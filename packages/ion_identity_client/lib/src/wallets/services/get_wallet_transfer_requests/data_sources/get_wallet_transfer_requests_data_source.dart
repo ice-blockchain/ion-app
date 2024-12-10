@@ -2,9 +2,9 @@
 
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/wallets/exceptions/wallets_exceptions.dart';
 import 'package:sprintf/sprintf.dart';
@@ -12,11 +12,11 @@ import 'package:sprintf/sprintf.dart';
 class GetWalletTransferRequestsDataSource {
   const GetWalletTransferRequestsDataSource(
     this._networkClient,
-    this._tokenStorage,
+    this._identityStorage,
   );
 
   final NetworkClient _networkClient;
-  final TokenStorage _tokenStorage;
+  final IdentityStorage _identityStorage;
 
   static const walletTransfersPath = '/wallets/%s/transfers';
 
@@ -25,7 +25,7 @@ class GetWalletTransferRequestsDataSource {
     String walletId, {
     String? pageToken,
   }) async {
-    final token = _tokenStorage.getToken(username: username);
+    final token = _identityStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }

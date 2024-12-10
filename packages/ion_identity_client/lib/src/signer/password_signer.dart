@@ -8,19 +8,23 @@ import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 
 class PasswordSigner {
   PasswordSigner({
     required this.config,
     required this.keyService,
+    required this.identityStorage,
   });
 
   final KeyService keyService;
   final IONIdentityConfig config;
+  final IdentityStorage identityStorage;
 
-  Future<CredentialRequestData> getCredentialInfo({
+  Future<CredentialRequestData> createCredentialInfo({
     required String challenge,
     required String password,
+    required String username,
     required CredentialKind credentialKind,
   }) async {
     final keyPair = await keyService.generateKeyPair();
@@ -56,6 +60,8 @@ class PasswordSigner {
       keyPair.privateKeyPem,
       password,
     );
+
+    await identityStorage.setPrivateKey(username: username, privateKey: keyPair.privateKeyPem);
 
     return CredentialRequestData(
       credentialInfo: CredentialInfo(

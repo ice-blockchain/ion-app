@@ -34,6 +34,7 @@ class CreateRecoveryCredentialsService {
     final credentialRequestData = await identitySigner.registerWithPassword(
       challenge: credentialChallenge.challenge,
       password: recoveryCode,
+      username: username,
       credentialKind: CredentialKind.RecoveryKey,
     );
 
