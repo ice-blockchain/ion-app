@@ -72,10 +72,6 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
 
   const PrivateDirectMessageData._();
 
-  List<MediaAttachment> get medias => media.values.toList();
-  @override
-  MediaAttachment? get primaryMedia => medias.firstOrNull;
-
   FutureOr<EventMessage> toEventMessage({
     required String pubkey,
   }) {
