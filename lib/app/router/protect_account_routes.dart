@@ -12,7 +12,6 @@ class ProtectAccountRoutes {
     TypedGoRoute<CreateRecoveryKeyRoute>(path: 'recovery-keys-save'),
     TypedGoRoute<ValidateRecoveryKeyRoute>(path: 'recovery-keys-input'),
     TypedGoRoute<RecoveryKeysSuccessRoute>(path: 'recovery-keys-success'),
-    TypedGoRoute<RecoveryKeysErrorAlertRoute>(path: 'recovery-keys-error-alert'),
     TypedGoRoute<AuthenticatorSetupRoute>(path: 'authenticator-setup/:step'),
     TypedGoRoute<AuthenticatorDeleteRoute>(path: 'authenticator-delete'),
     TypedGoRoute<AuthenticatorDeleteSuccessRoute>(path: 'authenticator-delete-success'),
@@ -86,14 +85,6 @@ class RecoveryKeysSuccessRoute extends BaseRouteData {
   RecoveryKeysSuccessRoute()
       : super(
           child: const RecoveryKeysSuccessPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class RecoveryKeysErrorAlertRoute extends BaseRouteData {
-  RecoveryKeysErrorAlertRoute()
-      : super(
-          child: const RecoveryKeysErrorAlert(),
           type: IceRouteType.bottomSheet,
         );
 }

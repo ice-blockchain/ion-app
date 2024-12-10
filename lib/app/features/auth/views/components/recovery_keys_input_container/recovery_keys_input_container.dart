@@ -9,8 +9,10 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/protect_account/backup/data/models/recovery_key_property.dart';
+import 'package:ion/app/features/protect_account/backup/views/components/errors/recovery_keys_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/recovery_key_input.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecoveryKeysInputContainer extends HookConsumerWidget {
@@ -89,6 +91,11 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
                       controllers[RecoveryKeyProperty.identityKeyName]!.text,
                       controllers[RecoveryKeyProperty.recoveryKeyId]!.text,
                       controllers[RecoveryKeyProperty.recoveryCode]!.text,
+                    );
+                  } else {
+                    showSimpleBottomSheet<void>(
+                      context: context,
+                      child: const RecoveryKeysErrorAlert(),
                     );
                   }
                 },
