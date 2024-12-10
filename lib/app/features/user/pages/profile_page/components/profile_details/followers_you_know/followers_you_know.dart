@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followers_you_know/followed_by_avatars.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followers_you_know/followed_by_text.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followers_you_know/user_avatar.dart';
-import 'package:ion/app/features/user/providers/user_followers_provider.c.dart';
+import 'package:ion/app/features/user/providers/followers_you_know_data_source_provider.c.dart';
 
 class FollowersYouKnow extends ConsumerWidget {
   const FollowersYouKnow({
@@ -17,36 +18,21 @@ class FollowersYouKnow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userFollowers = ref.watch(userFollowersProvider(pubkey)).valueOrNull;
+    final dataSource = ref.watch(followersYouKnowDataSourceProvider(pubkey));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final entities = entitiesPagedData?.data.items;
 
-    if (userFollowers == null || userFollowers.isEmpty) {
+    if (entities == null || entities.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final followersToDisplay = userFollowers.take(3).toList();
-
-    final avatarSize = UserAvatar.avatarSize;
-    final overlap = avatarSize * 0.2;
+    final pubkeys = entities.take(3).map((entity) => entity.masterPubkey).toList();
 
     return Row(
       children: [
-        SizedBox(
-          height: avatarSize,
-          width: avatarSize + (followersToDisplay.length - 1) * (avatarSize - overlap),
-          child: Stack(
-            children: [
-              for (int i = followersToDisplay.length - 1; i >= 0; i--)
-                Positioned(
-                  left: i * (avatarSize - overlap),
-                  child: UserAvatar(
-                    pubkey: followersToDisplay[i],
-                  ),
-                ),
-            ],
-          ),
-        ),
+        FollowedByAvatars(pubkeys: pubkeys),
         SizedBox(width: 10.0.s),
-        FollowedByText(pubkey: pubkey),
+        FollowedByText(pubkeys: pubkeys),
       ],
     );
   }

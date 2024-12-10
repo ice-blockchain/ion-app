@@ -1,82 +1,48 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/gestures.dart'; // Import this for TapGestureRecognizer
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart'; // Import hooks
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/providers/user_followers_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/hooks/use_tap_gesture_recognizer.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class FollowedByText extends HookConsumerWidget {
   const FollowedByText({
-    required this.pubkey,
+    required this.pubkeys,
     super.key,
   });
 
-  final String pubkey;
+  final List<String> pubkeys;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final firstUserTapRecognizer = useMemoized(TapGestureRecognizer.new);
-    final othersTapRecognizer = useMemoized(TapGestureRecognizer.new);
+    final firstUserPubkey = pubkeys.first;
 
-    useEffect(
-      () {
-        return () {
-          firstUserTapRecognizer.dispose();
-          othersTapRecognizer.dispose();
-        };
-      },
-      [firstUserTapRecognizer, othersTapRecognizer],
+    // User metadata is fetched alongside the `followersYouKnowDataSourceProvider`, so don't fetch it manually
+    final firstUserMetadata = ref.watch(
+      nostrCacheProvider.select(
+        cacheSelector<UserMetadataEntity>(
+          UserMetadataEntity.cacheKeyBuilder(pubkey: firstUserPubkey),
+        ),
+      ),
     );
 
-    String? firstUserPubkey;
-    String? secondUserPubkey;
-    int? numOthers;
+    final userTapRecognizer = useTapGestureRecognizer(
+      onTap: () => ProfileRoute(pubkey: firstUserPubkey).push<void>(context),
+    );
 
-    void onFirstUserTap() {
-      final pubkey = firstUserPubkey;
-      if (pubkey != null) {
-        ProfileRoute(pubkey: pubkey).push<void>(context);
-      }
-    }
+    final othersTapRecognizer = useTapGestureRecognizer();
 
-    void onOthersTap() {
-      final numOthersVal = numOthers;
-      if (numOthersVal != null && numOthersVal > 0) {
-        if (numOthersVal == 1) {
-          final pubkey = secondUserPubkey;
-          if (pubkey != null) {
-            ProfileRoute(pubkey: pubkey).push<void>(context);
-          }
-        } else {
-          // show all followers
-        }
-      }
-    }
-
-    firstUserTapRecognizer.onTap = onFirstUserTap;
-    othersTapRecognizer.onTap = onOthersTap;
-
-    final userFollowers = ref.watch(userFollowersProvider(pubkey)).valueOrNull;
-
-    if (userFollowers == null || userFollowers.isEmpty) {
+    if (firstUserMetadata == null) {
       return const SizedBox.shrink();
     }
-
-    firstUserPubkey = userFollowers.first;
-
-    final firstUserName =
-        ref.watch(userMetadataProvider(firstUserPubkey)).valueOrNull?.data.displayName ?? '';
-
-    final totalFollowers = userFollowers.length;
-    numOthers = totalFollowers - 1;
 
     final defaultStyle = context.theme.appTextThemes.body2.copyWith(
       color: context.theme.appColors.primaryText,
     );
+
     final actionableStyle = context.theme.appTextThemes.body2.copyWith(
       color: context.theme.appColors.darkBlue,
     );
@@ -87,39 +53,37 @@ class FollowedByText extends HookConsumerWidget {
         style: defaultStyle,
       ),
       TextSpan(
-        text: firstUserName,
+        text: firstUserMetadata.data.displayName,
         style: actionableStyle,
-        recognizer: firstUserTapRecognizer,
+        recognizer: userTapRecognizer,
       ),
     ];
 
-    if (numOthers >= 1) {
-      textSpans.add(
-        TextSpan(
-          text: context.i18n.profile_followed_by_and,
-          style: defaultStyle,
-        ),
-      );
-
-      secondUserPubkey = userFollowers.elementAt(1);
-      final secondUserName =
-          ref.watch(userMetadataProvider(secondUserPubkey)).valueOrNull?.data.displayName ?? '';
-      textSpans.add(
-        TextSpan(
-          text: numOthers == 1 ? secondUserName : context.i18n.profile_followed_by_and_others,
-          style: actionableStyle,
-          recognizer: othersTapRecognizer,
-        ),
-      );
+    if (pubkeys.length > 1) {
+      textSpans
+        ..add(
+          TextSpan(
+            text: context.i18n.profile_followed_by_and,
+            style: defaultStyle,
+          ),
+        )
+        ..add(
+          TextSpan(
+            text: context.i18n.profile_followed_by_and_others,
+            style: actionableStyle,
+            recognizer: othersTapRecognizer,
+          ),
+        );
     }
 
-    return RichText(
-      text: TextSpan(
-        children: textSpans,
+    return Expanded(
+      child: RichText(
+        text: TextSpan(children: textSpans),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        // overflow: TextOverflow.ellipsis,
       ),
-      textScaler: MediaQuery.textScalerOf(context),
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
     );
   }
 }
