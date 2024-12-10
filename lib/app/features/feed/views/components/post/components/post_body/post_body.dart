@@ -18,7 +18,7 @@ class PostBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postMedia = postEntity.data.mediaAttachments;
+    final postMedia = postEntity.data.media.values.toList();
 
     final textSpanBuilder = useTextSpanBuilder(
       context,

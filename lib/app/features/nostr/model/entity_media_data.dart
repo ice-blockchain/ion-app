@@ -8,21 +8,11 @@ mixin EntityMediaDataMixin {
   List<TextMatch> get content;
   Map<String, MediaAttachment> get media;
 
-  List<MediaAttachment> get mediaAttachments => content.fold<List<MediaAttachment>>(
-        [],
-        (result, match) {
-          if (match.matcher is UrlMatcher && media.containsKey(match.text)) {
-            result.add(media[match.text]!);
-          }
-          return result;
-        },
-      );
-
   List<TextMatch> get contentWithoutMedia => content.where((match) {
-        return !mediaAttachments.any((media) => media.url == match.text);
+        return !media.values.any((media) => media.url == match.text);
       }).toList();
 
-  MediaAttachment? get primaryMedia => mediaAttachments.firstOrNull;
+  MediaAttachment? get primaryMedia => media.values.firstOrNull;
 
   static Map<String, MediaAttachment> buildMedia(
     List<List<String>>? imetaTags,
