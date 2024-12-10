@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -42,7 +43,11 @@ class StoryViewerHeader extends ConsumerWidget {
           left: 16.0.s,
           right: 22.0.s,
           child: GestureDetector(
-            onTap: () => ProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context),
+            onTap: () async {
+              ref.read(storyPauseControllerProvider.notifier).paused = true;
+              await ProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context);
+              ref.read(storyPauseControllerProvider.notifier).paused = false;
+            },
             child: ListItem.user(
               profilePicture: userMetadata.data.picture,
               title: Text(
