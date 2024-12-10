@@ -1,46 +1,65 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/object.dart';
-import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-class NostrSealService {
-  /// https://github.com/nostr-protocol/nips/blob/master/59.md#2-seal-the-rumor
-  static const int kind = 13;
-
-  Future<EventMessage> encode(
+abstract class NostrSealService {
+  Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
+    String recipientPublicKey,
+  );
+
+  Future<EventMessage> decodeSeal(
+    EventMessage seal,
+    EventSigner recipientSigner,
+  );
+}
+
+class NostrSealServiceImpl implements NostrSealService {
+  static const int sealKind = 13;
+
+  @override
+  Future<EventMessage> createSeal(
+    EventMessage rumor,
+    EventSigner signer,
+    String recipientPublicKey,
   ) async {
-    final receiverPubkey = rumor.tags
-        .firstWhereOrNull((tag) => tag[0] == RelatedPubkey.tagName)
-        ?.let(RelatedPubkey.fromTag);
-
-    if (receiverPubkey == null) {
-      throw ReceiverPubkeyNotFoundException();
-    }
-
     final encodedRumor = jsonEncode(rumor.toJson());
 
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
       signer.privateKey,
-      receiverPubkey.value,
+      recipientPublicKey,
     );
 
-    final createdAt = randomDateBefore(const Duration(days: 2));
+    final createdAt = randomDateBefore(
+      const Duration(days: 2),
+    );
 
     return EventMessage.fromData(
       signer: signer,
+      kind: sealKind,
       createdAt: createdAt,
-      kind: kind,
       content: encryptedRumor,
     );
+  }
+
+  @override
+  Future<EventMessage> decodeSeal(
+    EventMessage seal,
+    EventSigner recipientSigner,
+  ) async {
+    final decryptedContent = await Nip44.decryptMessage(
+      seal.content,
+      recipientSigner.privateKey,
+      seal.pubkey,
+    );
+
+    return EventMessage.fromJson(jsonDecode(decryptedContent) as List);
   }
 }
