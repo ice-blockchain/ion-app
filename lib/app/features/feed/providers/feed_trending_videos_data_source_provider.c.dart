@@ -35,8 +35,7 @@ List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
             search: SearchExtensions(
               [
                 ReactionsCountSearchExtension(),
-                // TODO:uncomment when impl
-                // ReactionsSearchExtension(currentPubkey: currentPubkey),
+                ReactionsSearchExtension(currentPubkey: currentPubkey),
                 ReferencesSearchExtension(contain: false),
                 ExpirationSearchExtension(expiration: false),
                 VideosSearchExtension(contain: true),
