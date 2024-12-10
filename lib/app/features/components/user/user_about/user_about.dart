@@ -7,8 +7,8 @@ import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
-class ProfileAbout extends HookConsumerWidget {
-  const ProfileAbout({
+class UserAbout extends HookConsumerWidget {
+  const UserAbout({
     required this.pubkey,
     super.key,
   });
@@ -25,15 +25,12 @@ class ProfileAbout extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return SizedBox(
-      width: double.infinity,
-      child: Text.rich(
-        useTextSpanBuilder(context).build(
-          TextParser.allMatchers().parse(text),
-          onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
-        ),
-        textScaler: MediaQuery.textScalerOf(context),
+    return Text.rich(
+      useTextSpanBuilder(context).build(
+        TextParser.allMatchers().parse(text),
+        onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
       ),
+      textScaler: MediaQuery.textScalerOf(context),
     );
   }
 }
