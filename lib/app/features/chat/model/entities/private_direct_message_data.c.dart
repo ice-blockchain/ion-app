@@ -15,6 +15,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
 
+@immutable
 @Freezed(equal: false)
 class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
   const factory PrivateDirectMessageEntity({
@@ -41,6 +42,14 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
   }
 
   static const kind = 14;
+
+  @override
+  bool operator ==(Object other) {
+    return other is PrivateDirectMessageEntity && id == other.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 @freezed
