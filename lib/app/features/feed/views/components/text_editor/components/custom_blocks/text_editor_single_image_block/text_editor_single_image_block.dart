@@ -36,6 +36,7 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
     TextStyle textStyle,
   ) {
     final path = node.value.data as String;
+    return const SizedBox.shrink();
 
     return SizedBox.square(
       dimension: 100.0.s,
