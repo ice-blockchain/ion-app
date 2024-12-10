@@ -10,10 +10,10 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'mutual_followers_data_source_provider.c.g.dart';
+part 'followers_you_know_data_source_provider.c.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? mutualFollowersDataSource(Ref ref, String pubkey) {
+List<EntitiesDataSource>? followersYouKnowDataSource(Ref ref, String pubkey) {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null || pubkey == currentPubkey) {
