@@ -4,12 +4,11 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
 import 'package:ion/app/features/nostr/model/entity_media_data.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -17,12 +16,10 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'private_direct_message_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity, NostrEntity {
+class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
   const factory PrivateDirectMessageEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
-    required String signature,
     required DateTime createdAt,
     required PrivateDirectMessageData data,
   }) = _PrivateDirectMessageEntity;
@@ -32,14 +29,12 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity, NostrEntity 
   /// https://github.com/nostr-protocol/nips/blob/master/17.md
   factory PrivateDirectMessageEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event kind ${eventMessage.kind}, expected $kind');
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
     return PrivateDirectMessageEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: PrivateDirectMessageData.fromEventMessage(eventMessage),
     );
@@ -64,7 +59,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
 
     return PrivateDirectMessageData(
       content: parsedContent,
-      media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      media: EntityMediaDataMixin.parseImeta(tags[MediaAttachment.tagName]),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
     );

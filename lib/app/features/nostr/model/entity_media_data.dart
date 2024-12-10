@@ -59,7 +59,11 @@ mixin EntityMediaDataMixin {
   /// imeta may include any field specified by NIP 94.
   ///
   /// Source: https://github.com/nostr-protocol/nips/blob/master/92.md
-  static Map<String, MediaAttachment> parseImeta(List<List<String>> imetaTags) {
+  static Map<String, MediaAttachment> parseImeta(List<List<String>>? imetaTags) {
+    if (imetaTags == null) {
+      return {};
+    }
+
     final imeta = <String, MediaAttachment>{};
     for (final tag in imetaTags) {
       if (tag[0] == 'imeta') {
