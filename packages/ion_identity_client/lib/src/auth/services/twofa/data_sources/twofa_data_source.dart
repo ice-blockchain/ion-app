@@ -2,19 +2,19 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/models/init_twofa_request.c.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:sprintf/sprintf.dart';
 
 class TwoFADataSource {
   const TwoFADataSource({
     required this.networkClient,
-    required this.tokenStorage,
+    required this.identityStorage,
   });
 
   final NetworkClient networkClient;
-  final TokenStorage tokenStorage;
+  final IdentityStorage identityStorage;
 
   /// {userID}, {twoFAOption}
   static const twoFaPath = '/v1/users/%s/2fa/%s/verification-requests';
@@ -34,7 +34,7 @@ class TwoFADataSource {
     String? email,
     String? phoneNumber,
   }) async {
-    final token = tokenStorage.getToken(username: username)?.token;
+    final token = identityStorage.getToken(username: username)?.token;
     if (token == null && signature != null) {
       throw const UnauthenticatedException();
     }
@@ -64,7 +64,7 @@ class TwoFADataSource {
     required String twoFAOption,
     required String code,
   }) async {
-    final token = tokenStorage.getToken(username: username)?.token;
+    final token = identityStorage.getToken(username: username)?.token;
     if (token == null) {
       throw const UnauthenticatedException();
     }
@@ -84,7 +84,7 @@ class TwoFADataSource {
     required TwoFAType twoFAType,
     List<TwoFAType> verificationCodes = const [],
   }) async {
-    final token = tokenStorage.getToken(username: username)?.token;
+    final token = identityStorage.getToken(username: username)?.token;
     if (token == null) {
       throw const UnauthenticatedException();
     }

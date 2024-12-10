@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
@@ -15,11 +15,11 @@ import 'package:ion_identity_client/src/signer/types/user_action_signing_request
 class UserActionSignerDataSource {
   const UserActionSignerDataSource({
     required this.networkClient,
-    required this.tokenStorage,
+    required this.identityStorage,
   });
 
   final NetworkClient networkClient;
-  final TokenStorage tokenStorage;
+  final IdentityStorage identityStorage;
 
   static const initPath = '/auth/action/init';
   static const completePath = '/auth/action';
@@ -28,7 +28,7 @@ class UserActionSignerDataSource {
     String username,
     UserActionSigningInitRequest request,
   ) {
-    final token = tokenStorage.getToken(username: username);
+    final token = identityStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }
@@ -49,7 +49,7 @@ class UserActionSignerDataSource {
     Fido2Assertion assertion,
     String challengeIdentifier,
   ) {
-    final token = tokenStorage.getToken(username: username);
+    final token = identityStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }
@@ -76,7 +76,7 @@ class UserActionSignerDataSource {
     UserActionSigningRequest request,
     T Function(JsonObject) responseDecoder,
   ) {
-    final token = tokenStorage.getToken(username: username);
+    final token = identityStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }

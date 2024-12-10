@@ -2,24 +2,24 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 
 class DelegatedLoginService {
   const DelegatedLoginService({
     required this.dataSource,
-    required this.tokenStorage,
+    required this.identityStorage,
   });
 
   final DelegatedLoginDataSource dataSource;
-  final TokenStorage tokenStorage;
+  final IdentityStorage identityStorage;
 
   Future<UserToken> delegatedLogin({
     required String username,
   }) async {
     final tokenResponse = await dataSource.delegatedLogin(username: username);
-    await tokenStorage.setToken(username: username, newToken: tokenResponse.token);
+    await identityStorage.setToken(username: username, newToken: tokenResponse.token);
 
-    final userToken = tokenStorage.getToken(username: username);
+    final userToken = identityStorage.getToken(username: username);
     if (userToken == null) {
       throw const UnauthenticatedException();
     }

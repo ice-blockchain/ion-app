@@ -23,11 +23,13 @@ class IdentitySigner {
   Future<CredentialRequestData> registerWithPassword({
     required String challenge,
     required String password,
+    required String username,
     required CredentialKind credentialKind,
   }) async {
-    return passwordSigner.getCredentialInfo(
+    return passwordSigner.createCredentialInfo(
       challenge: challenge,
       password: password,
+      username: username,
       credentialKind: credentialKind,
     );
   }

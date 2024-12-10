@@ -2,7 +2,7 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class LoginService {
@@ -10,14 +10,14 @@ class LoginService {
     required this.username,
     required this.identitySigner,
     required this.dataSource,
-    required this.tokenStorage,
+    required this.identityStorage,
   });
 
   final String username;
   final IdentitySigner identitySigner;
   final LoginDataSource dataSource;
-  final TokenStorage tokenStorage;
-  
+  final IdentityStorage identityStorage;
+
   /// Logs in an existing user using the provided username, handling the necessary
   /// API interactions and storing the authentication token securely.
   ///
@@ -47,7 +47,7 @@ class LoginService {
       challengeIdentifier: challenge.challengeIdentifier,
       assertion: assertion,
     );
-    await tokenStorage.setTokens(
+    await identityStorage.setTokens(
       username: username,
       newTokens: tokens,
     );

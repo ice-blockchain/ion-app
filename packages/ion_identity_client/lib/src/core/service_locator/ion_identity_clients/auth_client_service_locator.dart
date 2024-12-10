@@ -57,7 +57,7 @@ class AuthClientServiceLocator {
       ),
       twoFAService: twoFA(username: username, config: config, identitySigner: identitySigner),
       delegatedLoginService: delegatedLogin(config: config),
-      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      identityStorage: IONIdentityServiceLocator.identityStorage(),
     );
   }
 
@@ -72,7 +72,7 @@ class AuthClientServiceLocator {
       dataSource: RegisterDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
-      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      identityStorage: IONIdentityServiceLocator.identityStorage(),
     );
   }
 
@@ -87,7 +87,7 @@ class AuthClientServiceLocator {
       dataSource: LoginDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
-      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      identityStorage: IONIdentityServiceLocator.identityStorage(),
     );
   }
 
@@ -100,7 +100,7 @@ class AuthClientServiceLocator {
       dataSource: LogoutDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
-      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      identityStorage: IONIdentityServiceLocator.identityStorage(),
     );
   }
 
@@ -114,7 +114,7 @@ class AuthClientServiceLocator {
       config: config,
       dataSource: CreateRecoveryCredentialsDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
-        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+        identityStorage: IONIdentityServiceLocator.identityStorage(),
       ),
       userActionSigner: UserActionSignerServiceLocator().userActionSigner(
         config: config,
@@ -147,9 +147,9 @@ class AuthClientServiceLocator {
     return DelegatedLoginService(
       dataSource: DelegatedLoginDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
-        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+        identityStorage: IONIdentityServiceLocator.identityStorage(),
       ),
-      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      identityStorage: IONIdentityServiceLocator.identityStorage(),
     );
   }
 
@@ -162,7 +162,7 @@ class AuthClientServiceLocator {
       username: username,
       dataSource: TwoFADataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
-        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+        identityStorage: IONIdentityServiceLocator.identityStorage(),
       ),
       wallets: WalletsClientServiceLocator().wallets(
         username: username,
@@ -174,6 +174,6 @@ class AuthClientServiceLocator {
   }
 
   ExtractUserIdService extractUserId() => ExtractUserIdService(
-        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+        identityStorage: IONIdentityServiceLocator.identityStorage(),
       );
 }

@@ -3,19 +3,19 @@
 import 'dart:convert';
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 
 class ExtractUserIdService {
   const ExtractUserIdService({
-    required this.tokenStorage,
+    required this.identityStorage,
   });
 
-  final TokenStorage tokenStorage;
+  final IdentityStorage identityStorage;
 
   String extractUserId({
     required String username,
   }) {
-    final token = tokenStorage.getToken(username: username)?.token;
+    final token = identityStorage.getToken(username: username)?.token;
     if (token == null) {
       throw const UnauthenticatedException();
     }

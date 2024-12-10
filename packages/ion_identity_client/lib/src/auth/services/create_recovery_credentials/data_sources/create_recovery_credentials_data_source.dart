@@ -3,8 +3,8 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_challenge.c.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.c.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/signer/types/user_action_signing_request.dart';
@@ -14,19 +14,19 @@ const recoveryKeyBody = {'kind': 'RecoveryKey'};
 class CreateRecoveryCredentialsDataSource {
   CreateRecoveryCredentialsDataSource({
     required this.networkClient,
-    required this.tokenStorage,
+    required this.identityStorage,
   });
 
   static const createCredentialInitPath = '/auth/credentials/init';
   static const createCredentialPath = '/auth/credentials';
 
   final NetworkClient networkClient;
-  final TokenStorage tokenStorage;
+  final IdentityStorage identityStorage;
 
   Future<CredentialChallenge> createCredentialInit({
     required String username,
   }) {
-    final token = tokenStorage.getToken(username: username);
+    final token = identityStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }
