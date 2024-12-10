@@ -25,12 +25,15 @@ class UserAbout extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return Text.rich(
-      useTextSpanBuilder(context).build(
-        TextParser.allMatchers().parse(text),
-        onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
+    return SizedBox(
+      width: double.infinity,
+      child: Text.rich(
+        useTextSpanBuilder(context).build(
+          TextParser.allMatchers().parse(text),
+          onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
+        ),
+        textScaler: MediaQuery.textScalerOf(context),
       ),
-      textScaler: MediaQuery.textScalerOf(context),
     );
   }
 }
