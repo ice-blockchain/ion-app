@@ -296,12 +296,14 @@ class ReferencesSearchExtension extends SearchExtension {
 ///
 /// When querying for kind 6 events this extension instead applies to the kind 1 event it points to
 class TagMarkerSearchExtension extends SearchExtension {
-  TagMarkerSearchExtension({required this.tagName, required this.marker});
+  TagMarkerSearchExtension({required this.tagName, required this.marker, this.negative = false});
 
   final String tagName;
 
   final String marker;
 
+  final bool negative;
+
   @override
-  String get query => '${tagName}marker:$marker';
+  String get query => '${negative ? '!' : ''}${tagName}marker:$marker';
 }
