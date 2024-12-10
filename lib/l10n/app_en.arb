@@ -4,6 +4,7 @@
   "hour": "{count, plural, =1{hour} other{hours}}",
   "button_continue": "Continue",
   "button_follow": "Follow",
+  "button_follow_back": "Follow back",
   "button_following": "Following",
   "button_save": "Save",
   "button_cancel": "Cancel",
