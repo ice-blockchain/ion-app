@@ -7,11 +7,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_followers_provider.c.dart';
+import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-class ProfileFollowersCell extends ConsumerWidget {
-  const ProfileFollowersCell({
+class FollowCountersCell extends ConsumerWidget {
+  const FollowCountersCell({
     required this.pubkey,
     required this.followType,
     super.key,
@@ -23,8 +23,12 @@ class ProfileFollowersCell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final usersNumber = followType == FollowType.following
-        ? ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length ?? 0
-        : ref.watch(userFollowersProvider(pubkey)).valueOrNull?.length ?? 0;
+        ? ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length
+        : ref.watch(followersCountProvider(pubkey)).valueOrNull;
+
+    if (usersNumber == null) {
+      return const SizedBox.shrink();
+    }
 
     return GestureDetector(
       onTap: () async {

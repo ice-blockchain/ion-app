@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/follower_counters/profile_followers_cell.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/follow_counters/follow_counters_cell.dart';
 
-class ProfileFollowers extends ConsumerWidget {
-  const ProfileFollowers({
+class FollowCounters extends ConsumerWidget {
+  const FollowCounters({
     required this.pubkey,
     super.key,
   });
@@ -25,7 +25,7 @@ class ProfileFollowers extends ConsumerWidget {
       child: Row(
         children: [
           Expanded(
-            child: ProfileFollowersCell(
+            child: FollowCountersCell(
               pubkey: pubkey,
               followType: FollowType.following,
             ),
@@ -38,7 +38,7 @@ class ProfileFollowers extends ConsumerWidget {
             color: context.theme.appColors.onTerararyFill,
           ),
           Expanded(
-            child: ProfileFollowersCell(
+            child: FollowCountersCell(
               pubkey: pubkey,
               followType: FollowType.followers,
             ),

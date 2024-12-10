@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/user/user_about/user_about.dart';
 import 'package:ion/app/features/components/user/user_info_summary/user_info_summary.dart';
 import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/profile_details/follower_counters/profile_followers.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/profile_details/follow_counters/follow_counters.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followers_you_know/followers_you_know.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/edit_user_button.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_actions/profile_actions.dart';
@@ -32,7 +32,7 @@ class ProfileDetails extends ConsumerWidget {
           SizedBox(height: 8.0.s),
           if (isCurrentUserProfile) const EditUserButton() else ProfileActions(pubkey: pubkey),
           SizedBox(height: 16.0.s),
-          ProfileFollowers(pubkey: pubkey),
+          FollowCounters(pubkey: pubkey),
           SizedBox(height: 10.0.s),
           if (!isCurrentUserProfile) ...[
             FollowersYouKnow(pubkey: pubkey),
