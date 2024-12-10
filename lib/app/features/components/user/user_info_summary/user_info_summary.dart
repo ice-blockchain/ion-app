@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/user_info_summary/user_info_tile.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -21,6 +22,7 @@ class UserInfoSummary extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataValue = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
+    final isCurrentUserFollowed = ref.watch(isCurrentUserFollowedProvider(pubkey));
 
     if (userMetadataValue == null) {
       return const SizedBox.shrink();
@@ -31,7 +33,6 @@ class UserInfoSummary extends HookConsumerWidget {
     final date = useMemoized(() => random.nextBool() ? 'October 2024' : null, []);
     final address = useMemoized(() => random.nextBool() ? 'Vienna, Austria' : null, []);
     final website = userMetadataValue.data.website;
-    const isFollower = true;
 
     final tiles = <Widget>[];
 
@@ -72,7 +73,7 @@ class UserInfoSummary extends HookConsumerWidget {
       );
     }
 
-    if (isFollower) {
+    if (isCurrentUserFollowed) {
       tiles.add(
         UserInfoTile(
           title: context.i18n.profile_follows_you,
@@ -85,10 +86,13 @@ class UserInfoSummary extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return Wrap(
-      spacing: 8.0.s,
-      runSpacing: 4.0.s,
-      children: tiles,
+    return SizedBox(
+      width: double.infinity,
+      child: Wrap(
+        spacing: 8.0.s,
+        runSpacing: 4.0.s,
+        children: tiles,
+      ),
     );
   }
 }
