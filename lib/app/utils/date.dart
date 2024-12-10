@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -123,4 +125,19 @@ String formatMessageTimestamp(DateTime dateTime) {
 /// Returns a formatted string based on the format "MMMM d, yyyy".
 String formatDateToMonthDayYear(DateTime date) {
   return DateFormat('MMMM d, yyyy').format(date);
+}
+
+/// Returns a random DateTime object before the current time.
+///
+/// [maxDuration]: The maximum duration before the current time.
+/// Example:
+/// ```dart
+/// DateTime randomDate = randomDateBefore(const Duration(days: 2));
+/// ```
+///
+DateTime randomDateBefore(Duration maxDuration) {
+  final now = DateTime.now();
+  final differenceInMilliseconds = now.difference(now.subtract(maxDuration)).inMilliseconds;
+  final randomMilliseconds = Random().nextInt(differenceInMilliseconds);
+  return now.subtract(Duration(milliseconds: randomMilliseconds));
 }
