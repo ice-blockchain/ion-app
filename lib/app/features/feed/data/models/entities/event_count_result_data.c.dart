@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart'
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'event_count_result_data.c.freezed.dart';
@@ -20,6 +21,7 @@ enum EventCountResultType {
   replies,
   reposts,
   quotes,
+  followers,
   reactions;
 }
 
@@ -132,6 +134,8 @@ class EventCountResultData with _$EventCountResultData {
       return EventCountResultType.quotes;
     } else if (filter.kinds != null && filter.kinds!.contains(ReactionEntity.kind)) {
       return EventCountResultType.reactions;
+    } else if (filter.kinds != null && filter.kinds!.contains(FollowListEntity.kind)) {
+      return EventCountResultType.followers;
     } else {
       throw UnknownEventCountResultType(eventId: eventId);
     }
@@ -142,6 +146,8 @@ class EventCountResultData with _$EventCountResultData {
     final key = switch (type) {
       EventCountResultType.quotes =>
         filter.q != null && filter.q!.isNotEmpty ? filter.q!.first : null,
+      EventCountResultType.followers =>
+        filter.p != null && filter.p!.isNotEmpty ? filter.p!.first : null,
       _ => filter.e != null && filter.e!.isNotEmpty ? filter.e!.first : null,
     };
     if (key == null) {
