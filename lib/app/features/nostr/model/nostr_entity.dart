@@ -39,6 +39,9 @@ class SimpleSigner implements EventSigner {
   @override
   final String publicKey;
 
+  @override
+  String get privateKey => '';
+
   final String signature;
 
   @override
