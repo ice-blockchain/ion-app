@@ -33,12 +33,12 @@ class FollowCountersCell extends ConsumerWidget {
     return GestureDetector(
       onTap: () async {
         if (usersNumber > 0) {
-          final newPubkey = await FollowListRoute(
+          final selectedPubkey = await FollowListRoute(
             pubkey: pubkey,
             followType: followType,
           ).push<String>(context);
-          if (newPubkey != null && context.mounted) {
-            unawaited(ProfileRoute(pubkey: newPubkey).push<void>(context));
+          if (selectedPubkey != null && context.mounted) {
+            unawaited(ProfileRoute(pubkey: selectedPubkey).push<void>(context));
           }
         }
       },

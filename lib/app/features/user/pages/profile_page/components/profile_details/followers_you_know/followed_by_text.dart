@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/hooks/use_tap_gesture_recognizer.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -33,7 +34,10 @@ class FollowedByText extends HookConsumerWidget {
       onTap: () => ProfileRoute(pubkey: firstUserPubkey).push<void>(context),
     );
 
-    final othersTapRecognizer = useTapGestureRecognizer();
+    final othersTapRecognizer = useTapGestureRecognizer(
+      onTap: () => FollowListRoute(pubkey: firstUserPubkey, followType: FollowType.followers)
+          .push<void>(context),
+    );
 
     if (firstUserMetadata == null) {
       return const SizedBox.shrink();
