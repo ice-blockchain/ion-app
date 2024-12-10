@@ -4,6 +4,7 @@ part of 'app_routes.c.dart';
 
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
+    TypedGoRoute<StoryViewerRoute>(path: 'story-viewing-fullstack/:pubkey'),
     TypedGoRoute<PostDetailsRoute>(path: 'post/:eventReference'),
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:eventReference'),
@@ -227,25 +228,10 @@ class StoryPreviewRoute extends BaseRouteData {
   final String? mimeType;
 }
 
-@TypedGoRoute<StoryViewerRoute>(
-  path: '/story-viewing/:pubkey',
-  routes: [
-    TypedGoRoute<StoryProfileRoute>(path: 'story-profile'),
-  ],
-)
 class StoryViewerRoute extends BaseRouteData {
   StoryViewerRoute({required this.pubkey})
       : super(
           child: StoryViewerPage(pubkey: pubkey),
-        );
-
-  final String pubkey;
-}
-
-class StoryProfileRoute extends BaseRouteData {
-  StoryProfileRoute({required this.pubkey})
-      : super(
-          child: ProfilePage(pubkey: pubkey),
         );
 
   final String pubkey;

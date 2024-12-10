@@ -42,7 +42,7 @@ class StoryViewerHeader extends ConsumerWidget {
           left: 16.0.s,
           right: 22.0.s,
           child: GestureDetector(
-            onTap: () => StoryProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context),
+            onTap: () => ProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context),
             child: ListItem.user(
               profilePicture: userMetadata.data.picture,
               title: Text(

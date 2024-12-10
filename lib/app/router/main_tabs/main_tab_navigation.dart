@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -33,68 +31,23 @@ class MainTabNavigation extends HookConsumerWidget {
         tabPressStream: tabPressStreamController.stream,
         child: shell,
       ),
-      bottomNavigationBar: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: context.theme.appColors.secondaryBackground,
-              boxShadow: state.isMainModalOpen
-                  ? null
-                  : [
-                      BoxShadow(
-                        color: context.theme.appColors.darkBlue.withAlpha(14),
-                        blurRadius: 10,
-                      ),
-                    ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: TabItem.values.map((tabItem) {
-                final isSelected = currentTab == tabItem;
+      bottomNavigationBar: state.shouldHideBottomBar
+          ? null
+          : _BottomNavBarContent(
+              state: state,
+              currentTab: currentTab,
+              onTabPressed: (tabItem) {
+                tabPressStreamController.add((current: currentTab, pressed: tabItem));
 
-                return Expanded(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () =>
-                        _onTabPress(context, tabItem.index, currentTab, tabPressStreamController),
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        top: 9.0.s,
-                        // Adding extra padding to the bottom of the tab bar if the device has a bottom padding
-                        bottom: MediaQuery.of(context).padding.bottom > 0 ? 23.0.s : 9.0.s,
-                      ),
-                      color: context.theme.appColors.secondaryBackground,
-                      child: _getTabButton(tabItem, isSelected),
-                    ),
-                  ),
-                );
-              }).toList(),
+                if (tabItem == TabItem.main) {
+                  _handleMainButtonTap(context, currentTab);
+                } else {
+                  _navigateToTab(context, tabItem, initialLocation: currentTab == tabItem);
+                }
+              },
+              conversationsEditMode: conversationsEditMode,
             ),
-          ),
-          if (conversationsEditMode && currentTab == TabItem.chat)
-            const ConversationEditBottomBar(),
-        ],
-      ),
     );
-  }
-
-  Widget _getTabButton(TabItem tabItem, bool isSelected) {
-    return tabItem.getIcon(isSelected: isSelected);
-  }
-
-  void _onTabPress(
-    BuildContext context,
-    int index,
-    TabItem currentTab,
-    StreamController<TabPressSteamData> tabPressStream,
-  ) {
-    final pressedTab = TabItem.values[index];
-    tabPressStream.add((current: currentTab, pressed: pressedTab));
-    if (pressedTab == TabItem.main) {
-      _handleMainButtonTap(context, currentTab);
-    } else {
-      _navigateToTab(context, pressedTab, initialLocation: currentTab == pressedTab);
-    }
   }
 
   void _handleMainButtonTap(BuildContext context, TabItem currentTab) {
@@ -109,4 +62,60 @@ class MainTabNavigation extends HookConsumerWidget {
       state.isMainModalOpen
           ? context.go(tabItem.baseRouteLocation)
           : shell.goBranch(tabItem.navigationIndex, initialLocation: initialLocation);
+}
+
+class _BottomNavBarContent extends StatelessWidget {
+  const _BottomNavBarContent({
+    required this.state,
+    required this.currentTab,
+    required this.onTabPressed,
+    required this.conversationsEditMode,
+  });
+
+  final GoRouterState state;
+  final TabItem currentTab;
+  final bool conversationsEditMode;
+  final ValueChanged<TabItem> onTabPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: context.theme.appColors.secondaryBackground,
+            boxShadow: state.isMainModalOpen
+                ? null
+                : [
+                    BoxShadow(
+                      color: context.theme.appColors.darkBlue.withAlpha(14),
+                      blurRadius: 10,
+                    ),
+                  ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: TabItem.values.map((tabItem) {
+              final isSelected = currentTab == tabItem;
+              return Expanded(
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => onTabPressed(tabItem),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: 9.0.s,
+                      bottom: MediaQuery.of(context).padding.bottom > 0 ? 23.0.s : 9.0.s,
+                    ),
+                    color: context.theme.appColors.secondaryBackground,
+                    child: tabItem.getIcon(isSelected: isSelected),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        if (conversationsEditMode && currentTab == TabItem.chat) const ConversationEditBottomBar(),
+      ],
+    );
+  }
 }
