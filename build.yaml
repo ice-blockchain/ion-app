@@ -16,7 +16,7 @@ targets:
       go_router_builder:go_router_builder:
         generate_for:
           include:
-            - lib/**.c.dart
+            - lib/app/router/**.c.dart
       drift_dev:
         generate_for:
           include:
