@@ -54,7 +54,8 @@ class IONDatabase extends _$IONDatabase {
     required EventMessage eventMessage,
     bool isDeleted = false,
   }) {
-    final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final conversationMessage =
+        PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return into(conversationMessagesTable).insert(
       ConversationMessagesTableData(
         isDeleted: isDeleted,
@@ -81,8 +82,10 @@ class IONDatabase extends _$IONDatabase {
     EventMessage eventMessage,
   ) async {
     if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
-      final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-      final conversationIdByPubkeys = await _lookupConversationByPubkeys(conversationMessage);
+      final conversationMessage =
+          PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+      final conversationIdByPubkeys =
+          await _lookupConversationByPubkeys(conversationMessage);
 
       if (conversationIdByPubkeys != null) {
         // Existing conversation (one-to-one or group)
@@ -92,7 +95,8 @@ class IONDatabase extends _$IONDatabase {
         );
       } else {
         // Existing group conversation (change of participants)
-        final conversationIdBySubject = await _lookupConversationBySubject(conversationMessage);
+        final conversationIdBySubject =
+            await _lookupConversationBySubject(conversationMessage);
 
         if (conversationIdBySubject != null) {
           await insertConversationData(
@@ -118,12 +122,14 @@ class IONDatabase extends _$IONDatabase {
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
-    final conversationsWithSameParticipants = await (select(conversationMessagesTable)
-          ..where(
-            (table) => table.pubKeys.equals(conversationMessage.allPubkeysMask),
-          )
-          ..limit(1))
-        .get();
+    final conversationsWithSameParticipants =
+        await (select(conversationMessagesTable)
+              ..where(
+                (table) =>
+                    table.pubKeys.equals(conversationMessage.allPubkeysMask),
+              )
+              ..limit(1))
+            .get();
 
     if (conversationsWithSameParticipants.isNotEmpty) {
       return conversationsWithSameParticipants.first.conversationId;
@@ -140,10 +146,11 @@ class IONDatabase extends _$IONDatabase {
     final subject = conversationMessage.data.relatedSubject?.value;
 
     if (subject != null) {
-      final conversationWithChangedParticipants = await (select(conversationMessagesTable)
-            ..where((table) => table.subject.equals(subject))
-            ..limit(1))
-          .get();
+      final conversationWithChangedParticipants =
+          await (select(conversationMessagesTable)
+                ..where((table) => table.subject.equals(subject))
+                ..limit(1))
+              .get();
 
       if (conversationWithChangedParticipants.isNotEmpty) {
         return conversationWithChangedParticipants.first.conversationId;
@@ -152,13 +159,13 @@ class IONDatabase extends _$IONDatabase {
     return null;
   }
 
-  final allConversationsLatestMessageQuery =
+  final _allConversationsLatestMessageQuery =
       'SELECT * FROM (SELECT * FROM conversation_messages_table ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
 
   Future<List<EventMessage>> getAllConversations() async {
     // Select last message of each conversation
     final uniqueConversationRows = await customSelect(
-      allConversationsLatestMessageQuery,
+      _allConversationsLatestMessageQuery,
       readsFrom: {conversationMessagesTable},
     ).get();
 
@@ -170,7 +177,7 @@ class IONDatabase extends _$IONDatabase {
 
   Stream<List<EventMessage>> watchConversations() {
     return customSelect(
-      allConversationsLatestMessageQuery,
+      _allConversationsLatestMessageQuery,
       readsFrom: {conversationMessagesTable},
     ).watch().asyncMap((uniqueConversationRows) async {
       final lastConversationEventMessages =
@@ -183,8 +190,9 @@ class IONDatabase extends _$IONDatabase {
   Future<List<EventMessage>> _selectLastMessageOfEachConversation(
     List<QueryRow> uniqueConversationRows,
   ) async {
-    final lastConversationMessagesIds =
-        uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
+    final lastConversationMessagesIds = uniqueConversationRows
+        .map((row) => row.data['event_message_id'] as String)
+        .toList();
 
     final lastConversationEventMessages = (await (select(eventMessagesTable)
               ..where((table) => table.id.isIn(lastConversationMessagesIds)))
