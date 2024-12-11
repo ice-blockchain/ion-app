@@ -3,14 +3,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/auth_interceptor.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-class NetworkServiceLocator with _Dio, _Interceptors, _TokenStorage, _NetworkClient {
+class NetworkServiceLocator with _Dio, _Interceptors, _IdentityStorage, _NetworkClient {
   factory NetworkServiceLocator() {
     return _instance;
   }
@@ -95,19 +95,19 @@ mixin _Interceptors {
   }
 }
 
-mixin _TokenStorage {
-  TokenStorage? _tokenStorageInstance;
+mixin _IdentityStorage {
+  IdentityStorage? _identityStorageInstance;
   FlutterSecureStorage? _flutterSecureStorage;
 
-  TokenStorage tokenStorage() {
-    if (_tokenStorageInstance != null) {
-      return _tokenStorageInstance!;
+  IdentityStorage identityStorage() {
+    if (_identityStorageInstance != null) {
+      return _identityStorageInstance!;
     }
 
-    _tokenStorageInstance = TokenStorage(
+    _identityStorageInstance = IdentityStorage(
       secureStorage: flutterSecureStorage(),
     );
-    return _tokenStorageInstance!;
+    return _identityStorageInstance!;
   }
 
   FlutterSecureStorage flutterSecureStorage() {
