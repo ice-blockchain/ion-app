@@ -66,26 +66,24 @@ class IONDatabase extends _$IONDatabase {
   Future<String?> _lookupConversationByPubkeys(
     EventMessage eventMessage,
   ) async {
-    final conversationsWithSameParticipants =
-        await (select(conversationMessagesTable)
-              ..where(
-                (table) => table.pubKeys.equals(eventMessage.pubkeysMask),
-              )
-              ..limit(1))
-            .get();
+    final conversationsWithSameParticipants = await (select(conversationMessagesTable)
+          ..where(
+            (table) => table.pubKeys.equals(eventMessage.pubkeysMask),
+          )
+          ..limit(1))
+        .get();
 
     if (conversationsWithSameParticipants.isEmpty) {
       // Check if there are conversations with the same subject but different pubkeys
       // (this means that amount of participants in conversation was changed)
       final subject = eventMessage.subject;
       if (subject != null) {
-        final conversationsWithChangedParticipants =
-            await (select(conversationMessagesTable)
-                  ..where(
-                    (table) => table.subject.equals(subject),
-                  )
-                  ..limit(1))
-                .get();
+        final conversationsWithChangedParticipants = await (select(conversationMessagesTable)
+              ..where(
+                (table) => table.subject.equals(subject),
+              )
+              ..limit(1))
+            .get();
 
         return conversationsWithChangedParticipants.isEmpty
             ? null
@@ -141,9 +139,8 @@ class IONDatabase extends _$IONDatabase {
       readsFrom: {conversationMessagesTable},
     ).get();
 
-    final lastConversationMessagesIds = uniqueConversationRows
-        .map((row) => row.data['event_message_id'] as String)
-        .toList();
+    final lastConversationMessagesIds =
+        uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
 
     final lastConversationEventMessages = (await (select(eventMessagesTable)
               ..where((table) => table.id.isIn(lastConversationMessagesIds)))
@@ -401,4 +398,3 @@ class EventMessageTableData implements Insertable<EventMessageTableData> {
 
 
 */
-
