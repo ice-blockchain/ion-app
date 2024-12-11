@@ -16,7 +16,7 @@ abstract class NostrGiftWrapService {
 
   Future<EventMessage> decodeWrap(
     EventMessage wrap,
-    EventSigner recipientSigner,
+    EventSigner signer,
   );
 }
 
@@ -54,11 +54,11 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
   @override
   Future<EventMessage> decodeWrap(
     EventMessage wrap,
-    EventSigner recipientSigner,
+    EventSigner signer,
   ) async {
     final decryptedContent = await Nip44.decryptMessage(
       wrap.content,
-      recipientSigner.privateKey,
+      signer.privateKey,
       wrap.tags.firstWhere((tag) => tag[0] == RelatedPubkey.tagName)[1],
     );
 

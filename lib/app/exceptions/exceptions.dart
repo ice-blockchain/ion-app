@@ -163,7 +163,3 @@ class CompressWithBrotliException extends IONException {
 class DecompressBrotliException extends IONException {
   DecompressBrotliException() : super(10034, 'Failed to decompress Brotli file.');
 }
-
-class ReceiverPubkeyNotFoundException extends IONException {
-  ReceiverPubkeyNotFoundException() : super(10035, 'Receiver pubkey not found');
-}
