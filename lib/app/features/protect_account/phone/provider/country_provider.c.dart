@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/constants/countries.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'country_provider.c.g.dart';
@@ -15,7 +17,11 @@ class SelectedCountry extends _$SelectedCountry {
   @override
   Country build() {
     final countries = ref.watch(countriesProvider);
-    return countries[1];
+    final locale = ref.watch(appLocaleProvider);
+    final localeCountry = countries.firstWhereOrNull(
+      (country) => country.isoCode.toLowerCase() == locale.countryCode?.toLowerCase(),
+    );
+    return localeCountry ?? countries[1];
   }
 
   set country(Country country) {
