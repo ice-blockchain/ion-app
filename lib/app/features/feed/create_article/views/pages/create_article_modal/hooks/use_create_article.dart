@@ -13,18 +13,22 @@ class CreateArticleState {
     required this.titleController,
     required this.textEditorController,
     required this.isButtonEnabled,
+    required this.editorFocusNotifier,
   });
   final ValueNotifier<MediaFile?> selectedImage;
   final ValueNotifier<bool> titleFilled;
   final TextEditingController titleController;
   final QuillController textEditorController;
   final bool isButtonEnabled;
+  final ValueNotifier<bool> editorFocusNotifier;
 }
 
 CreateArticleState useCreateArticle() {
   final selectedImage = useState<MediaFile?>(null);
   final titleFilled = useState(false);
   final textEditorController = useQuillController();
+  final editorFocusNotifier = useState<bool>(false);
+
   final titleController = useTextEditingController();
   final isButtonEnabled = selectedImage.value != null && titleFilled.value;
 
@@ -46,5 +50,6 @@ CreateArticleState useCreateArticle() {
     titleController: titleController,
     textEditorController: textEditorController,
     isButtonEnabled: isButtonEnabled,
+    editorFocusNotifier: editorFocusNotifier,
   );
 }

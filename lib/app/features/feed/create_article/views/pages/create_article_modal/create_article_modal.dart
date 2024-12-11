@@ -81,6 +81,11 @@ class CreateArticleModal extends HookConsumerWidget {
               child: TextField(
                 controller: articleState.titleController,
                 autofocus: true,
+                textInputAction: TextInputAction.next,
+                onSubmitted: (_) {
+                  articleState.textEditorController.editorFocusNode?.requestFocus();
+                  articleState.editorFocusNotifier.value = true;
+                },
                 style: context.theme.appTextThemes.headline2.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
@@ -95,10 +100,15 @@ class CreateArticleModal extends HookConsumerWidget {
             ),
             Expanded(
               child: ScreenSideOffset.small(
-                child: TextEditor(
-                  autoFocus: false,
-                  articleState.textEditorController,
-                  placeholder: context.i18n.create_article_story_placeholder,
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: articleState.editorFocusNotifier,
+                  builder: (context, isFocused, child) {
+                    return TextEditor(
+                      autoFocus: isFocused,
+                      articleState.textEditorController,
+                      placeholder: context.i18n.create_article_story_placeholder,
+                    );
+                  },
                 ),
               ),
             ),
