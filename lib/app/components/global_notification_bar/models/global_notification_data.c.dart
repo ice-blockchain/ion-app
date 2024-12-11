@@ -6,13 +6,14 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-part 'content_notification_data.c.freezed.dart';
+part 'global_notification_data.c.freezed.dart';
 
 @freezed
-sealed class NotificationData with _$NotificationData {
-  const factory NotificationData.loading(ContentType contentType) = _NotificationLoading;
-  const factory NotificationData.published(ContentType contentType) = _NotificationPublished;
-  const factory NotificationData.success(ContentType contentType) = _NotificationSuccess;
+sealed class GlobalNotificationData with _$GlobalNotificationData {
+  const factory GlobalNotificationData.loading(ContentType contentType) = GlobalNotificationLoading;
+  const factory GlobalNotificationData.published(ContentType contentType) =
+      GlobalNotificationPublished;
+  const factory GlobalNotificationData.success(ContentType contentType) = GlobalNotificationSuccess;
 }
 
 enum ContentType {
@@ -24,7 +25,7 @@ enum ContentType {
   repost;
 }
 
-extension NotificationDataExtension on NotificationData {
+extension GlobalNotificationDataExtension on GlobalNotificationData {
   ContentType get contentType => when(
         loading: (contentType) => contentType,
         published: (contentType) => contentType,
@@ -39,17 +40,15 @@ extension NotificationDataExtension on NotificationData {
     );
   }
 
-  Widget getIcon(BuildContext context) {
+  Widget? getIcon(BuildContext context) {
     return when(
       loading: (_) => IONLoadingIndicator(
         size: Size.square(16.0.s),
       ),
       published: (_) => Assets.svg.iconBlockCheckboxOnblue.icon(
-        color: context.theme.appColors.onPrimaryAccent,
+        color: context.theme.appColors.success,
       ),
-      success: (_) => Assets.svg.iconBlockCheckboxOnblue.icon(
-        color: context.theme.appColors.onPrimaryAccent,
-      ),
+      success: (_) => null,
     );
   }
 

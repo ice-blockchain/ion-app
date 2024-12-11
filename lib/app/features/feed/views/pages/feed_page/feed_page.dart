@@ -11,7 +11,6 @@ import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/app_update_type.dart';
 import 'package:ion/app/features/core/views/pages/app_update_modal.dart';
-import 'package:ion/app/features/feed/content_notification/views/components/notification_bar_wrapper.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
@@ -71,31 +70,29 @@ class FeedPage extends HookConsumerWidget {
     ];
 
     return Scaffold(
-      body: NotificationBarWrapper(
-        child: LoadMoreBuilder(
-          slivers: slivers,
-          hasMore: feedHasMore,
-          onLoadMore: () => _onLoadMore(ref),
-          builder: (context, slivers) {
-            return PullToRefreshBuilder(
-              sliverAppBar: CollapsingAppBar(
-                height: FeedControls.height,
-                child: const FeedControls(),
-              ),
-              slivers: slivers,
-              onRefresh: () => _onRefresh(ref),
-              refreshIndicatorEdgeOffset: FeedControls.height +
-                  MediaQuery.paddingOf(context).top +
-                  ScreenTopOffset.defaultMargin,
-              builder: (context, slivers) {
-                return CustomScrollView(
-                  controller: scrollController,
-                  slivers: slivers,
-                );
-              },
-            );
-          },
-        ),
+      body: LoadMoreBuilder(
+        slivers: slivers,
+        hasMore: feedHasMore,
+        onLoadMore: () => _onLoadMore(ref),
+        builder: (context, slivers) {
+          return PullToRefreshBuilder(
+            sliverAppBar: CollapsingAppBar(
+              height: FeedControls.height,
+              child: const FeedControls(),
+            ),
+            slivers: slivers,
+            onRefresh: () => _onRefresh(ref),
+            refreshIndicatorEdgeOffset: FeedControls.height +
+                MediaQuery.paddingOf(context).top +
+                ScreenTopOffset.defaultMargin,
+            builder: (context, slivers) {
+              return CustomScrollView(
+                controller: scrollController,
+                slivers: slivers,
+              );
+            },
+          );
+        },
       ),
     );
   }

@@ -141,7 +141,6 @@ class CreatePostModal extends HookConsumerWidget {
                   textEditorController: textEditorController,
                   parentEvent: parentEvent,
                   quotedEvent: quotedEvent,
-                  videoPath: videoPath,
                 ),
               ),
             ),

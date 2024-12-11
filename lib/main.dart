@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/translations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
@@ -51,6 +53,24 @@ class IONApp extends ConsumerWidget {
             darkTheme: template.whenOrNull(data: (data) => buildDarkTheme(data.theme)),
             themeMode: appThemeMode,
             routerConfig: goRouter,
+            builder: (context, child) {
+              return Builder(
+                builder: (_) {
+                  return Scaffold(
+                    body: SafeArea(
+                      child: Column(
+                        children: [
+                          if (Theme.of(context).isInitialized) const GlobalNotificationBar(),
+                          Expanded(
+                            child: child ?? const SizedBox.shrink(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
         ),
       ),

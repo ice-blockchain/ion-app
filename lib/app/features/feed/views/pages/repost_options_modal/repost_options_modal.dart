@@ -7,8 +7,6 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.c.dart';
-import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -54,9 +52,6 @@ class RepostOptionsModal extends ConsumerWidget {
                     if (context.mounted) {
                       context.pop();
                     }
-                    ref
-                        .read(contentNotificationControllerProvider.notifier)
-                        .showSuccess(ContentType.repost);
                   }
                 },
                 leadingIcon: repostLoading
