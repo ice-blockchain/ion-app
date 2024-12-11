@@ -26,7 +26,7 @@ class CreateArticleState {
 CreateArticleState useCreateArticle() {
   final selectedImage = useState<MediaFile?>(null);
   final titleFilled = useState(false);
-  final textEditorController = useQuillController()..skipRequestKeyboard = true;
+  final textEditorController = useQuillController();
   final editorFocusNotifier = useState<bool>(false);
 
   final titleController = useTextEditingController();
