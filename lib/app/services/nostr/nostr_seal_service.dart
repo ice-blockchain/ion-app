@@ -16,7 +16,7 @@ abstract class NostrSealService {
 
   Future<EventMessage> decodeSeal(
     EventMessage seal,
-    EventSigner recipientSigner,
+    EventSigner signer,
   );
 }
 
@@ -52,11 +52,11 @@ class NostrSealServiceImpl implements NostrSealService {
   @override
   Future<EventMessage> decodeSeal(
     EventMessage seal,
-    EventSigner recipientSigner,
+    EventSigner signer,
   ) async {
     final decryptedContent = await Nip44.decryptMessage(
       seal.content,
-      recipientSigner.privateKey,
+      signer.privateKey,
       seal.pubkey,
     );
 
