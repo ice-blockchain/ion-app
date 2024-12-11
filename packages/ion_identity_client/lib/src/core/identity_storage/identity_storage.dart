@@ -4,62 +4,91 @@ import 'dart:async';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/core/private_key_storage/private_key_storage.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/identity_storage/data_storage.dart';
 import 'package:ion_identity_client/src/core/types/user_token.c.dart';
+import 'package:rxdart/rxdart.dart';
 
-/// The IdentityStorage class composes both TokenStorage and PrivateKeysStorage.
-/// It exposes their methods, and also provides combined operations.
 class IdentityStorage {
   IdentityStorage({
     required FlutterSecureStorage secureStorage,
-  })  : _tokenStorage = TokenStorage(secureStorage: secureStorage),
-        _privateKeysStorage = PrivateKeysStorage(secureStorage: secureStorage);
+  })  : _tokenStorage = DataStorage<Authentication>(
+          secureStorage: secureStorage,
+          storageKey: 'ion_identity_client_user_tokens_key',
+          fromJson: Authentication.fromJson,
+          toJson: (auth) => auth.toJson(),
+        ),
+        _privateKeysStorage = DataStorage<String>(
+          secureStorage: secureStorage,
+          storageKey: 'ion_identity_client_private_keys_key',
+          // fromJson: Assuming the stored map looks like {"value": "the_private_key"}
+          fromJson: (json) => json['value'] as String,
+          // toJson: Convert the string into a map {"value": stringValue}
+          toJson: (value) => {'value': value},
+        );
 
-  final TokenStorage _tokenStorage;
-  final PrivateKeysStorage _privateKeysStorage;
+  final DataStorage<Authentication> _tokenStorage;
+  final DataStorage<String> _privateKeysStorage;
+
+  final BehaviorSubject<List<UserToken>> _userTokensSubject = BehaviorSubject<List<UserToken>>();
+
+  Stream<List<UserToken>> get userTokens => _userTokensSubject.stream;
 
   /// Initializes both underlying storages.
   Future<void> init() async {
-    await _tokenStorage.init();
-    await _privateKeysStorage.init();
+    await Future.wait([
+      _tokenStorage.init(),
+      _privateKeysStorage.init(),
+    ]);
+    _emitCurrentTokens();
   }
 
-  // Expose TokenStorage methods:
-  Stream<List<UserToken>> get userTokens => _tokenStorage.userTokens;
-
-  UserToken? getToken({required String username}) => _tokenStorage.getToken(username: username);
+  UserToken? getToken({required String username}) {
+    final auth = _tokenStorage.getData(key: username);
+    if (auth == null) return null;
+    return UserToken(
+      username: username,
+      token: auth.token,
+      refreshToken: auth.refreshToken,
+    );
+  }
 
   Future<void> setToken({
     required String username,
     required String newToken,
-  }) =>
-      _tokenStorage.setToken(username: username, newToken: newToken);
+  }) async {
+    final currentAuth = _tokenStorage.getData(key: username) ?? Authentication.empty();
+    final updatedAuth = currentAuth.copyWith(token: newToken);
+    await _tokenStorage.setData(key: username, value: updatedAuth);
+    _emitCurrentTokens();
+  }
 
   Future<void> setTokens({
     required String username,
     required Authentication newTokens,
-  }) =>
-      _tokenStorage.setTokens(username: username, newTokens: newTokens);
+  }) async {
+    await _tokenStorage.setData(key: username, value: newTokens);
+    _emitCurrentTokens();
+  }
 
-  Future<void> removeToken({required String username}) =>
-      _tokenStorage.removeToken(username: username);
+  Future<void> removeToken({required String username}) async {
+    await _tokenStorage.removeData(key: username);
+    _emitCurrentTokens();
+  }
 
-  Future<void> clearAllTokens() => _tokenStorage.clearAllTokens();
+  Future<void> clearAllTokens() async {
+    await _tokenStorage.clearAllData();
+    _emitCurrentTokens();
+  }
 
-  // Expose PrivateKeysStorage methods:
-  Stream<List<PrivateKeyEntry>> get privateKeys => _privateKeysStorage.privateKeys;
-
-  String? getPrivateKey({required String username}) =>
-      _privateKeysStorage.getPrivateKey(username: username);
+  String? getPrivateKey({required String username}) => _privateKeysStorage.getData(key: username);
 
   Future<void> setPrivateKey({required String username, required String privateKey}) =>
-      _privateKeysStorage.setPrivateKey(username: username, privateKey: privateKey);
+      _privateKeysStorage.setData(key: username, value: privateKey);
 
   Future<void> removePrivateKey({required String username}) =>
-      _privateKeysStorage.removePrivateKey(username: username);
+      _privateKeysStorage.removeData(key: username);
 
-  Future<void> clearAllPrivateKeys() => _privateKeysStorage.clearAllPrivateKeys();
+  Future<void> clearAllPrivateKeys() => _privateKeysStorage.clearAllData();
 
   /// Removes both the user's token and private key.
   Future<void> clearAllUserData({required String username}) async {
@@ -77,9 +106,21 @@ class IdentityStorage {
     ]);
   }
 
-  /// Dispose of both streams to avoid memory leaks.
   void dispose() {
-    _tokenStorage.dispose();
-    _privateKeysStorage.dispose();
+    _userTokensSubject.close();
+  }
+
+  void _emitCurrentTokens() {
+    final data = _tokenStorage.getAllData();
+    final tokensList = data.entries.map((e) {
+      final auth = e.value;
+      return UserToken(
+        username: e.key,
+        token: auth.token,
+        refreshToken: auth.refreshToken,
+      );
+    }).toList();
+
+    _userTokensSubject.add(tokensList);
   }
 }
