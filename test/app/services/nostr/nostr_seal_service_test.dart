@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/services/nostr/nostr_seal_service.dart';
 import 'package:nostr_dart/nostr_dart.dart';
