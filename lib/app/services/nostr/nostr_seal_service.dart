@@ -11,12 +11,13 @@ abstract class NostrSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String recipientPublicKey,
+    String pubkey,
   );
 
   Future<EventMessage> decodeSeal(
     EventMessage seal,
     EventSigner signer,
+    String pubkey,
   );
 }
 
@@ -27,14 +28,14 @@ class NostrSealServiceImpl implements NostrSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String recipientPublicKey,
+    String pubkey,
   ) async {
     final encodedRumor = jsonEncode(rumor.toJson());
 
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
       signer.privateKey,
-      recipientPublicKey,
+      pubkey,
     );
 
     final createdAt = randomDateBefore(
@@ -53,11 +54,12 @@ class NostrSealServiceImpl implements NostrSealService {
   Future<EventMessage> decodeSeal(
     EventMessage seal,
     EventSigner signer,
+    String pubkey,
   ) async {
     final decryptedContent = await Nip44.decryptMessage(
       seal.content,
       signer.privateKey,
-      seal.pubkey,
+      pubkey,
     );
 
     return EventMessage.fromJson(jsonDecode(decryptedContent) as List);

@@ -11,11 +11,13 @@ import 'package:nostr_dart/nostr_dart.dart';
 abstract class NostrGiftWrapService {
   Future<EventMessage> createWrap(
     EventMessage event,
-    String recipientPublicKey,
+    String pubkey,
+    EventSigner signer,
   );
 
   Future<EventMessage> decodeWrap(
     EventMessage wrap,
+    String pubkey,
     EventSigner signer,
   );
 }
@@ -26,14 +28,13 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
   @override
   Future<EventMessage> createWrap(
     EventMessage event,
-    String recipientPublicKey,
+    String pubkey,
+    EventSigner signer,
   ) async {
-    final randomSigner = KeyStore.generate();
-
     final encryptedEvent = await Nip44.encryptMessage(
       jsonEncode(event.toJson()),
-      randomSigner.privateKey,
-      recipientPublicKey,
+      signer.privateKey,
+      pubkey,
     );
 
     final createdAt = randomDateBefore(
@@ -41,12 +42,13 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
     );
 
     return EventMessage.fromData(
-      signer: randomSigner,
+      signer: signer,
       kind: wrapKind,
       createdAt: createdAt,
       content: encryptedEvent,
       tags: [
-        [RelatedPubkey.tagName, recipientPublicKey],
+        [RelatedPubkey.tagName, pubkey],
+        ['k', '14'],
       ],
     );
   }
@@ -54,12 +56,13 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
   @override
   Future<EventMessage> decodeWrap(
     EventMessage wrap,
+    String pubkey,
     EventSigner signer,
   ) async {
     final decryptedContent = await Nip44.decryptMessage(
       wrap.content,
       signer.privateKey,
-      wrap.tags.firstWhere((tag) => tag[0] == RelatedPubkey.tagName)[1],
+      pubkey,
     );
 
     return EventMessage.fromJson(jsonDecode(decryptedContent) as List);
