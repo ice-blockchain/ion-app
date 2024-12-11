@@ -14,7 +14,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_notifier.c.g.dart';
 
-@Riverpod(dependencies: [nostrEntity])
+@Riverpod(
+  dependencies: [
+    nostrEntityProvider,
+    assetEntityProvider,
+  ],
+)
 class CreateArticleNotifier extends _$CreateArticleNotifier {
   @override
   FutureOr<void> build() {}
