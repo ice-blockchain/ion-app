@@ -61,7 +61,6 @@ import 'package:ion/app/features/protect_account/authenticator/data/model/authen
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_page.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_success.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/authenticator_setup_page.dart';
-import 'package:ion/app/features/protect_account/backup/views/components/errors/recovery_keys_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/errors/secure_account_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_options_page.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_recovery_keys_modal.dart';
