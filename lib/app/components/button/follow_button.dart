@@ -9,12 +9,15 @@ class FollowButton extends StatelessWidget {
   const FollowButton({
     required this.onPressed,
     required this.following,
+    this.followLabel,
     super.key,
   });
 
   final VoidCallback onPressed;
 
   final bool following;
+
+  final String? followLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class FollowButton extends StatelessWidget {
       type: following ? ButtonType.outlined : ButtonType.primary,
       tintColor: following ? context.theme.appColors.primaryAccent : null,
       label: Text(
-        following ? context.i18n.button_following : context.i18n.button_follow,
+        following ? context.i18n.button_following : followLabel ?? context.i18n.button_follow,
         style: context.theme.appTextThemes.caption.copyWith(
           color: following
               ? context.theme.appColors.primaryAccent

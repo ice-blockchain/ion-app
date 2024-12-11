@@ -44,7 +44,21 @@ Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
 bool isCurrentUserFollowingSelector(Ref ref, String pubkey) {
   return ref.watch(
     currentUserFollowListProvider.select(
-      (state) => state.valueOrNull?.pubkeys.contains(pubkey) ?? false,
+      (state) => state.valueOrNull?.data.list.any((followee) => followee.pubkey == pubkey) ?? false,
+    ),
+  );
+}
+
+@riverpod
+bool isCurrentUserFollowed(Ref ref, String pubkey) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return false;
+  }
+  return ref.watch(
+    followListProvider(pubkey).select(
+      (state) =>
+          state.valueOrNull?.data.list.any((followee) => followee.pubkey == currentPubkey) ?? false,
     ),
   );
 }

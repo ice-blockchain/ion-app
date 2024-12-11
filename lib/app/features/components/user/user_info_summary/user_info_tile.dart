@@ -30,12 +30,10 @@ class UserInfoTile extends StatelessWidget {
             color: color,
           ),
           SizedBox(width: 4.0.s),
-          Expanded(
+          Flexible(
             child: Text(
               title,
-              style: context.theme.appTextThemes.body2.copyWith(
-                color: color,
-              ),
+              style: context.theme.appTextThemes.body2.copyWith(color: color),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
