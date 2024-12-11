@@ -74,6 +74,15 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
     );
   }
 
+  factory PrivateDirectMessageData.fromRawContent(String content) {
+    final parsedContent = TextParser.allMatchers().parse(content);
+
+    return PrivateDirectMessageData(
+      content: parsedContent,
+      media: {},
+    );
+  }
+
   const PrivateDirectMessageData._();
 
   FutureOr<EventMessage> toEventMessage({

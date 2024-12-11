@@ -35,6 +35,7 @@ class Ed25519KeyStore with EventSigner {
   @override
   String get publicKey => hex.encode(_publicKeyBytes);
 
+  @override
   String get privateKey => hex.encode(_privateKeyBytes);
 
   final List<int> _publicKeyBytes;
