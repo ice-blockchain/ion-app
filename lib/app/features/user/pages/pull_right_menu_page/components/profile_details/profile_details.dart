@@ -8,7 +8,7 @@ import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_followers_provider.c.dart';
+import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class ProfileDetails extends ConsumerWidget {
@@ -20,7 +20,7 @@ class ProfileDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
     final userMetadataValue = ref.watch(currentUserMetadataProvider).valueOrNull;
-    final userFollowers = ref.watch(userFollowersProvider(currentPubkey));
+    final followersCount = ref.watch(followersCountProvider(currentPubkey)).valueOrNull;
     final followList = ref.watch(followListProvider(currentPubkey));
 
     return Container(
@@ -50,7 +50,7 @@ class ProfileDetails extends ConsumerWidget {
                       ),
                       ProfileDetailsCell(
                         title: context.i18n.profile_followers,
-                        value: userFollowers.valueOrNull?.length,
+                        value: followersCount,
                       ),
                     ],
                   ),
