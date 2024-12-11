@@ -19,6 +19,7 @@ import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_i
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
@@ -36,6 +37,7 @@ class ReplyInputField extends HookConsumerWidget {
     final inputContainerKey = useRef(UniqueKey());
     final focusNode = useFocusNode();
     final hasFocus = useNodeFocused(focusNode);
+    final attachedMediaNotifier = useState(<MediaFile>[]);
 
     return ScreenSideOffset.small(
       child: Column(
@@ -100,7 +102,7 @@ class ReplyInputField extends HookConsumerWidget {
             ActionsToolbar(
               actions: [
                 ToolbarImageButton(
-                  attachedMediaNotifier: useState([]),
+                  attachedMediaNotifier: attachedMediaNotifier,
                   textEditorController: textEditorController,
                 ),
                 ToolbarPollButton(textEditorController: textEditorController),

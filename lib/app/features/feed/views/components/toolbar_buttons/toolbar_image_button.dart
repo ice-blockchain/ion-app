@@ -23,7 +23,7 @@ class ToolbarImageButton extends StatelessWidget {
         if (mediaFiles != null && mediaFiles.isNotEmpty) {
           for (final mediaFile in mediaFiles) {
             attachedMediaNotifier.value.add(mediaFile);
-            // addSingleImageBlock(textEditorController, mediaFile);
+            addSingleImageBlock(textEditorController, mediaFile);
           }
         }
       },

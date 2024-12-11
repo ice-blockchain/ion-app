@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -22,7 +20,6 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_keyboard_scroll_handler.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/post/constants.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
@@ -100,48 +97,60 @@ class CreatePostModal extends HookConsumerWidget {
               child: KeyboardDismissOnTap(
                 child: SingleChildScrollView(
                   controller: scrollController,
-                  child: ScreenSideOffset.small(
-                    child: Column(
-                      children: [
-                        if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
-                        if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10.0.s),
-                          child: Row(
-                            key: textInputKey,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const CurrentUserAvatar(),
-                              SizedBox(width: 10.0.s),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 6.0.s,
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      TextEditor(
-                                        textEditorController,
-                                        placeholder: createOption.getPlaceholder(context),
+                  child: Column(
+                    children: [
+                      if (videoPath != null)
+                        ScreenSideOffset.small(
+                          child: VideoPreviewCover(videoPath: videoPath!),
+                        ),
+                      if (parentEvent != null)
+                        ScreenSideOffset.small(
+                          child: ParentEntity(eventReference: parentEvent!),
+                        ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10.0.s),
+                        child: Row(
+                          key: textInputKey,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: ScreenSideOffset.defaultSmallMargin,
+                              ),
+                              child: const CurrentUserAvatar(),
+                            ),
+                            SizedBox(width: 10.0.s),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  top: 6.0.s,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextEditor(
+                                      textEditorController,
+                                      placeholder: createOption.getPlaceholder(context),
+                                    ),
+                                    if (attachedMediaNotifier.value.isNotEmpty) ...[
+                                      SizedBox(height: 12.0.s),
+                                      _AttachedMediaPreview(
+                                        attachedMediaNotifier: attachedMediaNotifier,
                                       ),
-                                      if (attachedMediaNotifier.value.isNotEmpty) ...[
-                                        SizedBox(height: 12.0.s),
-                                        _AttachedMediaPreview(
-                                          attachedMediaNotifier: attachedMediaNotifier,
-                                        ),
-                                      ],
                                     ],
-                                  ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
-                      ],
-                    ),
+                      ),
+                      if (quotedEvent != null)
+                        ScreenSideOffset.small(
+                          child: QuotedEntity(eventReference: quotedEvent!),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -169,6 +178,7 @@ class CreatePostModal extends HookConsumerWidget {
                   textEditorController: textEditorController,
                   parentEvent: parentEvent,
                   quotedEvent: quotedEvent,
+                  attachedMedia: attachedMediaNotifier.value,
                 ),
               ),
             ),
@@ -192,7 +202,6 @@ class CreatePostModal extends HookConsumerWidget {
 class _AttachedMediaPreview extends ConsumerWidget {
   const _AttachedMediaPreview({
     required this.attachedMediaNotifier,
-    super.key,
   });
 
   final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
@@ -234,13 +243,13 @@ class _AttachedMediaPreview extends ConsumerWidget {
     final attachedMediaAspectRatio = list.isEmpty ? 0.0 : calculateAspectRatio(media: list);
     final isHorizontalPreviews = attachedMediaAspectRatio >= 1;
 
-    return Container(
-      color: Colors.yellow.withOpacity(0.3),
+    return ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: 190.0.s,
       ),
       child: ListView.separated(
         shrinkWrap: true,
+        padding: EdgeInsets.only(right: ScreenSideOffset.defaultSmallMargin),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, i) {
           final file = attachedMediaNotifier.value[i];
@@ -250,64 +259,40 @@ class _AttachedMediaPreview extends ConsumerWidget {
             return const SizedBox.shrink();
           }
 
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(12.0.s),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: 190.0.s,
-                maxWidth: 300.0.s,
-              ),
-              child: Stack(
-                children: [
-                  AspectRatio(
+          return ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: 190.0.s,
+              maxWidth: 300.0.s,
+            ),
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0.s),
+                  child: AspectRatio(
                     aspectRatio: attachedMediaAspectRatio,
                     child: Image(
                       image: AssetEntityImageProvider(
                         assetEntity,
                         isOriginal: false,
-                        // thumbnailSize: const ThumbnailSize.square(300),
                       ),
                       fit: BoxFit.cover,
                     ),
                   ),
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: IconButton(
-                      onPressed: () {
-                        attachedMediaNotifier.value = attachedMediaNotifier.value.toList()
-                          ..remove(file);
-                      },
-                      icon: Assets.svg.iconFieldClearall.icon(
-                        size: isHorizontalPreviews ? 24.0.s : 16.0.s,
-                      ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    onPressed: () {
+                      attachedMediaNotifier.value = attachedMediaNotifier.value.toList()
+                        ..remove(file);
+                    },
+                    icon: Assets.svg.iconFieldClearall.icon(
+                      size: isHorizontalPreviews ? 24.0.s : 16.0.s,
                     ),
-                  )
-                ],
-              ),
-            ),
-          );
-
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(12.0.s),
-            child: AspectRatio(
-              aspectRatio: attachedMediaAspectRatio,
-              child: Image.file(
-                File(file.path),
-                fit: BoxFit.cover,
-              ),
-
-              // switch (file.mediaType) {
-              //   MediaType.image => CachedNetworkImage(
-              //     imageUrl: mediaItem.url,
-              //     fit: BoxFit.cover,
-              //     errorWidget: (context, url, error) => const SizedBox.shrink(),
-              //   ),
-              //   MediaType.video => VideoPreview(
-              //     videoUrl: mediaItem.url,
-              //   ),
-              //   _ => const SizedBox.shrink(),
-              // },
+                  ),
+                ),
+              ],
             ),
           );
         },
