@@ -57,10 +57,9 @@ import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_mo
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_page.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/authenticator_delete_success.dart';
-import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/authenticator_setup_page.dart';
+import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/step_pages.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/errors/secure_account_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_options_page.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_recovery_keys_modal.dart';

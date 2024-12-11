@@ -12,7 +12,10 @@ class ProtectAccountRoutes {
     TypedGoRoute<CreateRecoveryKeyRoute>(path: 'recovery-keys-save'),
     TypedGoRoute<ValidateRecoveryKeyRoute>(path: 'recovery-keys-input'),
     TypedGoRoute<RecoveryKeysSuccessRoute>(path: 'recovery-keys-success'),
-    TypedGoRoute<AuthenticatorSetupRoute>(path: 'authenticator-setup/:step'),
+    TypedGoRoute<AuthenticatorSetupOptionsRoute>(path: 'authenticator-setup/options'),
+    TypedGoRoute<AuthenticatorSetupInstructionsRoute>(path: 'authenticator-setup/instructions'),
+    TypedGoRoute<AuthenticatorSetupCodeConfirmRoute>(path: 'authenticator-setup/confirmation'),
+    TypedGoRoute<AuthenticatorSetupSuccessRoute>(path: 'authenticator-setup/success'),
     TypedGoRoute<AuthenticatorDeleteRoute>(path: 'authenticator-delete'),
     TypedGoRoute<AuthenticatorDeleteSuccessRoute>(path: 'authenticator-delete-success'),
     TypedGoRoute<EmailSetupRoute>(path: 'email-setup/:step'),
@@ -89,14 +92,36 @@ class RecoveryKeysSuccessRoute extends BaseRouteData {
         );
 }
 
-class AuthenticatorSetupRoute extends BaseRouteData {
-  AuthenticatorSetupRoute({required this.step})
+class AuthenticatorSetupOptionsRoute extends BaseRouteData {
+  AuthenticatorSetupOptionsRoute()
       : super(
-          child: AuthenticatorSetupPage(step),
+          child: const AuthenticatorSetupOptionsPage(),
           type: IceRouteType.bottomSheet,
         );
+}
 
-  final AuthenticatorSetupSteps step;
+class AuthenticatorSetupInstructionsRoute extends BaseRouteData {
+  AuthenticatorSetupInstructionsRoute()
+      : super(
+          child: const AuthenticatorSetupInstructionsPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class AuthenticatorSetupCodeConfirmRoute extends BaseRouteData {
+  AuthenticatorSetupCodeConfirmRoute()
+      : super(
+          child: const AuthenticatorSetupCodeConfirmPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class AuthenticatorSetupSuccessRoute extends BaseRouteData {
+  AuthenticatorSetupSuccessRoute()
+      : super(
+          child: const AuthenticatorSetupSuccessPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class AuthenticatorDeleteRoute extends BaseRouteData {
