@@ -129,10 +129,12 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
       }
 
       if (next.hasError) {
-        showSimpleBottomSheet<void>(
-          context: ref.context,
-          child: const TwoFaTryAgainPage(),
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showSimpleBottomSheet<void>(
+            context: ref.context,
+            child: const TwoFaTryAgainPage(),
+          );
+        });
         return;
       }
 
