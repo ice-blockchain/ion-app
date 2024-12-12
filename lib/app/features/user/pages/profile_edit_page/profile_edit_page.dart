@@ -73,15 +73,15 @@ class ProfileEditPage extends HookConsumerWidget {
                                     ProfileAvatar(pubkey: pubkey, showAvatarPicker: true),
                                     SizedBox(height: paddingValue),
                                     NameInput(
-                                      initialValue: userMetadata.data.displayName,
-                                      onChanged: (text) =>
-                                          update(draftRef.value.copyWith(displayName: text)),
-                                    ),
-                                    SizedBox(height: paddingValue),
-                                    NicknameInput(
                                       initialValue: userMetadata.data.name,
                                       onChanged: (text) =>
                                           update(draftRef.value.copyWith(name: text)),
+                                    ),
+                                    SizedBox(height: paddingValue),
+                                    NicknameInput(
+                                      initialValue: userMetadata.data.displayName,
+                                      onChanged: (text) =>
+                                          update(draftRef.value.copyWith(displayName: text)),
                                     ),
                                     SizedBox(height: paddingValue),
                                     BioInput(
