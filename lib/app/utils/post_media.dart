@@ -5,17 +5,17 @@ import 'dart:math';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class AspectRatioProvider {
-  const AspectRatioProvider._(this.aspectRatio);
+class MediaAspectRatio {
+  const MediaAspectRatio._(this.aspectRatio);
 
-  factory AspectRatioProvider.fromMediaFile(MediaFile file) {
+  factory MediaAspectRatio.fromMediaFile(MediaFile file) {
     final aspectRatio =
         file.height != null && file.width != null ? file.width! / file.height! : null;
-    return AspectRatioProvider._(aspectRatio);
+    return MediaAspectRatio._(aspectRatio);
   }
 
-  factory AspectRatioProvider.fromMediaAttachment(MediaAttachment mediaAttachment) {
-    return AspectRatioProvider._(mediaAttachment.aspectRatio);
+  factory MediaAspectRatio.fromMediaAttachment(MediaAttachment mediaAttachment) {
+    return MediaAspectRatio._(mediaAttachment.aspectRatio);
   }
 
   final double? aspectRatio;
@@ -25,7 +25,7 @@ class AspectRatioProvider {
 ///
 /// The aspect ratio is calculated by finding an average of the
 /// dominant category (horizontal or vertical).
-double calculatePostImageAspectRatio({required Iterable<AspectRatioProvider> ratioProviders}) {
+double calculatePostImageAspectRatio({required Iterable<MediaAspectRatio> ratioProviders}) {
   const minVerticalMediaAspectRatio = 0.85;
   const maxHorizontalMediaAspectRatio = 1.63;
 
@@ -36,7 +36,7 @@ double calculatePostImageAspectRatio({required Iterable<AspectRatioProvider> rat
   final horizontalRatios = <double>[];
   final verticalRatios = <double>[];
 
-  for (final AspectRatioProvider(:aspectRatio) in ratioProviders) {
+  for (final MediaAspectRatio(:aspectRatio) in ratioProviders) {
     if (aspectRatio == null) {
       horizontalRatios.add(maxHorizontalMediaAspectRatio);
     } else if (aspectRatio >= 1) {

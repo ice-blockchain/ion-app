@@ -26,7 +26,7 @@ class AttachedMediaPreview extends ConsumerWidget {
     final attachedMediaAspectRatio = list.isEmpty
         ? 0.0
         : calculatePostImageAspectRatio(
-            ratioProviders: list.map(AspectRatioProvider.fromMediaFile),
+            ratioProviders: list.map(MediaAspectRatio.fromMediaFile),
           );
     final isHorizontalPreviews = attachedMediaAspectRatio >= 1;
 
