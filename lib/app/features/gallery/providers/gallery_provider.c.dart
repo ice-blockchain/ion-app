@@ -20,6 +20,18 @@ Future<AssetEntity?> assetEntity(Ref ref, String id) {
 }
 
 @riverpod
+Future<AssetEntity?> latestGalleryPreview(Ref ref) async {
+  final mediaService = ref.watch(mediaServiceProvider);
+  final mediaData = await mediaService.fetchGalleryMedia(
+    page: 0,
+    size: 1,
+    type: MediaPickerType.image,
+  );
+
+  return await ref.watch(assetEntityProvider(mediaData.first.path).future);
+}
+
+@riverpod
 Future<String?> assetFilePath(Ref ref, String assetId) async {
   final assetEntity = await ref.watch(assetEntityProvider(assetId).future);
 

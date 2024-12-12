@@ -56,3 +56,6 @@ fastlane/keys
 
 # Third-party tools
 .cursorrules
+
+# FVM Version Cache
+.fvm/
