@@ -612,7 +612,6 @@
   "notification_article_published": "Your article has been published",
   "notification_reply_sent": "Your reply has been sent",
   "notification_repost_successful": "Successfully reposted",
-  "notification_post_successful": "Post successfully created",
   "chat_groups_joined": "Joined",
   "chat_groups_explore": "Explore",
   "chat_groups_subscribed": "Subscribed",

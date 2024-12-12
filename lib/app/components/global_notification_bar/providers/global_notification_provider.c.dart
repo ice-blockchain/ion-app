@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:ion/app/components/global_notification_bar/models/global_notification_data.c.dart';
+import 'package:ion/app/components/global_notification_bar/models/global_notification_data.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_state.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,7 +20,7 @@ class GlobalNotification extends _$GlobalNotification {
 
     _timer?.cancel();
 
-    if (data is! GlobalNotificationLoading) {
+    if (data.status != NotificationStatus.loading) {
       _timer = Timer(const Duration(seconds: 3), () {
         state = state.copyWith(isShow: false);
       });

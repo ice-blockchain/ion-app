@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/global_notification_bar/models/global_notification_data.c.dart';
+import 'package:ion/app/components/global_notification_bar/models/global_notification_data.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_state.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -91,17 +91,17 @@ class GlobalNotificationBar extends HookConsumerWidget {
   void _setupListeners(WidgetRef ref) {
     ref
       ..listen(createPostNotifierProvider, (_, next) {
-        _handleNotification(ref, notifier: next, contentType: ContentType.post);
+        _handleNotification(ref, notifier: next, type: NotificationContentType.post);
       })
       ..listen(repostNotifierProvider, (previous, next) {
-        _handleNotification(ref, notifier: next, contentType: ContentType.repost);
+        _handleNotification(ref, notifier: next, type: NotificationContentType.repost);
       })
       ..listen<StoryCameraState>(storyCameraControllerProvider, (previous, next) {
         if (next is StoryCameraUploading) {
           _handleNotification(
             ref,
             notifier: const AsyncValue.loading(),
-            contentType: ContentType.story,
+            type: NotificationContentType.story,
           );
         }
 
@@ -109,7 +109,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
           _handleNotification(
             ref,
             notifier: const AsyncValue.data(null),
-            contentType: ContentType.story,
+            type: NotificationContentType.story,
           );
         }
       });
@@ -118,22 +118,17 @@ class GlobalNotificationBar extends HookConsumerWidget {
   void _handleNotification(
     WidgetRef ref, {
     required AsyncValue<void> notifier,
-    required ContentType contentType,
+    required NotificationContentType type,
   }) {
-    if (notifier.isLoading) {
+    GlobalNotificationData? notificationData;
+
+    if (notifier.isLoading) notificationData = type.loading();
+    if (notifier.hasValue) notificationData = type.ready();
+
+    if (notificationData != null) {
       ref.read(globalNotificationProvider.notifier).show(
-            GlobalNotificationData.loading(contentType),
+            notificationData,
           );
-    } else if (notifier.hasValue) {
-      if (contentType == ContentType.reply || contentType == ContentType.repost) {
-        ref.read(globalNotificationProvider.notifier).show(
-              GlobalNotificationData.success(contentType),
-            );
-      } else {
-        ref.read(globalNotificationProvider.notifier).show(
-              GlobalNotificationData.published(contentType),
-            );
-      }
     }
   }
 }
