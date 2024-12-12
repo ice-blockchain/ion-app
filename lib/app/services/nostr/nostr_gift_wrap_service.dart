@@ -13,6 +13,7 @@ abstract class NostrGiftWrapService {
     EventMessage event,
     String pubkey,
     EventSigner signer,
+    int kind,
   );
 
   Future<EventMessage> decodeWrap(
@@ -30,6 +31,7 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
     EventMessage event,
     String pubkey,
     EventSigner signer,
+    int kind,
   ) async {
     final encryptedEvent = await Nip44.encryptMessage(
       jsonEncode(event.toJson().last),
@@ -48,7 +50,7 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
       content: encryptedEvent,
       tags: [
         [RelatedPubkey.tagName, pubkey],
-        ['k', '14'],
+        ['k', kind.toString()],
       ],
     );
   }

@@ -25,6 +25,7 @@ void main() {
         event,
         pubkey,
         signer,
+        PrivateDirectMessageEntity.kind,
       );
 
       expect(wrap.kind, equals(1059));
@@ -45,6 +46,7 @@ void main() {
         event,
         pubkey,
         signer,
+        PrivateDirectMessageEntity.kind,
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
