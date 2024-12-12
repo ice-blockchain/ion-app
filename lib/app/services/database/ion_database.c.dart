@@ -4,7 +4,8 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -19,7 +20,7 @@ class IONDatabaseNotifier extends _$IONDatabaseNotifier {
   @override
   void build() {}
 
-  Future<int> insertEventMessage(EventMessage eventMessage) {
+  Future<void> insertEventMessage(EventMessage eventMessage) {
     return _ionDatabase.insertEventMessage(eventMessage);
   }
 
@@ -38,6 +39,9 @@ class IONDatabaseNotifier extends _$IONDatabaseNotifier {
 class IONDatabase extends _$IONDatabase {
   IONDatabase() : super(_openConnection());
 
+  // For testing executor
+  IONDatabase.test(super.e);
+
   @override
   int get schemaVersion => 1;
 
@@ -50,86 +54,107 @@ class IONDatabase extends _$IONDatabase {
     required EventMessage eventMessage,
     bool isDeleted = false,
   }) {
+    final conversationMessage =
+        PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return into(conversationMessagesTable).insert(
       ConversationMessagesTableData(
         isDeleted: isDeleted,
         conversationId: conversationId,
-        eventMessageId: eventMessage.id,
-        createdAt: eventMessage.createdAt,
-        subject: eventMessage.subject,
-        pubKeys: eventMessage.pubkeysMask,
+        eventMessageId: conversationMessage.id,
+        createdAt: conversationMessage.createdAt,
+        pubKeys: conversationMessage.allPubkeysMask,
+        subject: conversationMessage.data.relatedSubject?.value,
       ),
       mode: InsertMode.insertOrReplace,
     );
   }
 
-  Future<String?> _lookupConversationByPubkeys(
-    EventMessage eventMessage,
-  ) async {
-    final conversationsWithSameParticipants = await (select(conversationMessagesTable)
-          ..where(
-            (table) => table.pubKeys.equals(eventMessage.pubkeysMask),
-          )
-          ..limit(1))
-        .get();
-
-    if (conversationsWithSameParticipants.isEmpty) {
-      // Check if there are conversations with the same subject but different pubkeys
-      // (this means that amount of participants in conversation was changed)
-      final subject = eventMessage.subject;
-      if (subject != null) {
-        final conversationsWithChangedParticipants = await (select(conversationMessagesTable)
-              ..where(
-                (table) => table.subject.equals(subject),
-              )
-              ..limit(1))
-            .get();
-
-        return conversationsWithChangedParticipants.isEmpty
-            ? null
-            : conversationsWithChangedParticipants.first.conversationId;
-      }
-      return null;
-    }
-
-    return conversationsWithSameParticipants.first.conversationId;
-  }
-
-  Future<int> insertEventMessage(EventMessage eventMessage) async {
-    final i = await into(eventMessagesTable).insert(
+  Future<void> insertEventMessage(EventMessage eventMessage) async {
+    await into(eventMessagesTable).insert(
       EventMessageTableData.fromEventMessage(eventMessage),
       mode: InsertMode.insertOrReplace,
     );
 
     await _updateConversationMessagesTable(eventMessage);
-
-    return i;
   }
 
   // Inserts new conversation id or returns existing one
   Future<void> _updateConversationMessagesTable(
     EventMessage eventMessage,
   ) async {
-    if (eventMessage.kind == 14) {
+    if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
       // This is the first message of the one-to-one conversation OR
       // change of the group conversation subject
-      if (eventMessage.content.isEmpty) {
+      final conversationMessage =
+          PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+      final conversationIdByPubkeys =
+          await _lookupConversationByPubkeys(conversationMessage);
+      final conversationIdBySubject =
+          await _lookupConversationBySubject(conversationMessage);
+
+      // Existing conversation (one-to-one or group)
+      if (conversationIdByPubkeys != null) {
+        await insertConversationData(
+          eventMessage: eventMessage,
+          conversationId: conversationIdByPubkeys,
+        );
+        // Existing group conversation (change of participants)
+      } else if (conversationIdBySubject != null) {
+        await insertConversationData(
+          eventMessage: eventMessage,
+          conversationId: conversationIdBySubject,
+        );
+      } else if (eventMessage.content.isEmpty) {
         final uuid = const Uuid().v1();
         await insertConversationData(
-          conversationId: uuid,
           eventMessage: eventMessage,
+          conversationId: uuid,
         );
       } else {
-        // This is next message of existing conversation
-        final conversationId = await _lookupConversationByPubkeys(eventMessage);
-        if (conversationId != null) {
-          await insertConversationData(
-            conversationId: conversationId,
-            eventMessage: eventMessage,
-          );
-        }
+        throw ConversationIsNotFoundException();
       }
     }
+  }
+
+  // Check if there are conversations with the same pubkeys
+  Future<String?> _lookupConversationByPubkeys(
+    PrivateDirectMessageEntity conversationMessage,
+  ) async {
+    final conversationsWithSameParticipants =
+        await (select(conversationMessagesTable)
+              ..where(
+                (table) =>
+                    table.pubKeys.equals(conversationMessage.allPubkeysMask),
+              )
+              ..limit(1))
+            .get();
+
+    if (conversationsWithSameParticipants.isNotEmpty) {
+      return conversationsWithSameParticipants.first.conversationId;
+    }
+
+    return null;
+  }
+
+  // Check if there are conversations with the same subject but different pubkeys
+  // (this means that amount of participants in conversation was changed)
+  Future<String?> _lookupConversationBySubject(
+    PrivateDirectMessageEntity conversationMessage,
+  ) async {
+    final subject = conversationMessage.data.relatedSubject?.value;
+
+    if (subject != null) {
+      final conversationWithChangedParticipants =
+          await (select(conversationMessagesTable)
+                ..where((table) => table.subject.equals(subject))
+                ..limit(1))
+              .get();
+
+      if (conversationWithChangedParticipants.isNotEmpty) {
+        return conversationWithChangedParticipants.first.conversationId;
+      }
+    }
+    return null;
   }
 
   Future<List<EventMessage>> getAllConversations() async {
@@ -139,8 +164,9 @@ class IONDatabase extends _$IONDatabase {
       readsFrom: {conversationMessagesTable},
     ).get();
 
-    final lastConversationMessagesIds =
-        uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
+    final lastConversationMessagesIds = uniqueConversationRows
+        .map((row) => row.data['event_message_id'] as String)
+        .toList();
 
     final lastConversationEventMessages = (await (select(eventMessagesTable)
               ..where((table) => table.id.isIn(lastConversationMessagesIds)))
@@ -282,119 +308,3 @@ class EventMessageTableData implements Insertable<EventMessageTableData> {
     );
   }
 }
-
-// Test data
-/*
- final ionDatabase = ref.watch(ionDatabaseProvider).requireValue;
-
-  // Initial message for one-to-one conversation
-  await ionDatabase.insertEventMessage(
-    EventMessage(
-      id: '0',
-      pubkey: 'pubkey0',
-      kind: 14,
-      createdAt: DateTime.now(),
-      tags: const [
-        ['p', 'pubkey1'],
-      ],
-      content: '',
-      sig: null,
-    ),
-  );
-
-    // Next message for the one-to-one conversation
-  await ionDatabase.insertEventMessage(
-    EventMessage(
-      id: '1',
-      pubkey: 'pubkey1',
-      kind: 14,
-      createdAt: DateTime.now(),
-      tags: const [
-        ['p', 'pubkey1'],
-      ],
-      content: 'Message 1',
-      sig: null,
-    ),
-  );
-
-    
-  // Initial message for the group conversation
-  await ionDatabase.insertEventMessage(
-    EventMessage(
-      id: '0',
-      pubkey: 'pubkey0',
-      kind: 14,
-      createdAt: DateTime.now(),
-      tags: const [
-        ['p', 'pubkey1'],
-        ['p', 'pubkey2'],
-        ['p', 'pubkey3'],
-        ['p', 'pubkey4'],
-        ['subject', 'Test group'],
-      ],
-      content: '',
-      sig: null,
-    ),
-  );
-
-  // Next message for the group conversation
-  await ionDatabase.insertEventMessage(
-    EventMessage(
-      id: '1',
-      pubkey: 'pubkey1',
-      kind: 14,
-      createdAt: DateTime.now(),
-      tags: const [
-        ['p', 'pubkey1'],
-        ['p', 'pubkey2'],
-        ['p', 'pubkey3'],
-        ['p', 'pubkey4'],
-        ['subject', 'Test group'],
-      ],
-      content: 'Message 1',
-      sig: null,
-    ),
-  );
-
-  // Change of the group conversation subject
-  await ionDatabase.insertEventMessage(
-    EventMessage(
-      id: '2',
-      pubkey: 'pubkey1',
-      kind: 14,
-      createdAt: DateTime.now(),
-      tags: const [
-        ['p', 'pubkey1'],
-        ['p', 'pubkey2'],
-        ['p', 'pubkey3'],
-        ['p', 'pubkey4'],
-        ['subject', 'Test group change'],
-      ],
-      content: 'Change of the group conversation subject',
-      sig: null,
-    ),
-  );
-
-  // Change of the group conversation participants
-  await ionDatabase.insertEventMessage(
-    EventMessage(
-      id: '3',
-      pubkey: 'pubkey1',
-      kind: 14,
-      createdAt: DateTime.now(),
-      tags: const [
-        ['p', 'pubkey1'],
-        ['p', 'pubkey2'],
-        ['p', 'pubkey3'],
-        ['p', 'pubkey4'],
-        ['p', 'pubkey5'],
-        ['subject', 'Test group change'],
-      ],
-      content: 'Change of the group conversation participants',
-      sig: null,
-    ),
-  );
-
-
-
-*/

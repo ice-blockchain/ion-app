@@ -68,7 +68,8 @@ class UnknownEventException extends IONException {
 }
 
 class IncorrectEventTagException extends IONException {
-  IncorrectEventTagException({required String tag}) : super(10013, 'Incorrect event tag $tag');
+  IncorrectEventTagException({required String tag})
+      : super(10013, 'Incorrect event tag $tag');
 }
 
 class QuillParseException extends IONException {
@@ -87,7 +88,8 @@ class EventNotFoundException extends IONException {
 }
 
 class AssetEntityFileNotFoundException extends IONException {
-  AssetEntityFileNotFoundException() : super(10018, 'Asset entity file not found');
+  AssetEntityFileNotFoundException()
+      : super(10018, 'Asset entity file not found');
 }
 
 class UnknownEventCountResultType extends IONException {
@@ -129,19 +131,23 @@ class FileUploadException extends IONException {
 }
 
 class UnknownFileResolutionException extends IONException {
-  UnknownFileResolutionException() : super(10026, 'Unknown upload file resolution');
+  UnknownFileResolutionException()
+      : super(10026, 'Unknown upload file resolution');
 }
 
 class CompressImageException extends IONException {
-  CompressImageException(dynamic error) : super(10027, 'Compress image exception: $error');
+  CompressImageException(dynamic error)
+      : super(10027, 'Compress image exception: $error');
 }
 
 class EntityNotFoundException extends IONException {
-  EntityNotFoundException(String eventId) : super(10028, 'Entity not found $eventId');
+  EntityNotFoundException(String eventId)
+      : super(10028, 'Entity not found $eventId');
 }
 
 class CompressVideoException extends IONException {
-  CompressVideoException(dynamic error) : super(10029, 'Failed to compress video: $error');
+  CompressVideoException(dynamic error)
+      : super(10029, 'Failed to compress video: $error');
 }
 
 class CompressAudioException extends IONException {
@@ -149,19 +155,28 @@ class CompressAudioException extends IONException {
 }
 
 class CompressAudioToWavException extends IONException {
-  CompressAudioToWavException() : super(10031, 'Failed to convert audio to wav.');
+  CompressAudioToWavException()
+      : super(10031, 'Failed to convert audio to wav.');
 }
 
 class ExtractThumbnailException extends IONException {
-  ExtractThumbnailException(dynamic error) : super(10032, 'Failed to extract thumbnail: $error');
+  ExtractThumbnailException(dynamic error)
+      : super(10032, 'Failed to extract thumbnail: $error');
 }
 
 class CompressWithBrotliException extends IONException {
-  CompressWithBrotliException() : super(10033, 'Failed to compress file with Brotli.');
+  CompressWithBrotliException()
+      : super(10033, 'Failed to compress file with Brotli.');
 }
 
 class DecompressBrotliException extends IONException {
-  DecompressBrotliException() : super(10034, 'Failed to decompress Brotli file.');
+  DecompressBrotliException()
+      : super(10034, 'Failed to decompress Brotli file.');
+}
+
+class ConversationIsNotFoundException extends IONException {
+  ConversationIsNotFoundException()
+      : super(10035, 'Failed to find conversation');
 }
 
 class VerifyIdentityException extends IONException {
