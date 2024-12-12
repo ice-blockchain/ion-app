@@ -66,16 +66,6 @@ class PostSubmitButton extends HookConsumerWidget {
         final imageIds = attachedMedia.map((e) => e.path).toList();
         final operations = textEditorController.document.toDelta().operations;
 
-        // final operations = <Operation>[];
-        // for (final operation in textEditorController.document.toDelta().operations) {
-        //   final data = operation.data;
-        //   if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
-        //     imageIds.add(data[textEditorSingleImageKey] as String);
-        //   } else {
-        //     operations.add(operation);
-        //   }
-        // }
-
         await ref.read(createPostNotifierProvider.notifier).create(
               content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
               parentEvent: parentEvent,
