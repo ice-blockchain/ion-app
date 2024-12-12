@@ -7,8 +7,8 @@ import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
-class ProfileAbout extends HookConsumerWidget {
-  const ProfileAbout({
+class UserAbout extends HookConsumerWidget {
+  const UserAbout({
     required this.pubkey,
     super.key,
   });
