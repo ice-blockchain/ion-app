@@ -52,16 +52,12 @@ enum NotificationContentType {
         type: this,
       );
 
-  GlobalNotificationData ready() =>
-      this == NotificationContentType.reply || this == NotificationContentType.repost
-          ? GlobalNotificationData(
-              status: NotificationStatus.success,
-              type: this,
-            )
-          : GlobalNotificationData(
-              status: NotificationStatus.published,
-              type: this,
-            );
+  GlobalNotificationData ready() => GlobalNotificationData(
+        status: this == NotificationContentType.repost
+            ? NotificationStatus.success
+            : NotificationStatus.published,
+        type: this,
+      );
 
   String getMessage(BuildContext context, NotificationStatus state) {
     final locale = context.i18n;
@@ -71,17 +67,18 @@ enum NotificationContentType {
           story => locale.notification_story_loading,
           post => locale.notification_post_loading,
           article => locale.notification_article_loading,
-          _ => throw ArgumentError('No loading state for $this'),
+          reply => locale.notification_reply_loading,
+          repost => locale.notification_repost_loading,
         },
       NotificationStatus.published => switch (this) {
           video => locale.notification_video_published,
           story => locale.notification_story_published,
           post => locale.notification_post_published,
           article => locale.notification_article_published,
-          _ => throw ArgumentError('No published state for $this'),
+          reply => locale.notification_reply_published,
+          repost => throw ArgumentError('No published state for $this'),
         },
       NotificationStatus.success => switch (this) {
-          reply => locale.notification_reply_sent,
           repost => locale.notification_repost_successful,
           _ => throw ArgumentError('No success state for $this'),
         },
