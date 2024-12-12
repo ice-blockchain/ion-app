@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/models/global_notification_data.c.dart';
-import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.dart';
+import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
+import 'package:ion/app/components/global_notification_bar/providers/global_notification_state.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
@@ -34,7 +35,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
 
     _controlAnimation(notificationState, animation, controller);
 
-    final data = notificationState?.data;
+    final data = notificationState.data;
 
     if (data == null) {
       return const SizedBox.shrink();
