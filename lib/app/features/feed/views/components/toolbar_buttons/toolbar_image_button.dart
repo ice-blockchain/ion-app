@@ -6,46 +6,73 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/cu
 import 'package:ion/app/features/feed/views/components/text_editor/components/gallery_permission_button.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
+abstract class ToolbarImageButtonDelegate {
+  void onMediaSelected(List<MediaFile>? mediaFiles) {
+    if (mediaFiles != null && mediaFiles.isNotEmpty) {
+      handleSelectedMedia(mediaFiles);
+    }
+  }
+
+  void handleSelectedMedia(List<MediaFile> files);
+}
+
+///
+/// Handles and stores attached media files using a [attachedMediaNotifier].
+///
+class AttachedMediaHandler extends ToolbarImageButtonDelegate {
+  AttachedMediaHandler(this._attachedMediaNotifier);
+
+  final ValueNotifier<List<MediaFile>> _attachedMediaNotifier;
+
+  @override
+  void handleSelectedMedia(List<MediaFile> files) {
+    files.forEach(_attachedMediaNotifier.value.add);
+  }
+}
+
+///
+/// Integrates selected media into a text using single image block and QuillController.
+///
+class QuillControllerHandler extends ToolbarImageButtonDelegate {
+  QuillControllerHandler(this._textEditorController);
+
+  final QuillController _textEditorController;
+
+  @override
+  void handleSelectedMedia(List<MediaFile> files) {
+    for (final file in files) {
+      final index = _textEditorController.selection.baseOffset;
+      _textEditorController
+        ..replaceText(
+          index,
+          0,
+          TextEditorSingleImageEmbed.image(file.path),
+          TextSelection.collapsed(
+            offset: _textEditorController.document.length,
+          ),
+        )
+        ..replaceText(
+          index + 1,
+          0,
+          '\n',
+          TextSelection.collapsed(offset: _textEditorController.document.length),
+        );
+    }
+  }
+}
+
 class ToolbarImageButton extends StatelessWidget {
   const ToolbarImageButton({
-    required this.textEditorController,
-    required this.attachedMediaNotifier,
+    required this.delegate,
     super.key,
   });
 
-  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
-  final QuillController textEditorController;
+  final ToolbarImageButtonDelegate delegate;
 
   @override
   Widget build(BuildContext context) {
     return GalleryPermissionButton(
-      onMediaSelected: (mediaFiles) {
-        if (mediaFiles != null && mediaFiles.isNotEmpty) {
-          for (final mediaFile in mediaFiles) {
-            attachedMediaNotifier.value.add(mediaFile);
-            addSingleImageBlock(textEditorController, mediaFile);
-          }
-        }
-      },
+      onMediaSelected: delegate.onMediaSelected,
     );
-  }
-
-  void addSingleImageBlock(QuillController textEditorController, MediaFile mediaFile) {
-    final index = textEditorController.selection.baseOffset;
-    textEditorController
-      ..replaceText(
-        index,
-        0,
-        TextEditorSingleImageEmbed.image(mediaFile.path),
-        TextSelection.collapsed(
-          offset: textEditorController.document.length,
-        ),
-      )
-      ..replaceText(
-        index + 1,
-        0,
-        '\n',
-        TextSelection.collapsed(offset: textEditorController.document.length),
-      );
   }
 }

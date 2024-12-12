@@ -164,10 +164,8 @@ class CreatePostModal extends HookConsumerWidget {
               key: actionsToolbarKey,
               child: ActionsToolbar(
                 actions: [
-                  // ToolbarImageButton(textEditorController: textEditorController),
                   ToolbarImageButton(
-                    textEditorController: textEditorController,
-                    attachedMediaNotifier: attachedMediaNotifier,
+                    delegate: AttachedMediaHandler(attachedMediaNotifier),
                   ),
                   ToolbarPollButton(textEditorController: textEditorController),
                   ToolbarRegularButton(textEditorController: textEditorController),
