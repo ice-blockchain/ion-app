@@ -54,8 +54,7 @@ class IONDatabase extends _$IONDatabase {
     required EventMessage eventMessage,
     bool isDeleted = false,
   }) {
-    final conversationMessage =
-        PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return into(conversationMessagesTable).insert(
       ConversationMessagesTableData(
         isDeleted: isDeleted,
@@ -122,14 +121,12 @@ class IONDatabase extends _$IONDatabase {
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
-    final conversationsWithSameParticipants =
-        await (select(conversationMessagesTable)
-              ..where(
-                (table) =>
-                    table.pubKeys.equals(conversationMessage.allPubkeysMask),
-              )
-              ..limit(1))
-            .get();
+    final conversationsWithSameParticipants = await (select(conversationMessagesTable)
+          ..where(
+            (table) => table.pubKeys.equals(conversationMessage.allPubkeysMask),
+          )
+          ..limit(1))
+        .get();
 
     if (conversationsWithSameParticipants.isNotEmpty) {
       return conversationsWithSameParticipants.first.conversationId;
@@ -146,11 +143,10 @@ class IONDatabase extends _$IONDatabase {
     final subject = conversationMessage.data.relatedSubject?.value;
 
     if (subject != null) {
-      final conversationWithChangedParticipants =
-          await (select(conversationMessagesTable)
-                ..where((table) => table.subject.equals(subject))
-                ..limit(1))
-              .get();
+      final conversationWithChangedParticipants = await (select(conversationMessagesTable)
+            ..where((table) => table.subject.equals(subject))
+            ..limit(1))
+          .get();
 
       if (conversationWithChangedParticipants.isNotEmpty) {
         return conversationWithChangedParticipants.first.conversationId;
