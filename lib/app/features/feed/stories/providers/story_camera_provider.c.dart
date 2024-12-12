@@ -3,8 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.c.dart';
-import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
@@ -56,15 +54,9 @@ class StoryCameraController extends _$StoryCameraController {
 
   Future<void> publishStory() async {
     state = const StoryCameraState.uploading();
-
-    final notificationController = ref.read(contentNotificationControllerProvider.notifier)
-      ..showLoading(ContentType.story);
-
     await Future<void>.delayed(const Duration(seconds: 2));
 
     state = const StoryCameraState.published();
-
-    notificationController.showPublished(ContentType.story);
   }
 
   Future<void> toggleFlash() async {

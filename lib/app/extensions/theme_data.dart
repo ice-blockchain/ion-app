@@ -10,4 +10,8 @@ extension AppThemeExtension on ThemeData {
 
   /// Usage example: Theme.of(context).appTextThemes;
   AppTextThemesExtension get appTextThemes => extension<AppTextThemesExtension>()!;
+
+  /// Flutter returns null if extension is not initialized, so we need to check it before using it.
+  bool get isInitialized =>
+      extension<AppColorsExtension>() != null && extension<AppTextThemesExtension>() != null;
 }

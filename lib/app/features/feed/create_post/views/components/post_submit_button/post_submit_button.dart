@@ -9,8 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
-import 'package:ion/app/features/feed/content_notification/data/models/content_notification_data.c.dart';
-import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
@@ -25,7 +23,6 @@ class PostSubmitButton extends HookConsumerWidget {
     super.key,
     this.parentEvent,
     this.quotedEvent,
-    this.videoPath,
   });
 
   final QuillController textEditorController;
@@ -33,8 +30,6 @@ class PostSubmitButton extends HookConsumerWidget {
   final EventReference? parentEvent;
 
   final EventReference? quotedEvent;
-
-  final String? videoPath; //TODO: remove and get from provider or controller
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,9 +82,6 @@ class PostSubmitButton extends HookConsumerWidget {
           if (ref.context.mounted) {
             ref.context.pop();
           }
-          ref
-              .read(contentNotificationControllerProvider.notifier)
-              .showSuccess(videoPath != null ? ContentType.video : ContentType.post);
         }
       },
     );
