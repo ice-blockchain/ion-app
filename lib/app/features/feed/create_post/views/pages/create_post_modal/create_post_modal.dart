@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -13,6 +11,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/attached_media_preview_list.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/collaple_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/current_user_avatar.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
@@ -20,20 +19,16 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_keyboard_scroll_handler.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
-import 'package:ion/app/features/feed/views/components/post/constants.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 import 'package:ion/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
-import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/generated/assets.gen.dart';
-import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
 class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({
@@ -135,7 +130,7 @@ class CreatePostModal extends HookConsumerWidget {
                                     ),
                                     if (attachedMediaNotifier.value.isNotEmpty) ...[
                                       SizedBox(height: 12.0.s),
-                                      _AttachedMediaPreview(
+                                      AttachedMediaPreview(
                                         attachedMediaNotifier: attachedMediaNotifier,
                                       ),
                                     ],
@@ -192,110 +187,6 @@ class CreatePostModal extends HookConsumerWidget {
       child: CancelCreationModal(
         title: context.i18n.cancel_creation_post_title,
         onCancel: () => Navigator.of(context).pop(),
-      ),
-    );
-  }
-}
-
-class _AttachedMediaPreview extends ConsumerWidget {
-  const _AttachedMediaPreview({
-    required this.attachedMediaNotifier,
-  });
-
-  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final list = attachedMediaNotifier.value;
-
-    // TODO: Refactor copy/paste from PostMedia.calculateAspectRatio.
-    // Should be one utility
-    double calculateAspectRatio({required List<MediaFile> media}) {
-      if (media.isEmpty) {
-        return 0;
-      }
-
-      final horizontalRatios = <double>[];
-      final verticalRatios = <double>[];
-
-      // for (final MediaAttachment(:aspectRatio) in media) {
-      for (final MediaFile(:width, :height) in media) {
-        final aspectRatio = height != null && width != null ? width / height : 0.0;
-
-        aspectRatio < 1
-            ? verticalRatios.add(
-                max(PostConstants.minVerticalMediaAspectRatio, aspectRatio),
-              )
-            : horizontalRatios.add(
-                min(PostConstants.maxHorizontalMediaAspectRatio, aspectRatio),
-              );
-      }
-
-      final ratios =
-          horizontalRatios.length > verticalRatios.length ? horizontalRatios : verticalRatios;
-
-      final ratio = ratios.reduce((a, b) => a + b) / ratios.length;
-      return ratio;
-    }
-
-    final attachedMediaAspectRatio = list.isEmpty ? 0.0 : calculateAspectRatio(media: list);
-    final isHorizontalPreviews = attachedMediaAspectRatio >= 1;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: 190.0.s,
-      ),
-      child: ListView.separated(
-        shrinkWrap: true,
-        padding: EdgeInsets.only(right: ScreenSideOffset.defaultSmallMargin),
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, i) {
-          final file = attachedMediaNotifier.value[i];
-
-          final assetEntity = ref.watch(assetEntityProvider(file.path)).valueOrNull;
-          if (assetEntity == null) {
-            return const SizedBox.shrink();
-          }
-
-          return ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: 190.0.s,
-              maxWidth: 300.0.s,
-            ),
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0.s),
-                  child: AspectRatio(
-                    aspectRatio: attachedMediaAspectRatio,
-                    child: Image(
-                      image: AssetEntityImageProvider(
-                        assetEntity,
-                        isOriginal: false,
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: () {
-                      attachedMediaNotifier.value = attachedMediaNotifier.value.toList()
-                        ..remove(file);
-                    },
-                    icon: Assets.svg.iconFieldClearall.icon(
-                      size: isHorizontalPreviews ? 24.0.s : 16.0.s,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-        separatorBuilder: (_, __) => SizedBox(width: 12.0.s),
-        itemCount: attachedMediaNotifier.value.length,
       ),
     );
   }

@@ -59,25 +59,7 @@ class ReplyInputField extends HookConsumerWidget {
               children: [
                 if (attachedMediaNotifier.value.isNotEmpty) ...[
                   SizedBox(height: 6.0.s),
-                  SizedBox(
-                    height: 50.0.s,
-                    child: ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0.s),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: attachedMediaNotifier.value.length,
-                      separatorBuilder: (_, __) => SizedBox(width: 12.0.s),
-                      itemBuilder: (context, index) {
-                        final media = attachedMediaNotifier.value[index];
-                        return AttachedMediaPreview(
-                          path: media.path,
-                          onRemove: () {
-                            attachedMediaNotifier.value = attachedMediaNotifier.value.toList()
-                              ..remove(media);
-                          },
-                        );
-                      },
-                    ),
-                  ),
+                  AttachedMediaPreview(attachedMediaNotifier: attachedMediaNotifier),
                 ],
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 9.0.s),
