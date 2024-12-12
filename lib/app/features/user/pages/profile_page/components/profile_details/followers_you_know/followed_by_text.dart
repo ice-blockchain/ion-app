@@ -51,38 +51,32 @@ class FollowedByText extends HookConsumerWidget {
       color: context.theme.appColors.darkBlue,
     );
 
-    final textSpans = [
-      TextSpan(
-        text: context.i18n.profile_followed_by,
-        style: defaultStyle,
-      ),
-      TextSpan(
-        text: firstUserMetadata.data.displayName,
-        style: actionableStyle,
-        recognizer: userTapRecognizer,
-      ),
-    ];
-
-    if (pubkeys.length > 1) {
-      textSpans
-        ..add(
-          TextSpan(
-            text: context.i18n.profile_followed_by_and,
-            style: defaultStyle,
-          ),
-        )
-        ..add(
-          TextSpan(
-            text: context.i18n.profile_followed_by_and_others,
-            style: actionableStyle,
-            recognizer: othersTapRecognizer,
-          ),
-        );
-    }
-
     return Expanded(
       child: RichText(
-        text: TextSpan(children: textSpans),
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: context.i18n.profile_followed_by,
+              style: defaultStyle,
+            ),
+            TextSpan(
+              text: firstUserMetadata.data.displayName,
+              style: actionableStyle,
+              recognizer: userTapRecognizer,
+            ),
+            if (pubkeys.length > 1) ...[
+              TextSpan(
+                text: context.i18n.profile_followed_by_and,
+                style: defaultStyle,
+              ),
+              TextSpan(
+                text: context.i18n.profile_followed_by_and_others,
+                style: actionableStyle,
+                recognizer: othersTapRecognizer,
+              ),
+            ],
+          ],
+        ),
         textScaler: MediaQuery.textScalerOf(context),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
