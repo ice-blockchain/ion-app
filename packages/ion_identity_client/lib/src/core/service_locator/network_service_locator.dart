@@ -6,11 +6,13 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/auth_interceptor.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-class NetworkServiceLocator with _Dio, _Interceptors, _TokenStorage, _NetworkClient {
+class NetworkServiceLocator
+    with _Dio, _Interceptors, _TokenStorage, _PrivateKeyStorage, _NetworkClient {
   factory NetworkServiceLocator() {
     return _instance;
   }
@@ -108,6 +110,31 @@ mixin _TokenStorage {
       secureStorage: flutterSecureStorage(),
     );
     return _tokenStorageInstance!;
+  }
+
+  FlutterSecureStorage flutterSecureStorage() {
+    if (_flutterSecureStorage != null) {
+      return _flutterSecureStorage!;
+    }
+
+    _flutterSecureStorage = const FlutterSecureStorage();
+    return _flutterSecureStorage!;
+  }
+}
+
+mixin _PrivateKeyStorage {
+  PrivateKeyStorage? _privateKeyStorageInstance;
+  FlutterSecureStorage? _flutterSecureStorage;
+
+  PrivateKeyStorage privateKeyStorage() {
+    if (_privateKeyStorageInstance != null) {
+      return _privateKeyStorageInstance!;
+    }
+
+    _privateKeyStorageInstance = PrivateKeyStorage(
+      secureStorage: flutterSecureStorage(),
+    );
+    return _privateKeyStorageInstance!;
   }
 
   FlutterSecureStorage flutterSecureStorage() {

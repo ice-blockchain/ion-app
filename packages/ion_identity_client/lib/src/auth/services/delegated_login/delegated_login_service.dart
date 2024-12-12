@@ -2,7 +2,7 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 
 class DelegatedLoginService {
   const DelegatedLoginService({

@@ -4,7 +4,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_challenge.c.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.c.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/signer/types/user_action_signing_request.dart';

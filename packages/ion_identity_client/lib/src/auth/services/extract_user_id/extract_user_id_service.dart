@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 
 class ExtractUserIdService {
   const ExtractUserIdService({

@@ -4,7 +4,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/models/delegated_login_request.c.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/models/delegated_login_response.c.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 
 class DelegatedLoginDataSource {

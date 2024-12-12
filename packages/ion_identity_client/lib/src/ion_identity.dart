@@ -6,7 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/password_signer.dart';
@@ -15,15 +16,17 @@ import 'package:ion_identity_client/src/signer/password_signer.dart';
 /// such as authentication and wallet management. This client supports multi-user
 /// scenarios, allowing different user sessions to be managed concurrently.
 class IONIdentity {
-  /// Creates an instance of [IONIdentity] with the given [config], [identitySigner],
+  /// Creates an instance of [IONIdentity] with the given [config], [identitySigner], [privateKeyStorage],
   /// and [tokenStorage]. This constructor is private and used internally.
   IONIdentity._({
     required IONIdentityConfig config,
     required IdentitySigner identitySigner,
     required TokenStorage tokenStorage,
+    required PrivateKeyStorage privateKeyStorage,
   })  : _config = config,
         _identitySigner = identitySigner,
-        _tokenStorage = tokenStorage;
+        _tokenStorage = tokenStorage,
+        _privateKeyStorage = privateKeyStorage;
 
   /// Factory method to create a default instance of [IONIdentity] using the given [config].
   factory IONIdentity.createDefault({
@@ -33,20 +36,29 @@ class IONIdentity {
       throw UnimplementedError('Current platform is not supproted');
     }
 
+    final tokenStorage = IONIdentityServiceLocator.tokenStorage();
+    final privateKeyStorage = IONIdentityServiceLocator.privateKeyStorage();
+
     final passkeySigner = PasskeysSigner();
-    final passwordSigner = PasswordSigner(config: config, keyService: const KeyService());
+    final passwordSigner = PasswordSigner(
+      config: config,
+      keyService: const KeyService(),
+      privateKeyStorage: privateKeyStorage,
+    );
     final identitySigner =
         IdentitySigner(passkeySigner: passkeySigner, passwordSigner: passwordSigner);
 
     return IONIdentity._(
       config: config,
       identitySigner: identitySigner,
-      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      tokenStorage: tokenStorage,
+      privateKeyStorage: privateKeyStorage,
     );
   }
 
   Future<void> init() async {
     await _tokenStorage.init();
+    await _privateKeyStorage.init();
   }
 
   void dispose() {
@@ -70,6 +82,7 @@ class IONIdentity {
   final IONIdentityConfig _config;
   final IdentitySigner _identitySigner;
   final TokenStorage _tokenStorage;
+  final PrivateKeyStorage _privateKeyStorage;
 
   /// A stream of the usernames of currently authorized users. This stream updates
   /// whenever the user tokens change, providing a real-time view of authenticated users.

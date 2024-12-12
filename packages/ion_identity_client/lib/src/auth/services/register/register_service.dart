@@ -3,7 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.c.dart';
 import 'package:ion_identity_client/src/auth/services/register/data_sources/register_data_source.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class RegisterService {
@@ -56,6 +56,7 @@ class RegisterService {
       (challenge) => identitySigner.registerWithPassword(
         challenge: challenge.challenge,
         password: password,
+        username: username,
         credentialKind: CredentialKind.PasswordProtectedKey,
       ),
     );

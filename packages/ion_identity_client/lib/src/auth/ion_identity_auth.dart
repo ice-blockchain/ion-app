@@ -8,7 +8,7 @@ import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
-import 'package:ion_identity_client/src/core/token_storage/token_storage.dart';
+import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 
 /// A class that handles user authentication processes, including user registration,
 /// login, and logout.
@@ -18,14 +18,14 @@ class IONIdentityAuth {
   /// The [username] is the identifier for the user.
   /// The [registerService] handles user registration.
   /// The [loginService] handles user login.
-  /// The [tokenStorage] manages the storage of authentication tokens.
+  /// The [privateKeyStorage] manages the storage of authentication tokens.
   /// The [createRecoveryCredentialsService] handles the creation of recovery credentials.
   IONIdentityAuth({
     required this.username,
     required this.registerService,
     required this.loginService,
     required this.logoutService,
-    required this.tokenStorage,
+    required this.privateKeyStorage,
     required this.createRecoveryCredentialsService,
     required this.recoverUserService,
     required this.delegatedLoginService,
@@ -41,7 +41,7 @@ class IONIdentityAuth {
   final TwoFAService twoFAService;
 
   final String username;
-  final TokenStorage tokenStorage;
+  final PrivateKeyStorage privateKeyStorage;
 
   Future<void> registerUser() => registerService.registerUser();
 
@@ -51,6 +51,8 @@ class IONIdentityAuth {
   Future<void> loginUser() => loginService.loginUser();
 
   Future<void> logOut() => logoutService.logOut();
+
+  String? getUserPrivateKey() => privateKeyStorage.getPrivateKey(username: username);
 
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() =>
       createRecoveryCredentialsService.createRecoveryCredentials();
