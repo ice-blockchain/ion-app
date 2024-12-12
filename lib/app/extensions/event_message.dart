@@ -14,18 +14,4 @@ extension MasterKeyExtensions on EventMessage {
 
     return masterPubkey;
   }
-
-  String? get subject {
-    return tags.singleWhereOrNull((tag) => tag[0] == 'subject')?[1];
-  }
-
-  String get pubkeysMask {
-    return pubkeysList.join(',');
-  }
-
-  List<String> get pubkeysList {
-    return tags.where((tag) => tag[0] == 'p').map((tag) => tag[1]).toList()
-      ..add(pubkey)
-      ..sort();
-  }
 }

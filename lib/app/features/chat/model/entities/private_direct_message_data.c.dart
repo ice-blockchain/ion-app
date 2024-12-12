@@ -63,7 +63,8 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 }
 
 @freezed
-class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataMixin {
+class PrivateDirectMessageData
+    with _$PrivateDirectMessageData, EntityMediaDataMixin {
   const factory PrivateDirectMessageData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
@@ -101,9 +102,12 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
     required String pubkey,
   }) {
     final eventTags = [
-      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
-      if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
-      if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      if (relatedPubkeys != null)
+        ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+      if (relatedEvents != null)
+        ...relatedEvents!.map((event) => event.toTag()),
+      if (media.isNotEmpty)
+        ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
     ];
 
     final createdAt = DateTime.now();
