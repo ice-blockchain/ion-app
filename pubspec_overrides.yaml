@@ -5,3 +5,8 @@ dependency_overrides:
   ion_screenshot_detector:
     path: packages/ion_screenshot_detector
   js: ^0.7.1
+  passkeys_ios:
+    git:
+      url: https://github.com/ice-tychon/flutter-passkeys.git
+      ref: fix-ios-immediate-creds
+      path: packages/passkeys/passkeys_ios
