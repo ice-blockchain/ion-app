@@ -80,7 +80,6 @@ class FollowedByText extends HookConsumerWidget {
         textScaler: MediaQuery.textScalerOf(context),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-        // overflow: TextOverflow.ellipsis,
       ),
     );
   }
