@@ -39,8 +39,7 @@ void main() {
         ),
       );
 
-      final eventMessage =
-          await database.select(database.eventMessagesTable).getSingle();
+      final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
       final conversationMessage =
           await database.select(database.conversationMessagesTable).getSingle();
@@ -78,11 +77,9 @@ void main() {
         ),
       );
 
-      final eventMessages =
-          await database.select(database.eventMessagesTable).get();
+      final eventMessages = await database.select(database.eventMessagesTable).get();
 
-      final conversationMessages =
-          await database.select(database.conversationMessagesTable).get();
+      final conversationMessages = await database.select(database.conversationMessagesTable).get();
 
       final conversations = await database.getAllConversations();
 
@@ -92,8 +89,7 @@ void main() {
       expect(conversations.single.content, 'First message');
     });
 
-    test('Insert initial one-to-one conversation, first message and reply',
-        () async {
+    test('Insert initial one-to-one conversation, first message and reply', () async {
       await database.insertEventMessage(
         EventMessage(
           id: '0',
@@ -160,8 +156,7 @@ void main() {
       ),
     );
 
-    final eventMessage =
-        await database.select(database.eventMessagesTable).getSingle();
+    final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
     final conversationMessage =
         await database.select(database.conversationMessagesTable).getSingle();
@@ -277,8 +272,7 @@ void main() {
     );
   });
 
-  test('Insert initial group conversation, first message and change subject',
-      () async {
+  test('Insert initial group conversation, first message and change subject', () async {
     await database.insertEventMessage(
       EventMessage(
         id: '0',
@@ -334,9 +328,7 @@ void main() {
     expect(conversations.data.relatedSubject?.value, 'Group subject changed');
   });
 
-  test(
-      'Insert initial group conversation, first message and change participants',
-      () async {
+  test('Insert initial group conversation, first message and change participants', () async {
     await database.insertEventMessage(
       EventMessage(
         id: '0',

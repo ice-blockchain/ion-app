@@ -19,9 +19,8 @@ class Conversations extends _$Conversations {
         .read(iONDatabaseNotifierProvider.notifier)
         .watchConversations()
         .listen((conversationsEventMessages) async {
-      final data = conversationsEventMessages
-          .map(PrivateDirectMessageEntity.fromEventMessage)
-          .toList();
+      final data =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
       state = AsyncValue.data(data);
     });
@@ -33,9 +32,8 @@ class Conversations extends _$Conversations {
       final database = ref.read(iONDatabaseNotifierProvider.notifier);
       final conversationsEventMessages = await database.getAllConversations();
 
-      final conversationsList = conversationsEventMessages
-          .map(PrivateDirectMessageEntity.fromEventMessage)
-          .toList();
+      final conversationsList =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
       state = AsyncValue.data(conversationsList);
       return conversationsList;
     } catch (e, st) {
