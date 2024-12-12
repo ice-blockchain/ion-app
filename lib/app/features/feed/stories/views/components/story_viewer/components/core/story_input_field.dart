@@ -5,9 +5,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class StoryInputField extends HookConsumerWidget {
   const StoryInputField({
@@ -23,18 +25,11 @@ class StoryInputField extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isTextNotEmpty = useState(false);
     final focusNode = useFocusNode();
+    final focused = useNodeFocused(focusNode);
 
-    useEffect(
-      () {
-        focusNode.addListener(
-          () => focusNode.hasFocus
-              ? ref.read(storyPauseControllerProvider.notifier).paused = true
-              : ref.read(storyPauseControllerProvider.notifier).paused = false,
-        );
-
-        return null;
-      },
-      [],
+    useOnInit(
+      () => ref.read(storyPauseControllerProvider.notifier).paused = focused.value,
+      [focused.value],
     );
 
     useEffect(
@@ -110,7 +105,10 @@ class StoryInputField extends HookConsumerWidget {
                           right: 4.0.s,
                           child: ToolbarSendButton(
                             enabled: true,
-                            onPressed: () {},
+                            onPressed: () {
+                              FocusScope.of(context).unfocus();
+                              controller.clear();
+                            },
                           ),
                         ),
                     ],

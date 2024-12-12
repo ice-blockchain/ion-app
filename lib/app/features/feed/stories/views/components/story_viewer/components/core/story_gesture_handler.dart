@@ -25,10 +25,10 @@ class StoryGestureHandler extends HookConsumerWidget {
       behavior: HitTestBehavior.deferToChild,
       onTapDown: (details) => tapPosition.value = details.globalPosition,
       onTap: () {
-        final isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
+        final focusScope = FocusScope.of(context);
 
-        if (isKeyboardVisible) {
-          FocusManager.instance.primaryFocus?.unfocus();
+        if (focusScope.hasFocus) {
+          focusScope.unfocus();
           return;
         }
 
