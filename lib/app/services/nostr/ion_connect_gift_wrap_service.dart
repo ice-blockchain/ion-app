@@ -8,12 +8,12 @@ import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-abstract class NostrGiftWrapService {
+abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
     EventMessage event,
     String pubkey,
     EventSigner signer,
-    int kind,
+    int contentKind,
   );
 
   Future<EventMessage> decodeWrap(
@@ -23,7 +23,7 @@ abstract class NostrGiftWrapService {
   );
 }
 
-class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
+class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   static const int wrapKind = 1059;
 
   @override
@@ -31,7 +31,7 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
     EventMessage event,
     String pubkey,
     EventSigner signer,
-    int kind,
+    int contentKind,
   ) async {
     final encryptedEvent = await Nip44.encryptMessage(
       jsonEncode(event.toJson().last),
@@ -50,7 +50,7 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
       content: encryptedEvent,
       tags: [
         [RelatedPubkey.tagName, pubkey],
-        ['k', kind.toString()],
+        ['k', contentKind.toString()],
       ],
     );
   }

@@ -7,7 +7,7 @@ import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-abstract class NostrSealService {
+abstract class IOnConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
@@ -21,7 +21,7 @@ abstract class NostrSealService {
   );
 }
 
-class NostrSealServiceImpl implements NostrSealService {
+class IonConnectSealServiceImpl implements IOnConnectSealService {
   static const int sealKind = 13;
 
   @override
