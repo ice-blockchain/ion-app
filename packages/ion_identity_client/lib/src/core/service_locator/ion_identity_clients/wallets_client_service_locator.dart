@@ -80,7 +80,7 @@ class WalletsClientServiceLocator {
       username,
       GetWalletsDataSource(
         IONIdentityServiceLocator.networkClient(config: config),
-        IONIdentityServiceLocator.identityStorage(),
+        IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }
@@ -93,7 +93,7 @@ class WalletsClientServiceLocator {
       username,
       GetWalletAssetsDataSource(
         IONIdentityServiceLocator.networkClient(config: config),
-        IONIdentityServiceLocator.identityStorage(),
+        IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }
@@ -106,7 +106,7 @@ class WalletsClientServiceLocator {
       username,
       GetWalletNftsDataSource(
         IONIdentityServiceLocator.networkClient(config: config),
-        IONIdentityServiceLocator.identityStorage(),
+        IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }
@@ -119,7 +119,7 @@ class WalletsClientServiceLocator {
       username,
       GetWalletHistoryDataSource(
         IONIdentityServiceLocator.networkClient(config: config),
-        IONIdentityServiceLocator.identityStorage(),
+        IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }
@@ -132,7 +132,7 @@ class WalletsClientServiceLocator {
       username,
       GetWalletTransferRequestsDataSource(
         IONIdentityServiceLocator.networkClient(config: config),
-        IONIdentityServiceLocator.identityStorage(),
+        IONIdentityServiceLocator.tokenStorage(),
       ),
     );
   }

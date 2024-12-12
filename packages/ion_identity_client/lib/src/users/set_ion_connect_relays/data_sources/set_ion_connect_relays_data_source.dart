@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/users/set_ion_connect_relays/models/set_ion_connect_relays_request.c.dart';
 
 class SetIONConnectRelaysDataSource {
   SetIONConnectRelaysDataSource(
     this._networkClient,
-    this._identityStorage,
+    this._tokenStorage,
   );
 
   final NetworkClient _networkClient;
-  final IdentityStorage _identityStorage;
+  final TokenStorage _tokenStorage;
 
   static const setUserConnectRelaysPath = '/v1/users';
 
@@ -22,7 +22,7 @@ class SetIONConnectRelaysDataSource {
     required String userId,
     required SetIONConnectRelaysRequest request,
   }) async {
-    final token = _identityStorage.getToken(username: username);
+    final token = _tokenStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }

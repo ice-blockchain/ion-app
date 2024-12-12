@@ -3,14 +3,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/auth_interceptor.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
+import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-class NetworkServiceLocator with _Dio, _Interceptors, _IdentityStorage, _NetworkClient {
+class NetworkServiceLocator
+    with _Dio, _Interceptors, _TokenStorage, _PrivateKeyStorage, _NetworkClient {
   factory NetworkServiceLocator() {
     return _instance;
   }
@@ -95,19 +97,44 @@ mixin _Interceptors {
   }
 }
 
-mixin _IdentityStorage {
-  IdentityStorage? _identityStorageInstance;
+mixin _TokenStorage {
+  TokenStorage? _tokenStorageInstance;
   FlutterSecureStorage? _flutterSecureStorage;
 
-  IdentityStorage identityStorage() {
-    if (_identityStorageInstance != null) {
-      return _identityStorageInstance!;
+  TokenStorage tokenStorage() {
+    if (_tokenStorageInstance != null) {
+      return _tokenStorageInstance!;
     }
 
-    _identityStorageInstance = IdentityStorage(
+    _tokenStorageInstance = TokenStorage(
       secureStorage: flutterSecureStorage(),
     );
-    return _identityStorageInstance!;
+    return _tokenStorageInstance!;
+  }
+
+  FlutterSecureStorage flutterSecureStorage() {
+    if (_flutterSecureStorage != null) {
+      return _flutterSecureStorage!;
+    }
+
+    _flutterSecureStorage = const FlutterSecureStorage();
+    return _flutterSecureStorage!;
+  }
+}
+
+mixin _PrivateKeyStorage {
+  PrivateKeyStorage? _privateKeyStorageInstance;
+  FlutterSecureStorage? _flutterSecureStorage;
+
+  PrivateKeyStorage privateKeyStorage() {
+    if (_privateKeyStorageInstance != null) {
+      return _privateKeyStorageInstance!;
+    }
+
+    _privateKeyStorageInstance = PrivateKeyStorage(
+      secureStorage: flutterSecureStorage(),
+    );
+    return _privateKeyStorageInstance!;
   }
 
   FlutterSecureStorage flutterSecureStorage() {

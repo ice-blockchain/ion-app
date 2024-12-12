@@ -2,9 +2,9 @@
 
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/wallets/exceptions/wallets_exceptions.dart';
 import 'package:sprintf/sprintf.dart';
@@ -12,11 +12,11 @@ import 'package:sprintf/sprintf.dart';
 class GetWalletNftsDataSource {
   const GetWalletNftsDataSource(
     this._networkClient,
-    this._identityStorage,
+    this._tokenStorage,
   );
 
   final NetworkClient _networkClient;
-  final IdentityStorage _identityStorage;
+  final TokenStorage _tokenStorage;
 
   static const walletNftsPath = '/wallets/%s/nfts';
 
@@ -24,7 +24,7 @@ class GetWalletNftsDataSource {
     String username,
     String walletId,
   ) async {
-    final token = _identityStorage.getToken(username: username);
+    final token = _tokenStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }

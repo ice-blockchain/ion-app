@@ -3,7 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.c.dart';
 import 'package:ion_identity_client/src/auth/services/register/data_sources/register_data_source.dart';
-import 'package:ion_identity_client/src/core/identity_storage/identity_storage.dart';
+import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class RegisterService {
@@ -11,13 +11,13 @@ class RegisterService {
     required this.username,
     required this.dataSource,
     required this.identitySigner,
-    required this.identityStorage,
+    required this.tokenStorage,
   });
 
   final String username;
   final RegisterDataSource dataSource;
   final IdentitySigner identitySigner;
-  final IdentityStorage identityStorage;
+  final TokenStorage tokenStorage;
 
   /// Registers a new user using the provided username and handles the necessary
   /// cryptographic operations and API interactions.
@@ -71,7 +71,7 @@ class RegisterService {
       credentialData: credentialData,
       temporaryAuthenticationToken: userRegistrationChallenge.temporaryAuthenticationToken,
     );
-    await identityStorage.setTokens(
+    await tokenStorage.setTokens(
       username: username,
       newTokens: registrationCompleteResponse.authentication,
     );

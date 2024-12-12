@@ -24,7 +24,7 @@ class UserActionSignerServiceLocator {
     return UserActionSigner(
       dataSource: UserActionSignerDataSource(
         networkClient: NetworkServiceLocator().networkClient(config: config),
-        identityStorage: IONIdentityServiceLocator.identityStorage(),
+        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       ),
       identitySigner: identitySigner,
     );
