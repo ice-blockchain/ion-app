@@ -83,7 +83,7 @@ class StoryPreviewPage extends ConsumerWidget {
                     await showSimpleBottomSheet<bool>(
                       context: context,
                       child: VisibilitySettingsModal(
-                        title: context.i18n.visibility_settings_title_story,
+                        title: context.i18n.story_settings_title,
                       ),
                     );
                   },

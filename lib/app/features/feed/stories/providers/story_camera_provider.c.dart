@@ -7,6 +7,7 @@ import 'package:ion/app/features/feed/content_notification/data/models/content_n
 import 'package:ion/app/features/feed/content_notification/providers/content_notification_provider.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,9 +25,12 @@ class StoryCameraController extends _$StoryCameraController {
     if (picture != null) {
       final mediaFile = await ref.read(mediaServiceProvider).saveImageToGallery(File(picture.path));
 
-      state = mediaFile != null
-          ? StoryCameraState.saved(file: mediaFile)
-          : const StoryCameraState.error(message: 'Failed to save photo.');
+      if (mediaFile != null) {
+        ref.invalidate(latestGalleryPreviewProvider);
+        state = StoryCameraState.saved(file: mediaFile);
+      } else {
+        state = const StoryCameraState.error(message: 'Failed to save photo.');
+      }
     }
   }
 
