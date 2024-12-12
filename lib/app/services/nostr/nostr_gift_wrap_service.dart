@@ -32,7 +32,7 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
     EventSigner signer,
   ) async {
     final encryptedEvent = await Nip44.encryptMessage(
-      jsonEncode(event.toJson()),
+      jsonEncode(event.toJson().last),
       signer.privateKey,
       pubkey,
     );
@@ -65,6 +65,8 @@ class NostrGiftWrapServiceImpl implements NostrGiftWrapService {
       pubkey,
     );
 
-    return EventMessage.fromJson(jsonDecode(decryptedContent) as List);
+    return EventMessage.fromPayloadJson(
+      jsonDecode(decryptedContent) as Map<String, dynamic>,
+    );
   }
 }

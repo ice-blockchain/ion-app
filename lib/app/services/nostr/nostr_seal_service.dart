@@ -30,7 +30,7 @@ class NostrSealServiceImpl implements NostrSealService {
     EventSigner signer,
     String pubkey,
   ) async {
-    final encodedRumor = jsonEncode(rumor.toJson());
+    final encodedRumor = jsonEncode(rumor.toJson().last);
 
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
@@ -62,6 +62,8 @@ class NostrSealServiceImpl implements NostrSealService {
       pubkey,
     );
 
-    return EventMessage.fromJson(jsonDecode(decryptedContent) as List);
+    return EventMessage.fromPayloadJson(
+      jsonDecode(decryptedContent) as Map<String, dynamic>,
+    );
   }
 }
