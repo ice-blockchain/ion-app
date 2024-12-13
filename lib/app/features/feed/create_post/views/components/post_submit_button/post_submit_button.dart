@@ -36,7 +36,7 @@ class PostSubmitButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasContent = useTextEditorHasContent(textEditorController);
+    final hasContent = useTextEditorHasContent(textEditorController) || attachedMedia.isNotEmpty;
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
     final hasPoll = useHasPoll(textEditorController);
