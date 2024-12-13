@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,9 +11,6 @@ import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/services/text_parser/text_match.dart';
-import 'package:ion/app/services/text_parser/text_matcher.dart';
-import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'article_data.c.freezed.dart';
@@ -56,7 +54,7 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
 @freezed
 class ArticleData with _$ArticleData implements EventSerializable {
   const factory ArticleData({
-    required List<TextMatch> content,
+    required String content,
     required Map<String, MediaAttachment> media,
     String? title,
     String? image,
@@ -82,11 +80,10 @@ class ArticleData with _$ArticleData implements EventSerializable {
       }
     }
 
-    final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
-      content: parsedContent,
+      content: eventMessage.content,
       media: mediaAttachments,
       title: title,
       image: image,
@@ -97,15 +94,10 @@ class ArticleData with _$ArticleData implements EventSerializable {
   }
 
   factory ArticleData.fromRawContent(String content) {
-    final parsedContent = TextParser.allMatchers().parse(content);
-
-    final hashtags = parsedContent
-        .where((match) => match.matcher is HashtagMatcher)
-        .map((match) => RelatedHashtag(value: match.text))
-        .toList();
+    final hashtags = extractHashtagsFromMarkdown(content);
 
     return ArticleData(
-      content: parsedContent,
+      content: content,
       relatedHashtags: hashtags,
       media: {},
     );
@@ -130,13 +122,25 @@ class ArticleData with _$ArticleData implements EventSerializable {
           ['published_at', (publishedAt!.millisecondsSinceEpoch / 1000).toString()],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
       ],
-      content: content.join('\n'),
+      content: content,
     );
   }
 
-  static Map<String, MediaAttachment> _buildMedia(
-    List<List<String>>? mediaTags,
-  ) {
+  static List<RelatedHashtag> extractHashtagsFromMarkdown(String content) {
+    final operations = jsonDecode(content) as List<dynamic>;
+    return operations
+        .where(
+          (operation) =>
+              operation is Map<String, dynamic> &&
+              operation.containsKey('insert') &&
+              operation['insert'] is String &&
+              (operation['insert'] as String).startsWith('#'),
+        )
+        .map((operation) => RelatedHashtag(value: operation['insert'] as String))
+        .toList();
+  }
+
+  static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {
     if (mediaTags == null) return {};
     return {
       for (final tag in mediaTags)
@@ -146,6 +150,6 @@ class ArticleData with _$ArticleData implements EventSerializable {
 
   @override
   String toString() {
-    return 'ArticleData(content: ${content.join('\n')}, media: $media, title: $title, image: $image, summary: $summary, publishedAt: $publishedAt)';
+    return 'ArticleData(content: $content, media: $media, title: $title, image: $image, summary: $summary, publishedAt: $publishedAt)';
   }
 }
