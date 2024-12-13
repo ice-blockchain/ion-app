@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/attached_media_aspect_ratio_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/services/media_service/aspect_ratio.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
@@ -23,10 +23,8 @@ class AttachedMediaPreview extends ConsumerWidget {
     final list = attachedMediaNotifier.value;
 
     final maxItemHeight = 190.0.s;
-    final attachedMediaAspectRatio = ref.read(
-      attachedMediaAspectRatioProvider(
-        list.map(MediaAspectRatio.fromMediaFile),
-      ),
+    final aspectRatio = attachedMediaAspectRatio(
+      list.map(MediaAspectRatio.fromMediaFile),
     );
 
     return ConstrainedBox(
@@ -54,7 +52,7 @@ class AttachedMediaPreview extends ConsumerWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.0.s),
                   child: AspectRatio(
-                    aspectRatio: attachedMediaAspectRatio.aspectRatio,
+                    aspectRatio: aspectRatio.aspectRatio,
                     child: Image(
                       image: AssetEntityImageProvider(
                         assetEntity,
@@ -73,7 +71,7 @@ class AttachedMediaPreview extends ConsumerWidget {
                         ..remove(file);
                     },
                     icon: Assets.svg.iconFieldClearall.icon(
-                      size: attachedMediaAspectRatio.isHorizontal ? 24.0.s : 16.0.s,
+                      size: aspectRatio.isHorizontal ? 24.0.s : 16.0.s,
                     ),
                   ),
                 ),

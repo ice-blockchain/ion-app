@@ -2,13 +2,9 @@
 
 import 'dart:math';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'attached_media_aspect_ratio_provider.c.g.dart';
 
 class MediaAspectRatio {
   const MediaAspectRatio._(this.aspectRatio);
@@ -44,11 +40,7 @@ class MediaAspectRatioResult {
 ///
 /// The aspect ratio is calculated by finding an average of the
 /// dominant category (horizontal or vertical).
-@riverpod
-MediaAspectRatioResult attachedMediaAspectRatio(
-  Ref ref,
-  Iterable<MediaAspectRatio> ratioProviders,
-) {
+MediaAspectRatioResult attachedMediaAspectRatio(Iterable<MediaAspectRatio> ratioProviders) {
   const minVerticalMediaAspectRatio = 0.85;
   const maxHorizontalMediaAspectRatio = 1.63;
 
