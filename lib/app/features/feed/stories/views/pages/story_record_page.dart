@@ -14,8 +14,8 @@ import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 
 class StoryRecordPage extends HookConsumerWidget {
   const StoryRecordPage({super.key});
@@ -38,12 +38,9 @@ class StoryRecordPage extends HookConsumerWidget {
 
     ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) async {
       if (next is StoryCameraSaved && context.mounted) {
-        // TODO: uncomment after getting the actual the banuba's token
-        // final filePath = await ref.read(editMediaProvider(next.file).future);
+        final filePath = await ref.read(editMediaProvider(next.file).future);
 
-        final filePath = await ref.read(assetFilePathProvider(next.file.path).future);
-
-        if (filePath != null && context.mounted) {
+        if (context.mounted) {
           await StoryPreviewRoute(
             path: filePath,
             mimeType: next.file.mimeType,

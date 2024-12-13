@@ -9,6 +9,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -25,11 +26,9 @@ class StoryGalleryButton extends ConsumerWidget {
         if (context.mounted) {
           final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
           if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
-            // TODO: uncomment after getting the actual the banuba's token
-            // final filePath = await ref.read(editMediaProvider(mediaFiles.first).future);
-            final filePath = await ref.read(assetFilePathProvider(mediaFiles.first.path).future);
+            final filePath = await ref.read(editMediaProvider(mediaFiles.first).future);
 
-            if (filePath != null && context.mounted) {
+            if (context.mounted) {
               await StoryPreviewRoute(
                 path: filePath,
                 mimeType: mediaFiles.first.mimeType,
