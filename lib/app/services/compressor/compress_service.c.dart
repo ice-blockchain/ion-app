@@ -38,8 +38,8 @@ class CompressionService {
   /// If success, returns a new [XFile] with the compressed video.
   /// If fails, throws an exception.
   ///
-  Future<XFile> compressVideo(
-    XFile inputFile, {
+  Future<MediaFile> compressVideo(
+    MediaFile inputFile, {
     FFmpegVideoCodecArg videoCodec = FFmpegVideoCodecArg.libx264,
     FfmpegPresetArg preset = FfmpegPresetArg.fast,
     FfmpegBitrateArg videoBitrate = FfmpegBitrateArg.medium,
@@ -72,19 +72,37 @@ class CompressionService {
         // TODO: Add scale and fps
         output,
       ];
-      return await FFmpegKit.executeWithArguments(args).then((session) async {
-        final returnCode = await session.getReturnCode();
-        if (ReturnCode.isSuccess(returnCode)) {
-          return XFile(output);
-        }
-        final logs = await session.getAllLogsAsString();
+
+      final session = await FFmpegKit.executeWithArguments(args);
+      final returnCode = await session.getReturnCode();
+      final logs = await session.getAllLogsAsString();
+
+      if (logs == null) {
+        throw CompressVideoException('no-logs');
+      }
+
+      final match = RegExp(r'Stream.*Video:.* (\d+)x(\d+)').firstMatch(logs);
+
+      if (match == null) {
+        Logger.log('Failed to compress video. Dimension not found. Logs: $logs');
+        throw CompressVideoException('no-dim');
+      }
+
+      if (!ReturnCode.isSuccess(returnCode)) {
         final stackTrace = await session.getFailStackTrace();
         Logger.log('Failed to compress video. Logs: $logs, StackTrace: $stackTrace');
-        throw CompressVideoException();
-      });
+        throw CompressVideoException(returnCode);
+      }
+
+      return MediaFile(
+        path: output,
+        mimeType: 'video/mp4',
+        width: int.parse(match.group(1)!),
+        height: int.parse(match.group(2)!),
+      );
     } catch (error, stackTrace) {
       Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);
-      throw CompressVideoException();
+      rethrow;
     }
   }
 

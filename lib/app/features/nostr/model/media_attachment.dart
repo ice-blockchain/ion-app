@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -20,6 +21,7 @@ class MediaAttachment {
     required this.fileHash,
     required this.originalFileHash,
     this.thumb,
+    this.image,
   });
 
   /// https://github.com/nostr-protocol/nips/blob/master/92.md#example
@@ -32,6 +34,7 @@ class MediaAttachment {
     String? mimeType;
     String? dimension;
     String? thumb;
+    String? image;
     String? alt;
     String? torrentInfoHash;
     String? fileHash;
@@ -56,6 +59,8 @@ class MediaAttachment {
           dimension = value;
         case 'thumb':
           thumb = value;
+        case 'image':
+          image = value;
         case 'alt':
           alt = value;
         case 'i':
@@ -76,6 +81,7 @@ class MediaAttachment {
       fileHash: fileHash!,
       originalFileHash: originalFileHash!,
       thumb: thumb,
+      image: image,
     );
   }
 
@@ -94,6 +100,8 @@ class MediaAttachment {
   final String torrentInfoHash;
 
   final String? thumb;
+
+  final String? image;
 
   late double? aspectRatio = _aspectRatioFromDimension(dimension);
 
@@ -142,6 +150,7 @@ class MediaAttachment {
       'x $fileHash',
       'ox $originalFileHash',
       if (thumb != null) 'thumb $thumb',
+      if (image != null) 'image $image',
     ];
   }
 
@@ -149,6 +158,30 @@ class MediaAttachment {
 
   @override
   String toString() {
-    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb)';
+    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb, image: $image)';
+  }
+
+  MediaAttachment copyWith({
+    String? url,
+    String? mimeType,
+    String? dimension,
+    FileAlt? alt,
+    String? fileHash,
+    String? originalFileHash,
+    String? torrentInfoHash,
+    String? thumb,
+    String? image,
+  }) {
+    return MediaAttachment(
+      url: url ?? this.url,
+      mimeType: mimeType ?? this.mimeType,
+      dimension: dimension ?? this.dimension,
+      alt: alt ?? this.alt,
+      fileHash: fileHash ?? this.fileHash,
+      originalFileHash: originalFileHash ?? this.originalFileHash,
+      torrentInfoHash: torrentInfoHash ?? this.torrentInfoHash,
+      thumb: thumb ?? this.thumb,
+      image: image ?? this.image,
+    );
   }
 }

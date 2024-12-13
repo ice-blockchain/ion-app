@@ -141,7 +141,7 @@ class EntityNotFoundException extends IONException {
 }
 
 class CompressVideoException extends IONException {
-  CompressVideoException() : super(10029, 'Failed to compress video.');
+  CompressVideoException(dynamic error) : super(10029, 'Failed to compress video: $error');
 }
 
 class CompressAudioException extends IONException {
@@ -162,4 +162,9 @@ class CompressWithBrotliException extends IONException {
 
 class DecompressBrotliException extends IONException {
   DecompressBrotliException() : super(10034, 'Failed to decompress Brotli file.');
+}
+
+class UnsupportedMediaTypeException extends IONException {
+  UnsupportedMediaTypeException(String mediaType)
+      : super(10035, 'Unsupported media type: $mediaType');
 }

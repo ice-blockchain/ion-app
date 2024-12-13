@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.c.dart';
@@ -20,6 +21,7 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
@@ -45,11 +47,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         final attachments = <MediaAttachment>[];
         await Future.wait(
           mediaIds.map((id) async {
-            final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
+            final (:files, :mediaAttachment) = await _uploadMedia(id);
             attachments.add(mediaAttachment);
-            files.add(fileMetadata);
+            files.addAll(files);
           }),
         );
+
         data = data.copyWith(
           content: [
             ...attachments.map((attachment) => TextMatch('${attachment.url} ')),
@@ -121,8 +124,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }.toList();
   }
 
-  Future<UploadResult> _uploadImage(String imageId) async {
-    final assetEntity = await ref.read(assetEntityProvider(imageId).future);
+  Future<({List<FileMetadata> files, MediaAttachment mediaAttachment})> _uploadMedia(
+    String mediaId,
+  ) async {
+    final assetEntity = await ref.read(assetEntityProvider(mediaId).future);
     if (assetEntity == null) {
       throw AssetEntityFileNotFoundException();
     }
@@ -133,17 +138,63 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       throw AssetEntityFileNotFoundException();
     }
 
+    final mediaFile =
+        MediaFile(path: file.path, width: assetEntity.width, height: assetEntity.height);
+
+    return switch (assetEntity.type) {
+      AssetType.image => _uploadImage(mediaFile),
+      AssetType.video => _uploadVideo(mediaFile),
+      _ => throw UnsupportedMediaTypeException(assetEntity.type.toShortString()),
+    };
+  }
+
+  Future<({List<FileMetadata> files, MediaAttachment mediaAttachment})> _uploadImage(
+    MediaFile file,
+  ) async {
     const maxDimension = 1024;
+    final MediaFile(:height, :width) = file;
+
+    if (height == null || width == null) {
+      throw UnknownUploadFileResolutionException();
+    }
+
     final compressedImage = await ref.read(compressServiceProvider).compressImage(
           MediaFile(path: file.path),
           // Do not pass the second dimension to keep the aspect ratio
-          width: assetEntity.width > assetEntity.height ? maxDimension : null,
-          height: assetEntity.height > assetEntity.width ? maxDimension : null,
+          width: width > height ? maxDimension : null,
+          height: height > width ? maxDimension : null,
           quality: 70,
         );
 
-    return ref
+    final uploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
         .upload(compressedImage, alt: FileAlt.post);
+
+    return (files: [uploadResult.fileMetadata], mediaAttachment: uploadResult.mediaAttachment);
+  }
+
+  Future<({List<FileMetadata> files, MediaAttachment mediaAttachment})> _uploadVideo(
+    MediaFile file,
+  ) async {
+    final compressedVideo = await ref.read(compressServiceProvider).compressVideo(file);
+
+    final videoUploadResult = await ref
+        .read(nostrUploadNotifierProvider.notifier)
+        .upload(compressedVideo, alt: FileAlt.post);
+
+    final thumb = await ref.read(compressServiceProvider).getThumbnail(compressedVideo);
+
+    final thumbUploadResult =
+        await ref.read(nostrUploadNotifierProvider.notifier).upload(thumb, alt: FileAlt.post);
+
+    final mediaAttachment = videoUploadResult.mediaAttachment.copyWith(
+      thumb: thumbUploadResult.fileMetadata.url,
+      image: thumbUploadResult.fileMetadata.url,
+    );
+
+    return (
+      files: [videoUploadResult.fileMetadata, thumbUploadResult.fileMetadata],
+      mediaAttachment: mediaAttachment
+    );
   }
 }
