@@ -8,14 +8,10 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_notifier.c.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_topics_item.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_visibility_item.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/providers/article/create_article_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/article/article.dart';
-import 'package:ion/app/features/feed/views/components/article/mocked_data.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -31,9 +27,6 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
     final selectedImage = ref.watch(createArticleProvider).image;
     final content = ref.watch(createArticleProvider).content;
 
-    final article = ArticleEntity.fromEventMessage(mockedArticleEvents[0]);
-    final eventReference = EventReference.fromNostrEntity(article);
-
     final isSubmitLoading = ref.watch(createArticleNotifierProvider).isLoading;
 
     ref.displayErrors(createArticleNotifierProvider);
@@ -46,12 +39,7 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
             title: Text(context.i18n.article_preview_title),
           ),
           const HorizontalSeparator(),
-          ProviderScope(
-            overrides: [
-              nostrEntityProvider(eventReference: eventReference).overrideWith((_) => article),
-            ],
-            child: Article(eventReference: eventReference),
-          ),
+          const ArticlePreview(),
           SizedBox(height: 12.0.s),
           const HorizontalSeparator(),
           SizedBox(height: 40.0.s),
