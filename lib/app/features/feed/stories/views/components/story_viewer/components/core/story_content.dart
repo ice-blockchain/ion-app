@@ -32,7 +32,7 @@ class StoryContent extends HookConsumerWidget {
     );
 
     final bottomPadding =
-        isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom - 30.0.s : 16.0.s;
+        isKeyboardVisible ? MediaQuery.of(context).viewInsets.bottom + 16.0.s : 16.0.s;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
