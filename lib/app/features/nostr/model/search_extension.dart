@@ -27,7 +27,7 @@ class SearchExtensions {
     bool root = true,
   }) {
     return SearchExtensions([
-      if (root) RepliesCountSearchExtension(root: root, forKind: forKind),
+      RepliesCountSearchExtension(root: root, forKind: forKind),
       if (forKind == PostEntity.kind)
         RepostsCountSearchExtension()
       else
