@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/providers/attached_media_aspect_ratio_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_carousel.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/services/media_service/aspect_ratio.dart';
 
 class PostMedia extends HookConsumerWidget {
   const PostMedia({
@@ -26,9 +26,13 @@ class PostMedia extends HookConsumerWidget {
     final knownMedia = useMemoized(() => _filterKnownMedia(media));
 
     final aspectRatio = useMemoized(
-      () => calculateMediaAspectRatio(
-        ratioProviders: knownMedia.map(MediaAspectRatio.fromMediaAttachment),
-      ),
+      () => ref
+          .read(
+            attachedMediaAspectRatioProvider(
+              knownMedia.map(MediaAspectRatio.fromMediaAttachment),
+            ),
+          )
+          .aspectRatio,
     );
 
     if (knownMedia.isEmpty) {

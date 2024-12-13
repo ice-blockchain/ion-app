@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/providers/attached_media_aspect_ratio_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
-import 'package:ion/app/services/media_service/aspect_ratio.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
 const textEditorSingleImageKey = 'text-editor-single-image';
@@ -52,12 +52,17 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
                 if (assetEntity == null) {
                   return const SizedBox.shrink();
                 }
+
+                final aspectRatio = ref
+                    .read(
+                      attachedMediaAspectRatioProvider(
+                        [MediaAspectRatio.fromAssetEntity(assetEntity)].toList(),
+                      ),
+                    )
+                    .aspectRatio;
+
                 return AspectRatio(
-                  aspectRatio: calculateMediaAspectRatio(
-                    ratioProviders: [
-                      MediaAspectRatio.fromAssetEntity(assetEntity),
-                    ],
-                  ),
+                  aspectRatio: aspectRatio,
                   child: Image(
                     image: AssetEntityImageProvider(
                       assetEntity,

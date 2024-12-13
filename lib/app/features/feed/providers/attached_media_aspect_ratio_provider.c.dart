@@ -1,10 +1,12 @@
-// SPDX-License-Identifier: ice License 1.0
-
 import 'dart:math';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'attached_media_aspect_ratio_provider.c.g.dart';
 
 class MediaAspectRatio {
   const MediaAspectRatio._(this.aspectRatio);
@@ -26,16 +28,30 @@ class MediaAspectRatio {
   final double? aspectRatio;
 }
 
+class MediaAspectRatioResult {
+  const MediaAspectRatioResult(this.aspectRatio);
+
+  final double aspectRatio;
+
+  bool get isHorizontal => aspectRatio >= 1;
+
+  bool get isVertical => aspectRatio < 1;
+}
+
 /// Calculates the aspect ratio for a list of media items.
 ///
 /// The aspect ratio is calculated by finding an average of the
 /// dominant category (horizontal or vertical).
-double calculateMediaAspectRatio({required Iterable<MediaAspectRatio> ratioProviders}) {
+@riverpod
+MediaAspectRatioResult attachedMediaAspectRatio(
+  Ref ref,
+  Iterable<MediaAspectRatio> ratioProviders,
+) {
   const minVerticalMediaAspectRatio = 0.85;
   const maxHorizontalMediaAspectRatio = 1.63;
 
   if (ratioProviders.isEmpty) {
-    return 0;
+    return const MediaAspectRatioResult(0);
   }
 
   final horizontalRatios = <double>[];
@@ -54,5 +70,7 @@ double calculateMediaAspectRatio({required Iterable<MediaAspectRatio> ratioProvi
   final ratios =
       horizontalRatios.length > verticalRatios.length ? horizontalRatios : verticalRatios;
 
-  return ratios.reduce((a, b) => a + b) / ratios.length;
+  final resultRatio = ratios.reduce((a, b) => a + b) / ratios.length;
+
+  return MediaAspectRatioResult(resultRatio);
 }
