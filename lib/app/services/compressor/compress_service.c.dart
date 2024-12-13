@@ -210,8 +210,9 @@ class CompressionService {
     Duration duration = const Duration(seconds: 1),
   }) async {
     try {
+      const maxDimension = 720;
       final outputPath = await _generateOutputPath();
-      await FFmpegKit.executeWithArguments([
+      final session = await FFmpegKit.executeWithArguments([
         '-i',
         inputFile.path,
         '-ss',
@@ -221,17 +222,28 @@ class CompressionService {
         outputPath,
       ]);
 
+      final returnCode = await session.getReturnCode();
+      if (!ReturnCode.isSuccess(returnCode)) {
+        throw ExtractThumbnailException(returnCode);
+      }
+
+      final MediaFile(:width, :height) = inputFile;
+
+      if (height == null || width == null) {
+        throw UnknownFileResolutionException();
+      }
+
       final compressedImage = await compressImage(
         MediaFile(path: outputPath),
-        quality: 100,
-        width: 200,
-        height: 200,
+        // Do not pass the second dimension to keep the aspect ratio
+        width: width > height ? maxDimension : null,
+        height: height > width ? maxDimension : null,
       );
 
       return compressedImage;
     } catch (error, stackTrace) {
       Logger.log('Error during thumbnail extraction!', error: error, stackTrace: stackTrace);
-      throw ExtractThumbnailException();
+      rethrow;
     }
   }
 

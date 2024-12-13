@@ -128,8 +128,8 @@ class FileUploadException extends IONException {
       : super(10025, 'Failed to upload file to $url: $error');
 }
 
-class UnknownUploadFileResolutionException extends IONException {
-  UnknownUploadFileResolutionException() : super(10026, 'Unknown upload file resolution');
+class UnknownFileResolutionException extends IONException {
+  UnknownFileResolutionException() : super(10026, 'Unknown upload file resolution');
 }
 
 class CompressImageException extends IONException {
@@ -153,7 +153,7 @@ class CompressAudioToWavException extends IONException {
 }
 
 class ExtractThumbnailException extends IONException {
-  ExtractThumbnailException() : super(10032, 'Failed to extract thumbnail.');
+  ExtractThumbnailException(dynamic error) : super(10032, 'Failed to extract thumbnail: $error');
 }
 
 class CompressWithBrotliException extends IONException {

@@ -182,7 +182,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final MediaFile(:height, :width) = file;
 
     if (height == null || width == null) {
-      throw UnknownUploadFileResolutionException();
+      throw UnknownFileResolutionException();
     }
 
     final compressedImage = await ref.read(compressServiceProvider).compressImage(
