@@ -6,7 +6,7 @@ import 'package:ion/app/services/timer/restartable_timer.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'relays.c.g.dart';
+part 'relays_provider.c.g.dart';
 
 typedef RelaysState = Map<String, NostrRelay>;
 

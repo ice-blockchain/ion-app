@@ -11,7 +11,7 @@ import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/relays.c.dart';
+import 'package:ion/app/features/nostr/providers/relays_provider.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
