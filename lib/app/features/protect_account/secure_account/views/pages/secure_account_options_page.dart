@@ -6,7 +6,6 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/protect_account/authenticator/data/model/authenticator_steps.dart';
 import 'package:ion/app/features/protect_account/components/secure_account_option.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
@@ -132,7 +131,7 @@ class SecureAccountOptionsPage extends HookConsumerWidget {
     if (securityMethods.isAuthenticatorEnabled) {
       AuthenticatorDeleteRoute().push<void>(context);
     } else {
-      AuthenticatorSetupRoute(step: AuthenticatorSetupSteps.options).push<void>(context);
+      AuthenticatorSetupOptionsRoute().push<void>(context);
     }
   }
 
