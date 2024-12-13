@@ -5,6 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/services/media_service/aspect_ratio.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
 const textEditorSingleImageKey = 'text-editor-single-image';
@@ -13,7 +14,8 @@ const textEditorSingleImageKey = 'text-editor-single-image';
 /// Embeds a single image in the text editor.
 ///
 class TextEditorSingleImageEmbed extends CustomBlockEmbed {
-  TextEditorSingleImageEmbed(String path) : super(textEditorSingleImageKey, path);
+  TextEditorSingleImageEmbed(String path)
+      : super(textEditorSingleImageKey, path);
 
   static BlockEmbed image(String path) => TextEditorSingleImageEmbed(path);
 }
@@ -47,13 +49,16 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
             borderRadius: BorderRadius.circular(12),
             child: Consumer(
               builder: (context, ref, child) {
-                final assetEntity = ref.watch(assetEntityProvider(path)).valueOrNull;
+                final assetEntity =
+                    ref.watch(assetEntityProvider(path)).valueOrNull;
                 if (assetEntity == null) {
                   return const SizedBox.shrink();
                 }
-                return ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: 385.0.s,
+                return AspectRatio(
+                  aspectRatio: calculateMediaAspectRatio(
+                    ratioProviders: [
+                      MediaAspectRatio.fromAssetEntity(assetEntity),
+                    ],
                   ),
                   child: Image(
                     image: AssetEntityImageProvider(

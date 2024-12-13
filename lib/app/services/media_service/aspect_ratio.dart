@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class MediaAspectRatio {
   const MediaAspectRatio._(this.aspectRatio);
@@ -12,6 +13,10 @@ class MediaAspectRatio {
     final aspectRatio =
         file.height != null && file.width != null ? file.width! / file.height! : null;
     return MediaAspectRatio._(aspectRatio);
+  }
+
+  factory MediaAspectRatio.fromAssetEntity(AssetEntity entity) {
+    return MediaAspectRatio._(entity.width / entity.height);
   }
 
   factory MediaAspectRatio.fromMediaAttachment(MediaAttachment mediaAttachment) {
@@ -25,7 +30,7 @@ class MediaAspectRatio {
 ///
 /// The aspect ratio is calculated by finding an average of the
 /// dominant category (horizontal or vertical).
-double calculatePostImageAspectRatio({required Iterable<MediaAspectRatio> ratioProviders}) {
+double calculateMediaAspectRatio({required Iterable<MediaAspectRatio> ratioProviders}) {
   const minVerticalMediaAspectRatio = 0.85;
   const maxHorizontalMediaAspectRatio = 1.63;
 

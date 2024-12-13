@@ -26,7 +26,7 @@ class PostMedia extends HookConsumerWidget {
     final knownMedia = useMemoized(() => _filterKnownMedia(media));
 
     final aspectRatio = useMemoized(
-      () => calculatePostImageAspectRatio(
+      () => calculateMediaAspectRatio(
         ratioProviders: knownMedia.map(MediaAspectRatio.fromMediaAttachment),
       ),
     );
