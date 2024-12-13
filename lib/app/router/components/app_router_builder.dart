@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
+import 'package:ion/app/hooks/use_interval.dart';
 
 class AppRouterBuilder extends HookConsumerWidget {
   const AppRouterBuilder({super.key, this.child});
@@ -16,21 +17,16 @@ class AppRouterBuilder extends HookConsumerWidget {
     final notification = ref.watch(globalNotificationProvider);
     final isShowSafeArea = useState(false);
 
-    useEffect(
-      () {
-        if (notification.isShow) {
-          isShowSafeArea.value = true;
-        } else {
-          // Delay to hide safe area top to prevent animation glitch
-          Future.delayed(GlobalNotificationBar.animationDuration, () {
-            isShowSafeArea.value = false;
-          });
-        }
-
-        return null;
-      },
-      [notification.isShow],
-    );
+    if (notification.isShow) {
+      isShowSafeArea.value = true;
+    } else {
+      // Delay to hide safe area top to prevent animation glitch
+      useInterval(
+        delay: GlobalNotificationBar.animationDuration,
+        callback: () => isShowSafeArea.value = false,
+        oneTime: true,
+      );
+    }
 
     return Scaffold(
       body: SafeArea(
