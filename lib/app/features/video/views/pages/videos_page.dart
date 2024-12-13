@@ -24,9 +24,7 @@ class VideosPage extends HookConsumerWidget {
     useStatusBarColor();
 
     final dataSource = ref.watch(feedVideosDataSourceProvider(eventReference: eventReference));
-
-    // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
-    final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
+    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
 
     final nostrEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
     if (nostrEntity is! PostEntity) {
@@ -71,8 +69,7 @@ class VideosPage extends HookConsumerWidget {
     if (totalItems > threshold && index >= totalItems - threshold) {
       ref
           .read(
-            // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
-            mockPostEntitiesPagedDataProvider(
+            entitiesPagedDataProvider(
               ref.read(feedVideosDataSourceProvider(eventReference: eventReference)),
             ).notifier,
           )
