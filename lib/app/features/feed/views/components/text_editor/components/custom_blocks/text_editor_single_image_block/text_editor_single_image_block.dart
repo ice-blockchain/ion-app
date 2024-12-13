@@ -5,7 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
-import 'package:photo_manager/photo_manager.dart';
+import 'package:ion/app/services/media_service/aspect_ratio.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
 const textEditorSingleImageKey = 'text-editor-single-image';
@@ -37,27 +37,39 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
   ) {
     final path = node.value.data as String;
 
-    return SizedBox.square(
-      dimension: 100.0.s,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Consumer(
-          builder: (context, ref, child) {
-            final assetEntity = ref.watch(assetEntityProvider(path)).valueOrNull;
-            if (assetEntity == null) {
-              return const SizedBox.shrink();
-            }
-            return Image(
-              image: AssetEntityImageProvider(
-                assetEntity,
-                isOriginal: false,
-                thumbnailSize: const ThumbnailSize.square(300),
-              ),
-              fit: BoxFit.cover,
-            );
-          },
+    // Add Column to be sure that image will be added from the new line
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0.s),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Consumer(
+              builder: (context, ref, child) {
+                final assetEntity = ref.watch(assetEntityProvider(path)).valueOrNull;
+                if (assetEntity == null) {
+                  return const SizedBox.shrink();
+                }
+
+                return AspectRatio(
+                  aspectRatio: attachedMediaAspectRatio(
+                    [MediaAspectRatio.fromAssetEntity(assetEntity)],
+                  ).aspectRatio,
+                  child: Image(
+                    image: AssetEntityImageProvider(
+                      assetEntity,
+                      isOriginal: false,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                );
+              },
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

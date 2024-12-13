@@ -11,6 +11,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/attached_media_preview_list.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/collaple_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/current_user_avatar.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
@@ -27,6 +28,7 @@ import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({
@@ -69,6 +71,8 @@ class CreatePostModal extends HookConsumerWidget {
     Future<void> onBack() async =>
         textEditorController.document.isEmpty() ? context.pop() : _showCancelCreationModal(context);
 
+    final attachedMediaNotifier = useState<List<MediaFile>>([]);
+
     return BackHardwareButtonInterceptor(
       onBackPress: (_) => onBack(),
       child: SheetContent(
@@ -88,36 +92,60 @@ class CreatePostModal extends HookConsumerWidget {
               child: KeyboardDismissOnTap(
                 child: SingleChildScrollView(
                   controller: scrollController,
-                  child: ScreenSideOffset.small(
-                    child: Column(
-                      children: [
-                        if (videoPath != null) VideoPreviewCover(videoPath: videoPath!),
-                        if (parentEvent != null) ParentEntity(eventReference: parentEvent!),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10.0.s),
-                          child: Row(
-                            key: textInputKey,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const CurrentUserAvatar(),
-                              SizedBox(width: 10.0.s),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 6.0.s,
-                                  ),
-                                  child: TextEditor(
-                                    textEditorController,
-                                    placeholder: createOption.getPlaceholder(context),
-                                  ),
+                  child: Column(
+                    children: [
+                      if (videoPath != null)
+                        ScreenSideOffset.small(
+                          child: VideoPreviewCover(videoPath: videoPath!),
+                        ),
+                      if (parentEvent != null)
+                        ScreenSideOffset.small(
+                          child: ParentEntity(eventReference: parentEvent!),
+                        ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10.0.s),
+                        child: Row(
+                          key: textInputKey,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: ScreenSideOffset.defaultSmallMargin,
+                              ),
+                              child: const CurrentUserAvatar(),
+                            ),
+                            SizedBox(width: 10.0.s),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  top: 6.0.s,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextEditor(
+                                      textEditorController,
+                                      placeholder: createOption.getPlaceholder(context),
+                                    ),
+                                    if (attachedMediaNotifier.value.isNotEmpty) ...[
+                                      SizedBox(height: 12.0.s),
+                                      AttachedMediaPreview(
+                                        attachedMediaNotifier: attachedMediaNotifier,
+                                      ),
+                                    ],
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        if (quotedEvent != null) QuotedEntity(eventReference: quotedEvent!),
-                      ],
-                    ),
+                      ),
+                      if (quotedEvent != null)
+                        ScreenSideOffset.small(
+                          child: QuotedEntity(eventReference: quotedEvent!),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -131,7 +159,9 @@ class CreatePostModal extends HookConsumerWidget {
               key: actionsToolbarKey,
               child: ActionsToolbar(
                 actions: [
-                  ToolbarImageButton(textEditorController: textEditorController),
+                  ToolbarImageButton(
+                    delegate: AttachedMediaHandler(attachedMediaNotifier),
+                  ),
                   ToolbarPollButton(textEditorController: textEditorController),
                   ToolbarRegularButton(textEditorController: textEditorController),
                   ToolbarItalicButton(textEditorController: textEditorController),
@@ -141,6 +171,7 @@ class CreatePostModal extends HookConsumerWidget {
                   textEditorController: textEditorController,
                   parentEvent: parentEvent,
                   quotedEvent: quotedEvent,
+                  attachedMedia: attachedMediaNotifier.value,
                 ),
               ),
             ),

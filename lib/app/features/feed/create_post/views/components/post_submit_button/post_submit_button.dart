@@ -11,10 +11,10 @@ import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dar
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class PostSubmitButton extends HookConsumerWidget {
@@ -23,6 +23,7 @@ class PostSubmitButton extends HookConsumerWidget {
     super.key,
     this.parentEvent,
     this.quotedEvent,
+    this.attachedMedia = const [],
   });
 
   final QuillController textEditorController;
@@ -30,6 +31,8 @@ class PostSubmitButton extends HookConsumerWidget {
   final EventReference? parentEvent;
 
   final EventReference? quotedEvent;
+
+  final List<MediaFile> attachedMedia;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,16 +63,8 @@ class PostSubmitButton extends HookConsumerWidget {
       loading: isSubmitLoading,
       enabled: isSubmitButtonEnabled && !isSubmitLoading,
       onPressed: () async {
-        final imageIds = <String>[];
-        final operations = <Operation>[];
-        for (final operation in textEditorController.document.toDelta().operations) {
-          final data = operation.data;
-          if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
-            imageIds.add(data[textEditorSingleImageKey] as String);
-          } else {
-            operations.add(operation);
-          }
-        }
+        final imageIds = attachedMedia.map((e) => e.path).toList();
+        final operations = textEditorController.document.toDelta().operations;
 
         await ref.read(createPostNotifierProvider.notifier).create(
               content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),

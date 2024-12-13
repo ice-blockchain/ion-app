@@ -19,7 +19,9 @@ class ArticleMainToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionsToolbar(
       actions: [
-        ToolbarImageButton(textEditorController: textEditorController),
+        ToolbarImageButton(
+          delegate: QuillControllerHandler(textEditorController),
+        ),
         ToolbarTypographyButton(
           textEditorController: textEditorController,
           onPressed: onTypographyPressed,
