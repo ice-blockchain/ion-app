@@ -47,9 +47,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         final attachments = <MediaAttachment>[];
         await Future.wait(
           mediaIds.map((id) async {
-            final (:files, :mediaAttachment) = await _uploadMedia(id);
+            final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(id);
             attachments.add(mediaAttachment);
-            files.addAll(files);
+            files.addAll(fileMetadatas);
           }),
         );
 
@@ -124,7 +124,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }.toList();
   }
 
-  Future<({List<FileMetadata> files, MediaAttachment mediaAttachment})> _uploadMedia(
+  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(
     String mediaId,
   ) async {
     final assetEntity = await ref.read(assetEntityProvider(mediaId).future);
@@ -148,7 +148,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     };
   }
 
-  Future<({List<FileMetadata> files, MediaAttachment mediaAttachment})> _uploadImage(
+  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
     MediaFile file,
   ) async {
     const maxDimension = 1024;
@@ -170,10 +170,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         .read(nostrUploadNotifierProvider.notifier)
         .upload(compressedImage, alt: FileAlt.post);
 
-    return (files: [uploadResult.fileMetadata], mediaAttachment: uploadResult.mediaAttachment);
+    return (
+      fileMetadatas: [uploadResult.fileMetadata],
+      mediaAttachment: uploadResult.mediaAttachment
+    );
   }
 
-  Future<({List<FileMetadata> files, MediaAttachment mediaAttachment})> _uploadVideo(
+  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadVideo(
     MediaFile file,
   ) async {
     final compressedVideo = await ref.read(compressServiceProvider).compressVideo(file);
@@ -182,18 +185,21 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         .read(nostrUploadNotifierProvider.notifier)
         .upload(compressedVideo, alt: FileAlt.post);
 
-    final thumb = await ref.read(compressServiceProvider).getThumbnail(compressedVideo);
+    final thumbImage = await ref.read(compressServiceProvider).getThumbnail(compressedVideo);
 
     final thumbUploadResult =
-        await ref.read(nostrUploadNotifierProvider.notifier).upload(thumb, alt: FileAlt.post);
+        await ref.read(nostrUploadNotifierProvider.notifier).upload(thumbImage, alt: FileAlt.post);
 
-    final mediaAttachment = videoUploadResult.mediaAttachment.copyWith(
-      thumb: thumbUploadResult.fileMetadata.url,
-      image: thumbUploadResult.fileMetadata.url,
-    );
+    final thumbUrl = thumbUploadResult.fileMetadata.url;
+
+    final mediaAttachment =
+        videoUploadResult.mediaAttachment.copyWith(thumb: thumbUrl, image: thumbUrl);
+
+    final videoFileMetadata =
+        videoUploadResult.fileMetadata.copyWith(thumb: thumbUrl, image: thumbUrl);
 
     return (
-      files: [videoUploadResult.fileMetadata, thumbUploadResult.fileMetadata],
+      fileMetadatas: [videoFileMetadata, thumbUploadResult.fileMetadata],
       mediaAttachment: mediaAttachment
     );
   }
