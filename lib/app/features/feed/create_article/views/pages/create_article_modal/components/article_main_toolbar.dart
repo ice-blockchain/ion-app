@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
 
-class ArticleMainToolbar extends HookConsumerWidget {
+class ArticleMainToolbar extends StatelessWidget {
   const ArticleMainToolbar({
     required this.textEditorController,
     required this.onTypographyPressed,
@@ -17,7 +17,7 @@ class ArticleMainToolbar extends HookConsumerWidget {
   final VoidCallback onTypographyPressed;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ActionsToolbar(
       actions: [
         ToolbarImageButton(
