@@ -168,3 +168,8 @@ class UnsupportedMediaTypeException extends IONException {
   UnsupportedMediaTypeException(String mediaType)
       : super(10035, 'Unsupported media type: $mediaType');
 }
+
+class UnsupportedParentEntity extends IONException {
+  UnsupportedParentEntity({required String eventId})
+      : super(10036, 'Unsupported parent entity: $eventId');
+}

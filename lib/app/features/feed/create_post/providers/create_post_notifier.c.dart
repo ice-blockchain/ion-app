@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.c.dart';
@@ -14,6 +15,7 @@ import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
+import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
@@ -74,8 +76,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         if (parentEntity == null) {
           throw EventNotFoundException(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
         }
-        if (parentEntity is! PostEntity) {
-          throw IncorrectEventKindException(eventId: parentEvent.eventId, kind: PostEntity.kind);
+        if (parentEntity is! PostEntity || parentEntity is! ArticleEntity) {
+          throw UnsupportedParentEntity(eventId: parentEvent.eventId);
         }
         data = data.copyWith(
           relatedEvents: _buildRelatedEvents(parentEntity),
@@ -104,24 +106,42 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     ];
   }
 
-  List<RelatedEvent> _buildRelatedEvents(PostEntity parentEntity) {
-    final rootRelatedEvent = parentEntity.data.relatedEvents
-        ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
-    return [
-      if (rootRelatedEvent != null) rootRelatedEvent,
-      RelatedEvent(
-        eventId: parentEntity.id,
-        pubkey: parentEntity.masterPubkey,
-        marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
-      ),
-    ];
+  List<RelatedEvent> _buildRelatedEvents(NostrEntity parentEntity) {
+    if (parentEntity is ArticleEntity) {
+      return [
+        RelatedEvent(
+          eventId: parentEntity.id,
+          pubkey: parentEntity.masterPubkey,
+          marker: RelatedEventMarker.root,
+        ),
+      ];
+    } else if (parentEntity is PostEntity) {
+      final rootRelatedEvent = parentEntity.data.relatedEvents
+          ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
+      return [
+        if (rootRelatedEvent != null) rootRelatedEvent,
+        RelatedEvent(
+          eventId: parentEntity.id,
+          pubkey: parentEntity.masterPubkey,
+          marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
+        ),
+      ];
+    } else {
+      throw UnsupportedParentEntity(eventId: parentEntity.id);
+    }
   }
 
-  List<RelatedPubkey> _buildRelatedPubkeys(PostEntity parentEntity) {
-    return <RelatedPubkey>{
-      RelatedPubkey(value: parentEntity.masterPubkey),
-      ...parentEntity.data.relatedPubkeys ?? [],
-    }.toList();
+  List<RelatedPubkey> _buildRelatedPubkeys(NostrEntity parentEntity) {
+    if (parentEntity is ArticleEntity) {
+      return [RelatedPubkey(value: parentEntity.masterPubkey)];
+    } else if (parentEntity is PostEntity) {
+      return <RelatedPubkey>{
+        RelatedPubkey(value: parentEntity.masterPubkey),
+        ...parentEntity.data.relatedPubkeys ?? [],
+      }.toList();
+    } else {
+      throw UnsupportedParentEntity(eventId: parentEntity.id);
+    }
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(
