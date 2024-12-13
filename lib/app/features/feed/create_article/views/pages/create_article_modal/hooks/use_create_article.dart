@@ -54,6 +54,7 @@ CreateArticleState useCreateArticle() {
     ref.read(createArticleProvider.notifier).updateImage(selectedImage.value);
     ref.read(createArticleProvider.notifier).updateTitle(titleController.text);
     ref.read(createArticleProvider.notifier).updateContent(content);
+    ref.read(createArticleProvider.notifier).updateOperationsAndImageIds(textEditorController);
   }
 
   return CreateArticleState(

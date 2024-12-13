@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,6 +16,8 @@ class CreateArticle extends _$CreateArticle {
       image: null,
       title: '',
       content: '',
+      operations: [],
+      imageIds: [],
     );
   }
 
@@ -27,6 +32,23 @@ class CreateArticle extends _$CreateArticle {
   void updateContent(String content) {
     state = state.copyWith(content: content);
   }
+
+  void updateOperationsAndImageIds(QuillController textEditorController) {
+    final operations = <Operation>[];
+    final imageIds = <String>[];
+    for (final operation in textEditorController.document.toDelta().operations) {
+      final data = operation.data;
+      if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
+        imageIds.add(data[textEditorSingleImageKey] as String);
+      } else {
+        operations.add(operation);
+      }
+    }
+    state = state.copyWith(
+      operations: operations,
+      imageIds: imageIds,
+    );
+  }
 }
 
 class CreateArticleState {
@@ -34,20 +56,28 @@ class CreateArticleState {
     required this.image,
     required this.title,
     required this.content,
+    required this.operations,
+    required this.imageIds,
   });
   final MediaFile? image;
   final String? title;
   final String? content;
+  final List<Operation> operations;
+  final List<String> imageIds;
 
   CreateArticleState copyWith({
     MediaFile? image,
     String? title,
     String? content,
+    List<Operation>? operations,
+    List<String>? imageIds,
   }) {
     return CreateArticleState(
       image: image ?? this.image,
       title: title ?? this.title,
       content: content ?? this.content,
+      operations: operations ?? this.operations,
+      imageIds: imageIds ?? this.imageIds,
     );
   }
 }

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -26,6 +28,8 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
     final title = ref.watch(createArticleProvider).title;
     final selectedImage = ref.watch(createArticleProvider).image;
     final content = ref.watch(createArticleProvider).content;
+    final imageIds = ref.watch(createArticleProvider).imageIds;
+    final operations = ref.watch(createArticleProvider).operations;
 
     final isSubmitLoading = ref.watch(createArticleNotifierProvider).isLoading;
 
@@ -64,8 +68,10 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                     onPressed: () async {
                       await ref.read(createArticleNotifierProvider.notifier).create(
                             title: title,
-                            content: content ?? '',
+                            content:
+                                Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
                             imageId: selectedImage?.path,
+                            mediaIds: imageIds,
                           );
 
                       if (!ref.read(createArticleNotifierProvider).hasError) {
