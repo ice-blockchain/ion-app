@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
@@ -35,19 +34,26 @@ class StoryRecordPage extends HookConsumerWidget {
     );
 
     final isCameraReady = cameraState is CameraReady;
+    final storyCameraState = ref.watch(storyCameraControllerProvider);
+    final selectedFile = storyCameraState.whenOrNull(saved: (file) => file);
 
-    ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) async {
-      if (next is StoryCameraSaved && context.mounted) {
-        final filePath = await ref.read(editMediaProvider(next.file).future);
-
-        if (context.mounted) {
-          await StoryPreviewRoute(
-            path: filePath,
-            mimeType: next.file.mimeType,
-          ).push<void>(context);
-        }
-      }
-    });
+    if (selectedFile != null) {
+      ref
+        ..watch(editMediaProvider(selectedFile))
+        ..displayErrors(editMediaProvider(selectedFile))
+        ..listen<AsyncValue<String>>(editMediaProvider(selectedFile), (previous, next) {
+          next.whenOrNull(
+            data: (filePath) async {
+              if (context.mounted) {
+                await StoryPreviewRoute(
+                  path: filePath,
+                  mimeType: selectedFile.mimeType,
+                ).push<void>(context);
+              }
+            },
+          );
+        });
+    }
 
     return PermissionAwareWidget(
       permissionType: Permission.camera,

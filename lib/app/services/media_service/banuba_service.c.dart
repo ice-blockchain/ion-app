@@ -2,6 +2,7 @@
 
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
@@ -75,12 +76,12 @@ Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
 
   if (filePath == null) {
     Logger.log('File path or mime type is null', error: mediaFile, stackTrace: StackTrace.current);
-    throw Exception('File path or mime type is null');
+    throw AssetEntityFileNotFoundException();
   }
 
   if (mediaFile.mimeType == null) {
     Logger.log('Mime type is null', error: mediaFile, stackTrace: StackTrace.current);
-    throw Exception('Mime type is null');
+    throw AssetEntityFileNotFoundException();
   }
 
   final mediaType = MediaType.fromMimeType(mediaFile.mimeType!);
