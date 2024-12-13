@@ -31,7 +31,7 @@ part 'create_post_notifier.c.g.dart';
 enum CreatePostCategory {
   post,
   video,
-  stroy,
+  story,
   reply,
 }
 
