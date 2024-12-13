@@ -11,7 +11,7 @@ import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/relays_provider.c.dart';
+import 'package:ion/app/features/nostr/providers/relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -153,12 +153,12 @@ class NostrNotifier extends _$NostrNotifier {
             throw UserMasterPubkeyNotFoundException();
           }
           final userRelays = await _getUserRelays(pubkey);
-          return await ref.read(relayNotifierProvider(userRelays.data.list.random.url).future);
+          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceUser():
         {
           final userRelays = await _getUserRelays(actionSource.pubkey);
-          return await ref.read(relayNotifierProvider(userRelays.data.list.random.url).future);
+          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
         }
       case ActionSourceIndexers():
         {
@@ -166,11 +166,11 @@ class NostrNotifier extends _$NostrNotifier {
           if (indexers == null) {
             throw UserIndexersNotFoundException();
           }
-          return await ref.read(relayNotifierProvider(indexers.random).future);
+          return await ref.read(relayProvider(indexers.random).future);
         }
       case ActionSourceRelayUrl():
         {
-          return await ref.read(relayNotifierProvider(actionSource.url).future);
+          return await ref.read(relayProvider(actionSource.url).future);
         }
     }
   }
