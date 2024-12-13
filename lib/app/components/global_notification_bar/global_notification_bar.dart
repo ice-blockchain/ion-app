@@ -102,7 +102,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
       ..listen(createPostNotifierProvider(CreatePostCategory.video), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.video);
       })
-      ..listen(createPostNotifierProvider(CreatePostCategory.stroy), (_, next) {
+      ..listen(createPostNotifierProvider(CreatePostCategory.story), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.story);
       })
       ..listen(repostNotifierProvider, (previous, next) {
