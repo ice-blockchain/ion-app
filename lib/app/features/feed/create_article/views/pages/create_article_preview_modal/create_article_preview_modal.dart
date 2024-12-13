@@ -39,6 +39,7 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
             title: Text(context.i18n.article_preview_title),
           ),
           const HorizontalSeparator(),
+          SizedBox(height: 12.0.s),
           const ArticlePreview(),
           SizedBox(height: 12.0.s),
           const HorizontalSeparator(),
