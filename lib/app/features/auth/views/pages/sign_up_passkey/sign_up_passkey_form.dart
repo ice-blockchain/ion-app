@@ -5,12 +5,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
+import 'package:ion/app/exceptions/request_execution_exception_extention.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class SignUpPasskeyForm extends HookConsumerWidget {
   const SignUpPasskeyForm({super.key});
@@ -25,12 +27,16 @@ class SignUpPasskeyForm extends HookConsumerWidget {
 
     ref.displayErrors(registerActionNotifierProvider);
 
+    final registerError = registerActionState.error;
+
     return Form(
       key: formKey.value,
       child: Column(
         children: [
           IdentityKeyNameInput(
-            errorText: registerActionState.error?.toString(),
+            errorText: registerError is RequestExecutionException
+                ? registerError.localizedString(context)
+                : registerActionState.error?.toString(),
             controller: identityKeyNameController,
           ),
           SizedBox(height: 16.0.s),
