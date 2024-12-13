@@ -129,15 +129,17 @@ class ArticleData with _$ArticleData implements EventSerializable {
   static List<RelatedHashtag> extractHashtagsFromMarkdown(String content) {
     final operations = jsonDecode(content) as List<dynamic>;
     return operations
+        .whereType<Map<String, dynamic>>()
         .where(
           (operation) =>
-              operation is Map<String, dynamic> &&
               operation.containsKey('insert') &&
               operation['insert'] is String &&
               (operation['insert'] as String).startsWith('#'),
         )
-        .map((operation) => RelatedHashtag(value: operation['insert'] as String))
-        .toList();
+        .map((operation) {
+      final insert = operation['insert']! as String;
+      return RelatedHashtag(value: insert);
+    }).toList();
   }
 
   static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {
