@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
@@ -12,7 +14,6 @@ import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_notifier.c.g.dart';
@@ -36,8 +37,9 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
 
     state = await AsyncValue.guard(() async {
       String? imageUrl;
-      var data = ArticleData.fromRawContent(content.trim());
+      final data = ArticleData.fromRawContent(content.trim());
       final files = <FileMetadata>[];
+      final uploadedUrls = <String, String>{};
 
       if (mediaIds != null) {
         final attachments = <MediaAttachment>[];
@@ -46,15 +48,12 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
             final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
             attachments.add(mediaAttachment);
             files.add(fileMetadata);
+
+            uploadedUrls[id] = mediaAttachment.url;
           }),
         );
-        data = data.copyWith(
-          content: [
-            ...attachments.map((attachment) => TextMatch('${attachment.url} ')),
-            ...data.content,
-          ],
-          media: {for (final attachment in attachments) attachment.url: attachment},
-        );
+
+        content = _replaceImagePathsWithUrls(content, uploadedUrls);
       }
 
       if (imageId != null) {
@@ -67,7 +66,7 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
         title: title,
         summary: summary,
         image: imageUrl,
-        content: data.content,
+        content: content,
         media: data.media,
         publishedAt: publishedAt ?? DateTime.now(),
       );
@@ -79,6 +78,26 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
 
       Logger.log('ARTICLE SENT');
     });
+  }
+
+  String _replaceImagePathsWithUrls(String content, Map<String, String> uploadedUrls) {
+    final operations = jsonDecode(content) as List<dynamic>;
+
+    for (final operation in operations) {
+      if (operation is Map<String, dynamic> &&
+          operation.containsKey('insert') &&
+          operation['insert'] is Map<String, dynamic>) {
+        final insertData = operation['insert'] as Map<String, dynamic>;
+        if (insertData.containsKey(textEditorSingleImageKey)) {
+          final localPath = insertData[textEditorSingleImageKey] as String;
+          if (uploadedUrls.containsKey(localPath)) {
+            insertData[textEditorSingleImageKey] = uploadedUrls[localPath];
+          }
+        }
+      }
+    }
+
+    return jsonEncode(operations);
   }
 
   Future<UploadResult> _uploadImage(String imageId) async {

@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/create_article/views/pages/create_article_
 import 'package:ion/app/features/feed/providers/article/create_article_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CreateArticlePreviewModal extends HookConsumerWidget {
@@ -27,9 +28,9 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
 
     final title = ref.watch(createArticleProvider).title;
     final selectedImage = ref.watch(createArticleProvider).image;
-    final content = ref.watch(createArticleProvider).content;
     final imageIds = ref.watch(createArticleProvider).imageIds;
     final operations = ref.watch(createArticleProvider).operations;
+    final content = ref.watch(createArticleProvider).content;
 
     final isSubmitLoading = ref.watch(createArticleNotifierProvider).isLoading;
 
@@ -66,6 +67,12 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
                     onPressed: () async {
+                      Logger.log(
+                        'Content: ${Document.fromDelta(Delta.fromOperations(operations)).toPlainText()}',
+                      );
+                      Logger.log('Content BEFORE: $content');
+                      Logger.log('ImageIDS: $imageIds');
+                      Logger.log('Operations: $operations');
                       await ref.read(createArticleNotifierProvider.notifier).create(
                             title: title,
                             content:

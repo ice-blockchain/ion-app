@@ -35,7 +35,7 @@ class ArticleDetailsHeader extends ConsumerWidget {
             SizedBox(height: 10.0.s),
             ArticleImage(
               imageUrl: article.data.image,
-              minutesToRead: calculateReadingTime(article.data.content.join(' ')),
+              minutesToRead: calculateReadingTime(article.data.content),
             ),
             SizedBox(height: 12.0.s),
             UserInfo(
