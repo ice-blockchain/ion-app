@@ -59,3 +59,5 @@ fastlane/keys
 
 # FVM Version Cache
 .fvm/
+
+assets/ion_identity/coins.json
