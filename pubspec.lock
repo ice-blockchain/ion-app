@@ -1467,12 +1467,13 @@ packages:
     source: hosted
     version: "2.1.0"
   passkeys_ios:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: passkeys_ios
-      sha256: "1e23e40efd12867725443923a72914c11f926dce8623757b45ed2d7a16e95731"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/passkeys/passkeys_ios"
+      ref: fix-ios-immediate-creds
+      resolved-ref: a282eccc77f7bf91b10273d477958b2ac104c5f9
+      url: "https://github.com/ice-tychon/flutter-passkeys.git"
+    source: git
     version: "2.1.0"
   passkeys_platform_interface:
     dependency: transitive
