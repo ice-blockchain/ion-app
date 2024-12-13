@@ -8,6 +8,8 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_hashtag.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
+import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
+import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
@@ -15,6 +17,7 @@ import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -46,63 +49,60 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      await Future<void>.delayed(const Duration(seconds: 3));
-      return;
+      var data = PostData.fromRawContent(content.trim());
+      final files = <FileMetadata>[];
 
-      // var data = PostData.fromRawContent(content.trim());
-      // final files = <FileMetadata>[];
+      if (mediaIds != null) {
+        final attachments = <MediaAttachment>[];
+        await Future.wait(
+          mediaIds.map((id) async {
+            final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(id);
+            attachments.add(mediaAttachment);
+            files.addAll(fileMetadatas);
+          }),
+        );
 
-      // if (mediaIds != null) {
-      //   final attachments = <MediaAttachment>[];
-      //   await Future.wait(
-      //     mediaIds.map((id) async {
-      //       final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(id);
-      //       attachments.add(mediaAttachment);
-      //       files.addAll(fileMetadatas);
-      //     }),
-      //   );
+        data = data.copyWith(
+          content: [
+            ...attachments.map((attachment) => TextMatch('${attachment.url} ')),
+            ...data.content,
+          ],
+          media: {for (final attachment in attachments) attachment.url: attachment},
+        );
+      }
 
-      //   data = data.copyWith(
-      //     content: [
-      //       ...attachments.map((attachment) => TextMatch('${attachment.url} ')),
-      //       ...data.content,
-      //     ],
-      //     media: {for (final attachment in attachments) attachment.url: attachment},
-      //   );
-      // }
+      if (quotedEvent != null) {
+        data = data.copyWith(
+          quotedEvent: QuotedEvent(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
+        );
+      }
 
-      // if (quotedEvent != null) {
-      //   data = data.copyWith(
-      //     quotedEvent: QuotedEvent(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
-      //   );
-      // }
+      if (parentEvent != null) {
+        final parentEntity =
+            await ref.read(nostrEntityProvider(eventReference: parentEvent).future);
+        if (parentEntity == null) {
+          throw EventNotFoundException(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
+        }
+        if (parentEntity is! PostEntity && parentEntity is! ArticleEntity) {
+          throw UnsupportedParentEntity(eventId: parentEvent.eventId);
+        }
+        data = data.copyWith(
+          relatedEvents: _buildRelatedEvents(parentEntity),
+          relatedPubkeys: _buildRelatedPubkeys(parentEntity),
+        );
+      }
 
-      // if (parentEvent != null) {
-      //   final parentEntity =
-      //       await ref.read(nostrEntityProvider(eventReference: parentEvent).future);
-      //   if (parentEntity == null) {
-      //     throw EventNotFoundException(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
-      //   }
-      //   if (parentEntity is! PostEntity || parentEntity is! ArticleEntity) {
-      //     throw UnsupportedParentEntity(eventId: parentEvent.eventId);
-      //   }
-      //   data = data.copyWith(
-      //     relatedEvents: _buildRelatedEvents(parentEntity),
-      //     relatedPubkeys: _buildRelatedPubkeys(parentEntity),
-      //   );
-      // }
+      data = data.copyWith(relatedHashtags: _buildRelatedHashtags(data.content));
 
-      // data = data.copyWith(relatedHashtags: _buildRelatedHashtags(data.content));
+      //TODO: check the event json according to notion when defined
+      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, data]);
 
-      // //TODO: check the event json according to notion when defined
-      // await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, data]);
-
-      // if (quotedEvent != null) {
-      //   ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
-      // }
-      // if (parentEvent != null) {
-      //   ref.read(repliesCountProvider(parentEvent).notifier).addOne();
-      // }
+      if (quotedEvent != null) {
+        ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
+      }
+      if (parentEvent != null) {
+        ref.read(repliesCountProvider(parentEvent).notifier).addOne();
+      }
     });
   }
 
