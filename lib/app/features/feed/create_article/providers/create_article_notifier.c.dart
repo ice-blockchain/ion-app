@@ -8,6 +8,7 @@ import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -35,6 +36,7 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
       if (imageId != null) {
         final uploadResult = await _uploadImage(imageId);
         imageUrl = uploadResult.mediaAttachment.url;
+        Logger.log('ARTICLE IMAGE UPLOADED');
       }
 
       final articleData = ArticleData(
@@ -48,6 +50,8 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
       await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([
         articleData,
       ]);
+
+      Logger.log('ARTICLE SENT');
     });
   }
 
