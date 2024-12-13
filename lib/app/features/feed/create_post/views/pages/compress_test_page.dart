@@ -85,8 +85,6 @@ class VideoCompressTab extends HookConsumerWidget {
 
         // Here you would invoke the compression logic
         // For demo purposes, we are directly playing the selected video
-        // compressedSize.value =
-        //     '${(await compressedFile.length() / 1024 / 1024).toStringAsFixed(2)} MB';
         compressedVideoController.value = VideoPlayerController.file(File(compressedFile.path));
         await compressedVideoController.value!.initialize();
         await compressedVideoController.value!.play();
