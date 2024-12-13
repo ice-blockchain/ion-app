@@ -42,8 +42,8 @@ class FillProfile extends HookConsumerWidget {
         if (pickedAvatar != null) {
           ref.read(onboardingDataProvider.notifier).avatar = pickedAvatar;
         }
-        ref.read(onboardingDataProvider.notifier).name = name.value;
-        ref.read(onboardingDataProvider.notifier).displayName = nickname.value;
+        ref.read(onboardingDataProvider.notifier).name = nickname.value;
+        ref.read(onboardingDataProvider.notifier).displayName = name.value;
         await SelectLanguagesRoute().push<void>(context);
       }
     });
