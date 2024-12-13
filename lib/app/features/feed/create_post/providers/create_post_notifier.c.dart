@@ -195,7 +195,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final uploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
-        .upload(compressedImage, alt: FileAlt.post);
+        .upload(compressedImage, alt: FileAlt.post); //TODO:set dynamically
 
     return (
       fileMetadatas: [uploadResult.fileMetadata],
@@ -210,12 +210,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final videoUploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
-        .upload(compressedVideo, alt: FileAlt.post);
+        .upload(compressedVideo, alt: FileAlt.post); //TODO:set dynamically
 
     final thumbImage = await ref.read(compressServiceProvider).getThumbnail(compressedVideo);
 
-    final thumbUploadResult =
-        await ref.read(nostrUploadNotifierProvider.notifier).upload(thumbImage, alt: FileAlt.post);
+    final thumbUploadResult = await ref
+        .read(nostrUploadNotifierProvider.notifier)
+        .upload(thumbImage, alt: FileAlt.post); //TODO:set dynamically
 
     final thumbUrl = thumbUploadResult.fileMetadata.url;
 
