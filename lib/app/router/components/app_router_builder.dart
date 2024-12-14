@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/hooks/use_interval.dart';
 
 class AppRouterBuilder extends HookConsumerWidget {
@@ -28,8 +29,9 @@ class AppRouterBuilder extends HookConsumerWidget {
       );
     }
 
-    return Scaffold(
-      body: SafeArea(
+    return Material(
+      color: context.theme.appColors.secondaryBackground,
+      child: SafeArea(
         top: isShowSafeArea.value,
         bottom: false,
         child: Column(
