@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-
-final routeObserver = RouteObserver<PageRoute<dynamic>>();
+import 'package:go_router/go_router.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 typedef RouteAwareCallback = void Function();
 
@@ -53,32 +53,62 @@ class _RouteAwareHook extends RouteAware {
   }
 }
 
+/// A Flutter Hook that implements route awareness functionality.
+///
+/// This hook allows tracking navigation events and executing callbacks when:
+/// - A route is pushed onto the navigation stack
+/// - A route is popped from the navigation stack
+/// - Another route is pushed on top of the current route
+/// - User returns to this route after popping the top route
 void useRouteAware({RouteAwareCallbacks? callbacks}) {
   final context = useContext();
   final routeAwareRef = useRef<_RouteAwareHook?>(null);
+  final currentRoute = ModalRoute.of(context);
+  final goRouterState = GoRouterState.of(context);
+
+  final String currentRouteName = useMemoized(
+    () {
+      final location = goRouterState.matchedLocation;
+      return goRouterState.name ?? goRouterState.fullPath ?? location;
+    },
+    [goRouterState.matchedLocation],
+  );
+
+  final isRouteActive = currentRoute?.isCurrent ?? false;
+  final wasRouteActive = usePrevious(isRouteActive);
 
   useEffect(
     () {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final route = ModalRoute.of(context);
-        log('route: $route', name: 'RouteAware');
-        log('route.runtimeType: ${route.runtimeType}', name: 'RouteAware');
-        if (route is PageRoute) {
-          final routeName = route.settings.name ?? 'unknown_route';
-          routeAwareRef.value = _RouteAwareHook(
-            routeName,
-            callbacks ?? const RouteAwareCallbacks(),
-          );
-          routeObserver.subscribe(routeAwareRef.value!, route);
-        }
-      });
+      if (currentRoute == null) return null;
+
+      if ((wasRouteActive ?? false) && !isRouteActive) {
+        callbacks?.onPushNext?.call();
+      } else if (wasRouteActive == false && isRouteActive) {
+        callbacks?.onPopNext?.call();
+      }
+      return null;
+    },
+    [isRouteActive, wasRouteActive, currentRouteName],
+  );
+
+  useEffect(
+    () {
+      if (currentRoute == null) return null;
+
+      routeAwareRef.value = _RouteAwareHook(
+        currentRouteName,
+        callbacks ?? const RouteAwareCallbacks(),
+      );
+
+      routeObserver.subscribe(routeAwareRef.value!, currentRoute);
 
       return () {
         if (routeAwareRef.value != null) {
           routeObserver.unsubscribe(routeAwareRef.value!);
+          routeAwareRef.value = null;
         }
       };
     },
-    const [],
+    [currentRoute, currentRouteName],
   );
 }
