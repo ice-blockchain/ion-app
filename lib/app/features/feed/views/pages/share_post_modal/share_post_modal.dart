@@ -15,7 +15,6 @@ class SharePostModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShareModalBase(
       title: context.i18n.feed_share_via,
-      showNextIcon: true,
       emptyStateWidget: const ShareOptions(),
       onClose: context.pop,
     );
