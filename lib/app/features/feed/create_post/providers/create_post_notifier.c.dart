@@ -89,7 +89,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       if (createOption == CreatePostOption.story) {
         data = data.copyWith(
-            expiration: EntityExpiration(value: DateTime.now().subtract(const Duration(days: 2))));
+          expiration: EntityExpiration(value: DateTime.now().subtract(const Duration(days: 2))),
+        );
       }
 
       //TODO: check the event json according to notion when defined
