@@ -6,9 +6,6 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/related_hashtag.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
@@ -16,6 +13,9 @@ import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/model/related_event.c.dart';
+import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
+import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
@@ -30,7 +30,7 @@ part 'create_post_notifier.c.g.dart';
 @Riverpod(dependencies: [nostrEntity])
 class CreatePostNotifier extends _$CreatePostNotifier {
   @override
-  FutureOr<void> build(CreatePostOption option) {}
+  FutureOr<void> build(CreatePostOption createOption) {}
 
   Future<void> create({
     required String content,
@@ -85,6 +85,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       }
 
       data = data.copyWith(relatedHashtags: _buildRelatedHashtags(data.content));
+
+      if (createOption == CreatePostOption.story) {
+        data = data.copyWith();
+      }
 
       //TODO: check the event json according to notion when defined
       await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, data]);

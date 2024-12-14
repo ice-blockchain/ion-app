@@ -105,7 +105,7 @@ class ArticleData implements EventSerializable {
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (publishedAt != null)
-          ['published_at', (publishedAt!.millisecondsSinceEpoch / 1000).toString()],
+          ['published_at', (publishedAt!.millisecondsSinceEpoch ~/ 1000).toString()],
       ],
       content: content,
     );
