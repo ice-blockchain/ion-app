@@ -2,7 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
@@ -10,7 +10,6 @@ import 'package:ion/app/features/feed/data/models/entities/related_hashtag.c.dar
 import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
@@ -23,7 +22,6 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
-import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
@@ -44,7 +42,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required String content,
     EventReference? parentEvent,
     EventReference? quotedEvent,
-    List<String>? mediaIds,
+    List<MediaFile>? mediaFiles,
   }) async {
     state = const AsyncValue.loading();
 
@@ -52,11 +50,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       var data = PostData.fromRawContent(content.trim());
       final files = <FileMetadata>[];
 
-      if (mediaIds != null) {
+      if (mediaFiles != null) {
         final attachments = <MediaAttachment>[];
         await Future.wait(
-          mediaIds.map((id) async {
-            final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(id);
+          mediaFiles.map((mediaFile) async {
+            final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(mediaFile);
             attachments.add(mediaAttachment);
             files.addAll(fileMetadatas);
           }),
@@ -152,26 +150,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(
-    String mediaId,
+    MediaFile mediaFile,
   ) async {
-    final assetEntity = await ref.read(assetEntityProvider(mediaId).future);
-    if (assetEntity == null) {
-      throw AssetEntityFileNotFoundException();
-    }
-
-    final file = await assetEntity.file;
-
-    if (file == null) {
-      throw AssetEntityFileNotFoundException();
-    }
-
-    final mediaFile =
-        MediaFile(path: file.path, width: assetEntity.width, height: assetEntity.height);
-
-    return switch (assetEntity.type) {
-      AssetType.image => _uploadImage(mediaFile),
-      AssetType.video => _uploadVideo(mediaFile),
-      _ => throw UnsupportedMediaTypeException(assetEntity.type.toShortString()),
+    final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
+    return switch (mediaType) {
+      MediaType.image => _uploadImage(mediaFile),
+      MediaType.video => _uploadVideo(mediaFile),
+      _ => throw UnknownMediaTypeException(),
     };
   }
 
@@ -179,11 +164,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     MediaFile file,
   ) async {
     const maxDimension = 1024;
-    final MediaFile(:height, :width) = file;
-
-    if (height == null || width == null) {
-      throw UnknownFileResolutionException();
-    }
+    final (:width, :height) =
+        await ref.read(compressServiceProvider).getImageDimension(path: file.path);
 
     final compressedImage = await ref.read(compressServiceProvider).compressImage(
           MediaFile(path: file.path),

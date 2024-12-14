@@ -164,9 +164,8 @@ class DecompressBrotliException extends IONException {
   DecompressBrotliException() : super(10034, 'Failed to decompress Brotli file.');
 }
 
-class UnsupportedMediaTypeException extends IONException {
-  UnsupportedMediaTypeException(String mediaType)
-      : super(10035, 'Unsupported media type: $mediaType');
+class UnknownMediaTypeException extends IONException {
+  UnknownMediaTypeException() : super(10035, 'Unknown media type');
 }
 
 class UnsupportedParentEntity extends IONException {

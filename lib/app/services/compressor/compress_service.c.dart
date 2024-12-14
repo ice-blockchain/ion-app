@@ -135,7 +135,7 @@ class CompressionService {
         throw CompressImageException(returnCode);
       }
 
-      final outputDimension = await _getImageDimension(path: output);
+      final outputDimension = await getImageDimension(path: output);
 
       return MediaFile(
         path: output,
@@ -318,7 +318,7 @@ class CompressionService {
   ///
   /// Get width and height for the given image path
   ///
-  Future<({int width, int height})> _getImageDimension({required String path}) async {
+  Future<({int width, int height})> getImageDimension({required String path}) async {
     final file = File(path);
     final imageBytes = await file.readAsBytes();
 
