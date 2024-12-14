@@ -120,7 +120,7 @@ class ReplyInputField extends HookConsumerWidget {
               trailing: PostSubmitButton(
                 textEditorController: textEditorController,
                 parentEvent: eventReference,
-                attachedMedia: attachedMediaNotifier.value,
+                mediaFiles: attachedMediaNotifier.value,
               ),
             ),
         ],

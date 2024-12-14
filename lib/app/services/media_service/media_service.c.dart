@@ -29,6 +29,7 @@ class MediaFile with _$MediaFile {
     int? width,
     int? height,
     String? mimeType,
+    String? thumb,
   }) = _MediaFile;
 
   const MediaFile._();

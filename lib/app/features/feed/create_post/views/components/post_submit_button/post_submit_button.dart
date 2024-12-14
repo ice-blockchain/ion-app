@@ -26,7 +26,7 @@ class PostSubmitButton extends HookConsumerWidget {
     super.key,
     this.parentEvent,
     this.quotedEvent,
-    this.attachedMedia = const [],
+    this.mediaFiles = const [],
   });
 
   final QuillController textEditorController;
@@ -35,7 +35,7 @@ class PostSubmitButton extends HookConsumerWidget {
 
   final EventReference? quotedEvent;
 
-  final List<MediaFile> attachedMedia;
+  final List<MediaFile> mediaFiles;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,9 +62,8 @@ class PostSubmitButton extends HookConsumerWidget {
     return ToolbarSendButton(
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
-        final mediaIds = attachedMedia.map((e) => e.path).toList();
         final operations = textEditorController.document.toDelta().operations;
-        final mediaFiles = await _buildMediaFilesFromIds(ref, mediaIds: mediaIds);
+        final convertedMediaFiles = await _convertToMediaFiles(ref, mediaFiles: mediaFiles);
 
         unawaited(
           ref
@@ -77,7 +76,7 @@ class PostSubmitButton extends HookConsumerWidget {
                 content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
                 parentEvent: parentEvent,
                 quotedEvent: quotedEvent,
-                mediaFiles: mediaFiles,
+                mediaFiles: convertedMediaFiles,
               ),
         );
 
@@ -88,13 +87,14 @@ class PostSubmitButton extends HookConsumerWidget {
     );
   }
 
-  Future<List<MediaFile>> _buildMediaFilesFromIds(
+  // Convert all asset media ids-a returned from MediaPicker to actual file path-es
+  Future<List<MediaFile>> _convertToMediaFiles(
     WidgetRef ref, {
-    required List<String> mediaIds,
+    required List<MediaFile> mediaFiles,
   }) async {
     return Future.wait(
-      mediaIds.map((mediaId) async {
-        final assetEntity = await ref.read(assetEntityProvider(mediaId).future);
+      mediaFiles.map((mediaFile) async {
+        final assetEntity = await ref.read(assetEntityProvider(mediaFile.path).future);
         if (assetEntity == null) {
           throw AssetEntityFileNotFoundException();
         }
@@ -107,6 +107,7 @@ class PostSubmitButton extends HookConsumerWidget {
           height: assetEntity.height,
           width: assetEntity.width,
           mimeType: mimeType,
+          thumb: mediaFile.thumb,
         );
       }),
     );

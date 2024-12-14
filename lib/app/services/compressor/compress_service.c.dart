@@ -201,40 +201,44 @@ class CompressionService {
   }
 
   ///
-  /// Extracts a thumbnail from a video file.
+  /// Extracts a thumbnail from a video file or processes the provided [thumb].
   /// If success, returns a new [MediaFile] with the thumbnail.
   /// If fails, throws an exception.
   ///
-  Future<MediaFile> getThumbnail(
-    MediaFile inputFile, {
-    Duration duration = const Duration(seconds: 1),
-  }) async {
+  Future<MediaFile> getThumbnail(MediaFile videoFile, {String? thumb}) async {
     try {
       const maxDimension = 720;
-      final outputPath = await _generateOutputPath();
-      final session = await FFmpegKit.executeWithArguments([
-        '-i',
-        inputFile.path,
-        '-ss',
-        '00:00:01.000',
-        '-vframes',
-        '1',
-        outputPath,
-      ]);
 
-      final returnCode = await session.getReturnCode();
-      if (!ReturnCode.isSuccess(returnCode)) {
-        throw ExtractThumbnailException(returnCode);
+      var thumbPath = thumb;
+
+      if (thumbPath == null) {
+        final outputPath = await _generateOutputPath();
+        final session = await FFmpegKit.executeWithArguments([
+          '-i',
+          videoFile.path,
+          '-ss',
+          '00:00:01.000',
+          '-vframes',
+          '1',
+          outputPath,
+        ]);
+
+        final returnCode = await session.getReturnCode();
+        if (!ReturnCode.isSuccess(returnCode)) {
+          throw ExtractThumbnailException(returnCode);
+        }
+
+        thumbPath = outputPath;
       }
 
-      final MediaFile(:width, :height) = inputFile;
+      final MediaFile(:width, :height) = videoFile;
 
       if (height == null || width == null) {
         throw UnknownFileResolutionException();
       }
 
       final compressedImage = await compressImage(
-        MediaFile(path: outputPath),
+        MediaFile(path: thumbPath),
         // Do not pass the second dimension to keep the aspect ratio
         width: width > height ? maxDimension : null,
         height: height > width ? maxDimension : null,

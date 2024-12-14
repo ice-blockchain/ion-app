@@ -72,6 +72,8 @@ class CreatePostModal extends HookConsumerWidget {
         textEditorController.document.isEmpty() ? context.pop() : _showCancelCreationModal(context);
 
     final attachedMediaNotifier = useState<List<MediaFile>>([]);
+    final attachedVideoNotifier =
+        useState<MediaFile?>(videoPath != null ? MediaFile(path: videoPath!) : null);
 
     return BackHardwareButtonInterceptor(
       onBackPress: (_) => onBack(),
@@ -94,10 +96,9 @@ class CreatePostModal extends HookConsumerWidget {
                   controller: scrollController,
                   child: Column(
                     children: [
-                      if (videoPath != null)
-                        ScreenSideOffset.small(
-                          child: VideoPreviewCover(videoPath: videoPath!),
-                        ),
+                      ScreenSideOffset.small(
+                        child: VideoPreviewCover(attachedVideoNotifier: attachedVideoNotifier),
+                      ),
                       if (parentEvent != null)
                         ScreenSideOffset.small(
                           child: ParentEntity(eventReference: parentEvent!),
@@ -171,7 +172,10 @@ class CreatePostModal extends HookConsumerWidget {
                   textEditorController: textEditorController,
                   parentEvent: parentEvent,
                   quotedEvent: quotedEvent,
-                  attachedMedia: attachedMediaNotifier.value,
+                  mediaFiles: [
+                    ...attachedMediaNotifier.value,
+                    if (attachedVideoNotifier.value != null) attachedVideoNotifier.value!,
+                  ],
                 ),
               ),
             ),

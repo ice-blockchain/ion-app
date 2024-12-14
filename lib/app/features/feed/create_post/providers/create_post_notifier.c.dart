@@ -168,7 +168,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         await ref.read(compressServiceProvider).getImageDimension(path: file.path);
 
     final compressedImage = await ref.read(compressServiceProvider).compressImage(
-          MediaFile(path: file.path),
+          file,
           // Do not pass the second dimension to keep the aspect ratio
           width: width > height ? maxDimension : null,
           height: height > width ? maxDimension : null,
@@ -194,7 +194,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         .read(nostrUploadNotifierProvider.notifier)
         .upload(compressedVideo, alt: FileAlt.post); //TODO:set dynamically
 
-    final thumbImage = await ref.read(compressServiceProvider).getThumbnail(compressedVideo);
+    final thumbImage =
+        await ref.read(compressServiceProvider).getThumbnail(compressedVideo, thumb: file.thumb);
 
     final thumbUploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
