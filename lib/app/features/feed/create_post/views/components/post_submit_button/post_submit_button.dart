@@ -11,6 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
@@ -23,6 +24,7 @@ import 'package:ion/app/utils/validators.dart';
 class PostSubmitButton extends HookConsumerWidget {
   const PostSubmitButton({
     required this.textEditorController,
+    required this.createOption,
     super.key,
     this.parentEvent,
     this.quotedEvent,
@@ -36,6 +38,8 @@ class PostSubmitButton extends HookConsumerWidget {
   final EventReference? quotedEvent;
 
   final List<MediaFile> mediaFiles;
+
+  final CreatePostOption createOption;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,7 +73,7 @@ class PostSubmitButton extends HookConsumerWidget {
           ref
               .read(
                 createPostNotifierProvider(
-                  parentEvent == null ? CreatePostCategory.post : CreatePostCategory.reply,
+                  createOption,
                 ).notifier,
               )
               .create(

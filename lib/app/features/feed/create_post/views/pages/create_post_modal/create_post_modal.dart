@@ -176,6 +176,7 @@ class CreatePostModal extends HookConsumerWidget {
                     ...attachedMediaNotifier.value,
                     if (attachedVideoNotifier.value != null) attachedVideoNotifier.value!,
                   ],
+                  createOption: createOption,
                 ),
               ),
             ),

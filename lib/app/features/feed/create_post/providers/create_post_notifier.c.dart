@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
@@ -26,17 +27,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
 
-enum CreatePostCategory {
-  post,
-  video,
-  story,
-  reply,
-}
-
 @Riverpod(dependencies: [nostrEntity])
 class CreatePostNotifier extends _$CreatePostNotifier {
   @override
-  FutureOr<void> build(CreatePostCategory category) {}
+  FutureOr<void> build(CreatePostOption option) {}
 
   Future<void> create({
     required String content,

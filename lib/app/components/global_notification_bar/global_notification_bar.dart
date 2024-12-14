@@ -7,6 +7,7 @@ import 'package:ion/app/components/global_notification_bar/models/global_notific
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
@@ -93,16 +94,16 @@ class GlobalNotificationBar extends HookConsumerWidget {
 
   void _setupListeners(WidgetRef ref) {
     ref
-      ..listen(createPostNotifierProvider(CreatePostCategory.post), (_, next) {
+      ..listen(createPostNotifierProvider(CreatePostOption.plain), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.post);
       })
-      ..listen(createPostNotifierProvider(CreatePostCategory.reply), (_, next) {
+      ..listen(createPostNotifierProvider(CreatePostOption.reply), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.reply);
       })
-      ..listen(createPostNotifierProvider(CreatePostCategory.video), (_, next) {
+      ..listen(createPostNotifierProvider(CreatePostOption.video), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.video);
       })
-      ..listen(createPostNotifierProvider(CreatePostCategory.story), (_, next) {
+      ..listen(createPostNotifierProvider(CreatePostOption.story), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.story);
       })
       ..listen(repostNotifierProvider, (previous, next) {

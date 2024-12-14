@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_author_header.dart';
@@ -121,6 +122,7 @@ class ReplyInputField extends HookConsumerWidget {
                 textEditorController: textEditorController,
                 parentEvent: eventReference,
                 mediaFiles: attachedMediaNotifier.value,
+                createOption: CreatePostOption.reply,
               ),
             ),
         ],
