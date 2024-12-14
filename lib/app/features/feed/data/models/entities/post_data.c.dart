@@ -6,13 +6,14 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/nostr/model/related_event.c.dart';
-import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
-import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
+import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
 import 'package:ion/app/features/nostr/model/entity_media_data.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/model/related_event.c.dart';
+import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
+import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
@@ -63,6 +64,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
   const factory PostData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
+    EntityExpiration? expiration,
     QuotedEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
@@ -77,7 +79,12 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     return PostData(
       content: parsedContent,
       media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
-      quotedEvent: _buildQuotedEvent(tags[QuotedEvent.tagName]),
+      expiration: tags[EntityExpiration.tagName] != null
+          ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
+          : null,
+      quotedEvent: tags[QuotedEvent.tagName] != null
+          ? QuotedEvent.fromTag(tags[QuotedEvent.tagName]!.first)
+          : null,
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
@@ -114,6 +121,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
       content: content.map((match) => match.text).join(),
       tags: [
         ...tags,
+        if (expiration != null) expiration!.toTag(),
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
@@ -121,13 +129,6 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
       ],
     );
-  }
-
-  static QuotedEvent? _buildQuotedEvent(List<List<String>>? qTags) {
-    if (qTags == null) {
-      return null;
-    }
-    return QuotedEvent.fromTag(qTags.first);
   }
 
   @override
