@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
@@ -87,7 +88,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       data = data.copyWith(relatedHashtags: _buildRelatedHashtags(data.content));
 
       if (createOption == CreatePostOption.story) {
-        data = data.copyWith();
+        data = data.copyWith(
+            expiration: EntityExpiration(value: DateTime.now().subtract(const Duration(days: 2))));
       }
 
       //TODO: check the event json according to notion when defined
