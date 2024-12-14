@@ -16,7 +16,10 @@ class GlobalNotification extends _$GlobalNotification {
   Timer? _timer;
 
   void show(GlobalNotificationData data) {
-    state = state.copyWith(isShow: true, data: data);
+    // Prevent bottom sheet from jumping when showing notification
+    Future.delayed(const Duration(milliseconds: 500), () {
+      state = state.copyWith(isShow: true, data: data);
+    });
 
     _timer?.cancel();
 
