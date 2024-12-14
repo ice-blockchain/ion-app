@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +13,7 @@ import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart'
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/hooks/use_route_aware_hook.dart';
 
 class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({
@@ -28,6 +31,23 @@ class StoryViewerPage extends HookConsumerWidget {
     useOnInit(() => ref.read(storyViewingControllerProvider.notifier).updateStories(stories));
 
     final drag = usePageDismiss(context);
+
+    useRouteAware(
+      callbacks: RouteAwareCallbacks(
+        onPushNext: () {
+          log('== onPushNext', name: 'RouteAware:: StoryViewerPage');
+        },
+        onPopNext: () {
+          log('== onPopNext', name: 'RouteAware:: StoryViewerPage');
+        },
+        onPop: () {
+          log('== onPop', name: 'RouteAware:: StoryViewerPage');
+        },
+        onPush: () {
+          log('== onPush', name: 'RouteAware:: StoryViewerPage');
+        },
+      ),
+    );
 
     return Hero(
       tag: 'story-$pubkey',
