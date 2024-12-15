@@ -28,7 +28,7 @@ class VideoPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoPath = video.data.primaryMedia?.url;
+    final videoPath = video.data.primaryVideo?.url;
     if (videoPath == null || videoPath.isEmpty) {
       return Text(context.i18n.video_not_found);
     }

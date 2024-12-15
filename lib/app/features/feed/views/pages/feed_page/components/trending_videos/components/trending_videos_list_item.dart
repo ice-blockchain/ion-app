@@ -25,7 +25,7 @@ class TrendingVideoListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eventReference = EventReference.fromNostrEntity(video);
 
-    final thumbnailUrl = video.data.primaryMedia?.thumb;
+    final thumbnailUrl = video.data.primaryVideo?.thumb;
     if (thumbnailUrl == null || thumbnailUrl.isEmpty) {
       return _PlaceholderThumbnail(size: itemSize);
     }
