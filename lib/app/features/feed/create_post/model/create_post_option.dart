@@ -16,7 +16,7 @@ enum CreatePostOption {
       CreatePostOption.quote => context.i18n.feed_write_comment,
       CreatePostOption.plain => context.i18n.create_post_modal_title,
       CreatePostOption.video => context.i18n.create_video_new_video,
-      CreatePostOption.story => context.i18n.create_story_nav_title,
+      _ => throw ArgumentError()
     };
   }
 
