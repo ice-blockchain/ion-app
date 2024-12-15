@@ -10,8 +10,6 @@ import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
@@ -108,23 +106,6 @@ class GlobalNotificationBar extends HookConsumerWidget {
       })
       ..listen(repostNotifierProvider, (previous, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.repost);
-      })
-      ..listen<StoryCameraState>(storyCameraControllerProvider, (previous, next) {
-        if (next is StoryCameraUploading) {
-          _handleNotification(
-            ref,
-            notifier: const AsyncValue.loading(),
-            type: NotificationContentType.story,
-          );
-        }
-
-        if (next is StoryCameraPublished) {
-          _handleNotification(
-            ref,
-            notifier: const AsyncValue.data(null),
-            type: NotificationContentType.story,
-          );
-        }
       });
   }
 

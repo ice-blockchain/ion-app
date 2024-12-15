@@ -52,13 +52,6 @@ class StoryCameraController extends _$StoryCameraController {
     }
   }
 
-  Future<void> publishStory() async {
-    state = const StoryCameraState.uploading();
-    await Future<void>.delayed(const Duration(seconds: 2));
-
-    state = const StoryCameraState.published();
-  }
-
   Future<void> toggleFlash() async {
     final cameraNotifier = ref.read(cameraControllerNotifierProvider.notifier);
     await cameraNotifier.toggleFlash();
