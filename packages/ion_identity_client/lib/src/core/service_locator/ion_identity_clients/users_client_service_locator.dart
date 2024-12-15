@@ -49,7 +49,7 @@ class UsersClientServiceLocator {
         username,
         UserDetailsDataSource(
           IONIdentityServiceLocator.networkClient(config: config),
-          IONIdentityServiceLocator.identityStorage(),
+          IONIdentityServiceLocator.tokenStorage(),
         ),
       );
 
@@ -61,7 +61,7 @@ class UsersClientServiceLocator {
         username,
         IONConnectIndexersDataSource(
           IONIdentityServiceLocator.networkClient(config: config),
-          IONIdentityServiceLocator.identityStorage(),
+          IONIdentityServiceLocator.tokenStorage(),
         ),
       );
 
@@ -73,7 +73,7 @@ class UsersClientServiceLocator {
         username,
         SetIONConnectRelaysDataSource(
           IONIdentityServiceLocator.networkClient(config: config),
-          IONIdentityServiceLocator.identityStorage(),
+          IONIdentityServiceLocator.tokenStorage(),
         ),
       );
 }

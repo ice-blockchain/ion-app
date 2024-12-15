@@ -11,6 +11,7 @@ import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart'
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
+import 'package:ion/app/features/auth/views/pages/sign_up_password/password_validation.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password_button.dart';
 import 'package:ion/app/features/components/verify_identity/components/password_input.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -26,6 +27,9 @@ class SignUpPasswordPage extends HookConsumerWidget {
     final identityKeyNameController = useTextEditingController();
     final passwordController = useTextEditingController();
     final passwordConfirmationController = useTextEditingController();
+    final passwordInputFocused = useState<bool>(false);
+    final passwordConfirmationInputFocused = useState<bool>(false);
+
     final formKey = useRef(GlobalKey<FormState>());
 
     final registerActionState = ref.watch(registerActionNotifierProvider);
@@ -33,23 +37,29 @@ class SignUpPasswordPage extends HookConsumerWidget {
     ref.displayErrors(registerActionNotifierProvider);
 
     final passwordsError = useState<String?>(null);
+    final focusedPasswordValue = useState<String?>(null);
+    final onFocusedPasswordValue = useCallback(
+      (String value) {
+        passwordsError.value = null;
+        focusedPasswordValue.value = value;
+      },
+      [],
+    );
+
     useEffect(
       () {
-        void clearError() {
-          if (passwordsError.value != null) {
-            passwordsError.value = null;
-          }
+        if (passwordInputFocused.value) {
+          focusedPasswordValue.value = passwordController.text;
         }
-
-        passwordController.addListener(clearError);
-        passwordConfirmationController.addListener(clearError);
-
-        return () {
-          passwordController.removeListener(clearError);
-          passwordConfirmationController.removeListener(clearError);
-        };
+        if (passwordConfirmationInputFocused.value) {
+          focusedPasswordValue.value = passwordConfirmationController.text;
+        }
+        return null;
       },
-      [passwordController, passwordConfirmationController, passwordsError],
+      [
+        passwordInputFocused.value,
+        passwordConfirmationInputFocused.value,
+      ],
     );
 
     return SheetContent(
@@ -75,14 +85,24 @@ class SignUpPasswordPage extends HookConsumerWidget {
                     PasswordInput(
                       controller: passwordController,
                       errorText: passwordsError.value,
+                      onFocused: (value) => passwordInputFocused.value = value,
+                      onValueChanged: onFocusedPasswordValue,
                     ),
                     SizedBox(height: 16.0.s),
                     PasswordInput(
                       isConfirmation: true,
                       controller: passwordConfirmationController,
                       errorText: passwordsError.value,
+                      onFocused: (value) => passwordConfirmationInputFocused.value = value,
+                      onValueChanged: onFocusedPasswordValue,
                     ),
-                    SizedBox(height: 20.0.s),
+                    SizedBox(height: 16.0.s),
+                    PasswordValidation(
+                      password: focusedPasswordValue.value,
+                      showValidation:
+                          passwordInputFocused.value || passwordConfirmationInputFocused.value,
+                    ),
+                    SizedBox(height: 22.0.s),
                     SignUpPasswordButton(
                       onPressed: () {
                         if (passwordController.text == passwordConfirmationController.text) {

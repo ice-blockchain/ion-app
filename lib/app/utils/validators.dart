@@ -32,6 +32,18 @@ class Validators {
     return false;
   }
 
+  static bool hasNoDigits(String? value) {
+    return isEmpty(value) || !RegExp(r'\d').hasMatch(value!);
+  }
+
+  static bool hasNoUppercaseOrLowercaseLetters(String? value) {
+    return isEmpty(value) || !(RegExp('[A-Z]').hasMatch(value!) && RegExp('[a-z]').hasMatch(value));
+  }
+
+  static bool hasNoSpecialChars(String? value) {
+    return isEmpty(value) || !RegExp(r'[^a-zA-Z0-9\s]').hasMatch(value!);
+  }
+
   static bool isInvalidNumber(String? value) {
     return isEmpty(value) || double.tryParse(value!) == null;
   }

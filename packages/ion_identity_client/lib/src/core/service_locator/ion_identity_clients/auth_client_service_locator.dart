@@ -43,6 +43,7 @@ class AuthClientServiceLocator {
         config: config,
         identitySigner: identitySigner,
       ),
+      identitySigner: identitySigner,
       loginService: login(username: username, config: config, identitySigner: identitySigner),
       logoutService: logout(username: username, config: config),
       createRecoveryCredentialsService: createRecoveryCredentials(
