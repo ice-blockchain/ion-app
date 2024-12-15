@@ -178,7 +178,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final uploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
-        .upload(compressedImage, alt: _getFileAlt()); //TODO:set dynamically
+        .upload(compressedImage, alt: _getFileAlt());
 
     return (
       fileMetadatas: [uploadResult.fileMetadata],
@@ -193,7 +193,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final videoUploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
-        .upload(compressedVideo, alt: _getFileAlt()); //TODO:set dynamically
+        .upload(compressedVideo, alt: _getFileAlt());
 
     final thumbImage =
         await ref.read(compressServiceProvider).getThumbnail(compressedVideo, thumb: file.thumb);
