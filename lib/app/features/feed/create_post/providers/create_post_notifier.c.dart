@@ -178,7 +178,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final uploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
-        .upload(compressedImage, alt: FileAlt.post); //TODO:set dynamically
+        .upload(compressedImage, alt: _getFileAlt()); //TODO:set dynamically
 
     return (
       fileMetadatas: [uploadResult.fileMetadata],
@@ -193,14 +193,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final videoUploadResult = await ref
         .read(nostrUploadNotifierProvider.notifier)
-        .upload(compressedVideo, alt: FileAlt.post); //TODO:set dynamically
+        .upload(compressedVideo, alt: _getFileAlt()); //TODO:set dynamically
 
     final thumbImage =
         await ref.read(compressServiceProvider).getThumbnail(compressedVideo, thumb: file.thumb);
 
-    final thumbUploadResult = await ref
-        .read(nostrUploadNotifierProvider.notifier)
-        .upload(thumbImage, alt: FileAlt.post); //TODO:set dynamically
+    final thumbUploadResult =
+        await ref.read(nostrUploadNotifierProvider.notifier).upload(thumbImage, alt: _getFileAlt());
 
     final thumbUrl = thumbUploadResult.fileMetadata.url;
 
@@ -214,5 +213,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       fileMetadatas: [videoFileMetadata, thumbUploadResult.fileMetadata],
       mediaAttachment: mediaAttachment
     );
+  }
+
+  FileAlt _getFileAlt() {
+    return switch (createOption) {
+      CreatePostOption.video => FileAlt.video,
+      CreatePostOption.story => FileAlt.story,
+      _ => FileAlt.post
+    };
   }
 }
