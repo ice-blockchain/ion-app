@@ -33,43 +33,43 @@ PODS:
   - BanubaUtilities (1.39.0)
   - BanubaVideoEditorGallerySDK (1.39.0)
   - BanubaVideoEditorSDK (1.39.0)
-  - BNBAcneEyebagsRemoval (1.16.1):
-    - BNBEffectPlayer (= 1.16.1)
-    - BNBFaceTracker (= 1.16.1)
-    - BNBScripting (= 1.16.1)
-    - BNBSdkCore (= 1.16.1)
-  - BNBBackground (1.16.1):
-    - BNBEffectPlayer (= 1.16.1)
-    - BNBScripting (= 1.16.1)
-    - BNBSdkCore (= 1.16.1)
-  - BNBEffectPlayer (1.16.1)
-  - BNBEyes (1.16.1):
-    - BNBEffectPlayer (= 1.16.1)
-    - BNBFaceTracker (= 1.16.1)
-    - BNBScripting (= 1.16.1)
-    - BNBSdkCore (= 1.16.1)
-  - BNBFaceTracker (1.16.1):
-    - BNBEffectPlayer (= 1.16.1)
-    - BNBScripting (= 1.16.1)
-    - BNBSdkCore (= 1.16.1)
-  - BNBHair (1.16.1):
-    - BNBEffectPlayer (= 1.16.1)
-    - BNBScripting (= 1.16.1)
-    - BNBSdkCore (= 1.16.1)
+  - BNBAcneEyebagsRemoval (1.16.2):
+    - BNBEffectPlayer (= 1.16.2)
+    - BNBFaceTracker (= 1.16.2)
+    - BNBScripting (= 1.16.2)
+    - BNBSdkCore (= 1.16.2)
+  - BNBBackground (1.16.2):
+    - BNBEffectPlayer (= 1.16.2)
+    - BNBScripting (= 1.16.2)
+    - BNBSdkCore (= 1.16.2)
+  - BNBEffectPlayer (1.16.2)
+  - BNBEyes (1.16.2):
+    - BNBEffectPlayer (= 1.16.2)
+    - BNBFaceTracker (= 1.16.2)
+    - BNBScripting (= 1.16.2)
+    - BNBSdkCore (= 1.16.2)
+  - BNBFaceTracker (1.16.2):
+    - BNBEffectPlayer (= 1.16.2)
+    - BNBScripting (= 1.16.2)
+    - BNBSdkCore (= 1.16.2)
+  - BNBHair (1.16.2):
+    - BNBEffectPlayer (= 1.16.2)
+    - BNBScripting (= 1.16.2)
+    - BNBSdkCore (= 1.16.2)
   - BNBLicenseUtils (1.39.0)
-  - BNBLips (1.16.1):
-    - BNBEffectPlayer (= 1.16.1)
-    - BNBFaceTracker (= 1.16.1)
-    - BNBScripting (= 1.16.1)
-    - BNBSdkCore (= 1.16.1)
-  - BNBScripting (1.16.1)
-  - BNBSdkApi (1.16.1):
-    - BNBSdkCore (= 1.16.1)
-  - BNBSdkCore (1.16.1)
-  - BNBSkin (1.16.1):
-    - BNBEffectPlayer (= 1.16.1)
-    - BNBScripting (= 1.16.1)
-    - BNBSdkCore (= 1.16.1)
+  - BNBLips (1.16.2):
+    - BNBEffectPlayer (= 1.16.2)
+    - BNBFaceTracker (= 1.16.2)
+    - BNBScripting (= 1.16.2)
+    - BNBSdkCore (= 1.16.2)
+  - BNBScripting (1.16.2)
+  - BNBSdkApi (1.16.2):
+    - BNBSdkCore (= 1.16.2)
+  - BNBSdkCore (1.16.2)
+  - BNBSkin (1.16.2):
+    - BNBEffectPlayer (= 1.16.2)
+    - BNBScripting (= 1.16.2)
+    - BNBSdkCore (= 1.16.2)
   - camera_avfoundation (0.0.1):
     - Flutter
   - device_info_plus (0.0.1):
@@ -161,16 +161,16 @@ PODS:
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
-  - sqlite3 (3.47.1):
-    - sqlite3/common (= 3.47.1)
-  - sqlite3/common (3.47.1)
-  - sqlite3/dbstatvtab (3.47.1):
+  - sqlite3 (3.47.2):
+    - sqlite3/common (= 3.47.2)
+  - sqlite3/common (3.47.2)
+  - sqlite3/dbstatvtab (3.47.2):
     - sqlite3/common
-  - sqlite3/fts5 (3.47.1):
+  - sqlite3/fts5 (3.47.2):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.47.1):
+  - sqlite3/perf-threadsafe (3.47.2):
     - sqlite3/common
-  - sqlite3/rtree (3.47.1):
+  - sqlite3/rtree (3.47.2):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
@@ -350,18 +350,18 @@ SPEC CHECKSUMS:
   BanubaUtilities: 4ca45fcd7a6b5d246b75f02fd3f36b43d2dbebd3
   BanubaVideoEditorGallerySDK: 6d775728f14ab78e210d86058166e3deb3fc3814
   BanubaVideoEditorSDK: 1b8d56004f147c0ed96077f8171247efbc0511e7
-  BNBAcneEyebagsRemoval: da39d2fed84a475263dea8e01f47b1862f17fa2e
-  BNBBackground: 30cb2cd4c2faa1d363a74f202e2fc9910e2c11d3
-  BNBEffectPlayer: 237927942c4e1e9acb1e6cbb81a4a707dbe475f5
-  BNBEyes: 08df5b6c27e0dad4f122bc429ea64cf2302f391c
-  BNBFaceTracker: a60fbd3286c192099d6e7e14020de44fc83e2642
-  BNBHair: afe2fe7c68d2198383f2cdd59cd792a2b9ec5b5c
+  BNBAcneEyebagsRemoval: 40f97a9161a7dd2aba0bb6f45923fe9b943d3f7a
+  BNBBackground: ffa56bcc53cc683bc25fc49ff071ee958666e6d1
+  BNBEffectPlayer: 08bcdd70abbdc4fe2880aa1ae1fce7c47a29e6ba
+  BNBEyes: a8c9d9eb080f3737b984bed6bff47f7349491d4d
+  BNBFaceTracker: 77ce50a692df014a66bd55ba222e697b6e53dcdd
+  BNBHair: 1e9597ba9e9fbcf5b956e4d33752e9d73f87fdcc
   BNBLicenseUtils: a075f2e799b177accd88f1285698d847adda3631
-  BNBLips: df7ef06d31c2b73430e13cabc675f65d00f6c809
-  BNBScripting: 77c1cb5fa048e7b145ec6c06efe2309f05f75b4a
-  BNBSdkApi: df268c08865db716000b87acf7e824e654740123
-  BNBSdkCore: 7beb9131821167ef1d4b591c262799ce509628a8
-  BNBSkin: 5e14ae3132c19fe78a792d358b582e643a7a97f1
+  BNBLips: 13875558846025af58221f673b205fc9484ea2c4
+  BNBScripting: 75f32918479ff9e023e82f16494001c3087415cb
+  BNBSdkApi: dbe0eefe6f34e31bc359e65e39088bde267e8eee
+  BNBSdkCore: 46d9b72e02f9b7b78c458fe3a87b498d0b1ff8ea
+  BNBSkin: 8c902f4141cdfdfbd92863256036edded59152c7
   camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
@@ -389,7 +389,7 @@ SPEC CHECKSUMS:
   share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
-  sqlite3: 1e522f0938463e44b7faf50393b40bdc1e1e456d
+  sqlite3: 7559e33dae4c78538df563795af3a86fc887ee71
   sqlite3_flutter_libs: 1b4e98da20ebd4e9b1240269b78cdcf492dbe9f3
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654

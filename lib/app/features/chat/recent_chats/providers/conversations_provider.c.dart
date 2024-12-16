@@ -2,9 +2,11 @@
 
 import 'package:ion/app/features/chat/model/channel_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/group.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/services/database/ion_database.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversations_provider.c.g.dart';
@@ -12,14 +14,28 @@ part 'conversations_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class Conversations extends _$Conversations {
   @override
-  FutureOr<List<RecentChatDataModel>> build() async {
+  FutureOr<List<PrivateDirectMessageEntity>> build() async {
+    final conversationSubscription = ref
+        .read(iONDatabaseNotifierProvider.notifier)
+        .watchConversations()
+        .listen((conversationsEventMessages) async {
+      final data =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+
+      state = AsyncValue.data(data);
+    });
+
+    ref.onDispose(conversationSubscription.cancel);
+
     state = const AsyncValue.loading();
     try {
-      final data = await Future.delayed(const Duration(seconds: 1), () {
-        return mockConversationData;
-      });
-      state = AsyncValue.data(data);
-      return data;
+      final database = ref.read(iONDatabaseNotifierProvider.notifier);
+      final conversationsEventMessages = await database.getAllConversations();
+
+      final conversationsList =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+      state = AsyncValue.data(conversationsList);
+      return conversationsList;
     } catch (e, st) {
       state = AsyncValue.error(e, st);
       rethrow;
@@ -46,7 +62,7 @@ class Conversations extends _$Conversations {
         newConversation,
         ...currentData,
       ];
-      return List<RecentChatDataModel>.unmodifiable(newData);
+      return List<PrivateDirectMessageEntity>.unmodifiable(newData);
     });
   }
 
@@ -70,7 +86,7 @@ class Conversations extends _$Conversations {
         newConversation,
         ...currentData,
       ];
-      return List<RecentChatDataModel>.unmodifiable(newData);
+      return List<PrivateDirectMessageEntity>.unmodifiable(newData);
     });
   }
 }
