@@ -180,3 +180,7 @@ class UnsupportedParentEntity extends IONException {
   UnsupportedParentEntity({required String eventId})
       : super(10038, 'Unsupported parent entity: $eventId');
 }
+
+class RelayRequestFailedException extends IONException {
+  RelayRequestFailedException() : super(10037, 'Relay request failed');
+}

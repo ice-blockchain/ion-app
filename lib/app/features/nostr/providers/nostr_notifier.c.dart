@@ -80,7 +80,7 @@ class NostrNotifier extends _$NostrNotifier {
     final relay = await _getRelay(actionSource);
 
     final dislikedRelaysUrls = <String>[];
-    StreamSubscription<EventMessage>? subscription;
+    StreamSubscription<RelayMessage>? subscription;
     final streamController = StreamController<EventMessage>(onCancel: () => subscription?.cancel());
 
     Future<void> handleRetry() => withRetry(
@@ -89,11 +89,12 @@ class NostrNotifier extends _$NostrNotifier {
             final retryEventsStream = nd.requestEvents(requestMessage, retryRelay);
             await for (final retryEvent in retryEventsStream) {
               if (streamController.isClosed) break;
-              if (retryEvent is NoticeMessage) {
+              if (retryEvent.indicatesError) {
                 dislikedRelaysUrls.add(retryRelay.url);
-                throw Exception((retryEvent as NoticeMessage).message);
+                throw Exception(RelayRequestFailedException());
+              } else if (retryEvent is EventMessage) {
+                streamController.add(retryEvent);
               }
-              streamController.add(retryEvent);
             }
           },
         );
@@ -104,7 +105,7 @@ class NostrNotifier extends _$NostrNotifier {
           await subscription?.cancel();
           dislikedRelaysUrls.add(relay.url);
           await handleRetry();
-        } else {
+        } else if (event is EventMessage) {
           streamController.add(event);
         }
       },
@@ -250,7 +251,6 @@ extension on List<UserRelay> {
   }
 }
 
-extension on EventMessage {
-  // TODO: add ClosedMessage case
-  bool get indicatesError => this is NoticeMessage;
+extension on RelayMessage {
+  bool get indicatesError => this is NoticeMessage || this is ClosedMessage;
 }
