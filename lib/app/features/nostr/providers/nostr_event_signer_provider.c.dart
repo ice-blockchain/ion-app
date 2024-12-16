@@ -23,14 +23,23 @@ class NostrEventSigner extends _$NostrEventSigner {
 
   Future<EventSigner> generate() async {
     final keyStore = await Ed25519KeyStore.generate();
-    final storage = ref.read(secureStorageProvider);
-    await storage.setString(key: _storageKey, value: keyStore.privateKey);
-    state = AsyncData(keyStore);
-    return keyStore;
+    return _setEventSigner(keyStore);
+  }
+
+  Future<EventSigner> generateFromPrivate(String privateKey) async {
+    final keyStore = await Ed25519KeyStore.fromPrivate(privateKey);
+    return _setEventSigner(keyStore);
   }
 
   Future<void> delete() async {
     await ref.read(secureStorageProvider).remove(key: _storageKey);
+  }
+
+  Future<EventSigner> _setEventSigner(EventSigner signer) async {
+    final storage = ref.read(secureStorageProvider);
+    await storage.setString(key: _storageKey, value: signer.privateKey);
+    state = AsyncData(signer);
+    return signer;
   }
 
   String get _storageKey => '${identityKeyName}_nostr_key_store';

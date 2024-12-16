@@ -17,6 +17,7 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -79,10 +80,24 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<EventSigner> _generateNostrEventSigner() async {
+    final currentUserNostrEventSigner = await ref.read(currentUserNostrEventSignerProvider.future);
+    if (currentUserNostrEventSigner != null) {
+      // Event signer already exists, reuse it
+      return currentUserNostrEventSigner;
+    }
+
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
-    final nostrEventSigner = await ref.read(currentUserNostrEventSignerProvider.future) ??
-        await ref.read(nostrEventSignerProvider(currentIdentityKeyName).notifier).generate();
-    return nostrEventSigner;
+    final ionIdentityClient = await ref.read(ionIdentityClientProvider.future);
+    final privateKey = ionIdentityClient.auth.getUserPrivateKey();
+    if (privateKey != null) {
+      // Private key was generated during the auth flow (password), reuse it
+      return ref
+          .read(nostrEventSignerProvider(currentIdentityKeyName).notifier)
+          .generateFromPrivate(privateKey);
+    }
+
+    // Generate new event signer
+    return ref.read(nostrEventSignerProvider(currentIdentityKeyName).notifier).generate();
   }
 
   Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
