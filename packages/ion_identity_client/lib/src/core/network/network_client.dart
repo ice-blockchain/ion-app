@@ -3,7 +3,6 @@
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
-import 'package:ion_identity_client/src/core/types/types.dart';
 
 typedef Decoder<T> = T Function(JsonObject response);
 
