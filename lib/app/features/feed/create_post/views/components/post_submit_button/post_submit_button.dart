@@ -91,7 +91,7 @@ class PostSubmitButton extends HookConsumerWidget {
     );
   }
 
-  // Convert all asset media ids-a returned from MediaPicker to actual file path-es
+  // Convert all asset media id-s returned from MediaPicker to actual file path-es
   Future<List<MediaFile>> _convertToMediaFiles(
     WidgetRef ref, {
     required List<MediaFile> mediaFiles,
