@@ -2,11 +2,17 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/services/text_parser/text_match.dart';
+import 'package:ion/app/services/text_parser/text_matcher.dart';
+import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'article_data.c.freezed.dart';
@@ -47,45 +53,61 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
   static const kind = 30023;
 }
 
-class ArticleData implements EventSerializable {
-  ArticleData({
-    required this.content,
-    this.title,
-    this.image,
-    this.summary,
-    this.publishedAt,
-  });
+@freezed
+class ArticleData with _$ArticleData implements EventSerializable {
+  const factory ArticleData({
+    required List<TextMatch> content,
+    required Map<String, MediaAttachment> media,
+    String? title,
+    String? image,
+    String? summary,
+    DateTime? publishedAt,
+    List<RelatedHashtag>? relatedHashtags,
+  }) = _ArticleData;
+
+  const ArticleData._();
 
   factory ArticleData.fromEventMessage(EventMessage eventMessage) {
-    String? title;
-    String? image;
-    String? summary;
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+
+    final title = tags['title']?.firstOrNull?[1];
+    final image = tags['image']?.firstOrNull?[1];
+    final summary = tags['summary']?.firstOrNull?[1];
     DateTime? publishedAt;
 
-    for (final tag in eventMessage.tags) {
-      if (tag.isNotEmpty) {
-        switch (tag[0]) {
-          case 'title':
-            title = tag[1];
-          case 'image':
-            image = tag[1];
-          case 'summary':
-            summary = tag[1];
-          case 'published_at':
-            final timestamp = int.tryParse(tag[1]);
-            if (timestamp != null) {
-              publishedAt = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-            }
-        }
+    if (tags['published_at']?.firstOrNull?[1] != null) {
+      final timestamp = int.tryParse(tags['published_at']!.first[1]);
+      if (timestamp != null) {
+        publishedAt = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
       }
     }
 
+    final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
+    final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
+
     return ArticleData(
+      content: parsedContent,
+      media: mediaAttachments,
       title: title,
       image: image,
       summary: summary,
-      content: eventMessage.content,
       publishedAt: publishedAt,
+      relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
+    );
+  }
+
+  factory ArticleData.fromRawContent(String content) {
+    final parsedContent = TextParser.allMatchers().parse(content);
+
+    final hashtags = parsedContent
+        .where((match) => match.matcher is HashtagMatcher)
+        .map((match) => RelatedHashtag(value: match.text))
+        .toList();
+
+    return ArticleData(
+      content: parsedContent,
+      relatedHashtags: hashtags,
+      media: {},
     );
   }
 
@@ -105,15 +127,25 @@ class ArticleData implements EventSerializable {
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (publishedAt != null)
-          ['published_at', (publishedAt!.millisecondsSinceEpoch ~/ 1000).toString()],
+          ['published_at', (publishedAt!.millisecondsSinceEpoch / 1000).toString()],
+        if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
       ],
-      content: content,
+      content: content.join('\n'),
     );
   }
 
-  final String? title;
-  final String? image;
-  final String? summary;
-  final String content;
-  final DateTime? publishedAt;
+  static Map<String, MediaAttachment> _buildMedia(
+    List<List<String>>? mediaTags,
+  ) {
+    if (mediaTags == null) return {};
+    return {
+      for (final tag in mediaTags)
+        if (tag.length > 1) tag[1]: MediaAttachment.fromTag(tag),
+    };
+  }
+
+  @override
+  String toString() {
+    return 'ArticleData(content: ${content.join('\n')}, media: $media, title: $title, image: $image, summary: $summary, publishedAt: $publishedAt)';
+  }
 }
