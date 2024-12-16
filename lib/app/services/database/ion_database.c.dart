@@ -54,7 +54,8 @@ class IONDatabase extends _$IONDatabase {
     required EventMessage eventMessage,
     bool isDeleted = false,
   }) {
-    final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final conversationMessage =
+        PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return into(conversationMessagesTable).insert(
       ConversationMessagesTableData(
         isDeleted: isDeleted,
@@ -81,34 +82,36 @@ class IONDatabase extends _$IONDatabase {
     EventMessage eventMessage,
   ) async {
     if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
-      final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-      final conversationIdByPubkeys = await _lookupConversationByPubkeys(conversationMessage);
+      final conversationMessage =
+          PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+      final conversationIdByPubkeys =
+          await _lookupConversationByPubkeys(conversationMessage);
 
-      // Existing conversation (one-to-one or group)
       if (conversationIdByPubkeys != null) {
+        // Existing conversation (one-to-one or group)
         await insertConversationData(
           eventMessage: eventMessage,
           conversationId: conversationIdByPubkeys,
         );
       } else {
-        final conversationIdBySubject = await _lookupConversationBySubject(conversationMessage);
+        // Existing group conversation (change of participants)
+        final conversationIdBySubject =
+            await _lookupConversationBySubject(conversationMessage);
 
         if (conversationIdBySubject != null) {
-          // Existing group conversation (change of participants)
           await insertConversationData(
             eventMessage: eventMessage,
             conversationId: conversationIdBySubject,
           );
-
-          // New conversation
         } else if (eventMessage.content.isEmpty) {
+          // New conversation
           final uuid = const Uuid().v1();
           await insertConversationData(
             eventMessage: eventMessage,
             conversationId: uuid,
           );
-          // Invalid message (doesn't belong to any conversation)
         } else {
+          // Invalid message (doesn't belong to any conversation)
           throw ConversationIsNotFoundException();
         }
       }
@@ -119,12 +122,14 @@ class IONDatabase extends _$IONDatabase {
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
-    final conversationsWithSameParticipants = await (select(conversationMessagesTable)
-          ..where(
-            (table) => table.pubKeys.equals(conversationMessage.allPubkeysMask),
-          )
-          ..limit(1))
-        .get();
+    final conversationsWithSameParticipants =
+        await (select(conversationMessagesTable)
+              ..where(
+                (table) =>
+                    table.pubKeys.equals(conversationMessage.allPubkeysMask),
+              )
+              ..limit(1))
+            .get();
 
     if (conversationsWithSameParticipants.isNotEmpty) {
       return conversationsWithSameParticipants.first.conversationId;
@@ -141,10 +146,11 @@ class IONDatabase extends _$IONDatabase {
     final subject = conversationMessage.data.relatedSubject?.value;
 
     if (subject != null) {
-      final conversationWithChangedParticipants = await (select(conversationMessagesTable)
-            ..where((table) => table.subject.equals(subject))
-            ..limit(1))
-          .get();
+      final conversationWithChangedParticipants =
+          await (select(conversationMessagesTable)
+                ..where((table) => table.subject.equals(subject))
+                ..limit(1))
+              .get();
 
       if (conversationWithChangedParticipants.isNotEmpty) {
         return conversationWithChangedParticipants.first.conversationId;
@@ -153,15 +159,40 @@ class IONDatabase extends _$IONDatabase {
     return null;
   }
 
+  final allConversationsLatestMessageQuery =
+      'SELECT * FROM (SELECT * FROM conversation_messages_table ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
+
   Future<List<EventMessage>> getAllConversations() async {
     // Select last message of each conversation
     final uniqueConversationRows = await customSelect(
-      'SELECT * FROM (SELECT * FROM conversation_messages_table ORDER BY created_at DESC) AS sub GROUP BY conversation_id',
+      allConversationsLatestMessageQuery,
       readsFrom: {conversationMessagesTable},
     ).get();
 
-    final lastConversationMessagesIds =
-        uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
+    final lastConversationEventMessages =
+        await _selectLastMessageOfEachConversation(uniqueConversationRows);
+
+    return lastConversationEventMessages;
+  }
+
+  Stream<List<EventMessage>> watchConversations() {
+    return customSelect(
+      allConversationsLatestMessageQuery,
+      readsFrom: {conversationMessagesTable},
+    ).watch().asyncMap((uniqueConversationRows) async {
+      final lastConversationEventMessages =
+          await _selectLastMessageOfEachConversation(uniqueConversationRows);
+
+      return lastConversationEventMessages;
+    });
+  }
+
+  Future<List<EventMessage>> _selectLastMessageOfEachConversation(
+    List<QueryRow> uniqueConversationRows,
+  ) async {
+    final lastConversationMessagesIds = uniqueConversationRows
+        .map((row) => row.data['event_message_id'] as String)
+        .toList();
 
     final lastConversationEventMessages = (await (select(eventMessagesTable)
               ..where((table) => table.id.isIn(lastConversationMessagesIds)))
@@ -170,24 +201,6 @@ class IONDatabase extends _$IONDatabase {
         .toList();
 
     return lastConversationEventMessages;
-  }
-
-  Stream<List<EventMessage>> watchConversations() {
-    return customSelect(
-      'SELECT * FROM (SELECT * FROM conversation_messages_table ORDER BY created_at DESC) AS sub GROUP BY conversation_id',
-      readsFrom: {conversationMessagesTable},
-    ).watch().asyncMap((rows) async {
-      final lastConversationMessagesIds =
-          rows.map((row) => row.data['event_message_id'] as String).toList();
-
-      final lastConversationEventMessages = (await (select(eventMessagesTable)
-                ..where((table) => table.id.isIn(lastConversationMessagesIds)))
-              .get())
-          .map((e) => e.toEventMessage())
-          .toList();
-
-      return lastConversationEventMessages;
-    });
   }
 }
 
