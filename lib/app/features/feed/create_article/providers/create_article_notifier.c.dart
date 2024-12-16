@@ -8,7 +8,6 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/cu
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
@@ -18,9 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_notifier.c.g.dart';
 
-@Riverpod(
-  dependencies: [],
-)
+@Riverpod(dependencies: [])
 class CreateArticleNotifier extends _$CreateArticleNotifier {
   @override
   FutureOr<void> build() {}
@@ -35,31 +32,34 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
   }) async {
     state = const AsyncValue.loading();
 
+    Logger.log('CreateArticleNotifier: create');
+
     state = await AsyncValue.guard(() async {
       String? imageUrl;
-      final data = ArticleData.fromRawContent(content.trim());
       final files = <FileMetadata>[];
       final uploadedUrls = <String, String>{};
+      Logger.log('files : $files');
+      Logger.log('uploadedUrls : $uploadedUrls');
 
-      if (mediaIds != null) {
-        final attachments = <MediaAttachment>[];
+      if (mediaIds != null && mediaIds.isNotEmpty) {
+        Logger.log('mediaIds : $mediaIds');
         await Future.wait(
           mediaIds.map((id) async {
             final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
-            attachments.add(mediaAttachment);
-            files.add(fileMetadata);
-
             uploadedUrls[id] = mediaAttachment.url;
+            files.add(fileMetadata);
           }),
         );
-
+        Logger.log('_replaceImagePathsWithUrls BEFORE');
         content = _replaceImagePathsWithUrls(content, uploadedUrls);
+        Logger.log('_replaceImagePathsWithUrls AFTER');
       }
 
       if (imageId != null) {
+        Logger.log('imageId != null');
         final uploadResult = await _uploadImage(imageId);
+        Logger.log('imageId != null AFTER UPLOAD');
         imageUrl = uploadResult.mediaAttachment.url;
-        Logger.log('ARTICLE IMAGE UPLOADED');
       }
 
       final articleData = ArticleData(
@@ -67,37 +67,59 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
         summary: summary,
         image: imageUrl,
         content: content,
-        media: data.media,
+        media: {},
         publishedAt: publishedAt ?? DateTime.now(),
       );
 
-      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([
-        ...files,
-        articleData,
-      ]);
-
-      Logger.log('ARTICLE SENT');
+      Logger.log('Article data: $articleData');
+      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
     });
   }
 
   String _replaceImagePathsWithUrls(String content, Map<String, String> uploadedUrls) {
-    final operations = jsonDecode(content) as List<dynamic>;
+    try {
+      Logger.log('Content BEFORE parsing: $content');
 
-    for (final operation in operations) {
-      if (operation is Map<String, dynamic> &&
-          operation.containsKey('insert') &&
-          operation['insert'] is Map<String, dynamic>) {
-        final insertData = operation['insert'] as Map<String, dynamic>;
-        if (insertData.containsKey(textEditorSingleImageKey)) {
-          final localPath = insertData[textEditorSingleImageKey] as String;
-          if (uploadedUrls.containsKey(localPath)) {
-            insertData[textEditorSingleImageKey] = uploadedUrls[localPath];
+      // Ensure the content is a valid JSON string
+      final dynamic parsedContent = jsonDecode(content);
+
+      if (parsedContent is! List<dynamic>) {
+        throw const FormatException('Content is not a valid list of operations.');
+      }
+
+      // Iterate over each operation
+      for (final operation in parsedContent) {
+        if (operation is Map<String, dynamic> &&
+            operation.containsKey('insert') &&
+            operation['insert'] is Map<String, dynamic>) {
+          final insertData = operation['insert'] as Map<String, dynamic>;
+
+          // Look for the specific key and replace the local path with uploaded URL
+          if (insertData.containsKey(textEditorSingleImageKey)) {
+            final localPath = insertData[textEditorSingleImageKey] as String?;
+            Logger.log('Found localPath: $localPath');
+
+            if (localPath != null && uploadedUrls.containsKey(localPath)) {
+              Logger.log('Replacing $localPath with ${uploadedUrls[localPath]}');
+              insertData[textEditorSingleImageKey] = uploadedUrls[localPath];
+            } else if (localPath != null) {
+              Logger.log('No uploaded URL found for $localPath');
+            }
           }
         }
       }
-    }
 
-    return jsonEncode(operations);
+      // Convert the modified operations back to JSON string
+      final modifiedContent = jsonEncode(parsedContent);
+      Logger.log('Content AFTER replacement: $modifiedContent');
+      return modifiedContent;
+    } catch (e, stackTrace) {
+      Logger.log('Error in _replaceImagePathsWithUrls: $e');
+      Logger.log('Stack trace: $stackTrace');
+
+      // Return the original content if parsing fails
+      return content;
+    }
   }
 
   Future<UploadResult> _uploadImage(String imageId) async {

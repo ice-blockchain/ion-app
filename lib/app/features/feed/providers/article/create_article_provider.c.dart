@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
@@ -26,16 +28,18 @@ class CreateArticle extends _$CreateArticle {
   }
 
   void updateTitle(String? title) {
-    state = state.copyWith(title: title);
+    state = state.copyWith(title: title?.trim());
   }
 
-  void updateContent(String content) {
-    state = state.copyWith(content: content);
+  void updateContent(QuillController textEditorController) {
+    final deltaJson = jsonEncode(textEditorController.document.toDelta().toJson());
+    state = state.copyWith(content: deltaJson);
   }
 
   void updateOperationsAndImageIds(QuillController textEditorController) {
     final operations = <Operation>[];
     final imageIds = <String>[];
+
     for (final operation in textEditorController.document.toDelta().operations) {
       final data = operation.data;
       if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
@@ -44,6 +48,7 @@ class CreateArticle extends _$CreateArticle {
         operations.add(operation);
       }
     }
+
     state = state.copyWith(
       operations: operations,
       imageIds: imageIds,
@@ -59,9 +64,10 @@ class CreateArticleState {
     required this.operations,
     required this.imageIds,
   });
+
   final MediaFile? image;
   final String? title;
-  final String? content;
+  final String content; // JSON string representation of content
   final List<Operation> operations;
   final List<String> imageIds;
 
