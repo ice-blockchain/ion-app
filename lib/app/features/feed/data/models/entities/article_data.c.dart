@@ -12,6 +12,7 @@ import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
+import 'package:uuid/uuid.dart';
 
 part 'article_data.c.freezed.dart';
 
@@ -109,6 +110,8 @@ class ArticleData with _$ArticleData implements EventSerializable {
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
+    final uniqueIdForEditing = const Uuid().v4(); // Required to be set in 'd' tag
+
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
@@ -121,6 +124,10 @@ class ArticleData with _$ArticleData implements EventSerializable {
         if (publishedAt != null)
           ['published_at', (publishedAt!.millisecondsSinceEpoch / 1000).toString()],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+        [
+          'd',
+          uniqueIdForEditing,
+        ],
       ],
       content: content,
     );
