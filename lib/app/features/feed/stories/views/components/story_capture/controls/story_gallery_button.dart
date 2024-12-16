@@ -27,18 +27,14 @@ class StoryGalleryButton extends HookConsumerWidget {
     if (file != null) {
       ref
         ..displayErrors(editMediaProvider(file))
-        ..listen<AsyncValue<String>>(editMediaProvider(file), (previous, next) {
-          next.whenOrNull(
-            data: (path) async {
-              if (context.mounted) {
-                await StoryPreviewRoute(
-                  path: path,
-                  mimeType: file.mimeType,
-                ).push<void>(context);
-                selectedFile.value = null;
-              }
-            },
-          );
+        ..listenSuccess(editMediaProvider(file), (path) async {
+          if (context.mounted && path != null) {
+            await StoryPreviewRoute(
+              path: path,
+              mimeType: file.mimeType,
+            ).push<void>(context);
+            selectedFile.value = null;
+          }
         });
     }
 

@@ -39,19 +39,14 @@ class StoryRecordPage extends HookConsumerWidget {
 
     if (selectedFile != null) {
       ref
-        ..watch(editMediaProvider(selectedFile))
         ..displayErrors(editMediaProvider(selectedFile))
-        ..listen<AsyncValue<String>>(editMediaProvider(selectedFile), (previous, next) {
-          next.whenOrNull(
-            data: (filePath) async {
-              if (context.mounted) {
-                await StoryPreviewRoute(
-                  path: filePath,
-                  mimeType: selectedFile.mimeType,
-                ).push<void>(context);
-              }
-            },
-          );
+        ..listenSuccess(editMediaProvider(selectedFile), (filePath) async {
+          if (context.mounted && filePath != null) {
+            await StoryPreviewRoute(
+              path: filePath,
+              mimeType: selectedFile.mimeType,
+            ).push<void>(context);
+          }
         });
     }
 
