@@ -59,7 +59,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
                 );
               }
             },
-            label: Text(context.i18n.sign_up_passkey_button),
+            label: Text(context.i18n.button_continue),
             mainAxisSize: MainAxisSize.max,
           ),
         ],
