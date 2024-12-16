@@ -93,9 +93,8 @@ class IONDatabase extends _$IONDatabase {
           eventMessage: eventMessage,
           conversationId: conversationIdByPubkeys,
         );
-      // Existing group conversation (change of participants)
+        // Existing group conversation (change of participants)
       } else {
-    
         final conversationIdBySubject =
             await _lookupConversationBySubject(conversationMessage);
 
