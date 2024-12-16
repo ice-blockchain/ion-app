@@ -8,14 +8,13 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 
 class StoryRecordPage extends HookConsumerWidget {
   const StoryRecordPage({super.key});
@@ -35,22 +34,21 @@ class StoryRecordPage extends HookConsumerWidget {
     );
 
     final isCameraReady = cameraState is CameraReady;
+    final storyCameraState = ref.watch(storyCameraControllerProvider);
+    final selectedFile = storyCameraState.whenOrNull(saved: (file) => file);
 
-    ref.listen<StoryCameraState>(storyCameraControllerProvider, (_, next) async {
-      if (next is StoryCameraSaved && context.mounted) {
-        // TODO: uncomment after getting the actual the banuba's token
-        // final filePath = await ref.read(editMediaProvider(next.file).future);
-
-        final filePath = await ref.read(assetFilePathProvider(next.file.path).future);
-
-        if (filePath != null && context.mounted) {
-          await StoryPreviewRoute(
-            path: filePath,
-            mimeType: next.file.mimeType,
-          ).push<void>(context);
-        }
-      }
-    });
+    if (selectedFile != null) {
+      ref
+        ..displayErrors(editMediaProvider(selectedFile))
+        ..listenSuccess(editMediaProvider(selectedFile), (filePath) async {
+          if (context.mounted && filePath != null) {
+            await StoryPreviewRoute(
+              path: filePath,
+              mimeType: selectedFile.mimeType,
+            ).push<void>(context);
+          }
+        });
+    }
 
     return PermissionAwareWidget(
       permissionType: Permission.camera,

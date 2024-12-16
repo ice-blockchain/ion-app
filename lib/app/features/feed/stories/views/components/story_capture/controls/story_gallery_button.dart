@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -9,32 +10,41 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
-class StoryGalleryButton extends ConsumerWidget {
+class StoryGalleryButton extends HookConsumerWidget {
   const StoryGalleryButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selectedFile = useState<MediaFile?>(null);
+
+    final file = selectedFile.value;
+    if (file != null) {
+      ref
+        ..displayErrors(editMediaProvider(file))
+        ..listenSuccess(editMediaProvider(file), (path) async {
+          if (context.mounted && path != null) {
+            await StoryPreviewRoute(
+              path: path,
+              mimeType: file.mimeType,
+            ).push<void>(context);
+            selectedFile.value = null;
+          }
+        });
+    }
+
     return PermissionAwareWidget(
       permissionType: Permission.photos,
       onGranted: () async {
         if (context.mounted) {
           final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
-          if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
-            // TODO: uncomment after getting the actual the banuba's token
-            // final filePath = await ref.read(editMediaProvider(mediaFiles.first).future);
-            final filePath = await ref.read(assetFilePathProvider(mediaFiles.first.path).future);
-
-            if (filePath != null && context.mounted) {
-              await StoryPreviewRoute(
-                path: filePath,
-                mimeType: mediaFiles.first.mimeType,
-              ).push<void>(context);
-            }
+          if (mediaFiles != null && mediaFiles.isNotEmpty) {
+            selectedFile.value = mediaFiles.first;
           }
         }
       },
