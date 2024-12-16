@@ -17,13 +17,14 @@ void useInterval({
 }) {
   assert(delay > Duration.zero, 'Delay must be positive');
 
-  final savedCallback = useRef(callback)..value = callback;
-
   useEffect(
     () {
       final timer = oneTime
-          ? Timer(delay, () => savedCallback.value())
-          : Timer.periodic(delay, (_) => savedCallback.value());
+          ? Timer(delay, callback)
+          : Timer.periodic(
+              delay,
+              (_) => callback,
+            );
 
       return timer.cancel;
     },
