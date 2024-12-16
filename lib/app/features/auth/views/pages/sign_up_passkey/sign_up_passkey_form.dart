@@ -11,6 +11,7 @@ import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart'
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class SignUpPasskeyForm extends HookConsumerWidget {
   const SignUpPasskeyForm({super.key});
@@ -30,7 +31,9 @@ class SignUpPasskeyForm extends HookConsumerWidget {
       child: Column(
         children: [
           IdentityKeyNameInput(
-            errorText: registerActionState.error?.toString(),
+            errorText: registerActionState.error is UserAlreadyExistsException
+                ? context.i18n.sign_up_passkey_identity_key_name_taken
+                : registerActionState.error?.toString(),
             controller: identityKeyNameController,
           ),
           SizedBox(height: 16.0.s),

@@ -4,7 +4,6 @@ library ion_identity_client;
 
 export 'src/auth/dtos/dtos.dart';
 export 'src/auth/ion_identity_auth.dart';
-export 'src/auth/result_types/result_types.dart';
 export 'src/auth/services/create_recovery_credentials/models/create_recovery_credentials_success.dart';
 export 'src/auth/services/twofa/models/twofa_type.c.dart';
 export 'src/core/types/ion_exception.dart';

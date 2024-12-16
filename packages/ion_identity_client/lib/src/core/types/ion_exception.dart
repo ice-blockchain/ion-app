@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+
 abstract class IONIdentityException implements Exception {
   const IONIdentityException([this.message]);
 
@@ -45,4 +49,31 @@ class UnknownIONIdentityException extends IONIdentityException {
 
 class IncompleteDataIONIdentityException extends IONIdentityException {
   const IncompleteDataIONIdentityException([super.message]);
+}
+
+class UserAlreadyExistsException extends IONIdentityException {
+  const UserAlreadyExistsException() : super('User already exists');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    if (responseData == null) return false;
+    if (responseData is! String) return false;
+
+    try {
+      final jsonError = jsonDecode(responseData) as Map<String, dynamic>;
+      final error = jsonError['error'] as Map<String, dynamic>?;
+      if (error == null) return false;
+
+      final errorMessage = const UserAlreadyExistsException().message?.toLowerCase();
+      if (errorMessage == null) return false;
+
+      final message = error['message']?.toString().toLowerCase();
+      if (message == null) return false;
+
+      return message.contains(errorMessage);
+    } catch (_) {
+      return false;
+    }
+  }
 }

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:dio/dio.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
-import 'package:ion_identity_client/src/core/types/types.dart';
 
 typedef Decoder<T> = T Function(JsonObject response);
 
@@ -142,6 +142,10 @@ class NetworkClient {
         throw DecodeException(data, e, stackTrace);
       }
     } on DioException catch (e, stackTrace) {
+      if (UserAlreadyExistsException.isMatch(e)) {
+        throw const UserAlreadyExistsException();
+      }
+
       throw RequestExecutionException(e, stackTrace);
     } on NetworkException {
       rethrow;

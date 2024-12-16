@@ -128,6 +128,7 @@
   "sign_up_passkey_advantage_3_description": "Passkey offer state-of-the-art phishing resistance",
   "sign_up_passkey_use_password": "Use password instead",
   "sign_up_password_title": "Register",
+  "sign_up_passkey_identity_key_name_taken": "Identity key name is taken",
   "sign_up_password_description": "Choose a strong password to create an account",
   "restore_identity_title": "Restore identity key",
   "restore_identity_type_description": "Select the type of identity key recovery",
