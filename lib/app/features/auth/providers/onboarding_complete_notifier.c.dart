@@ -96,7 +96,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
           .generateFromPrivate(privateKey);
     }
 
-    // Generate new event signer
+    // Generate a new event signer
     return ref.read(nostrEventSignerProvider(currentIdentityKeyName).notifier).generate();
   }
 
