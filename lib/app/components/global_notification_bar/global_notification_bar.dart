@@ -37,7 +37,11 @@ class GlobalNotificationBar extends HookConsumerWidget {
       curve: Curves.easeInOut,
     );
 
-    _controlAnimation(notificationState, animation, controller);
+    _controlAnimation(
+      isShow: notificationState.isShow,
+      animation: animation,
+      controller: controller,
+    );
 
     final data = notificationState.data;
 
@@ -78,16 +82,14 @@ class GlobalNotificationBar extends HookConsumerWidget {
     );
   }
 
-  void _controlAnimation(
-    GlobalNotificationState? notificationState,
-    CurvedAnimation animation,
-    AnimationController controller,
-  ) {
-    if (notificationState != null &&
-        notificationState.isShow &&
-        animation.status != AnimationStatus.completed) {
+  void _controlAnimation({
+    required bool isShow,
+    required CurvedAnimation animation,
+    required AnimationController controller,
+  }) {
+    if (isShow && animation.status != AnimationStatus.completed) {
       controller.forward();
-    } else if (animation.status != AnimationStatus.dismissed) {
+    } else if (!isShow && animation.status != AnimationStatus.dismissed) {
       controller.animateBack(0, duration: animationDuration);
     }
   }
