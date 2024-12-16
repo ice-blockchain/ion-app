@@ -129,8 +129,7 @@ class FileUploadException extends IONException {
 }
 
 class UnknownFileResolutionException extends IONException {
-  UnknownFileResolutionException()
-      : super(10026, 'Unknown upload file resolution');
+  UnknownFileResolutionException() : super(10026, 'Unknown upload file resolution');
 }
 
 class CompressImageException extends IONException {
@@ -142,8 +141,7 @@ class EntityNotFoundException extends IONException {
 }
 
 class CompressVideoException extends IONException {
-  CompressVideoException(dynamic error)
-      : super(10029, 'Failed to compress video: $error');
+  CompressVideoException(dynamic error) : super(10029, 'Failed to compress video: $error');
 }
 
 class CompressAudioException extends IONException {
@@ -155,8 +153,7 @@ class CompressAudioToWavException extends IONException {
 }
 
 class ExtractThumbnailException extends IONException {
-  ExtractThumbnailException(dynamic error)
-      : super(10032, 'Failed to extract thumbnail: $error');
+  ExtractThumbnailException(dynamic error) : super(10032, 'Failed to extract thumbnail: $error');
 }
 
 class CompressWithBrotliException extends IONException {
