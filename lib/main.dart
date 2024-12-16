@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/views/components/content_scaler.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
+import 'package:ion/app/router/providers/route_events_provider.c.dart';
 import 'package:ion/app/services/logger/config.dart';
 import 'package:ion/app/services/riverpod/riverpod_logger.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
@@ -37,6 +38,7 @@ class IONApp extends ConsumerWidget {
     final template = ref.watch(appTemplateProvider);
     final goRouter = ref.watch(goRouterProvider);
     final appLocale = ref.watch(appLocaleProvider);
+    ref.watch(routeEventsDispatcherProvider);
 
     return ContentScaler(
       child: AppLifecycleObserver(
