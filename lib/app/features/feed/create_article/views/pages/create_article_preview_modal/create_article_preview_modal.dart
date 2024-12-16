@@ -67,9 +67,6 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
                     onPressed: () async {
-                      Logger.log(
-                        'Content: ${Document.fromDelta(Delta.fromOperations(operations)).toPlainText()}',
-                      );
                       Logger.log('Content BEFORE: $content');
                       Logger.log('ImageIDS: $imageIds');
                       Logger.log('Operations: $operations');

@@ -6,7 +6,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/providers/article/create_article_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class CreateArticleState {
@@ -50,10 +49,9 @@ CreateArticleState useCreateArticle() {
   );
 
   void onNext(WidgetRef ref) {
-    final content = encodeArticleContent(textEditorController);
     ref.read(createArticleProvider.notifier).updateImage(selectedImage.value);
     ref.read(createArticleProvider.notifier).updateTitle(titleController.text);
-    ref.read(createArticleProvider.notifier).updateContent(content);
+    ref.read(createArticleProvider.notifier).updateContent(textEditorController);
     ref.read(createArticleProvider.notifier).updateOperationsAndImageIds(textEditorController);
   }
 
