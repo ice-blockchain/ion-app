@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/utils/validators.dart';
 
-const minPasswordLength = 8;
+const _minPasswordLength = 8;
 
 enum PasswordValidationErrorType {
   notLongEnough,
@@ -15,7 +15,7 @@ enum PasswordValidationErrorType {
   String getDisplayName(BuildContext context) {
     return switch (this) {
       PasswordValidationErrorType.notLongEnough =>
-        context.i18n.error_input_length(minPasswordLength),
+        context.i18n.error_input_length(_minPasswordLength),
       PasswordValidationErrorType.noDigits => context.i18n.error_input_numbers,
       PasswordValidationErrorType.shouldHaveBothUppercaseAndLowercase =>
         context.i18n.error_input_all_cases,
@@ -26,7 +26,7 @@ enum PasswordValidationErrorType {
   bool isInvalid(String? password) {
     return switch (this) {
       PasswordValidationErrorType.notLongEnough =>
-        Validators.isInvalidLength(password, minLength: minPasswordLength),
+        Validators.isInvalidLength(password, minLength: _minPasswordLength),
       PasswordValidationErrorType.noDigits => Validators.hasNoDigits(password),
       PasswordValidationErrorType.shouldHaveBothUppercaseAndLowercase =>
         Validators.hasNoUppercaseOrLowercaseLetters(password),
