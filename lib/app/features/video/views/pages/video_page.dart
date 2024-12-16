@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -15,6 +14,7 @@ import 'package:ion/app/features/video/views/components/video_header.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
+import 'package:ion/app/features/video/views/hooks/use_video_ended.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -109,32 +109,4 @@ class VideoPage extends HookConsumerWidget {
       ),
     );
   }
-}
-
-void useVideoEndedEffect({
-  required VideoPlayerController playerController,
-  VoidCallback? onVideoEnded,
-}) {
-  final hasVideoEnded = useState(false);
-
-  useEffect(
-    () {
-      void listener() {
-        final duration = playerController.value.duration;
-        final position = playerController.value.position;
-
-        final isVideoEnded = position >= duration - const Duration(milliseconds: 500);
-        if (isVideoEnded && !hasVideoEnded.value) {
-          hasVideoEnded.value = true;
-          onVideoEnded?.call();
-        } else if (!isVideoEnded && hasVideoEnded.value) {
-          hasVideoEnded.value = false;
-        }
-      }
-
-      playerController.addListener(listener);
-      return () => playerController.removeListener(listener);
-    },
-    [playerController],
-  );
 }
