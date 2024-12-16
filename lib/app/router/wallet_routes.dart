@@ -195,8 +195,9 @@ class NftContactsListRoute extends BaseRouteData {
   NftContactsListRoute({required this.title, this.action = ContactRouteAction.pop})
       : super(
           child: ContactsListView(
-            appBarTitle: title,
             action: action,
+            appBarTitle: title,
+            showBackButton: true,
           ),
           type: IceRouteType.bottomSheet,
         );
