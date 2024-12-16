@@ -29,23 +29,6 @@ class PasswordInput extends HookWidget {
   Widget build(BuildContext context) {
     final isPasswordVisible = useState(false);
 
-    useEffect(
-      () {
-        void listener() {
-          onValueChanged?.call(controller.text);
-        }
-
-        controller.addListener(listener);
-        return () {
-          controller.removeListener(listener);
-        };
-      },
-      [
-        onValueChanged,
-        controller,
-      ],
-    );
-
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
@@ -77,6 +60,7 @@ class PasswordInput extends HookWidget {
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),
       onFocused: onFocused,
       errorText: errorText,
+      onChanged: onValueChanged,
     );
   }
 }
