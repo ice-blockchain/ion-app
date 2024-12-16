@@ -17,8 +17,8 @@ import 'package:ion/app/features/user/providers/current_user_identity_provider.c
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:nostr_dart/nostr_dart.dart' as nd;
+import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nostr_notifier.c.g.dart';
