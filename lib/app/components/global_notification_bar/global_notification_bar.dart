@@ -7,10 +7,13 @@ import 'package:ion/app/components/global_notification_bar/models/global_notific
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_state.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 const _notificationHeight = 24.0;
 
@@ -91,8 +94,17 @@ class GlobalNotificationBar extends HookConsumerWidget {
 
   void _setupListeners(WidgetRef ref) {
     ref
-      ..listen(createPostNotifierProvider, (_, next) {
+      ..listen(createPostNotifierProvider(CreatePostCategory.post), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.post);
+      })
+      ..listen(createPostNotifierProvider(CreatePostCategory.reply), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.reply);
+      })
+      ..listen(createPostNotifierProvider(CreatePostCategory.video), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.video);
+      })
+      ..listen(createPostNotifierProvider(CreatePostCategory.stroy), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.story);
       })
       ..listen(repostNotifierProvider, (previous, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.repost);
@@ -121,13 +133,16 @@ class GlobalNotificationBar extends HookConsumerWidget {
     required AsyncValue<void> notifier,
     required NotificationContentType type,
   }) {
-    GlobalNotificationData? notificationData;
-
-    if (notifier.isLoading) notificationData = type.loading();
-    if (notifier.hasValue) notificationData = type.ready();
-
-    if (notificationData != null) {
-      ref.read(globalNotificationProvider.notifier).show(notificationData);
+    if (notifier.isLoading) {
+      ref.read(globalNotificationProvider.notifier).show(type.loading());
+    } else if (notifier.hasError && notifier.error != null) {
+      showSimpleBottomSheet<void>(
+        context: rootNavigatorKey.currentContext!,
+        child: ErrorModal(error: notifier.error!),
+      );
+      ref.read(globalNotificationProvider.notifier).hide();
+    } else if (notifier.hasValue) {
+      ref.read(globalNotificationProvider.notifier).show(type.ready());
     }
   }
 }

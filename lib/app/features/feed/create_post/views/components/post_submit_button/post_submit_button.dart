@@ -6,7 +6,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
@@ -40,9 +39,6 @@ class PostSubmitButton extends HookConsumerWidget {
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
     final hasPoll = useHasPoll(textEditorController);
-    final isSubmitLoading = ref.watch(createPostNotifierProvider).isLoading;
-
-    ref.displayErrors(createPostNotifierProvider);
 
     final isSubmitButtonEnabled = useMemoized(
       () {
@@ -60,24 +56,25 @@ class PostSubmitButton extends HookConsumerWidget {
     );
 
     return ToolbarSendButton(
-      loading: isSubmitLoading,
-      enabled: isSubmitButtonEnabled && !isSubmitLoading,
-      onPressed: () async {
+      enabled: isSubmitButtonEnabled,
+      onPressed: () {
         final imageIds = attachedMedia.map((e) => e.path).toList();
         final operations = textEditorController.document.toDelta().operations;
 
-        await ref.read(createPostNotifierProvider.notifier).create(
+        ref
+            .read(
+              createPostNotifierProvider(
+                parentEvent == null ? CreatePostCategory.post : CreatePostCategory.reply,
+              ).notifier,
+            )
+            .create(
               content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
               parentEvent: parentEvent,
               quotedEvent: quotedEvent,
               mediaIds: imageIds,
             );
 
-        if (!ref.read(createPostNotifierProvider).hasError) {
-          if (ref.context.mounted) {
-            ref.context.pop();
-          }
-        }
+        ref.context.pop();
       },
     );
   }
