@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
-import 'package:ion/app/exceptions/request_execution_exception_extention.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart';
@@ -27,15 +26,13 @@ class SignUpPasskeyForm extends HookConsumerWidget {
 
     ref.displayErrors(registerActionNotifierProvider);
 
-    final registerError = registerActionState.error;
-
     return Form(
       key: formKey.value,
       child: Column(
         children: [
           IdentityKeyNameInput(
-            errorText: registerError is RequestExecutionException
-                ? registerError.localizedString(context)
+            errorText: registerActionState.error is UserAlreadyExistsException
+                ? context.i18n.sign_up_passkey_identity_key_name_taken
                 : registerActionState.error?.toString(),
             controller: identityKeyNameController,
           ),

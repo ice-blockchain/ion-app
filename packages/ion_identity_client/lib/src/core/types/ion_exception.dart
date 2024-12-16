@@ -46,3 +46,7 @@ class UnknownIONIdentityException extends IONIdentityException {
 class IncompleteDataIONIdentityException extends IONIdentityException {
   const IncompleteDataIONIdentityException([super.message]);
 }
+
+class UserAlreadyExistsException extends IONIdentityException {
+  const UserAlreadyExistsException() : super('User already exists');
+}
