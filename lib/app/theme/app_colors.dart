@@ -60,6 +60,35 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     );
   }
 
+  factory AppColorsExtension.defaultColors() {
+    return AppColorsExtension(
+      primaryAccent: const Color(0xFF0166FF),
+      primaryText: const Color(0xFF0E0E0E),
+      secondaryText: const Color(0xFF494949),
+      tertararyText: const Color(0xFF9A9A9A),
+      sharkText: const Color(0xFF333436),
+      primaryBackground: const Color(0xFFF5F7FF),
+      secondaryBackground: const Color(0xFFFFFFFF),
+      tertararyBackground: const Color(0xFFFAFBFF),
+      backgroundSheet: const Color(0x32081532),
+      onPrimaryAccent: const Color(0xFFFFFFFF),
+      onTertararyBackground: const Color(0xFF5A5E66),
+      onTerararyFill: const Color(0xFFE1EAF8),
+      onSecondaryBackground: const Color(0xFFF5F7FF),
+      strokeElements: const Color(0xFFCCCCCC),
+      sheetLine: const Color(0xFFB8BCCA),
+      attentionRed: const Color(0xFFFD4E4E),
+      success: const Color(0xFF35D487),
+      orangePeel: const Color(0xFFFFA143),
+      purple: const Color(0xFF7D40FF),
+      raspberry: const Color(0xFFEA3665),
+      darkBlue: const Color(0xFF1D46EB),
+      lightBlue: const Color(0xFF1B9CF0),
+      quaternaryText: const Color(0xFF727689),
+      attentionBlock: const Color(0xFFEEF1FF),
+    );
+  }
+
   final Color primaryAccent;
   final Color primaryText;
   final Color secondaryText;

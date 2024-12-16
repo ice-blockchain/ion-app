@@ -38,6 +38,24 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     );
   }
 
+  factory AppTextThemesExtension.defaultTextThemes() {
+    return const AppTextThemesExtension(
+      headline1: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+      headline2: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+      inputFieldText: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+      title: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+      subtitle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+      subtitle2: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+      subtitle3: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+      body: TextStyle(fontSize: 13, height: 1.38, fontWeight: FontWeight.w600),
+      body2: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+      caption: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+      caption2: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+      caption3: TextStyle(fontSize: 11, height: 1.63, fontWeight: FontWeight.w400),
+      caption4: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+    );
+  }
+
   final TextStyle headline1;
   final TextStyle headline2;
   final TextStyle inputFieldText;

@@ -6,8 +6,10 @@ import 'package:ion/app/theme/app_text_themes.dart';
 
 extension AppThemeExtension on ThemeData {
   /// Usage example: Theme.of(context).appColors;
-  AppColorsExtension get appColors => extension<AppColorsExtension>()!;
+  AppColorsExtension get appColors =>
+      extension<AppColorsExtension>() ?? AppColorsExtension.defaultColors();
 
   /// Usage example: Theme.of(context).appTextThemes;
-  AppTextThemesExtension get appTextThemes => extension<AppTextThemesExtension>()!;
+  AppTextThemesExtension get appTextThemes =>
+      extension<AppTextThemesExtension>() ?? AppTextThemesExtension.defaultTextThemes();
 }
