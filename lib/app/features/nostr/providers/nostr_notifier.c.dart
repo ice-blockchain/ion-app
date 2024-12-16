@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -12,6 +14,7 @@ import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.c.dart';
+import 'package:ion/app/features/nostr/utils/retry.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -33,12 +36,14 @@ class NostrNotifier extends _$NostrNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final relay = await _getRelay(actionSource);
-    await relay.sendEvents(events);
-    if (cache) {
-      return events.map(_parseAndCache).toList();
-    }
-    return null;
+    return withRetry(() async {
+      final relay = await _getRelay(actionSource);
+      await relay.sendEvents(events);
+      if (cache) {
+        return events.map(_parseAndCache).toList();
+      }
+      return null;
+    });
   }
 
   Future<NostrEntity?> sendEvent(
@@ -72,9 +77,42 @@ class NostrNotifier extends _$NostrNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
-    //TODO: handle NOTICE
     final relay = await _getRelay(actionSource);
-    yield* nd.requestEvents(requestMessage, relay);
+
+    final dislikedRelaysUrls = <String>[];
+    StreamSubscription<EventMessage>? subscription;
+    final streamController = StreamController<EventMessage>(onCancel: () => subscription?.cancel());
+
+    Future<void> handleRetry() => withRetry(
+          () async {
+            final retryRelay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+            final retryEventsStream = nd.requestEvents(requestMessage, retryRelay);
+            await for (final retryEvent in retryEventsStream) {
+              if (streamController.isClosed) break;
+              if (retryEvent is NoticeMessage) {
+                dislikedRelaysUrls.add(retryRelay.url);
+                throw Exception((retryEvent as NoticeMessage).message);
+              }
+              streamController.add(retryEvent);
+            }
+          },
+        );
+
+    subscription = nd.requestEvents(requestMessage, relay).listen(
+      (event) async {
+        if (event.indicatesError) {
+          await subscription?.cancel();
+          dislikedRelaysUrls.add(relay.url);
+          await handleRetry();
+        } else {
+          streamController.add(event);
+        }
+      },
+      onDone: streamController.close,
+      onError: streamController.addError,
+    );
+
+    yield* streamController.stream;
   }
 
   Future<EventMessage?> requestEvent(
@@ -144,7 +182,10 @@ class NostrNotifier extends _$NostrNotifier {
     );
   }
 
-  Future<NostrRelay> _getRelay(ActionSource actionSource) async {
+  Future<NostrRelay> _getRelay(
+    ActionSource actionSource, {
+    List<String> dislikedUrls = const [],
+  }) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():
         {
@@ -153,12 +194,14 @@ class NostrNotifier extends _$NostrNotifier {
             throw UserMasterPubkeyNotFoundException();
           }
           final userRelays = await _getUserRelays(pubkey);
-          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
+          final relays = userRelays.data.list.avoiding(dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceUser():
         {
           final userRelays = await _getUserRelays(actionSource.pubkey);
-          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
+          final relays = userRelays.data.list.avoiding(dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceIndexers():
         {
@@ -166,10 +209,15 @@ class NostrNotifier extends _$NostrNotifier {
           if (indexers == null) {
             throw UserIndexersNotFoundException();
           }
-          return await ref.read(relayProvider(indexers.random).future);
+          var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
+          if (urls.isEmpty) {
+            urls = indexers;
+          }
+          return await ref.read(relayProvider(urls.random).future);
         }
       case ActionSourceRelayUrl():
         {
+          // TODO: support multiple urls to allow retrying on different relays
           return await ref.read(relayProvider(actionSource.url).future);
         }
     }
@@ -192,4 +240,17 @@ class NostrNotifier extends _$NostrNotifier {
     }
     return entity;
   }
+}
+
+extension on List<UserRelay> {
+  List<UserRelay> avoiding(List<String> dislikedRelaysUrls) {
+    final urls = where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
+    if (urls.isEmpty) return this;
+    return urls;
+  }
+}
+
+extension on EventMessage {
+  // TODO: add ClosedMessage case
+  bool get indicatesError => this is NoticeMessage;
 }
