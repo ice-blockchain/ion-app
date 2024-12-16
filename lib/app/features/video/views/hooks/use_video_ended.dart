@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:video_player/video_player.dart';
 
-void useVideoEndedEffect({
+void useVideoEnded({
   required VideoPlayerController playerController,
   VoidCallback? onVideoEnded,
 }) {

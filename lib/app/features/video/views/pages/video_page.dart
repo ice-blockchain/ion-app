@@ -45,7 +45,7 @@ class VideoPage extends HookConsumerWidget {
       return const CenteredLoadingIndicator();
     }
 
-    useVideoEndedEffect(
+    useVideoEnded(
       playerController: playerController,
       onVideoEnded: onVideoEnded,
     );
