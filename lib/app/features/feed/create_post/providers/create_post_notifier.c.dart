@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -89,7 +90,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       if (createOption == CreatePostOption.story) {
         data = data.copyWith(
-          expiration: EntityExpiration(value: DateTime.now().add(const Duration(days: 2))),
+          expiration: EntityExpiration(
+            value: DateTime.now().add(
+              Duration(
+                hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
+              ),
+            ),
+          ),
         );
       }
 

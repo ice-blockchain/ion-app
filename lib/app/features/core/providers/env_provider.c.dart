@@ -14,6 +14,7 @@ enum EnvVariable {
   ION_ORIGIN,
   SHOW_DEBUG_INFO,
   BANUBA_TOKEN,
+  STORY_EXPIRATION_HOURS,
 }
 
 @Riverpod(keepAlive: true)
@@ -38,6 +39,14 @@ class Env extends _$Env {
 
     if (T == bool) {
       return (value.toLowerCase() == 'true') as T;
+    }
+
+    if (T == int) {
+      return int.parse(value) as T;
+    }
+
+    if (T == double) {
+      return double.parse(value) as T;
     }
 
     return value as T;
