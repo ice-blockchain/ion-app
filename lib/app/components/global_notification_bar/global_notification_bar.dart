@@ -12,11 +12,12 @@ import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
 
-const _animationDuration = Duration(milliseconds: 500);
 const _notificationHeight = 24.0;
 
 class GlobalNotificationBar extends HookConsumerWidget {
   const GlobalNotificationBar({super.key});
+
+  static const animationDuration = Duration(milliseconds: 500);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +26,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
     _setupListeners(ref);
 
     final controller = useAnimationController(
-      duration: _animationDuration,
+      duration: animationDuration,
     );
 
     final animation = CurvedAnimation(
@@ -84,7 +85,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
         animation.status != AnimationStatus.completed) {
       controller.forward();
     } else if (animation.status != AnimationStatus.dismissed) {
-      controller.animateBack(0, duration: _animationDuration);
+      controller.animateBack(0, duration: animationDuration);
     }
   }
 

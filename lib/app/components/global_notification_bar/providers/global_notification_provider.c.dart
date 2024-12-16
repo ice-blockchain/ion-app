@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
 import 'package:ion/app/components/global_notification_bar/models/global_notification_data.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_state.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,7 +17,10 @@ class GlobalNotification extends _$GlobalNotification {
   Timer? _timer;
 
   void show(GlobalNotificationData data) {
-    state = state.copyWith(isShow: true, data: data);
+    // Prevent bottom sheet from jumping when showing notification
+    Future.delayed(GlobalNotificationBar.animationDuration, () {
+      state = state.copyWith(isShow: true, data: data);
+    });
 
     _timer?.cancel();
 
