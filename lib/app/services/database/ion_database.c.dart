@@ -54,7 +54,8 @@ class IONDatabase extends _$IONDatabase {
     required EventMessage eventMessage,
     bool isDeleted = false,
   }) {
-    final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final conversationMessage =
+        PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return into(conversationMessagesTable).insert(
       ConversationMessagesTableData(
         isDeleted: isDeleted,
@@ -82,11 +83,10 @@ class IONDatabase extends _$IONDatabase {
     EventMessage eventMessage,
   ) async {
     if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
-      // This is the first message of the one-to-one conversation OR
-      // change of the group conversation subject
-      final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-      final conversationIdByPubkeys = await _lookupConversationByPubkeys(conversationMessage);
-      final conversationIdBySubject = await _lookupConversationBySubject(conversationMessage);
+      final conversationMessage =
+          PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+      final conversationIdByPubkeys =
+          await _lookupConversationByPubkeys(conversationMessage);
 
       // Existing conversation (one-to-one or group)
       if (conversationIdByPubkeys != null) {
@@ -94,20 +94,29 @@ class IONDatabase extends _$IONDatabase {
           eventMessage: eventMessage,
           conversationId: conversationIdByPubkeys,
         );
-        // Existing group conversation (change of participants)
-      } else if (conversationIdBySubject != null) {
-        await insertConversationData(
-          eventMessage: eventMessage,
-          conversationId: conversationIdBySubject,
-        );
-      } else if (eventMessage.content.isEmpty) {
-        final uuid = const Uuid().v1();
-        await insertConversationData(
-          eventMessage: eventMessage,
-          conversationId: uuid,
-        );
-      } else {
-        throw ConversationIsNotFoundException();
+      }
+      // Existing group conversation (change of participants)
+      if (conversationIdByPubkeys == null) {
+        final conversationIdBySubject =
+            await _lookupConversationBySubject(conversationMessage);
+
+        if (conversationIdBySubject != null) {
+          await insertConversationData(
+            eventMessage: eventMessage,
+            conversationId: conversationIdBySubject,
+          );
+
+          // New conversation
+        } else if (eventMessage.content.isEmpty) {
+          final uuid = const Uuid().v1();
+          await insertConversationData(
+            eventMessage: eventMessage,
+            conversationId: uuid,
+          );
+          // Invalid message (doesn't belong to any conversation)
+        } else {
+          throw ConversationIsNotFoundException();
+        }
       }
     }
   }
@@ -116,12 +125,14 @@ class IONDatabase extends _$IONDatabase {
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
-    final conversationsWithSameParticipants = await (select(conversationMessagesTable)
-          ..where(
-            (table) => table.pubKeys.equals(conversationMessage.allPubkeysMask),
-          )
-          ..limit(1))
-        .get();
+    final conversationsWithSameParticipants =
+        await (select(conversationMessagesTable)
+              ..where(
+                (table) =>
+                    table.pubKeys.equals(conversationMessage.allPubkeysMask),
+              )
+              ..limit(1))
+            .get();
 
     if (conversationsWithSameParticipants.isNotEmpty) {
       return conversationsWithSameParticipants.first.conversationId;
@@ -138,10 +149,11 @@ class IONDatabase extends _$IONDatabase {
     final subject = conversationMessage.data.relatedSubject?.value;
 
     if (subject != null) {
-      final conversationWithChangedParticipants = await (select(conversationMessagesTable)
-            ..where((table) => table.subject.equals(subject))
-            ..limit(1))
-          .get();
+      final conversationWithChangedParticipants =
+          await (select(conversationMessagesTable)
+                ..where((table) => table.subject.equals(subject))
+                ..limit(1))
+              .get();
 
       if (conversationWithChangedParticipants.isNotEmpty) {
         return conversationWithChangedParticipants.first.conversationId;
@@ -157,8 +169,9 @@ class IONDatabase extends _$IONDatabase {
       readsFrom: {conversationMessagesTable},
     ).get();
 
-    final lastConversationMessagesIds =
-        uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
+    final lastConversationMessagesIds = uniqueConversationRows
+        .map((row) => row.data['event_message_id'] as String)
+        .toList();
 
     final lastConversationEventMessages = (await (select(eventMessagesTable)
               ..where((table) => table.id.isIn(lastConversationMessagesIds)))

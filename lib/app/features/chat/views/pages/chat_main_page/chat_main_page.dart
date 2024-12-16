@@ -9,7 +9,7 @@ import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empt
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/components/chat_main_appbar/chat_main_appbar.dart';
 
-class ChatMainPage extends HookConsumerWidget {
+class ChatMainPage extends ConsumerWidget {
   const ChatMainPage({super.key});
 
   @override
