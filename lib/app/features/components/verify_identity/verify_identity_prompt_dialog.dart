@@ -8,7 +8,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/secured_by.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
-import 'package:ion/app/features/user/model/verify_identity_type.dart';
 import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -23,10 +22,13 @@ class VerifyIdentityPromptDialog extends ConsumerWidget {
     final textThemes = context.theme.appTextThemes;
     final isThemeLight = ref.watch(appThemeModeProvider) == ThemeMode.light;
 
-    final verifyIdentityType =
-        ref.watch(verifyIdentityTypeProvider).value ?? VerifyIdentityType.passkey;
+    final verifyIdentityType = ref.watch(verifyIdentityTypeProvider).valueOrNull;
 
     final maxHeight = MediaQuery.sizeOf(context).height * 0.8;
+
+    if (verifyIdentityType == null) {
+      return const SizedBox.shrink();
+    }
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: maxHeight),

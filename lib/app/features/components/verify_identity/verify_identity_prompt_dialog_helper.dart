@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_password.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog.dart';
 import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -38,6 +39,8 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
       }
     });
 
+    final onGetPassword = useOnGetPassword(context);
+
     useOnInit(
       () {
         requestWithVerifyIdentity(({
@@ -46,14 +49,14 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
         }) {
           return ref.watch(
             verifyUserIdentityProvider(
-              context: context,
+              onGetPassword: onGetPassword,
               onPasswordFlow: onPasswordFlow,
               onPasskeyFlow: onPasskeyFlow,
             ).future,
           );
         });
       },
-      <Object>[],
+      <Object>[onGetPassword],
     );
 
     return child;
@@ -72,6 +75,7 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final onGetPassword = useOnGetPassword(context);
     useOnInit(
       () {
         try {
@@ -81,7 +85,7 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
           }) {
             return ref.watch(
               verifyUserIdentityProvider(
-                context: context,
+                onGetPassword: onGetPassword,
                 onPasswordFlow: onPasswordFlow,
                 onPasskeyFlow: onPasskeyFlow,
               ).future,
@@ -93,7 +97,7 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
           }
         }
       },
-      <Object>[],
+      <Object>[onGetPassword],
     );
 
     return child;
