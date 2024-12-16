@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/models/global_notification_data.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
-import 'package:ion/app/components/global_notification_bar/providers/global_notification_state.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
@@ -14,8 +13,6 @@ import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.d
 import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-
-const _notificationHeight = 24.0;
 
 class GlobalNotificationBar extends HookConsumerWidget {
   const GlobalNotificationBar({super.key});
@@ -55,7 +52,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
       sizeFactor: animation,
       axisAlignment: 1,
       child: SizedBox(
-        height: _notificationHeight.s,
+        height: 24.0.s,
         child: ColoredBox(
           color: data.getBackgroundColor(context),
           child: Padding(
