@@ -63,7 +63,7 @@ class ArticlePreview extends ConsumerWidget {
                   SizedBox(height: 10.0.s),
                   ArticlePreviewImage(
                     mediaFile: selectedImage,
-                    minutesToRead: calculateReadingTime(content ?? ''),
+                    minutesToRead: calculateReadingTime(content),
                   ),
                   SizedBox(height: 10.0.s),
                   ArticleFooter(text: title ?? ''),

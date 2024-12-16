@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/cu
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
@@ -34,6 +35,7 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
     state = await AsyncValue.guard(() async {
       final files = <FileMetadata>[];
       final uploadedUrls = <String, String>{};
+      final mediaAttachments = <MediaAttachment>[];
 
       if (mediaIds != null && mediaIds.isNotEmpty) {
         await Future.wait(
@@ -41,6 +43,7 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
             final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
             uploadedUrls[id] = mediaAttachment.url;
             files.add(fileMetadata);
+            mediaAttachments.add(mediaAttachment);
           }),
         );
         content = _replaceImagePathsWithUrls(content, uploadedUrls);
@@ -52,12 +55,15 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
         imageUrl = uploadResult.mediaAttachment.url;
       }
 
+      final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(content);
+
       final articleData = ArticleData(
         title: title,
         summary: summary,
         image: imageUrl,
         content: content,
-        media: {},
+        media: {for (final attachment in mediaAttachments) attachment.url: attachment},
+        relatedHashtags: relatedHashtags,
         publishedAt: publishedAt ?? DateTime.now(),
       );
 
