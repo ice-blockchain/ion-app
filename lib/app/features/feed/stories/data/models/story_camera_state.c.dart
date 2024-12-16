@@ -10,7 +10,5 @@ sealed class StoryCameraState with _$StoryCameraState {
   const factory StoryCameraState.initial() = StoryCameraInitial;
   const factory StoryCameraState.recording() = StoryCameraRecording;
   const factory StoryCameraState.saved({required MediaFile file}) = StoryCameraSaved;
-  const factory StoryCameraState.uploading() = StoryCameraUploading;
-  const factory StoryCameraState.published() = StoryCameraPublished;
   const factory StoryCameraState.error({required String message}) = StoryCameraError;
 }

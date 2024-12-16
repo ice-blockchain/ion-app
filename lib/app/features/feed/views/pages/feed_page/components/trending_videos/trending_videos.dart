@@ -29,9 +29,7 @@ class TrendingVideos extends ConsumerWidget {
     const listOverlay = TrendingVideosOverlay.vertical;
 
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-    // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
-    // final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final videosData = ref.watch(mockPostEntitiesPagedDataProvider(dataSource));
+    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
     final videos = videosData?.data.items;
 
     if (videos == null) {
@@ -81,9 +79,7 @@ class TrendingVideos extends ConsumerWidget {
   Future<void> _onLoadMore(WidgetRef ref) async {
     await ref
         .read(
-          // TODO: Replace with the actual `entitiesPagedDataProvider` when real data is available.
-          mockPostEntitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider))
-              .notifier,
+          entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)).notifier,
         )
         .fetchEntities();
   }

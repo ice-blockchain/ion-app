@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:ion/app/features/feed/data/models/entities/related_pubkey.c.dart';
+import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';

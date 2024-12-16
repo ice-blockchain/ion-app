@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -11,6 +12,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
+import 'package:ion/app/features/nostr/model/related_event.c.dart';
 import 'package:ion/app/features/nostr/model/search_extension.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -58,6 +60,11 @@ EntitiesDataSource _buildArticlesDataSource({
     [
       ReferencesSearchExtension(contain: false),
       ExpirationSearchExtension(expiration: false),
+      TagMarkerSearchExtension(
+        tagName: RelatedEvent.tagName,
+        marker: RelatedEventMarker.reply.toShortString(),
+        negative: true,
+      ),
     ],
     currentPubkey: currentPubkey,
     forKind: ArticleEntity.kind,
@@ -115,6 +122,11 @@ EntitiesDataSource _buildVideosDataSource({
             ReferencesSearchExtension(contain: false),
             ExpirationSearchExtension(expiration: false),
             VideosSearchExtension(contain: true),
+            TagMarkerSearchExtension(
+              tagName: RelatedEvent.tagName,
+              marker: RelatedEventMarker.reply.toShortString(),
+              negative: true,
+            ),
           ],
           currentPubkey: currentPubkey,
         ).toString(),
@@ -146,6 +158,11 @@ EntitiesDataSource _buildPostsDataSource({
           [
             ReferencesSearchExtension(contain: false),
             ExpirationSearchExtension(expiration: false),
+            TagMarkerSearchExtension(
+              tagName: RelatedEvent.tagName,
+              marker: RelatedEventMarker.reply.toShortString(),
+              negative: true,
+            ),
           ],
           currentPubkey: currentPubkey,
         ).toString(),

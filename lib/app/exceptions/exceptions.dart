@@ -128,8 +128,8 @@ class FileUploadException extends IONException {
       : super(10025, 'Failed to upload file to $url: $error');
 }
 
-class UnknownUploadFileResolutionException extends IONException {
-  UnknownUploadFileResolutionException() : super(10026, 'Unknown upload file resolution');
+class UnknownFileResolutionException extends IONException {
+  UnknownFileResolutionException() : super(10026, 'Unknown upload file resolution');
 }
 
 class CompressImageException extends IONException {
@@ -141,7 +141,7 @@ class EntityNotFoundException extends IONException {
 }
 
 class CompressVideoException extends IONException {
-  CompressVideoException() : super(10029, 'Failed to compress video.');
+  CompressVideoException(dynamic error) : super(10029, 'Failed to compress video: $error');
 }
 
 class CompressAudioException extends IONException {
@@ -153,7 +153,7 @@ class CompressAudioToWavException extends IONException {
 }
 
 class ExtractThumbnailException extends IONException {
-  ExtractThumbnailException() : super(10032, 'Failed to extract thumbnail.');
+  ExtractThumbnailException(dynamic error) : super(10032, 'Failed to extract thumbnail: $error');
 }
 
 class CompressWithBrotliException extends IONException {
@@ -162,4 +162,13 @@ class CompressWithBrotliException extends IONException {
 
 class DecompressBrotliException extends IONException {
   DecompressBrotliException() : super(10034, 'Failed to decompress Brotli file.');
+}
+
+class UnknownMediaTypeException extends IONException {
+  UnknownMediaTypeException() : super(10035, 'Unknown media type');
+}
+
+class UnsupportedParentEntity extends IONException {
+  UnsupportedParentEntity({required String eventId})
+      : super(10036, 'Unsupported parent entity: $eventId');
 }

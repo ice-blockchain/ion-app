@@ -38,8 +38,8 @@ class CompressionService {
   /// If success, returns a new [XFile] with the compressed video.
   /// If fails, throws an exception.
   ///
-  Future<XFile> compressVideo(
-    XFile inputFile, {
+  Future<MediaFile> compressVideo(
+    MediaFile inputFile, {
     FFmpegVideoCodecArg videoCodec = FFmpegVideoCodecArg.libx264,
     FfmpegPresetArg preset = FfmpegPresetArg.fast,
     FfmpegBitrateArg videoBitrate = FfmpegBitrateArg.medium,
@@ -72,19 +72,37 @@ class CompressionService {
         // TODO: Add scale and fps
         output,
       ];
-      return await FFmpegKit.executeWithArguments(args).then((session) async {
-        final returnCode = await session.getReturnCode();
-        if (ReturnCode.isSuccess(returnCode)) {
-          return XFile(output);
-        }
-        final logs = await session.getAllLogsAsString();
+
+      final session = await FFmpegKit.executeWithArguments(args);
+      final returnCode = await session.getReturnCode();
+      final logs = await session.getAllLogsAsString();
+
+      if (logs == null) {
+        throw CompressVideoException('no-logs');
+      }
+
+      final match = RegExp(r'Stream.*Video:.* (\d+)x(\d+)').firstMatch(logs);
+
+      if (match == null) {
+        Logger.log('Failed to compress video. Dimension not found. Logs: $logs');
+        throw CompressVideoException('no-dim');
+      }
+
+      if (!ReturnCode.isSuccess(returnCode)) {
         final stackTrace = await session.getFailStackTrace();
         Logger.log('Failed to compress video. Logs: $logs, StackTrace: $stackTrace');
-        throw CompressVideoException();
-      });
+        throw CompressVideoException(returnCode);
+      }
+
+      return MediaFile(
+        path: output,
+        mimeType: 'video/mp4',
+        width: int.parse(match.group(1)!),
+        height: int.parse(match.group(2)!),
+      );
     } catch (error, stackTrace) {
       Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);
-      throw CompressVideoException();
+      rethrow;
     }
   }
 
@@ -117,7 +135,7 @@ class CompressionService {
         throw CompressImageException(returnCode);
       }
 
-      final outputDimension = await _getImageDimension(path: output);
+      final outputDimension = await getImageDimension(path: output);
 
       return MediaFile(
         path: output,
@@ -183,37 +201,53 @@ class CompressionService {
   }
 
   ///
-  /// Extracts a thumbnail from a video file.
+  /// Extracts a thumbnail from a video file or processes the provided [thumb].
   /// If success, returns a new [MediaFile] with the thumbnail.
   /// If fails, throws an exception.
   ///
-  Future<MediaFile> getThumbnail(
-    MediaFile inputFile, {
-    Duration duration = const Duration(seconds: 1),
-  }) async {
+  Future<MediaFile> getThumbnail(MediaFile videoFile, {String? thumb}) async {
     try {
-      final outputPath = await _generateOutputPath();
-      await FFmpegKit.executeWithArguments([
-        '-i',
-        inputFile.path,
-        '-ss',
-        '00:00:01.000',
-        '-vframes',
-        '1',
-        outputPath,
-      ]);
+      const maxDimension = 720;
+
+      var thumbPath = thumb;
+
+      if (thumbPath == null) {
+        final outputPath = await _generateOutputPath();
+        final session = await FFmpegKit.executeWithArguments([
+          '-i',
+          videoFile.path,
+          '-ss',
+          '00:00:01.000',
+          '-vframes',
+          '1',
+          outputPath,
+        ]);
+
+        final returnCode = await session.getReturnCode();
+        if (!ReturnCode.isSuccess(returnCode)) {
+          throw ExtractThumbnailException(returnCode);
+        }
+
+        thumbPath = outputPath;
+      }
+
+      final MediaFile(:width, :height) = videoFile;
+
+      if (height == null || width == null) {
+        throw UnknownFileResolutionException();
+      }
 
       final compressedImage = await compressImage(
-        MediaFile(path: outputPath),
-        quality: 100,
-        width: 200,
-        height: 200,
+        MediaFile(path: thumbPath),
+        // Do not pass the second dimension to keep the aspect ratio
+        width: width > height ? maxDimension : null,
+        height: height > width ? maxDimension : null,
       );
 
       return compressedImage;
     } catch (error, stackTrace) {
       Logger.log('Error during thumbnail extraction!', error: error, stackTrace: stackTrace);
-      throw ExtractThumbnailException();
+      rethrow;
     }
   }
 
@@ -288,7 +322,7 @@ class CompressionService {
   ///
   /// Get width and height for the given image path
   ///
-  Future<({int width, int height})> _getImageDimension({required String path}) async {
+  Future<({int width, int height})> getImageDimension({required String path}) async {
     final file = File(path);
     final imageBytes = await file.readAsBytes();
 

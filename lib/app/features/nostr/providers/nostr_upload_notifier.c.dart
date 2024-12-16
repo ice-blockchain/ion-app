@@ -33,7 +33,7 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
     required FileAlt alt,
   }) async {
     if (file.width == null || file.height == null) {
-      throw UnknownUploadFileResolutionException();
+      throw UnknownFileResolutionException();
     }
 
     final dimension = '${file.width}x${file.height}';

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -8,26 +10,32 @@ import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_duration.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_edit_cover.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPreviewCover extends HookConsumerWidget {
   const VideoPreviewCover({
-    required this.videoPath,
+    required this.attachedVideoNotifier,
     super.key,
   });
 
-  final String videoPath;
+  final ValueNotifier<MediaFile?> attachedVideoNotifier;
 
   static const double minAspectRatio = 9 / 16;
   static const double maxAspectRatio = 16 / 9;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showPlayButton = useState(true);
+    final videoPlaying = useState(false);
 
-    final assetFilePathAsync = ref.watch(assetFilePathProvider(videoPath));
-    final filePath = assetFilePathAsync.valueOrNull;
+    final attachedVideo = attachedVideoNotifier.value;
+
+    if (attachedVideo == null) {
+      return const SizedBox.shrink();
+    }
+
+    final filePath = ref.watch(assetFilePathProvider(attachedVideo.path)).valueOrNull;
 
     if (filePath == null) {
       return const _VideoPlaceholder();
@@ -61,17 +69,25 @@ class VideoPreviewCover extends HookConsumerWidget {
               onTap: () {
                 if (videoController.value.isPlaying) {
                   videoController.pause();
-                  showPlayButton.value = true;
+                  videoPlaying.value = false;
                 } else {
                   videoController.play();
-                  showPlayButton.value = false;
+                  videoPlaying.value = true;
                 }
               },
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  VideoPlayer(videoController),
-                  if (showPlayButton.value)
+                  if (attachedVideoNotifier.value?.thumb != null && !videoPlaying.value)
+                    Image.file(
+                      File(attachedVideoNotifier.value!.thumb!),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    )
+                  else
+                    VideoPlayer(videoController),
+                  if (!videoPlaying.value)
                     Container(
                       width: 48.0.s,
                       height: 48.0.s,
@@ -84,14 +100,14 @@ class VideoPreviewCover extends HookConsumerWidget {
                             .icon(color: context.theme.appColors.secondaryBackground),
                         onPressed: () {
                           videoController.play();
-                          showPlayButton.value = false;
+                          videoPlaying.value = true;
                         },
                       ),
                     ),
                   Positioned(
                     right: 12.0.s,
                     bottom: 12.0.s,
-                    child: const VideoPreviewEditCover(),
+                    child: VideoPreviewEditCover(attachedVideoNotifier: attachedVideoNotifier),
                   ),
                   Positioned(
                     left: 12.0.s,

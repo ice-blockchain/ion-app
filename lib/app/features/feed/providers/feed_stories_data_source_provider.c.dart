@@ -31,7 +31,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
         requestFilters: [
           RequestFilter(
             kinds: const [PostEntity.kind, RepostEntity.kind],
-            authors: entry.value,
+            authors: [currentPubkey, ...entry.value],
             search: SearchExtensions(
               [
                 ReactionsSearchExtension(currentPubkey: currentPubkey),
@@ -44,7 +44,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
           ),
           RequestFilter(
             kinds: const [PostEntity.kind, RepostEntity.kind],
-            authors: entry.value,
+            authors: [currentPubkey, ...entry.value],
             search: SearchExtensions(
               [
                 ReactionsSearchExtension(currentPubkey: currentPubkey),

@@ -10,7 +10,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:path/path.dart' as p;
@@ -29,6 +31,7 @@ class MediaFile with _$MediaFile {
     int? width,
     int? height,
     String? mimeType,
+    String? thumb,
   }) = _MediaFile;
 
   const MediaFile._();
@@ -203,6 +206,32 @@ class MediaService {
       Logger.log('Error capturing widget as image:', error: e, stackTrace: st);
       return null;
     }
+  }
+
+  // Convert all asset media id-s returned from MediaPicker to actual file path-es
+  Future<List<MediaFile>> convertAssetIdsToMediaFiles(
+    WidgetRef ref, {
+    required List<MediaFile> mediaFiles,
+  }) async {
+    return Future.wait(
+      mediaFiles.map((mediaFile) async {
+        final assetEntity = await ref.read(assetEntityProvider(mediaFile.path).future);
+        if (assetEntity == null) {
+          throw AssetEntityFileNotFoundException();
+        }
+        final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetEntity.file).wait;
+        if (file == null) {
+          throw AssetEntityFileNotFoundException();
+        }
+        return MediaFile(
+          path: file.path,
+          height: assetEntity.height,
+          width: assetEntity.width,
+          mimeType: mimeType,
+          thumb: mediaFile.thumb,
+        );
+      }),
+    );
   }
 }
 

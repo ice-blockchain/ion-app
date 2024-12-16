@@ -5,14 +5,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/models/global_notification_data.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
-import 'package:ion/app/components/global_notification_bar/providers/global_notification_state.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/views/pages/error_modal.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
-
-const _notificationHeight = 24.0;
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class GlobalNotificationBar extends HookConsumerWidget {
   const GlobalNotificationBar({super.key});
@@ -34,7 +33,11 @@ class GlobalNotificationBar extends HookConsumerWidget {
       curve: Curves.easeInOut,
     );
 
-    _controlAnimation(notificationState, animation, controller);
+    _controlAnimation(
+      isShow: notificationState.isShow,
+      animation: animation,
+      controller: controller,
+    );
 
     final data = notificationState.data;
 
@@ -48,7 +51,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
       sizeFactor: animation,
       axisAlignment: 1,
       child: SizedBox(
-        height: _notificationHeight.s,
+        height: 24.0.s,
         child: ColoredBox(
           color: data.getBackgroundColor(context),
           child: Padding(
@@ -75,44 +78,34 @@ class GlobalNotificationBar extends HookConsumerWidget {
     );
   }
 
-  void _controlAnimation(
-    GlobalNotificationState? notificationState,
-    CurvedAnimation animation,
-    AnimationController controller,
-  ) {
-    if (notificationState != null &&
-        notificationState.isShow &&
-        animation.status != AnimationStatus.completed) {
+  void _controlAnimation({
+    required bool isShow,
+    required CurvedAnimation animation,
+    required AnimationController controller,
+  }) {
+    if (isShow && animation.status != AnimationStatus.completed) {
       controller.forward();
-    } else if (animation.status != AnimationStatus.dismissed) {
+    } else if (!isShow && animation.status != AnimationStatus.dismissed) {
       controller.animateBack(0, duration: animationDuration);
     }
   }
 
   void _setupListeners(WidgetRef ref) {
     ref
-      ..listen(createPostNotifierProvider, (_, next) {
+      ..listen(createPostNotifierProvider(CreatePostOption.plain), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.post);
+      })
+      ..listen(createPostNotifierProvider(CreatePostOption.reply), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.reply);
+      })
+      ..listen(createPostNotifierProvider(CreatePostOption.video), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.video);
+      })
+      ..listen(createPostNotifierProvider(CreatePostOption.story), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.story);
       })
       ..listen(repostNotifierProvider, (previous, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.repost);
-      })
-      ..listen<StoryCameraState>(storyCameraControllerProvider, (previous, next) {
-        if (next is StoryCameraUploading) {
-          _handleNotification(
-            ref,
-            notifier: const AsyncValue.loading(),
-            type: NotificationContentType.story,
-          );
-        }
-
-        if (next is StoryCameraPublished) {
-          _handleNotification(
-            ref,
-            notifier: const AsyncValue.data(null),
-            type: NotificationContentType.story,
-          );
-        }
       });
   }
 
@@ -121,13 +114,16 @@ class GlobalNotificationBar extends HookConsumerWidget {
     required AsyncValue<void> notifier,
     required NotificationContentType type,
   }) {
-    GlobalNotificationData? notificationData;
-
-    if (notifier.isLoading) notificationData = type.loading();
-    if (notifier.hasValue) notificationData = type.ready();
-
-    if (notificationData != null) {
-      ref.read(globalNotificationProvider.notifier).show(notificationData);
+    if (notifier.isLoading) {
+      ref.read(globalNotificationProvider.notifier).show(type.loading());
+    } else if (notifier.hasError && notifier.error != null) {
+      showSimpleBottomSheet<void>(
+        context: rootNavigatorKey.currentContext!,
+        child: ErrorModal(error: notifier.error!),
+      );
+      ref.read(globalNotificationProvider.notifier).hide();
+    } else if (notifier.hasValue) {
+      ref.read(globalNotificationProvider.notifier).show(type.ready());
     }
   }
 }

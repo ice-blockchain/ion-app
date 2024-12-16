@@ -27,27 +27,32 @@ class ErrorModal extends ConsumerWidget {
       _ => ''
     };
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 30.0.s, right: 30.0.s, top: 30.0.s),
-          child: InfoCard(
-            iconAsset: Assets.svg.actionWalletKeyserror,
-            title: context.i18n.error_general_title,
-            description: context.i18n.error_general_description(errorInfo),
-          ),
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.9),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 30.0.s, right: 30.0.s, top: 30.0.s),
+              child: InfoCard(
+                iconAsset: Assets.svg.actionWalletKeyserror,
+                title: context.i18n.error_general_title,
+                description: context.i18n.error_general_description(errorInfo),
+              ),
+            ),
+            SizedBox(height: 24.0.s),
+            ScreenSideOffset.small(
+              child: Button(
+                label: Text(context.i18n.button_try_again),
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            ScreenBottomOffset(),
+          ],
         ),
-        SizedBox(height: 24.0.s),
-        ScreenSideOffset.small(
-          child: Button(
-            label: Text(context.i18n.button_try_again),
-            mainAxisSize: MainAxisSize.max,
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        ScreenBottomOffset(),
-      ],
+      ),
     );
   }
 }

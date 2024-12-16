@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
@@ -13,6 +15,9 @@ mixin EntityMediaDataMixin {
       }).toList();
 
   MediaAttachment? get primaryMedia => media.values.firstOrNull;
+
+  MediaAttachment? get primaryVideo =>
+      media.values.firstWhereOrNull((media) => media.mediaType == MediaType.video);
 
   static Map<String, MediaAttachment> buildMedia(
     List<List<String>>? imetaTags,
