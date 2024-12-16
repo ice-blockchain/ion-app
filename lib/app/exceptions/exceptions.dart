@@ -169,14 +169,14 @@ class ConversationIsNotFoundException extends IONException {
 }
 
 class VerifyIdentityException extends IONException {
-  VerifyIdentityException() : super(10035, 'Verify identity exception.');
+  VerifyIdentityException() : super(10036, 'Verify identity exception.');
 }
 
 class UnknownMediaTypeException extends IONException {
-  UnknownMediaTypeException() : super(10035, 'Unknown media type');
+  UnknownMediaTypeException() : super(10037, 'Unknown media type');
 }
 
 class UnsupportedParentEntity extends IONException {
   UnsupportedParentEntity({required String eventId})
-      : super(10036, 'Unsupported parent entity: $eventId');
+      : super(10038, 'Unsupported parent entity: $eventId');
 }
