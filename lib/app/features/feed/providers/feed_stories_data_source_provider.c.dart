@@ -34,8 +34,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
             authors: entry.value,
             search: SearchExtensions(
               [
-                // TODO:uncomment when impl
-                // ReactionsSearchExtension(currentPubkey: currentPubkey),
+                ReactionsSearchExtension(currentPubkey: currentPubkey),
                 ReferencesSearchExtension(contain: false),
                 ExpirationSearchExtension(expiration: true),
                 VideosSearchExtension(contain: true),
@@ -48,8 +47,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
             authors: entry.value,
             search: SearchExtensions(
               [
-                // TODO:uncomment when impl
-                // ReactionsSearchExtension(currentPubkey: currentPubkey),
+                ReactionsSearchExtension(currentPubkey: currentPubkey),
                 ReferencesSearchExtension(contain: false),
                 ExpirationSearchExtension(expiration: true),
                 ImagesSearchExtension(contain: true),

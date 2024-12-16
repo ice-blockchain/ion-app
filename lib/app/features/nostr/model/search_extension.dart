@@ -22,24 +22,22 @@ class SearchExtensions {
 
   factory SearchExtensions.withCounters(
     List<SearchExtension> extensions, {
-    // ignore: avoid_unused_constructor_parameters
     required String currentPubkey,
     int forKind = PostEntity.kind,
     bool root = true,
   }) {
     return SearchExtensions([
-      if (root) RepliesCountSearchExtension(root: root, forKind: forKind),
+      RepliesCountSearchExtension(root: root, forKind: forKind),
       if (forKind == PostEntity.kind)
         RepostsCountSearchExtension()
       else
         GenericRepostsCountSearchExtension(forKind: forKind),
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
-      // TODO:uncomment when impl and remove avoid_unused_constructor_parameters comment
-      // ReplySampleSearchExtension(currentPubkey: currentPubkey, root: root, forKind: forKind),
-      // QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
-      // RepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
-      // ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      ReplySampleSearchExtension(currentPubkey: currentPubkey, root: root, forKind: forKind),
+      QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      RepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ...extensions,
     ]);
   }
@@ -298,12 +296,14 @@ class ReferencesSearchExtension extends SearchExtension {
 ///
 /// When querying for kind 6 events this extension instead applies to the kind 1 event it points to
 class TagMarkerSearchExtension extends SearchExtension {
-  TagMarkerSearchExtension({required this.tagName, required this.marker});
+  TagMarkerSearchExtension({required this.tagName, required this.marker, this.negative = false});
 
   final String tagName;
 
   final String marker;
 
+  final bool negative;
+
   @override
-  String get query => '${tagName}marker:$marker';
+  String get query => '${negative ? '!' : ''}${tagName}marker:$marker';
 }

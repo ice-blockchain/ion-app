@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/related_event.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
@@ -19,9 +20,9 @@ Stream<Set<String>?> repliedEvents(Ref ref) async* {
   } else {
     final cache = ref.read(nostrCacheProvider);
     var repliedIds = cache.values.fold<Set<String>>({}, (result, entity) {
-      final repliedId = _getCurrentUserRepliedId(entity, currentPubkey: currentPubkey);
-      if (repliedId != null) {
-        result.add(repliedId);
+      final currentUserRepliedIds = _getCurrentUserRepliedIds(entity, currentPubkey: currentPubkey);
+      if (currentUserRepliedIds != null) {
+        result.addAll(currentUserRepliedIds);
       }
       return result;
     });
@@ -29,20 +30,30 @@ Stream<Set<String>?> repliedEvents(Ref ref) async* {
     yield repliedIds;
 
     await for (final entity in ref.watch(nostrCacheStreamProvider)) {
-      final repliedId = _getCurrentUserRepliedId(entity, currentPubkey: currentPubkey);
-      if (repliedId != null) {
-        yield repliedIds = {...repliedIds, repliedId};
+      final currentUserRepliedIds = _getCurrentUserRepliedIds(entity, currentPubkey: currentPubkey);
+      if (currentUserRepliedIds != null) {
+        yield repliedIds = {...repliedIds, ...currentUserRepliedIds};
       }
     }
   }
 }
 
-String? _getCurrentUserRepliedId(NostrEntity entity, {required String currentPubkey}) {
+List<String>? _getCurrentUserRepliedIds(NostrEntity entity, {required String currentPubkey}) {
   if (entity.masterPubkey != currentPubkey || entity is! PostEntity) {
     return null;
   }
 
-  return entity.data.parentEvent?.eventId;
+  final relatedEvents = entity.data.relatedEvents;
+
+  if (relatedEvents == null) {
+    return null;
+  }
+
+  return [
+    for (final event in relatedEvents)
+      if (event.marker == RelatedEventMarker.reply || event.marker == RelatedEventMarker.root)
+        event.eventId,
+  ];
 }
 
 @riverpod
