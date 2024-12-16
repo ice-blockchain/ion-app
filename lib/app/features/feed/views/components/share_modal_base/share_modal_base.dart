@@ -16,8 +16,8 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class ShareModalBase extends HookWidget {
   const ShareModalBase({
     required this.title,
-    required this.showNextIcon,
     required this.emptyStateWidget,
+    this.showNextIcon = true,
     this.showBackButton = false,
     this.onSearch,
     this.onClose,

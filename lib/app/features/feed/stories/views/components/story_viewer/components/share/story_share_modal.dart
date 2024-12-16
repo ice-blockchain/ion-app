@@ -14,7 +14,6 @@ class StoryShareModal extends StatelessWidget {
     return ShareModalBase(
       title: context.i18n.feed_share_via,
       showBackButton: true,
-      showNextIcon: false,
       onClose: context.pop,
       emptyStateWidget: const ShareActionButtons(),
     );

@@ -10,6 +10,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/register_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class SignUpPasskeyForm extends HookConsumerWidget {
   const SignUpPasskeyForm({super.key});
@@ -38,7 +39,10 @@ class SignUpPasskeyForm extends HookConsumerWidget {
             trailingIcon: registerActionState.isLoading ||
                     (authState.valueOrNull?.hasAuthenticated).falseOrValue
                 ? const IONLoadingIndicator()
-                : const SizedBox.shrink(),
+                : Assets.svg.iconButtonNext.icon(
+                    size: 24.0.s,
+                    color: context.theme.appColors.onPrimaryAccent,
+                  ),
             onPressed: () {
               if (formKey.value.currentState!.validate()) {
                 guardPasskeyDialog(
@@ -55,7 +59,7 @@ class SignUpPasskeyForm extends HookConsumerWidget {
                 );
               }
             },
-            label: Text(context.i18n.sign_up_passkey_button),
+            label: Text(context.i18n.button_continue),
             mainAxisSize: MainAxisSize.max,
           ),
         ],

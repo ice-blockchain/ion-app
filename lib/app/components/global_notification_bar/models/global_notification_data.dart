@@ -32,9 +32,7 @@ enum NotificationStatus {
 
   Widget? getIcon(BuildContext context) => switch (this) {
         loading => IONLoadingIndicator(size: Size.square(16.0.s)),
-        published => Assets.svg.iconBlockCheckboxOnblue.icon(
-            color: context.theme.appColors.success,
-          ),
+        published => Assets.svg.iconBlockCheckboxOn.icon(),
         success => null,
       };
 }

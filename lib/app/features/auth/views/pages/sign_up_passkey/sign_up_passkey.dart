@@ -28,7 +28,7 @@ class SignUpPasskeyPage extends StatelessWidget {
             ScreenSideOffset.large(
               child: Column(
                 children: [
-                  SizedBox(height: 14.0.s),
+                  SizedBox(height: 56.0.s),
                   SignUpListItem(
                     title: context.i18n.sign_up_passkey_advantage_1_title,
                     subtitle: context.i18n.sign_up_passkey_advantage_1_description,
@@ -44,7 +44,7 @@ class SignUpPasskeyPage extends StatelessWidget {
                     subtitle: context.i18n.sign_up_passkey_advantage_3_description,
                     icon: Assets.svg.iconLoginSafeacc.icon(),
                   ),
-                  SizedBox(height: 18.0.s),
+                  SizedBox(height: 57.0.s),
                   const SignUpPasskeyForm(),
                   ScreenBottomOffset(),
                 ],

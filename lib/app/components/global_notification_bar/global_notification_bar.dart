@@ -126,9 +126,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
     if (notifier.hasValue) notificationData = type.ready();
 
     if (notificationData != null) {
-      ref.read(globalNotificationProvider.notifier).show(
-            notificationData,
-          );
+      ref.read(globalNotificationProvider.notifier).show(notificationData);
     }
   }
 }
