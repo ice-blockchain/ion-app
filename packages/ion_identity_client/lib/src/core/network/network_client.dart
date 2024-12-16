@@ -2,7 +2,6 @@
 
 import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/core/network/network_errors.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 
@@ -144,7 +143,7 @@ class NetworkClient {
         throw DecodeException(data, e, stackTrace);
       }
     } on DioException catch (e, stackTrace) {
-      if (NetworkErrors.isUserAlreadyExistsException(e)) {
+      if (UserAlreadyExistsException.isMatch(e)) {
         throw const UserAlreadyExistsException();
       }
 
