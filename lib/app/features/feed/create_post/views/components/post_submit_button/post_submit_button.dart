@@ -8,7 +8,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -16,7 +15,6 @@ import 'package:ion/app/features/feed/create_post/providers/create_post_notifier
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/validators.dart';
@@ -67,7 +65,9 @@ class PostSubmitButton extends HookConsumerWidget {
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
         final operations = textEditorController.document.toDelta().operations;
-        final convertedMediaFiles = await _convertToMediaFiles(ref, mediaFiles: mediaFiles);
+        final convertedMediaFiles = await ref
+            .read(mediaServiceProvider)
+            .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
         unawaited(
           ref
@@ -88,32 +88,6 @@ class PostSubmitButton extends HookConsumerWidget {
           ref.context.pop();
         }
       },
-    );
-  }
-
-  // Convert all asset media id-s returned from MediaPicker to actual file path-es
-  Future<List<MediaFile>> _convertToMediaFiles(
-    WidgetRef ref, {
-    required List<MediaFile> mediaFiles,
-  }) async {
-    return Future.wait(
-      mediaFiles.map((mediaFile) async {
-        final assetEntity = await ref.read(assetEntityProvider(mediaFile.path).future);
-        if (assetEntity == null) {
-          throw AssetEntityFileNotFoundException();
-        }
-        final (mimeType, file) = await (assetEntity.mimeTypeAsync, assetEntity.file).wait;
-        if (file == null) {
-          throw AssetEntityFileNotFoundException();
-        }
-        return MediaFile(
-          path: file.path,
-          height: assetEntity.height,
-          width: assetEntity.width,
-          mimeType: mimeType,
-          thumb: mediaFile.thumb,
-        );
-      }),
     );
   }
 }
