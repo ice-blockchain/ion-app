@@ -74,8 +74,4 @@ class Validators {
   static bool isInvalidUrl(String? value) {
     return isEmpty(value) || !(Uri.tryParse(value!)?.isAbsolute).falseOrValue;
   }
-
-  static bool isArticleValid(String? title, String? imageUrl) {
-    return title != null && title.trim().isNotEmpty && imageUrl != null;
-  }
 }
