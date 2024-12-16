@@ -10,6 +10,7 @@ class PublicKeyCredentialDescriptor {
   PublicKeyCredentialDescriptor(
     this.type,
     this.id,
+    this.encryptedPrivateKey,
   );
 
   factory PublicKeyCredentialDescriptor.fromJson(JsonObject json) {
@@ -18,6 +19,7 @@ class PublicKeyCredentialDescriptor {
 
   final String type;
   final String id;
+  final String? encryptedPrivateKey;
 
   JsonObject toJson() => _$PublicKeyCredentialDescriptorToJson(this);
 }

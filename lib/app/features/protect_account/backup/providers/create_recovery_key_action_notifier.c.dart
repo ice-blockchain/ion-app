@@ -14,7 +14,9 @@ class CreateRecoveryKeyActionNotifier extends _$CreateRecoveryKeyActionNotifier 
     return null;
   }
 
-  Future<void> createRecoveryCredentials() async {
+  Future<void> createRecoveryCredentials(
+    OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
+  ) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
@@ -24,7 +26,7 @@ class CreateRecoveryKeyActionNotifier extends _$CreateRecoveryKeyActionNotifier 
       }
 
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      return ionIdentity(username: selectedUser).auth.createRecoveryCredentials();
+      return ionIdentity(username: selectedUser).auth.createRecoveryCredentials(onVerifyIdentity);
     });
   }
 }

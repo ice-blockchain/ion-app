@@ -31,6 +31,33 @@ class KeyService {
     );
   }
 
+  Future<KeyPairData> reconstructKeyPairFromEncryptedPrivateKey(
+    String encryptedPrivateKey,
+    String recoveryCode,
+  ) async {
+    // 1. Decrypt the private key to get the privateKeyPem
+    final privateKeyPem = await decryptPrivateKey(encryptedPrivateKey, recoveryCode);
+
+    // 2. Convert the PEM-encoded private key back to a SimpleKeyPairData
+    final keyPairData = await pemToPrivateKey(privateKeyPem);
+
+    // 3. Extract the public key and convert it to PEM format
+    final publicKey = keyPairData.publicKey;
+    final publicKeyPem = _encodeEd25519PublicKeyToPem(Uint8List.fromList(publicKey.bytes));
+
+    // 4. Extract the private key bytes from the keyPairData
+    final privateKeyBytes = await keyPairData.extractPrivateKeyBytes();
+
+    // 5. Reconstruct the KeyPairData object
+    return KeyPairData(
+      keyPair: keyPairData,
+      publicKey: publicKey,
+      publicKeyPem: publicKeyPem,
+      privateKeyPem: privateKeyPem,
+      privateKeyBytes: privateKeyBytes,
+    );
+  }
+
   // Encrypts the private key using AES-GCM with a key derived from the recovery code
   Future<String> encryptPrivateKey(String privateKeyPem, String recoveryCode) async {
     // Generate a random salt

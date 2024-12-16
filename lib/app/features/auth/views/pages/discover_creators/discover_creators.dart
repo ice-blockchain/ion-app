@@ -17,11 +17,12 @@ import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.c.d
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
-import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class DiscoverCreators extends HookConsumerWidget {
   const DiscoverCreators({super.key});
@@ -104,10 +105,15 @@ class DiscoverCreators extends HookConsumerWidget {
                         selectedCreators.map((creator) => creator.masterPubkey).toList();
                     guardPasskeyDialog(
                       context,
-                      (child) => RiverpodPasskeyRequestBuilder(
+                      (child) => RiverpodVerifyIdentityRequestBuilder(
+                        requestWithVerifyIdentity: (
+                          OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+                        ) {
+                          ref
+                              .read(onboardingCompleteNotifierProvider.notifier)
+                              .finish(onVerifyIdentity);
+                        },
                         provider: onboardingCompleteNotifierProvider,
-                        request: () =>
-                            ref.read(onboardingCompleteNotifierProvider.notifier).finish(),
                         child: child,
                       ),
                     );

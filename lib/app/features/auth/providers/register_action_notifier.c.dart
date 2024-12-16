@@ -18,4 +18,13 @@ class RegisterActionNotifier extends _$RegisterActionNotifier {
       await ionIdentity(username: keyName).auth.registerUser();
     });
   }
+
+  Future<void> signUpWithPassword({required String keyName, required String password}) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
+      await ionIdentity(username: keyName).auth.registerUserWithPassword(password);
+    });
+  }
 }

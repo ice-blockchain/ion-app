@@ -3,10 +3,7 @@
 import 'dart:convert';
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion.dart';
-import 'package:ion_identity_client/src/signer/dtos/fido_2_assertion_data.dart';
-import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.c.dart';
+import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:passkeys/authenticator.dart';
 import 'package:passkeys/types.dart';
@@ -98,12 +95,12 @@ class PasskeysSigner {
     );
   }
 
-  /// Signs a user action challenge, returning a [Fido2Assertion] containing
+  /// Signs a user action challenge, returning a [AssertionRequestData] containing
   /// the assertion data.
   ///
   /// This method interacts with a passkey authenticator to authenticate the
   /// user, utilizing the options specified in [PasskeysOptions].
-  Future<Fido2Assertion> sign(UserActionChallenge challenge) async {
+  Future<AssertionRequestData> sign(UserActionChallenge challenge) async {
     try {
       final fido2Assertion = await PasskeyAuthenticator().authenticate(
         AuthenticateRequestType(
@@ -124,15 +121,14 @@ class PasskeysSigner {
           mediation: MediationType.Required,
         ),
       );
-
-      return Fido2Assertion(
-        'Fido2',
-        Fido2AssertionData(
-          fido2Assertion.clientDataJSON,
-          fido2Assertion.rawId,
-          fido2Assertion.signature,
-          fido2Assertion.authenticatorData,
-          fido2Assertion.userHandle,
+      return AssertionRequestData(
+        kind: CredentialKind.Fido2,
+        credentialAssertion: CredentialAssertionData(
+          clientData: fido2Assertion.clientDataJSON,
+          credId: fido2Assertion.rawId,
+          signature: fido2Assertion.signature,
+          authenticatorData: fido2Assertion.authenticatorData,
+          userHandle: fido2Assertion.userHandle,
         ),
       );
     } catch (e) {

@@ -9,7 +9,7 @@ import 'package:ion/app/features/auth/views/pages/recover_user_page/components/r
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_options_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/models/recover_user_step.dart';
-import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -104,15 +104,16 @@ class RecoverUserPage extends HookConsumerWidget {
 
         guardPasskeyDialog(
           ref.context,
-          (child) => RiverpodPasskeyRequestBuilder(
+          (child) => RiverpodVerifyIdentityRequestBuilder(
             provider: completeUserRecoveryActionNotifierProvider,
-            request: () =>
-                ref.read(completeUserRecoveryActionNotifierProvider.notifier).completeRecovery(
-                      username: recoveryCreds.value!.name,
-                      credentialId: recoveryCreds.value!.id,
-                      recoveryKey: recoveryCreds.value!.code,
-                      challenge: challenge!,
-                    ),
+            requestWithVerifyIdentity: (_) {
+              ref.read(completeUserRecoveryActionNotifierProvider.notifier).completeRecovery(
+                    username: recoveryCreds.value!.name,
+                    credentialId: recoveryCreds.value!.id,
+                    recoveryKey: recoveryCreds.value!.code,
+                    challenge: challenge!,
+                  );
+            },
             child: child,
           ),
         );

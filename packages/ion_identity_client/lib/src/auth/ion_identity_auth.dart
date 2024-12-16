@@ -9,6 +9,7 @@ import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
+import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 /// A class that handles user authentication processes, including user registration,
 /// login, and logout.
@@ -22,6 +23,7 @@ class IONIdentityAuth {
   /// The [createRecoveryCredentialsService] handles the creation of recovery credentials.
   IONIdentityAuth({
     required this.username,
+    required this.identitySigner,
     required this.registerService,
     required this.loginService,
     required this.logoutService,
@@ -33,6 +35,7 @@ class IONIdentityAuth {
   });
 
   final RegisterService registerService;
+  final IdentitySigner identitySigner;
   final LoginService loginService;
   final LogoutService logoutService;
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
@@ -54,8 +57,14 @@ class IONIdentityAuth {
 
   String? getUserPrivateKey() => privateKeyStorage.getPrivateKey(username: username);
 
-  Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() =>
-      createRecoveryCredentialsService.createRecoveryCredentials();
+  Future<bool> isPasskeyAvailable() => identitySigner.isPasskeyAvailable();
+
+  bool isPasswordFlowUser() => privateKeyStorage.getPrivateKey(username: username) != null;
+
+  Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials(
+    OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
+  ) =>
+      createRecoveryCredentialsService.createRecoveryCredentials(onVerifyIdentity);
 
   Future<UserRegistrationChallenge> initRecovery({
     required String credentialId,

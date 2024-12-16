@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
-import 'package:ion/app/features/components/passkeys/passkey_prompt_dialog_helper.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
@@ -62,9 +62,9 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
                       onRequestCode: () async {
                         await guardPasskeyDialog(
                           ref.context,
-                          (child) => RiverpodPasskeyRequestBuilder(
+                          (child) => RiverpodVerifyIdentityRequestBuilder(
                             provider: requestTwoFaCodeNotifierProvider,
-                            request: () {
+                            requestWithVerifyIdentity: (_) {
                               ref
                                   .read(requestTwoFaCodeNotifierProvider.notifier)
                                   .requestTwoFaCode(twoFaType);
@@ -106,9 +106,9 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
   ) {
     guardPasskeyDialog(
       ref.context,
-      (child) => RiverpodPasskeyRequestBuilder(
+      (child) => RiverpodVerifyIdentityRequestBuilder(
         provider: deleteTwoFANotifierProvider,
-        request: () {
+        requestWithVerifyIdentity: (_) {
           ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
             TwoFaTypeAdapter(twoFaToDelete).twoFAType,
             [

@@ -27,7 +27,7 @@ class LoginDataSource {
   }
 
   Future<Authentication> loginComplete({
-    required Fido2Assertion assertion,
+    required AssertionRequestData assertion,
     required String challengeIdentifier,
   }) {
     final requestData = UserActionSigningCompleteRequest(

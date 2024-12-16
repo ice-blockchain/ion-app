@@ -9,6 +9,7 @@ import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -70,7 +71,10 @@ class UserDelegationManager extends _$UserDelegationManager {
     );
   }
 
-  Future<EventMessage> buildDelegationEventFrom(UserDelegationData userDelegationData) async {
+  Future<EventMessage> buildDelegationEventFrom(
+    UserDelegationData userDelegationData,
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  ) async {
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
     final mainWallet = (await ref.read(mainWalletProvider.future))!;
     final ionIdentity = await ref.read(ionIdentityProvider.future);
@@ -88,9 +92,18 @@ class UserDelegationManager extends _$UserDelegationManager {
       content: '',
     );
 
-    final signResponse = await ionIdentity(username: currentIdentityKeyName)
-        .wallets
-        .generateHashSignature(mainWallet.id, eventId);
+    final signResponse = await onVerifyIdentity(
+      onPasswordFlow: ({required String password}) {
+        return ionIdentity(username: currentIdentityKeyName)
+            .wallets
+            .generateHashSignatureWithPassword(mainWallet.id, eventId, password);
+      },
+      onPasskeyFlow: () {
+        return ionIdentity(username: currentIdentityKeyName)
+            .wallets
+            .generateHashSignatureWithPasskey(mainWallet.id, eventId);
+      },
+    );
 
     final curveName = switch (mainWallet.signingKey.curve) {
       'ed25519' => 'curve25519',

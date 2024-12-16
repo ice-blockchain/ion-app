@@ -29,7 +29,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> finish() async {
+  Future<void> finish(OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
@@ -40,7 +40,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
-        final userDelegationEvent = await _buildUserDelegation(pubkey: eventSigner.publicKey);
+        final userDelegationEvent = await _buildUserDelegation(
+          pubkey: eventSigner.publicKey,
+          onVerifyIdentity: onVerifyIdentity,
+        );
 
         await ref
             .read(nostrNotifierProvider.notifier)
@@ -139,14 +142,18 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return (interestSetData: interestSetData, interestsData: interestsData);
   }
 
-  Future<EventMessage> _buildUserDelegation({required String pubkey}) async {
+  Future<EventMessage> _buildUserDelegation({
+    required String pubkey,
+    required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  }) async {
     final userDelegationData = await ref
         .read(userDelegationManagerProvider.notifier)
         .buildCurrentUserDelegationDataWith(pubkey: pubkey);
 
-    return ref
-        .read(userDelegationManagerProvider.notifier)
-        .buildDelegationEventFrom(userDelegationData);
+    return ref.read(userDelegationManagerProvider.notifier).buildDelegationEventFrom(
+          userDelegationData,
+          onVerifyIdentity,
+        );
   }
 
   FollowListData _buildFollowList() {

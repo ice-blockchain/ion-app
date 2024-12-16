@@ -3,8 +3,6 @@
 import 'dart:math';
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/dtos/credential_request_data.c.dart';
-import 'package:ion_identity_client/src/auth/dtos/credential_response.c.dart';
 import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
@@ -28,7 +26,9 @@ class CreateRecoveryCredentialsService {
   final IdentitySigner identitySigner;
   final KeyService keyService;
 
-  Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials() async {
+  Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials(
+    OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
+  ) async {
     final credentialChallenge = await dataSource.createCredentialInit(username: username);
     final recoveryCode = generateRecoveryCode();
     final credentialRequestData = await identitySigner.registerWithPassword(
@@ -49,9 +49,20 @@ class CreateRecoveryCredentialsService {
       ),
     );
 
-    final credentialResponse = await userActionSigner.execute(
-      credentialRequest,
-      CredentialResponse.fromJson,
+    final credentialResponse = await onVerifyIdentity(
+      onPasswordFlow: ({required String password}) {
+        return userActionSigner.signWithPassword(
+          credentialRequest,
+          CredentialResponse.fromJson,
+          password,
+        );
+      },
+      onPasskeyFlow: () {
+        return userActionSigner.signWithPasskey(
+          credentialRequest,
+          CredentialResponse.fromJson,
+        );
+      },
     );
 
     return CreateRecoveryCredentialsSuccess(

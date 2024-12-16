@@ -10,8 +10,8 @@ UserActionSigningCompleteRequest _$UserActionSigningCompleteRequestFromJson(
         Map<String, dynamic> json) =>
     UserActionSigningCompleteRequest(
       challengeIdentifier: json['challengeIdentifier'] as String,
-      firstFactor:
-          Fido2Assertion.fromJson(json['firstFactor'] as Map<String, dynamic>),
+      firstFactor: AssertionRequestData.fromJson(
+          json['firstFactor'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserActionSigningCompleteRequestToJson(

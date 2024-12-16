@@ -7,6 +7,7 @@ import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_decoration.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class TextInput extends HookWidget {
   TextInput({
@@ -29,9 +30,11 @@ class TextInput extends HookWidget {
     this.suffixIcon,
     this.onChanged,
     this.onValidated,
+    this.onFocused,
     this.maxLength,
     this.isLive = false,
     this.alwaysShowPrefixIcon = false,
+    this.obscureText = false,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
@@ -65,9 +68,11 @@ class TextInput extends HookWidget {
 
   final ValueChanged<String>? onChanged;
   final ValueChanged<bool>? onValidated;
+  final ValueChanged<bool>? onFocused;
   final bool alwaysShowPrefixIcon;
   final int? maxLength;
   final bool isLive;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +81,13 @@ class TextInput extends HookWidget {
     final hasValue = useState(initialValue.isNotEmpty);
     final hasFocus = useNodeFocused(focusNode);
     final hasBeenChanged = useState(false);
+
+    useOnInit(
+      () {
+        onFocused?.call(hasFocus.value);
+      },
+      [hasFocus.value],
+    );
 
     String? validate(String? value) {
       final validatorError = validator?.call(value);
@@ -123,6 +135,8 @@ class TextInput extends HookWidget {
       cursorErrorColor: context.theme.appColors.primaryAccent,
       cursorColor: context.theme.appColors.primaryAccent,
       maxLength: maxLength,
+      obscureText: obscureText,
+      obscuringCharacter: '*',
       validator: validate,
       decoration: TextInputDecoration(
         context: context,
