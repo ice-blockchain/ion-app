@@ -77,7 +77,6 @@ class IONDatabase extends _$IONDatabase {
     await _updateConversationMessagesTable(eventMessage);
   }
 
-  // Inserts new conversation id or returns existing one
   Future<void> _updateConversationMessagesTable(
     EventMessage eventMessage,
   ) async {
