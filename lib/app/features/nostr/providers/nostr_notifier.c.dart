@@ -36,7 +36,7 @@ class NostrNotifier extends _$NostrNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final dislikedRelaysUrls = <String>[];
+    final dislikedRelaysUrls = <String>{};
     NostrRelay? relay;
     return withRetry(
       () async {
@@ -48,7 +48,7 @@ class NostrNotifier extends _$NostrNotifier {
         return null;
       },
       onRetry: () {
-        dislikedRelaysUrls.add(relay?.url ?? '');
+        if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
     );
   }
@@ -84,7 +84,7 @@ class NostrNotifier extends _$NostrNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
-    final dislikedRelaysUrls = <String>[];
+    final dislikedRelaysUrls = <String>{};
     NostrRelay? relay;
 
     yield* withRetryStream(
@@ -102,7 +102,7 @@ class NostrNotifier extends _$NostrNotifier {
         }
       },
       onRetry: () {
-        dislikedRelaysUrls.add(relay?.url ?? '');
+        if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
     );
   }
@@ -176,7 +176,7 @@ class NostrNotifier extends _$NostrNotifier {
 
   Future<NostrRelay> _getRelay(
     ActionSource actionSource, {
-    List<String> dislikedUrls = const [],
+    Set<String> dislikedUrls = const {},
   }) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():
@@ -232,14 +232,14 @@ class NostrNotifier extends _$NostrNotifier {
 
   List<UserRelay> _userRelaysAvoidingDislikedUrls(
     List<UserRelay> relays,
-    List<String> dislikedRelaysUrls,
+    Set<String> dislikedRelaysUrls,
   ) {
     final urls = relays.where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
     if (urls.isEmpty) return relays;
     return urls;
   }
 
-  List<String> _indexersAvoidingDislikedUrls(List<String> indexers, List<String> dislikedUrls) {
+  List<String> _indexersAvoidingDislikedUrls(List<String> indexers, Set<String> dislikedUrls) {
     var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
     if (urls.isEmpty) {
       urls = indexers;
