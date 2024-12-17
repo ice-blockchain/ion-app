@@ -92,7 +92,10 @@ class NostrNotifier extends _$NostrNotifier {
         relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
         await for (final event in nd.requestEvents(requestMessage, relay!)) {
           if (event is NoticeMessage || event is ClosedMessage) {
-            throw RelayRequestFailedException();
+            throw RelayRequestFailedException(
+              relayUrl: relay!.url,
+              message: _getErrorEventMessage(event),
+            );
           } else if (event is EventMessage) {
             yield event;
           }
@@ -243,4 +246,10 @@ class NostrNotifier extends _$NostrNotifier {
     }
     return urls;
   }
+
+  String? _getErrorEventMessage(RelayMessage event) => switch (event) {
+        NoticeMessage() => event.message,
+        ClosedMessage() => event.message,
+        _ => null,
+      };
 }

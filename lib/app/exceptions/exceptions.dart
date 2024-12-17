@@ -182,5 +182,11 @@ class UnsupportedParentEntity extends IONException {
 }
 
 class RelayRequestFailedException extends IONException {
-  RelayRequestFailedException() : super(10039, 'Relay request failed');
+  RelayRequestFailedException({
+    required String relayUrl,
+    String? message,
+  }) : super(
+          10039,
+          'Relay request failed: $relayUrl, message $message',
+        );
 }

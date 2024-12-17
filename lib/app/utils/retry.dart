@@ -65,7 +65,7 @@ Stream<T> withRetryStream<T>(
         milliseconds: min(jitteredDelay.inMilliseconds, maxDelay.inMilliseconds),
       );
 
-      Logger.log('Retry #$attempt after ${currentDelay.inMilliseconds}ms...');
+      Logger.log('Retry #$attempt after ${currentDelay.inMilliseconds}ms... Last error: $e');
       await Future<void>.delayed(currentDelay);
 
       currentDelay = Duration(
