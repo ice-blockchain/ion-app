@@ -7,6 +7,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/inputs/hooks/use_text_changed.dart';
+import 'package:ion/app/components/inputs/text_input/components/text_input_clear_button.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/countries.c.dart';
@@ -32,8 +34,16 @@ class PhoneSetupInputPage extends HookConsumerWidget {
     final locale = context.i18n;
     final formKey = useRef(GlobalKey<FormState>());
     final phoneController = useTextEditingController();
+    final showClear = useState(false);
 
     final country = ref.watch(selectedCountryProvider);
+
+    useTextChanged(
+      controller: phoneController,
+      onTextChanged: (String text) {
+        showClear.value = text.isNotEmpty;
+      },
+    );
 
     return Form(
       key: formKey.value,
@@ -60,6 +70,8 @@ class PhoneSetupInputPage extends HookConsumerWidget {
                         }
                       },
                     ),
+                    suffixIcon:
+                        showClear.value ? TextInputClearButton(controller: phoneController) : null,
                     labelText: context.i18n.phone_number,
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
