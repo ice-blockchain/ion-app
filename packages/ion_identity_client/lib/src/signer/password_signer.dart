@@ -66,7 +66,10 @@ class PasswordSigner {
       password,
     );
 
-    await privateKeyStorage.setPrivateKey(username: username, privateKey: keyPair.privateKeyPem);
+    await privateKeyStorage.setPrivateKey(
+      username: username,
+      privateKey: hex.encode(keyPair.privateKeyBytes),
+    );
 
     return CredentialRequestData(
       credentialInfo: CredentialInfo(
