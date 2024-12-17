@@ -3,6 +3,7 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
+import 'package:ion/app/features/chat/providers/set_user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
@@ -49,6 +50,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         await ref
             .read(nostrNotifierProvider.notifier)
             .sendEvents([userDelegationEvent, userRelaysEvent]);
+
+        ref.read(setUserChatRelaysProvider(pubkey: eventSigner.publicKey));
 
         final uploadedAvatar = await _uploadAvatar();
 
