@@ -49,7 +49,7 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
             child: (Uri.tryParse(path)?.hasAbsolutePath ?? false)
                 ? Consumer(
                     builder: (context, ref, child) {
-                      final aspectRatioCache = ref.read(imageAspectRatioCacheProvider);
+                      final aspectRatioCache = ref.watch(imageAspectRatioCacheProvider);
                       final futureAspectRatio = aspectRatioCache.getAspectRatio(path);
                       return FutureBuilder<MediaAspectRatioResult>(
                         future: futureAspectRatio,

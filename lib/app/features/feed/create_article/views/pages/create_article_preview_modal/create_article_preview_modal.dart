@@ -70,11 +70,10 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                             mediaIds: imageIds,
                           );
 
-                      if (!ref.read(createArticleNotifierProvider).hasError) {
-                        if (ref.context.mounted) {
-                          final state = GoRouterState.of(ref.context);
-                          ref.context.go(state.currentTab.baseRouteLocation);
-                        }
+                      if (!ref.read(createArticleNotifierProvider).hasError &&
+                          ref.context.mounted) {
+                        final state = GoRouterState.of(ref.context);
+                        ref.context.go(state.currentTab.baseRouteLocation);
                       }
                     },
                     label: Text(context.i18n.button_publish),

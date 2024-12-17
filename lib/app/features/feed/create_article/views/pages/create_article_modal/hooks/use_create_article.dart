@@ -49,9 +49,9 @@ CreateArticleState useCreateArticle() {
   );
 
   void onNext(WidgetRef ref) {
-    ref.read(createArticleProvider.notifier).updateImage(selectedImage.value);
-    ref.read(createArticleProvider.notifier).updateTitle(titleController.text);
-    ref.read(createArticleProvider.notifier).updateContent(textEditorController);
+    ref
+        .read(createArticleProvider.notifier)
+        .updateArticleDetails(textEditorController, selectedImage.value, titleController.text);
   }
 
   return CreateArticleState(

@@ -21,10 +21,10 @@ class ArticlePreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final title = ref.read(createArticleProvider).title;
-    final selectedImage = ref.read(createArticleProvider).image;
-    final content = ref.read(createArticleProvider).content;
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    final title = ref.watch(createArticleProvider).title;
+    final selectedImage = ref.watch(createArticleProvider).image;
+    final content = ref.watch(createArticleProvider).content;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
     if (currentPubkey == null) {
       return const Skeleton(child: PostSkeleton());

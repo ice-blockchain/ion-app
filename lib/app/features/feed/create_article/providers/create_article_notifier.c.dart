@@ -17,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_notifier.c.g.dart';
 
-@Riverpod(dependencies: [])
+@riverpod
 class CreateArticleNotifier extends _$CreateArticleNotifier {
   @override
   FutureOr<void> build() {}
@@ -34,27 +34,11 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
 
     state = await AsyncValue.guard(() async {
       final files = <FileMetadata>[];
-      final uploadedUrls = <String, String>{};
       final mediaAttachments = <MediaAttachment>[];
 
-      if (mediaIds != null && mediaIds.isNotEmpty) {
-        await Future.wait(
-          mediaIds.map((id) async {
-            final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
-            uploadedUrls[id] = mediaAttachment.url;
-            files.add(fileMetadata);
-            mediaAttachments.add(mediaAttachment);
-          }),
-        );
-        content = _replaceImagePathsWithUrls(content, uploadedUrls);
-      }
+      content = await _prepareContent(content, mediaIds, files, mediaAttachments);
 
-      String? imageUrl;
-      if (imageId != null) {
-        final uploadResult = await _uploadImage(imageId);
-        imageUrl = uploadResult.mediaAttachment.url;
-      }
-
+      final imageUrl = await _getUploadImage(imageId);
       final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(content);
 
       final articleData = ArticleData(
@@ -71,25 +55,53 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
     });
   }
 
+  Future<String> _prepareContent(
+    String content,
+    List<String>? mediaIds,
+    List<FileMetadata> files,
+    List<MediaAttachment> mediaAttachments,
+  ) async {
+    final uploadedUrls = <String, String>{};
+
+    var updatedContent = content;
+
+    if (mediaIds != null && mediaIds.isNotEmpty) {
+      await Future.wait(
+        mediaIds.map((id) async {
+          final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
+          uploadedUrls[id] = mediaAttachment.url;
+          files.add(fileMetadata);
+          mediaAttachments.add(mediaAttachment);
+        }),
+      );
+      updatedContent = _replaceImagePathsWithUrls(updatedContent, uploadedUrls);
+    }
+
+    return updatedContent;
+  }
+
   String _replaceImagePathsWithUrls(String content, Map<String, String> uploadedUrls) {
     final parsedContent = jsonDecode(content) as List<dynamic>;
 
     for (final operation in parsedContent) {
-      if (operation is Map<String, dynamic> &&
-          operation.containsKey('insert') &&
-          operation['insert'] is Map<String, dynamic>) {
-        final insertData = operation['insert'] as Map<String, dynamic>;
-
-        if (insertData.containsKey(textEditorSingleImageKey)) {
-          final localPath = insertData[textEditorSingleImageKey] as String?;
-          if (localPath != null && uploadedUrls.containsKey(localPath)) {
-            insertData[textEditorSingleImageKey] = uploadedUrls[localPath];
-          }
+      if (operation case {'insert': {textEditorSingleImageKey: final String? localPath}}) {
+        if (localPath != null && uploadedUrls.containsKey(localPath)) {
+          final insertData = operation['insert'] as Map<String, dynamic>;
+          insertData[textEditorSingleImageKey] = uploadedUrls[localPath];
         }
       }
     }
 
     return jsonEncode(parsedContent);
+  }
+
+  Future<String?> _getUploadImage(String? imageId) async {
+    String? imageUrl;
+    if (imageId != null) {
+      final uploadResult = await _uploadImage(imageId);
+      imageUrl = uploadResult.mediaAttachment.url;
+    }
+    return imageUrl;
   }
 
   Future<UploadResult> _uploadImage(String imageId) async {

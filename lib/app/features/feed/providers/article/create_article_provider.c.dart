@@ -21,21 +21,15 @@ class CreateArticle extends _$CreateArticle {
     );
   }
 
-  void updateImage(MediaFile? image) {
-    state = state.copyWith(image: image);
-  }
-
-  void updateTitle(String? title) {
-    state = state.copyWith(title: title?.trim());
-  }
-
-  void updateContent(QuillController textEditorController) {
+  void updateArticleDetails(QuillController textEditorController, MediaFile? image, String title) {
     final deltaJson = jsonEncode(textEditorController.document.toDelta().toJson());
     final imageIds = _extractImageIds(textEditorController);
 
     state = state.copyWith(
       content: deltaJson,
       imageIds: imageIds,
+      image: image,
+      title: title.trim(),
     );
   }
 
