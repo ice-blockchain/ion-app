@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:nostr_dart/nostr_dart.dart';
+
 sealed class IONException implements Exception {
   const IONException(this.code, this.message);
 
@@ -179,4 +181,14 @@ class UnknownMediaTypeException extends IONException {
 class UnsupportedParentEntity extends IONException {
   UnsupportedParentEntity({required String eventId})
       : super(10038, 'Unsupported parent entity: $eventId');
+}
+
+class RelayRequestFailedException extends IONException {
+  RelayRequestFailedException({
+    required String relayUrl,
+    RelayMessage? event,
+  }) : super(
+          10039,
+          'Relay request failed: $relayUrl, event $event',
+        );
 }

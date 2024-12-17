@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -17,6 +19,7 @@ import 'package:ion/app/features/user/providers/current_user_identity_provider.c
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/utils/retry.dart';
 import 'package:nostr_dart/nostr_dart.dart' as nd;
 import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,12 +36,21 @@ class NostrNotifier extends _$NostrNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final relay = await _getRelay(actionSource);
-    await relay.sendEvents(events);
-    if (cache) {
-      return events.map(_parseAndCache).toList();
-    }
-    return null;
+    final dislikedRelaysUrls = <String>{};
+    NostrRelay? relay;
+    return withRetry(
+      () async {
+        relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        await relay!.sendEvents(events);
+        if (cache) {
+          return events.map(_parseAndCache).toList();
+        }
+        return null;
+      },
+      onRetry: () {
+        if (relay != null) dislikedRelaysUrls.add(relay!.url);
+      },
+    );
   }
 
   Future<NostrEntity?> sendEvent(
@@ -72,9 +84,27 @@ class NostrNotifier extends _$NostrNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
-    //TODO: handle NOTICE
-    final relay = await _getRelay(actionSource);
-    yield* nd.requestEvents(requestMessage, relay);
+    final dislikedRelaysUrls = <String>{};
+    NostrRelay? relay;
+
+    yield* withRetryStream(
+      () async* {
+        relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        await for (final event in nd.requestEvents(requestMessage, relay!)) {
+          if (event is NoticeMessage || event is ClosedMessage) {
+            throw RelayRequestFailedException(
+              relayUrl: relay!.url,
+              event: event,
+            );
+          } else if (event is EventMessage) {
+            yield event;
+          }
+        }
+      },
+      onRetry: () {
+        if (relay != null) dislikedRelaysUrls.add(relay!.url);
+      },
+    );
   }
 
   Future<EventMessage?> requestEvent(
@@ -144,7 +174,10 @@ class NostrNotifier extends _$NostrNotifier {
     );
   }
 
-  Future<NostrRelay> _getRelay(ActionSource actionSource) async {
+  Future<NostrRelay> _getRelay(
+    ActionSource actionSource, {
+    Set<String> dislikedUrls = const {},
+  }) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():
         {
@@ -153,12 +186,14 @@ class NostrNotifier extends _$NostrNotifier {
             throw UserMasterPubkeyNotFoundException();
           }
           final userRelays = await _getUserRelays(pubkey);
-          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
+          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceUser():
         {
           final userRelays = await _getUserRelays(actionSource.pubkey);
-          return await ref.read(relayProvider(userRelays.data.list.random.url).future);
+          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceIndexers():
         {
@@ -166,10 +201,12 @@ class NostrNotifier extends _$NostrNotifier {
           if (indexers == null) {
             throw UserIndexersNotFoundException();
           }
-          return await ref.read(relayProvider(indexers.random).future);
+          final urls = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
+          return await ref.read(relayProvider(urls.random).future);
         }
       case ActionSourceRelayUrl():
         {
+          // TODO: support multiple urls to allow retrying on different relays
           return await ref.read(relayProvider(actionSource.url).future);
         }
     }
@@ -191,5 +228,22 @@ class NostrNotifier extends _$NostrNotifier {
       ref.read(nostrCacheProvider.notifier).cache(entity);
     }
     return entity;
+  }
+
+  List<UserRelay> _userRelaysAvoidingDislikedUrls(
+    List<UserRelay> relays,
+    Set<String> dislikedRelaysUrls,
+  ) {
+    final urls = relays.where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
+    if (urls.isEmpty) return relays;
+    return urls;
+  }
+
+  List<String> _indexersAvoidingDislikedUrls(List<String> indexers, Set<String> dislikedUrls) {
+    var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
+    if (urls.isEmpty) {
+      urls = indexers;
+    }
+    return urls;
   }
 }
