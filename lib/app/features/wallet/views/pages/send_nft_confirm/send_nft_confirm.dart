@@ -31,7 +31,6 @@ class SendNftConfirmPage extends ConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.send_nft_navigation_title),
-            showBackButton: false,
             actions: const [NavigationCloseButton()],
           ),
           if (selectedNft != null)
@@ -73,7 +72,16 @@ class SendNftConfirmPage extends ConsumerWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
-                      title: Text(locale.wallet_arrival_time),
+                      title: Row(
+                        children: [
+                          Text(locale.wallet_arrival_time),
+                          SizedBox(width: 6.0.s),
+                          Assets.svg.iconBlockInformation.icon(
+                            size: 14.0.s,
+                            color: context.theme.appColors.secondaryText,
+                          ),
+                        ],
+                      ),
                       value: '${formData.arrivalTime} '
                           '${locale.wallet_arrival_time_minutes}',
                       icon: Assets.svg.iconBlockTime.icon(
@@ -82,7 +90,16 @@ class SendNftConfirmPage extends ConsumerWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
-                      title: Text(locale.wallet_network_fee),
+                      title: Row(
+                        children: [
+                          Text(locale.wallet_network_fee),
+                          SizedBox(width: 6.0.s),
+                          Assets.svg.iconBlockInformation.icon(
+                            size: 14.0.s,
+                            color: context.theme.appColors.secondaryText,
+                          ),
+                        ],
+                      ),
                       value: '1.00 USDT',
                       icon: Assets.svg.iconBlockCoins.icon(
                         size: 16.0.s,
