@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'reaction_data.c.freezed.dart';
 
+@immutable
 @Freezed(equal: false)
 class ReactionEntity with _$ReactionEntity {
   const factory ReactionEntity({
@@ -36,6 +36,14 @@ class ReactionEntity with _$ReactionEntity {
   static const int kind = 7;
 
   static const String likeSymbol = '+';
+
+  @override
+  bool operator ==(Object other) {
+    return other is ReactionEntity && id == other.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 @freezed
@@ -56,7 +64,7 @@ class ReactionData with _$ReactionData {
 
     if (eventId == null ||
         pubkey == null ||
-        kind != ReactionEntity.kind.toString()) {
+        kind != PrivateDirectMessageEntity.kind.toString()) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
@@ -64,25 +72,6 @@ class ReactionData with _$ReactionData {
       eventId: eventId,
       pubkey: pubkey,
       content: eventMessage.content,
-    );
-  }
-
-  @override
-  FutureOr<EventMessage> toEventMessage(
-    EventSigner signer, {
-    List<List<String>> tags = const [],
-    DateTime? createdAt,
-  }) {
-    return EventMessage.fromData(
-      signer: signer,
-      createdAt: createdAt,
-      kind: ReactionEntity.kind,
-      content: content,
-      tags: [
-        ...tags,
-        ['p', pubkey],
-        ['e', eventId],
-      ],
     );
   }
 }

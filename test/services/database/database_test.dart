@@ -396,7 +396,7 @@ void main() {
     });
   });
 
-  group('Database reactions', () {
+  group('Database conversation message status', () {
     test('Mark conversation message as sent', () async {
       await database.insertEventMessage(
         EventMessage(
@@ -505,6 +505,320 @@ void main() {
       expect(conversationMessage.eventMessageId, '1');
       expect(conversationMessage.isSent, true);
       expect(conversationMessage.isReceived, true);
+    });
+
+    test('Check if messages are marked as read', () async {
+      await database.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'First received message',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 2)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'Second not received message',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '3',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 3)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'Third received message marked as read',
+          sig: null,
+        ),
+      );
+
+      await database.markConversationMessageAsSent('1');
+      await database.markConversationMessageAsSent('2');
+      await database.markConversationMessageAsSent('3');
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '4',
+          pubkey: 'pubkey1',
+          createdAt: DateTime.now().add(const Duration(seconds: 4)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: 'received',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '5',
+          pubkey: 'pubkey1',
+          createdAt: DateTime.now().add(const Duration(seconds: 5)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '3'],
+          ],
+          content: 'received',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '6',
+          pubkey: 'pubkey1',
+          createdAt: DateTime.now().add(const Duration(seconds: 6)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '3'],
+          ],
+          content: 'read',
+          sig: null,
+        ),
+      );
+
+      final firstConversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('1')))
+              .getSingle();
+
+      final secondConversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('2')))
+              .getSingle();
+
+      final thirdConversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('3')))
+              .getSingle();
+
+      expect(firstConversationMessage.eventMessageId, '1');
+      expect(secondConversationMessage.eventMessageId, '2');
+      expect(thirdConversationMessage.eventMessageId, '3');
+
+      expect(firstConversationMessage.isSent, true);
+      expect(firstConversationMessage.isReceived, true);
+      expect(firstConversationMessage.isRead, true);
+
+      expect(secondConversationMessage.isSent, true);
+      expect(secondConversationMessage.isReceived, false);
+      expect(secondConversationMessage.isRead, false);
+
+      expect(thirdConversationMessage.isSent, true);
+      expect(thirdConversationMessage.isReceived, true);
+      expect(thirdConversationMessage.isRead, true);
+    });
+  });
+
+  group('Database conversation message reaction', () {
+    test('Reaction message inserted into DB', () async {
+      await database.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '0'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '0'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
+
+      final conversationMessages =
+          await database.select(database.eventMessagesTable).get();
+      final conversationReactions =
+          await database.select(database.conversationReactionsTable).get();
+
+      expect(conversationMessages.length, 2);
+      expect(conversationReactions.length, 2);
+      expect(
+        conversationReactions.first.conversationMessageId,
+        conversationReactions.last.conversationMessageId,
+      );
+      expect(
+        conversationReactions.first.content,
+        ':clap:',
+      );
+    });
+
+    test('Get reactions for the message', () async {
+      await database.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'First message with reactions',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 2)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '3',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 3)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '4',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 4)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: ':smile:',
+          sig: null,
+        ),
+      );
+
+      await database.insertEventMessage(
+        EventMessage(
+          id: '5',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 5)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '0'],
+          ],
+          content: ':smile:',
+          sig: null,
+        ),
+      );
+
+      final eventMessages =
+          await database.select(database.eventMessagesTable).get();
+      final conversationReactions =
+          await database.select(database.conversationReactionsTable).get();
+
+      expect(eventMessages.length, 6);
+      expect(conversationReactions.length, 4);
+
+      final conversationMessage =
+          await (database.select(database.eventMessagesTable)
+                ..where((table) => table.id.equals('1')))
+              .getSingle();
+
+      final privateDirectMessageEntity =
+          PrivateDirectMessageEntity.fromEventMessage(
+        conversationMessage.toEventMessage(),
+      );
+
+      final messageWithReactions =
+          await database.getMessageWithReactions(privateDirectMessageEntity);
+
+      expect(messageWithReactions.data.reactions.length, 3);
+      expect(
+        messageWithReactions.data.reactions.map((r) => r.data.content).toList(),
+        [':clap:', ':clap:', ':smile:'],
+      );
     });
   });
 }

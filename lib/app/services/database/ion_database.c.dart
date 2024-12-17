@@ -6,7 +6,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
+import 'package:ion/app/features/chat/model/entities/reaction_data.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -34,14 +34,14 @@ class IONDatabaseNotifier extends _$IONDatabaseNotifier {
     return _ionDatabase.getAllConversations();
   }
 
+  Stream<List<EventMessage>> watchConversations() {
+    return _ionDatabase.watchConversations();
+  }
+
   Future<PrivateDirectMessageEntity> getMessageWithReactions(
     PrivateDirectMessageEntity privateDirectMessageEntity,
   ) {
     return _ionDatabase.getMessageWithReactions(privateDirectMessageEntity);
-  }
-
-  Stream<List<EventMessage>> watchConversations() {
-    return _ionDatabase.watchConversations();
   }
 }
 
@@ -117,7 +117,7 @@ class IONDatabase extends _$IONDatabase {
         case 'received':
           await _updateConversationMessageAsReceived(eventMessage);
         case 'read':
-          await _updateConversationMessagesAsRead(eventMessage.id);
+          await _updateConversationMessagesAsRead(eventMessage);
         default:
           await _insertConversationReactionsTableData(eventMessage);
       }
@@ -241,16 +241,26 @@ class IONDatabase extends _$IONDatabase {
   }
 
   // Call when kind 7 is received from relay with "read" content
-  Future<void> _updateConversationMessagesAsRead(String id) async {
+  Future<void> _updateConversationMessagesAsRead(
+    EventMessage eventMessage,
+  ) async {
+    final reactionEntity = ReactionEntity.fromEventMessage(eventMessage);
+
     final latestConversationMessageTableData =
         await (select(conversationMessagesTable)
-              ..where((table) => table.eventMessageId.equals(id)))
+              ..where(
+                (table) =>
+                    table.eventMessageId.equals(reactionEntity.data.eventId),
+              ))
             .getSingle();
 
     final allPreviousReceivedMessages = await (select(conversationMessagesTable)
           ..where(
             (table) => table.conversationId
                 .equals(latestConversationMessageTableData.conversationId),
+          )
+          ..where(
+            (table) => table.isReceived.equals(true),
           )
           ..where(
             (table) => table.createdAt.isSmallerOrEqualValue(
