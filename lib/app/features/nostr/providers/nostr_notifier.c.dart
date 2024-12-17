@@ -94,7 +94,7 @@ class NostrNotifier extends _$NostrNotifier {
           if (event is NoticeMessage || event is ClosedMessage) {
             throw RelayRequestFailedException(
               relayUrl: relay!.url,
-              message: _getErrorEventMessage(event),
+              event: event,
             );
           } else if (event is EventMessage) {
             yield event;
@@ -246,10 +246,4 @@ class NostrNotifier extends _$NostrNotifier {
     }
     return urls;
   }
-
-  String? _getErrorEventMessage(RelayMessage event) => switch (event) {
-        NoticeMessage() => event.message,
-        ClosedMessage() => event.message,
-        _ => null,
-      };
 }
