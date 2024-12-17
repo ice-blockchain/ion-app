@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
