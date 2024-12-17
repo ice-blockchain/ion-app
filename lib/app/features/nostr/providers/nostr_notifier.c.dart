@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/relay_message.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
@@ -14,12 +15,12 @@ import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.c.dart';
-import 'package:ion/app/features/nostr/utils/retry.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/utils/retry.dart';
 import 'package:nostr_dart/nostr_dart.dart' as nd;
 import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -36,14 +37,21 @@ class NostrNotifier extends _$NostrNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    return withRetry(() async {
-      final relay = await _getRelay(actionSource);
-      await relay.sendEvents(events);
-      if (cache) {
-        return events.map(_parseAndCache).toList();
-      }
-      return null;
-    });
+    final dislikedRelaysUrls = <String>[];
+    NostrRelay? relay;
+    return withRetry(
+      () async {
+        relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        await relay?.sendEvents(events);
+        if (cache) {
+          return events.map(_parseAndCache).toList();
+        }
+        return null;
+      },
+      onRetry: () {
+        dislikedRelaysUrls.add(relay?.url ?? '');
+      },
+    );
   }
 
   Future<NostrEntity?> sendEvent(
@@ -195,13 +203,13 @@ class NostrNotifier extends _$NostrNotifier {
             throw UserMasterPubkeyNotFoundException();
           }
           final userRelays = await _getUserRelays(pubkey);
-          final relays = userRelays.data.list.avoiding(dislikedUrls);
+          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
           return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceUser():
         {
           final userRelays = await _getUserRelays(actionSource.pubkey);
-          final relays = userRelays.data.list.avoiding(dislikedUrls);
+          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
           return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceIndexers():
@@ -210,10 +218,7 @@ class NostrNotifier extends _$NostrNotifier {
           if (indexers == null) {
             throw UserIndexersNotFoundException();
           }
-          var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
-          if (urls.isEmpty) {
-            urls = indexers;
-          }
+          final urls = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
           return await ref.read(relayProvider(urls.random).future);
         }
       case ActionSourceRelayUrl():
@@ -241,19 +246,21 @@ class NostrNotifier extends _$NostrNotifier {
     }
     return entity;
   }
-}
 
-extension on List<UserRelay> {
-  /// Returns a new list of [UserRelay]s excluding the ones with the provided urls.
-  /// If all relays are excluded, the original list is returned.
-  /// It is used to try to avoid relays that have failed to process the request.
-  List<UserRelay> avoiding(List<String> dislikedRelaysUrls) {
-    final urls = where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
-    if (urls.isEmpty) return this;
+  List<UserRelay> _userRelaysAvoidingDislikedUrls(
+    List<UserRelay> relays,
+    List<String> dislikedRelaysUrls,
+  ) {
+    final urls = relays.where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
+    if (urls.isEmpty) return relays;
     return urls;
   }
-}
 
-extension on RelayMessage {
-  bool get indicatesError => this is NoticeMessage || this is ClosedMessage;
+  List<String> _indexersAvoidingDislikedUrls(List<String> indexers, List<String> dislikedUrls) {
+    var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
+    if (urls.isEmpty) {
+      urls = indexers;
+    }
+    return urls;
+  }
 }

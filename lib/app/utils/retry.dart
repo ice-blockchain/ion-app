@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:ion/app/services/logger/logger.dart';
 
 Future<T> withRetry<T>(
@@ -13,6 +14,7 @@ Future<T> withRetry<T>(
   double multiplier = 3,
   double minJitter = 0.5,
   double maxJitter = 1.5,
+  VoidCallback? onRetry,
 }) async {
   var attempt = 0;
   var currentDelay = initialDelay;
@@ -44,6 +46,7 @@ Future<T> withRetry<T>(
         milliseconds: (currentDelay.inMilliseconds * multiplier).toInt(),
       );
     }
+    onRetry?.call();
   }
 
   throw Exception('Unreachable');
