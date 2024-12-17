@@ -41,14 +41,14 @@ class NostrNotifier extends _$NostrNotifier {
     return withRetry(
       () async {
         relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
-        await relay?.sendEvents(events);
+        await relay!.sendEvents(events);
         if (cache) {
           return events.map(_parseAndCache).toList();
         }
         return null;
       },
       onRetry: () {
-        dislikedRelaysUrls.add(relay?.url ?? '');
+        dislikedRelaysUrls.add(relay!.url);
       },
     );
   }
@@ -102,7 +102,7 @@ class NostrNotifier extends _$NostrNotifier {
         }
       },
       onRetry: () {
-        dislikedRelaysUrls.add(relay?.url ?? '');
+        dislikedRelaysUrls.add(relay!.url);
       },
     );
   }
