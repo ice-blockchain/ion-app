@@ -91,7 +91,7 @@ class NostrNotifier extends _$NostrNotifier {
               if (streamController.isClosed) break;
               if (retryEvent.indicatesError) {
                 dislikedRelaysUrls.add(retryRelay.url);
-                throw Exception(RelayRequestFailedException());
+                throw RelayRequestFailedException();
               } else if (retryEvent is EventMessage) {
                 streamController.add(retryEvent);
               }
@@ -244,6 +244,9 @@ class NostrNotifier extends _$NostrNotifier {
 }
 
 extension on List<UserRelay> {
+  /// Returns a new list of [UserRelay]s excluding the ones with the provided urls.
+  /// If all relays are excluded, the original list is returned.
+  /// It is used to try to avoid relays that have failed to process the request.
   List<UserRelay> avoiding(List<String> dislikedRelaysUrls) {
     final urls = where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
     if (urls.isEmpty) return this;
