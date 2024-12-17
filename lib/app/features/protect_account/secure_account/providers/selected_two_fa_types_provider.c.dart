@@ -57,7 +57,7 @@ typedef AvailableTwoFATypesState = ({
   int count,
 });
 
-@Riverpod(dependencies: [])
+@riverpod
 AvailableTwoFATypesState availableTwoFaTypes(Ref ref) =>
     throw UnimplementedError('availableTwoFaTypesProvider must be overridden');
 

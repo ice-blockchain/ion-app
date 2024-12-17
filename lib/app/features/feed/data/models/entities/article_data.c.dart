@@ -94,16 +94,6 @@ class ArticleData with _$ArticleData implements EventSerializable {
     );
   }
 
-  factory ArticleData.fromRawContent(String content) {
-    final hashtags = extractHashtagsFromMarkdown(content);
-
-    return ArticleData(
-      content: content,
-      relatedHashtags: hashtags,
-      media: {},
-    );
-  }
-
   @override
   FutureOr<EventMessage> toEventMessage(
     EventSigner signer, {
@@ -122,12 +112,9 @@ class ArticleData with _$ArticleData implements EventSerializable {
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (publishedAt != null)
-          ['published_at', (publishedAt!.millisecondsSinceEpoch / 1000).toString()],
+          ['published_at', (publishedAt!.millisecondsSinceEpoch ~/ 1000).toString()],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-        [
-          'd',
-          uniqueIdForEditing,
-        ],
+        ['d', uniqueIdForEditing],
       ],
       content: content,
     );
@@ -135,16 +122,18 @@ class ArticleData with _$ArticleData implements EventSerializable {
 
   static List<RelatedHashtag> extractHashtagsFromMarkdown(String content) {
     final operations = jsonDecode(content) as List<dynamic>;
+    const insertKey = 'insert';
+
     return operations
         .whereType<Map<String, dynamic>>()
         .where(
           (operation) =>
-              operation.containsKey('insert') &&
-              operation['insert'] is String &&
-              (operation['insert'] as String).startsWith('#'),
+              operation.containsKey(insertKey) &&
+              operation[insertKey] is String &&
+              (operation[insertKey] as String).startsWith('#'),
         )
         .map((operation) {
-      final insert = operation['insert']! as String;
+      final insert = operation[insertKey]! as String;
       return RelatedHashtag(value: insert);
     }).toList();
   }
@@ -155,10 +144,5 @@ class ArticleData with _$ArticleData implements EventSerializable {
       for (final tag in mediaTags)
         if (tag.length > 1) tag[1]: MediaAttachment.fromTag(tag),
     };
-  }
-
-  @override
-  String toString() {
-    return 'ArticleData(content: $content, media: $media, title: $title, image: $image, summary: $summary, publishedAt: $publishedAt)';
   }
 }
