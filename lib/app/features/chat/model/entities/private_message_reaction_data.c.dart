@@ -6,30 +6,30 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-part 'reaction_data.c.freezed.dart';
+part 'private_message_reaction_data.c.freezed.dart';
 
 @immutable
 @Freezed(equal: false)
-class ReactionEntity with _$ReactionEntity {
-  const factory ReactionEntity({
+class PrivateMessageReactionEntity with _$PrivateMessageReactionEntity {
+  const factory PrivateMessageReactionEntity({
     required String id,
     required String pubkey,
     required DateTime createdAt,
-    required ReactionData data,
-  }) = _ReactionEntity;
+    required PrivateMessageReactionEntityData data,
+  }) = _PrivateMessageReactionEntity;
 
-  const ReactionEntity._();
+  const PrivateMessageReactionEntity._();
 
-  factory ReactionEntity.fromEventMessage(EventMessage eventMessage) {
+  factory PrivateMessageReactionEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
-    return ReactionEntity(
+    return PrivateMessageReactionEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       createdAt: eventMessage.createdAt,
-      data: ReactionData.fromEventMessage(eventMessage),
+      data: PrivateMessageReactionEntityData.fromEventMessage(eventMessage),
     );
   }
 
@@ -39,7 +39,7 @@ class ReactionEntity with _$ReactionEntity {
 
   @override
   bool operator ==(Object other) {
-    return other is ReactionEntity && id == other.id;
+    return other is PrivateMessageReactionEntity && id == other.id;
   }
 
   @override
@@ -47,16 +47,16 @@ class ReactionEntity with _$ReactionEntity {
 }
 
 @freezed
-class ReactionData with _$ReactionData {
-  const factory ReactionData({
+class PrivateMessageReactionEntityData with _$PrivateMessageReactionEntityData {
+  const factory PrivateMessageReactionEntityData({
     required String pubkey,
     required String content,
     required String eventId,
-  }) = _ReactionData;
+  }) = _PrivateMessageReactionEntityData;
 
-  const ReactionData._();
+  const PrivateMessageReactionEntityData._();
 
-  factory ReactionData.fromEventMessage(EventMessage eventMessage) {
+  factory PrivateMessageReactionEntityData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final kind = tags['k']?.first[1];
     final eventId = tags['e']?.first[1];
@@ -66,7 +66,7 @@ class ReactionData with _$ReactionData {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
-    return ReactionData(
+    return PrivateMessageReactionEntityData(
       eventId: eventId,
       pubkey: pubkey,
       content: eventMessage.content,
