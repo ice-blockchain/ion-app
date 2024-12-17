@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
@@ -14,7 +14,9 @@ import 'package:ion/app/features/video/views/components/video_header.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
+import 'package:ion/app/features/video/views/hooks/use_video_ended.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPage extends HookConsumerWidget {
   const VideoPage({
@@ -43,68 +45,68 @@ class VideoPage extends HookConsumerWidget {
       return const CenteredLoadingIndicator();
     }
 
-    final hasVideoEnded = useState(false);
-
-    useEffect(
-      () {
-        void listener() {
-          final duration = playerController.value.duration;
-          final position = playerController.value.position;
-
-          final isVideoEnded = position >= duration - const Duration(milliseconds: 500);
-          if (isVideoEnded && !hasVideoEnded.value) {
-            hasVideoEnded.value = true;
-            onVideoEnded?.call();
-          } else if (!isVideoEnded && hasVideoEnded.value) {
-            hasVideoEnded.value = false;
-          }
-        }
-
-        playerController.addListener(listener);
-        return () => playerController.removeListener(listener);
-      },
-      [playerController],
+    useVideoEnded(
+      playerController: playerController,
+      onVideoEnded: onVideoEnded,
     );
 
-    return Stack(
-      children: [
-        Center(
-          child: AspectRatio(
-            aspectRatio: playerController.value.aspectRatio,
-            child: VideoPlayer(playerController),
+    ref.listen(appLifecycleProvider, (_, current) async {
+      if (current == AppLifecycleState.resumed) {
+        await playerController.play();
+      } else if (current == AppLifecycleState.inactive ||
+          current == AppLifecycleState.paused ||
+          current == AppLifecycleState.hidden) {
+        await playerController.pause();
+      }
+    });
+
+    return VisibilityDetector(
+      key: ValueKey(videoPath),
+      onVisibilityChanged: (info) {
+        if (!context.mounted) return;
+
+        info.visibleFraction == 0 ? playerController.pause() : playerController.play();
+      },
+      child: Stack(
+        children: [
+          Center(
+            child: AspectRatio(
+              aspectRatio: playerController.value.aspectRatio,
+              child: VideoPlayer(playerController),
+            ),
           ),
-        ),
-        SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const VideoHeader(),
-              const Spacer(),
-              VideoControls(videoPath: videoPath),
-              VideoPostInfo(videoPost: video),
-              VideoProgress(
-                controller: playerController,
-                builder: (context, position, duration) => VideoSlider(
-                  position: position,
-                  duration: duration,
-                  onChangeStart: (_) => playerController.pause(),
-                  onChangeEnd: (_) => playerController.play(),
-                  onChanged: (value) {
-                    if (playerController.value.isInitialized) {
-                      playerController.seekTo(
-                        Duration(milliseconds: value.toInt()),
-                      );
-                    }
-                  },
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const VideoHeader(),
+                const Spacer(),
+                VideoControls(videoPath: videoPath),
+                VideoPostInfo(videoPost: video),
+                VideoProgress(
+                  controller: playerController,
+                  builder: (context, position, duration) => VideoSlider(
+                    position: position,
+                    duration: duration,
+                    onChangeStart: (_) => playerController.pause(),
+                    onChangeEnd: (_) => playerController.play(),
+                    onChanged: (value) {
+                      if (playerController.value.isInitialized) {
+                        playerController.seekTo(
+                          Duration(milliseconds: value.toInt()),
+                        );
+                      }
+                    },
+                  ),
                 ),
-              ),
-              VideoActions(
-                eventReference: EventReference.fromNostrEntity(video),
-              ),
-            ],
+                VideoActions(
+                  eventReference: EventReference.fromNostrEntity(video),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

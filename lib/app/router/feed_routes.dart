@@ -5,6 +5,7 @@ part of 'app_routes.c.dart';
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<StoryViewerRoute>(path: 'story-viewing-fullstack/:pubkey'),
+    TypedGoRoute<VideosRoute>(path: 'video-fullstack/:eventReference'),
     TypedGoRoute<PostDetailsRoute>(path: 'post/:eventReference'),
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:eventReference'),
@@ -245,9 +246,6 @@ class StoryContactsShareRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<VideosRoute>(
-  path: '/video/:eventReference',
-)
 class VideosRoute extends BaseRouteData {
   VideosRoute({required this.eventReference})
       : super(
