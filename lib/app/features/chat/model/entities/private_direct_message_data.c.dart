@@ -63,8 +63,7 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 }
 
 @freezed
-class PrivateDirectMessageData
-    with _$PrivateDirectMessageData, EntityMediaDataMixin {
+class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataMixin {
   const factory PrivateDirectMessageData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
@@ -81,13 +80,9 @@ class PrivateDirectMessageData
     return PrivateDirectMessageData(
       content: parsedContent,
       media: EntityMediaDataMixin.parseImeta(tags[MediaAttachment.tagName]),
-      relatedSubject: tags[RelatedSubject.tagName]
-          ?.map(RelatedSubject.fromTag)
-          .singleOrNull,
-      relatedPubkeys:
-          tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents:
-          tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
+      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
+      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
     );
   }
 
@@ -106,12 +101,9 @@ class PrivateDirectMessageData
     required String pubkey,
   }) {
     final eventTags = [
-      if (relatedPubkeys != null)
-        ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
-      if (relatedEvents != null)
-        ...relatedEvents!.map((event) => event.toTag()),
-      if (media.isNotEmpty)
-        ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+      if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+      if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
     ];
 
     final createdAt = DateTime.now();
