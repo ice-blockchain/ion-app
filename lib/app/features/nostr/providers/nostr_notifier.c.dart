@@ -48,7 +48,7 @@ class NostrNotifier extends _$NostrNotifier {
         return null;
       },
       onRetry: () {
-        dislikedRelaysUrls.add(relay!.url);
+        dislikedRelaysUrls.add(relay?.url ?? '');
       },
     );
   }
@@ -102,7 +102,7 @@ class NostrNotifier extends _$NostrNotifier {
         }
       },
       onRetry: () {
-        dislikedRelaysUrls.add(relay!.url);
+        dislikedRelaysUrls.add(relay?.url ?? '');
       },
     );
   }

@@ -50,6 +50,7 @@ Stream<T> withRetryStream<T>(
       }
       return;
     } catch (e) {
+      Logger.log(e.toString());
       attempt++;
       if (attempt >= maxRetries) {
         rethrow;
@@ -63,7 +64,7 @@ Stream<T> withRetryStream<T>(
         maxJitter: maxJitter,
       );
 
-      Logger.log('Retry #$attempt after ${delay.inMilliseconds}ms... Last error: $e');
+      Logger.log('Retry #$attempt after ${delay.inMilliseconds}ms...');
       await Future<void>.delayed(delay);
     }
     onRetry?.call();
