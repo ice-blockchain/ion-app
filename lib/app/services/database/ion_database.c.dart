@@ -15,99 +15,55 @@ part 'ion_database.c.g.dart';
 
 // Proxy notifier to interact with the database
 @Riverpod(keepAlive: true)
-class IONDatabaseNotifier extends _$IONDatabaseNotifier {
-  final IONDatabase _ionDatabase = IONDatabase();
+class DBConversationsNotifier extends _$DBConversationsNotifier {
+  DBConversationsNotifier({IONDatabase? database})
+      : _db = database ?? IONDatabase();
+
+  final IONDatabase _db;
 
   @override
   void build() {}
-
-  Future<void> insertEventMessage(EventMessage eventMessage) {
-    return _ionDatabase.insertEventMessage(eventMessage);
-  }
-
-  // Call when "OK" is received from relay to mark message as sent (one tick)
-  Future<void> markConversationMessageAsSent(String id) {
-    return _ionDatabase.markConversationMessageAsSent(id);
-  }
-
-  Future<List<EventMessage>> getAllConversations() {
-    return _ionDatabase.getAllConversations();
-  }
-
-  Stream<List<EventMessage>> watchConversations() {
-    return _ionDatabase.watchConversations();
-  }
-
-  Future<PrivateDirectMessageEntity> getMessageWithReactions(
-    PrivateDirectMessageEntity privateDirectMessageEntity,
-  ) {
-    return _ionDatabase.getMessageWithReactions(privateDirectMessageEntity);
-  }
-}
-
-// DO NOT create or use database directly, use proxy notifier
-// [IONDatabaseNotifier] methods instead
-@DriftDatabase(
-  tables: [
-    EventMessagesTable,
-    ConversationMessagesTable,
-    ConversationReactionsTable,
-  ],
-)
-class IONDatabase extends _$IONDatabase {
-  IONDatabase() : super(_openConnection());
-
-  // For testing executor
-  IONDatabase.test(super.e);
-
-  @override
-  int get schemaVersion => 1;
-
-  static QueryExecutor _openConnection() {
-    return driftDatabase(name: 'ion_database');
-  }
 
   Future<int> _insertConversationData({
     required String conversationId,
     required EventMessage eventMessage,
     bool isDeleted = false,
   }) {
-    final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-    return into(conversationMessagesTable).insert(
-      ConversationMessagesTableData(
-        isDeleted: isDeleted,
-        conversationId: conversationId,
-        eventMessageId: conversationMessage.id,
-        createdAt: conversationMessage.createdAt,
-        pubKeys: conversationMessage.allPubkeysMask,
-        subject: conversationMessage.data.relatedSubject?.value,
-        isSent: false,
-        isReceived: false,
-        isRead: false,
-      ),
-      mode: InsertMode.insertOrReplace,
-    );
+    final conversationMessage =
+        PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    return _db.into(_db.conversationMessagesTable).insert(
+          ConversationMessagesTableData(
+            isDeleted: isDeleted,
+            conversationId: conversationId,
+            eventMessageId: conversationMessage.id,
+            createdAt: conversationMessage.createdAt,
+            pubKeys: conversationMessage.allPubkeysMask,
+            subject: conversationMessage.data.relatedSubject?.value,
+            status: DeliveryStatus.none,
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
   }
 
   Future<int> _insertConversationReactionsTableData(EventMessage eventMessage) {
     final reactionEntity = ReactionEntity.fromEventMessage(eventMessage);
 
-    return into(conversationReactionsTable).insert(
-      ConversationReactionsTableData(
-        id: reactionEntity.id,
-        createdAt: reactionEntity.createdAt,
-        content: reactionEntity.data.content,
-        conversationMessageId: reactionEntity.data.eventId,
-      ),
-      mode: InsertMode.insertOrReplace,
-    );
+    return _db.into(_db.conversationReactionsTable).insert(
+          ConversationReactionsTableData(
+            reactionEventId: reactionEntity.id,
+            createdAt: reactionEntity.createdAt,
+            content: reactionEntity.data.content,
+            messageId: reactionEntity.data.eventId,
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
   }
 
   Future<void> insertEventMessage(EventMessage eventMessage) async {
-    await into(eventMessagesTable).insert(
-      EventMessageTableData.fromEventMessage(eventMessage),
-      mode: InsertMode.insertOrReplace,
-    );
+    await _db.into(_db.eventMessagesTable).insert(
+          EventMessageTableData.fromEventMessage(eventMessage),
+          mode: InsertMode.insertOrReplace,
+        );
 
     if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
       await _updateConversationMessagesTable(eventMessage);
@@ -127,8 +83,10 @@ class IONDatabase extends _$IONDatabase {
     EventMessage eventMessage,
   ) async {
     if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
-      final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-      final conversationIdByPubkeys = await _lookupConversationByPubkeys(conversationMessage);
+      final conversationMessage =
+          PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+      final conversationIdByPubkeys =
+          await _lookupConversationByPubkeys(conversationMessage);
 
       if (conversationIdByPubkeys != null) {
         // Existing conversation (one-to-one or group)
@@ -138,7 +96,8 @@ class IONDatabase extends _$IONDatabase {
         );
       } else {
         // Existing group conversation (change of participants)
-        final conversationIdBySubject = await _lookupConversationBySubject(conversationMessage);
+        final conversationIdBySubject =
+            await _lookupConversationBySubject(conversationMessage);
 
         if (conversationIdBySubject != null) {
           await _insertConversationData(
@@ -164,12 +123,14 @@ class IONDatabase extends _$IONDatabase {
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
-    final conversationsWithSameParticipants = await (select(conversationMessagesTable)
-          ..where(
-            (table) => table.pubKeys.equals(conversationMessage.allPubkeysMask),
-          )
-          ..limit(1))
-        .get();
+    final conversationsWithSameParticipants =
+        await (_db.select(_db.conversationMessagesTable)
+              ..where(
+                (table) =>
+                    table.pubKeys.equals(conversationMessage.allPubkeysMask),
+              )
+              ..limit(1))
+            .get();
 
     if (conversationsWithSameParticipants.isNotEmpty) {
       return conversationsWithSameParticipants.first.conversationId;
@@ -186,10 +147,11 @@ class IONDatabase extends _$IONDatabase {
     final subject = conversationMessage.data.relatedSubject?.value;
 
     if (subject != null) {
-      final conversationWithChangedParticipants = await (select(conversationMessagesTable)
-            ..where((table) => table.subject.equals(subject))
-            ..limit(1))
-          .get();
+      final conversationWithChangedParticipants =
+          await (_db.select(_db.conversationMessagesTable)
+                ..where((table) => table.subject.equals(subject))
+                ..limit(1))
+              .get();
 
       if (conversationWithChangedParticipants.isNotEmpty) {
         return conversationWithChangedParticipants.first.conversationId;
@@ -200,13 +162,17 @@ class IONDatabase extends _$IONDatabase {
 
   // Call when "OK" is received from relay to mark message as sent (one tick)
   Future<void> markConversationMessageAsSent(String id) async {
-    final conversationMessagesTableData = await (select(conversationMessagesTable)
-          ..where((table) => table.eventMessageId.equals(id)))
-        .getSingle();
+    final conversationMessagesTableData =
+        await (_db.select(_db.conversationMessagesTable)
+              ..where((table) => table.eventMessageId.equals(id)))
+            .getSingle();
 
-    final sentConversationMessagesTableData = conversationMessagesTableData.copyWith(isSent: true);
+    final sentConversationMessagesTableData =
+        conversationMessagesTableData.copyWith(status: DeliveryStatus.isSent);
 
-    await update(conversationMessagesTable).replace(sentConversationMessagesTableData);
+    await _db
+        .update(_db.conversationMessagesTable)
+        .replace(sentConversationMessagesTableData);
   }
 
   // Call when kind 7 is received from relay with "received" content
@@ -215,16 +181,20 @@ class IONDatabase extends _$IONDatabase {
   ) async {
     final reactionEntity = ReactionEntity.fromEventMessage(eventMessage);
 
-    final conversationMessagesTableData = await (select(conversationMessagesTable)
-          ..where(
-            (table) => table.eventMessageId.equals(reactionEntity.data.eventId),
-          ))
-        .getSingle();
+    final conversationMessagesTableData =
+        await (_db.select(_db.conversationMessagesTable)
+              ..where(
+                (table) =>
+                    table.eventMessageId.equals(reactionEntity.data.eventId),
+              ))
+            .getSingle();
 
-    final receivedConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(isSent: true, isReceived: true);
+    final receivedConversationMessagesTableData = conversationMessagesTableData
+        .copyWith(status: DeliveryStatus.isReceived);
 
-    await update(conversationMessagesTable).replace(receivedConversationMessagesTableData);
+    await _db
+        .update(_db.conversationMessagesTable)
+        .replace(receivedConversationMessagesTableData);
   }
 
   // Call when kind 7 is received from relay with "read" content
@@ -233,38 +203,38 @@ class IONDatabase extends _$IONDatabase {
   ) async {
     final reactionEntity = ReactionEntity.fromEventMessage(eventMessage);
 
-    final latestConversationMessageTableData = await (select(conversationMessagesTable)
-          ..where(
-            (table) => table.eventMessageId.equals(reactionEntity.data.eventId),
-          ))
-        .getSingle();
+    final latestConversationMessageTableData =
+        await (_db.select(_db.conversationMessagesTable)
+              ..where(
+                (table) =>
+                    table.eventMessageId.equals(reactionEntity.data.eventId),
+              ))
+            .getSingle();
 
-    final allPreviousReceivedMessages = await (select(conversationMessagesTable)
-          ..where(
-            (table) =>
-                table.conversationId.equals(latestConversationMessageTableData.conversationId),
-          )
-          ..where(
-            (table) => table.isReceived.equals(true),
-          )
-          ..where(
-            (table) => table.createdAt.isSmallerOrEqualValue(
-              latestConversationMessageTableData.createdAt,
-            ),
-          ))
-        .get();
+    final allPreviousReceivedMessages =
+        await (_db.select(_db.conversationMessagesTable)
+              ..where(
+                (table) => table.conversationId
+                    .equals(latestConversationMessageTableData.conversationId),
+              )
+              ..where(
+                (table) => table.status.equals(DeliveryStatus.isReceived.index),
+              )
+              ..where(
+                (table) => table.createdAt.isSmallerOrEqualValue(
+                  latestConversationMessageTableData.createdAt,
+                ),
+              ))
+            .get();
 
-    await batch(
+    await _db.batch(
       (b) {
         b.replaceAll(
-          conversationMessagesTable,
+          _db.conversationMessagesTable,
           allPreviousReceivedMessages
               .map(
-                (previousMessage) => previousMessage.copyWith(
-                  isSent: true,
-                  isReceived: true,
-                  isRead: true,
-                ),
+                (previousMessage) =>
+                    previousMessage.copyWith(status: DeliveryStatus.isRead),
               )
               .toList(),
         );
@@ -277,9 +247,9 @@ class IONDatabase extends _$IONDatabase {
 
   Future<List<EventMessage>> getAllConversations() async {
     // Select last message of each conversation
-    final uniqueConversationRows = await customSelect(
+    final uniqueConversationRows = await _db.customSelect(
       _allConversationsLatestMessageQuery,
-      readsFrom: {conversationMessagesTable},
+      readsFrom: {_db.conversationMessagesTable},
     ).get();
 
     final lastConversationEventMessages =
@@ -289,24 +259,31 @@ class IONDatabase extends _$IONDatabase {
   }
 
   Stream<List<EventMessage>> watchConversations() {
-    return customSelect(
-      _allConversationsLatestMessageQuery,
-      readsFrom: {conversationMessagesTable},
-    ).watch().asyncMap((uniqueConversationRows) async {
-      final lastConversationEventMessages =
-          await _selectLastMessageOfEachConversation(uniqueConversationRows);
+    return _db
+        .customSelect(
+          _allConversationsLatestMessageQuery,
+          readsFrom: {_db.conversationMessagesTable},
+        )
+        .watch()
+        .asyncMap((uniqueConversationRows) async {
+          final lastConversationEventMessages =
+              await _selectLastMessageOfEachConversation(
+            uniqueConversationRows,
+          );
 
-      return lastConversationEventMessages;
-    });
+          return lastConversationEventMessages;
+        });
   }
 
   Future<List<EventMessage>> _selectLastMessageOfEachConversation(
     List<QueryRow> uniqueConversationRows,
   ) async {
-    final lastConversationMessagesIds =
-        uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
+    final lastConversationMessagesIds = uniqueConversationRows
+        .map((row) => row.data['event_message_id'] as String)
+        .toList();
 
-    final lastConversationEventMessages = (await (select(eventMessagesTable)
+    final lastConversationEventMessages = (await (_db
+                .select(_db.eventMessagesTable)
               ..where((table) => table.id.isIn(lastConversationMessagesIds)))
             .get())
         .map((e) => e.toEventMessage())
@@ -315,18 +292,19 @@ class IONDatabase extends _$IONDatabase {
     return lastConversationEventMessages;
   }
 
-  Future<PrivateDirectMessageEntity> getMessageWithReactions(
-    PrivateDirectMessageEntity privateDirectMessageEntity,
+  Future<List<ReactionEntity>> getMessageReactions(
+    String messageId,
   ) async {
-    final reactionsEventMessagesIds = (await (select(conversationReactionsTable)
-              ..where(
-                (table) => table.conversationMessageId.equals(privateDirectMessageEntity.id),
-              ))
-            .get())
-        .map((reactionsTableData) => reactionsTableData.id)
-        .toList();
+    final reactionsEventMessagesIds =
+        (await (_db.select(_db.conversationReactionsTable)
+                  ..where(
+                    (table) => table.messageId.equals(messageId),
+                  ))
+                .get())
+            .map((reactionsTableData) => reactionsTableData.reactionEventId)
+            .toList();
 
-    final reactionsEventMessages = await (select(eventMessagesTable)
+    final reactionsEventMessages = await (_db.select(_db.eventMessagesTable)
           ..where((table) => table.id.isIn(reactionsEventMessagesIds)))
         .get();
 
@@ -338,7 +316,30 @@ class IONDatabase extends _$IONDatabase {
         )
         .toList();
 
-    return privateDirectMessageEntity.copyWith.data(reactions: reactions);
+    return reactions;
+  }
+}
+
+// DO NOT create or use database directly, use proxy notifier
+// [IONDatabaseNotifier] methods instead
+@DriftDatabase(
+  tables: [
+    EventMessagesTable,
+    ConversationMessagesTable,
+    ConversationReactionsTable,
+  ],
+)
+class IONDatabase extends _$IONDatabase {
+  IONDatabase() : super(_openConnection());
+
+  // For testing executor
+  IONDatabase.test(super.e);
+
+  @override
+  int get schemaVersion => 1;
+
+  static QueryExecutor _openConnection() {
+    return driftDatabase(name: 'ion_database');
   }
 }
 
@@ -357,6 +358,8 @@ class EventMessagesTable extends Table {
   Set<Column<Object>> get primaryKey => {id};
 }
 
+enum DeliveryStatus { none, isSent, isReceived, isRead }
+
 // Table for conversations (is automatically updated when
 // [EventMessagesTable] is updated with new records)
 class ConversationMessagesTable extends Table {
@@ -365,10 +368,8 @@ class ConversationMessagesTable extends Table {
   TextColumn get eventMessageId => text()();
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get subject => text().nullable()();
+  IntColumn get status => intEnum<DeliveryStatus>()();
   BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
-  BoolColumn get isSent => boolean().withDefault(const Constant(false))();
-  BoolColumn get isReceived => boolean().withDefault(const Constant(false))();
-  BoolColumn get isRead => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column<Object>> get primaryKey => {eventMessageId};
@@ -378,12 +379,12 @@ class ConversationMessagesTable extends Table {
 // [EventMessagesTable] is updated with new records)
 class ConversationReactionsTable extends Table {
   TextColumn get content => text()();
-  TextColumn get id => text()();
-  TextColumn get conversationMessageId => text()();
+  TextColumn get messageId => text()();
+  TextColumn get reactionEventId => text()();
   DateTimeColumn get createdAt => dateTime()();
 
   @override
-  Set<Column<Object>> get primaryKey => {id};
+  Set<Column<Object>> get primaryKey => {reactionEventId};
 }
 
 // As it is the only custom model needed better to keep it in the same file

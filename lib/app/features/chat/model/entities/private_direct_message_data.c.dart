@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/model/entities/reaction_data.c.dart';
 import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/nostr/model/entity_media_data.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
@@ -64,11 +63,11 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 }
 
 @freezed
-class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataMixin {
+class PrivateDirectMessageData
+    with _$PrivateDirectMessageData, EntityMediaDataMixin {
   const factory PrivateDirectMessageData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
-    @Default([]) List<ReactionEntity> reactions,
     RelatedSubject? relatedSubject,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedEvent>? relatedEvents,
@@ -82,9 +81,13 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
     return PrivateDirectMessageData(
       content: parsedContent,
       media: EntityMediaDataMixin.parseImeta(tags[MediaAttachment.tagName]),
-      relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
-      relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedSubject: tags[RelatedSubject.tagName]
+          ?.map(RelatedSubject.fromTag)
+          .singleOrNull,
+      relatedPubkeys:
+          tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
+      relatedEvents:
+          tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
     );
   }
 
@@ -103,9 +106,12 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
     required String pubkey,
   }) {
     final eventTags = [
-      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
-      if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
-      if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      if (relatedPubkeys != null)
+        ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+      if (relatedEvents != null)
+        ...relatedEvents!.map((event) => event.toTag()),
+      if (media.isNotEmpty)
+        ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
     ];
 
     final createdAt = DateTime.now();

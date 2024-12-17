@@ -10,6 +10,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
   late IONDatabase database;
+  late DBConversationsNotifier conversationsNotifier;
 
   setUp(() async {
     database = IONDatabase.test(
@@ -18,6 +19,7 @@ void main() {
         closeStreamsSynchronously: true,
       ),
     );
+    conversationsNotifier = DBConversationsNotifier(database: database);
   });
 
   tearDown(() async {
@@ -26,7 +28,7 @@ void main() {
 
   group('Database conversations', () {
     test('Insert initial one-to-one conversation', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -40,7 +42,8 @@ void main() {
         ),
       );
 
-      final eventMessage = await database.select(database.eventMessagesTable).getSingle();
+      final eventMessage =
+          await database.select(database.eventMessagesTable).getSingle();
 
       final conversationMessage =
           await database.select(database.conversationMessagesTable).getSingle();
@@ -50,7 +53,7 @@ void main() {
     });
 
     test('Insert initial one-to-one conversation and first message', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -64,7 +67,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -78,11 +81,13 @@ void main() {
         ),
       );
 
-      final eventMessages = await database.select(database.eventMessagesTable).get();
+      final eventMessages =
+          await database.select(database.eventMessagesTable).get();
 
-      final conversationMessages = await database.select(database.conversationMessagesTable).get();
+      final conversationMessages =
+          await database.select(database.conversationMessagesTable).get();
 
-      final conversations = await database.getAllConversations();
+      final conversations = await conversationsNotifier.getAllConversations();
 
       expect(eventMessages.length, 2);
       expect(conversationMessages.length, 2);
@@ -90,8 +95,9 @@ void main() {
       expect(conversations.single.content, 'First message');
     });
 
-    test('Insert initial one-to-one conversation, first message and reply', () async {
-      await database.insertEventMessage(
+    test('Insert initial one-to-one conversation, first message and reply',
+        () async {
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -105,7 +111,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -119,7 +125,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey1',
@@ -133,14 +139,14 @@ void main() {
         ),
       );
 
-      final conversations = await database.getAllConversations();
+      final conversations = await conversationsNotifier.getAllConversations();
 
       expect(conversations.length, 1);
       expect(conversations.single.content, 'Reply to the first message');
     });
 
     test('Insert initial group conversation', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -156,13 +162,14 @@ void main() {
         ),
       );
 
-      final eventMessage = await database.select(database.eventMessagesTable).getSingle();
+      final eventMessage =
+          await database.select(database.eventMessagesTable).getSingle();
 
       final conversationMessage =
           await database.select(database.conversationMessagesTable).getSingle();
 
       final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await database.getAllConversations()).single,
+        (await conversationsNotifier.getAllConversations()).single,
       );
 
       expect(eventMessage.id, '0');
@@ -171,7 +178,7 @@ void main() {
     });
 
     test('Insert initial group conversation and first message', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -187,7 +194,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -204,7 +211,7 @@ void main() {
       );
 
       final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await database.getAllConversations()).single,
+        (await conversationsNotifier.getAllConversations()).single,
       );
 
       expect(
@@ -213,8 +220,9 @@ void main() {
       );
     });
 
-    test('Insert initial group conversation, first message and reply', () async {
-      await database.insertEventMessage(
+    test('Insert initial group conversation, first message and reply',
+        () async {
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -230,7 +238,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -246,7 +254,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey2',
@@ -263,7 +271,7 @@ void main() {
       );
 
       final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await database.getAllConversations()).single,
+        (await conversationsNotifier.getAllConversations()).single,
       );
 
       expect(
@@ -272,8 +280,9 @@ void main() {
       );
     });
 
-    test('Insert initial group conversation, first message and change subject', () async {
-      await database.insertEventMessage(
+    test('Insert initial group conversation, first message and change subject',
+        () async {
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -289,7 +298,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -305,7 +314,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey0',
@@ -322,14 +331,16 @@ void main() {
       );
 
       final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await database.getAllConversations()).single,
+        (await conversationsNotifier.getAllConversations()).single,
       );
 
       expect(conversations.data.relatedSubject?.value, 'Group subject changed');
     });
 
-    test('Insert initial group conversation, first message and change participants', () async {
-      await database.insertEventMessage(
+    test(
+        'Insert initial group conversation, first message and change participants',
+        () async {
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -345,7 +356,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -361,7 +372,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey0',
@@ -379,7 +390,7 @@ void main() {
       );
 
       final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await database.getAllConversations()).single,
+        (await conversationsNotifier.getAllConversations()).single,
       );
 
       expect(conversations.data.relatedPubkeys?.length, 3);
@@ -389,7 +400,7 @@ void main() {
 
   group('Database conversation message status', () {
     test('Mark conversation message as sent', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -403,7 +414,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -417,23 +428,25 @@ void main() {
         ),
       );
 
-      var conversationMessage = await (database.select(database.conversationMessagesTable)
-            ..where((table) => table.eventMessageId.equals('1')))
-          .getSingle();
+      var conversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('1')))
+              .getSingle();
 
-      expect(conversationMessage.isSent, false);
+      expect(conversationMessage.status, DeliveryStatus.none);
 
-      await database.markConversationMessageAsSent('1');
-      conversationMessage = await (database.select(database.conversationMessagesTable)
-            ..where((table) => table.eventMessageId.equals('1')))
-          .getSingle();
+      await conversationsNotifier.markConversationMessageAsSent('1');
+      conversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('1')))
+              .getSingle();
 
       expect(conversationMessage.eventMessageId, '1');
-      expect(conversationMessage.isSent, true);
+      expect(conversationMessage.status, DeliveryStatus.isSent);
     });
 
     test('Check if message is marked as received', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -447,7 +460,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -461,15 +474,15 @@ void main() {
         ),
       );
 
-      var conversationMessage = await (database.select(database.conversationMessagesTable)
-            ..where((table) => table.eventMessageId.equals('1')))
-          .getSingle();
+      var conversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('1')))
+              .getSingle();
 
-      await database.markConversationMessageAsSent('1');
-      expect(conversationMessage.isSent, false);
-      expect(conversationMessage.isReceived, false);
+      await conversationsNotifier.markConversationMessageAsSent('1');
+      expect(conversationMessage.status, DeliveryStatus.none);
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey1',
@@ -485,17 +498,17 @@ void main() {
         ),
       );
 
-      conversationMessage = await (database.select(database.conversationMessagesTable)
-            ..where((table) => table.eventMessageId.equals('1')))
-          .getSingle();
+      conversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('1')))
+              .getSingle();
 
       expect(conversationMessage.eventMessageId, '1');
-      expect(conversationMessage.isSent, true);
-      expect(conversationMessage.isReceived, true);
+      expect(conversationMessage.status, DeliveryStatus.isReceived);
     });
 
     test('Check if messages are marked as read', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -509,7 +522,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -523,7 +536,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey0',
@@ -537,7 +550,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '3',
           pubkey: 'pubkey0',
@@ -551,11 +564,11 @@ void main() {
         ),
       );
 
-      await database.markConversationMessageAsSent('1');
-      await database.markConversationMessageAsSent('2');
-      await database.markConversationMessageAsSent('3');
+      await conversationsNotifier.markConversationMessageAsSent('1');
+      await conversationsNotifier.markConversationMessageAsSent('2');
+      await conversationsNotifier.markConversationMessageAsSent('3');
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '4',
           pubkey: 'pubkey1',
@@ -571,7 +584,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '5',
           pubkey: 'pubkey1',
@@ -587,7 +600,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '6',
           pubkey: 'pubkey1',
@@ -603,39 +616,34 @@ void main() {
         ),
       );
 
-      final firstConversationMessage = await (database.select(database.conversationMessagesTable)
-            ..where((table) => table.eventMessageId.equals('1')))
-          .getSingle();
+      final firstConversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('1')))
+              .getSingle();
 
-      final secondConversationMessage = await (database.select(database.conversationMessagesTable)
-            ..where((table) => table.eventMessageId.equals('2')))
-          .getSingle();
+      final secondConversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('2')))
+              .getSingle();
 
-      final thirdConversationMessage = await (database.select(database.conversationMessagesTable)
-            ..where((table) => table.eventMessageId.equals('3')))
-          .getSingle();
+      final thirdConversationMessage =
+          await (database.select(database.conversationMessagesTable)
+                ..where((table) => table.eventMessageId.equals('3')))
+              .getSingle();
 
       expect(firstConversationMessage.eventMessageId, '1');
       expect(secondConversationMessage.eventMessageId, '2');
       expect(thirdConversationMessage.eventMessageId, '3');
 
-      expect(firstConversationMessage.isSent, true);
-      expect(firstConversationMessage.isReceived, true);
-      expect(firstConversationMessage.isRead, true);
-
-      expect(secondConversationMessage.isSent, true);
-      expect(secondConversationMessage.isReceived, false);
-      expect(secondConversationMessage.isRead, false);
-
-      expect(thirdConversationMessage.isSent, true);
-      expect(thirdConversationMessage.isReceived, true);
-      expect(thirdConversationMessage.isRead, true);
+      expect(firstConversationMessage.status, DeliveryStatus.isRead);
+      expect(secondConversationMessage.status, DeliveryStatus.isSent);
+      expect(thirdConversationMessage.status, DeliveryStatus.isRead);
     });
   });
 
   group('Database conversation message reaction', () {
     test('Reaction message inserted into DB', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -651,7 +659,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -667,15 +675,16 @@ void main() {
         ),
       );
 
-      final conversationMessages = await database.select(database.eventMessagesTable).get();
+      final conversationMessages =
+          await database.select(database.eventMessagesTable).get();
       final conversationReactions =
           await database.select(database.conversationReactionsTable).get();
 
       expect(conversationMessages.length, 2);
       expect(conversationReactions.length, 2);
       expect(
-        conversationReactions.first.conversationMessageId,
-        conversationReactions.last.conversationMessageId,
+        conversationReactions.first.messageId,
+        conversationReactions.last.messageId,
       );
       expect(
         conversationReactions.first.content,
@@ -684,7 +693,7 @@ void main() {
     });
 
     test('Get reactions for the message', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -698,7 +707,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -712,7 +721,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey0',
@@ -728,7 +737,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '3',
           pubkey: 'pubkey0',
@@ -744,7 +753,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '4',
           pubkey: 'pubkey0',
@@ -760,7 +769,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '5',
           pubkey: 'pubkey0',
@@ -776,27 +785,25 @@ void main() {
         ),
       );
 
-      final eventMessages = await database.select(database.eventMessagesTable).get();
+      final eventMessages =
+          await database.select(database.eventMessagesTable).get();
       final conversationReactions =
           await database.select(database.conversationReactionsTable).get();
 
       expect(eventMessages.length, 6);
       expect(conversationReactions.length, 4);
 
-      final conversationMessage = await (database.select(database.eventMessagesTable)
-            ..where((table) => table.id.equals('1')))
-          .getSingle();
+      final conversationMessage =
+          await (database.select(database.eventMessagesTable)
+                ..where((table) => table.id.equals('1')))
+              .getSingle();
 
-      final privateDirectMessageEntity = PrivateDirectMessageEntity.fromEventMessage(
-        conversationMessage.toEventMessage(),
-      );
+      final reactions = await conversationsNotifier
+          .getMessageReactions(conversationMessage.id);
 
-      final messageWithReactions =
-          await database.getMessageWithReactions(privateDirectMessageEntity);
-
-      expect(messageWithReactions.data.reactions.length, 3);
+      expect(reactions.length, 3);
       expect(
-        messageWithReactions.data.reactions.map((r) => r.data.content).toList(),
+        reactions.map((r) => r.data.content).toList(),
         [':clap:', ':clap:', ':smile:'],
       );
     });
