@@ -13,6 +13,7 @@ import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/interests.c.dart';
+import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
@@ -28,6 +29,7 @@ class EventParser {
       PostEntity.kind => PostEntity.fromEventMessage(eventMessage),
       ArticleEntity.kind => ArticleEntity.fromEventMessage(eventMessage),
       UserRelaysEntity.kind => UserRelaysEntity.fromEventMessage(eventMessage),
+      UserChatRelaysEntity.kind => UserChatRelaysEntity.fromEventMessage(eventMessage),
       FollowListEntity.kind => FollowListEntity.fromEventMessage(eventMessage),
       InterestSetEntity.kind => InterestSetEntity.fromEventMessage(eventMessage),
       InterestsEntity.kind => InterestsEntity.fromEventMessage(eventMessage),
