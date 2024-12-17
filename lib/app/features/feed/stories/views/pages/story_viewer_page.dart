@@ -8,9 +8,11 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/hooks/use_route_presence.dart';
 
 class StoryViewerPage extends HookConsumerWidget {
   const StoryViewerPage({
@@ -26,6 +28,11 @@ class StoryViewerPage extends HookConsumerWidget {
     final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
 
     useOnInit(() => ref.read(storyViewingControllerProvider.notifier).updateStories(stories));
+
+    useRoutePresence(
+      onBecameInactive: () => ref.read(storyPauseControllerProvider.notifier).paused = true,
+      onBecameActive: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
+    );
 
     final drag = usePageDismiss(context);
 
