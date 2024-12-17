@@ -6,8 +6,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 extension MasterKeyExtensions on EventMessage {
   String get masterPubkey {
-    final masterPubkey =
-        tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
+    final masterPubkey = tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
 
     if (tags.any((tags) => tags[0] == 'k' && tags[1] == '14')) {
       return '';

@@ -62,9 +62,7 @@ class ReactionData with _$ReactionData {
     final eventId = tags['e']?.first[1];
     final pubkey = tags['p']?.first[1];
 
-    if (eventId == null ||
-        pubkey == null ||
-        kind != PrivateDirectMessageEntity.kind.toString()) {
+    if (eventId == null || pubkey == null || kind != PrivateDirectMessageEntity.kind.toString()) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
