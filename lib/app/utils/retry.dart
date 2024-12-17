@@ -41,8 +41,7 @@ Stream<T> withRetryStream<T>(
   VoidCallback? onRetry,
 }) async* {
   var attempt = 0;
-  var currentDelay = initialDelay;
-  final random = Random();
+  var delay = initialDelay;
 
   while (attempt < maxRetries) {
     try {
@@ -56,24 +55,38 @@ Stream<T> withRetryStream<T>(
         rethrow;
       }
 
-      final jitter = minJitter + (maxJitter - minJitter) * random.nextDouble();
-      final jitteredDelay = Duration(
-        milliseconds: (currentDelay.inMilliseconds * jitter).round(),
+      delay = _getNextRetryDelay(
+        currentDelay: delay,
+        maxDelay: maxDelay,
+        multiplier: multiplier,
+        minJitter: minJitter,
+        maxJitter: maxJitter,
       );
 
-      currentDelay = Duration(
-        milliseconds: min(jitteredDelay.inMilliseconds, maxDelay.inMilliseconds),
-      );
-
-      Logger.log('Retry #$attempt after ${currentDelay.inMilliseconds}ms... Last error: $e');
-      await Future<void>.delayed(currentDelay);
-
-      currentDelay = Duration(
-        milliseconds: (currentDelay.inMilliseconds * multiplier).toInt(),
-      );
+      Logger.log('Retry #$attempt after ${delay.inMilliseconds}ms... Last error: $e');
+      await Future<void>.delayed(delay);
     }
     onRetry?.call();
   }
 
   throw Exception('Unreachable');
+}
+
+Duration _getNextRetryDelay({
+  required Duration currentDelay,
+  required Duration maxDelay,
+  required double multiplier,
+  required double minJitter,
+  required double maxJitter,
+}) {
+  final random = Random();
+  final jitter = minJitter + (maxJitter - minJitter) * random.nextDouble() * multiplier;
+
+  final jitteredDelay = Duration(
+    milliseconds: (currentDelay.inMilliseconds * jitter).round(),
+  );
+
+  return Duration(
+    milliseconds: min(jitteredDelay.inMilliseconds, maxDelay.inMilliseconds),
+  );
 }
