@@ -20,7 +20,7 @@ Future<void> setUserChatRelays(
   Ref ref, {
   required String pubkey,
 }) async {
-  final eventSigner = ref.read(currentUserNostrEventSignerProvider).valueOrNull;
+  final eventSigner = ref.watch(currentUserNostrEventSignerProvider).valueOrNull;
 
   if (eventSigner == null) {
     throw EventSignerNotFoundException();
@@ -35,6 +35,6 @@ Future<void> setUserChatRelays(
   final eventMessage =
       await UserChatRelaysData(list: userRelays.data.list).toEventMessage(eventSigner);
 
-  await ref.read(nostrNotifierProvider.notifier).sendEvent(eventMessage);
+  await ref.watch(nostrNotifierProvider.notifier).sendEvent(eventMessage);
   ref.invalidate(userChatRelaysProvider(pubkey));
 }
