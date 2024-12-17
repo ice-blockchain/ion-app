@@ -16,14 +16,40 @@ Future<T> withRetry<T>(
   double maxJitter = 1.5,
   VoidCallback? onRetry,
 }) async {
+  return withRetryStream<T>(
+    () async* {
+      await task();
+    },
+    maxRetries: maxRetries,
+    initialDelay: initialDelay,
+    maxDelay: maxDelay,
+    multiplier: multiplier,
+    minJitter: minJitter,
+    maxJitter: maxJitter,
+    onRetry: onRetry,
+  ).first;
+}
+
+Stream<T> withRetryStream<T>(
+  Stream<T> Function() task, {
+  int maxRetries = 10,
+  Duration initialDelay = const Duration(milliseconds: 100),
+  Duration maxDelay = const Duration(seconds: 10),
+  double multiplier = 3,
+  double minJitter = 0.5,
+  double maxJitter = 1.5,
+  VoidCallback? onRetry,
+}) async* {
   var attempt = 0;
   var currentDelay = initialDelay;
   final random = Random();
 
   while (attempt < maxRetries) {
     try {
-      final result = await task();
-      return result;
+      await for (final event in task()) {
+        yield event;
+      }
+      return;
     } catch (e) {
       attempt++;
       if (attempt >= maxRetries) {

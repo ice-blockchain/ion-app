@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/extensions/relay_message.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
@@ -85,43 +84,24 @@ class NostrNotifier extends _$NostrNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
-    final relay = await _getRelay(actionSource);
-
     final dislikedRelaysUrls = <String>[];
-    StreamSubscription<RelayMessage>? subscription;
-    final streamController = StreamController<EventMessage>(onCancel: () => subscription?.cancel());
+    NostrRelay? relay;
 
-    Future<void> handleRetry() => withRetry(
-          () async {
-            final retryRelay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
-            final retryEventsStream = nd.requestEvents(requestMessage, retryRelay);
-            await for (final retryEvent in retryEventsStream) {
-              if (streamController.isClosed) break;
-              if (retryEvent.indicatesError) {
-                dislikedRelaysUrls.add(retryRelay.url);
-                throw RelayRequestFailedException();
-              } else if (retryEvent is EventMessage) {
-                streamController.add(retryEvent);
-              }
-            }
-          },
-        );
-
-    subscription = nd.requestEvents(requestMessage, relay).listen(
-      (event) async {
-        if (event.indicatesError) {
-          await subscription?.cancel();
-          dislikedRelaysUrls.add(relay.url);
-          await handleRetry();
-        } else if (event is EventMessage) {
-          streamController.add(event);
+    yield* withRetryStream(
+      () async* {
+        relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        await for (final event in nd.requestEvents(requestMessage, relay!)) {
+          if (event is NoticeMessage || event is ClosedMessage) {
+            throw RelayRequestFailedException();
+          } else if (event is EventMessage) {
+            yield event;
+          }
         }
       },
-      onDone: streamController.close,
-      onError: streamController.addError,
+      onRetry: () {
+        dislikedRelaysUrls.add(relay?.url ?? '');
+      },
     );
-
-    yield* streamController.stream;
   }
 
   Future<EventMessage?> requestEvent(
