@@ -32,5 +32,8 @@ class UserChatRelays extends _$UserChatRelays {
   ///
   /// Returns the random relay url for the user chat relays.
   ///
-  String? get randomRelayUrl => state.valueOrNull?.data.list.random.url;
+  Future<String?> getRandomRelayUrl() async {
+    final value = await future;
+    return value?.data.list.random.url;
+  }
 }
