@@ -16,8 +16,7 @@ part 'ion_database.c.g.dart';
 // Proxy notifier to interact with the database
 @Riverpod(keepAlive: true)
 class DBConversationsNotifier extends _$DBConversationsNotifier {
-  DBConversationsNotifier({IONDatabase? database})
-      : _db = database ?? IONDatabase();
+  DBConversationsNotifier({IONDatabase? database}) : _db = database ?? IONDatabase();
 
   final IONDatabase _db;
 
@@ -29,8 +28,7 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
     required EventMessage eventMessage,
     bool isDeleted = false,
   }) {
-    final conversationMessage =
-        PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return _db.into(_db.conversationMessagesTable).insert(
           ConversationMessagesTableData(
             isDeleted: isDeleted,
@@ -46,8 +44,7 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
   }
 
   Future<int> _insertConversationReactionsTableData(EventMessage eventMessage) {
-    final reactionEntity =
-        PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
 
     return _db.into(_db.conversationReactionsTable).insert(
           ConversationReactionsTableData(
@@ -84,10 +81,8 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
     EventMessage eventMessage,
   ) async {
     if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
-      final conversationMessage =
-          PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-      final conversationIdByPubkeys =
-          await _lookupConversationByPubkeys(conversationMessage);
+      final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+      final conversationIdByPubkeys = await _lookupConversationByPubkeys(conversationMessage);
 
       if (conversationIdByPubkeys != null) {
         // Existing conversation (one-to-one or group)
@@ -97,8 +92,7 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
         );
       } else {
         // Existing group conversation (change of participants)
-        final conversationIdBySubject =
-            await _lookupConversationBySubject(conversationMessage);
+        final conversationIdBySubject = await _lookupConversationBySubject(conversationMessage);
 
         if (conversationIdBySubject != null) {
           await _insertConversationData(
@@ -124,14 +118,12 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
-    final conversationsWithSameParticipants =
-        await (_db.select(_db.conversationMessagesTable)
-              ..where(
-                (table) =>
-                    table.pubKeys.equals(conversationMessage.allPubkeysMask),
-              )
-              ..limit(1))
-            .get();
+    final conversationsWithSameParticipants = await (_db.select(_db.conversationMessagesTable)
+          ..where(
+            (table) => table.pubKeys.equals(conversationMessage.allPubkeysMask),
+          )
+          ..limit(1))
+        .get();
 
     if (conversationsWithSameParticipants.isNotEmpty) {
       return conversationsWithSameParticipants.first.conversationId;
@@ -148,11 +140,10 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
     final subject = conversationMessage.data.relatedSubject?.value;
 
     if (subject != null) {
-      final conversationWithChangedParticipants =
-          await (_db.select(_db.conversationMessagesTable)
-                ..where((table) => table.subject.equals(subject))
-                ..limit(1))
-              .get();
+      final conversationWithChangedParticipants = await (_db.select(_db.conversationMessagesTable)
+            ..where((table) => table.subject.equals(subject))
+            ..limit(1))
+          .get();
 
       if (conversationWithChangedParticipants.isNotEmpty) {
         return conversationWithChangedParticipants.first.conversationId;
@@ -163,72 +154,60 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
 
   // Call when "OK" is received from relay to mark message as sent (one tick)
   Future<void> markConversationMessageAsSent(String id) async {
-    final conversationMessagesTableData =
-        await (_db.select(_db.conversationMessagesTable)
-              ..where((table) => table.eventMessageId.equals(id)))
-            .getSingle();
+    final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
+          ..where((table) => table.eventMessageId.equals(id)))
+        .getSingle();
 
     final sentConversationMessagesTableData =
         conversationMessagesTableData.copyWith(status: DeliveryStatus.isSent);
 
-    await _db
-        .update(_db.conversationMessagesTable)
-        .replace(sentConversationMessagesTableData);
+    await _db.update(_db.conversationMessagesTable).replace(sentConversationMessagesTableData);
   }
 
   // Call when kind 7 is received from relay with "received" content
   Future<void> _updateConversationMessageAsReceived(
     EventMessage eventMessage,
   ) async {
-    final reactionEntity =
-        PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
 
-    final conversationMessagesTableData =
-        await (_db.select(_db.conversationMessagesTable)
-              ..where(
-                (table) =>
-                    table.eventMessageId.equals(reactionEntity.data.eventId),
-              ))
-            .getSingle();
+    final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
+          ..where(
+            (table) => table.eventMessageId.equals(reactionEntity.data.eventId),
+          ))
+        .getSingle();
 
-    final receivedConversationMessagesTableData = conversationMessagesTableData
-        .copyWith(status: DeliveryStatus.isReceived);
+    final receivedConversationMessagesTableData =
+        conversationMessagesTableData.copyWith(status: DeliveryStatus.isReceived);
 
-    await _db
-        .update(_db.conversationMessagesTable)
-        .replace(receivedConversationMessagesTableData);
+    await _db.update(_db.conversationMessagesTable).replace(receivedConversationMessagesTableData);
   }
 
   // Call when kind 7 is received from relay with "read" content
   Future<void> _updateConversationMessagesAsRead(
     EventMessage eventMessage,
   ) async {
-    final reactionEntity =
-        PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
 
-    final latestConversationMessageTableData =
-        await (_db.select(_db.conversationMessagesTable)
-              ..where(
-                (table) =>
-                    table.eventMessageId.equals(reactionEntity.data.eventId),
-              ))
-            .getSingle();
+    final latestConversationMessageTableData = await (_db.select(_db.conversationMessagesTable)
+          ..where(
+            (table) => table.eventMessageId.equals(reactionEntity.data.eventId),
+          ))
+        .getSingle();
 
-    final allPreviousReceivedMessages =
-        await (_db.select(_db.conversationMessagesTable)
-              ..where(
-                (table) => table.conversationId
-                    .equals(latestConversationMessageTableData.conversationId),
-              )
-              ..where(
-                (table) => table.status.equals(DeliveryStatus.isReceived.index),
-              )
-              ..where(
-                (table) => table.createdAt.isSmallerOrEqualValue(
-                  latestConversationMessageTableData.createdAt,
-                ),
-              ))
-            .get();
+    final allPreviousReceivedMessages = await (_db.select(_db.conversationMessagesTable)
+          ..where(
+            (table) =>
+                table.conversationId.equals(latestConversationMessageTableData.conversationId),
+          )
+          ..where(
+            (table) => table.status.equals(DeliveryStatus.isReceived.index),
+          )
+          ..where(
+            (table) => table.createdAt.isSmallerOrEqualValue(
+              latestConversationMessageTableData.createdAt,
+            ),
+          ))
+        .get();
 
     await _db.batch(
       (b) {
@@ -236,8 +215,7 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
           _db.conversationMessagesTable,
           allPreviousReceivedMessages
               .map(
-                (previousMessage) =>
-                    previousMessage.copyWith(status: DeliveryStatus.isRead),
+                (previousMessage) => previousMessage.copyWith(status: DeliveryStatus.isRead),
               )
               .toList(),
         );
@@ -269,8 +247,7 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
         )
         .watch()
         .asyncMap((uniqueConversationRows) async {
-          final lastConversationEventMessages =
-              await _selectLastMessageOfEachConversation(
+          final lastConversationEventMessages = await _selectLastMessageOfEachConversation(
             uniqueConversationRows,
           );
 
@@ -281,12 +258,10 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
   Future<List<EventMessage>> _selectLastMessageOfEachConversation(
     List<QueryRow> uniqueConversationRows,
   ) async {
-    final lastConversationMessagesIds = uniqueConversationRows
-        .map((row) => row.data['event_message_id'] as String)
-        .toList();
+    final lastConversationMessagesIds =
+        uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
 
-    final lastConversationEventMessages = (await (_db
-                .select(_db.eventMessagesTable)
+    final lastConversationEventMessages = (await (_db.select(_db.eventMessagesTable)
               ..where((table) => table.id.isIn(lastConversationMessagesIds)))
             .get())
         .map((e) => e.toEventMessage())
@@ -298,14 +273,13 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
   Future<List<PrivateMessageReactionEntity>> getMessageReactions(
     String messageId,
   ) async {
-    final reactionsEventMessagesIds =
-        (await (_db.select(_db.conversationReactionsTable)
-                  ..where(
-                    (table) => table.messageId.equals(messageId),
-                  ))
-                .get())
-            .map((reactionsTableData) => reactionsTableData.reactionEventId)
-            .toList();
+    final reactionsEventMessagesIds = (await (_db.select(_db.conversationReactionsTable)
+              ..where(
+                (table) => table.messageId.equals(messageId),
+              ))
+            .get())
+        .map((reactionsTableData) => reactionsTableData.reactionEventId)
+        .toList();
 
     final reactionsEventMessages = await (_db.select(_db.eventMessagesTable)
           ..where((table) => table.id.isIn(reactionsEventMessagesIds)))
@@ -313,8 +287,7 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
 
     final reactions = reactionsEventMessages
         .map(
-          (reactionEventMessageData) =>
-              PrivateMessageReactionEntity.fromEventMessage(
+          (reactionEventMessageData) => PrivateMessageReactionEntity.fromEventMessage(
             reactionEventMessageData.toEventMessage(),
           ),
         )
