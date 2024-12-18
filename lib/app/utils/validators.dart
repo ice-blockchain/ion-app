@@ -15,7 +15,7 @@ class Validators {
     return isEmpty(value) || !EmailValidator.validate(value!);
   }
 
-  static bool isInvalidName(String? value) {
+  static bool isInvalidNickname(String? value) {
     return isEmpty(value) || !RegExp(r'^[a-zA-Z0-9.]+$').hasMatch(value!);
   }
 
