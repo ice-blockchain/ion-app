@@ -65,9 +65,7 @@ dependencies:
       url: https://github.com/chebizarro/dart-nip44.git
       ref: master
   nostr_dart:
-    git:
-      url: https://github.com/ice-blockchain/nostr-dart.git
-      ref: 0.0.13
+    path: ../nostr-dart
   ogp_data_extract: ^0.1.4
   package_info_plus: ^4.2.0
   path: ^1.9.0

@@ -57,7 +57,7 @@ class Article extends ConsumerWidget {
                     pubkey: eventReference.pubkey,
                     trailing: Row(
                       children: [
-                        const BookmarkButton(id: 'test_article_id'),
+                        const BookmarkButton.article(id: 'test_article_id'),
                         UserInfoMenu(pubkey: eventReference.pubkey),
                       ],
                     ),

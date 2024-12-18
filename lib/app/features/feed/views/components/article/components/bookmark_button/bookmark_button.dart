@@ -3,25 +3,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/providers/bookmarks_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
+import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BookmarkButton extends ConsumerWidget {
-  const BookmarkButton({required this.id, super.key});
+  const BookmarkButton.post({required this.id, super.key}) : type = BookmarksSetType.posts;
+
+  const BookmarkButton.story({required this.id, super.key}) : type = BookmarksSetType.stories;
+
+  const BookmarkButton.video({required this.id, super.key}) : type = BookmarksSetType.videos;
+
+  const BookmarkButton.article({required this.id, super.key}) : type = BookmarksSetType.articles;
 
   final String id;
+  final BookmarksSetType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookmarks = ref.watch(bookmarkNotifierProvider);
-    final isBookmarked = bookmarks.contains(id);
+    final isBookmarked = ref.watch(isBookmarkedProvider(id, type: type));
 
     return IconButton(
       icon: SvgPicture.asset(
-        isBookmarked ? Assets.svg.iconBookmarks : Assets.svg.iconBookmarksOn,
+        isBookmarked ? Assets.svg.iconBookmarksOn : Assets.svg.iconBookmarks,
       ),
       onPressed: () {
-        ref.read(bookmarkNotifierProvider.notifier).toggleBookmark(id);
+        ref.read(bookmarksNotifierProvider.notifier).toggleBookmark(id, type: type);
       },
     );
   }
