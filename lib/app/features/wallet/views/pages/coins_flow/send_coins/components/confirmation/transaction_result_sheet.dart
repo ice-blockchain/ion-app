@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -37,7 +38,7 @@ class TransactionResultSheet extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 40.0.s),
-            icons.actionSendfundsSuccessful.iconWithDimensions(
+            icons.actionContactsendSuccess.iconWithDimensions(
               width: 74.0.s,
               height: 76.0.s,
             ),
@@ -48,7 +49,7 @@ class TransactionResultSheet extends ConsumerWidget {
                 color: colors.primaryAccent,
               ),
             ),
-            SizedBox(height: 36.0.s),
+            SizedBox(height: 24.0.s),
             if (type == CryptoAssetType.nft)
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -65,36 +66,33 @@ class TransactionResultSheet extends ConsumerWidget {
                 usdAmount: controller.getUsdtAmount() * 0.999,
                 icon: mockedCoinsDataArray[3].iconUrl.icon(),
               ),
-            SizedBox(height: 31.0.s),
-            Button(
-              label: Text(locale.wallet_transaction_details),
-              leadingIcon: icons.iconButtonDetails.icon(),
-              mainAxisSize: MainAxisSize.max,
-              onPressed: () {
-                CoinTransactionDetailsRoute(cryptoAssetType: type).push<void>(context);
-              },
-            ),
-            SizedBox(height: 12.0.s),
+            SizedBox(height: 24.0.s),
             Row(
               children: [
                 Expanded(
                   child: Button(
+                    label: Text(locale.wallet_transaction_details),
+                    leadingIcon: icons.iconButtonDetails.icon(
+                      color: context.theme.appColors.secondaryText,
+                    ),
+                    backgroundColor: context.theme.appColors.tertararyBackground,
                     type: ButtonType.outlined,
-                    onPressed: () {},
-                    leadingIcon: icons.iconButtonShare.icon(),
-                    label: Text(locale.button_share),
+                    mainAxisSize: MainAxisSize.max,
+                    onPressed: () {
+                      final location = switch (type) {
+                        CryptoAssetType.coin => CoinTransactionDetailsRoute().location,
+                        CryptoAssetType.nft => NftTransactionDetailsRoute().location,
+                      };
+                      context.push(location);
+                    },
                   ),
                 ),
                 SizedBox(width: 13.0.s),
-                Expanded(
-                  child: Button(
-                    type: ButtonType.outlined,
-                    onPressed: () => Navigator.pop(context),
-                    leadingIcon: icons.iconSheetClose.icon(
-                      color: colors.secondaryText,
-                    ),
-                    label: Text(locale.button_close),
-                  ),
+                Button(
+                  type: ButtonType.outlined,
+                  onPressed: () {},
+                  backgroundColor: context.theme.appColors.tertararyBackground,
+                  leadingIcon: icons.iconButtonShare.icon(),
                 ),
               ],
             ),

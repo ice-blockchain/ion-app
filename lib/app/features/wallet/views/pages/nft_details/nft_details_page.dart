@@ -52,8 +52,21 @@ class NftDetailsPage extends ConsumerWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     RoundedCard.filled(
-                      child: ReadMoreText(
-                        nft.description,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            context.i18n.common_desc,
+                            style: context.theme.appTextThemes.caption3.copyWith(
+                              color: context.theme.appColors.tertararyText,
+                            ),
+                          ),
+                          SizedBox(height: 4.0.s),
+                          ReadMoreText(
+                            nft.description,
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 12.0.s),

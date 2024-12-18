@@ -7,6 +7,8 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/components/arrival_time/list_item_arrival_time.dart';
+import 'package:ion/app/features/wallet/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
@@ -31,7 +33,6 @@ class SendNftConfirmPage extends ConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.send_nft_navigation_title),
-            showBackButton: false,
             actions: const [NavigationCloseButton()],
           ),
           if (selectedNft != null)
@@ -50,11 +51,8 @@ class SendNftConfirmPage extends ConsumerWidget {
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_title),
                       value: formData.wallet.name,
-                      icon: Image.network(
-                        formData.wallet.icon,
-                        width: ScreenSideOffset.defaultSmallMargin,
-                        height: ScreenSideOffset.defaultSmallMargin,
-                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                      icon: Assets.svg.walletWalletblue.icon(
+                        size: ScreenSideOffset.defaultSmallMargin,
                       ),
                       secondary: Align(
                         alignment: Alignment.centerRight,
@@ -72,22 +70,9 @@ class SendNftConfirmPage extends ConsumerWidget {
                       icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_arrival_time),
-                      value: '${formData.arrivalTime} '
-                          '${locale.wallet_arrival_time_minutes}',
-                      icon: Assets.svg.iconBlockTime.icon(
-                        size: 16.0.s,
-                      ),
-                    ),
+                    ListItemArrivalTime(arrivalTime: formData.arrivalTime),
                     SizedBox(height: 12.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_network_fee),
-                      value: '1.00 USDT',
-                      icon: Assets.svg.iconBlockCoins.icon(
-                        size: 16.0.s,
-                      ),
-                    ),
+                    const ListItemNetworkFee(value: '1.00 USDT'),
                     SizedBox(height: 12.0.s),
                     Button(
                       mainAxisSize: MainAxisSize.max,
@@ -96,9 +81,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                         context.i18n.button_confirm,
                       ),
                       onPressed: () {
-                        CoinTransactionResultRoute(
-                          cryptoAssetType: CryptoAssetType.nft,
-                        ).go(context);
+                        NftTransactionResultRoute().go(context);
                       },
                     ),
                   ],

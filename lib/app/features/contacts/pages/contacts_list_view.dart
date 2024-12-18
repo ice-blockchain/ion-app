@@ -22,11 +22,13 @@ class ContactsListView extends ConsumerWidget {
   const ContactsListView({
     required this.appBarTitle,
     required this.action,
+    this.showBackButton = false,
     super.key,
   });
 
   final String appBarTitle;
   final ContactRouteAction action;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +40,7 @@ class ContactsListView extends ConsumerWidget {
           SliverAppBar(
             primary: false,
             flexibleSpace: NavigationAppBar.modal(
-              showBackButton: false,
+              showBackButton: showBackButton,
               actions: [
                 NavigationCloseButton(
                   onPressed: () => context.pop(),

@@ -195,8 +195,9 @@ class NftContactsListRoute extends BaseRouteData {
   NftContactsListRoute({required this.title, this.action = ContactRouteAction.pop})
       : super(
           child: ContactsListView(
-            appBarTitle: title,
             action: action,
+            appBarTitle: title,
+            showBackButton: true,
           ),
           type: IceRouteType.bottomSheet,
         );
@@ -214,23 +215,19 @@ class CoinsSendFormConfirmationRoute extends BaseRouteData {
 }
 
 class CoinTransactionResultRoute extends BaseRouteData {
-  CoinTransactionResultRoute({required this.cryptoAssetType})
+  CoinTransactionResultRoute()
       : super(
-          child: TransactionResultSheet(type: cryptoAssetType),
+          child: const TransactionResultSheet(type: CryptoAssetType.coin),
           type: IceRouteType.bottomSheet,
         );
-
-  final CryptoAssetType cryptoAssetType;
 }
 
 class NftTransactionResultRoute extends BaseRouteData {
-  NftTransactionResultRoute({required this.$extra})
+  NftTransactionResultRoute()
       : super(
-          child: TransactionResultSheet(type: $extra),
+          child: const TransactionResultSheet(type: CryptoAssetType.nft),
           type: IceRouteType.bottomSheet,
         );
-
-  final CryptoAssetType $extra;
 }
 
 class CoinsDetailsRoute extends BaseRouteData {
@@ -333,20 +330,17 @@ class SendNftConfirmRoute extends BaseRouteData {
 }
 
 class NftTransactionDetailsRoute extends BaseRouteData {
-  NftTransactionDetailsRoute({required this.cryptoAssetType})
+  NftTransactionDetailsRoute()
       : super(
-          child: TransactionDetailsPage(type: cryptoAssetType),
+          child: const TransactionDetailsPage(type: CryptoAssetType.nft),
           type: IceRouteType.bottomSheet,
         );
-
-  final CryptoAssetType cryptoAssetType;
 }
 
 class CoinTransactionDetailsRoute extends BaseRouteData {
-  CoinTransactionDetailsRoute({required this.cryptoAssetType})
+  CoinTransactionDetailsRoute()
       : super(
-          child: TransactionDetailsPage(type: cryptoAssetType),
+          child: const TransactionDetailsPage(type: CryptoAssetType.coin),
           type: IceRouteType.bottomSheet,
         );
-  final CryptoAssetType cryptoAssetType;
 }

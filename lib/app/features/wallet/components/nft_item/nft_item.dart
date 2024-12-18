@@ -30,10 +30,16 @@ class NftItem extends StatelessWidget {
         children: [
           Text('#${nftData.rank}'),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
+              CachedNetworkImage(
+                imageUrl: nftData.currencyIconUrl,
+                width: 12,
+                height: 12,
+                fit: BoxFit.fitWidth,
+              ),
               Padding(
-                padding: EdgeInsets.only(right: 4.0.s),
+                padding: EdgeInsets.only(right: 4.0.s, left: 5.0.s),
                 child: Text(
                   nftData.currency,
                   style: context.theme.appTextThemes.caption2.copyWith(
