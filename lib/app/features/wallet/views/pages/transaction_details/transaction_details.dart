@@ -95,11 +95,6 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItem.text(
-                      title: Text(context.i18n.send_nft_confirm_asset),
-                      value: controller.getAsset(),
-                    ),
-                    SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
                       value: controller.getNetwork(),
@@ -110,6 +105,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                       arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
                           .format(formData.arrivalDateTime),
                     ),
+                    ListItemArrivalTime(arrivalTime: formData.arrivalTime),
                     SizedBox(height: 12.0.s),
                     const ListItemNetworkFee(value: '1.00 USDT'),
                     SizedBox(height: 15.0.s),
