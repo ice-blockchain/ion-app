@@ -7,7 +7,6 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class NftItem extends StatelessWidget {
   const NftItem({
