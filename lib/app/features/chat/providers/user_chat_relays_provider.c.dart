@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -25,14 +25,7 @@ Future<UserChatRelaysEntity?> userChatRelays(
 
   final entity = await ref
       .read(nostrNotifierProvider.notifier)
-      .requestEntity<UserChatRelaysEntity>(requestMessage);
+      .requestEntity<UserChatRelaysEntity>(requestMessage, actionSource: ActionSourceUser(pubkey));
 
   return entity;
-}
-
-/// Helper function to get a random relay URL from the user chat relays
-@riverpod
-String? userChatRelaysRandomUrl(Ref ref, String pubkey) {
-  final relays = ref.watch(userChatRelaysProvider(pubkey)).valueOrNull;
-  return relays?.data.list.random.url;
 }
