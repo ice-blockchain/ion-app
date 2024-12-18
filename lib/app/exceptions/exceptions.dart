@@ -192,3 +192,7 @@ class RelayRequestFailedException extends IONException {
           'Relay request failed: $relayUrl, event $event',
         );
 }
+
+class UserChatRelaysNotFoundException extends IONException {
+  UserChatRelaysNotFoundException() : super(10040, 'User chat relays not found');
+}

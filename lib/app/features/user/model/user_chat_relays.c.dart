@@ -40,12 +40,12 @@ class UserChatRelaysEntity with _$UserChatRelaysEntity, NostrEntity implements C
   }
 
   @override
-  String get masterPubkey => pubkey;
-
-  List<String> get urls => data.list.map((relay) => relay.url).toList();
+  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
+  String get masterPubkey => '';
+
+  List<String> get urls => data.list.map((relay) => relay.url).toList();
 
   static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
