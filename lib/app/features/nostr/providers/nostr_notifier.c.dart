@@ -15,6 +15,7 @@ import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.c.dart';
+import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -218,13 +219,15 @@ class NostrNotifier extends _$NostrNotifier {
           if (pubkey == null) {
             throw UserMasterPubkeyNotFoundException();
           }
-          final relayUrl = await _getUserChatRelays(pubkey);
-          return await ref.read(relayProvider(relayUrl).future);
+          final userChatRelays = await _getUserChatRelays(pubkey);
+          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceUserChat():
         {
-          final relayUrl = await _getUserChatRelays(actionSource.pubkey);
-          return await ref.read(relayProvider(relayUrl).future);
+          final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
+          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
         }
     }
   }
@@ -238,12 +241,12 @@ class NostrNotifier extends _$NostrNotifier {
     return userRelays.first;
   }
 
-  Future<String> _getUserChatRelays(String pubkey) async {
+  Future<UserChatRelaysEntity> _getUserChatRelays(String pubkey) async {
     final userRelays = await ref.read(userChatRelaysProvider(pubkey).future);
     if (userRelays == null) {
       throw UserChatRelaysNotFoundException();
     }
-    return userRelays.data.list.random.url;
+    return userRelays;
   }
 
   NostrEntity _parseAndCache(EventMessage event) {
