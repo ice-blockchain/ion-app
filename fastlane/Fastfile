@@ -1,7 +1,7 @@
 require 'json'
 
 MATCH_GIT_URL = ENV["MATCH_GIT_URL"]
-APP_ENV = ENV["APP_ENV"]
+APP_FLAVOR = ENV["APP_FLAVOR"]
 APP_ID = ENV["APP_ID"]
 APPLE_DEVELOPMENT_TEAM = ENV["APPLE_DEVELOPMENT_TEAM"]
 FIREBASE_DISTRIBUTION_TOKEN = ENV["FIREBASE_DISTRIBUTION_TOKEN"]
@@ -105,7 +105,7 @@ platform :android do
                 upload_to_play_store(
                     package_name: APP_ID,
                     track: "internal",
-                    aab: "build/app/outputs/bundle/#{APP_ENV}Release/app-#{APP_ENV}-release.aab",
+                    aab: "build/app/outputs/bundle/#{APP_FLAVOR}Release/app-#{APP_FLAVOR}-release.aab",
                     json_key: "./fastlane/keys/gp-console.json",
                     skip_upload_metadata: true,
                     skip_upload_images: true,
@@ -119,7 +119,7 @@ platform :android do
                     app: FIREBASE_ANDROID_APP_ID,
                     firebase_cli_token: FIREBASE_DISTRIBUTION_TOKEN,
                     android_artifact_type: "APK",
-                    android_artifact_path: "build/app/outputs/flutter-apk/app-#{APP_ENV}-release.apk",
+                    android_artifact_path: "build/app/outputs/flutter-apk/app-#{APP_FLAVOR}-release.apk",
                     release_notes: options[:release_notes] || git_branch,
                     groups: "Internal-testers",
                 )
