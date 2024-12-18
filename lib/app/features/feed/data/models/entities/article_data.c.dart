@@ -4,15 +4,17 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
-import 'package:uuid/uuid.dart';
 
 part 'article_data.c.freezed.dart';
 
@@ -69,13 +71,13 @@ class ArticleData with _$ArticleData implements EventSerializable {
   factory ArticleData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    final title = tags['title']?.firstOrNull?[1];
-    final image = tags['image']?.firstOrNull?[1];
-    final summary = tags['summary']?.firstOrNull?[1];
-    DateTime? publishedAt;
+    final title = tags['title']?.firstOrNull?.elementAtOrNull(1);
+    final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
+    final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
 
-    if (tags['published_at']?.firstOrNull?[1] != null) {
-      final timestamp = int.tryParse(tags['published_at']!.first[1]);
+    DateTime? publishedAt;
+    if (tags['published_at']?.firstOrNull?.elementAtOrNull(1) != null) {
+      final timestamp = int.tryParse(tags['published_at']!.first.elementAt(1));
       if (timestamp != null) {
         publishedAt = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
       }
@@ -100,7 +102,7 @@ class ArticleData with _$ArticleData implements EventSerializable {
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
-    final uniqueIdForEditing = const Uuid().v4(); // Required to be set in 'd' tag
+    final uniqueIdForEditing = generateV4UUID(); // Required to be set in 'd' tag
 
     return EventMessage.fromData(
       signer: signer,
@@ -136,6 +138,17 @@ class ArticleData with _$ArticleData implements EventSerializable {
       final insert = operation[insertKey]! as String;
       return RelatedHashtag(value: insert);
     }).toList();
+  }
+
+  static List<String> extractImageIds(QuillController textEditorController) {
+    final imageIds = <String>[];
+    for (final operation in textEditorController.document.toDelta().operations) {
+      final data = operation.data;
+      if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
+        imageIds.add(data[textEditorSingleImageKey] as String);
+      }
+    }
+    return imageIds;
   }
 
   static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {

@@ -192,3 +192,11 @@ class RelayRequestFailedException extends IONException {
           'Relay request failed: $relayUrl, event $event',
         );
 }
+
+class CreateArticleImageNotFoundException extends IONException {
+  CreateArticleImageNotFoundException() : super(10040, 'Create article image not found');
+}
+
+class CreateArticleFailedToRetrieveImageFileException extends IONException {
+  CreateArticleFailedToRetrieveImageFileException() : super(10041, 'Failed to retrieve image file');
+}

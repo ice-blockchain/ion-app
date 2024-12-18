@@ -61,8 +61,13 @@ Map<String, List<String>> findBestOptions(Map<String, List<String>> keysToOption
 }
 
 /// Calculates the reading time (in minutes) of a given content.
-int calculateReadingTime(String content) {
+int calculateReadingTime(String? content) {
+  if (content == null) {
+    return 1; // Default reading time
+  }
+
   const wordsPerMinute = 200;
   final words = content.split(' ').length;
+
   return (words / wordsPerMinute).ceil();
 }

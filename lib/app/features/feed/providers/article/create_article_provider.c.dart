@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,17 +13,12 @@ part 'create_article_provider.c.g.dart';
 class CreateArticle extends _$CreateArticle {
   @override
   CreateArticleState build() {
-    return CreateArticleState(
-      image: null,
-      title: '',
-      content: '',
-      imageIds: [],
-    );
+    return CreateArticleState();
   }
 
   void updateArticleDetails(QuillController textEditorController, MediaFile? image, String title) {
     final deltaJson = jsonEncode(textEditorController.document.toDelta().toJson());
-    final imageIds = _extractImageIds(textEditorController);
+    final imageIds = ArticleData.extractImageIds(textEditorController);
 
     state = state.copyWith(
       content: deltaJson,
@@ -32,43 +27,32 @@ class CreateArticle extends _$CreateArticle {
       title: title.trim(),
     );
   }
-
-  List<String> _extractImageIds(QuillController textEditorController) {
-    final imageIds = <String>[];
-    for (final operation in textEditorController.document.toDelta().operations) {
-      final data = operation.data;
-      if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
-        imageIds.add(data[textEditorSingleImageKey] as String);
-      }
-    }
-    return imageIds;
-  }
 }
 
 class CreateArticleState {
   CreateArticleState({
-    required this.image,
-    required this.title,
-    required this.content,
-    required this.imageIds,
+    this.content = '',
+    this.image,
+    this.title = '',
+    this.imageIds = const [],
   });
 
-  final MediaFile? image;
-  final String? title;
   final String content;
   final List<String> imageIds;
+  final MediaFile? image;
+  final String? title;
 
   CreateArticleState copyWith({
+    String content = '',
+    String title = '',
+    List<String> imageIds = const [],
     MediaFile? image,
-    String? title,
-    String? content,
-    List<String>? imageIds,
   }) {
     return CreateArticleState(
+      content: content,
+      imageIds: imageIds,
+      title: title,
       image: image ?? this.image,
-      title: title ?? this.title,
-      content: content ?? this.content,
-      imageIds: imageIds ?? this.imageIds,
     );
   }
 }

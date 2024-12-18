@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
+import 'package:ion/app/features/feed/views/components/article/constants.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -29,7 +30,7 @@ class ArticlePreviewImage extends StatelessWidget {
         alignment: minutesToReadAlignment,
         children: [
           AspectRatio(
-            aspectRatio: 343 / 210,
+            aspectRatio: ArticleConstants.headerImageAspectRation,
             child: Consumer(
               builder: (context, ref, _) {
                 if (mediaFile == null) {
