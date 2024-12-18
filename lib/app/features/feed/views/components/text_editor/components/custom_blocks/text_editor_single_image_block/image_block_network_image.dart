@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/aspect_ratio.dart';
 
-class NetworkImage extends StatelessWidget {
-  const NetworkImage({
+class ImageBlockNetworkImage extends StatelessWidget {
+  const ImageBlockNetworkImage({
     required this.path,
     required this.media,
     super.key,
