@@ -1,5 +1,8 @@
 name: CI/CD
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       environment:
@@ -24,6 +27,11 @@ on:
         default: "9.9.9"
         required: true
 
+env:
+  APP_ENV: ${{ inputs.environment || 'staging' }}
+  DEPLOYMENT_TYPE: ${{ inputs.deployment || 'firebase' }}
+  APP_VERSION: ${{ inputs.version || '9.9.9' }}
+
 jobs:
   flutter:
     name: Flutter -- verify, build, test
@@ -43,10 +51,6 @@ jobs:
           token: ${{ secrets.ICE_CI_CD_BOT_GH_PAT }}
           path: flutter-app-secrets
           fetch-depth: 0
-      - name: Detect APP environment and set it to ENV
-        id: detect-env
-        run: |
-          echo "APP_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
       - name: Configure APP environment (${{ env.APP_ENV }})
         id: setup-env
         run: |
@@ -177,18 +181,15 @@ jobs:
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
-          if [[ ${{ inputs.deployment == 'firebase' }} == true ]]
+          if [[ ${{ env.DEPLOYMENT_TYPE == 'firebase' }} == true ]]
             then
               echo "IOS_SIGN_TYPE=adhoc" >> $GITHUB_ENV
-              echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
-              echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
+              echo "DEPLOYMENT_TARGET=firebase" >> $GITHUB_ENV
               echo "RELEASE_NOTES=${{ inputs.environment }}_${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "IOS_SIGN_TYPE=appstore" >> $GITHUB_ENV
-              echo "DEPLOY_TARGET=testflight" >> $GITHUB_ENV
-              echo "APP_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+              echo "DEPLOYMENT_TARGET=testflight" >> $GITHUB_ENV
           fi
-          echo "APP_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$(echo $((GITHUB_RUN_NUMBER)))" >> $GITHUB_ENV
       - name: Fetch code signing identity (${{env.IOS_SIGN_TYPE}})
         id: fetch_code_identity
@@ -204,11 +205,11 @@ jobs:
           set +a
           ./scripts/generate_ios_export_options.sh --signType $IOS_SIGN_TYPE --bundleId $APP_ID --outputPath ios/ExportOptions.plist
           flutter build ipa --release --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --export-options-plist=ios/ExportOptions.plist
-      - name: Deploy iOS App to ${{env.DEPLOY_TARGET}}
+      - name: Deploy iOS App to ${{env.DEPLOYMENT_TARGET}}
         id: deploy-app
         run: |
           cd main-repo
-          bundle exec fastlane ios deploy target:$DEPLOY_TARGET release_notes:$RELEASE_NOTES
+          bundle exec fastlane ios deploy target:$DEPLOYMENT_TARGET release_notes:$RELEASE_NOTES
       - name: Slack Notification
         if: ${{ always() && github.event_name == 'push' }}
         uses: act10ns/slack@v2
@@ -269,30 +270,33 @@ jobs:
         env:
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: |
-          if [[ ${{ inputs.deployment == 'firebase' }} == true ]]
+          if [[ ${{ env.DEPLOYMENT_TYPE == 'firebase' }} == true ]]
             then
               echo "ANDROID_ARCHIVE_TYPE=apk" >> $GITHUB_ENV
-              echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
-              echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
+              echo "DEPLOYMENT_TARGET=firebase" >> $GITHUB_ENV
               echo "RELEASE_NOTES=${{ inputs.environment }}_${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "ANDROID_ARCHIVE_TYPE=appbundle" >> $GITHUB_ENV
-              echo "DEPLOY_TARGET=playstore" >> $GITHUB_ENV
-              echo "APP_VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+              echo "DEPLOYMENT_TARGET=playstore" >> $GITHUB_ENV
           fi
-          echo "APP_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+          if [[ ${{ env.APP_ENV == 'production' }} == true ]]
+            then
+              echo "APP_FLAVOR=production" >> $GITHUB_ENV
+            else
+              echo "APP_FLAVOR=staging" >> $GITHUB_ENV
+          fi
           echo "RELEASE_STATUS=draft" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$(echo $((GITHUB_RUN_NUMBER)))" >> $GITHUB_ENV
       - name: Build Android App (${{env.ANDROID_ARCHIVE_TYPE}} v${{ env.APP_VERSION }} build:${{ env.BUILD_NUMBER }})
         id: build-app
         run: |
           cd main-repo
-          flutter build $ANDROID_ARCHIVE_TYPE --release --flavor=$APP_ENV --build-number=$BUILD_NUMBER --build-name=$APP_VERSION
-      - name: Deploy Android App to ${{env.DEPLOY_TARGET}}
+          flutter build $ANDROID_ARCHIVE_TYPE --release --flavor=$APP_FLAVOR --build-number=$BUILD_NUMBER --build-name=$APP_VERSION
+      - name: Deploy Android App to ${{env.DEPLOYMENT_TARGET}}
         id: deploy-app
         run: |
           cd main-repo
-          bundle exec fastlane android deploy target:$DEPLOY_TARGET release_status:$RELEASE_STATUS release_notes:$RELEASE_NOTES
+          bundle exec fastlane android deploy target:$DEPLOYMENT_TARGET release_status:$RELEASE_STATUS release_notes:$RELEASE_NOTES
       - name: Slack Notification
         if: ${{ always() && github.event_name == 'push' }}
         uses: act10ns/slack@v2
