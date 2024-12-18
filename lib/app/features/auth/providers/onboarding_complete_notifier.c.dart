@@ -42,7 +42,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         final userRelaysEvent = await _buildAndCacheUserRelays(list: relayUrls);
 
         // Build and cache user chat relays
-        final userChatRelaysEvent = await _buildAndCacheUserChatRelays(
+        final userChatRelaysEvent = await _buildUserChatRelays(
           relayUrls: relayUrls,
         );
 
@@ -118,17 +118,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return userRelaysEvent;
   }
 
-  Future<EventMessage> _buildAndCacheUserChatRelays({required List<String> relayUrls}) async {
+  Future<EventMessage> _buildUserChatRelays({required List<String> relayUrls}) async {
     final userChatRelays = UserChatRelaysData(
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
     final userChatRelaysEvent = await ref.read(nostrNotifierProvider.notifier).sign(userChatRelays);
-
-    ref
-        .read(nostrCacheProvider.notifier)
-        .cache(UserChatRelaysEntity.fromEventMessage(userChatRelaysEvent));
-
     return userChatRelaysEvent;
   }
 
