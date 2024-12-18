@@ -6,8 +6,8 @@ import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/media_service/aspect_ratio.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
-class LocalImage extends ConsumerWidget {
-  const LocalImage({
+class ImageBlockLocalImage extends ConsumerWidget {
+  const ImageBlockLocalImage({
     required this.path,
     super.key,
   });
