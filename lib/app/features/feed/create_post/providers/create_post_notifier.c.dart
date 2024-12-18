@@ -9,6 +9,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/feed/services/media_upload_service.dart';
 import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
@@ -171,25 +172,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
     MediaFile file,
   ) async {
-    const maxDimension = 1024;
-    final (:width, :height) =
-        await ref.read(compressServiceProvider).getImageDimension(path: file.path);
-
-    final compressedImage = await ref.read(compressServiceProvider).compressImage(
-          file,
-          // Do not pass the second dimension to keep the aspect ratio
-          width: width > height ? maxDimension : null,
-          height: height > width ? maxDimension : null,
-          quality: 70,
-        );
-
-    final uploadResult = await ref
-        .read(nostrUploadNotifierProvider.notifier)
-        .upload(compressedImage, alt: _getFileAlt());
-
-    return (
-      fileMetadatas: [uploadResult.fileMetadata],
-      mediaAttachment: uploadResult.mediaAttachment
+    return uploadImage(
+      ref,
+      file,
+      alt: createOption == CreatePostOption.story ? FileAlt.story : FileAlt.post,
     );
   }
 

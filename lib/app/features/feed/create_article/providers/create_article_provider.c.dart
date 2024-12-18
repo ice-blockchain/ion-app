@@ -5,14 +5,13 @@ import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/services/media_upload_service.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -69,7 +68,8 @@ class CreateArticle extends _$CreateArticle {
     if (imageId == null) return null;
 
     final uploadResult = await _uploadImage(imageId);
-    files.add(uploadResult.fileMetadata);
+
+    files.addAll(uploadResult.fileMetadatas);
     return uploadResult.mediaAttachment.url;
   }
 
@@ -86,12 +86,15 @@ class CreateArticle extends _$CreateArticle {
     if (mediaIds != null && mediaIds.isNotEmpty) {
       await Future.wait(
         mediaIds.map((id) async {
-          final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
-          uploadedUrls[id] = mediaAttachment.url;
-          files.add(fileMetadata);
-          mediaAttachments.add(mediaAttachment);
+          final uploadResult = await _uploadImage(id);
+
+          uploadedUrls[id] = uploadResult.mediaAttachment.url;
+
+          files.addAll(uploadResult.fileMetadatas);
+          mediaAttachments.add(uploadResult.mediaAttachment);
         }),
       );
+
       updatedContent = _replaceImagePathsWithUrls(updatedContent, uploadedUrls);
     }
 
@@ -113,24 +116,19 @@ class CreateArticle extends _$CreateArticle {
     return jsonEncode(parsedContent);
   }
 
-  Future<UploadResult> _uploadImage(String imageId) async {
+  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
+    String imageId,
+  ) async {
     final assetEntity = await ref.read(assetEntityProvider(imageId).future);
     if (assetEntity == null) throw CreateArticleImageNotFoundException();
 
     final file = await assetEntity.file;
     if (file == null) throw CreateArticleFailedToRetrieveImageFileException();
 
-    const maxDimension = 1024;
-    final compressedImage = await ref.read(compressServiceProvider).compressImage(
-          MediaFile(path: file.path),
-          width: assetEntity.width > assetEntity.height ? maxDimension : null,
-          height: assetEntity.height > assetEntity.width ? maxDimension : null,
-          quality: 70,
-        );
-
-    return ref.read(nostrUploadNotifierProvider.notifier).upload(
-          compressedImage,
-          alt: FileAlt.article,
-        );
+    return uploadImage(
+      ref,
+      MediaFile(path: file.path),
+      alt: FileAlt.article,
+    );
   }
 }
