@@ -74,7 +74,10 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ),
                     if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
                     ScreenSideOffset.small(
-                      child: TextEditorPreview(content: articleEntity.data.content),
+                      child: TextEditorPreview(
+                        content: articleEntity.data.content,
+                        media: articleEntity.data.media,
+                      ),
                     ),
 
                     // TODO: Uncomment all those blocks when API is ready
