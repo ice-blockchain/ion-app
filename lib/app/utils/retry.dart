@@ -17,9 +17,7 @@ Future<T> withRetry<T>(
   VoidCallback? onRetry,
 }) async {
   return withRetryStream<T>(
-    () async* {
-      await task();
-    },
+    () => Stream.fromFuture(task()),
     maxRetries: maxRetries,
     initialDelay: initialDelay,
     maxDelay: maxDelay,
