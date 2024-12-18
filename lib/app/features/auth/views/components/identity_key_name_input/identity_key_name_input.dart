@@ -31,6 +31,7 @@ class IdentityKeyNameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextInput(
+      isLive: true,
       keyboardType: TextInputType.emailAddress,
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
@@ -57,7 +58,9 @@ class IdentityKeyNameInput extends StatelessWidget {
       labelText: context.i18n.common_identity_key_name,
       controller: controller,
       validator: (String? value) {
-        if (Validators.isEmpty(value)) return '';
+        if (Validators.isInvalidIdentityName(value)) {
+          return context.i18n.error_identity_name_invalid;
+        }
         return null;
       },
       textInputAction: textInputAction,

@@ -11,6 +11,10 @@ class Validators {
     return value == null || value.trim().isEmpty;
   }
 
+  static bool isInvalidIdentityName(String? value) {
+    return isEmpty(value) || !RegExp(r'^[a-z0-9._-]+$').hasMatch(value!);
+  }
+
   static bool isInvalidEmail(String? value) {
     return isEmpty(value) || !EmailValidator.validate(value!);
   }
