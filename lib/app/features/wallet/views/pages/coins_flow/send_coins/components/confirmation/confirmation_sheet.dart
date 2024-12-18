@@ -110,9 +110,7 @@ class ConfirmationSheet extends ConsumerWidget {
                   Button(
                     label: Text('${locale.button_confirm} - \$351.35'),
                     mainAxisSize: MainAxisSize.max,
-                    onPressed: () =>
-                        CoinTransactionResultRoute(cryptoAssetType: CryptoAssetType.coin)
-                            .go(context),
+                    onPressed: () => CoinTransactionResultRoute().go(context),
                   ),
                   SizedBox(height: 16.0.s),
                 ],
