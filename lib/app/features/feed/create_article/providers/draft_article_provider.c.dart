@@ -8,24 +8,24 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'create_article_provider.c.freezed.dart';
-part 'create_article_provider.c.g.dart';
+part 'draft_article_provider.c.freezed.dart';
+part 'draft_article_provider.c.g.dart';
 
 @freezed
-class CreateArticleState with _$CreateArticleState {
-  const factory CreateArticleState({
+class DraftArticleState with _$DraftArticleState {
+  const factory DraftArticleState({
     @Default('') String content,
     @Default([]) List<String> imageIds,
     MediaFile? image,
     @Default('') String title,
-  }) = _CreateArticleState;
+  }) = _DraftArticleState;
 }
 
 @Riverpod(keepAlive: true)
-class CreateArticle extends _$CreateArticle {
+class DraftArticle extends _$DraftArticle {
   @override
-  CreateArticleState build() {
-    return const CreateArticleState();
+  DraftArticleState build() {
+    return const DraftArticleState();
   }
 
   void updateArticleDetails(

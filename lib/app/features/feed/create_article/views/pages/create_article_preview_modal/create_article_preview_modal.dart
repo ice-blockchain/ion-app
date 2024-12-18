@@ -7,11 +7,11 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_article/providers/create_article_notifier.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_topics_item.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_visibility_item.dart';
-import 'package:ion/app/features/feed/providers/article/create_article_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -23,14 +23,14 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingValue = 20.0.s;
 
-    final title = ref.watch(createArticleProvider).title;
-    final selectedImage = ref.watch(createArticleProvider).image;
-    final imageIds = ref.watch(createArticleProvider).imageIds;
-    final content = ref.watch(createArticleProvider).content;
+    final title = ref.watch(draftArticleProvider).title;
+    final selectedImage = ref.watch(draftArticleProvider).image;
+    final imageIds = ref.watch(draftArticleProvider).imageIds;
+    final content = ref.watch(draftArticleProvider).content;
 
-    final isSubmitLoading = ref.watch(createArticleNotifierProvider).isLoading;
+    final isSubmitLoading = ref.watch(createArticleProvider).isLoading;
 
-    ref.displayErrors(createArticleNotifierProvider);
+    ref.displayErrors(createArticleProvider);
 
     return SheetContent(
       bottomPadding: 0,
@@ -63,15 +63,14 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
                     onPressed: () async {
-                      await ref.read(createArticleNotifierProvider.notifier).create(
+                      await ref.read(createArticleProvider.notifier).create(
                             title: title,
                             content: content,
                             imageId: selectedImage?.path,
                             mediaIds: imageIds,
                           );
 
-                      if (!ref.read(createArticleNotifierProvider).hasError &&
-                          ref.context.mounted) {
+                      if (!ref.read(createArticleProvider).hasError && ref.context.mounted) {
                         final state = GoRouterState.of(ref.context);
                         ref.context.go(state.currentTab.baseRouteLocation);
                       }

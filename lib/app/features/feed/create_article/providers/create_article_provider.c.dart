@@ -16,10 +16,10 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'create_article_notifier.c.g.dart';
+part 'create_article_provider.c.g.dart';
 
 @riverpod
-class CreateArticleNotifier extends _$CreateArticleNotifier {
+class CreateArticle extends _$CreateArticle {
   @override
   FutureOr<void> build() {}
 
