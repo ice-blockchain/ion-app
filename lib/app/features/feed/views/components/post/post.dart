@@ -6,6 +6,7 @@ import 'package:ion/app/components/counter_items_footer/counter_items_footer.dar
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
@@ -37,6 +38,10 @@ class Post extends ConsumerWidget {
       return const Skeleton(child: PostSkeleton());
     }
 
+    // final isBookmarked =
+    //     ref.watch(isBookmarkedProvider(postEntity.id, type: BookmarksSetType.posts));
+    // print('IS POST BOOKMARKED: $isBookmarked, id: ${postEntity.id}');
+
     final framedEvent = _getFramedEventReference(postEntity);
 
     return Column(
@@ -48,6 +53,8 @@ class Post extends ConsumerWidget {
               pubkey: eventReference.pubkey,
               trailing: UserInfoMenu(pubkey: eventReference.pubkey),
             ),
+        SizedBox(height: 10.0.s),
+        BookmarkButton.post(id: postEntity.id),
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (framedEvent != null) _FramedEvent(eventReference: framedEvent),
