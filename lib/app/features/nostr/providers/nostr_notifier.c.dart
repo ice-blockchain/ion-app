@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
@@ -211,6 +212,20 @@ class NostrNotifier extends _$NostrNotifier {
           // TODO: support multiple urls to allow retrying on different relays
           return await ref.read(relayProvider(actionSource.url).future);
         }
+      case ActionSourceCurrentUserChat():
+        {
+          final pubkey = ref.read(currentPubkeySelectorProvider);
+          if (pubkey == null) {
+            throw UserMasterPubkeyNotFoundException();
+          }
+          final relayUrl = await _getUserChatRelays(pubkey);
+          return await ref.read(relayProvider(relayUrl).future);
+        }
+      case ActionSourceUserChat():
+        {
+          final relayUrl = await _getUserChatRelays(actionSource.pubkey);
+          return await ref.read(relayProvider(relayUrl).future);
+        }
     }
   }
 
@@ -221,6 +236,14 @@ class NostrNotifier extends _$NostrNotifier {
       throw UserRelaysNotFoundException();
     }
     return userRelays.first;
+  }
+
+  Future<String> _getUserChatRelays(String pubkey) async {
+    final userRelays = await ref.read(userChatRelaysProvider(pubkey).future);
+    if (userRelays == null) {
+      throw UserChatRelaysNotFoundException();
+    }
+    return userRelays.data.list.random.url;
   }
 
   NostrEntity _parseAndCache(EventMessage event) {
