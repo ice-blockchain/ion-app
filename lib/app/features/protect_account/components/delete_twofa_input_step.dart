@@ -15,6 +15,7 @@ import 'package:ion/app/features/protect_account/authenticator/data/adapter/twof
 import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class DeleteTwoFAInputStep extends HookConsumerWidget {
   const DeleteTwoFAInputStep({
@@ -64,10 +65,12 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
                           ref.context,
                           (child) => RiverpodVerifyIdentityRequestBuilder(
                             provider: requestTwoFaCodeNotifierProvider,
-                            requestWithVerifyIdentity: (_) {
-                              ref
-                                  .read(requestTwoFaCodeNotifierProvider.notifier)
-                                  .requestTwoFaCode(twoFaType);
+                            requestWithVerifyIdentity:
+                                (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) {
+                              ref.read(requestTwoFaCodeNotifierProvider.notifier).requestTwoFaCode(
+                                    twoFaType,
+                                    onVerifyIdentity,
+                                  );
                             },
                             child: child,
                           ),
@@ -108,9 +111,10 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
       ref.context,
       (child) => RiverpodVerifyIdentityRequestBuilder(
         provider: deleteTwoFANotifierProvider,
-        requestWithVerifyIdentity: (_) {
+        requestWithVerifyIdentity: (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) {
           ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
             TwoFaTypeAdapter(twoFaToDelete).twoFAType,
+            onVerifyIdentity,
             [
               for (final controller in controllers.entries)
                 TwoFaTypeAdapter(controller.key, controller.value.text).twoFAType,

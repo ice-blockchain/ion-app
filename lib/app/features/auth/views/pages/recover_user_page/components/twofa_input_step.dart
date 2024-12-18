@@ -13,10 +13,13 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
+import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_password.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class TwoFAInputStep extends HookConsumerWidget {
   const TwoFAInputStep({
@@ -43,6 +46,8 @@ class TwoFAInputStep extends HookConsumerWidget {
       for (final type in twoFaTypes) type: useTextEditingController(),
     };
 
+    final onGetPassword = useOnGetPassword(context);
+
     return SheetContent(
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
@@ -67,7 +72,18 @@ class TwoFAInputStep extends HookConsumerWidget {
                               onRequestCode: () async {
                                 await ref
                                     .read(requestTwoFaCodeNotifierProvider.notifier)
-                                    .requestRecoveryTwoFaCode(twoFaType, recoveryIdentityKeyName);
+                                    .requestRecoveryTwoFaCode(twoFaType, recoveryIdentityKeyName, ({
+                                  required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
+                                  required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
+                                }) {
+                                  return ref.watch(
+                                    verifyUserIdentityProvider(
+                                      onGetPassword: onGetPassword,
+                                      onPasswordFlow: onPasswordFlow,
+                                      onPasskeyFlow: onPasskeyFlow,
+                                    ).future,
+                                  );
+                                });
                               },
                               isSending: isRequesting,
                             ),

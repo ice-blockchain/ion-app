@@ -91,11 +91,13 @@ class IONIdentityAuth {
 
   Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
+    required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
     Map<String, String>? verificationCodes,
     String? recoveryIdentityKeyName,
   }) =>
       twoFAService.requestTwoFACode(
         twoFAType: twoFAType,
+        onVerifyIdentity: onVerifyIdentity,
         verificationCodes: verificationCodes,
         recoveryIdentityKeyName: recoveryIdentityKeyName,
       );
@@ -103,8 +105,9 @@ class IONIdentityAuth {
   Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);
 
   Future<void> deleteTwoFA(
-    TwoFAType twoFAType, [
+    TwoFAType twoFAType,
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity, [
     List<TwoFAType> verificationCodes = const [],
   ]) =>
-      twoFAService.deleteTwoFA(twoFAType, verificationCodes);
+      twoFAService.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
 }

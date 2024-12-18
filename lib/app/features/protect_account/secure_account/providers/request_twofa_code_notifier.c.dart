@@ -16,7 +16,10 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> requestTwoFaCode(TwoFaType twoFaType) async {
+  Future<void> requestTwoFaCode(
+    TwoFaType twoFaType,
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  ) async {
     if (state.isLoading) {
       return;
     }
@@ -27,13 +30,14 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
       final client = await ref.read(ionIdentityClientProvider.future);
       final twoFAType = await _getTwoFAType(twoFaType);
 
-      await client.auth.requestTwoFACode(twoFAType: twoFAType);
+      await client.auth.requestTwoFACode(twoFAType: twoFAType, onVerifyIdentity: onVerifyIdentity);
     });
   }
 
   Future<void> requestRecoveryTwoFaCode(
     TwoFaType twoFaType,
     String recoveryIdentityKeyName,
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   ) async {
     if (state.isLoading) {
       return;
@@ -48,6 +52,7 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
       await client(username: '').auth.requestTwoFACode(
             twoFAType: twoFAType,
             recoveryIdentityKeyName: recoveryIdentityKeyName,
+            onVerifyIdentity: onVerifyIdentity,
           );
     });
   }

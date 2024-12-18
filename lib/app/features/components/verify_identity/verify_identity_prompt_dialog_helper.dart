@@ -78,24 +78,24 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
     final onGetPassword = useOnGetPassword(context);
     useOnInit(
       () {
-        try {
-          requestWithVerifyIdentity(({
-            required OnPasswordFlow<P> onPasswordFlow,
-            required OnPasskeyFlow<P> onPasskeyFlow,
-          }) {
-            return ref.watch(
+        requestWithVerifyIdentity(({
+          required OnPasswordFlow<P> onPasswordFlow,
+          required OnPasskeyFlow<P> onPasskeyFlow,
+        }) async {
+          try {
+            return await ref.watch(
               verifyUserIdentityProvider(
                 onGetPassword: onGetPassword,
                 onPasswordFlow: onPasswordFlow,
                 onPasskeyFlow: onPasskeyFlow,
               ).future,
             );
-          });
-        } finally {
-          if (context.mounted) {
-            Navigator.of(context).pop();
+          } finally {
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           }
-        }
+        });
       },
       <Object>[onGetPassword],
     );

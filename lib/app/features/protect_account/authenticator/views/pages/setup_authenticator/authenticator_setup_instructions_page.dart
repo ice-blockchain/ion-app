@@ -10,8 +10,10 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
+import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_password.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/components/copy_key_card.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
+import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -28,10 +30,25 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
     final locale = context.i18n;
 
     final code = useState<String?>(null);
+    final onGetPassword = useOnGetPassword(context);
 
-    useOnInit(() async {
-      code.value = await requestTwoFACode(ref, const TwoFAType.authenticator());
-    });
+    useOnInit(
+      () async {
+        code.value = await requestTwoFACode(ref, const TwoFAType.authenticator(), ({
+          required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
+          required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
+        }) {
+          return ref.watch(
+            verifyUserIdentityProvider(
+              onGetPassword: onGetPassword,
+              onPasswordFlow: onPasswordFlow,
+              onPasskeyFlow: onPasskeyFlow,
+            ).future,
+          );
+        });
+      },
+      [onGetPassword],
+    );
 
     return SheetContent(
       body: CustomScrollView(

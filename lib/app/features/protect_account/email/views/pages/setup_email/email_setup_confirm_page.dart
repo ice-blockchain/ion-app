@@ -53,8 +53,13 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                     onRequestCode: () => guardPasskeyDialog(
                       context,
                       (child) => HookVerifyIdentityRequestBuilder(
-                        requestWithVerifyIdentity: (_) =>
-                            requestTwoFACode(ref, TwoFAType.email(email)),
+                        requestWithVerifyIdentity:
+                            (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) =>
+                                requestTwoFACode(
+                          ref,
+                          TwoFAType.email(email),
+                          onVerifyIdentity,
+                        ),
                         child: child,
                       ),
                     ),
