@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
@@ -18,6 +19,7 @@ class UserChatRelaysEntity with _$UserChatRelaysEntity, NostrEntity implements C
     required String id,
     required String pubkey,
     required String signature,
+    required String masterPubkey,
     required DateTime createdAt,
     required UserChatRelaysData data,
   }) = _UserChatRelaysEntity;
@@ -33,6 +35,7 @@ class UserChatRelaysEntity with _$UserChatRelaysEntity, NostrEntity implements C
     return UserChatRelaysEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: UserChatRelaysData.fromEventMessage(eventMessage),
@@ -41,9 +44,6 @@ class UserChatRelaysEntity with _$UserChatRelaysEntity, NostrEntity implements C
 
   @override
   String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  @override
-  String get masterPubkey => '';
 
   List<String> get urls => data.list.map((relay) => relay.url).toList();
 
@@ -64,7 +64,7 @@ class UserChatRelaysData with _$UserChatRelaysData implements EventSerializable 
     return UserChatRelaysData(
       list: [
         for (final tag in eventMessage.tags)
-          if (tag[0] == 'relay') fromTag(tag),
+          if (tag[0] == 'relay') fromRelayTag(tag),
       ],
     );
   }
@@ -81,12 +81,12 @@ class UserChatRelaysData with _$UserChatRelaysData implements EventSerializable 
       kind: UserChatRelaysEntity.kind,
       tags: [
         ...tags,
-        ...list.map(toTag),
+        ...list.map(toRelayTag),
       ],
       content: '',
     );
   }
 
-  static List<String> toTag(UserRelay relay) => ['relay', relay.url];
-  static UserRelay fromTag(List<String> tag) => UserRelay(url: tag[1]);
+  static List<String> toRelayTag(UserRelay relay) => ['relay', relay.url];
+  static UserRelay fromRelayTag(List<String> tag) => UserRelay(url: tag[1]);
 }
