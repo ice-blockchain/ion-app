@@ -204,3 +204,7 @@ class CreateArticleImageNotFoundException extends IONException {
 class CreateArticleFailedToRetrieveImageFileException extends IONException {
   CreateArticleFailedToRetrieveImageFileException() : super(10042, 'Failed to retrieve image file');
 }
+
+class CreateArticleFailedException extends IONException {
+  CreateArticleFailedException(dynamic error) : super(10041, 'Failed to create article: $error');
+}
