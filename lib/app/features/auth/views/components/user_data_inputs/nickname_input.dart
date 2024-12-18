@@ -34,6 +34,8 @@ class NicknameInput extends StatelessWidget {
       isLive: isLive,
       showNoErrorsIndicator: isLive,
       validator: (String? value) {
+        if (Validators.isEmpty(value)) return '';
+
         if (Validators.isInvalidNickname(value)) {
           return context.i18n.error_nickname_invalid;
         }
