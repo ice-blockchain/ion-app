@@ -185,7 +185,7 @@ jobs:
             then
               echo "IOS_SIGN_TYPE=adhoc" >> $GITHUB_ENV
               echo "DEPLOYMENT_TARGET=firebase" >> $GITHUB_ENV
-              echo "RELEASE_NOTES=${{ inputs.environment }}_${{ github.ref_name }}" >> $GITHUB_ENV
+              echo "RELEASE_NOTES=${{ env.APP_ENV }}_${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "IOS_SIGN_TYPE=appstore" >> $GITHUB_ENV
               echo "DEPLOYMENT_TARGET=testflight" >> $GITHUB_ENV
@@ -274,7 +274,7 @@ jobs:
             then
               echo "ANDROID_ARCHIVE_TYPE=apk" >> $GITHUB_ENV
               echo "DEPLOYMENT_TARGET=firebase" >> $GITHUB_ENV
-              echo "RELEASE_NOTES=${{ inputs.environment }}_${{ github.ref_name }}" >> $GITHUB_ENV
+              echo "RELEASE_NOTES=${{ env.APP_ENV }}_${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "ANDROID_ARCHIVE_TYPE=appbundle" >> $GITHUB_ENV
               echo "DEPLOYMENT_TARGET=playstore" >> $GITHUB_ENV
