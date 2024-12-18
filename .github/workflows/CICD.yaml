@@ -10,6 +10,7 @@ on:
         options:
           - staging
           - production
+          - testnet
       deployment:
         description: "Deployment target"
         required: true
@@ -181,7 +182,7 @@ jobs:
               echo "IOS_SIGN_TYPE=adhoc" >> $GITHUB_ENV
               echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
               echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
-              echo "RELEASE_NOTES=${{ github.ref_name }}" >> $GITHUB_ENV
+              echo "RELEASE_NOTES=${{ inputs.environment }}_${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "IOS_SIGN_TYPE=appstore" >> $GITHUB_ENV
               echo "DEPLOY_TARGET=testflight" >> $GITHUB_ENV
@@ -273,7 +274,7 @@ jobs:
               echo "ANDROID_ARCHIVE_TYPE=apk" >> $GITHUB_ENV
               echo "DEPLOY_TARGET=firebase" >> $GITHUB_ENV
               echo "APP_VERSION=9.9.9" >> $GITHUB_ENV
-              echo "RELEASE_NOTES=release_notes:${{ github.ref_name }}" >> $GITHUB_ENV
+              echo "RELEASE_NOTES=${{ inputs.environment }}_${{ github.ref_name }}" >> $GITHUB_ENV
             else
               echo "ANDROID_ARCHIVE_TYPE=appbundle" >> $GITHUB_ENV
               echo "DEPLOY_TARGET=playstore" >> $GITHUB_ENV
@@ -291,7 +292,7 @@ jobs:
         id: deploy-app
         run: |
           cd main-repo
-          bundle exec fastlane android deploy target:$DEPLOY_TARGET release_status:$RELEASE_STATUS $RELEASE_NOTES
+          bundle exec fastlane android deploy target:$DEPLOY_TARGET release_status:$RELEASE_STATUS release_notes:$RELEASE_NOTES
       - name: Slack Notification
         if: ${{ always() && github.event_name == 'push' }}
         uses: act10ns/slack@v2
