@@ -47,6 +47,7 @@ class NostrNotifier extends _$NostrNotifier {
         }
         return null;
       },
+      retryWhen: (error) => error is RelayRequestFailedException,
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -101,6 +102,7 @@ class NostrNotifier extends _$NostrNotifier {
           }
         }
       },
+      retryWhen: (error) => error is RelayRequestFailedException,
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },

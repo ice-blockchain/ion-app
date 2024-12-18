@@ -15,6 +15,7 @@ Future<T> withRetry<T>(
   double minJitter = 0.5,
   double maxJitter = 1.5,
   VoidCallback? onRetry,
+  bool Function(Object)? retryWhen,
 }) async {
   return withRetryStream<T>(
     () => Stream.fromFuture(task()),
@@ -25,6 +26,7 @@ Future<T> withRetry<T>(
     minJitter: minJitter,
     maxJitter: maxJitter,
     onRetry: onRetry,
+    retryWhen: retryWhen,
   ).first;
 }
 
@@ -37,6 +39,7 @@ Stream<T> withRetryStream<T>(
   double minJitter = 0.5,
   double maxJitter = 1.5,
   VoidCallback? onRetry,
+  bool Function(Object)? retryWhen,
 }) async* {
   var attempt = 0;
   var delay = initialDelay;
@@ -48,6 +51,11 @@ Stream<T> withRetryStream<T>(
       }
       return;
     } catch (e) {
+      final shouldRetry = retryWhen?.call(e) ?? true;
+      if (!shouldRetry) {
+        rethrow;
+      }
+
       Logger.log(e.toString());
       attempt++;
       if (attempt >= maxRetries) {
