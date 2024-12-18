@@ -4,11 +4,13 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/services/database/ion_database.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
   late IONDatabase database;
+  late DBConversationsNotifier conversationsNotifier;
 
   setUp(() async {
     database = IONDatabase.test(
@@ -17,15 +19,16 @@ void main() {
         closeStreamsSynchronously: true,
       ),
     );
+    conversationsNotifier = DBConversationsNotifier(database: database);
   });
 
   tearDown(() async {
     await database.close();
   });
 
-  group('Database', () {
+  group('Database conversations', () {
     test('Insert initial one-to-one conversation', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -49,7 +52,7 @@ void main() {
     });
 
     test('Insert initial one-to-one conversation and first message', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -63,7 +66,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -81,7 +84,7 @@ void main() {
 
       final conversationMessages = await database.select(database.conversationMessagesTable).get();
 
-      final conversations = await database.getAllConversations();
+      final conversations = await conversationsNotifier.getAllConversations();
 
       expect(eventMessages.length, 2);
       expect(conversationMessages.length, 2);
@@ -90,7 +93,7 @@ void main() {
     });
 
     test('Insert initial one-to-one conversation, first message and reply', () async {
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '0',
           pubkey: 'pubkey0',
@@ -104,7 +107,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '1',
           pubkey: 'pubkey0',
@@ -118,7 +121,7 @@ void main() {
         ),
       );
 
-      await database.insertEventMessage(
+      await conversationsNotifier.insertEventMessage(
         EventMessage(
           id: '2',
           pubkey: 'pubkey1',
@@ -132,257 +135,657 @@ void main() {
         ),
       );
 
-      final conversations = await database.getAllConversations();
+      final conversations = await conversationsNotifier.getAllConversations();
 
       expect(conversations.length, 1);
       expect(conversations.single.content, 'Reply to the first message');
     });
+
+    test('Insert initial group conversation', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey1'],
+            ['subject', 'Group subject'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      final eventMessage = await database.select(database.eventMessagesTable).getSingle();
+
+      final conversationMessage =
+          await database.select(database.conversationMessagesTable).getSingle();
+
+      final conversations = PrivateDirectMessageEntity.fromEventMessage(
+        (await conversationsNotifier.getAllConversations()).single,
+      );
+
+      expect(eventMessage.id, '0');
+      expect(conversationMessage.eventMessageId, eventMessage.id);
+      expect(conversations.data.relatedSubject?.value, 'Group subject');
+    });
+
+    test('Insert initial group conversation and first message', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: 'First message',
+          sig: null,
+        ),
+      );
+
+      final conversations = PrivateDirectMessageEntity.fromEventMessage(
+        (await conversationsNotifier.getAllConversations()).single,
+      );
+
+      expect(
+        conversations.data.content.map((m) => m.text).join(' '),
+        'First message',
+      );
+    });
+
+    test('Insert initial group conversation, first message and reply', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: 'First message',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey2',
+          createdAt: DateTime.now().add(const Duration(seconds: 3)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey0'],
+            ['p', 'pubkey1'],
+            ['subject', 'Group subject'],
+          ],
+          content: 'Reply to first message',
+          sig: null,
+        ),
+      );
+
+      final conversations = PrivateDirectMessageEntity.fromEventMessage(
+        (await conversationsNotifier.getAllConversations()).single,
+      );
+
+      expect(
+        conversations.data.content.map((m) => m.text).join(' '),
+        'Reply to first message',
+      );
+    });
+
+    test('Insert initial group conversation, first message and change subject', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: 'First message',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 3)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject changed'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      final conversations = PrivateDirectMessageEntity.fromEventMessage(
+        (await conversationsNotifier.getAllConversations()).single,
+      );
+
+      expect(conversations.data.relatedSubject?.value, 'Group subject changed');
+    });
+
+    test('Insert initial group conversation, first message and change participants', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+            ['p', 'pubkey2'],
+            ['subject', 'Group subject'],
+          ],
+          content: 'First message',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 3)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey3'],
+            ['p', 'pubkey2'],
+            ['p', 'pubkey1'],
+            ['subject', 'Group subject'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      final conversations = PrivateDirectMessageEntity.fromEventMessage(
+        (await conversationsNotifier.getAllConversations()).single,
+      );
+
+      expect(conversations.data.relatedPubkeys?.length, 3);
+      expect(conversations.data.relatedSubject?.value, 'Group subject');
+    });
   });
 
-  test('Insert initial group conversation', () async {
-    await database.insertEventMessage(
-      EventMessage(
-        id: '0',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now(),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey1'],
-          ['subject', 'Group subject'],
-        ],
-        content: '',
-        sig: null,
-      ),
-    );
+  group('Database conversation message status', () {
+    test('Mark conversation message as sent', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
 
-    final eventMessage = await database.select(database.eventMessagesTable).getSingle();
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'First message',
+          sig: null,
+        ),
+      );
 
-    final conversationMessage =
-        await database.select(database.conversationMessagesTable).getSingle();
+      var conversationMessage = await (database.select(database.conversationMessagesTable)
+            ..where((table) => table.eventMessageId.equals('1')))
+          .getSingle();
 
-    final conversations = PrivateDirectMessageEntity.fromEventMessage(
-      (await database.getAllConversations()).single,
-    );
+      expect(conversationMessage.status, DeliveryStatus.none);
 
-    expect(eventMessage.id, '0');
-    expect(conversationMessage.eventMessageId, eventMessage.id);
-    expect(conversations.data.relatedSubject?.value, 'Group subject');
+      await conversationsNotifier.markConversationMessageAsSent('1');
+      conversationMessage = await (database.select(database.conversationMessagesTable)
+            ..where((table) => table.eventMessageId.equals('1')))
+          .getSingle();
+
+      expect(conversationMessage.eventMessageId, '1');
+      expect(conversationMessage.status, DeliveryStatus.isSent);
+    });
+
+    test('Check if message is marked as received', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'First message',
+          sig: null,
+        ),
+      );
+
+      var conversationMessage = await (database.select(database.conversationMessagesTable)
+            ..where((table) => table.eventMessageId.equals('1')))
+          .getSingle();
+
+      await conversationsNotifier.markConversationMessageAsSent('1');
+      expect(conversationMessage.status, DeliveryStatus.none);
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey1',
+          createdAt: DateTime.now().add(const Duration(seconds: 2)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: 'received',
+          sig: null,
+        ),
+      );
+
+      conversationMessage = await (database.select(database.conversationMessagesTable)
+            ..where((table) => table.eventMessageId.equals('1')))
+          .getSingle();
+
+      expect(conversationMessage.eventMessageId, '1');
+      expect(conversationMessage.status, DeliveryStatus.isReceived);
+    });
+
+    test('Check if messages are marked as read', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'First received message',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 2)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'Second not received message',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '3',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 3)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'Third received message marked as read',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.markConversationMessageAsSent('1');
+      await conversationsNotifier.markConversationMessageAsSent('2');
+      await conversationsNotifier.markConversationMessageAsSent('3');
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '4',
+          pubkey: 'pubkey1',
+          createdAt: DateTime.now().add(const Duration(seconds: 4)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: 'received',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '5',
+          pubkey: 'pubkey1',
+          createdAt: DateTime.now().add(const Duration(seconds: 5)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '3'],
+          ],
+          content: 'received',
+          sig: null,
+        ),
+      );
+
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '6',
+          pubkey: 'pubkey1',
+          createdAt: DateTime.now().add(const Duration(seconds: 6)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '3'],
+          ],
+          content: 'read',
+          sig: null,
+        ),
+      );
+
+      final firstConversationMessage = await (database.select(database.conversationMessagesTable)
+            ..where((table) => table.eventMessageId.equals('1')))
+          .getSingle();
+
+      final secondConversationMessage = await (database.select(database.conversationMessagesTable)
+            ..where((table) => table.eventMessageId.equals('2')))
+          .getSingle();
+
+      final thirdConversationMessage = await (database.select(database.conversationMessagesTable)
+            ..where((table) => table.eventMessageId.equals('3')))
+          .getSingle();
+
+      expect(firstConversationMessage.eventMessageId, '1');
+      expect(secondConversationMessage.eventMessageId, '2');
+      expect(thirdConversationMessage.eventMessageId, '3');
+
+      expect(firstConversationMessage.status, DeliveryStatus.isRead);
+      expect(secondConversationMessage.status, DeliveryStatus.isSent);
+      expect(thirdConversationMessage.status, DeliveryStatus.isRead);
+    });
   });
 
-  test('Insert initial group conversation and first message', () async {
-    await database.insertEventMessage(
-      EventMessage(
-        id: '0',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now(),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: '',
-        sig: null,
-      ),
-    );
+  group('Database conversation message reaction', () {
+    test('Reaction message inserted into DB', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '0'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
 
-    await database.insertEventMessage(
-      EventMessage(
-        id: '1',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now().add(const Duration(seconds: 1)),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: 'First message',
-        sig: null,
-      ),
-    );
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '0'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
 
-    final conversations = PrivateDirectMessageEntity.fromEventMessage(
-      (await database.getAllConversations()).single,
-    );
+      final conversationMessages = await database.select(database.eventMessagesTable).get();
+      final conversationReactions =
+          await database.select(database.conversationReactionsTable).get();
 
-    expect(
-      conversations.data.content.map((m) => m.text).join(' '),
-      'First message',
-    );
-  });
+      expect(conversationMessages.length, 2);
+      expect(conversationReactions.length, 2);
+      expect(
+        conversationReactions.first.messageId,
+        conversationReactions.last.messageId,
+      );
+      expect(
+        conversationReactions.first.content,
+        ':clap:',
+      );
+    });
 
-  test('Insert initial group conversation, first message and reply', () async {
-    await database.insertEventMessage(
-      EventMessage(
-        id: '0',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now(),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: '',
-        sig: null,
-      ),
-    );
+    test('Get reactions for the message', () async {
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '0',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now(),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: '',
+          sig: null,
+        ),
+      );
 
-    await database.insertEventMessage(
-      EventMessage(
-        id: '1',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now().add(const Duration(seconds: 1)),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: 'First message',
-        sig: null,
-      ),
-    );
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '1',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 1)),
+          kind: PrivateDirectMessageEntity.kind,
+          tags: const [
+            ['p', 'pubkey1'],
+          ],
+          content: 'First message with reactions',
+          sig: null,
+        ),
+      );
 
-    await database.insertEventMessage(
-      EventMessage(
-        id: '2',
-        pubkey: 'pubkey2',
-        createdAt: DateTime.now().add(const Duration(seconds: 3)),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey0'],
-          ['p', 'pubkey1'],
-          ['subject', 'Group subject'],
-        ],
-        content: 'Reply to first message',
-        sig: null,
-      ),
-    );
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '2',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 2)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
 
-    final conversations = PrivateDirectMessageEntity.fromEventMessage(
-      (await database.getAllConversations()).single,
-    );
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '3',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 3)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: ':clap:',
+          sig: null,
+        ),
+      );
 
-    expect(
-      conversations.data.content.map((m) => m.text).join(' '),
-      'Reply to first message',
-    );
-  });
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '4',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 4)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '1'],
+          ],
+          content: ':smile:',
+          sig: null,
+        ),
+      );
 
-  test('Insert initial group conversation, first message and change subject', () async {
-    await database.insertEventMessage(
-      EventMessage(
-        id: '0',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now(),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: '',
-        sig: null,
-      ),
-    );
+      await conversationsNotifier.insertEventMessage(
+        EventMessage(
+          id: '5',
+          pubkey: 'pubkey0',
+          createdAt: DateTime.now().add(const Duration(seconds: 5)),
+          kind: ReactionEntity.kind,
+          tags: const [
+            ['k', '14'],
+            ['p', 'pubkey0'],
+            ['e', '0'],
+          ],
+          content: ':smile:',
+          sig: null,
+        ),
+      );
 
-    await database.insertEventMessage(
-      EventMessage(
-        id: '1',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now().add(const Duration(seconds: 1)),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: 'First message',
-        sig: null,
-      ),
-    );
+      final eventMessages = await database.select(database.eventMessagesTable).get();
+      final conversationReactions =
+          await database.select(database.conversationReactionsTable).get();
 
-    await database.insertEventMessage(
-      EventMessage(
-        id: '2',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now().add(const Duration(seconds: 3)),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject changed'],
-        ],
-        content: '',
-        sig: null,
-      ),
-    );
+      expect(eventMessages.length, 6);
+      expect(conversationReactions.length, 4);
 
-    final conversations = PrivateDirectMessageEntity.fromEventMessage(
-      (await database.getAllConversations()).single,
-    );
+      final conversationMessage = await (database.select(database.eventMessagesTable)
+            ..where((table) => table.id.equals('1')))
+          .getSingle();
 
-    expect(conversations.data.relatedSubject?.value, 'Group subject changed');
-  });
+      final reactions = await conversationsNotifier.getMessageReactions(conversationMessage.id);
 
-  test('Insert initial group conversation, first message and change participants', () async {
-    await database.insertEventMessage(
-      EventMessage(
-        id: '0',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now(),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: '',
-        sig: null,
-      ),
-    );
-
-    await database.insertEventMessage(
-      EventMessage(
-        id: '1',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now().add(const Duration(seconds: 1)),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey1'],
-          ['p', 'pubkey2'],
-          ['subject', 'Group subject'],
-        ],
-        content: 'First message',
-        sig: null,
-      ),
-    );
-
-    await database.insertEventMessage(
-      EventMessage(
-        id: '2',
-        pubkey: 'pubkey0',
-        createdAt: DateTime.now().add(const Duration(seconds: 3)),
-        kind: PrivateDirectMessageEntity.kind,
-        tags: const [
-          ['p', 'pubkey3'],
-          ['p', 'pubkey2'],
-          ['p', 'pubkey1'],
-          ['subject', 'Group subject'],
-        ],
-        content: '',
-        sig: null,
-      ),
-    );
-
-    final conversations = PrivateDirectMessageEntity.fromEventMessage(
-      (await database.getAllConversations()).single,
-    );
-
-    expect(conversations.data.relatedPubkeys?.length, 3);
-    expect(conversations.data.relatedSubject?.value, 'Group subject');
+      expect(reactions.length, 3);
+      expect(
+        reactions.map((r) => r.data.content).toList(),
+        [':clap:', ':clap:', ':smile:'],
+      );
+    });
   });
 }
