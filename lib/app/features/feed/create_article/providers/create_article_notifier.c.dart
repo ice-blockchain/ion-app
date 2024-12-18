@@ -37,23 +37,40 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
       final files = <FileMetadata>[];
       final mediaAttachments = <MediaAttachment>[];
 
-      content = await _prepareContent(content, mediaIds, files, mediaAttachments);
+      final mainImageFuture = _getUploadImage(imageId, files);
+      final contentFuture = _prepareContent(content, mediaIds, files, mediaAttachments);
 
-      final imageUrl = await _getUploadImage(imageId);
-      final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(content);
+      try {
+        final results = await Future.wait([mainImageFuture, contentFuture]);
 
-      final articleData = ArticleData(
-        title: title,
-        summary: summary,
-        image: imageUrl,
-        content: content,
-        media: {for (final attachment in mediaAttachments) attachment.url: attachment},
-        relatedHashtags: relatedHashtags,
-        publishedAt: publishedAt ?? DateTime.now(),
-      );
+        final imageUrl = (results.isNotEmpty && results[0] != null) ? results[0] : null;
+        final updatedContent = (results.length > 1 && results[1] != null) ? results[1]! : '';
 
-      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
+        final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(updatedContent);
+
+        final articleData = ArticleData(
+          title: title,
+          summary: summary,
+          image: imageUrl,
+          content: updatedContent,
+          media: {for (final attachment in mediaAttachments) attachment.url: attachment},
+          relatedHashtags: relatedHashtags,
+          publishedAt: publishedAt ?? DateTime.now(),
+        );
+
+        await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
+      } catch (error) {
+        throw CreateArticleFailedException(error);
+      }
     });
+  }
+
+  Future<String?> _getUploadImage(String? imageId, List<FileMetadata> files) async {
+    if (imageId == null) return null;
+
+    final uploadResult = await _uploadImage(imageId);
+    files.add(uploadResult.fileMetadata);
+    return uploadResult.mediaAttachment.url;
   }
 
   Future<String> _prepareContent(
@@ -94,15 +111,6 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
     }
 
     return jsonEncode(parsedContent);
-  }
-
-  Future<String?> _getUploadImage(String? imageId) async {
-    String? imageUrl;
-    if (imageId != null) {
-      final uploadResult = await _uploadImage(imageId);
-      imageUrl = uploadResult.mediaAttachment.url;
-    }
-    return imageUrl;
   }
 
   Future<UploadResult> _uploadImage(String imageId) async {
