@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/user_info_summary/user_info_tile.dart';
@@ -28,22 +25,9 @@ class UserInfoSummary extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final random = Random();
-    final technology = useMemoized(() => random.nextBool() ? 'Technology' : null, []);
-    final date = useMemoized(() => random.nextBool() ? 'October 2024' : null, []);
-    final address = useMemoized(() => random.nextBool() ? 'Vienna, Austria' : null, []);
     final website = userMetadataValue.data.website;
 
     final tiles = <Widget>[];
-
-    if (technology != null && technology.isNotEmpty) {
-      tiles.add(
-        UserInfoTile(
-          title: technology,
-          assetName: Assets.svg.iconBlockchain,
-        ),
-      );
-    }
 
     if (website != null && website.isNotEmpty) {
       tiles.add(
@@ -55,23 +39,12 @@ class UserInfoSummary extends HookConsumerWidget {
       );
     }
 
-    if (date != null && date.isNotEmpty) {
-      tiles.add(
-        UserInfoTile(
-          title: date,
-          assetName: Assets.svg.iconFieldCalendar,
-        ),
-      );
-    }
-
-    if (address != null && address.isNotEmpty) {
-      tiles.add(
-        UserInfoTile(
-          title: address,
-          assetName: Assets.svg.iconProfileLocation,
-        ),
-      );
-    }
+    tiles.add(
+      UserInfoTile(
+        title: context.i18n.profile_creation_date,
+        assetName: Assets.svg.iconFieldCalendar,
+      ),
+    );
 
     if (isCurrentUserFollowed) {
       tiles.add(

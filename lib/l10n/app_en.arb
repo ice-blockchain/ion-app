@@ -221,6 +221,7 @@
   "profile_send_coin": "Send coin",
   "profile_request_funds": "Request funds",
   "profile_empty_state": "There's nothing here yet",
+  "profile_creation_date": "December 2024",
   "notifications_title": "Notifications",
   "notifications_type_comments": "Comments",
   "notifications_type_followers": "Followers",
