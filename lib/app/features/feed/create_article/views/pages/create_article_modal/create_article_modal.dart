@@ -63,6 +63,7 @@ class CreateArticleModal extends HookConsumerWidget {
                   borderColor: context.theme.appColors.secondaryBackground,
                   disabled: !articleState.isButtonEnabled,
                   onPressed: () {
+                    articleState.onNext(ref);
                     ArticlePreviewRoute().push<void>(context);
                   },
                 ),

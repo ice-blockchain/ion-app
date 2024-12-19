@@ -36,14 +36,14 @@ class MediaAspectRatioResult {
   bool get isVertical => aspectRatio < 1;
 }
 
+const minVerticalMediaAspectRatio = 0.85;
+const maxHorizontalMediaAspectRatio = 1.63;
+
 /// Calculates the aspect ratio for a list of media items.
 ///
 /// The aspect ratio is calculated by finding an average of the
 /// dominant category (horizontal or vertical).
 MediaAspectRatioResult attachedMediaAspectRatio(Iterable<MediaAspectRatio> ratioProviders) {
-  const minVerticalMediaAspectRatio = 0.85;
-  const maxHorizontalMediaAspectRatio = 1.63;
-
   if (ratioProviders.isEmpty) {
     return const MediaAspectRatioResult(0);
   }

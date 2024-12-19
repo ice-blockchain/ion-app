@@ -1,31 +1,29 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_topics_item.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_arcticle_visibility_item.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/views/components/article/article.dart';
-import 'package:ion/app/features/feed/views/components/article/mocked_data.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_topics_item.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_visibility_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CreateArticlePreviewModal extends StatelessWidget {
+class CreateArticlePreviewModal extends HookConsumerWidget {
   const CreateArticlePreviewModal({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final paddingValue = 20.0.s;
 
-    final article = ArticleEntity.fromEventMessage(mockedArticleEvents[0]);
-    final eventReference = EventReference.fromNostrEntity(article);
+    final DraftArticleState(:title, :image, :imageIds, :content) = ref.watch(draftArticleProvider);
 
     return SheetContent(
       bottomPadding: 0,
@@ -35,12 +33,8 @@ class CreateArticlePreviewModal extends StatelessWidget {
             title: Text(context.i18n.article_preview_title),
           ),
           const HorizontalSeparator(),
-          ProviderScope(
-            overrides: [
-              nostrEntityProvider(eventReference: eventReference).overrideWith((_) => article),
-            ],
-            child: Article(eventReference: eventReference),
-          ),
+          SizedBox(height: 12.0.s),
+          const ArticlePreview(),
           SizedBox(height: 12.0.s),
           const HorizontalSeparator(),
           SizedBox(height: 40.0.s),
@@ -60,7 +54,19 @@ class CreateArticlePreviewModal extends StatelessWidget {
                     leadingIcon: Assets.svg.iconFeedArticles.icon(
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      ref.read(createArticleProvider.notifier).create(
+                            title: title,
+                            content: content,
+                            imageId: image?.path,
+                            mediaIds: imageIds,
+                          );
+
+                      if (!ref.read(createArticleProvider).hasError && ref.context.mounted) {
+                        final state = GoRouterState.of(ref.context);
+                        ref.context.go(state.currentTab.baseRouteLocation);
+                      }
+                    },
                     label: Text(context.i18n.button_publish),
                     mainAxisSize: MainAxisSize.max,
                   ),

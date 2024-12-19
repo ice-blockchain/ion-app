@@ -1,15 +1,23 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:collection/collection.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'article_data.c.freezed.dart';
+
+const textEditorSingleImageKey = 'text-editor-single-image';
 
 @Freezed(equal: false)
 class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity {
@@ -47,45 +55,45 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
   static const kind = 30023;
 }
 
-class ArticleData implements EventSerializable {
-  ArticleData({
-    required this.content,
-    this.title,
-    this.image,
-    this.summary,
-    this.publishedAt,
-  });
+@freezed
+class ArticleData with _$ArticleData implements EventSerializable {
+  const factory ArticleData({
+    required String content,
+    required Map<String, MediaAttachment> media,
+    String? title,
+    String? image,
+    String? summary,
+    DateTime? publishedAt,
+    List<RelatedHashtag>? relatedHashtags,
+  }) = _ArticleData;
+
+  const ArticleData._();
 
   factory ArticleData.fromEventMessage(EventMessage eventMessage) {
-    String? title;
-    String? image;
-    String? summary;
-    DateTime? publishedAt;
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    for (final tag in eventMessage.tags) {
-      if (tag.isNotEmpty) {
-        switch (tag[0]) {
-          case 'title':
-            title = tag[1];
-          case 'image':
-            image = tag[1];
-          case 'summary':
-            summary = tag[1];
-          case 'published_at':
-            final timestamp = int.tryParse(tag[1]);
-            if (timestamp != null) {
-              publishedAt = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-            }
-        }
+    final title = tags['title']?.firstOrNull?.elementAtOrNull(1);
+    final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
+    final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
+
+    DateTime? publishedAt;
+    if (tags['published_at']?.firstOrNull?.elementAtOrNull(1) != null) {
+      final timestamp = int.tryParse(tags['published_at']!.first.elementAt(1));
+      if (timestamp != null) {
+        publishedAt = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
       }
     }
 
+    final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
+
     return ArticleData(
+      content: eventMessage.content,
+      media: mediaAttachments,
       title: title,
       image: image,
       summary: summary,
-      content: eventMessage.content,
       publishedAt: publishedAt,
+      relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
     );
   }
 
@@ -95,6 +103,8 @@ class ArticleData implements EventSerializable {
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
+    final uniqueIdForEditing = generateV4UUID(); // Required to be set in 'd' tag
+
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
@@ -106,14 +116,47 @@ class ArticleData implements EventSerializable {
         if (summary != null) ['summary', summary!],
         if (publishedAt != null)
           ['published_at', (publishedAt!.millisecondsSinceEpoch ~/ 1000).toString()],
+        if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+        ['d', uniqueIdForEditing],
       ],
       content: content,
     );
   }
 
-  final String? title;
-  final String? image;
-  final String? summary;
-  final String content;
-  final DateTime? publishedAt;
+  static List<RelatedHashtag> extractHashtagsFromMarkdown(String content) {
+    final operations = jsonDecode(content) as List<dynamic>;
+    const insertKey = 'insert';
+
+    return operations
+        .whereType<Map<String, dynamic>>()
+        .where(
+          (operation) =>
+              operation.containsKey(insertKey) &&
+              operation[insertKey] is String &&
+              (operation[insertKey] as String).startsWith('#'),
+        )
+        .map((operation) {
+      final insert = operation[insertKey]! as String;
+      return RelatedHashtag(value: insert);
+    }).toList();
+  }
+
+  static List<String> extractImageIds(QuillController textEditorController) {
+    final imageIds = <String>[];
+    for (final operation in textEditorController.document.toDelta().operations) {
+      final data = operation.data;
+      if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
+        imageIds.add(data[textEditorSingleImageKey] as String);
+      }
+    }
+    return imageIds;
+  }
+
+  static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {
+    if (mediaTags == null) return {};
+    return {
+      for (final tag in mediaTags)
+        if (tag.length > 1) tag[1]: MediaAttachment.fromTag(tag),
+    };
+  }
 }

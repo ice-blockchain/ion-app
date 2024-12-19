@@ -177,7 +177,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final compressedImage = await ref.read(compressServiceProvider).compressImage(
           file,
-          // Do not pass the second dimension to keep the aspect ratio
           width: width > height ? maxDimension : null,
           height: height > width ? maxDimension : null,
           quality: 70,

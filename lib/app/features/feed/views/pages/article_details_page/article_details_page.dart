@@ -64,22 +64,27 @@ class ArticleDetailsPage extends HookConsumerWidget {
               slivers: [
                 SliverList(
                   delegate: SliverChildListDelegate([
+                    SizedBox(height: 13.0.s),
                     ScreenSideOffset.small(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 13.0.s, bottom: 16.0.s),
-                        child: ArticleDetailsDateTopics(
-                          publishedAt: articleEntity.data.publishedAt,
-                          topics: const [
-                            'Technology',
-                            'Crypto',
-                          ], // TODO: get topics from articleEntity
-                        ),
+                      child: ArticleDetailsDateTopics(
+                        publishedAt: articleEntity.data.publishedAt,
+                        topics: const [
+                          'Technology',
+                          'Crypto',
+                        ], // TODO: get topics from articleEntity
                       ),
                     ),
+                    SizedBox(height: 16.0.s),
                     ArticleDetailsHeader(
                       article: articleEntity,
                     ),
-                    ScreenSideOffset.small(child: const TextEditorPreview()),
+                    if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
+                    ScreenSideOffset.small(
+                      child: TextEditorPreview(
+                        content: articleEntity.data.content,
+                        media: articleEntity.data.media,
+                      ),
+                    ),
                     const ArticleDetailsDateTopics(),
                     ScreenSideOffset.small(
                       child: CounterItemsFooter(
