@@ -71,5 +71,5 @@ class SendAssetFormController extends _$SendAssetFormController {
     };
   }
 
-  double get amount => state.amount ?? 0.0;
+  double getAmount() => state.amount ?? 0.0;
 }
