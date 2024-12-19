@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -72,6 +73,7 @@ class AvatarPicker extends HookConsumerWidget {
                     maxSelection: 1,
                     isBottomSheet: true,
                     title: title,
+                    type: MediaPickerType.image,
                   ),
                 );
                 if (mediaFiles != null && context.mounted) {
