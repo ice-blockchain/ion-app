@@ -24,7 +24,7 @@ Future<UserChatRelaysEntity?> userChatRelays(
     );
 
   final entity = await ref
-      .read(nostrNotifierProvider.notifier)
+      .watch(nostrNotifierProvider.notifier)
       .requestEntity<UserChatRelaysEntity>(requestMessage, actionSource: ActionSourceUser(pubkey));
 
   return entity;
