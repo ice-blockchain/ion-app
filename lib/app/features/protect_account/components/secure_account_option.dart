@@ -27,7 +27,7 @@ class SecureAccountOption extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLightTheme = ref.watch(appThemeModeProvider.notifier).isLightTheme;
+    final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
 
     final trailingIcon = isEnabled
         ? Assets.svg.iconDappCheck.icon(

@@ -24,6 +24,7 @@ class ExploreTransactionDetailsModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final webViewController = useState<InAppWebViewController?>(null);
     final isLoadingPage = useState<bool>(false);
+    final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
 
     return SheetContent(
       body: Column(
@@ -55,9 +56,7 @@ class ExploreTransactionDetailsModal extends HookConsumerWidget {
                         ? const SizedBox.shrink()
                         : Center(
                             child: IONLoadingIndicator(
-                              type: ref.watch(appThemeModeProvider.notifier).isLightTheme
-                                  ? IndicatorType.dark
-                                  : IndicatorType.light,
+                              type: isLightTheme ? IndicatorType.dark : IndicatorType.light,
                               size: Size.square(30.0.s),
                             ),
                           );
