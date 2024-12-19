@@ -73,7 +73,7 @@ class SendButton extends HookConsumerWidget {
     final countdown = countdownState.countdown;
     final startCountdown = countdownState.startCountdown;
 
-    final isLightTheme = ref.watch(appThemeModeProvider.notifier).isLightTheme;
+    final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
 
     return countdown.value > 0
         ? Padding(
