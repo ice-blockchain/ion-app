@@ -41,7 +41,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
-        // Build and cache user chat relays
+        // Build user chat relays
         final userChatRelaysEvent = await _buildUserChatRelays(
           relayUrls: relayUrls,
         );
