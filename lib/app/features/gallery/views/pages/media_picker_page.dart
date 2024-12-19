@@ -50,10 +50,11 @@ class MediaPickerPage extends HookConsumerWidget {
           ),
           onBackPress: () => Navigator.of(context).pop(),
           actions: [
-            AddMediaButton(
-              onPressed: () => Navigator.of(context).pop(selectedMedia),
-              mediaCount: selectedMedia.length,
-            ),
+            if (selectedMedia.isNotEmpty)
+              AddMediaButton(
+                onPressed: () => Navigator.of(context).pop(selectedMedia),
+                mediaCount: selectedMedia.length,
+              ),
           ],
         ),
         automaticallyImplyLeading: false,

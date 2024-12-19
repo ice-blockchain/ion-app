@@ -16,12 +16,7 @@ class AddMediaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notSelected = mediaCount == 0;
     final text = context.i18n.button_add;
-
-    if (notSelected) {
-      return const SizedBox.shrink();
-    }
 
     return TextButton(
       onPressed: onPressed,
