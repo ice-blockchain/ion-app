@@ -30,7 +30,7 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
     final locale = context.i18n;
 
     final code = useState<String?>(null);
-    final onGetPassword = useOnGetPassword(context);
+    final onGetPassword = useOnGetPassword();
 
     useOnInit(
       () async {
@@ -38,7 +38,7 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
           required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
           required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
         }) {
-          return ref.watch(
+          return ref.read(
             verifyUserIdentityProvider(
               onGetPassword: onGetPassword,
               onPasswordFlow: onPasswordFlow,

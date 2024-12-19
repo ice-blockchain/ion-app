@@ -46,7 +46,7 @@ class TwoFAInputStep extends HookConsumerWidget {
       for (final type in twoFaTypes) type: useTextEditingController(),
     };
 
-    final onGetPassword = useOnGetPassword(context);
+    final onGetPassword = useOnGetPassword();
 
     return SheetContent(
       body: AuthScrollContainer(
@@ -76,7 +76,7 @@ class TwoFAInputStep extends HookConsumerWidget {
                                   required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
                                   required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
                                 }) {
-                                  return ref.watch(
+                                  return ref.read(
                                     verifyUserIdentityProvider(
                                       onGetPassword: onGetPassword,
                                       onPasswordFlow: onPasswordFlow,
