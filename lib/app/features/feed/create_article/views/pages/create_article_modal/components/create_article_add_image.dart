@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/feed/views/components/article/constants.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -46,7 +47,7 @@ class CreateArticleAddImage extends HookConsumerWidget {
         onTap: selectedImage.value == null ? onPressed : null,
         child: ScreenSideOffset.small(
           child: AspectRatio(
-            aspectRatio: 343 / 210,
+            aspectRatio: ArticleConstants.headerImageAspectRation,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0.s),
               child: Stack(

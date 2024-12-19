@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
@@ -14,6 +16,7 @@ class CreateArticleState {
     required this.textEditorController,
     required this.isButtonEnabled,
     required this.editorFocusNotifier,
+    required this.onNext,
   });
   final ValueNotifier<MediaFile?> selectedImage;
   final ValueNotifier<bool> titleFilled;
@@ -21,6 +24,7 @@ class CreateArticleState {
   final QuillController textEditorController;
   final bool isButtonEnabled;
   final ValueNotifier<bool> editorFocusNotifier;
+  final void Function(WidgetRef ref) onNext;
 }
 
 CreateArticleState useCreateArticle() {
@@ -44,6 +48,12 @@ CreateArticleState useCreateArticle() {
     [titleController],
   );
 
+  void onNext(WidgetRef ref) {
+    ref
+        .read(draftArticleProvider.notifier)
+        .updateArticleDetails(textEditorController, selectedImage.value, titleController.text);
+  }
+
   return CreateArticleState(
     selectedImage: selectedImage,
     titleFilled: titleFilled,
@@ -51,5 +61,6 @@ CreateArticleState useCreateArticle() {
     textEditorController: textEditorController,
     isButtonEnabled: isButtonEnabled,
     editorFocusNotifier: editorFocusNotifier,
+    onNext: onNext,
   );
 }

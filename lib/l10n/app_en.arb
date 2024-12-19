@@ -525,7 +525,7 @@
   "schedule_modal_nav_title": "Set date and time",
   "cancel_creation_post_title": "Cancel post?",
   "cancel_creation_description": "Are you sure you want to cancel your progress?",
-  "cancel_creation_article_title": "Cancel arcticle?",
+  "cancel_creation_article_title": "Cancel article?",
   "photo_library_require_access_title": "\"{appName} app\" would like to access your photo library",
   "photo_library_require_access_description": "This lets you share photos from your library and save photos to your camera roll.",
   "camera_require_access_title": "\"{appName} app\" would like to access your camera",

@@ -7,12 +7,16 @@ import 'package:ion/app/features/feed/providers/bookmarks_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BookmarkButton extends ConsumerWidget {
-  const BookmarkButton({required this.id, super.key});
+  const BookmarkButton({this.id, super.key});
 
-  final String id;
+  final String? id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (id == null || id!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     final bookmarks = ref.watch(bookmarkNotifierProvider);
     final isBookmarked = bookmarks.contains(id);
 
@@ -21,7 +25,7 @@ class BookmarkButton extends ConsumerWidget {
         isBookmarked ? Assets.svg.iconBookmarks : Assets.svg.iconBookmarksOn,
       ),
       onPressed: () {
-        ref.read(bookmarkNotifierProvider.notifier).toggleBookmark(id);
+        ref.read(bookmarkNotifierProvider.notifier).toggleBookmark(id!);
       },
     );
   }
