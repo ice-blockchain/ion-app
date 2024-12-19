@@ -8,10 +8,11 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -37,7 +38,12 @@ class TransactionResultSheet extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 40.0.s),
+            NavigationAppBar.modal(
+              showBackButton: false,
+              actions: const [
+                NavigationCloseButton(),
+              ],
+            ),
             icons.actionContactsendSuccess.iconWithDimensions(
               width: 74.0.s,
               height: 76.0.s,
@@ -62,9 +68,10 @@ class TransactionResultSheet extends ConsumerWidget {
               ),
             if (type == CryptoAssetType.coin)
               TransactionAmountSummary(
-                usdtAmount: controller.getUsdtAmount(),
-                usdAmount: controller.getUsdtAmount() * 0.999,
-                icon: mockedCoinsDataArray[3].iconUrl.icon(),
+                amount: controller.amount,
+                currency: formData.selectedCoin!.abbreviation,
+                usdAmount: controller.amount * 0.999,
+                icon: formData.selectedCoin!.iconUrl.icon(),
               ),
             SizedBox(height: 24.0.s),
             Row(

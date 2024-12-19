@@ -37,7 +37,7 @@ class SendCoinsForm extends HookConsumerWidget {
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
-        text: formController.usdtAmount.toString(),
+        text: formController.amount.toString(),
       ),
     );
 

@@ -46,10 +46,11 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  if (formData.usdtAmount != null)
+                  if (formData.amount != null)
                     TransactionAmountSummary(
-                      usdtAmount: formData.usdtAmount!,
-                      usdAmount: formData.usdtAmount! * 0.999,
+                      amount: formData.amount!,
+                      currency: formData.selectedCoin!.abbreviation,
+                      usdAmount: formData.amount! * 0.999, // TODO: Remove mock
                       icon: mockedCoinsDataArray[3].iconUrl.icon(),
                     ),
                   SizedBox(height: 16.0.s),
@@ -70,15 +71,16 @@ class ConfirmationSheet extends ConsumerWidget {
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),
                     value: formData.wallet.name,
-                    icon: Image.network(
-                      formData.wallet.icon,
-                      width: ScreenSideOffset.defaultSmallMargin,
-                      height: ScreenSideOffset.defaultSmallMargin,
+                    icon: Assets.svg.walletWalletblue.icon(
+                      size: ScreenSideOffset.defaultSmallMargin,
                     ),
-                    secondary: Text(
-                      '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
-                      textAlign: TextAlign.right,
-                      style: context.theme.appTextThemes.caption3.copyWith(),
+                    secondary: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+                        textAlign: TextAlign.right,
+                        style: context.theme.appTextThemes.caption3.copyWith(),
+                      ),
                     ),
                   ),
                   SizedBox(height: 16.0.s),

@@ -34,7 +34,7 @@ class SendAssetFormController extends _$SendAssetFormController {
             address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
           ),
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
-      usdtAmount: 350,
+      amount: 350,
       arrivalTime: 15,
       arrivalDateTime: DateTime.now(),
     );
@@ -50,7 +50,7 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   void updateAmount(String amount) {
     final value = double.tryParse(amount) ?? 0.0;
-    state = state.copyWith(usdtAmount: value);
+    state = state.copyWith(amount: value);
   }
 
   void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
@@ -71,5 +71,5 @@ class SendAssetFormController extends _$SendAssetFormController {
     };
   }
 
-  double getUsdtAmount() => state.usdtAmount ?? 0.0;
+  double get amount => state.amount ?? 0.0;
 }
