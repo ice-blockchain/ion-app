@@ -19,12 +19,16 @@ class AddMediaButton extends StatelessWidget {
     final notSelected = mediaCount == 0;
     final text = context.i18n.button_add;
 
+    if (notSelected) {
+      return const SizedBox.shrink();
+    }
+
     return TextButton(
-      onPressed: notSelected ? null : onPressed,
+      onPressed: onPressed,
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
-          notSelected ? text : '$text ($mediaCount)',
+          '$text ($mediaCount)',
           style: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryAccent,
           ),
