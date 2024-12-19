@@ -21,6 +21,7 @@ Future<Raw<IONIdentity>> ionIdentity(Ref ref) async {
   final config = IONIdentityConfig(
     appId: appId,
     origin: envController.get(EnvVariable.ION_ORIGIN),
+    logging: true,
   );
 
   final ionClient = IONIdentity.createDefault(config: config);
