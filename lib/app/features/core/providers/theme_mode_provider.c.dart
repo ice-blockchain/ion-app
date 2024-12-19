@@ -15,4 +15,6 @@ class AppThemeMode extends _$AppThemeMode {
   set themeMode(ThemeMode themeMode) {
     state = themeMode;
   }
+
+  bool get isLightTheme => state == ThemeMode.light;
 }

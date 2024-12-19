@@ -50,6 +50,7 @@ class WalletRoutes {
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
         TypedGoRoute<NftTransactionResultRoute>(path: 'nft-transaction-result'),
         TypedGoRoute<NftTransactionDetailsRoute>(path: 'nft-transaction-details'),
+        TypedGoRoute<ExploreNftTransactionDetailsRoute>(path: 'explore-nft-transaction-details'),
       ],
     ),
   ];
@@ -72,6 +73,7 @@ class WalletRoutes {
     ),
     TypedGoRoute<CoinTransactionResultRoute>(path: 'coin-transaction-result'),
     TypedGoRoute<CoinTransactionDetailsRoute>(path: 'coin-transaction-details'),
+    TypedGoRoute<ExploreCoinTransactionDetailsRoute>(path: 'explore-coin-transaction-details'),
   ];
 
   static const coinReceiveRoutes = <TypedRoute<RouteData>>[
@@ -343,4 +345,24 @@ class CoinTransactionDetailsRoute extends BaseRouteData {
           child: const TransactionDetailsPage(type: CryptoAssetType.coin),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class ExploreNftTransactionDetailsRoute extends BaseRouteData {
+  ExploreNftTransactionDetailsRoute({required this.url})
+      : super(
+          child: ExploreTransactionDetailsModal(url: url),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String url;
+}
+
+class ExploreCoinTransactionDetailsRoute extends BaseRouteData {
+  ExploreCoinTransactionDetailsRoute({required this.url})
+      : super(
+          child: ExploreTransactionDetailsModal(url: url),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String url;
 }

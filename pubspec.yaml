@@ -37,6 +37,7 @@ dependencies:
   flutter_animate: ^4.5.0
   flutter_dotenv: ^5.1.0
   flutter_hooks: ^0.20.5
+  flutter_inappwebview: ^6.1.5
   flutter_keyboard_visibility: ^6.0.0
   flutter_localizations:
     sdk: flutter

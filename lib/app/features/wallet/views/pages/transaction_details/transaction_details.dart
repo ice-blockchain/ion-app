@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -15,10 +17,10 @@ import 'package:ion/app/features/wallet/providers/mock_data/wallet_assets_mock_d
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
@@ -93,21 +95,38 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 12.0.s),
+                    ListItem.text(
+                      title: Text(context.i18n.send_nft_confirm_asset),
+                      value: controller.getAsset(),
+                    ),
+                    SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
                       value: controller.getNetwork(),
                       icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItemArrivalTime(arrivalTime: formData.arrivalTime),
+                    ListItemArrivalTime(
+                      arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
+                          .format(formData.arrivalDateTime),
+                    ),
                     SizedBox(height: 12.0.s),
                     const ListItemNetworkFee(value: '1.00 USDT'),
                     SizedBox(height: 15.0.s),
                     TransactionDetailsActions(
                       onViewOnExplorer: () {
-                        openUrlInAppBrowser(
-                          'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326',
-                        );
+                        const url =
+                            'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326';
+                        final location = switch (type) {
+                          CryptoAssetType.coin => ExploreCoinTransactionDetailsRoute(
+                              url: url,
+                            ).location,
+                          CryptoAssetType.nft => ExploreNftTransactionDetailsRoute(
+                              url: url,
+                            ).location,
+                        };
+
+                        context.push<void>(location);
                       },
                       onShare: () {},
                     ),
