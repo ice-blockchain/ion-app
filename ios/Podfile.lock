@@ -33,43 +33,43 @@ PODS:
   - BanubaUtilities (1.39.0)
   - BanubaVideoEditorGallerySDK (1.39.0)
   - BanubaVideoEditorSDK (1.39.0)
-  - BNBAcneEyebagsRemoval (1.16.2):
-    - BNBEffectPlayer (= 1.16.2)
-    - BNBFaceTracker (= 1.16.2)
-    - BNBScripting (= 1.16.2)
-    - BNBSdkCore (= 1.16.2)
-  - BNBBackground (1.16.2):
-    - BNBEffectPlayer (= 1.16.2)
-    - BNBScripting (= 1.16.2)
-    - BNBSdkCore (= 1.16.2)
-  - BNBEffectPlayer (1.16.2)
-  - BNBEyes (1.16.2):
-    - BNBEffectPlayer (= 1.16.2)
-    - BNBFaceTracker (= 1.16.2)
-    - BNBScripting (= 1.16.2)
-    - BNBSdkCore (= 1.16.2)
-  - BNBFaceTracker (1.16.2):
-    - BNBEffectPlayer (= 1.16.2)
-    - BNBScripting (= 1.16.2)
-    - BNBSdkCore (= 1.16.2)
-  - BNBHair (1.16.2):
-    - BNBEffectPlayer (= 1.16.2)
-    - BNBScripting (= 1.16.2)
-    - BNBSdkCore (= 1.16.2)
+  - BNBAcneEyebagsRemoval (1.16.3):
+    - BNBEffectPlayer (= 1.16.3)
+    - BNBFaceTracker (= 1.16.3)
+    - BNBScripting (= 1.16.3)
+    - BNBSdkCore (= 1.16.3)
+  - BNBBackground (1.16.3):
+    - BNBEffectPlayer (= 1.16.3)
+    - BNBScripting (= 1.16.3)
+    - BNBSdkCore (= 1.16.3)
+  - BNBEffectPlayer (1.16.3)
+  - BNBEyes (1.16.3):
+    - BNBEffectPlayer (= 1.16.3)
+    - BNBFaceTracker (= 1.16.3)
+    - BNBScripting (= 1.16.3)
+    - BNBSdkCore (= 1.16.3)
+  - BNBFaceTracker (1.16.3):
+    - BNBEffectPlayer (= 1.16.3)
+    - BNBScripting (= 1.16.3)
+    - BNBSdkCore (= 1.16.3)
+  - BNBHair (1.16.3):
+    - BNBEffectPlayer (= 1.16.3)
+    - BNBScripting (= 1.16.3)
+    - BNBSdkCore (= 1.16.3)
   - BNBLicenseUtils (1.39.0)
-  - BNBLips (1.16.2):
-    - BNBEffectPlayer (= 1.16.2)
-    - BNBFaceTracker (= 1.16.2)
-    - BNBScripting (= 1.16.2)
-    - BNBSdkCore (= 1.16.2)
-  - BNBScripting (1.16.2)
-  - BNBSdkApi (1.16.2):
-    - BNBSdkCore (= 1.16.2)
-  - BNBSdkCore (1.16.2)
-  - BNBSkin (1.16.2):
-    - BNBEffectPlayer (= 1.16.2)
-    - BNBScripting (= 1.16.2)
-    - BNBSdkCore (= 1.16.2)
+  - BNBLips (1.16.3):
+    - BNBEffectPlayer (= 1.16.3)
+    - BNBFaceTracker (= 1.16.3)
+    - BNBScripting (= 1.16.3)
+    - BNBSdkCore (= 1.16.3)
+  - BNBScripting (1.16.3)
+  - BNBSdkApi (1.16.3):
+    - BNBSdkCore (= 1.16.3)
+  - BNBSdkCore (1.16.3)
+  - BNBSkin (1.16.3):
+    - BNBEffectPlayer (= 1.16.3)
+    - BNBScripting (= 1.16.3)
+    - BNBSdkCore (= 1.16.3)
   - camera_avfoundation (0.0.1):
     - Flutter
   - device_info_plus (0.0.1):
@@ -350,18 +350,18 @@ SPEC CHECKSUMS:
   BanubaUtilities: 4ca45fcd7a6b5d246b75f02fd3f36b43d2dbebd3
   BanubaVideoEditorGallerySDK: 6d775728f14ab78e210d86058166e3deb3fc3814
   BanubaVideoEditorSDK: 1b8d56004f147c0ed96077f8171247efbc0511e7
-  BNBAcneEyebagsRemoval: 40f97a9161a7dd2aba0bb6f45923fe9b943d3f7a
-  BNBBackground: ffa56bcc53cc683bc25fc49ff071ee958666e6d1
-  BNBEffectPlayer: 08bcdd70abbdc4fe2880aa1ae1fce7c47a29e6ba
-  BNBEyes: a8c9d9eb080f3737b984bed6bff47f7349491d4d
-  BNBFaceTracker: 77ce50a692df014a66bd55ba222e697b6e53dcdd
-  BNBHair: 1e9597ba9e9fbcf5b956e4d33752e9d73f87fdcc
+  BNBAcneEyebagsRemoval: 9ad2c2351d57231add905c5bff6117faff87b712
+  BNBBackground: 1e88cbaa9c447c1aa46506b0d74b1bd833494c72
+  BNBEffectPlayer: 05f74da227a9ece5dd52bcdd8aa996e076793e6b
+  BNBEyes: afd66da363889f60764496ae404a89a370b53fdd
+  BNBFaceTracker: 5c088cbbfcca3cd1c1815ea6037b5e8a3fd978e9
+  BNBHair: 1eb5dbf95c9107db9eade8173f194689c3edda01
   BNBLicenseUtils: a075f2e799b177accd88f1285698d847adda3631
-  BNBLips: 13875558846025af58221f673b205fc9484ea2c4
-  BNBScripting: 75f32918479ff9e023e82f16494001c3087415cb
-  BNBSdkApi: dbe0eefe6f34e31bc359e65e39088bde267e8eee
-  BNBSdkCore: 46d9b72e02f9b7b78c458fe3a87b498d0b1ff8ea
-  BNBSkin: 8c902f4141cdfdfbd92863256036edded59152c7
+  BNBLips: 0d95e0f5ae1edefc66fdf06f37c876cc89ba6a49
+  BNBScripting: 5237343f223f528dc8e8392817020a4182058473
+  BNBSdkApi: f773621958cf0f7776e18f90b96ace13b29d84e2
+  BNBSdkCore: cc7711127dbcaf392d0a25f4a858d98ffc5c9213
+  BNBSkin: 3a741bbba57a2a860fe4a69dbd597d7d9aea5793
   camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
