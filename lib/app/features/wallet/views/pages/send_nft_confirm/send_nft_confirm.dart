@@ -70,7 +70,10 @@ class SendNftConfirmPage extends ConsumerWidget {
                       icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItemArrivalTime(arrivalTime: formData.arrivalTime),
+                    ListItemArrivalTime(
+                      arrivalTime: '${formData.arrivalTime} '
+                          '${context.i18n.wallet_arrival_time_minutes}',
+                    ),
                     SizedBox(height: 12.0.s),
                     const ListItemNetworkFee(value: '1.00 USDT'),
                     SizedBox(height: 12.0.s),

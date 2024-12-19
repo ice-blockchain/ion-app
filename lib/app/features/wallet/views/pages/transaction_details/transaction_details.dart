@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/components/arrival_time/list_item_arrival_time.dart';
+import 'package:ion/app/features/wallet/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
 import 'package:ion/app/features/wallet/components/timeline/timeline.dart';
@@ -13,10 +17,10 @@ import 'package:ion/app/features/wallet/providers/mock_data/wallet_assets_mock_d
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/browser/browser.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
@@ -38,7 +42,6 @@ class TransactionDetailsPage extends ConsumerWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.transaction_details_title),
-              showBackButton: false,
               actions: const [NavigationCloseButton()],
             ),
             ScreenSideOffset.small(
@@ -79,10 +82,8 @@ class TransactionDetailsPage extends ConsumerWidget {
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_title),
                       value: formData.wallet.name,
-                      icon: Image.network(
-                        formData.wallet.icon,
-                        width: ScreenSideOffset.defaultSmallMargin,
-                        height: ScreenSideOffset.defaultSmallMargin,
+                      icon: Assets.svg.walletWalletblue.icon(
+                        size: ScreenSideOffset.defaultSmallMargin,
                       ),
                       secondary: Align(
                         alignment: Alignment.centerRight,
@@ -105,28 +106,27 @@ class TransactionDetailsPage extends ConsumerWidget {
                       icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_arrival_time),
-                      value: '${formData.arrivalTime} '
-                          '${locale.wallet_arrival_time_minutes}',
-                      icon: Assets.svg.iconBlockTime.icon(
-                        size: 16.0.s,
-                      ),
+                    ListItemArrivalTime(
+                      arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
+                          .format(formData.arrivalDateTime),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_network_fee),
-                      value: '1.00 USDT',
-                      icon: Assets.svg.iconBlockCoins.icon(
-                        size: 16.0.s,
-                      ),
-                    ),
+                    const ListItemNetworkFee(value: '1.00 USDT'),
                     SizedBox(height: 15.0.s),
                     TransactionDetailsActions(
                       onViewOnExplorer: () {
-                        openUrlInAppBrowser(
-                          'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326',
-                        );
+                        const url =
+                            'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326';
+                        final location = switch (type) {
+                          CryptoAssetType.coin => ExploreCoinTransactionDetailsRoute(
+                              url: url,
+                            ).location,
+                          CryptoAssetType.nft => ExploreNftTransactionDetailsRoute(
+                              url: url,
+                            ).location,
+                        };
+
+                        context.push<void>(location);
                       },
                       onShare: () {},
                     ),
