@@ -13,13 +13,14 @@ class DeleteTwoFANotifier extends _$DeleteTwoFANotifier {
 
   Future<void> deleteTwoFa(
     TwoFAType twoFAType,
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
     List<TwoFAType> verificationCodes,
   ) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final client = await ref.read(ionIdentityClientProvider.future);
-      await client.auth.deleteTwoFA(twoFAType, verificationCodes);
+      await client.auth.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
     });
   }
 }

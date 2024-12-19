@@ -6,7 +6,8 @@ part of 'credential_assertion_data.c.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CredentialAssertionData _$CredentialAssertionDataFromJson(Map<String, dynamic> json) =>
+CredentialAssertionData _$CredentialAssertionDataFromJson(
+        Map<String, dynamic> json) =>
     CredentialAssertionData(
       clientData: json['clientData'] as String,
       credId: json['credId'] as String,
@@ -15,7 +16,8 @@ CredentialAssertionData _$CredentialAssertionDataFromJson(Map<String, dynamic> j
       userHandle: json['userHandle'] as String?,
     );
 
-Map<String, dynamic> _$CredentialAssertionDataToJson(CredentialAssertionData instance) {
+Map<String, dynamic> _$CredentialAssertionDataToJson(
+    CredentialAssertionData instance) {
   final val = <String, dynamic>{
     'clientData': instance.clientData,
     'credId': instance.credId,

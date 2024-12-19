@@ -21,8 +21,8 @@ AssertionRequestData _$AssertionRequestDataFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AssertionRequestData {
   CredentialKind get kind => throw _privateConstructorUsedError;
-
-  CredentialAssertionData get credentialAssertion => throw _privateConstructorUsedError;
+  CredentialAssertionData get credentialAssertion =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this AssertionRequestData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -36,22 +36,21 @@ mixin _$AssertionRequestData {
 
 /// @nodoc
 abstract class $AssertionRequestDataCopyWith<$Res> {
-  factory $AssertionRequestDataCopyWith(
-          AssertionRequestData value, $Res Function(AssertionRequestData) then) =
+  factory $AssertionRequestDataCopyWith(AssertionRequestData value,
+          $Res Function(AssertionRequestData) then) =
       _$AssertionRequestDataCopyWithImpl<$Res, AssertionRequestData>;
-
   @useResult
   $Res call({CredentialKind kind, CredentialAssertionData credentialAssertion});
 }
 
 /// @nodoc
-class _$AssertionRequestDataCopyWithImpl<$Res, $Val extends AssertionRequestData>
+class _$AssertionRequestDataCopyWithImpl<$Res,
+        $Val extends AssertionRequestData>
     implements $AssertionRequestDataCopyWith<$Res> {
   _$AssertionRequestDataCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
-
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -79,10 +78,9 @@ class _$AssertionRequestDataCopyWithImpl<$Res, $Val extends AssertionRequestData
 /// @nodoc
 abstract class _$$AssertionRequestDataImplCopyWith<$Res>
     implements $AssertionRequestDataCopyWith<$Res> {
-  factory _$$AssertionRequestDataImplCopyWith(
-          _$AssertionRequestDataImpl value, $Res Function(_$AssertionRequestDataImpl) then) =
+  factory _$$AssertionRequestDataImplCopyWith(_$AssertionRequestDataImpl value,
+          $Res Function(_$AssertionRequestDataImpl) then) =
       __$$AssertionRequestDataImplCopyWithImpl<$Res>;
-
   @override
   @useResult
   $Res call({CredentialKind kind, CredentialAssertionData credentialAssertion});
@@ -92,8 +90,8 @@ abstract class _$$AssertionRequestDataImplCopyWith<$Res>
 class __$$AssertionRequestDataImplCopyWithImpl<$Res>
     extends _$AssertionRequestDataCopyWithImpl<$Res, _$AssertionRequestDataImpl>
     implements _$$AssertionRequestDataImplCopyWith<$Res> {
-  __$$AssertionRequestDataImplCopyWithImpl(
-      _$AssertionRequestDataImpl _value, $Res Function(_$AssertionRequestDataImpl) _then)
+  __$$AssertionRequestDataImplCopyWithImpl(_$AssertionRequestDataImpl _value,
+      $Res Function(_$AssertionRequestDataImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of AssertionRequestData
@@ -120,7 +118,8 @@ class __$$AssertionRequestDataImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$AssertionRequestDataImpl implements _AssertionRequestData {
-  const _$AssertionRequestDataImpl({required this.kind, required this.credentialAssertion});
+  const _$AssertionRequestDataImpl(
+      {required this.kind, required this.credentialAssertion});
 
   factory _$AssertionRequestDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$AssertionRequestDataImplFromJson(json);
@@ -154,8 +153,10 @@ class _$AssertionRequestDataImpl implements _AssertionRequestData {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$AssertionRequestDataImplCopyWith<_$AssertionRequestDataImpl> get copyWith =>
-      __$$AssertionRequestDataImplCopyWithImpl<_$AssertionRequestDataImpl>(this, _$identity);
+  _$$AssertionRequestDataImplCopyWith<_$AssertionRequestDataImpl>
+      get copyWith =>
+          __$$AssertionRequestDataImplCopyWithImpl<_$AssertionRequestDataImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -167,15 +168,15 @@ class _$AssertionRequestDataImpl implements _AssertionRequestData {
 
 abstract class _AssertionRequestData implements AssertionRequestData {
   const factory _AssertionRequestData(
-      {required final CredentialKind kind,
-      required final CredentialAssertionData credentialAssertion}) = _$AssertionRequestDataImpl;
+          {required final CredentialKind kind,
+          required final CredentialAssertionData credentialAssertion}) =
+      _$AssertionRequestDataImpl;
 
   factory _AssertionRequestData.fromJson(Map<String, dynamic> json) =
       _$AssertionRequestDataImpl.fromJson;
 
   @override
   CredentialKind get kind;
-
   @override
   CredentialAssertionData get credentialAssertion;
 
@@ -183,6 +184,6 @@ abstract class _AssertionRequestData implements AssertionRequestData {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AssertionRequestDataImplCopyWith<_$AssertionRequestDataImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$AssertionRequestDataImplCopyWith<_$AssertionRequestDataImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

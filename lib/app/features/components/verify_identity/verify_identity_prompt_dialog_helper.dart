@@ -39,7 +39,7 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
       }
     });
 
-    final onGetPassword = useOnGetPassword(context);
+    final onGetPassword = useOnGetPassword();
 
     useOnInit(
       () {
@@ -47,7 +47,7 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
           required OnPasswordFlow<P> onPasswordFlow,
           required OnPasskeyFlow<P> onPasskeyFlow,
         }) {
-          return ref.watch(
+          return ref.read(
             verifyUserIdentityProvider(
               onGetPassword: onGetPassword,
               onPasswordFlow: onPasswordFlow,
@@ -75,27 +75,27 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onGetPassword = useOnGetPassword(context);
+    final onGetPassword = useOnGetPassword();
     useOnInit(
       () {
-        try {
-          requestWithVerifyIdentity(({
-            required OnPasswordFlow<P> onPasswordFlow,
-            required OnPasskeyFlow<P> onPasskeyFlow,
-          }) {
-            return ref.watch(
+        requestWithVerifyIdentity(({
+          required OnPasswordFlow<P> onPasswordFlow,
+          required OnPasskeyFlow<P> onPasskeyFlow,
+        }) async {
+          try {
+            return await ref.read(
               verifyUserIdentityProvider(
                 onGetPassword: onGetPassword,
                 onPasswordFlow: onPasswordFlow,
                 onPasskeyFlow: onPasskeyFlow,
               ).future,
             );
-          });
-        } finally {
-          if (context.mounted) {
-            Navigator.of(context).pop();
+          } finally {
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           }
-        }
+        });
       },
       <Object>[onGetPassword],
     );

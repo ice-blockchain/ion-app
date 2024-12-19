@@ -6,14 +6,16 @@ part of 'assertion_request_data.c.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AssertionRequestDataImpl _$$AssertionRequestDataImplFromJson(Map<String, dynamic> json) =>
+_$AssertionRequestDataImpl _$$AssertionRequestDataImplFromJson(
+        Map<String, dynamic> json) =>
     _$AssertionRequestDataImpl(
       kind: $enumDecode(_$CredentialKindEnumMap, json['kind']),
-      credentialAssertion:
-          CredentialAssertionData.fromJson(json['credentialAssertion'] as Map<String, dynamic>),
+      credentialAssertion: CredentialAssertionData.fromJson(
+          json['credentialAssertion'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$AssertionRequestDataImplToJson(_$AssertionRequestDataImpl instance) =>
+Map<String, dynamic> _$$AssertionRequestDataImplToJson(
+        _$AssertionRequestDataImpl instance) =>
     <String, dynamic>{
       'kind': _$CredentialKindEnumMap[instance.kind]!,
       'credentialAssertion': instance.credentialAssertion.toJson(),

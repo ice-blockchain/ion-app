@@ -68,8 +68,13 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                       onRequestCode: () => guardPasskeyDialog(
                         context,
                         (child) => HookVerifyIdentityRequestBuilder(
-                          requestWithVerifyIdentity: (_) =>
-                              requestTwoFACode(ref, TwoFAType.sms(phone)),
+                          requestWithVerifyIdentity:
+                              (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) =>
+                                  requestTwoFACode(
+                            ref,
+                            TwoFAType.sms(phone),
+                            onVerifyIdentity,
+                          ),
                           child: child,
                         ),
                       ),

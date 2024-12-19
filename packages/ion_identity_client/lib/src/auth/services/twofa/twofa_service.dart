@@ -25,6 +25,7 @@ class TwoFAService {
 
   Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
+    required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
     required Map<String, String>? verificationCodes,
     String? recoveryIdentityKeyName,
   }) async {
@@ -38,7 +39,7 @@ class TwoFAService {
     }
 
     final userId = _extractUserIdService.extractUserId(username: username);
-    final base64Signature = await _generateSignature(userId);
+    final base64Signature = await _generateSignature(userId, onVerifyIdentity);
 
     final response = await _dataSource.requestTwoFACode(
       signature: base64Signature,
@@ -65,11 +66,12 @@ class TwoFAService {
   }
 
   Future<void> deleteTwoFA(
-    TwoFAType twoFAType, [
+    TwoFAType twoFAType,
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity, [
     List<TwoFAType> verificationCodes = const [],
   ]) async {
     final userId = _extractUserIdService.extractUserId(username: username);
-    final base64Signature = await _generateSignature(userId);
+    final base64Signature = await _generateSignature(userId, onVerifyIdentity);
 
     await _dataSource.deleteTwoFA(
       signature: base64Signature,
@@ -80,15 +82,29 @@ class TwoFAService {
     );
   }
 
-  Future<String> _generateSignature(String userId) async {
+  Future<String> _generateSignature(
+    String userId,
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  ) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final mainWallet = (await _wallets.getWallets()).first;
 
     final hash = sha256.convert(utf8.encode('$timestamp:$userId'));
 
-    final signatureResponse = await _wallets.generateHashSignatureWithPasskey(
-      mainWallet.id,
-      hash.toString(),
+    final signatureResponse = await onVerifyIdentity(
+      onPasswordFlow: ({required String password}) {
+        return _wallets.generateHashSignatureWithPassword(
+          mainWallet.id,
+          hash.toString(),
+          password,
+        );
+      },
+      onPasskeyFlow: () {
+        return _wallets.generateHashSignatureWithPasskey(
+          mainWallet.id,
+          hash.toString(),
+        );
+      },
     );
 
     final signature = signatureResponse.signature['encoded'].toString().substring(2);
