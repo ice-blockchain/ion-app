@@ -36,6 +36,7 @@ class SendAssetFormController extends _$SendAssetFormController {
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
       usdtAmount: 350,
       arrivalTime: 15,
+      arrivalDateTime: DateTime.now(),
     );
   }
 

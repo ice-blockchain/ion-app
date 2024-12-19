@@ -8,7 +8,7 @@ import 'package:ion/generated/assets.gen.dart';
 class ListItemArrivalTime extends StatelessWidget {
   const ListItemArrivalTime({required this.arrivalTime, super.key});
 
-  final int arrivalTime;
+  final String arrivalTime;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +31,7 @@ class ListItemArrivalTime extends StatelessWidget {
           ),
         ],
       ),
-      value: '$arrivalTime '
-          '${context.i18n.wallet_arrival_time_minutes}',
+      value: arrivalTime,
       icon: Assets.svg.iconBlockTime.icon(
         size: 16.0.s,
       ),

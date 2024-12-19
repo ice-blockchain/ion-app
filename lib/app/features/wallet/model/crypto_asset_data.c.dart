@@ -15,6 +15,7 @@ class CryptoAssetData with _$CryptoAssetData {
     required WalletData wallet,
     required NetworkType selectedNetwork,
     required int arrivalTime,
+    required DateTime arrivalDateTime,
     required String address,
     CoinData? selectedCoin,
     NftData? selectedNft,
