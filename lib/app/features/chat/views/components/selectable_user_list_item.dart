@@ -42,8 +42,6 @@ class SelectableUserListItem extends ConsumerWidget {
             ),
           ),
           profilePicture: userMetadata.data.picture,
-          verifiedBadge: userMetadata.data.verified,
-          ntfAvatar: userMetadata.data.nft,
           contentPadding: EdgeInsets.symmetric(horizontal: 0.0.s, vertical: 0.0.s),
           constraints: BoxConstraints(minHeight: itemHeight),
           trailing: isSelected

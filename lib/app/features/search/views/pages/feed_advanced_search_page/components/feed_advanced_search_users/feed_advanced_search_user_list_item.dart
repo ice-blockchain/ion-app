@@ -39,9 +39,7 @@ class FeedAdvancedSearchUserListItem extends ConsumerWidget {
             subtitle: Text(
               prefixUsername(username: userMetadataValue.name, context: context),
             ),
-            ntfAvatar: userMetadataValue.nft,
             profilePicture: userMetadataValue.picture,
-            verifiedBadge: userMetadataValue.verified,
             trailing: FollowUserButton(pubkey: pubkey),
           ),
           if (about != null) ...[

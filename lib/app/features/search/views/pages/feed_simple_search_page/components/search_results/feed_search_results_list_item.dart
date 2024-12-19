@@ -42,8 +42,6 @@ class FeedSearchResultsListItem extends ConsumerWidget {
                   prefixUsername(username: userMetadataEntity.data.name, context: context),
                 ),
                 profilePicture: userMetadataEntity.data.picture,
-                verifiedBadge: userMetadataEntity.data.verified,
-                ntfAvatar: userMetadataEntity.data.nft,
               ),
             );
           },

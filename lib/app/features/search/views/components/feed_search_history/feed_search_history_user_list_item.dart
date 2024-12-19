@@ -39,7 +39,7 @@ class _UserListItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Avatar(size: 65.0.s, imageUrl: userMetadata.picture, hexagon: userMetadata.nft),
+          Avatar(size: 65.0.s, imageUrl: userMetadata.picture),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [

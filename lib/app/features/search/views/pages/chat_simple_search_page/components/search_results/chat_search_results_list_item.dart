@@ -46,8 +46,6 @@ class ChatSearchResultsListItem extends ConsumerWidget {
                         prefixUsername(username: userMetadata.data.name, context: context),
                       ),
                       profilePicture: userMetadata.data.picture,
-                      verifiedBadge: userMetadata.data.verified,
-                      ntfAvatar: userMetadata.data.nft,
                     ),
                   ),
                   Assets.svg.iconArrowRight.icon(

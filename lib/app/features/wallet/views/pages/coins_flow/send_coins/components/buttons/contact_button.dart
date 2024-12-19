@@ -40,8 +40,6 @@ class ContactButton extends ConsumerWidget {
         title: Text(contact.name),
         subtitle: Text(contact.nickname!),
         profilePicture: contact.icon,
-        verifiedBadge: contact.isVerified!,
-        iceBadge: contact.hasIceAccount,
         timeago: contact.lastSeen,
         trailing: IconButton(
           onPressed: onClearTap,

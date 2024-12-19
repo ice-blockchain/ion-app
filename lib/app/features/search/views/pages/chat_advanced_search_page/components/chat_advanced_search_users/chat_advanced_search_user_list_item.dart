@@ -45,17 +45,6 @@ class ChatAdvancedSearchUserListItem extends ConsumerWidget {
                         userMetadataValue.displayName,
                         style: context.theme.appTextThemes.subtitle3,
                       ),
-                      SizedBox(width: 4.0.s),
-                      if (userMetadataValue.verified)
-                        Padding(
-                          padding: EdgeInsets.only(left: 4.0.s),
-                          child: Assets.svg.iconBadgeIcelogo.icon(size: 16),
-                        ),
-                      if (userMetadataValue.verified)
-                        Padding(
-                          padding: EdgeInsets.only(left: 4.0.s),
-                          child: Assets.svg.iconBadgeVerify.icon(size: 16),
-                        ),
                     ],
                   ),
                   SizedBox(height: 2.0.s),

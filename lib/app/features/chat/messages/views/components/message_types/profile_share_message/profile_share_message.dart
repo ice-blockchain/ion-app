@@ -104,7 +104,6 @@ class _ProfileSummary extends StatelessWidget {
           ),
         ),
         profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
-        verifiedBadge: true,
         avatarSize: 40.0.s,
       ),
     );

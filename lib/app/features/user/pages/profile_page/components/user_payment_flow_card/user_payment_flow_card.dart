@@ -34,8 +34,6 @@ class UserPaymentFlowCard extends ConsumerWidget {
           title: Text(userMetadata.data.displayName),
           subtitle: Text(prefixUsername(username: userMetadata.data.name, context: context)),
           profilePicture: userMetadata.data.picture,
-          verifiedBadge: userMetadata.data.verified,
-          ntfAvatar: userMetadata.data.nft,
           contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 8.0.s),
           border: Border.all(
             color: context.theme.appColors.strokeElements,
