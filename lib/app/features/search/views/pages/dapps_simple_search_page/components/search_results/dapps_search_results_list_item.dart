@@ -35,7 +35,6 @@ class DAppsSearchResultsListItem extends ConsumerWidget {
               width: 48.0.s,
               fit: BoxFit.contain,
             ),
-            verifiedBadge: app.isVerified,
           ),
         ),
       ),

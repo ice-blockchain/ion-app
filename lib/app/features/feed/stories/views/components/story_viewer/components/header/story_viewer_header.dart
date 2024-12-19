@@ -62,7 +62,6 @@ class StoryViewerHeader extends ConsumerWidget {
                   shadows: shadow,
                 ),
               ),
-              verifiedBadge: userMetadata.data.verified,
               trailing: HeaderActions(post: currentPost),
               backgroundColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,

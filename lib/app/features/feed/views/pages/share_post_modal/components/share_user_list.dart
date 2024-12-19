@@ -37,7 +37,6 @@ class ShareUserList extends StatelessWidget {
                   ? Assets.svg.iconBlockCheckboxOn.icon()
                   : Assets.svg.iconBlockCheckboxOff
                       .icon(color: context.theme.appColors.onTerararyFill),
-              verifiedBadge: true,
               contentPadding: EdgeInsets.symmetric(vertical: 8.0.s),
             ),
           ),

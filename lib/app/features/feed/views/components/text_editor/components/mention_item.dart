@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
@@ -28,15 +26,13 @@ class MentionItem extends ConsumerWidget {
         if (userMetadata == null) {
           return const SizedBox.shrink();
         }
+        final username = prefixUsername(username: userMetadata.data.name, context: context);
         return IntrinsicHeight(
           child: ListItem.user(
-            onTap: () => onPress('@${userMetadata.data.name}'),
+            onTap: () => onPress(username),
             title: Text(userMetadata.data.displayName),
-            subtitle: Text(prefixUsername(username: userMetadata.data.name, context: context)),
+            subtitle: Text(username),
             profilePicture: userMetadata.data.picture,
-            iceBadge: Random().nextBool(),
-            verifiedBadge: Random().nextBool(),
-            ntfAvatar: Random().nextBool(),
           ),
         );
       },

@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class UserNameTile extends ConsumerWidget {
   const UserNameTile({
@@ -39,10 +38,6 @@ class UserNameTile extends ConsumerWidget {
                 ),
               ),
             ),
-            if (userMetadataValue.data.verified) ...[
-              SizedBox(width: 6.0.s),
-              Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
-            ],
           ],
         ),
         SizedBox(height: 3.0.s),

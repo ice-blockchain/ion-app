@@ -79,8 +79,6 @@ class ContactsListView extends ConsumerWidget {
                       title: Text(contact.name),
                       subtitle: Text(contact.nickname!),
                       profilePicture: contact.icon,
-                      verifiedBadge: contact.isVerified!,
-                      iceBadge: contact.hasIceAccount,
                       timeago: contact.lastSeen,
                       onTap: () => action == ContactRouteAction.pop
                           ? context.pop(contact.id)

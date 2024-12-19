@@ -37,8 +37,6 @@ class GroupMemberListItem extends ConsumerWidget {
             ),
           ),
           profilePicture: userMetadata.data.picture,
-          verifiedBadge: userMetadata.data.verified,
-          ntfAvatar: userMetadata.data.nft,
           contentPadding: EdgeInsets.zero,
           constraints: BoxConstraints(maxHeight: 39.0.s),
           trailing: isCurrentPubkey

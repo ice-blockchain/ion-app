@@ -32,8 +32,6 @@ class CreatorListItem extends ConsumerWidget {
         title: Text(userMetadataEntity.data.displayName),
         subtitle: Text(prefixUsername(username: userMetadataEntity.data.name, context: context)),
         profilePicture: userMetadataEntity.data.picture,
-        verifiedBadge: userMetadataEntity.data.verified,
-        ntfAvatar: userMetadataEntity.data.nft,
         backgroundColor: context.theme.appColors.tertararyBackground,
         contentPadding: EdgeInsets.all(12.0.s),
         borderRadius: BorderRadius.circular(16.0.s),

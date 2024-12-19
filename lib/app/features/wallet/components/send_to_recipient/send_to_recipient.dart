@@ -28,8 +28,6 @@ class SendToRecipient extends StatelessWidget {
               title: Text(contact!.name),
               subtitle: Text(contact!.nickname!),
               profilePicture: contact!.icon,
-              verifiedBadge: contact!.isVerified!,
-              iceBadge: contact!.hasIceAccount,
             ),
             SizedBox(height: 12.0.s),
             Align(

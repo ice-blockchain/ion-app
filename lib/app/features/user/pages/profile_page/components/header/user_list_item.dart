@@ -35,7 +35,6 @@ class UseListItem extends ConsumerWidget {
             ),
           ),
           profilePicture: userMetadata.data.picture,
-          verifiedBadge: userMetadata.data.verified,
           constraints: BoxConstraints(maxHeight: minHeight, minHeight: minHeight),
         );
       },

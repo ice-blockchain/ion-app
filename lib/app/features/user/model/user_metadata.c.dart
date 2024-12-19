@@ -62,9 +62,6 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
     String? website,
     String? banner,
     @Default({}) Map<String, MediaAttachment> media,
-    @Default(false) bool bot,
-    @Default(false) bool verified,
-    @Default(false) bool nft,
   }) = _UserMetadata;
 
   const UserMetadata._();
@@ -89,7 +86,6 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
       picture: userDataContent.picture,
       website: userDataContent.website,
       banner: userDataContent.banner,
-      bot: userDataContent.bot ?? false,
       media: media,
     );
   }
@@ -112,7 +108,6 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
           displayName: displayName,
           website: website,
           banner: banner,
-          bot: bot,
         ).toJson(),
       ),
       tags: [
@@ -132,7 +127,6 @@ class UserDataEventMessageContent {
     this.displayName,
     this.website,
     this.banner,
-    this.bot,
   });
 
   factory UserDataEventMessageContent.fromJson(Map<String, dynamic> json) =>
@@ -150,8 +144,6 @@ class UserDataEventMessageContent {
   final String? website;
 
   final String? banner;
-
-  final bool? bot;
 
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
 }
