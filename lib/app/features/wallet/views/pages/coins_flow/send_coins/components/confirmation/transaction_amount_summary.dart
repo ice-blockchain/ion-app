@@ -5,13 +5,15 @@ import 'package:ion/app/extensions/extensions.dart';
 
 class TransactionAmountSummary extends StatelessWidget {
   const TransactionAmountSummary({
-    required this.usdtAmount,
+    required this.amount,
+    required this.currency,
     required this.usdAmount,
     required this.icon,
     super.key,
   });
 
-  final double usdtAmount;
+  final double amount;
+  final String currency;
   final double usdAmount;
   final Widget icon;
 
@@ -28,7 +30,7 @@ class TransactionAmountSummary extends StatelessWidget {
             icon,
             SizedBox(width: 8.0.s),
             Text(
-              '-$usdtAmount USDT',
+              '-$amount $currency',
               style: textTheme.headline2,
             ),
           ],

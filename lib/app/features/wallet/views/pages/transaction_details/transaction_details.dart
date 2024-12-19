@@ -61,8 +61,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     if (type == CryptoAssetType.coin)
                       TransactionAmountSummary(
-                        usdtAmount: controller.getUsdtAmount(),
-                        usdAmount: controller.getUsdtAmount() * 0.999,
+                        amount: controller.getAmount(),
+                        currency: formData.selectedCoin!.abbreviation,
+                        usdAmount: controller.getAmount() * 0.999,
                         icon: mockedCoinsDataArray[3].iconUrl.icon(),
                       ),
                     SizedBox(height: 12.0.s),

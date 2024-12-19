@@ -19,7 +19,7 @@ class CryptoAssetData with _$CryptoAssetData {
     required String address,
     CoinData? selectedCoin,
     NftData? selectedNft,
-    double? usdtAmount,
+    double? amount,
     ContactData? selectedContact,
   }) = _CryptoAssetData;
 }
