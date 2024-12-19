@@ -196,3 +196,11 @@ class RelayRequestFailedException extends IONException {
 class UserChatRelaysNotFoundException extends IONException {
   UserChatRelaysNotFoundException() : super(10040, 'User chat relays not found');
 }
+
+class CreateArticleImageNotFoundException extends IONException {
+  CreateArticleImageNotFoundException() : super(10041, 'Create article image not found');
+}
+
+class CreateArticleFailedToRetrieveImageFileException extends IONException {
+  CreateArticleFailedToRetrieveImageFileException() : super(10042, 'Failed to retrieve image file');
+}

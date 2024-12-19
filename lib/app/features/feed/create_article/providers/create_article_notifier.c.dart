@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
@@ -106,10 +107,10 @@ class CreateArticleNotifier extends _$CreateArticleNotifier {
 
   Future<UploadResult> _uploadImage(String imageId) async {
     final assetEntity = await ref.read(assetEntityProvider(imageId).future);
-    if (assetEntity == null) throw Exception('Image not found');
+    if (assetEntity == null) throw CreateArticleImageNotFoundException();
 
     final file = await assetEntity.file;
-    if (file == null) throw Exception('Failed to retrieve image file');
+    if (file == null) throw CreateArticleFailedToRetrieveImageFileException();
 
     const maxDimension = 1024;
     final compressedImage = await ref.read(compressServiceProvider).compressImage(

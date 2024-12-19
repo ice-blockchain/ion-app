@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
+import 'package:ion/app/features/feed/views/components/article/constants.dart';
 
 class ArticleImage extends StatelessWidget {
   const ArticleImage({
@@ -27,7 +28,7 @@ class ArticleImage extends StatelessWidget {
         alignment: minutesToReadAlignment,
         children: [
           AspectRatio(
-            aspectRatio: 343 / 210,
+            aspectRatio: ArticleConstants.headerImageAspectRation,
             child: imageUrl != null
                 ? CachedNetworkImage(
                     imageUrl: imageUrl!,
