@@ -68,9 +68,9 @@ class TransactionResultSheet extends ConsumerWidget {
               ),
             if (type == CryptoAssetType.coin)
               TransactionAmountSummary(
-                amount: controller.amount,
+                amount: controller.getAmount(),
                 currency: formData.selectedCoin!.abbreviation,
-                usdAmount: controller.amount * 0.999,
+                usdAmount: controller.getAmount() * 0.999,
                 icon: formData.selectedCoin!.iconUrl.icon(),
               ),
             SizedBox(height: 24.0.s),
