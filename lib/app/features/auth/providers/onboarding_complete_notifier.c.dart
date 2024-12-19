@@ -39,7 +39,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
             await (_assignUserRelays(), _generateNostrEventSigner()).wait;
 
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
-        final userRelaysEvent = await _buildAndCacheUserRelays(list: relayUrls);
+        final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
         // Build and cache user chat relays
         final userChatRelaysEvent = await _buildUserChatRelays(
@@ -106,9 +106,9 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(nostrEventSignerProvider(currentIdentityKeyName).notifier).generate();
   }
 
-  Future<EventMessage> _buildAndCacheUserRelays({required List<String> list}) async {
+  Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
     final userRelays = UserRelaysData(
-      list: list.map((url) => UserRelay(url: url)).toList(),
+      list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
     final userRelaysEvent = await ref.read(nostrNotifierProvider.notifier).sign(userRelays);
