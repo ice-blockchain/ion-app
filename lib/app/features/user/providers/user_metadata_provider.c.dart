@@ -13,13 +13,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_metadata_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<UserMetadataEntity?> userMetadata(Ref ref, String pubkey) async {
+Future<UserMetadataEntity?> userMetadata(
+  Ref ref,
+  String pubkey, {
+  bool cacheOnly = false,
+}) async {
   final userMetadata = ref.watch(
     nostrCacheProvider.select(
       cacheSelector<UserMetadataEntity>(UserMetadataEntity.cacheKeyBuilder(pubkey: pubkey)),
     ),
   );
-  if (userMetadata != null) {
+
+  if (userMetadata != null || cacheOnly) {
     return userMetadata;
   }
 
