@@ -21,3 +21,12 @@ class ActionSourceRelayUrl extends ActionSource {
 class ActionSourceIndexers extends ActionSource {
   const ActionSourceIndexers();
 }
+
+class ActionSourceUserChat extends ActionSource {
+  const ActionSourceUserChat(this.pubkey);
+  final String pubkey;
+}
+
+class ActionSourceCurrentUserChat extends ActionSource {
+  const ActionSourceCurrentUserChat();
+}

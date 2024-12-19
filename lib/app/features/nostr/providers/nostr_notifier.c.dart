@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
@@ -14,6 +15,7 @@ import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/relays_provider.c.dart';
+import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -211,6 +213,22 @@ class NostrNotifier extends _$NostrNotifier {
           // TODO: support multiple urls to allow retrying on different relays
           return await ref.read(relayProvider(actionSource.url).future);
         }
+      case ActionSourceCurrentUserChat():
+        {
+          final pubkey = ref.read(currentPubkeySelectorProvider);
+          if (pubkey == null) {
+            throw UserMasterPubkeyNotFoundException();
+          }
+          final userChatRelays = await _getUserChatRelays(pubkey);
+          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
+        }
+      case ActionSourceUserChat():
+        {
+          final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
+          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
+          return await ref.read(relayProvider(relays.random.url).future);
+        }
     }
   }
 
@@ -221,6 +239,14 @@ class NostrNotifier extends _$NostrNotifier {
       throw UserRelaysNotFoundException();
     }
     return userRelays.first;
+  }
+
+  Future<UserChatRelaysEntity> _getUserChatRelays(String pubkey) async {
+    final userRelays = await ref.read(userChatRelaysProvider(pubkey).future);
+    if (userRelays == null) {
+      throw UserChatRelaysNotFoundException();
+    }
+    return userRelays;
   }
 
   NostrEntity _parseAndCache(EventMessage event) {
