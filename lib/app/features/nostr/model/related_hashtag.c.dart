@@ -25,7 +25,7 @@ class RelatedHashtag with _$RelatedHashtag {
   }
 
   List<String> toTag() {
-    return [tagName, value];
+    return [tagName, if (value.startsWith('#')) value.substring(1) else value];
   }
 
   static const String tagName = 't';
