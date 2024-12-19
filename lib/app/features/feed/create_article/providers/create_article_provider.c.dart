@@ -5,13 +5,13 @@ import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/services/media_upload_service.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,28 +39,21 @@ class CreateArticle extends _$CreateArticle {
       final mainImageFuture = _getUploadImage(imageId, files);
       final contentFuture = _prepareContent(content, mediaIds, files, mediaAttachments);
 
-      try {
-        final results = await Future.wait([mainImageFuture, contentFuture]);
+      final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
 
-        final imageUrl = (results.isNotEmpty && results[0] != null) ? results[0] : null;
-        final updatedContent = (results.length > 1 && results[1] != null) ? results[1]! : '';
+      final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(updatedContent);
 
-        final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(updatedContent);
+      final articleData = ArticleData(
+        title: title,
+        summary: summary,
+        image: imageUrl,
+        content: updatedContent,
+        media: {for (final attachment in mediaAttachments) attachment.url: attachment},
+        relatedHashtags: relatedHashtags,
+        publishedAt: publishedAt ?? DateTime.now(),
+      );
 
-        final articleData = ArticleData(
-          title: title,
-          summary: summary,
-          image: imageUrl,
-          content: updatedContent,
-          media: {for (final attachment in mediaAttachments) attachment.url: attachment},
-          relatedHashtags: relatedHashtags,
-          publishedAt: publishedAt ?? DateTime.now(),
-        );
-
-        await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
-      } catch (error) {
-        throw CreateArticleFailedException(error);
-      }
+      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
     });
   }
 
@@ -68,8 +61,7 @@ class CreateArticle extends _$CreateArticle {
     if (imageId == null) return null;
 
     final uploadResult = await _uploadImage(imageId);
-
-    files.addAll(uploadResult.fileMetadatas);
+    files.add(uploadResult.fileMetadata);
     return uploadResult.mediaAttachment.url;
   }
 
@@ -86,15 +78,12 @@ class CreateArticle extends _$CreateArticle {
     if (mediaIds != null && mediaIds.isNotEmpty) {
       await Future.wait(
         mediaIds.map((id) async {
-          final uploadResult = await _uploadImage(id);
-
-          uploadedUrls[id] = uploadResult.mediaAttachment.url;
-
-          files.addAll(uploadResult.fileMetadatas);
-          mediaAttachments.add(uploadResult.mediaAttachment);
+          final (:fileMetadata, :mediaAttachment) = await _uploadImage(id);
+          uploadedUrls[id] = mediaAttachment.url;
+          files.add(fileMetadata);
+          mediaAttachments.add(mediaAttachment);
         }),
       );
-
       updatedContent = _replaceImagePathsWithUrls(updatedContent, uploadedUrls);
     }
 
@@ -116,19 +105,24 @@ class CreateArticle extends _$CreateArticle {
     return jsonEncode(parsedContent);
   }
 
-  Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
-    String imageId,
-  ) async {
+  Future<UploadResult> _uploadImage(String imageId) async {
     final assetEntity = await ref.read(assetEntityProvider(imageId).future);
-    if (assetEntity == null) throw CreateArticleImageNotFoundException();
+    if (assetEntity == null) throw AssetEntityFileNotFoundException();
 
     final file = await assetEntity.file;
-    if (file == null) throw CreateArticleFailedToRetrieveImageFileException();
+    if (file == null) throw AssetEntityFileNotFoundException();
 
-    return uploadImage(
-      ref,
-      MediaFile(path: file.path),
-      alt: FileAlt.article,
-    );
+    const maxDimension = 1024;
+    final compressedImage = await ref.read(compressServiceProvider).compressImage(
+          MediaFile(path: file.path),
+          width: assetEntity.width > assetEntity.height ? maxDimension : null,
+          height: assetEntity.height > assetEntity.width ? maxDimension : null,
+          quality: 70,
+        );
+
+    return ref.read(nostrUploadNotifierProvider.notifier).upload(
+          compressedImage,
+          alt: FileAlt.article,
+        );
   }
 }

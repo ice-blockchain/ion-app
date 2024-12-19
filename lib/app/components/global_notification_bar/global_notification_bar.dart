@@ -7,6 +7,7 @@ import 'package:ion/app/components/global_notification_bar/models/global_notific
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
+import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
@@ -103,6 +104,9 @@ class GlobalNotificationBar extends HookConsumerWidget {
       })
       ..listen(createPostNotifierProvider(CreatePostOption.story), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.story);
+      })
+      ..listen(createArticleProvider, (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.article);
       })
       ..listen(repostNotifierProvider, (previous, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.repost);

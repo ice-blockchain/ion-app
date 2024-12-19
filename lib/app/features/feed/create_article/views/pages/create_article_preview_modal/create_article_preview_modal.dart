@@ -23,14 +23,7 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingValue = 20.0.s;
 
-    final title = ref.watch(draftArticleProvider).title;
-    final selectedImage = ref.watch(draftArticleProvider).image;
-    final imageIds = ref.watch(draftArticleProvider).imageIds;
-    final content = ref.watch(draftArticleProvider).content;
-
-    final isSubmitLoading = ref.watch(createArticleProvider).isLoading;
-
-    ref.displayErrors(createArticleProvider);
+    final DraftArticleState(:title, :image, :imageIds, :content) = ref.watch(draftArticleProvider);
 
     return SheetContent(
       bottomPadding: 0,
@@ -58,15 +51,14 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
               children: [
                 ScreenSideOffset.large(
                   child: Button(
-                    disabled: isSubmitLoading,
                     leadingIcon: Assets.svg.iconFeedArticles.icon(
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
-                    onPressed: () async {
-                      await ref.read(createArticleProvider.notifier).create(
+                    onPressed: () {
+                      ref.read(createArticleProvider.notifier).create(
                             title: title,
                             content: content,
-                            imageId: selectedImage?.path,
+                            imageId: image?.path,
                             mediaIds: imageIds,
                           );
 

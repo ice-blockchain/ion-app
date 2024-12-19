@@ -7,7 +7,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
@@ -17,6 +16,8 @@ import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'article_data.c.freezed.dart';
+
+const textEditorSingleImageKey = 'text-editor-single-image';
 
 @Freezed(equal: false)
 class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity {
