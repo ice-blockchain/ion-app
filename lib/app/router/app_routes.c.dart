@@ -128,8 +128,8 @@ import 'package:ion/app/features/wallet/views/pages/nft_details/nft_details_page
 import 'package:ion/app/features/wallet/views/pages/request_contacts_access_modal/request_contacts_access_modal.dart';
 import 'package:ion/app/features/wallet/views/pages/send_nft_confirm/send_nft_confirm.dart';
 import 'package:ion/app/features/wallet/views/pages/send_nft_form/send_nft_form.dart';
-import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details.dart';
 import 'package:ion/app/features/wallet/views/pages/transaction_details/explore_transaction_details_modal.dart';
+import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/wallet_page.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_scan/wallet_scan_modal_page.dart';
