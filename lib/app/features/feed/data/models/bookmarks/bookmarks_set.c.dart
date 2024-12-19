@@ -58,7 +58,8 @@ class BookmarksSetEntity with _$BookmarksSetEntity, NostrEntity implements Cache
 class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
   const factory BookmarksSetData({
     required BookmarksSetType type,
-    required List<String> ids,
+    required List<String> postsIds,
+    required List<ReplaceableEventReference> articlesRefs,
   }) = _BookmarksSetData;
 
   const BookmarksSetData._();
@@ -70,11 +71,13 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
       throw Exception('BookmarksSet event should have `d` tag');
     }
 
-    final type = BookmarksSetType.values.asNameMap()[typeName] ?? BookmarksSetType.unknown;
-    final idTag = type == BookmarksSetType.articles ? 'a' : 'e';
     return BookmarksSetData(
       type: BookmarksSetType.values.asNameMap()[typeName] ?? BookmarksSetType.unknown,
-      ids: eventMessage.tags.where((tag) => tag[0] == idTag).map((tag) => tag[1]).toList(),
+      postsIds: eventMessage.tags.where((tag) => tag[0] == 'e').map((tag) => tag[1]).toList(),
+      articlesRefs: eventMessage.tags
+          .where((tag) => tag[0] == 'a')
+          .map(ReplaceableEventReference.fromTag)
+          .toList(),
     );
   }
 
@@ -84,7 +87,6 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
-    final idTag = type == BookmarksSetType.articles ? 'a' : 'e';
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
@@ -92,7 +94,8 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
       tags: [
         ...tags,
         ['d', type.toShortString()],
-        ...ids.map((id) => [idTag, id]),
+        ...postsIds.map((id) => ['e', id]),
+        ...articlesRefs.map((ref) => ref.toTag()),
       ],
       content: '',
     );

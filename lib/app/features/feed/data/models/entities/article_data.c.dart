@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -45,6 +46,14 @@ class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity
   static String cacheKeyBuilder({required String id}) => id;
 
   static const kind = 30023;
+
+  ReplaceableEventReference toReplaceableEventReference() {
+    return ReplaceableEventReference(
+      kind: kind,
+      pubkey: masterPubkey,
+      dTag: id,
+    );
+  }
 }
 
 class ArticleData implements EventSerializable {
