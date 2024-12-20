@@ -196,3 +196,7 @@ class RelayRequestFailedException extends IONException {
 class UserChatRelaysNotFoundException extends IONException {
   UserChatRelaysNotFoundException() : super(10040, 'User chat relays not found');
 }
+
+class ConfigPlatformNotSupportException extends IONException {
+  ConfigPlatformNotSupportException() : super(10041, 'Platform not supported');
+}
