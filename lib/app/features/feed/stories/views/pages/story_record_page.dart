@@ -9,7 +9,7 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/camera_actions_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
@@ -34,8 +34,8 @@ class StoryRecordPage extends HookConsumerWidget {
     );
 
     final isCameraReady = cameraState is CameraReady;
-    final storyCameraState = ref.watch(storyCameraControllerProvider);
-    final selectedFile = storyCameraState.whenOrNull(saved: (file) => file);
+    final cameraActionsState = ref.watch(cameraActionsControllerProvider);
+    final selectedFile = cameraActionsState.whenOrNull(saved: (file) => file);
 
     if (selectedFile != null) {
       ref
@@ -65,30 +65,33 @@ class StoryRecordPage extends HookConsumerWidget {
               fit: StackFit.expand,
               children: [
                 cameraState.maybeWhen(
-                  ready: (controller, _, __) => StoryCameraPreview(controller: controller),
+                  ready: (controller, _, __) => CustomCameraPreview(controller: controller),
                   orElse: () => const CenteredLoadingIndicator(),
                 ),
                 if (isRecording)
-                  StoryRecordingIndicator(recordingDuration: recordingDuration)
+                  CameraRecordingIndicator(recordingDuration: recordingDuration)
                 else
-                  const IdleCameraPreview(),
+                  const CameraIdlePreview(),
                 Positioned.fill(
                   bottom: 16.0.s,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: StoryCaptureButton(
+                    child: CameraCaptureButton(
                       isRecording: isRecording,
                       recordingProgress: recordingProgress,
                       onCapturePhoto: isCameraReady
-                          ? () async => ref.read(storyCameraControllerProvider.notifier).takePhoto()
+                          ? () async =>
+                              ref.read(cameraActionsControllerProvider.notifier).takePhoto()
                           : null,
                       onRecordingStart: isCameraReady
-                          ? () async =>
-                              ref.read(storyCameraControllerProvider.notifier).startVideoRecording()
+                          ? () async => ref
+                              .read(cameraActionsControllerProvider.notifier)
+                              .startVideoRecording()
                           : null,
                       onRecordingStop: isCameraReady
-                          ? () async =>
-                              ref.read(storyCameraControllerProvider.notifier).stopVideoRecording()
+                          ? () async => ref
+                              .read(cameraActionsControllerProvider.notifier)
+                              .stopVideoRecording()
                           : null,
                     ),
                   ),

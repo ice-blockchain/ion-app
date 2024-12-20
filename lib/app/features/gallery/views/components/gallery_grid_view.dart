@@ -32,7 +32,7 @@ class GalleryGridView extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           if (index == 0) {
-            return const CameraCell();
+            return CameraCell(type: type);
           }
 
           final mediaData = galleryState.mediaData[index - 1];

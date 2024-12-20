@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class StoryCameraPreview extends StatelessWidget {
-  const StoryCameraPreview({
+class CustomCameraPreview extends StatelessWidget {
+  const CustomCameraPreview({
     required this.controller,
     super.key,
   });

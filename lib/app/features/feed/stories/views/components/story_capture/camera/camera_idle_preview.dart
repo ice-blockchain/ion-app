@@ -4,18 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/camera_actions_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_control_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_gallery_button.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class IdleCameraPreview extends ConsumerWidget {
-  const IdleCameraPreview({super.key});
+class CameraIdlePreview extends ConsumerWidget {
+  const CameraIdlePreview({
+    super.key,
+    this.showGalleryButton = true,
+  });
+
+  final bool showGalleryButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyCameraNotifier = ref.read(storyCameraControllerProvider.notifier);
+    final cameraActionsNotifier = ref.watch(cameraActionsControllerProvider.notifier);
 
     return Stack(
       children: [
@@ -32,7 +37,7 @@ class IdleCameraPreview extends ConsumerWidget {
           right: 10.0.s,
           child: StoryControlButton(
             icon: Assets.svg.iconStoryLightning.icon(),
-            onPressed: storyCameraNotifier.toggleFlash,
+            onPressed: cameraActionsNotifier.toggleFlash,
           ),
         ),
         Positioned(
@@ -43,11 +48,12 @@ class IdleCameraPreview extends ConsumerWidget {
             onPressed: () => ref.read(cameraControllerNotifierProvider.notifier).switchCamera(),
           ),
         ),
-        Positioned(
-          bottom: 30.0.s,
-          left: 16.0.s,
-          child: const StoryGalleryButton(),
-        ),
+        if (showGalleryButton)
+          Positioned(
+            bottom: 30.0.s,
+            left: 16.0.s,
+            child: const StoryGalleryButton(),
+          ),
       ],
     );
   }
