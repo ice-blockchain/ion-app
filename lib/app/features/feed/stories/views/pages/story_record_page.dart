@@ -80,15 +80,18 @@ class StoryRecordPage extends HookConsumerWidget {
                       isRecording: isRecording,
                       recordingProgress: recordingProgress,
                       onCapturePhoto: isCameraReady
-                          ? () async => ref.read(cameraActionsControllerProvider.notifier).takePhoto()
+                          ? () async =>
+                              ref.read(cameraActionsControllerProvider.notifier).takePhoto()
                           : null,
                       onRecordingStart: isCameraReady
-                          ? () async =>
-                              ref.read(cameraActionsControllerProvider.notifier).startVideoRecording()
+                          ? () async => ref
+                              .read(cameraActionsControllerProvider.notifier)
+                              .startVideoRecording()
                           : null,
                       onRecordingStop: isCameraReady
-                          ? () async =>
-                              ref.read(cameraActionsControllerProvider.notifier).stopVideoRecording()
+                          ? () async => ref
+                              .read(cameraActionsControllerProvider.notifier)
+                              .stopVideoRecording()
                           : null,
                     ),
                   ),
