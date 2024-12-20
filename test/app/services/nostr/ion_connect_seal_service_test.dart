@@ -9,8 +9,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 void main() {
   late IonConnectSealService sealService;
   late EventSigner signer;
-  const pubkey =
-      'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377';
+  const pubkey = 'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377';
 
   setUp(() async {
     sealService = IonConnectSealServiceImpl();
@@ -19,8 +18,8 @@ void main() {
 
   group('IonConnectSealService', () {
     test('creates seal from rumor', () async {
-      final rumor = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: pubkey);
+      final rumor =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: pubkey);
 
       final seal = await sealService.createSeal(
         rumor,

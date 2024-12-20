@@ -37,13 +37,11 @@ enum MediaType {
   }
 
   static bool isImageUrl(String url) {
-    return RegExp(r'https?://\S+\.(?:jpg|jpeg|png|gif|bmp|svg|webp)')
-        .hasMatch(url);
+    return RegExp(r'https?://\S+\.(?:jpg|jpeg|png|gif|bmp|svg|webp)').hasMatch(url);
   }
 
   static bool isVideoUrl(String url) {
-    return RegExp(r'https?://\S+\.(?:mp4|avi|mov|wmv|flv|mkv|webm)')
-        .hasMatch(url);
+    return RegExp(r'https?://\S+\.(?:mp4|avi|mov|wmv|flv|mkv|webm)').hasMatch(url);
   }
 
   static bool isAudioUrl(String url) {

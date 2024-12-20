@@ -34,10 +34,8 @@ Future<Template> appTemplate(Ref ref) async {
     ],
   );
 
-  final jsonString =
-      await rootBundle.loadString('lib/app/templates/basic.json');
-  final data =
-      Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+  final jsonString = await rootBundle.loadString('lib/app/templates/basic.json');
+  final data = Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
   return data;
 }
 
