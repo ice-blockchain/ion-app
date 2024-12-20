@@ -9,6 +9,7 @@ import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.da
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/search_extension.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,6 +39,10 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
                 ReferencesSearchExtension(contain: false),
                 ExpirationSearchExtension(expiration: true),
                 VideosSearchExtension(contain: true),
+                GenericIncludeSearchExtension(
+                  forKind: PostEntity.kind,
+                  includeKind: UserMetadataEntity.kind,
+                ),
               ],
             ).toString(),
             limit: 10,
@@ -51,6 +56,10 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
                 ReferencesSearchExtension(contain: false),
                 ExpirationSearchExtension(expiration: true),
                 ImagesSearchExtension(contain: true),
+                GenericIncludeSearchExtension(
+                  forKind: PostEntity.kind,
+                  includeKind: UserMetadataEntity.kind,
+                ),
               ],
             ).toString(),
             limit: 10,
