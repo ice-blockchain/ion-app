@@ -16,7 +16,7 @@ enum NetworkType {
 
   String getDisplayName(BuildContext context) {
     return switch (this) {
-      NetworkType.all => context.i18n.core_all,
+      NetworkType.all => context.i18n.all_chains_item,
       NetworkType.arbitrum => 'Arbitrum',
       NetworkType.bnb => 'BNB Smart Chain',
       NetworkType.cosmos => 'Cosmos',
@@ -29,7 +29,7 @@ enum NetworkType {
 
   AssetGenImage get iconAsset {
     return switch (this) {
-      NetworkType.all => Assets.images.wallet.walletInfinite,
+      NetworkType.all => Assets.images.wallet.walletAllnetwork,
       NetworkType.arbitrum => Assets.images.wallet.walletArbitrum,
       NetworkType.bnb => Assets.images.wallet.walletBinance,
       NetworkType.cosmos => Assets.images.wallet.walletCosmos,

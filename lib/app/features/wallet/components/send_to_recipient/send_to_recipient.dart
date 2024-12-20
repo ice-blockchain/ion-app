@@ -43,6 +43,7 @@ class SendToRecipient extends StatelessWidget {
       return ListItem.textWithIcon(
         title: Text(locale.wallet_send_to),
         secondary: Align(
+          alignment: Alignment.centerRight,
           child: Text(
             address,
             textAlign: TextAlign.center,

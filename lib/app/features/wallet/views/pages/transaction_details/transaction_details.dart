@@ -61,8 +61,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     if (type == CryptoAssetType.coin)
                       TransactionAmountSummary(
-                        usdtAmount: controller.getUsdtAmount(),
-                        usdAmount: controller.getUsdtAmount() * 0.999,
+                        amount: controller.getAmount(),
+                        currency: formData.selectedCoin!.abbreviation,
+                        usdAmount: controller.getAmount() * 0.999,
                         icon: mockedCoinsDataArray[3].iconUrl.icon(),
                       ),
                     SizedBox(height: 12.0.s),
@@ -95,11 +96,6 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItem.text(
-                      title: Text(context.i18n.send_nft_confirm_asset),
-                      value: controller.getAsset(),
-                    ),
-                    SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
                       value: controller.getNetwork(),
@@ -109,6 +105,10 @@ class TransactionDetailsPage extends ConsumerWidget {
                     ListItemArrivalTime(
                       arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
                           .format(formData.arrivalDateTime),
+                    ),
+                    ListItemArrivalTime(
+                      arrivalTime: '${formData.arrivalTime} '
+                          '${context.i18n.wallet_arrival_time_minutes}',
                     ),
                     SizedBox(height: 12.0.s),
                     const ListItemNetworkFee(value: '1.00 USDT'),
