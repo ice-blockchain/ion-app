@@ -29,7 +29,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
 
-@riverpod
+@Riverpod(dependencies: [nostrEntity])
 class CreatePostNotifier extends _$CreatePostNotifier {
   @override
   FutureOr<void> build(CreatePostOption createOption) {}

@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nostr_entity_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [])
 Future<NostrEntity?> nostrEntity(
   Ref ref, {
   required EventReference eventReference,

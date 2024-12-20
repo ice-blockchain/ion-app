@@ -16,7 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replies_data_source_provider.c.g.dart';
 
-@riverpod
+@Riverpod(dependencies: [nostrEntity])
 List<EntitiesDataSource>? repliesDataSource(
   Ref ref, {
   required EventReference eventReference,
