@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
-import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
@@ -57,7 +57,7 @@ class Article extends ConsumerWidget {
                     pubkey: eventReference.pubkey,
                     trailing: Row(
                       children: [
-                        const BookmarkButton(id: 'test_article_id'),
+                        BookmarkButton.article(eventReference: eventReference),
                         UserInfoMenu(pubkey: eventReference.pubkey),
                       ],
                     ),
