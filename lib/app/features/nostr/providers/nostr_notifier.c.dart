@@ -89,17 +89,18 @@ class NostrNotifier extends _$NostrNotifier {
     final authMessage = AuthMessage(
       challenge: jsonEncode(signedAuthEvent.toJson().last),
     );
-
     relay.sendMessage(authMessage);
-    await relay.messages
+
+    final okMessages = await relay.messages
         .where((message) => message is OkMessage)
         .cast<OkMessage>()
-        .where((message) => message.accepted)
-        .toList();
+        .firstWhere((message) => signedAuthEvent.id == message.eventId);
+
+    if (!okMessages.accepted) {
+      throw SendEventException(okMessages.message);
+    }
 
     ref.read(authChallengeProvider(relay.url).notifier).clearChallenge();
-
-    return;
   }
 
   Future<List<NostrEntity>?> sendEntitiesData(
