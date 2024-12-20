@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -9,8 +10,10 @@ import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
+import 'package:ion/app/features/nostr/model/auth_event.c.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/providers/auth_challenge_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
@@ -41,15 +44,22 @@ class NostrNotifier extends _$NostrNotifier {
     final dislikedRelaysUrls = <String>{};
     NostrRelay? relay;
     return withRetry(
-      () async {
+      ({error}) async {
         relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+
+        if (_isAuthRequired(error)) {
+          await sendAuthEvent(relay!);
+        }
+
         await relay!.sendEvents(events);
+
         if (cache) {
           return events.map(_parseAndCache).toList();
         }
+
         return null;
       },
-      retryWhen: (error) => error is RelayRequestFailedException,
+      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -63,6 +73,33 @@ class NostrNotifier extends _$NostrNotifier {
   }) async {
     final result = await sendEvents([event], actionSource: actionSource, cache: cache);
     return result?.elementAtOrNull(0);
+  }
+
+  Future<void> sendAuthEvent(NostrRelay relay) async {
+    final challenge = ref.read(authChallengeProvider(relay.url));
+    if (challenge == null && challenge.isEmpty) throw Exception('Auth challenge is empty');
+
+    final authEvent = AuthEvent(
+      challenge: challenge!,
+      relay: Uri.parse(relay.url).toString(),
+    );
+
+    final signedAuthEvent = await sign(authEvent);
+
+    final authMessage = AuthMessage(
+      challenge: jsonEncode(signedAuthEvent.toJson().last),
+    );
+
+    relay.sendMessage(authMessage);
+    await relay.messages
+        .where((message) => message is OkMessage)
+        .cast<OkMessage>()
+        .where((message) => message.accepted)
+        .toList();
+
+    ref.read(authChallengeProvider(relay.url).notifier).clearChallenge();
+
+    return;
   }
 
   Future<List<NostrEntity>?> sendEntitiesData(
@@ -91,8 +128,13 @@ class NostrNotifier extends _$NostrNotifier {
     NostrRelay? relay;
 
     yield* withRetryStream(
-      () async* {
+      ({error}) async* {
         relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+
+        if (_isAuthRequired(error)) {
+          await sendAuthEvent(relay!);
+        }
+
         await for (final event in nd.requestEvents(requestMessage, relay!)) {
           if (event is NoticeMessage || event is ClosedMessage) {
             throw RelayRequestFailedException(
@@ -104,7 +146,7 @@ class NostrNotifier extends _$NostrNotifier {
           }
         }
       },
-      retryWhen: (error) => error is RelayRequestFailedException,
+      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -177,6 +219,9 @@ class NostrNotifier extends _$NostrNotifier {
       ],
     );
   }
+
+  bool _isAuthRequired(Object? error) =>
+      error != null && (error is SendEventException) && error.code.startsWith('auth-required');
 
   Future<NostrRelay> _getRelay(
     ActionSource actionSource, {
