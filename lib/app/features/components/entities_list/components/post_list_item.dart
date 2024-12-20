@@ -18,8 +18,8 @@ class PostListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final eventReference = EventReference.fromNostrEntity(post);
     // TODO:
-    // wait for 10002 to be in cache before showing the UI when "side effects" are impl
     // process 20002 in the feed provider to fetch 10002
+
     return GestureDetector(
       onTap: () => PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
       child: ScreenSideOffset.small(

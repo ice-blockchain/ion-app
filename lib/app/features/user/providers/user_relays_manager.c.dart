@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
@@ -11,6 +12,21 @@ import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_relays_manager.c.g.dart';
+
+@riverpod
+Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
+  final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
+  return relays.elementAtOrNull(0);
+}
+
+@riverpod
+Future<UserRelaysEntity?> currentUserRelay(Ref ref) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return null;
+  }
+  return ref.watch(userRelayProvider(currentPubkey).future);
+}
 
 @riverpod
 class UserRelaysManager extends _$UserRelaysManager {
@@ -64,18 +80,6 @@ class UserRelaysManager extends _$UserRelaysManager {
     }
 
     return result;
-  }
-
-  Future<UserRelaysEntity?> fetchForCurrentUser() async {
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
-    if (currentPubkey == null) {
-      return null;
-    }
-    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([currentPubkey]);
-    if (userRelays.isEmpty) {
-      return null;
-    }
-    return userRelays.first;
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIdentityFor({

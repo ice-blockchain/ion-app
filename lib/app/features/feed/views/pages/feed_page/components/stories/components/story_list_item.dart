@@ -28,7 +28,7 @@ class StoryListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewed = useState(false);
-    final userMetadataAsync = ref.watch(userMetadataProvider(pubkey));
+    final userMetadataAsync = ref.watch(userMetadataProvider(pubkey, cacheOnly: true));
 
     return userMetadataAsync.maybeWhen(
       data: (userMetadata) {

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
-import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
@@ -19,60 +18,39 @@ class TrendingVideoAuthor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(pubkey));
+    final userMetadata = ref.watch(userMetadataProvider(pubkey, cacheOnly: true)).valueOrNull;
 
-    return userMetadata.maybeWhen(
-      data: (author) {
-        if (author == null) {
-          return const SizedBox.shrink();
-        }
+    if (userMetadata == null) {
+      return const SizedBox.shrink();
+    }
 
-        return Padding(
-          padding: EdgeInsets.all(8.0.s),
-          child: TextButton(
-            onPressed: () {},
-            child: Padding(
-              padding: EdgeInsets.all(4.0.s),
-              child: Row(
-                children: [
-                  Avatar(
-                    size: 20.0.s,
-                    imageUrl: author.data.picture,
-                  ),
-                  Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 4.0.s),
-                      child: Text(
-                        author.data.displayName,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.theme.appTextThemes.caption3.copyWith(
-                          color: context.theme.appColors.secondaryBackground,
-                        ),
-                      ),
+    return Padding(
+      padding: EdgeInsets.all(8.0.s),
+      child: TextButton(
+        onPressed: () {},
+        child: Padding(
+          padding: EdgeInsets.all(4.0.s),
+          child: Row(
+            children: [
+              Avatar(
+                size: 20.0.s,
+                imageUrl: userMetadata.data.picture,
+              ),
+              Flexible(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 4.0.s),
+                  child: Text(
+                    userMetadata.data.displayName,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.theme.appTextThemes.caption3.copyWith(
+                      color: context.theme.appColors.secondaryBackground,
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        );
-      },
-      orElse: () => const Skeleton(child: _TrendingVideoAuthorShape()),
-    );
-  }
-}
-
-class _TrendingVideoAuthorShape extends StatelessWidget {
-  const _TrendingVideoAuthorShape();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(8.0.s).copyWith(right: 36.0.s),
-      height: 20.0.s,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0.s),
-        color: Colors.white,
+        ),
       ),
     );
   }

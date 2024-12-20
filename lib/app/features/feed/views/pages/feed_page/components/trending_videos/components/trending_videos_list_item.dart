@@ -38,7 +38,6 @@ class TrendingVideoListItem extends ConsumerWidget {
         thumbnailUrl: thumbnailUrl,
         size: itemSize,
         eventReference: eventReference,
-        pubkey: video.masterPubkey,
       ),
     );
   }
@@ -74,13 +73,11 @@ class _VideoContainer extends StatelessWidget {
     required this.thumbnailUrl,
     required this.size,
     required this.eventReference,
-    required this.pubkey,
   });
 
   final String thumbnailUrl;
   final Size size;
   final EventReference eventReference;
-  final String pubkey;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +95,7 @@ class _VideoContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _TopControls(eventReference: eventReference),
-          TrendingVideoAuthor(pubkey: pubkey),
+          TrendingVideoAuthor(pubkey: eventReference.pubkey),
         ],
       ),
     );
