@@ -4,13 +4,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
+import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.c.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_recording_progress.dart';
-import 'package:ion/app/features/feed/stories/providers/story_camera_provider.c.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/idle_camera_preview.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/story_camera_preview.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_capture_button.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/story_recording_indicator.dart';
+import 'package:ion/app/features/feed/stories/providers/camera_actions_provider.c.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/custom_camera_preview.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_capture/camera/camera_idle_preview.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_capture_button.dart';
+import 'package:ion/app/features/feed/stories/views/components/story_capture/controls/camera_recording_indicator.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
@@ -27,8 +27,8 @@ class GalleryCameraPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraState = ref.watch(cameraControllerNotifierProvider);
 
-    ref.listen<StoryCameraState>(
-      storyCameraControllerProvider,
+    ref.listen<CameraCaptureState>(
+      cameraActionsControllerProvider,
       (_, next) => next.whenOrNull(
         saved: (file) {
           if (context.mounted) {
@@ -51,7 +51,7 @@ class GalleryCameraPage extends HookConsumerWidget {
 
     final isCameraReady = cameraState is CameraReady;
 
-    final storyCameraNotifier = ref.read(storyCameraControllerProvider.notifier);
+    final storyCameraNotifier = ref.read(cameraActionsControllerProvider.notifier);
 
     final capturePhotoAction = isCameraReady ? storyCameraNotifier.takePhoto : null;
     final startVideoAction = isCameraReady ? storyCameraNotifier.startVideoRecording : null;
@@ -70,18 +70,18 @@ class GalleryCameraPage extends HookConsumerWidget {
           fit: StackFit.expand,
           children: [
             cameraState.maybeWhen(
-              ready: (controller, _, __) => StoryCameraPreview(controller: controller),
+              ready: (controller, _, __) => CustomCameraPreview(controller: controller),
               orElse: () => const CenteredLoadingIndicator(),
             ),
             if (isRecording)
-              StoryRecordingIndicator(recordingDuration: recordingDuration)
+              CameraRecordingIndicator(recordingDuration: recordingDuration)
             else
-              const IdleCameraPreview(showGalleryButton: false),
+              const CameraIdlePreview(showGalleryButton: false),
             Positioned.fill(
               bottom: 16.0.s,
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: StoryCaptureButton(
+                child: CameraCaptureButton(
                   isRecording: isRecording,
                   recordingProgress: recordingProgress,
                   onCapturePhoto: onCapturePhoto,

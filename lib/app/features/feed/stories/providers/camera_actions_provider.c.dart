@@ -3,18 +3,18 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ion/app/features/feed/stories/data/models/story_camera_state.c.dart';
+import 'package:ion/app/features/feed/stories/data/models/camera_capture_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'story_camera_provider.c.g.dart';
+part 'camera_actions_provider.c.g.dart';
 
 @riverpod
-class StoryCameraController extends _$StoryCameraController {
+class CameraActionsController extends _$CameraActionsController {
   @override
-  StoryCameraState build() => const StoryCameraState.initial();
+  CameraCaptureState build() => const CameraCaptureState.initial();
 
   Future<void> takePhoto() async {
     final cameraNotifier = ref.read(cameraControllerNotifierProvider.notifier);
@@ -25,16 +25,16 @@ class StoryCameraController extends _$StoryCameraController {
 
       if (mediaFile != null) {
         ref.invalidate(latestGalleryPreviewProvider);
-        state = StoryCameraState.saved(file: mediaFile);
+        state = CameraCaptureState.saved(file: mediaFile);
       } else {
-        state = const StoryCameraState.error(message: 'Failed to save photo.');
+        state = const CameraCaptureState.error(message: 'Failed to save photo.');
       }
     }
   }
 
   Future<void> startVideoRecording() async {
     await ref.read(cameraControllerNotifierProvider.notifier).startVideoRecording();
-    state = const StoryCameraState.recording();
+    state = const CameraCaptureState.recording();
   }
 
   Future<void> stopVideoRecording() async {
@@ -45,10 +45,10 @@ class StoryCameraController extends _$StoryCameraController {
       final mediaFile = await ref.read(mediaServiceProvider).saveVideoToGallery(videoFile.path);
 
       if (mediaFile != null) {
-        state = StoryCameraState.saved(file: mediaFile);
+        state = CameraCaptureState.saved(file: mediaFile);
       }
     } else {
-      state = const StoryCameraState.error(message: 'Failed to stop video recording.');
+      state = const CameraCaptureState.error(message: 'Failed to stop video recording.');
     }
   }
 
@@ -57,5 +57,5 @@ class StoryCameraController extends _$StoryCameraController {
     await cameraNotifier.toggleFlash();
   }
 
-  void reset() => state = const StoryCameraState.initial();
+  void reset() => state = const CameraCaptureState.initial();
 }

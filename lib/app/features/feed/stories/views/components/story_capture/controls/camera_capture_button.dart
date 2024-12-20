@@ -6,8 +6,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/progress/inner_capture_circle.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/progress/story_circular_progress_indicator.dart';
 
-class StoryCaptureButton extends StatelessWidget {
-  const StoryCaptureButton({
+class CameraCaptureButton extends StatelessWidget {
+  const CameraCaptureButton({
     required this.isRecording,
     required this.recordingProgress,
     required this.onRecordingStart,

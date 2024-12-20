@@ -5,8 +5,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class StoryRecordingIndicator extends StatelessWidget {
-  const StoryRecordingIndicator({
+class CameraRecordingIndicator extends StatelessWidget {
+  const CameraRecordingIndicator({
     required this.recordingDuration,
     super.key,
   });
