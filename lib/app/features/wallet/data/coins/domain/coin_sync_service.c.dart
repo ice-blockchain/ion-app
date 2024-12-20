@@ -58,7 +58,7 @@ class CoinSyncService {
     }
 
     final version = _localStorage.getInt('coins_version');
-    final response = await _ionIdentityClient.coins.getCoins(currentVersion: version);
+    final response = await _ionIdentityClient.coins.getCoins(currentVersion: version ?? 0);
 
     await (
       _localStorage.setInt('coins_version', response.version),
@@ -69,6 +69,6 @@ class CoinSyncService {
       return;
     }
 
-    await _coinsRepository.saveAll(CoinsMapper.fromIONIdentityCoins(response.coins));
+    await _coinsRepository.upsertAll(CoinsMapper.fromIONIdentityCoins(response.coins));
   }
 }

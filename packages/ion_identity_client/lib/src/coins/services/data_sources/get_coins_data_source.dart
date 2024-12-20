@@ -19,7 +19,7 @@ class GetCoinsDataSource {
   Future<CoinsResponse> getCoins({
     required String username,
     required String userId,
-    int? currentVersion,
+    required int currentVersion,
   }) async {
     final token = _tokenStorage.getToken(username: username)?.token;
     if (token == null) {
@@ -29,7 +29,7 @@ class GetCoinsDataSource {
     final response = await _networkClient.get(
       '/v1/users/$userId/coins',
       queryParams: {
-        if (currentVersion != null) 'version': currentVersion,
+        'version': currentVersion,
       },
       headers: {
         ...RequestHeaders.getAuthorizationHeaders(

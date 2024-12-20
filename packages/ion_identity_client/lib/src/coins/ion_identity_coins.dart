@@ -17,7 +17,7 @@ class IONIdentityCoins {
   final ExtractUserIdService _extractUserIdService;
 
   Future<CoinsResponse> getCoins({
-    int? currentVersion,
+    required int currentVersion,
   }) {
     final userId = _extractUserIdService.extractUserId(username: username);
     return _getCoinsService.getCoins(

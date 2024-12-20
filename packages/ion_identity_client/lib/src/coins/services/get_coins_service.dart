@@ -13,7 +13,7 @@ class GetCoinsService {
   Future<CoinsResponse> getCoins({
     required String username,
     required String userId,
-    int? currentVersion,
+    required int currentVersion,
   }) async {
     return _getCoinsDataSource.getCoins(
       username: username,

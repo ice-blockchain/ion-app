@@ -16,17 +16,13 @@ class CoinsRepository {
 
   final IONDatabase _db;
 
-  Future<List<Coin>> fetchAll() async {
-    return _db.select(_db.coinsTable).get();
+  Future<bool> hasAny() async {
+    return _db.select(_db.coinsTable).getSingleOrNull().then((value) => value != null);
   }
 
-  Future<void> save(Coin coin) async {
-    await _db.into(_db.coinsTable).insert(coin);
-  }
-
-  Future<void> saveAll(List<Coin> coins) async {
+  Future<void> upsertAll(List<Coin> coins) async {
     await _db.batch((batch) {
-      batch.insertAll(_db.coinsTable, coins);
+      batch.insertAllOnConflictUpdate(_db.coinsTable, coins);
     });
   }
 

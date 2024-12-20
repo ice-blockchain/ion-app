@@ -22,22 +22,21 @@ class CoinInitializer {
   final CoinsRepository _coinsRepository;
 
   Future<void> initialize() async {
-    final currentCoins = await _coinsRepository.fetchAll();
+    final hasCoins = await _coinsRepository.hasAny();
+    if (hasCoins) return;
 
-    if (currentCoins.isEmpty) {
-      // load coins from file
-      final coinsJson =
-          (await rootBundle.loadString(Assets.ionIdentity.coins).then(jsonDecode)) as List<dynamic>;
+    // load coins from assets file
+    final coinsJson =
+        (await rootBundle.loadString(Assets.ionIdentity.coins).then(jsonDecode)) as List<dynamic>;
 
-      final coinEntities = coinsJson
-          .expand(
-            (group) =>
-                // ignore: avoid_dynamic_calls
-                (group['coins'] as List).map((coin) => Coin.fromJson(coin as Map<String, dynamic>)),
-          )
-          .toList();
+    final coinEntities = coinsJson
+        .expand(
+          (group) =>
+              // ignore: avoid_dynamic_calls
+              (group['coins'] as List).map((coin) => Coin.fromJson(coin as Map<String, dynamic>)),
+        )
+        .toList();
 
-      await _coinsRepository.saveAll(coinEntities);
-    }
+    await _coinsRepository.upsertAll(coinEntities);
   }
 }
