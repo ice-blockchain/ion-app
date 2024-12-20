@@ -7,6 +7,7 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
@@ -36,6 +37,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   Future<void> create({
     required String content,
+    required WhoCanReplySettingsOption whoCanReply,
     EventReference? parentEvent,
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
@@ -43,7 +45,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      var data = PostData.fromRawContent(content.trim());
+      var data = PostData.fromRawContent(content.trim(), whoCanReplySettings: {whoCanReply});
       final files = <FileMetadata>[];
 
       if (mediaFiles != null) {

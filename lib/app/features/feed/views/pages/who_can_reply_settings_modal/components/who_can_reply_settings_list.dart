@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
-import 'package:ion/app/features/feed/data/models/visibility_settings_options.dart';
-import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/components/visibility_settings_list_item.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/components/who_can_reply_settings_list_item.dart';
 
-class VisibilitySettingsList extends ConsumerWidget {
-  const VisibilitySettingsList({
+class WhoCanReplySettingsList extends ConsumerWidget {
+  const WhoCanReplySettingsList({
     super.key,
   });
 
@@ -19,12 +19,12 @@ class VisibilitySettingsList extends ConsumerWidget {
       padding: EdgeInsets.symmetric(
         horizontal: ScreenSideOffset.defaultSmallMargin,
       ),
-      itemCount: VisibilitySettingsOptions.values.length,
+      itemCount: WhoCanReplySettingsOption.values.length,
       separatorBuilder: (_, __) => const HorizontalSeparator(),
       itemBuilder: (BuildContext context, int index) {
-        final option = VisibilitySettingsOptions.values[index];
+        final option = WhoCanReplySettingsOption.values[index];
 
-        return VisibilitySettingsListItem(option: option);
+        return WhoCanReplySettingsListItem(option: option);
       },
     );
   }

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/components/visibility_settings_list.dart';
+import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/components/who_can_reply_settings_list.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
-class VisibilitySettingsModal extends StatelessWidget {
-  const VisibilitySettingsModal({
+class WhoCanReplySettingsModal extends StatelessWidget {
+  const WhoCanReplySettingsModal({
     this.title,
     super.key,
   });
@@ -26,7 +26,7 @@ class VisibilitySettingsModal extends StatelessWidget {
         ),
         SizedBox(height: 12.0.s),
         const HorizontalSeparator(),
-        const VisibilitySettingsList(),
+        const WhoCanReplySettingsList(),
         const HorizontalSeparator(),
         ScreenBottomOffset(
           margin: 0,
