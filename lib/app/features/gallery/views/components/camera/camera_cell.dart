@@ -12,9 +12,14 @@ import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/components/camera/camera.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class CameraCell extends HookConsumerWidget {
-  const CameraCell({super.key});
+  const CameraCell({required this.type, super.key});
+
+  final MediaPickerType type;
 
   static double get cellHeight => 120.0.s;
   static double get cellWidth => 122.0.s;
@@ -45,7 +50,14 @@ class CameraCell extends HookConsumerWidget {
             ready: (_, __, ___) async {
               if (shouldOpenCamera.value) {
                 shouldOpenCamera.value = false;
-                await ref.read(galleryNotifierProvider().notifier).captureImage();
+
+                final mediaFile =
+                    await GalleryCameraRoute(mediaPickerType: type).push<MediaFile?>(context);
+
+                if (mediaFile != null) {
+                  final galleryNotifier = ref.read(galleryNotifierProvider(type: type).notifier);
+                  await galleryNotifier.addCapturedMediaFileToGallery(mediaFile);
+                }
               }
             },
           );
@@ -56,17 +68,22 @@ class CameraCell extends HookConsumerWidget {
       permissionType: Permission.camera,
       onGranted: () async {
         await ref.read(cameraControllerNotifierProvider).maybeWhen(
-              ready: (_, __, ___) async =>
-                  ref.read(galleryNotifierProvider().notifier).captureImage(),
-              orElse: () {
-                shouldOpenCamera.value = true;
-                cameraControllerNotifier.resumeCamera();
-              },
-            );
+          ready: (_, __, ___) async {
+            final mediaFile =
+                await GalleryCameraRoute(mediaPickerType: type).push<MediaFile?>(context);
+
+            if (mediaFile != null) {
+              final galleryNotifier = ref.read(galleryNotifierProvider(type: type).notifier);
+              await galleryNotifier.addCapturedMediaFileToGallery(mediaFile);
+            }
+          },
+          orElse: () {
+            shouldOpenCamera.value = true;
+            cameraControllerNotifier.resumeCamera();
+          },
+        );
       },
-      requestDialog: const PermissionRequestSheet(
-        permission: Permission.camera,
-      ),
+      requestDialog: const PermissionRequestSheet(permission: Permission.camera),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, onPressed) {
         return SizedBox(

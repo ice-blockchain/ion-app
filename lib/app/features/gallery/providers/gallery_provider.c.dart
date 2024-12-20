@@ -101,28 +101,24 @@ class GalleryNotifier extends _$GalleryNotifier {
     });
   }
 
-  Future<void> captureImage() async {
-    final mediaService = ref.read(mediaServiceProvider);
-    final mediaSelectionNotifier = ref.read(mediaSelectionNotifierProvider.notifier);
+  Future<void> addCapturedMediaFileToGallery(MediaFile mediaFile) async {
+    state = await AsyncValue.guard(() async {
+      final currentState = state.value!;
+      final updatedMediaData = [mediaFile, ...currentState.mediaData];
 
-    final mediaFile = await mediaService.captureImageFromCamera(saveToGallery: true);
+      return currentState.copyWith(
+        mediaData: updatedMediaData,
+        currentPage: currentState.currentPage,
+        hasMore: currentState.hasMore,
+      );
+    });
 
-    if (mediaFile != null) {
-      state = await AsyncValue.guard(() async {
-        final currentState = state.value!;
-        final updatedMediaData = [mediaFile, ...currentState.mediaData];
+    final currentState = state.value;
+    if (currentState == null) return;
 
-        return currentState.copyWith(
-          mediaData: updatedMediaData,
-          currentPage: currentState.currentPage,
-          hasMore: currentState.hasMore,
+    ref.read(mediaSelectionNotifierProvider.notifier).toggleSelection(
+          mediaFile.path,
+          type: currentState.type,
         );
-      });
-
-      final currentState = state.value;
-      if (currentState == null) return;
-
-      mediaSelectionNotifier.toggleSelection(mediaFile.path, type: state.value!.type);
-    }
   }
 }

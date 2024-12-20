@@ -11,7 +11,12 @@ import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class IdleCameraPreview extends ConsumerWidget {
-  const IdleCameraPreview({super.key});
+  const IdleCameraPreview({
+    super.key,
+    this.showGalleryButton = true,
+  });
+
+  final bool showGalleryButton;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,11 +48,12 @@ class IdleCameraPreview extends ConsumerWidget {
             onPressed: () => ref.read(cameraControllerNotifierProvider.notifier).switchCamera(),
           ),
         ),
-        Positioned(
-          bottom: 30.0.s,
-          left: 16.0.s,
-          child: const StoryGalleryButton(),
-        ),
+        if (showGalleryButton)
+          Positioned(
+            bottom: 30.0.s,
+            left: 16.0.s,
+            child: const StoryGalleryButton(),
+          ),
       ],
     );
   }

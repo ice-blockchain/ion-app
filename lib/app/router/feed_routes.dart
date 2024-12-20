@@ -174,6 +174,17 @@ class MediaPickerRoute extends BaseRouteData {
   final MediaPickerType mediaPickerType;
 }
 
+@TypedGoRoute<GalleryCameraRoute>(path: '/gallery-camera')
+class GalleryCameraRoute extends BaseRouteData {
+  GalleryCameraRoute({
+    required this.mediaPickerType,
+  }) : super(
+          child: GalleryCameraPage(type: mediaPickerType),
+        );
+
+  final MediaPickerType mediaPickerType;
+}
+
 class ArticlePreviewRoute extends BaseRouteData {
   ArticlePreviewRoute()
       : super(
