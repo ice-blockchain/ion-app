@@ -70,7 +70,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> currentUserBookmarks(Ref ref)
   return ref.watch(bookmarksProvider(currentPubkey).future);
 }
 
-@Riverpod(dependencies: [nostrEntity])
+@riverpod
 Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
   final nostrEntity = await ref.read(
     nostrEntityProvider(eventReference: eventReference).future,
@@ -105,7 +105,7 @@ bool isArticleBookmarked(Ref ref, ArticleEntity article) {
   );
 }
 
-@Riverpod(dependencies: [nostrEntity])
+@riverpod
 class BookmarksNotifier extends _$BookmarksNotifier {
   @override
   FutureOr<void> build() async {}
