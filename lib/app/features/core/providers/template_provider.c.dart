@@ -2,8 +2,11 @@
 
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/providers/private_direct_chat_provider.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/templates/template.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,8 +14,30 @@ part 'template_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Template> appTemplate(Ref ref) async {
-  final jsonString = await rootBundle.loadString('lib/app/templates/basic.json');
-  final data = Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
+  final chatProvider = ref.read(privateDirectChatProviderProvider.notifier);
+
+  final result = await FilePicker.platform.pickFiles(
+    allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'],
+  );
+
+  await chatProvider.sentMessage(
+    subject: 'Test group',
+    content: 'Hello',
+    mediaFiles: [
+      MediaFile(
+        path: result?.files.single.path ?? '',
+        mimeType: 'image/jpeg',
+      ),
+    ],
+    participantsPubkeys: [
+      'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377',
+    ],
+  );
+
+  final jsonString =
+      await rootBundle.loadString('lib/app/templates/basic.json');
+  final data =
+      Template.fromJson(jsonDecode(jsonString) as Map<String, dynamic>);
   return data;
 }
 

@@ -7,11 +7,11 @@ import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-abstract class IOnConnectSealService {
+abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String pubkey,
+    String receiverPubkey,
   );
 
   Future<EventMessage> decodeSeal(
@@ -21,21 +21,21 @@ abstract class IOnConnectSealService {
   );
 }
 
-class IonConnectSealServiceImpl implements IOnConnectSealService {
+class IonConnectSealServiceImpl implements IonConnectSealService {
   static const int sealKind = 13;
 
   @override
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String pubkey,
+    String receiverPubkey,
   ) async {
     final encodedRumor = jsonEncode(rumor.toJson().last);
 
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
       signer.privateKey,
-      pubkey,
+      receiverPubkey,
     );
 
     final createdAt = randomDateBefore(
