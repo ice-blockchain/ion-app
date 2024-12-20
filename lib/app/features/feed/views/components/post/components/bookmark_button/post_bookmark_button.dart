@@ -13,17 +13,21 @@ class PostBookmarkButton extends ConsumerWidget {
 
   const PostBookmarkButton.video({required this.id, super.key}) : type = BookmarksSetType.videos;
 
-  final String id;
+  final String? id;
   final BookmarksSetType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBookmarked = ref.watch(isPostBookmarkedProvider(id));
+    if (id == null || id!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final isBookmarked = ref.watch(isPostBookmarkedProvider(id!));
 
     return BookmarkButton(
       isBookmarked: isBookmarked,
       onBookmark: () {
-        ref.read(bookmarksNotifierProvider.notifier).togglePostBookmark(id, type: type);
+        ref.read(bookmarksNotifierProvider.notifier).togglePostBookmark(id!, type: type);
       },
     );
   }

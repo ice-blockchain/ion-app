@@ -8,7 +8,6 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
-import 'package:ion/app/features/feed/views/components/article/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
@@ -53,12 +52,7 @@ class ArticlePreview extends ConsumerWidget {
                 children: [
                   UserInfo(
                     pubkey: currentPubkey,
-                    trailing: Row(
-                      children: [
-                        const BookmarkButton(id: 'test_article_id'),
-                        UserInfoMenu(pubkey: currentPubkey),
-                      ],
-                    ),
+                    trailing: UserInfoMenu(pubkey: currentPubkey),
                   ),
                   SizedBox(height: 10.0.s),
                   ArticlePreviewImage(
