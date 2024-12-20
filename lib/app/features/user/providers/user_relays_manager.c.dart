@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
@@ -11,6 +12,11 @@ import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_relays_manager.c.g.dart';
+
+@riverpod
+Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
+  return (await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey])).elementAtOrNull(0);
+}
 
 @riverpod
 class UserRelaysManager extends _$UserRelaysManager {

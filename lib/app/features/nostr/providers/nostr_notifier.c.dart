@@ -232,13 +232,12 @@ class NostrNotifier extends _$NostrNotifier {
     }
   }
 
-  // TODO:process cuncurrent calls to this method for the same pubkey (when opening a profile screen)
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
-    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
-    if (userRelays.isEmpty) {
+    final userRelays = await ref.read(userRelayProvider(pubkey).future);
+    if (userRelays == null) {
       throw UserRelaysNotFoundException();
     }
-    return userRelays.first;
+    return userRelays;
   }
 
   Future<UserChatRelaysEntity> _getUserChatRelays(String pubkey) async {
