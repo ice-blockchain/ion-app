@@ -16,15 +16,14 @@ class AddMediaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notSelected = mediaCount == 0;
     final text = context.i18n.button_add;
 
     return TextButton(
-      onPressed: notSelected ? null : onPressed,
+      onPressed: onPressed,
       child: Padding(
         padding: EdgeInsets.all(UiConstants.hitSlop),
         child: Text(
-          notSelected ? text : '$text ($mediaCount)',
+          '$text ($mediaCount)',
           style: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryAccent,
           ),
