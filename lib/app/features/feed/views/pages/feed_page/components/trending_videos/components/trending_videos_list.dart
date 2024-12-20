@@ -29,10 +29,12 @@ class TrendingVideosList extends StatelessWidget {
         separatorBuilder: (BuildContext context, int index) {
           return const TrendingVideosListSeparator();
         },
-        itemBuilder: (BuildContext context, int index) => TrendingVideoListItem(
-          video: videos[index],
-          itemSize: listOverlay.itemSize,
-        ),
+        itemBuilder: (BuildContext context, int index) {
+          return TrendingVideoListItem(
+            video: videos[index],
+            itemSize: listOverlay.itemSize,
+          );
+        },
       ),
     );
   }
