@@ -59,6 +59,7 @@ class AuthClientServiceLocator {
       twoFAService: twoFA(username: username, config: config, identitySigner: identitySigner),
       delegatedLoginService: delegatedLogin(config: config),
       privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
+      biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
     );
   }
 
@@ -103,6 +104,7 @@ class AuthClientServiceLocator {
       ),
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
+      biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
     );
   }
 

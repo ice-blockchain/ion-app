@@ -13,6 +13,7 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_s
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/password_validation.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password_button.dart';
+import 'package:ion/app/features/components/biometrics/hooks/use_on_suggest_biometrics.dart';
 import 'package:ion/app/features/components/verify_identity/components/password_input.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -62,6 +63,8 @@ class SignUpPasswordPage extends HookConsumerWidget {
       ],
     );
 
+    final onSuggestToAddBiometrics = useOnSuggestToAddBiometrics(ref);
+
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: AuthScrollContainer(
@@ -104,13 +107,16 @@ class SignUpPasswordPage extends HookConsumerWidget {
                     ),
                     SizedBox(height: 22.0.s),
                     SignUpPasswordButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (passwordController.text == passwordConfirmationController.text) {
                           if (formKey.value.currentState!.validate()) {
-                            ref.read(registerActionNotifierProvider.notifier).signUpWithPassword(
+                            await ref
+                                .read(registerActionNotifierProvider.notifier)
+                                .signUpWithPassword(
                                   keyName: identityKeyNameController.text,
                                   password: passwordController.text,
                                 );
+                            await onSuggestToAddBiometrics(identityKeyNameController.text);
                           }
                         } else {
                           passwordsError.value = context.i18n.error_passwords_are_not_equal;
