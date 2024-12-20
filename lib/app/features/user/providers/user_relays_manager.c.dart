@@ -15,7 +15,7 @@ part 'user_relays_manager.c.g.dart';
 
 @riverpod
 Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
-  final relays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
+  final relays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
   return relays.elementAtOrNull(0);
 }
 
