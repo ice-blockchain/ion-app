@@ -59,7 +59,21 @@ class IdentitySigner {
     );
   }
 
-  Future<bool> isPasskeyAvailable() async {
+  Future<bool> isPasskeyAvailable() {
     return passkeySigner.canAuthenticate();
+  }
+
+  Future<void> rejectToUseBiometrics(String username) {
+    return passwordSigner.rejectToUseBiometrics(username);
+  }
+
+  Future<void> enrollToUseBiometrics({
+    required String username,
+    required String localisedReason,
+  }) {
+    return passwordSigner.enrollToUseBiometrics(
+      username: username,
+      localisedReason: localisedReason,
+    );
   }
 }

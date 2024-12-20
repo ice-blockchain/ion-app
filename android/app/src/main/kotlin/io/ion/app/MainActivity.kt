@@ -4,16 +4,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
-import com.banuba.sdk.pe.BanubaPhotoEditor
 import com.banuba.sdk.pe.PhotoCreationActivity
+import com.banuba.sdk.pe.BanubaPhotoEditor
 import com.banuba.sdk.pe.data.PhotoEditorConfig
 import dev.fluttercommunity.shake_gesture_android.ShakeGesturePlugin
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.File
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             this.flutterEngine?.plugins?.get(ShakeGesturePlugin::class.java).let { plugin ->
@@ -39,15 +40,14 @@ class MainActivity : FlutterActivity() {
     }
 
     private var exportResult: MethodChannel.Result? = null
-
     private var photoEditorSDK: BanubaPhotoEditor? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val appFlutterEngine = requireNotNull(flutterEngine)
-        GeneratedPluginRegistrant.registerWith(appFlutterEngine)
 
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+
+        // Set up your MethodChannel here after registration
         MethodChannel(
-            appFlutterEngine.dartExecutor.binaryMessenger,
+            flutterEngine.dartExecutor.binaryMessenger,
             "banubaSdkChannel"
         ).setMethodCallHandler { call, result ->
             // Initialize export result callback to deliver the results back to Flutter
@@ -61,8 +61,9 @@ class MainActivity : FlutterActivity() {
                     if (photoEditorSDK == null) {
                         // The SDK token is incorrect - empty or truncated
                         result.error(ERR_CODE_SDK_NOT_INITIALIZED, "", null)
+                    } else {
+                        result.success(null)
                     }
-                    result.success(null)
                 }
 
                 METHOD_START_PHOTO_EDITOR -> {
@@ -71,7 +72,8 @@ class MainActivity : FlutterActivity() {
                         result.error(ERR_CODE_SDK_NOT_INITIALIZED, "", null)
                     } else {
                         // ✅ The license is active
-                        val imageUrl = call.argument<String>("imagePath") // Get the image URL from Flutter
+                        val imageUrl =
+                            call.argument<String>("imagePath") // Get the image URL from Flutter
                         if (imageUrl.isNullOrEmpty()) {
                             result.error("INVALID_ARGUMENT", "Image URL is required", null)
                             return@setMethodCallHandler
@@ -79,7 +81,7 @@ class MainActivity : FlutterActivity() {
                         val imageUri = Uri.fromFile(File(imageUrl))
                         val config = PhotoEditorConfig.Builder(this).build();
                         startActivityForResult(
-                            PhotoCreationActivity.startFromEditor(this, config, imageUri ),
+                            PhotoCreationActivity.startFromEditor(this, config, imageUri),
                             PHOTO_EDITOR_REQUEST_CODE
                         )
                     }
@@ -103,9 +105,8 @@ class MainActivity : FlutterActivity() {
     // You can use Map or JSON to pass custom data for your app.
     private fun preparePhotoExportData(result: Intent?): Map<String, Any?> {
         val photoUri = result?.getParcelableExtra(PhotoCreationActivity.EXTRA_EXPORTED) as? Uri
-        val data = mapOf(
+        return mapOf(
             ARG_EXPORTED_PHOTO_FILE to photoUri?.toString()
         )
-        return data
     }
 }

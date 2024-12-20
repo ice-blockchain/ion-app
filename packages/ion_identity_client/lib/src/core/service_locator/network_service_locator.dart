@@ -6,12 +6,19 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/auth_interceptor.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
+import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 
 class NetworkServiceLocator
-    with _Dio, _Interceptors, _TokenStorage, _PrivateKeyStorage, _NetworkClient {
+    with
+        _Dio,
+        _Interceptors,
+        _TokenStorage,
+        _PrivateKeyStorage,
+        _BiometricsStateStorage,
+        _NetworkClient {
   factory NetworkServiceLocator() {
     return _instance;
   }
@@ -130,6 +137,31 @@ mixin _PrivateKeyStorage {
       secureStorage: flutterSecureStorage(),
     );
     return _privateKeyStorageInstance!;
+  }
+
+  FlutterSecureStorage flutterSecureStorage() {
+    if (_flutterSecureStorage != null) {
+      return _flutterSecureStorage!;
+    }
+
+    _flutterSecureStorage = const FlutterSecureStorage();
+    return _flutterSecureStorage!;
+  }
+}
+
+mixin _BiometricsStateStorage {
+  BiometricsStateStorage? _biometricsStateStorageInstance;
+  FlutterSecureStorage? _flutterSecureStorage;
+
+  BiometricsStateStorage biometricsStateStorage() {
+    if (_biometricsStateStorageInstance != null) {
+      return _biometricsStateStorageInstance!;
+    }
+
+    _biometricsStateStorageInstance = BiometricsStateStorage(
+      secureStorage: flutterSecureStorage(),
+    );
+    return _biometricsStateStorageInstance!;
   }
 
   FlutterSecureStorage flutterSecureStorage() {

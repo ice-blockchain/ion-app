@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/user/model/verify_identity_type.dart';
+import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -37,14 +38,20 @@ AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
 Future<VerifyIdentityType> verifyIdentityType(Ref ref) async {
   final username = ref.read(currentIdentityKeyNameSelectorProvider);
   final ionIdentity = await ref.read(ionIdentityProvider.future);
+
   if (username != null) {
-    return ionIdentity(username: username).auth.isPasswordFlowUser()
-        ? VerifyIdentityType.password
-        : VerifyIdentityType.passkey;
+    if (ionIdentity(username: username).auth.isPasswordFlowUser()) {
+      final userBiometricsState =
+          await ref.read(userBiometricsStateProvider(username: username).future);
+      return userBiometricsState == BiometricsState.enabled
+          ? VerifyIdentityType.biometrics
+          : VerifyIdentityType.password;
+    }
+    return VerifyIdentityType.passkey;
   }
-  return (await ionIdentity(username: '').auth.isPasskeyAvailable())
-      ? VerifyIdentityType.passkey
-      : VerifyIdentityType.password;
+
+  final isPasskeyAvailable = await ref.read(isPasskeyAvailableProvider.future);
+  return isPasskeyAvailable ? VerifyIdentityType.passkey : VerifyIdentityType.password;
 }
 
 @riverpod

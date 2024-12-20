@@ -2,9 +2,11 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.c.freezed.dart';
@@ -15,12 +17,13 @@ class AuthState with _$AuthState {
   const factory AuthState({
     required List<String> authenticatedIdentityKeyNames,
     required String? currentIdentityKeyName,
+    required bool suggestToAddBiometrics,
   }) = _AuthState;
 
   const AuthState._();
 
   bool get hasAuthenticated {
-    return authenticatedIdentityKeyNames.isNotEmpty;
+    return authenticatedIdentityKeyNames.isNotEmpty && suggestToAddBiometrics == false;
   }
 }
 
@@ -35,10 +38,14 @@ class Auth extends _$Auth {
     final currentIdentityKeyName = authenticatedIdentityKeyNames.contains(savedIdentityKeyName)
         ? savedIdentityKeyName
         : authenticatedIdentityKeyNames.lastOrNull;
+    final biometricsStates = await ref.watch(biometricsStatesStreamProvider.future);
+    final userBiometricsState =
+        (currentIdentityKeyName != null) ? biometricsStates[currentIdentityKeyName] : null;
 
     return AuthState(
       authenticatedIdentityKeyNames: authenticatedIdentityKeyNames.toList(),
       currentIdentityKeyName: currentIdentityKeyName,
+      suggestToAddBiometrics: userBiometricsState == BiometricsState.canSuggest,
     );
   }
 
