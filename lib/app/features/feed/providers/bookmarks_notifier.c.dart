@@ -79,18 +79,15 @@ Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
 
   return ref.watch(
     currentUserBookmarksProvider.select(
-      (state) {
-        if (nostrEntity is PostEntity) {
-          return state.valueOrNull?.values.any(
-                (bookmarksSet) => bookmarksSet?.data.postsIds.contains(nostrEntity.id) ?? false,
-              ) ??
-              false;
-        } else if (nostrEntity is ArticleEntity) {
-          return state.valueOrNull?[BookmarksSetType.articles]?.data.articlesRefs
-                  .contains(nostrEntity.toReplaceableEventReference()) ??
-              false;
-        }
-        return false;
+      (state) => switch (nostrEntity) {
+        PostEntity() => state.valueOrNull?.values.any(
+              (bookmarksSet) => bookmarksSet?.data.postsIds.contains(nostrEntity.id) ?? false,
+            ) ??
+            false,
+        ArticleEntity() => state.valueOrNull?[BookmarksSetType.articles]?.data.articlesRefs
+                .contains(nostrEntity.toReplaceableEventReference()) ??
+            false,
+        _ => false,
       },
     ),
   );
