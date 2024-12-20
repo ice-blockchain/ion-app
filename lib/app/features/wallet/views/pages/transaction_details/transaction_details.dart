@@ -106,7 +106,10 @@ class TransactionDetailsPage extends ConsumerWidget {
                       arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
                           .format(formData.arrivalDateTime),
                     ),
-                    ListItemArrivalTime(arrivalTime: formData.arrivalTime),
+                    ListItemArrivalTime(
+                      arrivalTime: '${formData.arrivalTime} '
+                          '${context.i18n.wallet_arrival_time_minutes}',
+                    ),
                     SizedBox(height: 12.0.s),
                     const ListItemNetworkFee(value: '1.00 USDT'),
                     SizedBox(height: 15.0.s),
