@@ -17,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_videos_data_source_provider.c.g.dart';
 
-@Riverpod(dependencies: [nostrEntity])
+@riverpod
 List<EntitiesDataSource>? feedVideosDataSource(
   Ref ref, {
   required EventReference eventReference,
