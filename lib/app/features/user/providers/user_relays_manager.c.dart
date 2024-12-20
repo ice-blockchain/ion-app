@@ -15,7 +15,17 @@ part 'user_relays_manager.c.g.dart';
 
 @riverpod
 Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
-  return (await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey])).elementAtOrNull(0);
+  final relays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
+  return relays.elementAtOrNull(0);
+}
+
+@riverpod
+Future<UserRelaysEntity?> currentUserRelay(Ref ref) async {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return null;
+  }
+  return ref.watch(userRelayProvider(currentPubkey).future);
 }
 
 @riverpod
@@ -70,18 +80,6 @@ class UserRelaysManager extends _$UserRelaysManager {
     }
 
     return result;
-  }
-
-  Future<UserRelaysEntity?> fetchForCurrentUser() async {
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
-    if (currentPubkey == null) {
-      return null;
-    }
-    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([currentPubkey]);
-    if (userRelays.isEmpty) {
-      return null;
-    }
-    return userRelays.first;
   }
 
   Future<List<UserRelaysEntity>> _fetchRelaysFromIdentityFor({
