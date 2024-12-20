@@ -15,10 +15,11 @@ part 'ion_connect_gift_wrap_service.c.g.dart';
 abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
     EventMessage event,
-    String pubkey,
+    String receiverPubkey,
     EventSigner signer,
-    int contentKind,
-  );
+    int contentKind, {
+    List<String>? expirationTag,
+  });
 
   Future<EventMessage> decodeWrap(
     String content,
@@ -33,14 +34,15 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   @override
   Future<EventMessage> createWrap(
     EventMessage event,
-    String pubkey,
+    String receiverPubkey,
     EventSigner signer,
-    int contentKind,
-  ) async {
+    int contentKind, {
+    List<String>? expirationTag,
+  }) async {
     final encryptedEvent = await Nip44.encryptMessage(
       jsonEncode(event.toJson().last),
       signer.privateKey,
-      pubkey,
+      receiverPubkey,
     );
 
     final createdAt = randomDateBefore(
@@ -53,8 +55,9 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       createdAt: createdAt,
       content: encryptedEvent,
       tags: [
-        [RelatedPubkey.tagName, pubkey],
+        [RelatedPubkey.tagName, receiverPubkey],
         ['k', contentKind.toString()],
+        if (expirationTag != null) expirationTag,
       ],
     );
   }

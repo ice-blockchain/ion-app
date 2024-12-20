@@ -28,7 +28,9 @@ class StoryPreviewPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mediaType = mimeType != null ? MediaType.fromMimeType(mimeType!) : MediaType.unknown;
+    final mediaType = mimeType != null
+        ? MediaType.fromMimeType(mimeType!)
+        : MediaType.unknown;
 
     return Scaffold(
       body: SafeArea(
@@ -50,6 +52,7 @@ class StoryPreviewPage extends ConsumerWidget {
                       child: switch (mediaType) {
                         MediaType.video => StoryVideoPreview(path: path),
                         MediaType.image => StoryImagePreview(path: path),
+                        MediaType.audio => const CenteredLoadingIndicator(),
                         MediaType.unknown => const CenteredLoadingIndicator(),
                       },
                     ),
@@ -66,7 +69,10 @@ class StoryPreviewPage extends ConsumerWidget {
                   onPressed: () {
                     final file = MediaFile(path: path, mimeType: mimeType);
                     ref
-                        .read(createPostNotifierProvider(CreatePostOption.story).notifier)
+                        .read(
+                      createPostNotifierProvider(CreatePostOption.story)
+                          .notifier,
+                    )
                         .create(content: '', mediaFiles: [file]);
                     FeedRoute().go(context);
                   },

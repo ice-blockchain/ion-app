@@ -79,6 +79,7 @@
   "common_document": "Document",
   "common_you": "You",
   "common_add_video": "Add video",
+  "common_add_audio": "Add audio",
   "common_forwarded": "Forwarded",
   "common_forwarded_from": "Forwarded from",
   "common_title": "Title",

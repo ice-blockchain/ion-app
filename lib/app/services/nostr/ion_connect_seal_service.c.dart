@@ -15,7 +15,7 @@ abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String pubkey,
+    String receiverPubkey,
   );
 
   Future<EventMessage> decodeSeal(
@@ -32,14 +32,14 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   Future<EventMessage> createSeal(
     EventMessage rumor,
     EventSigner signer,
-    String pubkey,
+    String receiverPubkey,
   ) async {
     final encodedRumor = jsonEncode(rumor.toJson().last);
 
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
       signer.privateKey,
-      pubkey,
+      receiverPubkey,
     );
 
     final createdAt = randomDateBefore(

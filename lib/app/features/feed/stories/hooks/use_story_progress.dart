@@ -66,6 +66,7 @@ StoryProgress useStoryProgress({
               isCompleted,
             );
 
+          case MediaType.audio:
           case MediaType.unknown:
         }
       }
@@ -87,8 +88,7 @@ StoryProgress useStoryProgress({
             isCurrent,
             isPaused,
           );
-
-        case MediaType.unknown:
+        case MediaType.unknown || MediaType.audio:
       }
       return null;
     },
