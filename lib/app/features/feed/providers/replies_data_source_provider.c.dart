@@ -11,6 +11,7 @@ import 'package:ion/app/features/nostr/model/related_event.c.dart';
 import 'package:ion/app/features/nostr/model/search_extension.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -48,6 +49,10 @@ List<EntitiesDataSource>? repliesDataSource(
                 tagName: RelatedEvent.tagName,
                 marker: RelatedEventMarker.reply.toShortString(),
                 negative: entity.data.parentEvent == null,
+              ),
+              GenericIncludeSearchExtension(
+                forKind: PostEntity.kind,
+                includeKind: UserMetadataEntity.kind,
               ),
             ],
             currentPubkey: currentPubkey,

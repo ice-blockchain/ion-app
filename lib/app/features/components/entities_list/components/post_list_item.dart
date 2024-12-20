@@ -17,6 +17,8 @@ class PostListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final eventReference = EventReference.fromNostrEntity(post);
+    // TODO:
+    // process 20002 in the feed provider to fetch 10002
 
     return GestureDetector(
       onTap: () => PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
