@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:ion/app/services/logger/logger.dart';
 
 Future<T> withRetry<T>(
-  Future<T> Function() task, {
+  Future<T> Function({Object? error}) task, {
   int maxRetries = 10,
   Duration initialDelay = const Duration(milliseconds: 100),
   Duration maxDelay = const Duration(seconds: 10),
@@ -18,7 +18,7 @@ Future<T> withRetry<T>(
   bool Function(Object)? retryWhen,
 }) async {
   return withRetryStream<T>(
-    () => Stream.fromFuture(task()),
+    ({error}) => Stream.fromFuture(task(error: error)),
     maxRetries: maxRetries,
     initialDelay: initialDelay,
     maxDelay: maxDelay,
@@ -31,7 +31,7 @@ Future<T> withRetry<T>(
 }
 
 Stream<T> withRetryStream<T>(
-  Stream<T> Function() task, {
+  Stream<T> Function({Object? error}) task, {
   int maxRetries = 10,
   Duration initialDelay = const Duration(milliseconds: 100),
   Duration maxDelay = const Duration(seconds: 10),
@@ -43,14 +43,17 @@ Stream<T> withRetryStream<T>(
 }) async* {
   var attempt = 0;
   var delay = initialDelay;
+  Object? lastError;
 
   while (attempt < maxRetries) {
     try {
-      await for (final event in task()) {
+      await for (final event in task(error: lastError)) {
         yield event;
       }
       return;
     } catch (e) {
+      lastError = e;
+
       final shouldRetry = retryWhen?.call(e) ?? true;
       if (!shouldRetry) {
         rethrow;
