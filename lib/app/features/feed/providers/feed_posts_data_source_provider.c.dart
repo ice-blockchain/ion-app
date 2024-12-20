@@ -66,6 +66,10 @@ EntitiesDataSource _buildArticlesDataSource({
         marker: RelatedEventMarker.reply.toShortString(),
         negative: true,
       ),
+      GenericIncludeSearchExtension(
+        forKind: ArticleEntity.kind,
+        includeKind: UserMetadataEntity.kind,
+      ),
     ],
     currentPubkey: currentPubkey,
     forKind: ArticleEntity.kind,
@@ -127,6 +131,10 @@ EntitiesDataSource _buildVideosDataSource({
               tagName: RelatedEvent.tagName,
               marker: RelatedEventMarker.reply.toShortString(),
               negative: true,
+            ),
+            GenericIncludeSearchExtension(
+              forKind: PostEntity.kind,
+              includeKind: UserMetadataEntity.kind,
             ),
           ],
           currentPubkey: currentPubkey,
