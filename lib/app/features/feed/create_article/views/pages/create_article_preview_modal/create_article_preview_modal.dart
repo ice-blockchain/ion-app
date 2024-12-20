@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/create_article/providers/create_article_pr
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_topics_item.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_visibility_item.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_who_can_reply_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -42,7 +42,7 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
           SizedBox(height: 20.0.s),
           const HorizontalSeparator(),
           SizedBox(height: 20.0.s),
-          const SelectArticleVisibilityItem(),
+          const SelectArticleWhoCanReplyItem(),
           const Spacer(),
           Align(
             alignment: Alignment.bottomCenter,

@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
@@ -31,6 +32,7 @@ class StoryPreviewPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaType = mimeType != null ? MediaType.fromMimeType(mimeType!) : MediaType.unknown;
+    final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -79,10 +81,8 @@ class StoryPreviewPage extends ConsumerWidget {
                   onPressed: () {
                     final file = MediaFile(path: path, mimeType: mimeType);
                     ref
-                        .read(
-                      createPostNotifierProvider(CreatePostOption.story).notifier,
-                    )
-                        .create(content: '', mediaFiles: [file]);
+                        .read(createPostNotifierProvider(CreatePostOption.story).notifier)
+                        .create(content: '', mediaFiles: [file], whoCanReply: whoCanReply);
                     FeedRoute().go(context);
                   },
                 ),

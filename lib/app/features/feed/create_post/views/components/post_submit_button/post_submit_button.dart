@@ -13,6 +13,7 @@ import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart'
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
+import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
@@ -45,6 +46,7 @@ class PostSubmitButton extends HookConsumerWidget {
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
     final hasPoll = useHasPoll(textEditorController);
+    final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     final isSubmitButtonEnabled = useMemoized(
       () {
@@ -81,6 +83,7 @@ class PostSubmitButton extends HookConsumerWidget {
                 parentEvent: parentEvent,
                 quotedEvent: quotedEvent,
                 mediaFiles: convertedMediaFiles,
+                whoCanReply: whoCanReply,
               ),
         );
 

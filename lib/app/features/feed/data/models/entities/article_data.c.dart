@@ -7,7 +7,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/event_setting.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
@@ -74,6 +76,7 @@ class ArticleData with _$ArticleData implements EventSerializable {
     String? summary,
     DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
+    List<EventSetting>? settings,
   }) = _ArticleData;
 
   const ArticleData._();
@@ -103,6 +106,31 @@ class ArticleData with _$ArticleData implements EventSerializable {
       summary: summary,
       publishedAt: publishedAt,
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
+    );
+  }
+
+  factory ArticleData.fromData({
+    required String content,
+    required Map<String, MediaAttachment> media,
+    String? title,
+    String? image,
+    String? summary,
+    DateTime? publishedAt,
+    List<RelatedHashtag>? relatedHashtags,
+    Set<WhoCanReplySettingsOption>? whoCanReplySettings,
+  }) {
+    final setting = (whoCanReplySettings?.isNotEmpty ?? false)
+        ? WhoCanReplyEventSetting(value: whoCanReplySettings!.join(','))
+        : null;
+    return ArticleData(
+      content: content,
+      media: media,
+      title: title,
+      image: image,
+      summary: summary,
+      publishedAt: publishedAt,
+      relatedHashtags: relatedHashtags,
+      settings: setting != null ? [setting] : null,
     );
   }
 

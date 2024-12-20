@@ -6,9 +6,11 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
 import 'package:ion/app/features/nostr/model/entity_media_data.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/nostr/model/event_setting.c.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/model/related_event.c.dart';
@@ -69,6 +71,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
+    List<EventSetting>? settings,
   }) = _PostData;
 
   factory PostData.fromEventMessage(EventMessage eventMessage) {
@@ -91,7 +94,10 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     );
   }
 
-  factory PostData.fromRawContent(String content) {
+  factory PostData.fromRawContent(
+    String content, {
+    Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
+  }) {
     final parsedContent = TextParser.allMatchers().parse(content);
 
     final hashtags = parsedContent
@@ -99,10 +105,15 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         .map((match) => RelatedHashtag(value: match.text))
         .toList();
 
+    final whoCanReply =
+        whoCanReplySettings.map((setting) => setting.toValue()).whereNotNull().join(',');
+    final setting = whoCanReply.isNotEmpty ? WhoCanReplyEventSetting(value: whoCanReply) : null;
+
     return PostData(
       content: parsedContent,
       relatedHashtags: hashtags,
       media: {},
+      settings: [setting].whereNotNull().toList(),
     );
   }
 
@@ -127,6 +138,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
         if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+        if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
     );
   }
