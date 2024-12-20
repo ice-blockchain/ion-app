@@ -33,6 +33,12 @@ class MediaPickerPage extends HookConsumerWidget {
       mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
     );
 
+    ref.listen(mediaSelectionNotifierProvider, (_, value) {
+      if (maxSelection == 1 && value.selectedMedia.isNotEmpty == true) {
+        Navigator.of(context).pop(value.selectedMedia);
+      }
+    });
+
     useOnInit(
       () {
         ref.read(mediaSelectionNotifierProvider.notifier).updateMaxSelection(maxSelection);
@@ -50,7 +56,7 @@ class MediaPickerPage extends HookConsumerWidget {
           ),
           onBackPress: () => Navigator.of(context).pop(),
           actions: [
-            if (selectedMedia.isNotEmpty)
+            if (maxSelection > 1 && selectedMedia.isNotEmpty)
               AddMediaButton(
                 onPressed: () => Navigator.of(context).pop(selectedMedia),
                 mediaCount: selectedMedia.length,
