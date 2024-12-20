@@ -15,9 +15,9 @@ mixin RelayAuthMixin {
         ref.read(authChallengeProvider(relay.url).notifier).setChallenge = message.challenge;
       }
     });
-  }
 
-  void disposeAuth() {
-    _authMessageSubscription.cancel();
+    ref.onDispose(
+      () => _authMessageSubscription.cancel(),
+    );
   }
 }

@@ -15,15 +15,8 @@ class Relay extends _$Relay with RelayTimerMixin, RelayAuthMixin {
   Future<NostrRelay> build(String url) async {
     final relay = await NostrRelay.connect(url);
 
-    initializeRelayTimer(relay, ref.invalidateSelf);
+    initializeRelayTimer(relay, ref);
     initializeAuthMessageListener(relay, ref);
-
-    ref.onDispose(
-      () {
-        disposeTimer();
-        disposeAuth();
-      },
-    );
 
     return relay;
   }

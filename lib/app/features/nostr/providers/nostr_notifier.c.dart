@@ -77,7 +77,7 @@ class NostrNotifier extends _$NostrNotifier {
 
   Future<void> sendAuthEvent(NostrRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
-    if (challenge == null && challenge.isEmpty) throw Exception('Auth challenge is empty');
+    if (challenge == null && challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
     final authEvent = AuthEvent(
       challenge: challenge!,
