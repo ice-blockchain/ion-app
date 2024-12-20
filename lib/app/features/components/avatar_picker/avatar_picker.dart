@@ -70,7 +70,6 @@ class AvatarPicker extends HookConsumerWidget {
                 final mediaFiles = await showSimpleBottomSheet<List<MediaFile>>(
                   context: context,
                   child: MediaPickerPage(
-                    type: MediaPickerType.image,
                     maxSelection: 1,
                     isBottomSheet: true,
                     title: title,

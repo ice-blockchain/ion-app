@@ -34,7 +34,6 @@ class BannerPickerButton extends ConsumerWidget {
           final mediaFiles = await showSimpleBottomSheet<List<MediaFile>>(
             context: context,
             child: const MediaPickerPage(
-              type: MediaPickerType.image,
               maxSelection: 1,
               isBottomSheet: true,
               type: MediaPickerType.image,
