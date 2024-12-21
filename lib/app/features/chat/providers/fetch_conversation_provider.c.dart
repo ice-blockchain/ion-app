@@ -40,9 +40,11 @@ Future<void> fetchAndSyncConversations(Ref ref) async {
 
   final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-  final nostrEvents = ref
-      .read(nostrNotifierProvider.notifier)
-      .requestEvents(requestMessage, actionSource: const ActionSourceCurrentUserChat());
+  final nostrEvents = ref.read(nostrNotifierProvider.notifier).requestEvents(
+        requestMessage,
+        actionSource: const ActionSourceCurrentUserChat(),
+        keepSubscription: true,
+      );
 
   final currentUserSigner = await ref.read(currentUserNostrEventSignerProvider.future);
   if (currentUserSigner == null) return;
@@ -50,32 +52,17 @@ Future<void> fetchAndSyncConversations(Ref ref) async {
   final dbProvider = ref.read(dBConversationsNotifierProvider.notifier);
 
   await for (final event in nostrEvents) {
-    if (event.kind == 1059) {
-      final unwrappedGift = await ref.read(ionConnectGiftWrapServiceProvider).decodeWrap(
-            event.content,
-            pubkey,
-            currentUserSigner,
-          );
+    final unwrappedGift = await ref.read(ionConnectGiftWrapServiceProvider).decodeWrap(
+          event.content,
+          pubkey,
+          currentUserSigner,
+        );
 
-      final unwrappedSeal = await ref.read(ionConnectSealServiceProvider).decodeSeal(
-            unwrappedGift,
-            currentUserSigner,
-            pubkey,
-          );
-
-      await dbProvider.insertEventMessage(unwrappedSeal);
-    }
+    final unwrappedSeal = await ref.read(ionConnectSealServiceProvider).decodeSeal(
+          unwrappedGift,
+          currentUserSigner,
+          pubkey,
+        );
+    await dbProvider.insertEventMessage(unwrappedSeal);
   }
-
-  // TODO: delete it when create conversation is implemented
-  // const receiverPubkey = 'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377';
-
-  // final initMessage = await PrivateDirectMessageData.fromRawContent('')
-  //     .toEventMessage(pubkey: receiverPubkey);
-
-  // final message = await PrivateDirectMessageData.fromRawContent('test-message-content')
-  //     .toEventMessage(pubkey: receiverPubkey);
-
-  // await dbProvider.insertEventMessage(initMessage);
-  // await dbProvider.insertEventMessage(message);
 }
