@@ -23,10 +23,14 @@ List<UserStories>? stories(Ref ref) {
 
   if (entities == null) return null;
 
-  final postEntities = entities.whereType<PostEntity>().where((post) {
-    final mediaType = post.data.media.values.firstOrNull?.mediaType;
-    return mediaType == MediaType.image || mediaType == MediaType.video;
-  }).toList();
+  final postEntities = entities
+      .whereType<PostEntity>()
+      .where((post) {
+        final mediaType = post.data.media.values.firstOrNull?.mediaType;
+        return mediaType == MediaType.image || mediaType == MediaType.video;
+      })
+      .sortedBy((post) => post.createdAt)
+      .toList();
 
   final groupedStories = groupBy<PostEntity, String>(
     postEntities,
