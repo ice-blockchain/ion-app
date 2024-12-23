@@ -14,7 +14,7 @@ part 'request_twofa_code_notifier.c.g.dart';
 @riverpod
 class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
   @override
-  FutureOr<void> build() {}
+  FutureOr<String?> build() => null;
 
   Future<void> requestTwoFaCode(
     TwoFaType twoFaType,
@@ -30,7 +30,7 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
       final client = await ref.read(ionIdentityClientProvider.future);
       final twoFAType = await _getTwoFAType(twoFaType);
 
-      await client.auth.requestTwoFACode(twoFAType: twoFAType, onVerifyIdentity: onVerifyIdentity);
+      return client.auth.requestTwoFACode(twoFAType: twoFAType, onVerifyIdentity: onVerifyIdentity);
     });
   }
 
@@ -49,7 +49,7 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
       final client = await ref.read(ionIdentityProvider.future);
       final twoFAType = TwoFaTypeAdapter(twoFaType).twoFAType;
 
-      await client(username: '').auth.requestTwoFACode(
+      return client(username: '').auth.requestTwoFACode(
             twoFAType: twoFAType,
             recoveryIdentityKeyName: recoveryIdentityKeyName,
             onVerifyIdentity: onVerifyIdentity,
