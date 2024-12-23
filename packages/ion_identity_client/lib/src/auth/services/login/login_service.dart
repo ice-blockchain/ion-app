@@ -35,14 +35,19 @@ class LoginService {
   /// - [UserNotFoundException] if the user account does not exist.
   /// - [PasskeyValidationException] if the passkey validation fails.
   /// - [UnknownIONIdentityException] for any other unexpected errors during the login process.
-  Future<void> loginUser() async {
+  Future<void> loginUser({
+    bool preferImmediatelyAvailableCredentials = false,
+  }) async {
     final canAuthenticate = await identitySigner.isPasskeyAvailable();
     if (!canAuthenticate) {
       throw const PasskeyNotAvailableException();
     }
 
     final challenge = await dataSource.loginInit(username: username);
-    final assertion = await identitySigner.signWithPasskey(challenge);
+    final assertion = await identitySigner.signWithPasskey(
+      challenge,
+      preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+    );
     final tokens = await dataSource.loginComplete(
       challengeIdentifier: challenge.challengeIdentifier,
       assertion: assertion,

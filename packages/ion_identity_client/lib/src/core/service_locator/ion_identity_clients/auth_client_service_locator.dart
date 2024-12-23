@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/create_recovery_credentials_service.dart';
-import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/data_sources/create_recovery_credentials_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/create_credentials/create_new_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/create_credentials/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/create_credentials/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
@@ -47,6 +48,11 @@ class AuthClientServiceLocator {
       loginService: login(username: username, config: config, identitySigner: identitySigner),
       logoutService: logout(username: username, config: config),
       createRecoveryCredentialsService: createRecoveryCredentials(
+        username: username,
+        config: config,
+        identitySigner: identitySigner,
+      ),
+      createNewCredentialsService: createNewCredentials(
         username: username,
         config: config,
         identitySigner: identitySigner,
@@ -124,6 +130,26 @@ class AuthClientServiceLocator {
       ),
       identitySigner: identitySigner,
       keyService: const KeyService(),
+    );
+  }
+
+  CreateNewCredentialsService createNewCredentials({
+    required String username,
+    required IONIdentityConfig config,
+    required IdentitySigner identitySigner,
+  }) {
+    return CreateNewCredentialsService(
+      username: username,
+      config: config,
+      dataSource: CreateRecoveryCredentialsDataSource(
+        networkClient: IONIdentityServiceLocator.networkClient(config: config),
+        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      ),
+      userActionSigner: UserActionSignerServiceLocator().userActionSigner(
+        config: config,
+        identitySigner: identitySigner,
+      ),
+      identitySigner: identitySigner,
     );
   }
 
