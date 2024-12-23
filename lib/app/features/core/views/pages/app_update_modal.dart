@@ -7,7 +7,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/app_update_type.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/utils/force_update.dart';
 
 class AppUpdateModal extends StatelessWidget {
   const AppUpdateModal({
@@ -37,14 +37,8 @@ class AppUpdateModal extends StatelessWidget {
               color: context.theme.appColors.onPrimaryAccent,
             ),
             onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
               if (appUpdateType == AppUpdateType.updateRequired) {
-                showSimpleBottomSheet<void>(
-                  context: context,
-                  child: const AppUpdateModal(
-                    appUpdateType: AppUpdateType.upToDate,
-                  ),
-                );
+                ForceUpdateUtil.handleForceUpdateRedirect();
               }
             },
             label: Text(appUpdateType.getActionTitle(context)),

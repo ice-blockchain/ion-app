@@ -1,0 +1,22 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/config/providers/force_update_provider.c.dart';
+
+bool useAppUpdate(WidgetRef ref) {
+  final isModalShown = useState(false);
+
+  final forceUpdateState = ref.watch(forceUpdateProvider);
+
+  useEffect(
+    () {
+      if (forceUpdateState.showUpdateModal && !isModalShown.value) {
+        isModalShown.value = true;
+      }
+
+      return null;
+    },
+    [forceUpdateState],
+  );
+
+  return isModalShown.value;
+}

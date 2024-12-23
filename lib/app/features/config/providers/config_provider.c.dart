@@ -30,14 +30,21 @@ class ConfigNotifier extends _$ConfigNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> fetchConfigForCurrentPlatform() async {
+  Future<String> fetchConfigForCurrentPlatform() async {
     final configName = _getPlatformConfigName();
-    final path = '${EnvVariable.ION_ORIGIN}/v1/config/$configName';
 
-    final dio = ref.read(dioProvider);
-    final response = await dio.get<Map<String, dynamic>>(path);
+    const baseUrl = EnvVariable.ION_ORIGIN;
+    final path = '$baseUrl/v1/config/$configName';
 
-    return response.data!;
+    try {
+      final response = await ref.read(dioProvider).get<String>(path);
+      if (response.data == null) {
+        throw ForceUpdateFetchConfigException();
+      }
+      return response.data!;
+    } catch (e) {
+      throw ForceUpdateFetchConfigException();
+    }
   }
 }
 

@@ -205,3 +205,7 @@ class ForceUpdateCouldntLaunchUrlException extends IONException {
   ForceUpdateCouldntLaunchUrlException({required String url})
       : super(10042, 'Could not launch $url');
 }
+
+class ForceUpdateFetchConfigException extends IONException {
+  ForceUpdateFetchConfigException() : super(10043, 'Failed to get version config');
+}

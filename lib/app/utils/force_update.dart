@@ -36,4 +36,18 @@ class ForceUpdateUtil {
     const fallbackWebsite = 'https://example.com'; //TODO: Replace with the actual website
     await _openUrl(fallbackWebsite);
   }
+
+  static bool isVersionOutdated(String localVersion, String remoteVersion) {
+    final localParts = localVersion.split('.').map(int.parse).toList();
+    final remoteParts = remoteVersion.split('.').map(int.parse).toList();
+
+    for (var i = 0; i < remoteParts.length; i++) {
+      if (localParts.length <= i || localParts[i] < remoteParts[i]) {
+        return true;
+      } else if (localParts[i] > remoteParts[i]) {
+        return false;
+      }
+    }
+    return false;
+  }
 }
