@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/views/components/user_info/user_info.dart'
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class Post extends ConsumerWidget {
   const Post({
@@ -82,10 +83,17 @@ class _FramedEvent extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 6.0.s),
       child: QuotedPostFrame(
-        child: Post(
-          eventReference: eventReference,
-          header: UserInfo(pubkey: eventReference.pubkey),
-          footer: const SizedBox.shrink(),
+        child: GestureDetector(
+          // Open a post by clicking on any part of the widget, including the author's avatar or name.
+          onTap: () =>
+              PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
+          child: AbsorbPointer(
+            child: Post(
+              eventReference: eventReference,
+              header: UserInfo(pubkey: eventReference.pubkey),
+              footer: const SizedBox.shrink(),
+            ),
+          ),
         ),
       ),
     );

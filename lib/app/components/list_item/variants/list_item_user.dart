@@ -32,7 +32,7 @@ class _ListItemUser extends ListItem {
   }) : super(
           leading: leading ??
               Avatar(
-                size: avatarSize ?? defaultAvatarSize,
+                size: avatarSize ?? ListItem.defaultAvatarSize,
                 imageUrl: profilePicture,
                 badge: showProfilePictureIceBadge ? const _IceBadge() : null,
                 imageWidget: profilePictureWidget,
@@ -65,8 +65,6 @@ class _ListItemUser extends ListItem {
             ],
           ),
         );
-
-  static double get defaultAvatarSize => 30.0.s;
 
   static double get defaultBadgeSize => 16.0.s;
 

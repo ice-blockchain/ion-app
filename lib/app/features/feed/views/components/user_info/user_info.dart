@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -23,6 +24,7 @@ class UserInfo extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(userMetadataProvider(pubkey));
+    void openProfile() => ProfileRoute(pubkey: pubkey).push<void>(context);
 
     return userMetadata.maybeWhen(
       data: (userMetadataEntity) {
@@ -30,16 +32,27 @@ class UserInfo extends HookConsumerWidget {
           return const SizedBox.shrink();
         }
         return ListItem.user(
-          onTap: () => ProfileRoute(pubkey: pubkey).push<void>(context),
-          title: Text(
-            userMetadataEntity.data.displayName,
-            style: textStyle,
+          title: GestureDetector(
+            onTap: openProfile,
+            child: Text(
+              userMetadataEntity.data.displayName,
+              style: textStyle,
+            ),
           ),
-          subtitle: Text(
-            prefixUsername(username: userMetadataEntity.data.name, context: context),
-            style: textStyle,
+          subtitle: GestureDetector(
+            onTap: openProfile,
+            child: Text(
+              prefixUsername(username: userMetadataEntity.data.name, context: context),
+              style: textStyle,
+            ),
           ),
-          profilePicture: userMetadataEntity.data.picture,
+          profilePictureWidget: GestureDetector(
+            onTap: openProfile,
+            child: Avatar(
+              size: ListItem.defaultAvatarSize,
+              imageUrl: userMetadataEntity.data.picture,
+            ),
+          ),
           trailing: trailing,
         );
       },
