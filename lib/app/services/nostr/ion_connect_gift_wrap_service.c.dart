@@ -13,8 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_connect_gift_wrap_service.c.g.dart';
 
 @riverpod
-IonConnectGiftWrapService ionConnectGiftWrapService(Ref ref) =>
-    IonConnectGiftWrapServiceImpl();
+IonConnectGiftWrapService ionConnectGiftWrapService(Ref ref) => IonConnectGiftWrapServiceImpl();
 
 abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(

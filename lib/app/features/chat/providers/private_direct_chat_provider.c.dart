@@ -29,8 +29,7 @@ part 'private_direct_chat_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<PrivateDirectChatService> privateDirectChatService(Ref ref) async {
-  final eventSigner =
-      await ref.read(currentUserNostrEventSignerProvider.future);
+  final eventSigner = await ref.read(currentUserNostrEventSignerProvider.future);
 
   if (eventSigner == null) {
     throw EventSignerNotFoundException();
@@ -82,8 +81,7 @@ class PrivateDirectChatService {
 
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          final encryptedMediaFiles =
-              await _encryptMediaFiles(compressedMediaFiles);
+          final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
 
           final uploadedMediaFilesWithKeys = await Future.wait(
             encryptedMediaFiles.map((encryptedMediaFile) async {
@@ -219,8 +217,7 @@ class PrivateDirectChatService {
       receiverPubkey,
       signer,
       kind ?? PrivateDirectMessageEntity.kind,
-      expirationTag:
-          kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
+      expirationTag: kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
     );
 
     Logger.log('Wrap message $wrap');
@@ -248,8 +245,7 @@ class PrivateDirectChatService {
           final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
           final compressedMediaFile = switch (mediaType) {
-            MediaType.video =>
-              await compressionService.compressVideo(mediaFile),
+            MediaType.video => await compressionService.compressVideo(mediaFile),
             MediaType.image => await compressionService.compressImage(
                 mediaFile,
                 width: mediaFile.width,
@@ -262,9 +258,7 @@ class PrivateDirectChatService {
                 path: await compressionService.compressAudio(mediaFile.path),
               ),
             MediaType.unknown => MediaFile(
-                path: (await compressionService
-                        .compressWithBrotli(File(mediaFile.path)))
-                    .path,
+                path: (await compressionService.compressWithBrotli(File(mediaFile.path))).path,
               )
           };
 
@@ -286,14 +280,12 @@ class PrivateDirectChatService {
   ) async {
     final encryptedMediaFilesWithSecretBox = await Future.wait(
       compressedMediaFiles.map(
-        (compressedMediaFile) =>
-            Isolate.run<(MediaFile, String, String)>(() async {
+        (compressedMediaFile) => Isolate.run<(MediaFile, String, String)>(() async {
           final secretKey = await AesGcm.with256bits().newSecretKey();
           final secretKeyBytes = await secretKey.extractBytes();
           final secretKeyString = base64Encode(secretKeyBytes);
 
-          final compressedMediaFileBytes =
-              await File(compressedMediaFile.path).readAsBytes();
+          final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
 
           final secretBox = await AesGcm.with256bits().encrypt(
             compressedMediaFileBytes,
@@ -303,8 +295,7 @@ class PrivateDirectChatService {
           final nonceBytes = secretBox.nonce;
           final nonceString = base64Encode(nonceBytes);
 
-          final compressedEncryptedFile =
-              File('${compressedMediaFile.path}.enc');
+          final compressedEncryptedFile = File('${compressedMediaFile.path}.enc');
           // Rewrite compressed fieles with encrypted data
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 
