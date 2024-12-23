@@ -39,8 +39,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
   }) async {
     final sealService = IonConnectSealServiceImpl();
     final wrapService = IonConnectGiftWrapServiceImpl();
-    final currentUserSigner =
-        await ref.read(currentUserNostrEventSignerProvider.future);
+    final currentUserSigner = await ref.read(currentUserNostrEventSignerProvider.future);
 
     if (currentUserSigner == null) {
       throw EventSignerNotFoundException();
@@ -56,8 +55,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
 
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          final encryptedMediaFiles =
-              await _encryptMediaFiles(compressedMediaFiles);
+          final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
 
           final uploadedMediaFilesWithKeys = await Future.wait(
             encryptedMediaFiles.map((encryptedMediaFile) async {
@@ -116,8 +114,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     required String eventId,
     required String receiverPubkey,
   }) async {
-    final currentUserSigner =
-        await ref.read(currentUserNostrEventSignerProvider.future);
+    final currentUserSigner = await ref.read(currentUserNostrEventSignerProvider.future);
 
     if (currentUserSigner == null) {
       throw EventSignerNotFoundException();
@@ -202,9 +199,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
         Duration(
-          hours: ref
-              .read(envProvider.notifier)
-              .get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
+          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
         ),
       ),
     ).toTag();
@@ -214,8 +209,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
       receiverPubkey,
       signer,
       kind ?? PrivateDirectMessageEntity.kind,
-      expirationTag:
-          kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
+      expirationTag: kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
     );
 
     log('Wrap message $wrap');
@@ -256,9 +250,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
                 path: await compressService.compressAudio(mediaFile.path),
               ),
             MediaType.unknown => MediaFile(
-                path: (await compressService
-                        .compressWithBrotli(File(mediaFile.path)))
-                    .path,
+                path: (await compressService.compressWithBrotli(File(mediaFile.path))).path,
               )
           };
 
@@ -278,14 +270,12 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
   ) async {
     final encryptedMediaFilesWithSecretBox = await Future.wait(
       compressedMediaFiles.map(
-        (compressedMediaFile) =>
-            Isolate.run<(MediaFile, String, String)>(() async {
+        (compressedMediaFile) => Isolate.run<(MediaFile, String, String)>(() async {
           final secretKey = await AesGcm.with256bits().newSecretKey();
           final secretKeyBytes = await secretKey.extractBytes();
           final secretKeyString = base64Encode(secretKeyBytes);
 
-          final compressedMediaFileBytes =
-              await File(compressedMediaFile.path).readAsBytes();
+          final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
 
           final secretBox = await AesGcm.with256bits().encrypt(
             compressedMediaFileBytes,
@@ -295,8 +285,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
           final nonceBytes = secretBox.nonce;
           final nonceString = base64Encode(nonceBytes);
 
-          final compressedEncryptedFile =
-              File('${compressedMediaFile.path}.enc');
+          final compressedEncryptedFile = File('${compressedMediaFile.path}.enc');
           // Rewrite compressed fieles with encrypted data
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 
@@ -323,9 +312,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     final expiration = EntityExpiration(
       value: DateTime.now().add(
         Duration(
-          hours: ref
-              .read(envProvider.notifier)
-              .get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
+          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
         ),
       ),
     );
