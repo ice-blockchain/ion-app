@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 
 part 'event_setting.c.freezed.dart';
 
@@ -30,7 +31,7 @@ abstract class EventSetting {
 @freezed
 class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSetting {
   const factory WhoCanReplyEventSetting({
-    required String value,
+    required Set<WhoCanReplySettingsOption> values,
   }) = _WhoCanReplyEventSetting;
 
   const WhoCanReplyEventSetting._();
@@ -43,7 +44,9 @@ class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSet
     if (tag.length < 4) {
       throw IncorrectEventTagException(tag: tag.toString());
     }
-    return WhoCanReplyEventSetting(value: tag[2]);
+
+    final values = tag[2].split(',').map(WhoCanReplySettingsOption.fromTagValue).toSet();
+    return WhoCanReplyEventSetting(values: values);
   }
 
   @override
@@ -51,7 +54,7 @@ class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSet
     return [
       EventSetting.settingTagName,
       tagName,
-      value,
+      values.map((value) => value.tagValue).nonNulls.join(','),
       (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
     ];
   }

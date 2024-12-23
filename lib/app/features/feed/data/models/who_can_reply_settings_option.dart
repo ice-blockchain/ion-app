@@ -5,10 +5,19 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum WhoCanReplySettingsOption {
-  everyone,
-  followedAccounts,
-  verifiedAccounts,
-  mentionedAccounts;
+  everyone(null),
+  followedAccounts('following'),
+  // TODO: Add support for verified accounts setting when API is ready
+  verifiedAccounts(null),
+  mentionedAccounts('mentioned');
+
+  const WhoCanReplySettingsOption(this.tagValue);
+
+  final String? tagValue;
+
+  static WhoCanReplySettingsOption fromTagValue(String value) {
+    return values.firstWhere((option) => option.tagValue == value, orElse: () => everyone);
+  }
 
   String getTitle(BuildContext context) {
     return switch (this) {
@@ -31,15 +40,5 @@ enum WhoCanReplySettingsOption {
     };
 
     return icon.icon(color: context.theme.appColors.primaryAccent);
-  }
-
-  String? toValue() {
-    return switch (this) {
-      WhoCanReplySettingsOption.followedAccounts => 'following',
-      WhoCanReplySettingsOption.mentionedAccounts => 'mentioned',
-      // TODO: Add verified accounts option when API is ready
-      WhoCanReplySettingsOption.verifiedAccounts => null,
-      WhoCanReplySettingsOption.everyone => null,
-    };
   }
 }

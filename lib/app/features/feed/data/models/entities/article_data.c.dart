@@ -106,6 +106,7 @@ class ArticleData with _$ArticleData implements EventSerializable {
       summary: summary,
       publishedAt: publishedAt,
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
+      settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
     );
   }
 
@@ -117,11 +118,12 @@ class ArticleData with _$ArticleData implements EventSerializable {
     String? summary,
     DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
-    Set<WhoCanReplySettingsOption>? whoCanReplySettings,
+    Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
   }) {
-    final setting = (whoCanReplySettings?.isNotEmpty ?? false)
-        ? WhoCanReplyEventSetting(value: whoCanReplySettings!.join(','))
+    final setting = whoCanReplySettings.isNotEmpty
+        ? WhoCanReplyEventSetting(values: whoCanReplySettings)
         : null;
+
     return ArticleData(
       content: content,
       media: media,
@@ -155,6 +157,7 @@ class ArticleData with _$ArticleData implements EventSerializable {
           ['published_at', (publishedAt!.millisecondsSinceEpoch ~/ 1000).toString()],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
         ['d', uniqueIdForEditing],
+        if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,
     );
