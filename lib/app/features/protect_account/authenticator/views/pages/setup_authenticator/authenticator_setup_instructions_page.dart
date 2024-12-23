@@ -3,19 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/card/warning_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_password.dart';
-import 'package:ion/app/features/protect_account/authenticator/views/components/copy_key_card.dart';
-import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
-import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/components/authenticator_setup_instructions_error_state.dart';
+import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/components/authenticator_setup_instructions_success_state.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -27,28 +26,29 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final locale = context.i18n;
-
-    final code = useState<String?>(null);
     final onGetPassword = useOnGetPassword();
 
-    useOnInit(
-      () async {
-        code.value = await requestTwoFACode(ref, const TwoFAType.authenticator(), ({
-          required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
-          required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
-        }) {
-          return ref.read(
-            verifyUserIdentityProvider(
-              onGetPassword: onGetPassword,
-              onPasswordFlow: onPasswordFlow,
-              onPasskeyFlow: onPasskeyFlow,
-            ).future,
-          );
-        });
-      },
-      [onGetPassword],
-    );
+    final twoFaProvider = ref.watch(requestTwoFaCodeNotifierProvider);
+    ref.displayErrors(requestTwoFaCodeNotifierProvider);
+
+    final requestCode = useCallback(() {
+      guardPasskeyDialog(
+        ref.context,
+        (child) => RiverpodVerifyIdentityRequestBuilder(
+          provider: requestTwoFaCodeNotifierProvider,
+          requestWithVerifyIdentity:
+              (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) {
+            ref.read(requestTwoFaCodeNotifierProvider.notifier).requestTwoFaCode(
+                  TwoFaType.auth,
+                  onVerifyIdentity,
+                );
+          },
+          child: child,
+        ),
+      );
+    });
+
+    useOnInit(requestCode, [onGetPassword]);
 
     return SheetContent(
       body: CustomScrollView(
@@ -84,24 +84,11 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
                 SizedBox(height: 32.0.s),
                 Expanded(
                   child: ScreenSideOffset.large(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Spacer(),
-                        CopyKeyCard(code: code.value),
-                        const Spacer(),
-                        WarningCard(text: locale.warning_authenticator_setup),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 22.0.s),
-                ScreenSideOffset.large(
-                  child: Button(
-                    mainAxisSize: MainAxisSize.max,
-                    type: code.value == null ? ButtonType.disabled : ButtonType.primary,
-                    label: Text(context.i18n.button_next),
-                    onPressed: () => AuthenticatorSetupCodeConfirmRoute().push<void>(context),
+                    child: switch (twoFaProvider) {
+                      AsyncError() =>
+                        AuthenticatorSetupInstructionsErrorState(onRetry: requestCode),
+                      _ => AuthenticatorSetupInstructionsSuccessState(code: twoFaProvider.value),
+                    },
                   ),
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
