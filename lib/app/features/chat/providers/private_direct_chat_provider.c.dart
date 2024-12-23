@@ -6,17 +6,19 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/services/nostr/ed25519_key_store.dart';
 import 'package:ion/app/services/nostr/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -31,13 +33,18 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
 
   Future<List<NostrEntity?>> sentMessage({
     required String content,
-    required List<MediaFile> mediaFiles,
     required List<String> participantsPubkeys,
     String? subject,
+    List<MediaFile> mediaFiles = const [],
   }) async {
-    final signer = await Ed25519KeyStore.generate();
     final sealService = IonConnectSealServiceImpl();
     final wrapService = IonConnectGiftWrapServiceImpl();
+    final currentUserSigner =
+        await ref.read(currentUserNostrEventSignerProvider.future);
+
+    if (currentUserSigner == null) {
+      throw EventSignerNotFoundException();
+    }
 
     final conversationTags = _generateConversationTags(
       subject: subject,
@@ -49,7 +56,8 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
 
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
+          final encryptedMediaFiles =
+              await _encryptMediaFiles(compressedMediaFiles);
 
           final uploadedMediaFilesWithKeys = await Future.wait(
             encryptedMediaFiles.map((encryptedMediaFile) async {
@@ -69,16 +77,16 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
 
           final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
 
-          log('Meta tags: $imetaTags');
+          log('Generated meta tags: $imetaTags');
 
           final tags = conversationTags..addAll(imetaTags);
 
           return _createSealWrapSendMessage(
             tags: tags,
-            signer: signer,
             content: content,
             sealService: sealService,
             wrapService: wrapService,
+            signer: currentUserSigner,
             receiverPubkey: participantPubkey,
           );
         }),
@@ -90,11 +98,11 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
           return _createSealWrapSendMessage(
-            signer: signer,
             content: content,
             tags: conversationTags,
             sealService: sealService,
             wrapService: wrapService,
+            signer: currentUserSigner,
             receiverPubkey: participantPubkey,
           );
         }).toList(),
@@ -102,6 +110,40 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
 
       return results;
     }
+  }
+
+  Future<void> sendMessageReceivedStatus({
+    required String eventId,
+    required String receiverPubkey,
+  }) async {
+    final currentUserSigner =
+        await ref.read(currentUserNostrEventSignerProvider.future);
+
+    if (currentUserSigner == null) {
+      throw EventSignerNotFoundException();
+    }
+
+    final sealService = IonConnectSealServiceImpl();
+    final wrapService = IonConnectGiftWrapServiceImpl();
+
+    await _createSealWrapSendMessage(
+      signer: currentUserSigner,
+      content: 'received',
+      receiverPubkey: receiverPubkey,
+      kind: PrivateMessageReactionEntity.kind,
+      tags: [
+        ['k', PrivateDirectMessageEntity.kind.toString()],
+        ['p', receiverPubkey],
+        ['e', eventId],
+      ],
+      sealService: sealService,
+      wrapService: wrapService,
+    );
+  }
+
+  // Works in progress with https://pub.dev/packages/flutter_cache_manager
+  Future<MediaFile> downloadDecryptDecompressMedia() {
+    throw UnimplementedError();
   }
 
   List<List<String>> _generateConversationTags({
@@ -119,10 +161,11 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
   Future<NostrEntity?> _createSealWrapSendMessage({
     required String content,
     required String receiverPubkey,
-    required Ed25519KeyStore signer,
+    required EventSigner signer,
     required List<List<String>> tags,
     required IonConnectSealService sealService,
     required IonConnectGiftWrapService wrapService,
+    int? kind,
   }) async {
     final nostrNotifier = ref.read(nostrNotifierProvider.notifier);
 
@@ -131,7 +174,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     final id = EventMessage.calculateEventId(
       publicKey: signer.publicKey,
       createdAt: createdAt,
-      kind: PrivateDirectMessageEntity.kind,
+      kind: kind ?? PrivateDirectMessageEntity.kind,
       tags: tags,
       content: content,
     );
@@ -142,7 +185,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
       content: content,
       createdAt: createdAt,
       pubkey: signer.publicKey,
-      kind: PrivateDirectMessageEntity.kind,
+      kind: kind ?? PrivateDirectMessageEntity.kind,
       sig: null,
     );
 
@@ -159,7 +202,9 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
         Duration(
-          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
+          hours: ref
+              .read(envProvider.notifier)
+              .get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
         ),
       ),
     ).toTag();
@@ -168,8 +213,9 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
       seal,
       receiverPubkey,
       signer,
-      PrivateDirectMessageEntity.kind,
-      expirationTag: expirationTag,
+      kind ?? PrivateDirectMessageEntity.kind,
+      expirationTag:
+          kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
     );
 
     log('Wrap message $wrap');
@@ -210,7 +256,9 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
                 path: await compressService.compressAudio(mediaFile.path),
               ),
             MediaType.unknown => MediaFile(
-                path: (await compressService.compressWithBrotli(File(mediaFile.path))).path,
+                path: (await compressService
+                        .compressWithBrotli(File(mediaFile.path)))
+                    .path,
               )
           };
 
@@ -230,12 +278,14 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
   ) async {
     final encryptedMediaFilesWithSecretBox = await Future.wait(
       compressedMediaFiles.map(
-        (compressedMediaFile) => Isolate.run<(MediaFile, String, String)>(() async {
+        (compressedMediaFile) =>
+            Isolate.run<(MediaFile, String, String)>(() async {
           final secretKey = await AesGcm.with256bits().newSecretKey();
           final secretKeyBytes = await secretKey.extractBytes();
           final secretKeyString = base64Encode(secretKeyBytes);
 
-          final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
+          final compressedMediaFileBytes =
+              await File(compressedMediaFile.path).readAsBytes();
 
           final secretBox = await AesGcm.with256bits().encrypt(
             compressedMediaFileBytes,
@@ -245,7 +295,8 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
           final nonceBytes = secretBox.nonce;
           final nonceString = base64Encode(nonceBytes);
 
-          final compressedEncryptedFile = File('${compressedMediaFile.path}.enc');
+          final compressedEncryptedFile =
+              File('${compressedMediaFile.path}.enc');
           // Rewrite compressed fieles with encrypted data
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 
@@ -272,7 +323,9 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     final expiration = EntityExpiration(
       value: DateTime.now().add(
         Duration(
-          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
+          hours: ref
+              .read(envProvider.notifier)
+              .get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
         ),
       ),
     );
@@ -297,3 +350,34 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     }).toList();
   }
 }
+
+// Example usage:
+/*
+  final privateDirectChatProvider = ref.read(privateDirectChatProviderProvider.notifier);
+
+  final selectedFiles = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'],
+  );
+
+  await privateDirectChatProvider.sentMessage(
+    subject: 'Test group',
+    content: 'Hello',
+    mediaFiles: [
+      MediaFile(
+        path: selectedFiles?.files.single.path ?? '',
+        mimeType: 'image/jpeg',
+      ),
+    ],
+    participantsPubkeys: [
+      'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377',
+    ],
+  );
+
+  await privateDirectChatProvider.sendMessageReceivedStatus(
+    eventId: 'd44ac1ef3ed47b9dd01be2df8ad2f24b50706164004ff71ddf2d0bcfe9ea9857',
+    receiverPubkey:
+        'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377',
+  );
+
+*/
