@@ -123,6 +123,8 @@ class ListItem extends StatelessWidget {
 
   static BoxConstraints get defaultConstraints => BoxConstraints(minHeight: 60.0.s);
 
+  static double get defaultAvatarSize => 30.0.s;
+
   @override
   Widget build(BuildContext context) {
     final child = Container(
