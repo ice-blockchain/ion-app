@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
@@ -32,6 +31,7 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final viewed = useState(false);
     final currentUserMetadata = ref.watch(currentUserMetadataProvider);
+    final hasStories = ref.watch(filteredStoriesByPubkeyProvider(pubkey)).isNotEmpty;
 
     return currentUserMetadata.maybeWhen(
       data: (userMetadata) {
@@ -39,9 +39,9 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
 
         return PermissionAwareWidget(
           permissionType: Permission.camera,
-          onGranted: () => Random().nextBool()
-              ? StoryRecordRoute().push<void>(context)
-              : StoryViewerRoute(pubkey: pubkey).push<void>(context),
+          onGranted: () => hasStories
+              ? StoryViewerRoute(pubkey: pubkey).push<void>(context)
+              : StoryRecordRoute().push<void>(context),
           requestDialog: const PermissionRequestSheet(permission: Permission.camera),
           settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
           builder: (context, onPressed) {
