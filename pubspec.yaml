@@ -30,11 +30,13 @@ dependencies:
   extended_text: ^14.1.0
   ffmpeg_kit_flutter_full_gpl: ^6.0.3
   ffmpeg_wasm: ^1.0.3
+  file: ^7.0.1
   file_picker: ^8.1.2
   file_saver: ^0.2.12
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
+  flutter_cache_manager: ^3.4.1
   flutter_dotenv: ^5.1.0
   flutter_hooks: ^0.20.5
   flutter_inappwebview: ^6.1.5

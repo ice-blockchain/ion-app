@@ -3,9 +3,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'ion_connect_seal_service.c.g.dart';
+
+@riverpod
+IonConnectSealService ionConnectSealService(Ref ref) => IonConnectSealServiceImpl();
 
 abstract class IonConnectSealService {
   Future<EventMessage> createSeal(

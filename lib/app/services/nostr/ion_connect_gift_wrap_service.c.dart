@@ -3,10 +3,18 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'ion_connect_gift_wrap_service.c.g.dart';
+
+@riverpod
+IonConnectGiftWrapService ionConnectGiftWrapService(Ref ref) =>
+    IonConnectGiftWrapServiceImpl();
 
 abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
