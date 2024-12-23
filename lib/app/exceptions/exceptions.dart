@@ -200,3 +200,8 @@ class UserChatRelaysNotFoundException extends IONException {
 class ConfigPlatformNotSupportException extends IONException {
   ConfigPlatformNotSupportException() : super(10041, 'Platform not supported');
 }
+
+class ForceUpdateCouldntLaunchUrlException extends IONException {
+  ForceUpdateCouldntLaunchUrlException({required String url})
+      : super(10042, 'Could not launch $url');
+}
