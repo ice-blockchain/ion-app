@@ -213,3 +213,8 @@ class ForceUpdateFetchConfigException extends IONException {
 class AuthChallengeIsEmptyException extends IONException {
   AuthChallengeIsEmptyException() : super(10044, 'Auth challenge is empty');
 }
+
+class ForceUpdateCouldntLaunchUrlException extends IONException {
+  ForceUpdateCouldntLaunchUrlException({required String url})
+      : super(10042, 'Could not launch $url');
+}
