@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
@@ -18,6 +18,7 @@ import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.d
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/nostr/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
@@ -26,10 +27,44 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'private_direct_chat_provider.c.g.dart';
 
-@riverpod
-class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
-  @override
-  void build() {}
+@Riverpod(keepAlive: true)
+Future<PrivateDirectChatService> privateDirectChatService(Ref ref) async {
+  final eventSigner =
+      await ref.read(currentUserNostrEventSignerProvider.future);
+
+  if (eventSigner == null) {
+    throw EventSignerNotFoundException();
+  }
+
+  return PrivateDirectChatService(
+    eventSigner: eventSigner,
+    env: ref.read(envProvider.notifier),
+    sealService: ref.read(ionConnectSealServiceProvider),
+    wrapService: ref.read(ionConnectGiftWrapServiceProvider),
+    compressionService: ref.read(compressServiceProvider),
+    nostrNotifier: ref.read(nostrNotifierProvider.notifier),
+    nostrUploadNotifier: ref.read(nostrUploadNotifierProvider.notifier),
+  );
+}
+
+class PrivateDirectChatService {
+  PrivateDirectChatService({
+    required this.env,
+    required this.wrapService,
+    required this.sealService,
+    required this.eventSigner,
+    required this.nostrNotifier,
+    required this.nostrUploadNotifier,
+    required this.compressionService,
+  });
+
+  final Env env;
+  final EventSigner eventSigner;
+  final NostrNotifier nostrNotifier;
+  final IonConnectSealService sealService;
+  final IonConnectGiftWrapService wrapService;
+  final CompressionService compressionService;
+  final NostrUploadNotifier nostrUploadNotifier;
 
   Future<List<NostrEntity?>> sentMessage({
     required String content,
@@ -37,14 +72,6 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     String? subject,
     List<MediaFile> mediaFiles = const [],
   }) async {
-    final sealService = IonConnectSealServiceImpl();
-    final wrapService = IonConnectGiftWrapServiceImpl();
-    final currentUserSigner = await ref.read(currentUserNostrEventSignerProvider.future);
-
-    if (currentUserSigner == null) {
-      throw EventSignerNotFoundException();
-    }
-
     final conversationTags = _generateConversationTags(
       subject: subject,
       pubkeys: participantsPubkeys,
@@ -55,7 +82,8 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
 
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
+          final encryptedMediaFiles =
+              await _encryptMediaFiles(compressedMediaFiles);
 
           final uploadedMediaFilesWithKeys = await Future.wait(
             encryptedMediaFiles.map((encryptedMediaFile) async {
@@ -63,11 +91,14 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
               final secretBox = encryptedMediaFile.$2;
               final secretKeyBytes = encryptedMediaFile.$3;
 
-              final uploadResult = await ref
-                  .read(nostrUploadNotifierProvider.notifier)
-                  .upload(mediaFile, alt: FileAlt.message);
+              final uploadResult = await nostrUploadNotifier.upload(
+                mediaFile,
+                alt: FileAlt.message,
+              );
 
-              log('Uploaded media file: ${uploadResult.fileMetadata.url}, ${uploadResult.fileMetadata.mimeType} ${uploadResult.fileMetadata.size}');
+              Logger.log(
+                'Uploaded media file: ${uploadResult.fileMetadata.url}, ${uploadResult.fileMetadata.mimeType} ${uploadResult.fileMetadata.size}',
+              );
 
               return (uploadResult, secretBox, secretKeyBytes);
             }),
@@ -75,16 +106,12 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
 
           final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
 
-          log('Generated meta tags: $imetaTags');
-
           final tags = conversationTags..addAll(imetaTags);
 
           return _createSealWrapSendMessage(
             tags: tags,
             content: content,
-            sealService: sealService,
-            wrapService: wrapService,
-            signer: currentUserSigner,
+            signer: eventSigner,
             receiverPubkey: participantPubkey,
           );
         }),
@@ -97,10 +124,8 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
         participantsPubkeys.map((participantPubkey) async {
           return _createSealWrapSendMessage(
             content: content,
+            signer: eventSigner,
             tags: conversationTags,
-            sealService: sealService,
-            wrapService: wrapService,
-            signer: currentUserSigner,
             receiverPubkey: participantPubkey,
           );
         }).toList(),
@@ -114,17 +139,8 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     required String eventId,
     required String receiverPubkey,
   }) async {
-    final currentUserSigner = await ref.read(currentUserNostrEventSignerProvider.future);
-
-    if (currentUserSigner == null) {
-      throw EventSignerNotFoundException();
-    }
-
-    final sealService = IonConnectSealServiceImpl();
-    final wrapService = IonConnectGiftWrapServiceImpl();
-
     await _createSealWrapSendMessage(
-      signer: currentUserSigner,
+      signer: eventSigner,
       content: 'received',
       receiverPubkey: receiverPubkey,
       kind: PrivateMessageReactionEntity.kind,
@@ -133,8 +149,6 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
         ['p', receiverPubkey],
         ['e', eventId],
       ],
-      sealService: sealService,
-      wrapService: wrapService,
     );
   }
 
@@ -160,12 +174,8 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
     required String receiverPubkey,
     required EventSigner signer,
     required List<List<String>> tags,
-    required IonConnectSealService sealService,
-    required IonConnectGiftWrapService wrapService,
     int? kind,
   }) async {
-    final nostrNotifier = ref.read(nostrNotifierProvider.notifier);
-
     final createdAt = DateTime.now().toUtc();
 
     final id = EventMessage.calculateEventId(
@@ -186,7 +196,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
       sig: null,
     );
 
-    log('Event message $eventMessage');
+    Logger.log('Event message $eventMessage');
 
     final seal = await sealService.createSeal(
       eventMessage,
@@ -194,12 +204,12 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
       receiverPubkey,
     );
 
-    log('Seal message $seal');
+    Logger.log('Seal message $seal');
 
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
         Duration(
-          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
+          hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
         ),
       ),
     ).toTag();
@@ -209,14 +219,15 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
       receiverPubkey,
       signer,
       kind ?? PrivateDirectMessageEntity.kind,
-      expirationTag: kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
+      expirationTag:
+          kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
     );
 
-    log('Wrap message $wrap');
+    Logger.log('Wrap message $wrap');
 
     final result = await nostrNotifier.sendEvent(wrap, cache: false);
 
-    log('Sent message $result');
+    Logger.log('Sent message $result');
 
     return result;
   }
@@ -224,21 +235,22 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
   Future<List<MediaFile>> _compressMediaFiles(
     List<MediaFile> mediaFiles,
   ) async {
-    final compressService = ref.read(compressServiceProvider);
-
     // Would be better to compress all media files in isolates when this one is
     // fixed https://github.com/arthenica/ffmpeg-kit/issues/367
     final compressedMediaFiles = await Future.wait(
       mediaFiles.map(
         (mediaFile) async {
           final size = File(mediaFile.path).lengthSync();
-          log('Original media file: ${mediaFile.path}, ${mediaFile.mimeType} $size');
+          Logger.log(
+            'Original media file: ${mediaFile.path}, ${mediaFile.mimeType} $size',
+          );
 
           final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
           final compressedMediaFile = switch (mediaType) {
-            MediaType.video => await compressService.compressVideo(mediaFile),
-            MediaType.image => await compressService.compressImage(
+            MediaType.video =>
+              await compressionService.compressVideo(mediaFile),
+            MediaType.image => await compressionService.compressImage(
                 mediaFile,
                 width: mediaFile.width,
                 height: mediaFile.height,
@@ -247,15 +259,19 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
                 width: 0,
                 height: 0,
                 mimeType: mediaFile.mimeType,
-                path: await compressService.compressAudio(mediaFile.path),
+                path: await compressionService.compressAudio(mediaFile.path),
               ),
             MediaType.unknown => MediaFile(
-                path: (await compressService.compressWithBrotli(File(mediaFile.path))).path,
+                path: (await compressionService
+                        .compressWithBrotli(File(mediaFile.path)))
+                    .path,
               )
           };
 
           final compressedSize = File(compressedMediaFile.path).lengthSync();
-          log('Compressed media file: ${compressedMediaFile.path}, ${compressedMediaFile.mimeType} $compressedSize');
+          Logger.log(
+            'Compressed media file: ${compressedMediaFile.path}, ${compressedMediaFile.mimeType} $compressedSize',
+          );
 
           return compressedMediaFile;
         },
@@ -270,12 +286,14 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
   ) async {
     final encryptedMediaFilesWithSecretBox = await Future.wait(
       compressedMediaFiles.map(
-        (compressedMediaFile) => Isolate.run<(MediaFile, String, String)>(() async {
+        (compressedMediaFile) =>
+            Isolate.run<(MediaFile, String, String)>(() async {
           final secretKey = await AesGcm.with256bits().newSecretKey();
           final secretKeyBytes = await secretKey.extractBytes();
           final secretKeyString = base64Encode(secretKeyBytes);
 
-          final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
+          final compressedMediaFileBytes =
+              await File(compressedMediaFile.path).readAsBytes();
 
           final secretBox = await AesGcm.with256bits().encrypt(
             compressedMediaFileBytes,
@@ -285,7 +303,8 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
           final nonceBytes = secretBox.nonce;
           final nonceString = base64Encode(nonceBytes);
 
-          final compressedEncryptedFile = File('${compressedMediaFile.path}.enc');
+          final compressedEncryptedFile =
+              File('${compressedMediaFile.path}.enc');
           // Rewrite compressed fieles with encrypted data
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 
@@ -296,7 +315,9 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
             mimeType: compressedMediaFile.mimeType,
           );
 
-          log('Encrypted media file ${compressedEncryptedMediaFile.mimeType} ${compressedEncryptedFile.lengthSync()}');
+          Logger.log(
+            'Encrypted media file ${compressedEncryptedMediaFile.mimeType} ${compressedEncryptedFile.lengthSync()}',
+          );
 
           return (compressedEncryptedMediaFile, nonceString, secretKeyString);
         }),
@@ -311,9 +332,7 @@ class PrivateDirectChatProvider extends _$PrivateDirectChatProvider {
   ) {
     final expiration = EntityExpiration(
       value: DateTime.now().add(
-        Duration(
-          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
-        ),
+        Duration(hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS)),
       ),
     );
 
