@@ -7,8 +7,6 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/model/auth_event.c.dart';
 import 'package:ion/app/features/nostr/model/event_serializable.dart';
@@ -183,22 +181,6 @@ class NostrNotifier extends _$NostrNotifier {
     final entitiesStream = requestEntities(requestMessage, actionSource: actionSource);
     final entities = await entitiesStream.toList();
     return entities.isNotEmpty ? entities.first as T : null;
-  }
-
-  Future<EventCountResultEntity> requestCount(
-    EventCountRequestData requestData, {
-    ActionSource actionSource = const ActionSourceCurrentUser(),
-  }) async {
-    final requestEventMessage = await sign(requestData);
-    final relay = await _getRelay(actionSource);
-    relay.sendMessage(requestEventMessage);
-    return relay.messages
-        .where((message) => message is EventMessage && message.kind == EventCountResultEntity.kind)
-        .cast<EventMessage>()
-        .map(EventCountResultEntity.fromEventMessage)
-        .firstWhere(
-          (countResult) => countResult.data.requestEventId == requestEventMessage.id,
-        );
   }
 
   Future<EventMessage> sign(EventSerializable entityData) async {

@@ -58,6 +58,7 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
   const factory EventCountRequestData({
     required List<RequestFilter> filters,
     required EventCountRequestParams params,
+    List<String>? relays,
     String? output,
   }) = _EventCountRequestData;
 
@@ -71,6 +72,7 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
     return EventCountRequestData(
       filters: filters,
       params: EventCountRequestParams.fromTags(tags[EventCountRequestParams.tagName] ?? []),
+      relays: tags['relays']?.first.skip(1).toList(),
       output: tags['output']?.first[1],
     );
   }
@@ -85,8 +87,12 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
       signer: signer,
       createdAt: createdAt,
       kind: EventCountRequestEntity.kind,
-      content: json.encode(filters.map((filter) => filter.toString()).toList()),
-      tags: [...tags, ...params.toTags()],
+      content: json.encode(filters),
+      tags: [
+        ...tags,
+        ...params.toTags(),
+        if (relays != null) ['relays', ...relays!],
+      ],
     );
   }
 }
