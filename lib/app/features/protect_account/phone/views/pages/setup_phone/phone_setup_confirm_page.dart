@@ -16,6 +16,7 @@ import 'package:ion/app/features/components/verify_identity/verify_identity_prom
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/validate_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -32,6 +33,10 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
     final theme = context.theme;
     final formKey = useRef(GlobalKey<FormState>());
     final codeController = useTextEditingController.fromValue(TextEditingValue.empty);
+
+    ref
+      ..displayErrors(validateTwoFaCodeNotifierProvider)
+      ..listenSuccess(validateTwoFaCodeNotifierProvider, (_) => _onSuccess(context, ref));
 
     return Form(
       key: formKey.value,
@@ -85,23 +90,12 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_confirm),
-                  onPressed: () async {
-                    final isFormValid = formKey.value.currentState?.validate() ?? false;
-                    if (!isFormValid) {
-                      return;
-                    }
-
-                    await validateTwoFACode(ref, TwoFAType.sms(codeController.text));
-                    ref.invalidate(securityAccountControllerProvider);
-
-                    if (!context.mounted) {
-                      return;
-                    }
-
-                    unawaited(
-                      PhoneSetupRoute(step: PhoneSetupSteps.success).push<void>(context),
-                    );
-                  },
+                  onPressed: () => _validateAndProceed(
+                    context,
+                    ref,
+                    formKey.value,
+                    codeController.text,
+                  ),
                 ),
               ],
             ),
@@ -109,5 +103,29 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
         },
       ),
     );
+  }
+
+  void _validateAndProceed(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<FormState>? formKey,
+    String code,
+  ) {
+    final isFormValid = formKey?.currentState?.validate() ?? false;
+    if (!isFormValid) {
+      return;
+    }
+
+    ref.read(validateTwoFaCodeNotifierProvider.notifier).validateTwoFACode(TwoFAType.sms(code));
+  }
+
+  Future<void> _onSuccess(BuildContext context, WidgetRef ref) async {
+    ref.invalidate(securityAccountControllerProvider);
+
+    if (!context.mounted) {
+      return;
+    }
+
+    await PhoneSetupRoute(step: PhoneSetupSteps.success).push<void>(context);
   }
 }

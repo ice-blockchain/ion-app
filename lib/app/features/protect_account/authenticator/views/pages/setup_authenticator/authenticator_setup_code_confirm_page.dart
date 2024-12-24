@@ -11,8 +11,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/validate_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -29,6 +29,10 @@ class AuthenticatorSetupCodeConfirmPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
     final formKey = useRef(GlobalKey<FormState>());
+
+    ref
+      ..displayErrors(validateTwoFaCodeNotifierProvider)
+      ..listenSuccess(validateTwoFaCodeNotifierProvider, (_) => _onSuccess(context, ref));
 
     return SheetContent(
       body: CustomScrollView(
@@ -104,18 +108,23 @@ class AuthenticatorSetupCodeConfirmPage extends HookConsumerWidget {
     );
   }
 
-  Future<void> _validateAndProceed(
+  void _validateAndProceed(
     BuildContext context,
     WidgetRef ref,
     GlobalKey<FormState>? formKey,
     String code,
-  ) async {
+  ) {
     final isFormValid = formKey?.currentState?.validate() ?? false;
     if (!isFormValid) {
       return;
     }
 
-    await validateTwoFACode(ref, TwoFAType.authenticator(code));
+    ref
+        .read(validateTwoFaCodeNotifierProvider.notifier)
+        .validateTwoFACode(TwoFAType.authenticator(code));
+  }
+
+  Future<void> _onSuccess(BuildContext context, WidgetRef ref) async {
     ref.invalidate(securityAccountControllerProvider);
 
     if (!context.mounted) {
