@@ -9,7 +9,8 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class AppUpdateHandler extends HookConsumerWidget {
-  const AppUpdateHandler({super.key});
+  const AppUpdateHandler({required this.child, super.key});
+  final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,6 +28,6 @@ class AppUpdateHandler extends HookConsumerWidget {
       });
     }
 
-    return const SizedBox.shrink();
+    return child;
   }
 }

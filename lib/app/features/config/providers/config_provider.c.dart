@@ -2,6 +2,8 @@
 
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -10,9 +12,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'config_provider.c.g.dart';
 
 @riverpod
-class ConfigNotifier extends _$ConfigNotifier {
-  @override
-  FutureOr<void> build() {}
+ConfigService configService(Ref ref) => ConfigService(ref.watch(dioProvider));
+
+class ConfigService {
+  ConfigService(this.dio);
+  final Dio dio;
 
   ConfigName _getPlatformConfigName() {
     if (Platform.isAndroid) {
@@ -37,7 +41,7 @@ class ConfigNotifier extends _$ConfigNotifier {
     final path = '$baseUrl/v1/config/$configName';
 
     try {
-      final response = await ref.read(dioProvider).get<String>(path);
+      final response = await dio.get<String>(path);
       if (response.data == null) {
         throw ForceUpdateFetchConfigException();
       }

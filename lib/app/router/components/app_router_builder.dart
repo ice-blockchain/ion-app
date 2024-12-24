@@ -35,14 +35,15 @@ class AppRouterBuilder extends HookConsumerWidget {
       child: SafeArea(
         top: isShowSafeArea.value,
         bottom: false,
-        child: Column(
-          children: [
-            const GlobalNotificationBar(),
-            Expanded(
-              child: child ?? const SizedBox.shrink(),
-            ),
-            const AppUpdateHandler(),
-          ],
+        child: AppUpdateHandler(
+          child: Column(
+            children: [
+              const GlobalNotificationBar(),
+              Expanded(
+                child: child ?? const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
       ),
     );
