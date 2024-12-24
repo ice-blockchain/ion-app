@@ -3,18 +3,26 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'ion_connect_gift_wrap_service.c.g.dart';
+
+@riverpod
+IonConnectGiftWrapService ionConnectGiftWrapService(Ref ref) => IonConnectGiftWrapServiceImpl();
 
 abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
     EventMessage event,
-    String pubkey,
+    String receiverPubkey,
     EventSigner signer,
-    int contentKind,
-  );
+    int contentKind, {
+    List<String>? expirationTag,
+  });
 
   Future<EventMessage> decodeWrap(
     EventMessage wrap,
@@ -29,14 +37,15 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   @override
   Future<EventMessage> createWrap(
     EventMessage event,
-    String pubkey,
+    String receiverPubkey,
     EventSigner signer,
-    int contentKind,
-  ) async {
+    int contentKind, {
+    List<String>? expirationTag,
+  }) async {
     final encryptedEvent = await Nip44.encryptMessage(
       jsonEncode(event.toJson().last),
       signer.privateKey,
-      pubkey,
+      receiverPubkey,
     );
 
     final createdAt = randomDateBefore(
@@ -49,8 +58,9 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       createdAt: createdAt,
       content: encryptedEvent,
       tags: [
-        [RelatedPubkey.tagName, pubkey],
+        [RelatedPubkey.tagName, receiverPubkey],
         ['k', contentKind.toString()],
+        if (expirationTag != null) expirationTag,
       ],
     );
   }

@@ -6,15 +6,20 @@ import 'package:ion/app/extensions/extensions.dart';
 enum MediaType {
   image,
   video,
+  audio,
   unknown;
 
   factory MediaType.fromMimeType(String mimeType) {
     final imageRegex = RegExp('^image/');
     final videoRegex = RegExp('^video/');
+    final audioRegex = RegExp('^audio/');
+
     if (imageRegex.hasMatch(mimeType)) {
       return MediaType.image;
     } else if (videoRegex.hasMatch(mimeType)) {
       return MediaType.video;
+    } else if (audioRegex.hasMatch(mimeType)) {
+      return MediaType.audio;
     }
     return MediaType.unknown;
   }
@@ -24,6 +29,8 @@ enum MediaType {
       return MediaType.image;
     } else if (isVideoUrl(url)) {
       return MediaType.video;
+    } else if (isAudioUrl(url)) {
+      return MediaType.audio;
     } else {
       return MediaType.unknown;
     }
@@ -37,10 +44,15 @@ enum MediaType {
     return RegExp(r'https?://\S+\.(?:mp4|avi|mov|wmv|flv|mkv|webm)').hasMatch(url);
   }
 
+  static bool isAudioUrl(String url) {
+    return RegExp(r'https?://\S+\.(?:mp3|wav|ogg|flac|aac|wma)').hasMatch(url);
+  }
+
   String title(BuildContext context) {
     return switch (this) {
       MediaType.image => context.i18n.gallery_add_photo_title,
       MediaType.video => context.i18n.common_add_video,
+      MediaType.audio => context.i18n.common_add_audio,
       MediaType.unknown => '',
     };
   }

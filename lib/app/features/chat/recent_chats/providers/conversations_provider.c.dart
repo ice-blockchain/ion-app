@@ -16,7 +16,7 @@ class Conversations extends _$Conversations {
   @override
   FutureOr<List<PrivateDirectMessageEntity>> build() async {
     final conversationSubscription = ref
-        .read(dBConversationsNotifierProvider.notifier)
+        .read(conversationsDBServiceProvider)
         .watchConversations()
         .listen((conversationsEventMessages) async {
       final data =
@@ -29,7 +29,7 @@ class Conversations extends _$Conversations {
 
     state = const AsyncValue.loading();
     try {
-      final database = ref.read(dBConversationsNotifierProvider.notifier);
+      final database = ref.read(conversationsDBServiceProvider);
       final conversationsEventMessages = await database.getAllConversations();
 
       final conversationsList =
