@@ -209,3 +209,7 @@ class ForceUpdateCouldntLaunchUrlException extends IONException {
 class ForceUpdateFetchConfigException extends IONException {
   ForceUpdateFetchConfigException() : super(10043, 'Failed to get version config');
 }
+
+class AuthChallengeIsEmptyException extends IONException {
+  AuthChallengeIsEmptyException() : super(10044, 'Auth challenge is empty');
+}

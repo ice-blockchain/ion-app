@@ -16,7 +16,7 @@ command:
 
 scripts:
   pub_get:
-    exec: dart pub get
+    exec: flutter pub get
   analyze:
     exec: flutter analyze && dart run custom_lint
   test:
