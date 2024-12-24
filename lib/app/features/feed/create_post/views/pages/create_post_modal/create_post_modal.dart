@@ -22,7 +22,7 @@ import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_t
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
-import 'package:ion/app/features/feed/views/components/visibility_settings_toolbar/visibility_settings_toolbar.dart';
+import 'package:ion/app/features/feed/views/components/who_can_reply_toolbar/who_can_reply_toolbar.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -51,13 +51,13 @@ class CreatePostModal extends HookConsumerWidget {
     final textEditorController = useQuillController(defaultText: content);
     final scrollController = useScrollController();
 
-    final visibilityToolbarKey = useMemoized(GlobalKey.new);
+    final whoCanReplyToolbarKey = useMemoized(GlobalKey.new);
     final actionsToolbarKey = useMemoized(GlobalKey.new);
     final textInputKey = useMemoized(GlobalKey.new);
 
     useKeyboardScrollHandler(
       scrollController: scrollController,
-      keysToMeasure: [visibilityToolbarKey, actionsToolbarKey, textInputKey],
+      keysToMeasure: [whoCanReplyToolbarKey, actionsToolbarKey, textInputKey],
     );
 
     final createOption = videoPath != null
@@ -153,8 +153,8 @@ class CreatePostModal extends HookConsumerWidget {
             ),
             const HorizontalSeparator(),
             ScreenSideOffset.small(
-              key: visibilityToolbarKey,
-              child: const VisibilitySettingsToolbar(),
+              key: whoCanReplyToolbarKey,
+              child: const WhoCanReplyToolbar(),
             ),
             ScreenSideOffset.small(
               key: actionsToolbarKey,
