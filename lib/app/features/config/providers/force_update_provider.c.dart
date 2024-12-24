@@ -48,8 +48,7 @@ class ForceUpdate extends _$ForceUpdate {
 
     if (lastSyncDate == null ||
         DateTime.now().difference(lastSyncDate).inMilliseconds >= eightHoursInMilliseconds) {
-      final service = ref.read(configServiceProvider);
-      final remoteVersion = await service.fetchConfigForCurrentPlatform();
+      final remoteVersion = await ref.read(configForPlatformProvider.future);
 
       final packageInfo = await PackageInfo.fromPlatform();
       final localVersion = packageInfo.version;
