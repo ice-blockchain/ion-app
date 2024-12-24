@@ -63,8 +63,10 @@ mixin _Dio {
     );
     final dio = Dio(dioOptions);
 
-    final interceptors = NetworkServiceLocator().loggerInterceptor();
-    dio.interceptors.add(interceptors);
+    final interceptors = [
+      if (config.logging) NetworkServiceLocator().loggerInterceptor(),
+    ];
+    dio.interceptors.addAll(interceptors);
 
     return dio;
   }
@@ -75,7 +77,7 @@ mixin _Interceptors {
     required IONIdentityConfig config,
   }) {
     return <Interceptor>[
-      loggerInterceptor(),
+      if (config.logging) loggerInterceptor(),
       authInterceptor(config: config),
     ];
   }
