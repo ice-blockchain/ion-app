@@ -10,7 +10,7 @@ import 'package:ion/app/features/nostr/model/nostr_entity.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
-import 'package:ion/app/features/user/providers/tab_data_source_family.c.dart';
+import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 
@@ -46,7 +46,7 @@ class TabEntitiesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
-    final dataSource = ref.watch(tabDataSourceProviderFamily((type, pubkey)));
+    final dataSource = ref.watch(tabDataSourceProvider(type: type, pubkey: pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items;
 
