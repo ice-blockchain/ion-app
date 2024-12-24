@@ -24,12 +24,11 @@ class TabEntitiesList extends ConsumerWidget {
 
   factory TabEntitiesList.replies({
     required String pubkey,
-    required TabEntityType type,
     Key? key,
   }) {
     return TabEntitiesList(
       key: key,
-      type: type,
+      type: TabEntityType.replies,
       pubkey: pubkey,
       builder: (entities) => EntitiesList(entities: entities.toList(), showParent: true),
     );
