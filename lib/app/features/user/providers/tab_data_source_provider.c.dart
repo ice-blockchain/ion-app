@@ -8,11 +8,16 @@ import 'package:ion/app/features/user/providers/user_posts_data_source_provider.
 import 'package:ion/app/features/user/providers/user_replies_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_videos_data_source_provider.c.dart';
 
-final tabDataSourceProviderFamily =
-    Provider.autoDispose.family<List<EntitiesDataSource>?, (TabEntityType, String)>((ref, args) {
-  final type = args.$1;
-  final pubkey = args.$2;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'tab_data_source_provider.c.g.dart';
+
+@riverpod
+List<EntitiesDataSource>? tabDataSource(
+  Ref ref, {
+  required TabEntityType type,
+  required String pubkey,
+}) {
   switch (type) {
     case TabEntityType.posts:
       return ref.watch(userPostsDataSourceProvider(pubkey));
@@ -23,4 +28,4 @@ final tabDataSourceProviderFamily =
     case TabEntityType.videos:
       return ref.watch(userVideosDataSourceProvider(pubkey));
   }
-});
+}
