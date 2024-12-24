@@ -23,7 +23,7 @@ class ReportSentModal extends ConsumerWidget {
         Padding(
           padding: EdgeInsets.only(left: 30.0.s, right: 30.0.s, top: 79.0.s),
           child: InfoCard(
-            iconAsset: Assets.svg.actionWalletProtectwallet,
+            iconAsset: Assets.svg.walletIconWalletReport,
             title: context.i18n.profile_popup_report_success_title,
             description: context.i18n.profile_popup_report_success_desc,
           ),

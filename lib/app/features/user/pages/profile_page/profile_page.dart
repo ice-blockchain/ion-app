@@ -6,17 +6,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
 import 'package:ion/app/features/user/pages/components/user_banner/user_banner.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/articles_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/posts_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/replies_tab.dart';
-import 'package:ion/app/features/user/pages/profile_page/components/tabs/content/videos_tab.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
+import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
 
@@ -92,12 +90,11 @@ class ProfilePage extends HookConsumerWidget {
                     ];
                   },
                   body: TabBarView(
-                    children: [
-                      PostsTab(pubkey: pubkey),
-                      RepliesTab(pubkey: pubkey),
-                      VideosTab(pubkey: pubkey),
-                      ArticlesTab(pubkey: pubkey),
-                    ],
+                    children: TabEntityType.values
+                        .map(
+                          (type) => TabEntitiesList(pubkey: pubkey, type: type),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
