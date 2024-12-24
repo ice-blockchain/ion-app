@@ -201,20 +201,15 @@ class ConfigPlatformNotSupportException extends IONException {
   ConfigPlatformNotSupportException() : super(10041, 'Platform not supported');
 }
 
+class AuthChallengeIsEmptyException extends IONException {
+  AuthChallengeIsEmptyException() : super(10042, 'Auth challenge is empty');
+}
+
 class ForceUpdateCouldntLaunchUrlException extends IONException {
   ForceUpdateCouldntLaunchUrlException({required String url})
-      : super(10042, 'Could not launch $url');
+      : super(10043, 'Could not launch $url');
 }
 
 class ForceUpdateFetchConfigException extends IONException {
-  ForceUpdateFetchConfigException() : super(10043, 'Failed to get version config');
-}
-
-class AuthChallengeIsEmptyException extends IONException {
-  AuthChallengeIsEmptyException() : super(10044, 'Auth challenge is empty');
-}
-
-class ForceUpdateCouldntLaunchUrlException extends IONException {
-  ForceUpdateCouldntLaunchUrlException({required String url})
-      : super(10042, 'Could not launch $url');
+  ForceUpdateFetchConfigException() : super(10044, 'Failed to get version config');
 }
