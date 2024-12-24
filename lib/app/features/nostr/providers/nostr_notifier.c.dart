@@ -124,6 +124,7 @@ class NostrNotifier extends _$NostrNotifier {
   Stream<EventMessage> requestEvents(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    bool keepSubscription = false,
   }) async* {
     final dislikedRelaysUrls = <String>{};
     NostrRelay? relay;
@@ -136,7 +137,8 @@ class NostrNotifier extends _$NostrNotifier {
           await sendAuthEvent(relay!);
         }
 
-        await for (final event in nd.requestEvents(requestMessage, relay!)) {
+        await for (final event
+            in nd.requestEvents(requestMessage, relay!, keepSubscription: keepSubscription)) {
           if (event is NoticeMessage || event is ClosedMessage) {
             throw RelayRequestFailedException(
               relayUrl: relay!.url,

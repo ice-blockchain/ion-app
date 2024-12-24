@@ -295,6 +295,16 @@ class DBConversationsNotifier extends _$DBConversationsNotifier {
 
     return reactions;
   }
+
+  //get last createdAt date from conversation_messages_table
+  Future<DateTime?> getLastConversationMessageCreatedAt() async {
+    final lastConversationMessage = await (_db.select(_db.conversationMessagesTable)
+          ..orderBy([(table) => OrderingTerm.desc(table.createdAt)])
+          ..limit(1))
+        .getSingleOrNull();
+
+    return lastConversationMessage?.createdAt;
+  }
 }
 
 // DO NOT create or use database directly, use proxy notifier
