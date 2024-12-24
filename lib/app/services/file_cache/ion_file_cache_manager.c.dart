@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -23,5 +24,13 @@ class FileCacheService {
 
   Future<File> getFile(String url) async {
     return _cacheManager.getSingleFile(url);
+  }
+
+  Future<File> putFile({
+    required String url,
+    required Uint8List bytes,
+    required String fileExtension,
+  }) async {
+    return _cacheManager.putFile(url, bytes, fileExtension: fileExtension);
   }
 }
