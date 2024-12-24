@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
+import 'package:ion/app/features/config/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
@@ -29,5 +30,6 @@ Future<void> initApp(Ref ref) async {
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
   ]);
 
+  ref.read(forceUpdateProvider);
   await ref.read(onboardingCompleteProvider.future);
 }

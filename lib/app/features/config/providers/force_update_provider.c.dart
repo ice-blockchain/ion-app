@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/config/providers/config_provider.c.dart';
 import 'package:ion/app/features/config/providers/force_update_last_sync_date_provider.c.dart';
+import 'package:ion/app/features/config/providers/force_update_util_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
-import 'package:ion/app/utils/force_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,7 +17,7 @@ part 'force_update_provider.c.g.dart';
 @freezed
 class ForceUpdateState with _$ForceUpdateState {
   const factory ForceUpdateState({
-    @Default(false) bool showUpdateModal,
+    @Default(false) bool shouldShowUpdateModal,
   }) = _ForceUpdateState;
 
   const ForceUpdateState._();
@@ -55,13 +55,15 @@ class ForceUpdate extends _$ForceUpdate {
       final localVersion = packageInfo.version;
 
       if (localVersion == remoteVersion) {
-        state = state.copyWith(showUpdateModal: false);
+        state = state.copyWith(shouldShowUpdateModal: false);
 
         ref
             .read(forceUpdateLastSyncDateNotifierProvider.notifier)
             .updateLastSyncDate(DateTime.now());
-      } else if (ForceUpdateUtil.isVersionOutdated(localVersion, remoteVersion)) {
-        state = state.copyWith(showUpdateModal: true);
+      } else if (ref
+          .read(forceUpdateServiceProvider)
+          .isVersionOutdated(localVersion, remoteVersion)) {
+        state = state.copyWith(shouldShowUpdateModal: true);
       }
     }
   }

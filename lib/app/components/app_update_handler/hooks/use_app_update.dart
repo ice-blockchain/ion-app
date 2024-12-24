@@ -10,9 +10,9 @@ bool useAppUpdate(WidgetRef ref) {
 
   useEffect(
     () {
-      if (forceUpdateState.showUpdateModal && !isModalShown.value) {
+      if (forceUpdateState.shouldShowUpdateModal && !isModalShown.value) {
         isModalShown.value = true;
-      } else if (!forceUpdateState.showUpdateModal && isModalShown.value) {
+      } else if (!forceUpdateState.shouldShowUpdateModal && isModalShown.value) {
         isModalShown.value = false;
       }
       return null;

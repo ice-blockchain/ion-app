@@ -2,28 +2,35 @@
 
 import 'dart:io';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ForceUpdateUtil {
-  ForceUpdateUtil._();
+part 'force_update_util_provider.c.g.dart';
 
-  static Future<void> handleForceUpdateRedirect() async {
+class ForceUpdateUtil {
+  const ForceUpdateUtil(this.env);
+
+  final Env env;
+
+  Future<void> handleForceUpdateRedirect() async {
     if (Platform.isAndroid) {
-      const appId = EnvVariable.ION_ANDROID_APP_ID;
-      final androidUrl = 'https://play.google.com/store/apps/details?id=$appId';
+      final androidAppId = env.get<String>(EnvVariable.ION_ANDROID_APP_ID);
+      final androidUrl = 'https://play.google.com/store/apps/details?id=$androidAppId';
       await _openUrl(androidUrl);
     } else if (Platform.isIOS) {
-      const appId = EnvVariable.ION_IOS_APP_ID;
-      final iosUrl = 'https://apps.apple.com/app/id$appId';
+      final iosAppId = env.get<String>(EnvVariable.ION_IOS_APP_ID);
+      final iosUrl = 'https://apps.apple.com/app/id$iosAppId';
       await _openUrl(iosUrl);
     } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-      await _openWebsite();
+      const fallbackWebsite = 'https://example.com'; //TODO: Replace with the actual website
+      await _openUrl(fallbackWebsite);
     }
   }
 
-  static Future<void> _openUrl(String url) async {
+  Future<void> _openUrl(String url) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -32,12 +39,7 @@ class ForceUpdateUtil {
     }
   }
 
-  static Future<void> _openWebsite() async {
-    const fallbackWebsite = 'https://example.com'; //TODO: Replace with the actual website
-    await _openUrl(fallbackWebsite);
-  }
-
-  static bool isVersionOutdated(String localVersion, String remoteVersion) {
+  bool isVersionOutdated(String localVersion, String remoteVersion) {
     final localParts = localVersion.split('.').map(int.parse).toList();
     final remoteParts = remoteVersion.split('.').map(int.parse).toList();
 
@@ -50,4 +52,9 @@ class ForceUpdateUtil {
     }
     return false;
   }
+}
+
+@riverpod
+ForceUpdateUtil forceUpdateService(Ref ref) {
+  return ForceUpdateUtil(ref.watch(envProvider.notifier));
 }

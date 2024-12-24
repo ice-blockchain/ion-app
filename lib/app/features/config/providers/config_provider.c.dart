@@ -60,18 +60,11 @@ enum ConfigName {
   requiredLinuxAppVersion;
 
   @override
-  String toString() {
-    switch (this) {
-      case ConfigName.requiredAndroidAppVersion:
-        return 'required_android_app_version';
-      case ConfigName.requiredIosAppVersion:
-        return 'required_ios_app_version';
-      case ConfigName.requiredMacosAppVersion:
-        return 'required_macos_app_version';
-      case ConfigName.requiredWindowsAppVersion:
-        return 'required_windows_app_version';
-      case ConfigName.requiredLinuxAppVersion:
-        return 'required_linux_app_version';
-    }
-  }
+  String toString() => switch (this) {
+        ConfigName.requiredAndroidAppVersion => 'required_android_app_version',
+        ConfigName.requiredIosAppVersion => 'required_ios_app_version',
+        ConfigName.requiredMacosAppVersion => 'required_macos_app_version',
+        ConfigName.requiredWindowsAppVersion => 'required_windows_app_version',
+        ConfigName.requiredLinuxAppVersion => 'required_linux_app_version',
+      };
 }

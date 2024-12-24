@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/translations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/config/providers/force_update_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
@@ -34,8 +33,6 @@ class IONApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(forceUpdateProvider);
-
     final appThemeMode = ref.watch(appThemeModeProvider);
     final template = ref.watch(appTemplateProvider);
     final goRouter = ref.watch(goRouterProvider);
