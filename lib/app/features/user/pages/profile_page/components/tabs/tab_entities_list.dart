@@ -15,27 +15,25 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class TabEntitiesList extends ConsumerWidget {
-  factory TabEntitiesList({
-    required String pubkey,
-    required TabEntityType type,
-    Key? key,
-  }) {
-    return TabEntitiesList._(
-      type: type,
-      pubkey: pubkey,
-      builder: type == TabEntityType.replies
-          ? (entities) => EntitiesList(entities: entities.toList(), showParent: true)
-          : null,
-      key: key,
-    );
-  }
-
-  const TabEntitiesList._({
+  const TabEntitiesList({
     required this.type,
     required this.pubkey,
     this.builder,
     super.key,
   });
+
+  factory TabEntitiesList.replies({
+    required String pubkey,
+    required TabEntityType type,
+    Key? key,
+  }) {
+    return TabEntitiesList(
+      key: key,
+      type: type,
+      pubkey: pubkey,
+      builder: (entities) => EntitiesList(entities: entities.toList(), showParent: true),
+    );
+  }
 
   final String pubkey;
 
