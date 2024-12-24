@@ -58,7 +58,7 @@ class RecoverUserService {
         },
         'recovery': signedRecoveryPackage.toJson(),
       },
-      temporaryAuthenticationToken: challenge.temporaryAuthenticationToken,
+      temporaryAuthenticationToken: challenge.temporaryAuthenticationToken!,
     );
   }
 
