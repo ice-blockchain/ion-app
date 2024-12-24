@@ -15,6 +15,7 @@ import 'package:ion/app/features/components/verify_identity/verify_identity_prom
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/validate_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -29,6 +30,10 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
     final theme = context.theme;
     final formKey = useRef(GlobalKey<FormState>());
     final codeController = useTextEditingController.fromValue(TextEditingValue.empty);
+
+    ref
+      ..displayErrors(validateTwoFaCodeNotifierProvider)
+      ..listenSuccess(validateTwoFaCodeNotifierProvider, (_) => _onSuccess(context, ref));
 
     return Form(
       key: formKey.value,
@@ -69,23 +74,12 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_confirm),
-                  onPressed: () async {
-                    final isFormValid = formKey.value.currentState?.validate() ?? false;
-                    if (!isFormValid) {
-                      return;
-                    }
-
-                    await validateTwoFACode(ref, TwoFAType.email(codeController.text));
-                    final _ = await ref.refresh(securityAccountControllerProvider.future);
-
-                    if (!context.mounted) {
-                      return;
-                    }
-
-                    unawaited(
-                      EmailSetupRoute(step: EmailSetupSteps.success).push<void>(context),
-                    );
-                  },
+                  onPressed: () => _validateAndProceed(
+                    context,
+                    ref,
+                    formKey.value,
+                    codeController.text,
+                  ),
                 ),
               ],
             ),
@@ -93,5 +87,29 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
         },
       ),
     );
+  }
+
+  void _validateAndProceed(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<FormState>? formKey,
+    String code,
+  ) {
+    final isFormValid = formKey?.currentState?.validate() ?? false;
+    if (!isFormValid) {
+      return;
+    }
+
+    ref.read(validateTwoFaCodeNotifierProvider.notifier).validateTwoFACode(TwoFAType.email(code));
+  }
+
+  Future<void> _onSuccess(BuildContext context, WidgetRef ref) async {
+    ref.invalidate(securityAccountControllerProvider);
+
+    if (!context.mounted) {
+      return;
+    }
+
+    await EmailSetupRoute(step: EmailSetupSteps.success).push<void>(context);
   }
 }
