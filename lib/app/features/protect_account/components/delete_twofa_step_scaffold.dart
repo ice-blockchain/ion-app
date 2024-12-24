@@ -26,9 +26,10 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
+      bottomPadding: 0,
+      body: Column(
+        children: [
+          AppBar(
             primary: false,
             flexibleSpace: NavigationAppBar.modal(
               actions: [
@@ -39,26 +40,14 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
             ),
             toolbarHeight: NavigationAppBar.modalHeaderHeight,
             automaticallyImplyLeading: false,
-            pinned: true,
           ),
-          SliverToBoxAdapter(
-            child: AuthHeader(
-              topOffset: 34.0.s,
-              title: headerTitle,
-              description: headerDescription,
-              icon: AuthHeaderIcon(icon: headerIcon),
-            ),
+          AuthHeader(
+            title: headerTitle,
+            description: headerDescription,
+            icon: AuthHeaderIcon(icon: headerIcon),
           ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              children: [
-                SizedBox(height: 64.0.s),
-                Expanded(child: child),
-                SizedBox(height: 16.0.s),
-              ],
-            ),
-          ),
+          SizedBox(height: 64.0.s),
+          Expanded(child: child),
         ],
       ),
     );

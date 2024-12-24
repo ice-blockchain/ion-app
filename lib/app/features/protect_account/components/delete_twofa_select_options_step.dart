@@ -29,12 +29,11 @@ class DeleteTwoFASelectOptionStep extends ConsumerWidget {
     return ScreenSideOffset.large(
       child: Form(
         key: formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ...List.generate(
-              optionsState.optionsAmount,
-              (option) {
+        child: CustomScrollView(
+          slivers: [
+            SliverList.builder(
+              itemCount: optionsState.optionsAmount,
+              itemBuilder: (context, option) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 22.0.s),
                   child: TwoFaOptionSelector(
@@ -49,22 +48,35 @@ class DeleteTwoFASelectOptionStep extends ConsumerWidget {
                 );
               },
             ),
-            const Spacer(),
-            WarningCard(
-              text: context.i18n.two_fa_warning,
-            ),
-            SizedBox(
-              height: 24.0.s,
-            ),
-            Button(
-              mainAxisSize: MainAxisSize.max,
-              label: Text(context.i18n.button_confirm),
-              onPressed: () {
-                formKey.currentState!.save();
-                if (formKey.currentState!.validate()) {
-                  onConfirm();
-                }
-              },
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    WarningCard(
+                      text: context.i18n.two_fa_warning,
+                    ),
+                    SizedBox(
+                      height: 24.0.s,
+                    ),
+                    Button(
+                      mainAxisSize: MainAxisSize.max,
+                      label: Text(context.i18n.button_confirm),
+                      onPressed: () {
+                        formKey.currentState!.save();
+                        if (formKey.currentState!.validate()) {
+                          onConfirm();
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 48.0.s,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
