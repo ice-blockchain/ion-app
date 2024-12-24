@@ -49,6 +49,7 @@ Future<String> configForPlatform(Ref ref) async {
 
   const baseUrl = EnvVariable.ION_ORIGIN;
   final configName = getPlatformConfigName();
+
   final path = '$baseUrl/v1/config/$configName';
 
   try {
