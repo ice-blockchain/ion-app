@@ -58,10 +58,10 @@ class PasskeysSigner {
         ),
         authSelectionType: AuthenticatorSelectionType(
           authenticatorAttachment:
-              challenge.authenticatorSelection.authenticatorAttachment ?? 'platform',
-          requireResidentKey: challenge.authenticatorSelection.requireResidentKey,
-          residentKey: challenge.authenticatorSelection.residentKey,
-          userVerification: challenge.authenticatorSelection.userVerification,
+              challenge.authenticatorSelection?.authenticatorAttachment ?? 'platform',
+          requireResidentKey: challenge.authenticatorSelection?.requireResidentKey ?? false,
+          residentKey: challenge.authenticatorSelection?.residentKey ?? 'required',
+          userVerification: challenge.authenticatorSelection?.userVerification ?? 'required',
         ),
         pubKeyCredParams: List<PubKeyCredParamType>.from(
           challenge.pubKeyCredParams.map(
@@ -100,11 +100,14 @@ class PasskeysSigner {
   ///
   /// This method interacts with a passkey authenticator to authenticate the
   /// user, utilizing the options specified in [PasskeysOptions].
-  Future<AssertionRequestData> sign(UserActionChallenge challenge) async {
+  Future<AssertionRequestData> sign(
+    UserActionChallenge challenge, {
+    bool preferImmediatelyAvailableCredentials = false,
+  }) async {
     try {
       final fido2Assertion = await PasskeyAuthenticator().authenticate(
         AuthenticateRequestType(
-          preferImmediatelyAvailableCredentials: false,
+          preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
           relyingPartyId: challenge.rp.id,
           challenge: challenge.challenge,
           timeout: options.timeout,

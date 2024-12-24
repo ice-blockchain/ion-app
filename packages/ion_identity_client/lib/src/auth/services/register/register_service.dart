@@ -68,7 +68,7 @@ class RegisterService {
     final credentialData = await getCredentials(userRegistrationChallenge);
     final registrationCompleteResponse = await dataSource.registerComplete(
       credentialData: credentialData,
-      temporaryAuthenticationToken: userRegistrationChallenge.temporaryAuthenticationToken,
+      temporaryAuthenticationToken: userRegistrationChallenge.temporaryAuthenticationToken!,
     );
     await tokenStorage.setTokens(
       username: username,

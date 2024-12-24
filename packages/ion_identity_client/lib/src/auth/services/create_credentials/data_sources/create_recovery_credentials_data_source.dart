@@ -21,7 +21,7 @@ class CreateRecoveryCredentialsDataSource {
   final NetworkClient networkClient;
   final TokenStorage tokenStorage;
 
-  Future<CredentialChallenge> createCredentialInit({
+  Future<CreateCredentialsResponse> createCredentialInit({
     required String username,
   }) {
     final token = tokenStorage.getToken(username: username);
@@ -32,7 +32,7 @@ class CreateRecoveryCredentialsDataSource {
     return networkClient.post(
       createCredentialInitPath,
       data: recoveryKeyBody,
-      decoder: CredentialChallenge.fromJson,
+      decoder: CreateCredentialsResponse.fromJson,
       headers: RequestHeaders.getAuthorizationHeaders(
         token: token.token,
         username: username,

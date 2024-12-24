@@ -31,13 +31,13 @@ class UserRegistrationChallenge {
   factory UserRegistrationChallenge.fromJson(JsonObject json) =>
       _$UserRegistrationChallengeFromJson(json);
 
-  final String temporaryAuthenticationToken;
+  final String? temporaryAuthenticationToken;
   final RelyingParty rp;
   final UserInformation user;
-  final SupportedCredentialKinds supportedCredentialKinds;
+  final SupportedCredentialKinds? supportedCredentialKinds;
   final String? otpUrl;
   final String challenge;
-  final AuthenticatorSelectionCriteria authenticatorSelection;
+  final AuthenticatorSelectionCriteria? authenticatorSelection;
   final String attestation;
   final List<PublicKeyCredentialParameters> pubKeyCredParams;
   final List<PublicKeyCredentialDescriptor> excludeCredentials;

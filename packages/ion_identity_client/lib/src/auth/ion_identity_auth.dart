@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/services/create_recovery_credentials/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/create_credentials/create_new_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/create_credentials/create_recovery_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart';
@@ -29,6 +30,7 @@ class IONIdentityAuth {
     required this.logoutService,
     required this.privateKeyStorage,
     required this.createRecoveryCredentialsService,
+    required this.createNewCredentialsService,
     required this.recoverUserService,
     required this.delegatedLoginService,
     required this.twoFAService,
@@ -39,6 +41,7 @@ class IONIdentityAuth {
   final LoginService loginService;
   final LogoutService logoutService;
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
+  final CreateNewCredentialsService createNewCredentialsService;
   final RecoverUserService recoverUserService;
   final DelegatedLoginService delegatedLoginService;
   final TwoFAService twoFAService;
@@ -51,7 +54,12 @@ class IONIdentityAuth {
   Future<void> registerUserWithPassword(String password) =>
       registerService.registerWithPassword(password);
 
-  Future<void> loginUser() => loginService.loginUser();
+  Future<void> loginUser({
+    bool preferImmediatelyAvailableCredentials = false,
+  }) =>
+      loginService.loginUser(
+        preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+      );
 
   Future<void> logOut() => logoutService.logOut();
 
@@ -65,6 +73,11 @@ class IONIdentityAuth {
     OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
   ) =>
       createRecoveryCredentialsService.createRecoveryCredentials(onVerifyIdentity);
+
+  Future<void> createNewCredentials(
+    OnVerifyIdentity<CredentialRequestData> onVerifyIdentity,
+  ) =>
+      createNewCredentialsService.createNewCredentials(onVerifyIdentity);
 
   Future<UserRegistrationChallenge> initRecovery({
     required String credentialId,

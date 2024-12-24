@@ -8,8 +8,12 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
+import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
+import 'package:ion/app/features/auth/views/pages/create_local_creds_prompt_dialog/create_local_creds_prompt_dialog.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class LoginForm extends HookConsumerWidget {
@@ -24,6 +28,8 @@ class LoginForm extends HookConsumerWidget {
     final loginActionState = ref.watch(loginActionNotifierProvider);
 
     ref.displayErrors(loginActionNotifierProvider);
+
+    _listenLoginSuccess(ref);
 
     return Form(
       key: formKey.value,
@@ -67,6 +73,32 @@ class LoginForm extends HookConsumerWidget {
         },
         child: child,
       ),
+    );
+  }
+
+  void _listenLoginSuccess(WidgetRef ref) {
+    ref.listenSuccess(loginActionNotifierProvider, (result) {
+      if (result?.localCredsUsed ?? false) {
+        _navigateNext(ref);
+      } else {
+        _showCreateLocalCredsPromptDialog(ref);
+      }
+    });
+  }
+
+  void _navigateNext(WidgetRef ref) {
+    final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
+    if (onboardingComplete != null && onboardingComplete) {
+      FeedRoute().push<void>(ref.context);
+    } else {
+      FillProfileRoute().push<void>(ref.context);
+    }
+  }
+
+  void _showCreateLocalCredsPromptDialog(WidgetRef ref) {
+    showSimpleBottomSheet<void>(
+      context: ref.context,
+      child: const CreateLocalCredsPromptDialog(),
     );
   }
 }

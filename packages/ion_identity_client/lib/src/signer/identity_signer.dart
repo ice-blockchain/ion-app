@@ -33,8 +33,14 @@ class IdentitySigner {
     );
   }
 
-  Future<AssertionRequestData> signWithPasskey(UserActionChallenge challenge) async {
-    return passkeySigner.sign(challenge);
+  Future<AssertionRequestData> signWithPasskey(
+    UserActionChallenge challenge, {
+    bool preferImmediatelyAvailableCredentials = false,
+  }) async {
+    return passkeySigner.sign(
+      challenge,
+      preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+    );
   }
 
   Future<AssertionRequestData> signWithPassword({
