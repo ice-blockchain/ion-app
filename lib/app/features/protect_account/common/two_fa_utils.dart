@@ -13,8 +13,3 @@ Future<String?> requestTwoFACode(
   return ionIdentityClient.auth
       .requestTwoFACode(twoFAType: twoFAType, onVerifyIdentity: onVerifyIdentity);
 }
-
-Future<void> validateTwoFACode(WidgetRef ref, TwoFAType twoFAType) async {
-  final ionIdentityClient = await ref.read(ionIdentityClientProvider.future);
-  return ionIdentityClient.auth.verifyTwoFA(twoFAType);
-}
