@@ -92,7 +92,9 @@ class ProfilePage extends HookConsumerWidget {
                   body: TabBarView(
                     children: TabEntityType.values
                         .map(
-                          (type) => TabEntitiesList(pubkey: pubkey, type: type),
+                          (type) => type == TabEntityType.replies
+                              ? TabEntitiesList.replies(pubkey: pubkey, type: type)
+                              : TabEntitiesList(pubkey: pubkey, type: type),
                         )
                         .toList(),
                   ),
