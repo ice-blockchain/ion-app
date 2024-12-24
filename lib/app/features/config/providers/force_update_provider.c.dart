@@ -7,7 +7,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/config/providers/config_provider.c.dart';
 import 'package:ion/app/features/config/providers/force_update_last_sync_date_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/force_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -30,6 +29,8 @@ class ForceUpdate extends _$ForceUpdate {
 
   @override
   ForceUpdateState build() {
+    _checkAndUpdateConfig();
+
     ref.listen<AppLifecycleState>(
       appLifecycleProvider,
       (previous, next) {
@@ -45,8 +46,6 @@ class ForceUpdate extends _$ForceUpdate {
   Future<void> _checkAndUpdateConfig() async {
     final lastSyncDate = ref.read(forceUpdateLastSyncDateNotifierProvider);
 
-    Logger.log('lastSyncDate: $lastSyncDate');
-
     if (lastSyncDate == null ||
         DateTime.now().difference(lastSyncDate).inMilliseconds >= eightHoursInMilliseconds) {
       final remoteVersion =
@@ -55,17 +54,15 @@ class ForceUpdate extends _$ForceUpdate {
       final packageInfo = await PackageInfo.fromPlatform();
       final localVersion = packageInfo.version;
 
-      if (ForceUpdateUtil.isVersionOutdated(localVersion, remoteVersion)) {
-        state = state.copyWith(showUpdateModal: true);
-      } else {
+      if (localVersion == remoteVersion) {
         state = state.copyWith(showUpdateModal: false);
+
+        ref
+            .read(forceUpdateLastSyncDateNotifierProvider.notifier)
+            .updateLastSyncDate(DateTime.now());
+      } else if (ForceUpdateUtil.isVersionOutdated(localVersion, remoteVersion)) {
+        state = state.copyWith(showUpdateModal: true);
       }
-
-      ref.read(forceUpdateLastSyncDateNotifierProvider.notifier).updateLastSyncDate(DateTime.now());
     }
-  }
-
-  void resetUpdateModal() {
-    state = state.copyWith(showUpdateModal: false);
   }
 }
