@@ -36,7 +36,6 @@ class DeleteTwoFaInitialScaffold extends StatelessWidget {
         children: [
           NavigationAppBar.modal(),
           AuthHeader(
-            topOffset: 34.0.s,
             title: headerTitle,
             titleStyle: context.theme.appTextThemes.headline2,
             descriptionStyle: context.theme.appTextThemes.body2.copyWith(
