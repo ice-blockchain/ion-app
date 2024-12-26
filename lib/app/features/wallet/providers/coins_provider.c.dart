@@ -29,7 +29,7 @@ Future<List<CoinData>> coinsData(Ref ref) async {
         abbreviation: asset.symbol,
         name: asset.name ?? 'NULL',
         amount: double.parse(asset.balance) / asset.decimals,
-        balance: -100,
+        balance: 0,
         iconUrl: Assets.images.notifications.avatar1,
         asset: 'NULL',
         network: 'NULL',

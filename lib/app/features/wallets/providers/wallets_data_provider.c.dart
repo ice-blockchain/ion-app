@@ -46,7 +46,7 @@ class WalletsDataNotifier extends _$WalletsDataNotifier {
           id: wallet.id,
           name: wallet.name,
           icon: 'NULL',
-          balance: -100,
+          balance: 0,
           address: wallet.address,
         ),
     ];
