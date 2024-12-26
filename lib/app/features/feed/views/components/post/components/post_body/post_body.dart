@@ -35,10 +35,16 @@ class PostBody extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (postMedia.isNotEmpty) PostMedia(media: postMedia),
         Text.rich(
           postText,
         ),
+        if (postMedia.isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(
+              top: 10.0.s,
+            ),
+            child: PostMedia(media: postMedia),
+          ),
       ],
     );
   }
