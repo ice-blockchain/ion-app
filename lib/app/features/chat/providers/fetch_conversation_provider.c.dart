@@ -23,12 +23,12 @@ class FetchConversations extends _$FetchConversations {
   }
 
   Future<void> fetchAndSync() async {
-    final pubkey = ref.watch(currentPubkeySelectorProvider);
+    final pubkey = ref.read(currentPubkeySelectorProvider);
     if (pubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
 
-    final currentUserSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
+    final currentUserSigner = await ref.read(currentUserNostrEventSignerProvider.future);
     if (currentUserSigner == null) {
       throw EventSignerNotFoundException();
     }
