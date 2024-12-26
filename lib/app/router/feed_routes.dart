@@ -22,7 +22,8 @@ class FeedRoutes {
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
-        TypedGoRoute<MediaPickerRoute>(path: 'media-picker',
+        TypedGoRoute<MediaPickerRoute>(
+          path: 'media-picker',
           routes: [
             TypedGoRoute<AlbumSelectionRoute>(path: 'album-selection'),
           ],

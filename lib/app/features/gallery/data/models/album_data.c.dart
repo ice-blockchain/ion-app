@@ -6,10 +6,9 @@ part 'album_data.c.freezed.dart';
 @freezed
 class AlbumData with _$AlbumData {
   const factory AlbumData({
-    required String id, 
-    required String name, 
-    required int assetCount, 
+    required String id,
+    required String name,
+    required int assetCount,
     @Default(false) bool isAll,
   }) = _AlbumData;
-
 }

@@ -6,7 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 
 class ShimmerLoadingCell extends StatelessWidget {
   const ShimmerLoadingCell({super.key, this.dimension});
-  
+
   final double? dimension;
 
   @override
