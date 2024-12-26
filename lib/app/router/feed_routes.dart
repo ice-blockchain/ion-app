@@ -22,7 +22,11 @@ class FeedRoutes {
         TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
-        TypedGoRoute<MediaPickerRoute>(path: 'media-picker'),
+        TypedGoRoute<MediaPickerRoute>(path: 'media-picker',
+          routes: [
+            TypedGoRoute<AlbumSelectionRoute>(path: 'album-selection'),
+          ],
+        ),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<FeedSearchLanguagesRoute>(path: 'feed-search-languages'),
         TypedGoRoute<StoryContactsShareRoute>(path: 'story-contacts-share'),
@@ -171,6 +175,17 @@ class MediaPickerRoute extends BaseRouteData {
         );
 
   final int maxSelection;
+  final MediaPickerType mediaPickerType;
+}
+
+class AlbumSelectionRoute extends BaseRouteData {
+  AlbumSelectionRoute({
+    required this.mediaPickerType,
+  }) : super(
+          child: AlbumSelectionPage(type: mediaPickerType),
+          type: IceRouteType.bottomSheet,
+        );
+
   final MediaPickerType mediaPickerType;
 }
 

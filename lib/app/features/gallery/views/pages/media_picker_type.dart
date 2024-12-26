@@ -11,9 +11,9 @@ enum MediaPickerType {
 
   String title(BuildContext context) {
     return switch (this) {
-      MediaPickerType.image => context.i18n.gallery_add_photo_title,
-      MediaPickerType.video => context.i18n.common_add_video,
-      MediaPickerType.common => context.i18n.gallery_add_media_title,
+      MediaPickerType.image => context.i18n.gallery_all_photos_title,
+      MediaPickerType.video => context.i18n.common_all_video,
+      MediaPickerType.common => context.i18n.gallery_all_media_title,
     };
   }
 }
