@@ -28,8 +28,8 @@ Future<List<NftData>> nftsData(Ref ref) async {
       // TODO: get actual NFT data
       const NftData(
         collectionName: 'COLLECTION NULL',
-        identifier: -100,
-        price: -100,
+        identifier: 0,
+        price: 0,
         currency: 'CURRENCY NULL',
         iconUrl: 'ICONURL NULL',
         networkType: NetworkType.all,
@@ -38,7 +38,7 @@ Future<List<NftData>> nftsData(Ref ref) async {
         network: 'NETWORK NULL',
         tokenStandard: 'TOKENSTANDARD NULL',
         contractAddress: 'CONTRACTADDRESS NULL',
-        rank: -100,
+        rank: 0,
         asset: 'ASSET NULL',
       ),
   ];

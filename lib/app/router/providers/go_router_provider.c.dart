@@ -62,14 +62,9 @@ FutureOr<String?> _mainRedirect({
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
-  final isOnLogin = location.endsWith(GetStartedRoute().location);
 
   if (!hasAuthenticated && !isOnAuth) {
     return IntroRoute().location;
-  }
-
-  if (hasAuthenticated && isOnLogin) {
-    return null;
   }
 
   if (hasAuthenticated && onboardingComplete != null) {
