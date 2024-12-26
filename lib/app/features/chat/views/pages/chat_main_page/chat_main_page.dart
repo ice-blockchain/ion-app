@@ -17,7 +17,7 @@ class ChatMainPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() {
-      ref.read(fetchAndSyncConversationsProvider);
+      ref.read(fetchConversationsProvider.notifier).fetchAndSync();
     });
 
     final conversations = ref.watch(conversationsProvider);

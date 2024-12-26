@@ -200,3 +200,7 @@ class UserChatRelaysNotFoundException extends IONException {
 class AuthChallengeIsEmptyException extends IONException {
   AuthChallengeIsEmptyException() : super(10041, 'Auth challenge is empty');
 }
+
+class FetchAndSyncConversationsException extends IONException {
+  FetchAndSyncConversationsException() : super(10042, 'Failed to fetch and sync conversations');
+}
