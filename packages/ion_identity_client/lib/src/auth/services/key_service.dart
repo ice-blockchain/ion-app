@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:asn1lib/asn1lib.dart';
+import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:ion_identity_client/src/auth/dtos/key_pair_data.dart';
 
@@ -21,6 +22,34 @@ class KeyService {
     // Convert keys to PEM format
     final publicKeyPem = _encodeEd25519PublicKeyToPem(Uint8List.fromList(publicKey.bytes));
     final privateKeyPem = _encodeEd25519PrivateKeyToPem(Uint8List.fromList(privateKeyBytes));
+
+    return KeyPairData(
+      keyPair: keyPairData,
+      publicKey: publicKey,
+      publicKeyPem: publicKeyPem,
+      privateKeyPem: privateKeyPem,
+      privateKeyBytes: privateKeyBytes,
+    );
+  }
+
+  /// Reconstructs a KeyPairData object from a hex-encoded Ed25519 private key (seed).
+  Future<KeyPairData> reconstructKeyPairFromPrivateKeyBytes(String hexEncodedPrivateKeyBytes) async {
+    final privateKeyBytes = Uint8List.fromList(hex.decode(hexEncodedPrivateKeyBytes));
+
+    if (privateKeyBytes.length != 32) {
+      throw ArgumentError(
+        'Invalid private key seed length: expected 32 bytes, got ${privateKeyBytes.length}',
+      );
+    }
+
+    final algorithm = crypto.Ed25519();
+    final keyPair = await algorithm.newKeyPairFromSeed(privateKeyBytes);
+    final keyPairData = await keyPair.extract();
+    final publicKey = keyPairData.publicKey;
+
+    // Convert to PEM
+    final publicKeyPem = _encodeEd25519PublicKeyToPem(Uint8List.fromList(publicKey.bytes));
+    final privateKeyPem = _encodeEd25519PrivateKeyToPem(privateKeyBytes);
 
     return KeyPairData(
       keyPair: keyPairData,

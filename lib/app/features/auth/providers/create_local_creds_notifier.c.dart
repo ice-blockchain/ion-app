@@ -17,7 +17,8 @@ class CreateLocalCredsNotifier extends _$CreateLocalCredsNotifier {
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityClientProvider.future);
       await ionIdentity.auth.createNewCredentials(
-        ({required onPasskeyFlow, required onPasswordFlow}) => onPasskeyFlow(),
+        ({required onPasskeyFlow, required onPasswordFlow, required onBiometricsFlow}) =>
+            onPasskeyFlow(),
       );
     });
   }

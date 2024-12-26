@@ -50,10 +50,26 @@ class IdentitySigner {
     required String credentialId,
     required CredentialKind credentialKind,
   }) async {
-    return passwordSigner.createCredentialAssertion(
+    return passwordSigner.signWithPassword(
       challenge: challenge,
       encryptedPrivateKey: encryptedPrivateKey,
       password: password,
+      credentialKind: credentialKind,
+      credentialId: credentialId,
+    );
+  }
+
+  Future<AssertionRequestData> signWithBiometrics({
+    required String username,
+    required String localisedReason,
+    required String challenge,
+    required String credentialId,
+    required CredentialKind credentialKind,
+  }) async {
+    return passwordSigner.signWithBiometrics(
+      username: username,
+      localisedReason: localisedReason,
+      challenge: challenge,
       credentialKind: credentialKind,
       credentialId: credentialId,
     );

@@ -90,7 +90,7 @@ class PasswordSigner {
     );
   }
 
-  Future<AssertionRequestData> createCredentialAssertion({
+  Future<AssertionRequestData> signWithPassword({
     required String challenge,
     required String encryptedPrivateKey,
     required String password,
@@ -99,25 +99,43 @@ class PasswordSigner {
   }) async {
     final keyPair =
         await keyService.reconstructKeyPairFromEncryptedPrivateKey(encryptedPrivateKey, password);
-    final clientData = _buildClientData(
+    return _createCredentialAssertion(
+      keyPair: keyPair,
       challenge: challenge,
-      origin: config.origin,
-      clientDataType: ClientDataType.getKey,
+      credentialId: credentialId,
+      credentialKind: credentialKind,
     );
+  }
 
-    final signature = await _signDataWithPrivateKey(
-      data: clientData,
-      privateKey: keyPair.keyPair,
-      signatureEncryption: SignatureEncryption.base64Url,
+  Future<AssertionRequestData> signWithBiometrics({
+    required String challenge,
+    required String credentialId,
+    required String username,
+    required String localisedReason,
+    required CredentialKind credentialKind,
+  }) async {
+    final biometricsState = biometricsStateStorage.getBiometricsState(username: username);
+    if (biometricsState != BiometricsState.enabled) {
+      throw const BiometricsValidationException();
+    }
+    final privateKey = privateKeyStorage.getPrivateKey(
+      username: username,
     );
+    if (privateKey == null) {
+      throw const BiometricsValidationException();
+    }
 
-    return AssertionRequestData(
-      kind: credentialKind,
-      credentialAssertion: CredentialAssertionData(
-        clientData: base64UrlEncode(utf8.encode(clientData)),
-        credId: credentialId,
-        signature: signature,
-      ),
+    final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
+    if (didAuthenticate == false) {
+      throw const BiometricsValidationException();
+    }
+
+    final keyPair = await keyService.reconstructKeyPairFromPrivateKeyBytes(privateKey);
+    return _createCredentialAssertion(
+      keyPair: keyPair,
+      challenge: challenge,
+      credentialId: credentialId,
+      credentialKind: credentialKind,
     );
   }
 
@@ -132,22 +150,24 @@ class PasswordSigner {
     required String username,
     required String localisedReason,
   }) async {
-    final auth = LocalAuthentication();
+    final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
+    await biometricsStateStorage.updateBiometricsState(
+      username: username,
+      biometricsState: didAuthenticate ? BiometricsState.enabled : BiometricsState.failed,
+    );
+  }
+
+  Future<bool> _authWithBiometrics({
+    required String localisedReason,
+  }) async {
+    final localAuth = LocalAuthentication();
     try {
-      final didAuthenticate = await auth.authenticate(
+      return await localAuth.authenticate(
         localizedReason: localisedReason,
         options: const AuthenticationOptions(stickyAuth: true),
       );
-      await biometricsStateStorage.updateBiometricsState(
-        username: username,
-        biometricsState: didAuthenticate ? BiometricsState.enabled : BiometricsState.failed,
-      );
     } catch (_) {
-      await biometricsStateStorage.updateBiometricsState(
-        username: username,
-        biometricsState: BiometricsState.failed,
-      );
-      rethrow;
+      return false;
     }
   }
 
@@ -270,5 +290,33 @@ class PasswordSigner {
     return formattedStr.endsWith('-')
         ? formattedStr.substring(0, formattedStr.length - 1)
         : formattedStr;
+  }
+
+  Future<AssertionRequestData> _createCredentialAssertion({
+    required KeyPairData keyPair,
+    required String challenge,
+    required String credentialId,
+    required CredentialKind credentialKind,
+  }) async {
+    final clientData = _buildClientData(
+      challenge: challenge,
+      origin: config.origin,
+      clientDataType: ClientDataType.getKey,
+    );
+
+    final signature = await _signDataWithPrivateKey(
+      data: clientData,
+      privateKey: keyPair.keyPair,
+      signatureEncryption: SignatureEncryption.base64Url,
+    );
+
+    return AssertionRequestData(
+      kind: credentialKind,
+      credentialAssertion: CredentialAssertionData(
+        clientData: base64UrlEncode(utf8.encode(clientData)),
+        credId: credentialId,
+        signature: signature,
+      ),
+    );
   }
 }
