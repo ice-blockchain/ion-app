@@ -37,12 +37,15 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
         code.value = await requestTwoFACode(ref, const TwoFAType.authenticator(), ({
           required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
           required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
+          required OnBiometricsFlow<GenerateSignatureResponse> onBiometricsFlow,
         }) {
           return ref.read(
             verifyUserIdentityProvider(
               onGetPassword: onGetPassword,
               onPasswordFlow: onPasswordFlow,
               onPasskeyFlow: onPasskeyFlow,
+              onBiometricsFlow: onBiometricsFlow,
+              localisedReasonForBiometricsDialog: context.i18n.verify_with_biometrics_title,
             ).future,
           );
         });

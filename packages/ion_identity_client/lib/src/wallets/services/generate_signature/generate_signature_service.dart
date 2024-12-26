@@ -51,6 +51,24 @@ class GenerateSignatureService {
     );
   }
 
+  Future<GenerateSignatureResponse> generateHashSignatureWithBiometrics({
+    required String walletId,
+    required String hash,
+    required String localisedReason,
+    String? externalId,
+  }) async {
+    return _generateSignature(
+      walletId: walletId,
+      hash: hash,
+      externalId: externalId,
+      signFn: (request) => _userActionSigner.signWithBiometrics(
+        request,
+        GenerateSignatureResponse.fromJson,
+        localisedReason,
+      ),
+    );
+  }
+
   Future<GenerateSignatureResponse> generateMessageSignatureWithPasskey({
     required String walletId,
     required String message,

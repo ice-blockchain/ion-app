@@ -52,11 +52,7 @@ class UserActionSigner {
       // The assertion here is obtained by using the password to unlock
       // a password-protected key. If this key is unavailable, an exception is thrown.
       obtainAssertion: (challenge) async {
-        final credentialDescriptor = challenge.allowCredentials.passwordProtectedKey?.firstOrNull;
-        // If no password-protected credential is available, throw an exception.
-        if (credentialDescriptor == null || credentialDescriptor.encryptedPrivateKey == null) {
-          throw const PasswordFlowNotAvailableForTheUserException();
-        }
+        final credentialDescriptor = _extractPasswordProtectedCredentials(challenge);
 
         return identitySigner.signWithPassword(
           challenge: challenge.challenge,
@@ -67,6 +63,40 @@ class UserActionSigner {
         );
       },
     );
+  }
+
+  Future<T> signWithBiometrics<T>(
+    UserActionSigningRequest request,
+    T Function(JsonObject) responseDecoder,
+    String localisedReason,
+  ) async {
+    return _sign(
+      request: request,
+      responseDecoder: responseDecoder,
+      obtainAssertion: (challenge) async {
+        final credentialDescriptor = _extractPasswordProtectedCredentials(challenge);
+
+        return identitySigner.signWithBiometrics(
+          challenge: challenge.challenge,
+          username: request.username,
+          credentialId: credentialDescriptor.id,
+          credentialKind: CredentialKind.PasswordProtectedKey,
+          localisedReason: localisedReason,
+        );
+      },
+    );
+  }
+
+  PublicKeyCredentialDescriptor _extractPasswordProtectedCredentials(
+    UserActionChallenge challenge,
+  ) {
+    final credentialDescriptor = challenge.allowCredentials.passwordProtectedKey?.firstOrNull;
+    // If no password-protected credential is available, throw an exception.
+    if (credentialDescriptor == null || credentialDescriptor.encryptedPrivateKey == null) {
+      throw const PasswordFlowNotAvailableForTheUserException();
+    }
+
+    return credentialDescriptor;
   }
 
   /// A private helper method that encapsulates the shared logic for both signWithPasskey and signWithPassword.

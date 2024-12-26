@@ -16,13 +16,22 @@ AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
   required Future<String?> Function() onGetPassword,
   required OnPasswordFlow<T> onPasswordFlow,
   required OnPasskeyFlow<T> onPasskeyFlow,
+  required OnBiometricsFlow<T> onBiometricsFlow,
+  required String localisedReasonForBiometricsDialog,
 }) {
   return FutureProvider.autoDispose<T>((ref) async {
     final username = ref.read(currentIdentityKeyNameSelectorProvider)!;
     final ionIdentity = await ref.read(ionIdentityProvider.future);
     final isPasswordFlowUser = ionIdentity(username: username).auth.isPasswordFlowUser();
+    final biometricsState = ionIdentity(username: username).auth.getBiometricsState();
 
     if (isPasswordFlowUser) {
+      if (biometricsState == BiometricsState.enabled) {
+        try {
+          return await onBiometricsFlow(localisedReason: localisedReasonForBiometricsDialog);
+          // If biometrics flow fails then fallback to password flow
+        } catch (_) {}
+      }
       final password = await onGetPassword();
       if (password != null) {
         return onPasswordFlow(password: password);

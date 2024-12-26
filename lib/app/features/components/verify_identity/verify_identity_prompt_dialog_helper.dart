@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_password.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog.dart';
 import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
@@ -46,12 +47,15 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
         requestWithVerifyIdentity(({
           required OnPasswordFlow<P> onPasswordFlow,
           required OnPasskeyFlow<P> onPasskeyFlow,
+          required OnBiometricsFlow<P> onBiometricsFlow,
         }) {
           return ref.read(
             verifyUserIdentityProvider(
               onGetPassword: onGetPassword,
               onPasswordFlow: onPasswordFlow,
               onPasskeyFlow: onPasskeyFlow,
+              onBiometricsFlow: onBiometricsFlow,
+              localisedReasonForBiometricsDialog: context.i18n.verify_with_biometrics_title,
             ).future,
           );
         });
@@ -81,6 +85,7 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
         requestWithVerifyIdentity(({
           required OnPasswordFlow<P> onPasswordFlow,
           required OnPasskeyFlow<P> onPasskeyFlow,
+          required OnBiometricsFlow<P> onBiometricsFlow,
         }) async {
           try {
             return await ref.read(
@@ -88,6 +93,8 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
                 onGetPassword: onGetPassword,
                 onPasswordFlow: onPasswordFlow,
                 onPasskeyFlow: onPasskeyFlow,
+                onBiometricsFlow: onBiometricsFlow,
+                localisedReasonForBiometricsDialog: context.i18n.verify_with_biometrics_title,
               ).future,
             );
           } finally {

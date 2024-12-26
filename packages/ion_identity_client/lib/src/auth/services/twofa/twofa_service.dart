@@ -105,6 +105,13 @@ class TwoFAService {
           hash.toString(),
         );
       },
+      onBiometricsFlow: ({required String localisedReason}) {
+        return _wallets.generateHashSignatureWithBiometrics(
+          mainWallet.id,
+          hash.toString(),
+          localisedReason,
+        );
+      },
     );
 
     final signature = signatureResponse.signature['encoded'].toString().substring(2);
