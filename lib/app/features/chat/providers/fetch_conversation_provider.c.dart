@@ -8,7 +8,6 @@ import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
 import 'package:ion/app/services/database/ion_database.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/nostr/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
@@ -76,8 +75,7 @@ class FetchConversations extends _$FetchConversations {
 
         await dbProvider.insertEventMessage(unwrappedSeal);
       }
-    } catch (e, st) {
-      Logger.log('Error fetching and syncing conversations', error: e, stackTrace: st);
+    } catch (_) {
       throw FetchAndSyncConversationsException();
     }
   }
