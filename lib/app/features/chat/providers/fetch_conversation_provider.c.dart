@@ -28,15 +28,13 @@ class FetchConversations extends _$FetchConversations {
       throw UserMasterPubkeyNotFoundException();
     }
 
-    final currentUserSigner =
-        await ref.read(currentUserNostrEventSignerProvider.future);
+    final currentUserSigner = await ref.read(currentUserNostrEventSignerProvider.future);
     if (currentUserSigner == null) {
       throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate = await ref
-        .read(conversationsDBServiceProvider)
-        .getLastConversationMessageCreatedAt();
+    final lastMessageDate =
+        await ref.read(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
@@ -62,19 +60,17 @@ class FetchConversations extends _$FetchConversations {
 
     try {
       await for (final event in events) {
-        final unwrappedGift =
-            await ref.read(ionConnectGiftWrapServiceProvider).decodeWrap(
-                  event.content,
-                  pubkey,
-                  currentUserSigner,
-                );
+        final unwrappedGift = await ref.read(ionConnectGiftWrapServiceProvider).decodeWrap(
+              event.content,
+              pubkey,
+              currentUserSigner,
+            );
 
-        final unwrappedSeal =
-            await ref.read(ionConnectSealServiceProvider).decodeSeal(
-                  unwrappedGift,
-                  currentUserSigner,
-                  pubkey,
-                );
+        final unwrappedSeal = await ref.read(ionConnectSealServiceProvider).decodeSeal(
+              unwrappedGift,
+              currentUserSigner,
+              pubkey,
+            );
 
         await dbProvider.insertEventMessage(unwrappedSeal);
       }
