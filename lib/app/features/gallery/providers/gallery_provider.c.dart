@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/gallery/data/models/models.dart';
+import 'package:ion/app/features/gallery/providers/albums_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -13,12 +14,6 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'gallery_provider.c.g.dart';
-
-@riverpod
-Future<List<AlbumData>> albums(Ref ref, {required MediaPickerType type}) {
-  final mediaService = ref.watch(mediaServiceProvider);
-  return mediaService.fetchAlbums(type: type);
-}
 
 @riverpod
 Future<AssetEntity?> assetEntity(Ref ref, String id) {
@@ -35,12 +30,6 @@ Future<AssetEntity?> latestGalleryPreview(Ref ref) async {
   );
 
   return await ref.watch(assetEntityProvider(mediaData.first.path).future);
-}
-
-@riverpod
-Future<AssetEntity?> albumPreview(Ref ref, String albumId) async {
-  final mediaService = ref.watch(mediaServiceProvider);
-  return mediaService.fetchFirstAssetOfAlbum(albumId);
 }
 
 @riverpod
@@ -186,8 +175,8 @@ class GalleryNotifier extends _$GalleryNotifier {
     required int size,
     required MediaPickerType type,
   }) async {
-    final mediaService = ref.read(mediaServiceProvider);
-    final mediaFiles = await mediaService.fetchMediaFromAlbum(
+    final albumService = ref.read(albumServiceProvider);
+    final mediaFiles = await albumService.fetchMediaFromAlbum(
       albumId: album.id,
       page: page,
       size: size,
