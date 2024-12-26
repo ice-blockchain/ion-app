@@ -12,8 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_connect_seal_service.c.g.dart';
 
 @riverpod
-IonConnectSealService ionConnectSealService(Ref ref) =>
-    IonConnectSealServiceImpl();
+IonConnectSealService ionConnectSealService(Ref ref) => IonConnectSealServiceImpl();
 
 abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
