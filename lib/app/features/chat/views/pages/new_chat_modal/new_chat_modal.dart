@@ -63,6 +63,8 @@ class NewChatModal extends HookConsumerWidget {
                       ),
                     ],
                   ),
+                  SizedBox(height: 12.0.s),
+                  //TODO: update user list when figma design is ready
                   Expanded(
                     child:
                         searchText.isEmpty ? const FollowingUsersList() : const SearchedUsersList(),

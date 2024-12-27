@@ -6,8 +6,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/conversation_edit_bottom_bar.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/main_tabs/components/components.dart';
 
 class MainTabNavigation extends HookConsumerWidget {
@@ -24,7 +26,10 @@ class MainTabNavigation extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tabPressStreamController = useStreamController<TabPressSteamData>();
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
-    final conversationsEditMode = ref.watch(conversationsEditModeProvider);
+
+    useOnInit(() {
+      ref.read(setUserChatRelaysProvider);
+    });
 
     return Scaffold(
       body: MainTabNavigationContainer(
@@ -45,7 +50,6 @@ class MainTabNavigation extends HookConsumerWidget {
                   _navigateToTab(context, tabItem, initialLocation: currentTab == tabItem);
                 }
               },
-              conversationsEditMode: conversationsEditMode,
             ),
     );
   }
@@ -64,21 +68,21 @@ class MainTabNavigation extends HookConsumerWidget {
           : shell.goBranch(tabItem.navigationIndex, initialLocation: initialLocation);
 }
 
-class _BottomNavBarContent extends StatelessWidget {
+class _BottomNavBarContent extends ConsumerWidget {
   const _BottomNavBarContent({
     required this.state,
     required this.currentTab,
     required this.onTabPressed,
-    required this.conversationsEditMode,
   });
 
   final GoRouterState state;
   final TabItem currentTab;
-  final bool conversationsEditMode;
   final ValueChanged<TabItem> onTabPressed;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final conversationsEditMode = ref.watch(conversationsEditModeProvider);
+
     return Stack(
       children: [
         Container(
