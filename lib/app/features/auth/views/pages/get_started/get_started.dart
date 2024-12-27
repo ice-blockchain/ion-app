@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -54,9 +52,7 @@ class GetStartedPage extends ConsumerWidget {
                     onPressed: () async {
                       final isPasskeyAvailable = await ref.read(isPasskeyAvailableProvider.future);
                       if (context.mounted) {
-                        // TODO: remove once passwords flow is fully implemented and tested
-                        final randomBool = Random().nextBool();
-                        if (isPasskeyAvailable && randomBool) {
+                        if (isPasskeyAvailable) {
                           await SignUpPasskeyRoute().push<void>(context);
                         } else {
                           await SignUpPasswordRoute().push<void>(context);
