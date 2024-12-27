@@ -13,6 +13,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
+// TODO: we need to show it somehow, but be careful with automatic redirect to the Onboarding
 class CreateLocalCredsPromptDialog extends HookConsumerWidget {
   const CreateLocalCredsPromptDialog({super.key});
 
