@@ -19,7 +19,7 @@ enum WalletAddressPrivacyOption implements SelectableOption {
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
       WalletAddressPrivacyOption.public => Assets.svg.iconChannelType,
-      WalletAddressPrivacyOption.private => Assets.svg.iconSendfundsUser,
+      WalletAddressPrivacyOption.private => Assets.svg.iconPrivacyPrivate,
     };
     return icon.icon(color: context.theme.appColors.primaryAccent);
   }
