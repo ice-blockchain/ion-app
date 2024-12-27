@@ -19,6 +19,9 @@ class MediaAttachment {
     required this.torrentInfoHash,
     required this.fileHash,
     required this.originalFileHash,
+    this.encryptionKey,
+    this.encryptionNonce,
+    this.encryptionMac,
     this.thumb,
     this.image,
   });
@@ -38,14 +41,14 @@ class MediaAttachment {
     String? torrentInfoHash;
     String? fileHash;
     String? originalFileHash;
+    String? encryptionKey;
+    String? encryptionNonce;
+    String? encryptionMac;
 
     for (final params in tag.skip(1)) {
       final pair = params.split(' ');
-      if (pair.length != 2) {
-        continue;
-      }
-      final [key, value] = pair;
-      switch (key) {
+      final value = pair[1];
+      switch (pair[0]) {
         case 'url':
           {
             if (!Validators.isInvalidUrl(value)) {
@@ -68,6 +71,13 @@ class MediaAttachment {
           fileHash = value;
         case 'ox':
           originalFileHash = value;
+        case 'encryption-key':
+          {
+            final [key, secretKey, nonce, mac, algorithm] = pair;
+            encryptionKey = secretKey;
+            encryptionNonce = nonce;
+            encryptionMac = mac;
+          }
       }
     }
 
@@ -76,11 +86,14 @@ class MediaAttachment {
       mimeType: mimeType!,
       dimension: dimension!,
       alt: EnumExtensions.fromShortString(FileAlt.values, alt!),
-      torrentInfoHash: torrentInfoHash!,
+      torrentInfoHash: torrentInfoHash ?? '',
       fileHash: fileHash!,
       originalFileHash: originalFileHash!,
       thumb: thumb,
       image: image,
+      encryptionKey: encryptionKey,
+      encryptionNonce: encryptionNonce,
+      encryptionMac: encryptionMac,
     );
   }
 
@@ -101,6 +114,12 @@ class MediaAttachment {
   final String? thumb;
 
   final String? image;
+
+  final String? encryptionKey;
+
+  final String? encryptionNonce;
+
+  final String? encryptionMac;
 
   late double? aspectRatio = _aspectRatioFromDimension(dimension);
 
@@ -148,6 +167,8 @@ class MediaAttachment {
       'alt ${alt.toShortString()}',
       'x $fileHash',
       'ox $originalFileHash',
+      if (encryptionKey != null && encryptionNonce != null)
+        'encryption-key $encryptionKey $encryptionNonce $encryptionMac aes-gcm',
       if (thumb != null) 'thumb $thumb',
       if (image != null) 'image $image',
     ];
@@ -170,6 +191,9 @@ class MediaAttachment {
     String? torrentInfoHash,
     String? thumb,
     String? image,
+    String? encryptionKey,
+    String? encryptionNonce,
+    String? encryptionMac,
   }) {
     return MediaAttachment(
       url: url ?? this.url,
@@ -181,6 +205,9 @@ class MediaAttachment {
       torrentInfoHash: torrentInfoHash ?? this.torrentInfoHash,
       thumb: thumb ?? this.thumb,
       image: image ?? this.image,
+      encryptionKey: encryptionKey ?? this.encryptionKey,
+      encryptionNonce: encryptionNonce ?? this.encryptionNonce,
+      encryptionMac: encryptionMac ?? this.encryptionMac,
     );
   }
 }

@@ -33,9 +33,8 @@ class FetchConversations extends _$FetchConversations {
       throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate = await ref
-        .read(dBConversationsNotifierProvider.notifier)
-        .getLastConversationMessageCreatedAt();
+    final lastMessageDate =
+        await ref.read(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
@@ -57,7 +56,7 @@ class FetchConversations extends _$FetchConversations {
           keepSubscription: true,
         );
 
-    final dbProvider = ref.read(dBConversationsNotifierProvider.notifier);
+    final dbProvider = ref.read(conversationsDBServiceProvider);
 
     try {
       await for (final event in events) {

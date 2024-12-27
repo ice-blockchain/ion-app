@@ -47,7 +47,11 @@ class BanubaService {
       }
       return filePath;
     } on PlatformException catch (e) {
-      Logger.log('Start Photo Editor error', error: e, stackTrace: StackTrace.current);
+      Logger.log(
+        'Start Photo Editor error',
+        error: e,
+        stackTrace: StackTrace.current,
+      );
       rethrow;
     }
   }
@@ -75,12 +79,20 @@ Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
   final filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
 
   if (filePath == null) {
-    Logger.log('File path or mime type is null', error: mediaFile, stackTrace: StackTrace.current);
+    Logger.log(
+      'File path or mime type is null',
+      error: mediaFile,
+      stackTrace: StackTrace.current,
+    );
     throw AssetEntityFileNotFoundException();
   }
 
   if (mediaFile.mimeType == null) {
-    Logger.log('Mime type is null', error: mediaFile, stackTrace: StackTrace.current);
+    Logger.log(
+      'Mime type is null',
+      error: mediaFile,
+      stackTrace: StackTrace.current,
+    );
     throw AssetEntityFileNotFoundException();
   }
 
@@ -91,7 +103,7 @@ Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
       return ref.read(banubaServiceProvider).editPhoto(filePath);
     case MediaType.video:
       return ref.read(banubaServiceProvider).editVideo(filePath);
-    case MediaType.unknown:
+    case MediaType.unknown || MediaType.audio:
       throw Exception('Unknown media type');
   }
 }

@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
@@ -13,15 +14,17 @@ import 'package:uuid/uuid.dart';
 
 part 'ion_database.c.g.dart';
 
-// Proxy notifier to interact with the database
 @Riverpod(keepAlive: true)
-class DBConversationsNotifier extends _$DBConversationsNotifier {
-  DBConversationsNotifier({IONDatabase? database}) : _db = database ?? IONDatabase();
+IONDatabase ionDatabase(Ref ref) => IONDatabase();
+
+@Riverpod(keepAlive: true)
+ConversationsDBService conversationsDBService(Ref ref) =>
+    ConversationsDBService(ref.watch(ionDatabaseProvider));
+
+class ConversationsDBService {
+  ConversationsDBService(this._db);
 
   final IONDatabase _db;
-
-  @override
-  void build() {}
 
   Future<int> _insertConversationData({
     required String conversationId,
