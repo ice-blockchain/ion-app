@@ -30,8 +30,7 @@ class ConversationManagementService {
   });
 
   final ConversationsDBService databaseService;
-  final ConversationMessageManagementService
-      conversationMessageManagementService;
+  final ConversationMessageManagementService conversationMessageManagementService;
 
   Future<void> addParticipant(
     String conversationSubject,
@@ -40,12 +39,10 @@ class ConversationManagementService {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-    final conversationsEventMessages =
-        await databaseService.getAllConversations();
+    final conversationsEventMessages = await databaseService.getAllConversations();
 
-    final conversationsEntities = conversationsEventMessages
-        .map(PrivateDirectMessageEntity.fromEventMessage)
-        .toList();
+    final conversationsEntities =
+        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
@@ -72,12 +69,10 @@ class ConversationManagementService {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-    final conversationsEventMessages =
-        await databaseService.getAllConversations();
+    final conversationsEventMessages = await databaseService.getAllConversations();
 
-    final conversationsEntities = conversationsEventMessages
-        .map(PrivateDirectMessageEntity.fromEventMessage)
-        .toList();
+    final conversationsEntities =
+        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
@@ -108,12 +103,10 @@ class ConversationManagementService {
     assert(currentSubject.isNotEmpty, 'Current conversation subject is empty');
     assert(newSubject.isNotEmpty, 'New conversation subject is empty');
 
-    final conversationsEventMessages =
-        await databaseService.getAllConversations();
+    final conversationsEventMessages = await databaseService.getAllConversations();
 
-    final conversationsEntities = conversationsEventMessages
-        .map(PrivateDirectMessageEntity.fromEventMessage)
-        .toList();
+    final conversationsEntities =
+        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(

@@ -30,12 +30,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_message_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<ConversationMessageManagementService>
-    conversationMessageManagementService(
+Future<ConversationMessageManagementService> conversationMessageManagementService(
   Ref ref,
 ) async {
-  final eventSigner =
-      await ref.watch(currentUserNostrEventSignerProvider.future);
+  final eventSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
 
   return ConversationMessageManagementService(
     eventSigner: eventSigner,
@@ -90,8 +88,7 @@ class ConversationMessageManagementService {
 
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          final encryptedMediaFiles =
-              await _encryptMediaFiles(compressedMediaFiles);
+          final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
 
           final uploadedMediaFilesWithKeys = await Future.wait(
             encryptedMediaFiles.map((encryptedMediaFile) async {
@@ -214,8 +211,7 @@ class ConversationMessageManagementService {
         );
 
         if (attachment.mediaType == MediaType.unknown) {
-          final decompressedFile =
-              await compressionService.decompressBrotli(file);
+          final decompressedFile = await compressionService.decompressBrotli(file);
 
           decryptedDecompressedFiles.add(decompressedFile);
         } else {
@@ -288,8 +284,7 @@ class ConversationMessageManagementService {
       receiverPubkey,
       signer,
       kind ?? PrivateDirectMessageEntity.kind,
-      expirationTag:
-          kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
+      expirationTag: kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
     );
 
     Logger.log('Wrap message $wrap');
@@ -317,8 +312,7 @@ class ConversationMessageManagementService {
           final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
           final compressedMediaFile = switch (mediaType) {
-            MediaType.video =>
-              await compressionService.compressVideo(mediaFile),
+            MediaType.video => await compressionService.compressVideo(mediaFile),
             MediaType.image => await compressionService.compressImage(
                 mediaFile,
                 width: mediaFile.width,
@@ -331,9 +325,7 @@ class ConversationMessageManagementService {
                 path: await compressionService.compressAudio(mediaFile.path),
               ),
             MediaType.unknown => MediaFile(
-                path: (await compressionService
-                        .compressWithBrotli(File(mediaFile.path)))
-                    .path,
+                path: (await compressionService.compressWithBrotli(File(mediaFile.path))).path,
               )
           };
 
@@ -355,14 +347,12 @@ class ConversationMessageManagementService {
   ) async {
     final encryptedMediaFiles = await Future.wait(
       compressedMediaFiles.map(
-        (compressedMediaFile) =>
-            Isolate.run<(MediaFile, String, String, String)>(() async {
+        (compressedMediaFile) => Isolate.run<(MediaFile, String, String, String)>(() async {
           final secretKey = await AesGcm.with256bits().newSecretKey();
           final secretKeyBytes = await secretKey.extractBytes();
           final secretKeyString = base64Encode(secretKeyBytes);
 
-          final compressedMediaFileBytes =
-              await File(compressedMediaFile.path).readAsBytes();
+          final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
 
           final secretBox = await AesGcm.with256bits().encrypt(
             compressedMediaFileBytes,
@@ -373,8 +363,7 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile =
-              File('${compressedMediaFile.path}.enc');
+          final compressedEncryptedFile = File('${compressedMediaFile.path}.enc');
           // Rewrite compressed fieles with encrypted data
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 
