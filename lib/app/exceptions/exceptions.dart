@@ -204,3 +204,11 @@ class AuthChallengeIsEmptyException extends IONException {
 class FetchAndSyncConversationsException extends IONException {
   FetchAndSyncConversationsException() : super(10042, 'Failed to fetch and sync conversations');
 }
+
+class ConversationNotFoundException extends IONException {
+  ConversationNotFoundException() : super(10043, 'Failed to find conversation');
+}
+
+class ParticipantNotFoundException extends IONException {
+  ParticipantNotFoundException() : super(10044, 'Failed to find conversation participant');
+}
