@@ -10,6 +10,10 @@ flutter_launcher_icons:
   # iOS
   ios: true
   remove_alpha_ios: true
+  image_path_ios_dark_transparent: "assets/launch_icon/launch_icon_foreground.png"
+  image_path_ios_tinted_grayscale: "assets/launch_icon/launch_icon_foreground.png"
+  desaturate_tinted_to_grayscale_ios: true
+  background_color_ios: "#120240"
 
   # Web
   web:
