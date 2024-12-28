@@ -31,7 +31,7 @@ class MainTabNavigation extends HookConsumerWidget {
     useOnInit(() {
       final pubkey = ref.watch(currentPubkeySelectorProvider);
       if (pubkey != null) {
-        ref.read(userChatRelaysProvider(pubkey).notifier).setCurrentUserChatRelays();
+        ref.read(userChatRelaysManagerProvider.notifier).set();
       }
     });
 
