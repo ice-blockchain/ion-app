@@ -12,8 +12,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class TwoFaTryAgainPage extends StatelessWidget {
   const TwoFaTryAgainPage({
+    this.description,
     super.key,
   });
+
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class TwoFaTryAgainPage extends StatelessWidget {
               InfoCard(
                 iconAsset: Assets.svg.actionWalletKeyserror,
                 title: context.i18n.two_fa_failure_title,
-                description: context.i18n.two_fa_failure_desc,
+                description: description ?? context.i18n.two_fa_failure_desc,
               ),
             ],
           ),

@@ -77,3 +77,20 @@ class UserAlreadyExistsException extends IONIdentityException {
     }
   }
 }
+
+class InvalidTwoFaCodeException extends IONIdentityException {
+  InvalidTwoFaCodeException() : super('Invalid 2FA code');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        return responseData['code'] == '2FA_INVALID_CODE';
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+}
