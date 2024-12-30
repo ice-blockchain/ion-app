@@ -41,11 +41,7 @@ class _AmountDisplay extends HookWidget {
             ),
             SizedBox(width: 4.0.s),
             Text(
-              '~ ${NumberFormat.currency(
-                locale: 'en_US',
-                symbol: '',
-                decimalDigits: 2,
-              ).format(equivalentUsd)} USD',
+              '~ ${formatUSD(equivalentUsd)} USD',
               style: context.theme.appTextThemes.body2.copyWith(color: secondaryTextColor),
             ),
           ],

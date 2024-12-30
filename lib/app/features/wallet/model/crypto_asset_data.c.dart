@@ -19,7 +19,20 @@ class CryptoAssetData with _$CryptoAssetData {
     required String address,
     CoinData? selectedCoin,
     NftData? selectedNft,
-    double? amount,
     ContactData? selectedContact,
   }) = _CryptoAssetData;
+
+  const CryptoAssetData._();
+
+  double? get price {
+    if (selectedCoin != null) return selectedCoin!.balance;
+    if (selectedNft != null) return selectedNft!.price;
+    return null;
+  }
+
+  String get networkName {
+    if (selectedCoin != null) return selectedCoin!.network;
+    if (selectedNft != null) return selectedNft!.network;
+    return '';
+  }
 }

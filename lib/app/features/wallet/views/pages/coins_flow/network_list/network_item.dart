@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/components/coin_icon_with_network/coin_icon_with_network.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
@@ -35,7 +36,10 @@ class NetworkItem extends ConsumerWidget {
       ),
       subtitle: Text(coinData.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: _CoinIconWithNetwork(coinData, network: networkType),
+      leading: CoinIconWithNetwork.small(
+        coinData,
+        network: networkType,
+      ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -52,34 +56,6 @@ class NetworkItem extends ConsumerWidget {
         ],
       ),
       onTap: onTap,
-    );
-  }
-}
-
-class _CoinIconWithNetwork extends StatelessWidget {
-  const _CoinIconWithNetwork(this.coin, {required this.network});
-
-  final CoinData coin;
-  final NetworkType network;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: 39.0.s,
-      child: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            child: coin.iconUrl.icon(size: 36.0.s),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: network.iconAsset.icon(size: 16.0.s),
-          ),
-        ],
-      ),
     );
   }
 }

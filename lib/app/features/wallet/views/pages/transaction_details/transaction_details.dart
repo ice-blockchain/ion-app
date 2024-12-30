@@ -13,7 +13,7 @@ import 'package:ion/app/features/wallet/components/network_fee/list_item_network
 import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
 import 'package:ion/app/features/wallet/components/timeline/timeline.dart';
-import 'package:ion/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
+import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
@@ -31,8 +31,6 @@ class TransactionDetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-
-    final controller = ref.watch(sendAssetFormControllerProvider(type: type).notifier);
     final formData = ref.watch(sendAssetFormControllerProvider(type: type));
 
     return SheetContent(
@@ -59,12 +57,12 @@ class TransactionDetailsPage extends ConsumerWidget {
                           backgroundColor: Colors.transparent,
                         ),
                       ),
-                    if (type == CryptoAssetType.coin)
+                    if (formData.selectedCoin case final CoinData coin)
                       TransactionAmountSummary(
-                        amount: controller.getAmount(),
-                        currency: formData.selectedCoin!.abbreviation,
-                        usdAmount: controller.getAmount() * 0.999,
-                        icon: mockedCoinsDataArray[3].iconUrl.icon(),
+                        amount: coin.amount,
+                        currency: coin.abbreviation,
+                        usdAmount: coin.balance,
+                        icon: coin.iconUrl.icon(),
                       ),
                     SizedBox(height: 12.0.s),
                     Timeline(
@@ -95,20 +93,26 @@ class TransactionDetailsPage extends ConsumerWidget {
                         ),
                       ),
                     ),
+                    if (formData.selectedCoin case final CoinData coin) ...[
+                      SizedBox(height: 16.0.s),
+                      ListItem.textWithIcon(
+                        title: Text(locale.wallet_asset),
+                        value: coin.name,
+                        icon: coin.iconUrl.icon(
+                          size: ScreenSideOffset.defaultSmallMargin,
+                        ),
+                      ),
+                    ],
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
-                      value: controller.getNetwork(),
-                      icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                      value: formData.networkName,
+                      icon: formData.selectedNetwork.iconAsset.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItemArrivalTime(
                       arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
                           .format(formData.arrivalDateTime),
-                    ),
-                    ListItemArrivalTime(
-                      arrivalTime: '${formData.arrivalTime} '
-                          '${context.i18n.wallet_arrival_time_minutes}',
                     ),
                     SizedBox(height: 12.0.s),
                     const ListItemNetworkFee(value: '1.00 USDT'),

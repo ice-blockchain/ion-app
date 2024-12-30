@@ -37,7 +37,7 @@ class SendCoinsForm extends HookConsumerWidget {
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
-        text: formController.amount.toString(),
+        text: (formController.selectedCoin?.amount ?? 0).toString(),
       ),
     );
 
@@ -92,6 +92,7 @@ class SendCoinsForm extends HookConsumerWidget {
                     CoinAmountInput(
                       controller: amountController,
                       coinId: formController.selectedCoin!.abbreviation,
+                      showApproximateInUsd: false,
                     ),
                     SizedBox(height: 17.0.s),
                     ArrivalTimeSelector(
@@ -114,6 +115,9 @@ class SendCoinsForm extends HookConsumerWidget {
                         child: Assets.svg.iconButtonNext.icon(),
                       ),
                       onPressed: () {
+                        ref
+                            .read(sendAssetFormControllerProvider().notifier)
+                            .updateAmount(amountController.text);
                         CoinsSendFormConfirmationRoute().push<void>(context);
                       },
                     ),

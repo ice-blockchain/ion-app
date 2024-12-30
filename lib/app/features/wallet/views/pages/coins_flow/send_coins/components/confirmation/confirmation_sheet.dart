@@ -6,15 +6,18 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallet/components/arrival_time/list_item_arrival_time.dart';
+import 'package:ion/app/features/wallet/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
+import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/providers/mock_data/wallet_assets_mock_data.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConfirmationSheet extends ConsumerWidget {
@@ -46,27 +49,28 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  if (formData.amount != null)
+                  if (formData.selectedCoin case final CoinData coin)
                     TransactionAmountSummary(
-                      amount: formData.amount!,
-                      currency: formData.selectedCoin!.abbreviation,
-                      usdAmount: formData.amount! * 0.999, // TODO: Remove mock
-                      icon: mockedCoinsDataArray[3].iconUrl.icon(),
+                      amount: coin.amount,
+                      currency: coin.abbreviation,
+                      usdAmount: coin.balance,
+                      icon: coin.iconUrl.icon(),
                     ),
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
                     address: formData.address,
                     contact: formData.selectedContact,
                   ),
-                  SizedBox(height: 16.0.s),
-                  if (formData.selectedCoin != null)
+                  if (formData.selectedCoin case final CoinData coin) ...[
+                    SizedBox(height: 16.0.s),
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_asset),
-                      value: formData.selectedCoin!.name,
-                      icon: formData.selectedCoin!.iconUrl.icon(
+                      value: coin.name,
+                      icon: coin.iconUrl.icon(
                         size: ScreenSideOffset.defaultSmallMargin,
                       ),
                     ),
+                  ],
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),
@@ -86,34 +90,26 @@ class ConfirmationSheet extends ConsumerWidget {
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_network),
-                    value: formData.selectedNetwork.name,
+                    value: formData.selectedNetwork.getDisplayName(context),
                     icon: formData.selectedNetwork.iconAsset.icon(
                       size: 16.0.s,
                     ),
                   ),
                   SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_arrival_time),
-                    value: '${formData.arrivalTime} '
+                  ListItemArrivalTime(
+                    arrivalTime: '${formData.arrivalTime} '
                         '${locale.wallet_arrival_time_minutes}',
-                    icon: Assets.svg.iconBlockTime.icon(
-                      size: 16.0.s,
-                    ),
                   ),
                   SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_network_fee),
-                    value: '1.00 USDT',
-                    icon: Assets.svg.iconBlockCoins.icon(
-                      size: 16.0.s,
-                    ),
-                  ),
+                  const ListItemNetworkFee(value: '1.00 USDT'),
                   SizedBox(height: 22.0.s),
-                  Button(
-                    label: Text('${locale.button_confirm} - \$351.35'),
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () => CoinTransactionResultRoute().go(context),
-                  ),
+                  if (formData.price != null)
+                    Button(
+                      label:
+                          Text('${locale.button_confirm} - ${formatToCurrency(formData.price!)}'),
+                      mainAxisSize: MainAxisSize.max,
+                      onPressed: () => CoinTransactionResultRoute().go(context),
+                    ),
                   SizedBox(height: 16.0.s),
                 ],
               ),

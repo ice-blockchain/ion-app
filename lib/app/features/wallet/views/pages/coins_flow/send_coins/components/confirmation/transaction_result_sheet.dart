@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
+import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
@@ -26,7 +27,6 @@ class TransactionResultSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(sendAssetFormControllerProvider(type: type).notifier);
     final formData = ref.watch(sendAssetFormControllerProvider(type: type));
 
     final colors = context.theme.appColors;
@@ -68,12 +68,12 @@ class TransactionResultSheet extends ConsumerWidget {
                       backgroundColor: Colors.transparent,
                     ),
                   ),
-                if (type == CryptoAssetType.coin)
+                if (formData.selectedCoin case final CoinData coin)
                   TransactionAmountSummary(
-                    amount: controller.getAmount(),
-                    currency: formData.selectedCoin!.abbreviation,
-                    usdAmount: controller.getAmount() * 0.999,
-                    icon: formData.selectedCoin!.iconUrl.icon(),
+                    amount: coin.amount,
+                    currency: coin.abbreviation,
+                    usdAmount: coin.balance,
+                    icon: coin.iconUrl.icon(),
                   ),
                 SizedBox(height: 24.0.s),
                 Row(

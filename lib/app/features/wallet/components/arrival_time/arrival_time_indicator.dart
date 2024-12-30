@@ -21,7 +21,7 @@ class ArrivalTimeIndicator extends StatelessWidget {
     return Row(
       children: [
         Text(
-          locale.wallet_arrival_time_type_normal,
+          locale.wallet_arrival_time_type_standard,
           style: textTheme.body2.copyWith(
             color: colors.secondaryText,
           ),

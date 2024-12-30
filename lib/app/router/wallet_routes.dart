@@ -66,6 +66,7 @@ class WalletRoutes {
             TypedGoRoute<ContactsListRoute>(path: 'contacts-list'),
           ],
         ),
+        TypedGoRoute<CoinSendScanRoute>(path: 'scan-receiver-wallet'),
         TypedGoRoute<CoinsSendFormConfirmationRoute>(
           path: 'coin-send-form-confirmation',
         ),
@@ -113,6 +114,14 @@ class ManageNftsRoute extends BaseRouteData {
           child: const ManageNftsPage(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class CoinSendScanRoute extends BaseRouteData {
+  CoinSendScanRoute()
+      : super(
+    child: const WalletScanModalPage(),
+    type: IceRouteType.bottomSheet,
+  );
 }
 
 class CoinSendRoute extends BaseRouteData {

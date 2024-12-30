@@ -15,13 +15,10 @@ enum CryptoAssetType { coin, nft }
 
 @riverpod
 class SendAssetFormController extends _$SendAssetFormController {
-  late final CryptoAssetType _cryptoType;
-
   // TODO: make async
   @override
   CryptoAssetData build({CryptoAssetType type = CryptoAssetType.coin}) {
     final wallet = ref.watch(currentWalletDataProvider).valueOrNull;
-    _cryptoType = type;
 
     return CryptoAssetData(
       selectedNetwork: NetworkType.eth,
@@ -34,7 +31,6 @@ class SendAssetFormController extends _$SendAssetFormController {
             address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
           ),
       address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
-      amount: 350,
       arrivalTime: 15,
       arrivalDateTime: DateTime.now(),
     );
@@ -50,26 +46,12 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   void updateAmount(String amount) {
     final value = double.tryParse(amount) ?? 0.0;
-    state = state.copyWith(amount: value);
+    state = state.copyWith(
+      selectedCoin: state.selectedCoin?.copyWith(
+        amount: value,
+      ),
+    );
   }
 
   void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
-
-  String getAsset() {
-    return switch (_cryptoType) {
-      CryptoAssetType.coin when state.selectedCoin != null => state.selectedCoin!.asset,
-      CryptoAssetType.nft when state.selectedNft != null => state.selectedNft!.asset,
-      CryptoAssetType.coin || CryptoAssetType.nft => '',
-    };
-  }
-
-  String getNetwork() {
-    return switch (_cryptoType) {
-      CryptoAssetType.coin when state.selectedCoin != null => state.selectedCoin!.network,
-      CryptoAssetType.nft when state.selectedNft != null => state.selectedNft!.network,
-      CryptoAssetType.coin || CryptoAssetType.nft => '',
-    };
-  }
-
-  double getAmount() => state.amount ?? 0.0;
 }

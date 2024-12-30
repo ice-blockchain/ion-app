@@ -31,6 +31,7 @@ class SendToRecipient extends StatelessWidget {
             ),
             SizedBox(height: 12.0.s),
             Align(
+              alignment: Alignment.centerLeft,
               child: Text(
                 address,
                 style: context.theme.appTextThemes.caption3.copyWith(),
