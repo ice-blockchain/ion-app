@@ -28,8 +28,6 @@ class ForceUpdateState with _$ForceUpdateState {
 class ForceUpdate extends _$ForceUpdate {
   @override
   ForceUpdateState build() {
-    _checkAndUpdateConfig();
-
     ref.listen<AppLifecycleState>(
       appLifecycleProvider,
       (previous, next) {
@@ -37,6 +35,7 @@ class ForceUpdate extends _$ForceUpdate {
           _checkAndUpdateConfig();
         }
       },
+      fireImmediately: true,
     );
 
     return const ForceUpdateState();
