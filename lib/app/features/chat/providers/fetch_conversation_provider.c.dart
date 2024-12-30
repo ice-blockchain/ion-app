@@ -7,7 +7,7 @@ import 'package:ion/app/features/chat/model/entities/private_message_reaction_da
 import 'package:ion/app/features/nostr/model/action_source.dart';
 import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:ion/app/services/database/ion_database.c.dart';
+import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/nostr/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
