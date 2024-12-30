@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/nostr/model/file_alt.dart';
 import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
@@ -24,6 +25,7 @@ class CreateArticle extends _$CreateArticle {
 
   Future<void> create({
     required String content,
+    required WhoCanReplySettingsOption whoCanReply,
     String? title,
     String? summary,
     String? imageId,
@@ -43,7 +45,7 @@ class CreateArticle extends _$CreateArticle {
 
       final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(updatedContent);
 
-      final articleData = ArticleData(
+      final articleData = ArticleData.fromData(
         title: title,
         summary: summary,
         image: imageUrl,
@@ -51,6 +53,7 @@ class CreateArticle extends _$CreateArticle {
         media: {for (final attachment in mediaAttachments) attachment.url: attachment},
         relatedHashtags: relatedHashtags,
         publishedAt: publishedAt ?? DateTime.now(),
+        whoCanReplySettings: {whoCanReply},
       );
 
       await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, articleData]);

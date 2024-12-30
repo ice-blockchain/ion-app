@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/selected_visibility_options_provider.c.dart';
-import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/visibility_settings_modal.dart';
+import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
+import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -16,7 +16,7 @@ class CreateArticleTopics extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedOption = ref.watch(selectedVisibilityOptionsProvider);
+    final selectedOption = ref.watch(selectedWhoCanReplyOptionProvider);
 
     return ListItem(
       title: Text(
@@ -33,7 +33,7 @@ class CreateArticleTopics extends ConsumerWidget {
       onTap: () {
         showSimpleBottomSheet<void>(
           context: context,
-          child: const VisibilitySettingsModal(),
+          child: const WhoCanReplySettingsModal(),
         );
       },
     );

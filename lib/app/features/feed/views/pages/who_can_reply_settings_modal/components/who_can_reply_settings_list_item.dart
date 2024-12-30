@@ -4,25 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/visibility_settings_options.dart';
-import 'package:ion/app/features/feed/providers/selected_visibility_options_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class VisibilitySettingsListItem extends ConsumerWidget {
-  const VisibilitySettingsListItem({
+class WhoCanReplySettingsListItem extends ConsumerWidget {
+  const WhoCanReplySettingsListItem({
     required this.option,
     super.key,
   });
 
-  final VisibilitySettingsOptions option;
+  final WhoCanReplySettingsOption option;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedOption = ref.watch(selectedVisibilityOptionsProvider);
+    final selectedOption = ref.watch(selectedWhoCanReplyOptionProvider);
     final isSelected = selectedOption == option;
 
     void onSelect() {
-      ref.read(selectedVisibilityOptionsProvider.notifier).selectedOption = option;
+      ref.read(selectedWhoCanReplyOptionProvider.notifier).option = option;
       Navigator.pop(context, false);
     }
 
