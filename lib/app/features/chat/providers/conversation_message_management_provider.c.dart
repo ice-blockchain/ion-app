@@ -27,76 +27,15 @@ import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'private_direct_chat_provider.c.g.dart';
-
-// Example usage:
-/*
-  final privateDirectChatProvider =
-      ref.watch(privateDirectChatServiceProvider).requireValue;
-
-  Future.delayed(const Duration(seconds: 15), () {
-    privateDirectChatProvider.downloadDecryptDecompressMedia(
-      PrivateDirectMessageEntity.fromEventMessage(
-        EventMessage(
-          id: '0400b82dd7d0ab96e93e0688a6cb49ce0062ed30d1556118089a579b8c9ae783',
-          pubkey:
-              '6bd14684b3ed3632d913e6c52c8c64df4fa46871e7cebd08bd745432924b565b',
-          content: 'Hello',
-          createdAt: DateTime.now(),
-          kind: PrivateDirectMessageEntity.kind,
-          tags: const [
-            [
-              'imeta',
-              'url https://bom1-1.staging.ion-connect.ice.vip:4443/files/127fe9ddceb9cf5240bacf6c40c484aab4fe65255beefefbc82303e643486e3c:6af38a5a65ab8b7fba53e659023e07f727d5ee0d9ffaf81dfbec2a3e80c6b802.enc',
-              'alt message',
-              'm image/webp',
-              'dim null',
-              'x 6af38a5a65ab8b7fba53e659023e07f727d5ee0d9ffaf81dfbec2a3e80c6b802',
-              'ox 6af38a5a65ab8b7fba53e659023e07f727d5ee0d9ffaf81dfbec2a3e80c6b802',
-              'expiration 1735043248',
-              'encryption-key vSn0v3V1UyxBfehQ1m/fR0b/LsbzlM60/+Rbwr6BOKE= jzMoGrgE/eYplHcZ nkd3OhZcCx7+bSb/B0nbAg== aes-gcm',
-            ]
-          ],
-          sig:
-              'eddsa/curve25519:2847691e54e2c619960aa4bf125d66f2d531f503d6681ffe39a7495b360e4aba63c04c9085a7cd6627628833b8f1c2a1df98f20b1ca06db43246bce05766e20c',
-        ),
-      ),
-    );
-  });
-
-  
-  final selectedFiles = await FilePicker.platform.pickFiles(
-    type: FileType.custom,
-    allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'],
-  );
-
-  await privateDirectChatProvider.sentMessage(
-    subject: 'Test group',
-    content: 'Hello',
-    mediaFiles: [
-      MediaFile(
-        path: selectedFiles?.files.single.path ?? '',
-        mimeType: 'image/jpeg',
-      ),
-    ],
-    participantsPubkeys: [
-      'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377',
-    ],
-  );
-  
-
-  await privateDirectChatProvider.sendMessageReceivedStatus(
-    eventId: 'd44ac1ef3ed47b9dd01be2df8ad2f24b50706164004ff71ddf2d0bcfe9ea9857',
-    receiverPubkey:
-        'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377',
-  );
-*/
+part 'conversation_message_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<PrivateDirectChatService> privateDirectChatService(Ref ref) async {
+Future<ConversationMessageManagementService> conversationMessageManagementService(
+  Ref ref,
+) async {
   final eventSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
 
-  return PrivateDirectChatService(
+  return ConversationMessageManagementService(
     eventSigner: eventSigner,
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
@@ -108,8 +47,8 @@ Future<PrivateDirectChatService> privateDirectChatService(Ref ref) async {
   );
 }
 
-class PrivateDirectChatService {
-  PrivateDirectChatService({
+class ConversationMessageManagementService {
+  ConversationMessageManagementService({
     required this.env,
     required this.wrapService,
     required this.sealService,
