@@ -40,7 +40,7 @@ class AlbumItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isAll ? context.i18n.gallery_albums_all_title : name,
+                      isAll ? context.i18n.core_all : name,
                       style: context.theme.appTextThemes.subtitle3,
                     ),
                     Text(

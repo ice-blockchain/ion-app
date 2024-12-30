@@ -60,7 +60,7 @@ class MediaPickerPage extends HookConsumerWidget {
               AlbumSelectionRoute(mediaPickerType: type).push<void>(context);
             },
             label: Text(
-              isAll ? context.i18n.gallery_albums_all_title : albumName,
+              isAll ? context.i18n.core_all : albumName,
               style: context.theme.appTextThemes.subtitle,
             ),
             trailingIconOffset: 2.0.s,
