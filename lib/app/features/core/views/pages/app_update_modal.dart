@@ -1,15 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/config/providers/force_update_util_provider.c.dart';
 import 'package:ion/app/features/core/model/app_update_type.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
-class AppUpdateModal extends StatelessWidget {
+class AppUpdateModal extends ConsumerWidget {
   const AppUpdateModal({
     required this.appUpdateType,
     super.key,
@@ -18,7 +19,7 @@ class AppUpdateModal extends StatelessWidget {
   final AppUpdateType appUpdateType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -36,15 +37,10 @@ class AppUpdateModal extends StatelessWidget {
             leadingIcon: appUpdateType.buttonIconAsset.icon(
               color: context.theme.appColors.onPrimaryAccent,
             ),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
+            onPressed: () async {
               if (appUpdateType == AppUpdateType.updateRequired) {
-                showSimpleBottomSheet<void>(
-                  context: context,
-                  child: const AppUpdateModal(
-                    appUpdateType: AppUpdateType.upToDate,
-                  ),
-                );
+                final forceUpdateService = ref.read(forceUpdateServiceProvider);
+                await forceUpdateService.handleForceUpdateRedirect();
               }
             },
             label: Text(appUpdateType.getActionTitle(context)),

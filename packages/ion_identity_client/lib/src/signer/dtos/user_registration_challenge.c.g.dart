@@ -6,8 +6,7 @@ part of 'user_registration_challenge.c.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserRegistrationChallenge _$UserRegistrationChallengeFromJson(
-        Map<String, dynamic> json) =>
+UserRegistrationChallenge _$UserRegistrationChallengeFromJson(Map<String, dynamic> json) =>
     UserRegistrationChallenge(
       json['temporaryAuthenticationToken'] as String?,
       RelyingParty.fromJson(json['rp'] as Map<String, dynamic>),
@@ -24,21 +23,17 @@ UserRegistrationChallenge _$UserRegistrationChallengeFromJson(
               json['authenticatorSelection'] as Map<String, dynamic>),
       json['attestation'] as String,
       (json['pubKeyCredParams'] as List<dynamic>)
-          .map((e) =>
-              PublicKeyCredentialParameters.fromJson(e as Map<String, dynamic>))
+          .map((e) => PublicKeyCredentialParameters.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['excludeCredentials'] as List<dynamic>)
-          .map((e) =>
-              PublicKeyCredentialDescriptor.fromJson(e as Map<String, dynamic>))
+          .map((e) => PublicKeyCredentialDescriptor.fromJson(e as Map<String, dynamic>))
           .toList(),
       (json['allowedRecoveryCredentials'] as List<dynamic>?)
-          ?.map((e) =>
-              AllowedRecoveryCredential.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => AllowedRecoveryCredential.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$UserRegistrationChallengeToJson(
-        UserRegistrationChallenge instance) =>
+Map<String, dynamic> _$UserRegistrationChallengeToJson(UserRegistrationChallenge instance) =>
     <String, dynamic>{
       'temporaryAuthenticationToken': instance.temporaryAuthenticationToken,
       'rp': instance.rp.toJson(),
@@ -48,10 +43,8 @@ Map<String, dynamic> _$UserRegistrationChallengeToJson(
       'challenge': instance.challenge,
       'authenticatorSelection': instance.authenticatorSelection?.toJson(),
       'attestation': instance.attestation,
-      'pubKeyCredParams':
-          instance.pubKeyCredParams.map((e) => e.toJson()).toList(),
-      'excludeCredentials':
-          instance.excludeCredentials.map((e) => e.toJson()).toList(),
+      'pubKeyCredParams': instance.pubKeyCredParams.map((e) => e.toJson()).toList(),
+      'excludeCredentials': instance.excludeCredentials.map((e) => e.toJson()).toList(),
       'allowedRecoveryCredentials':
           instance.allowedRecoveryCredentials?.map((e) => e.toJson()).toList(),
     };
