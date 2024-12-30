@@ -28,7 +28,7 @@ class InfoCard extends StatelessWidget {
           Expanded(
             child: Text(
               context.i18n.wallet_receive_info,
-              style: context.theme.appTextThemes.caption2.copyWith(
+              style: context.theme.appTextThemes.caption3.copyWith(
                 color: context.theme.appColors.primaryAccent,
               ),
             ),
