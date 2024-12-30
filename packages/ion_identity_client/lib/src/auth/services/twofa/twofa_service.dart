@@ -3,9 +3,11 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/data_sources/twofa_data_source.dart';
+import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/wallets/ion_identity_wallets.dart';
 
 class TwoFAService {
@@ -57,12 +59,17 @@ class TwoFAService {
   Future<void> verifyTwoFA(TwoFAType twoFAType) async {
     final userId = _extractUserIdService.extractUserId(username: username);
 
-    await _dataSource.verifyTwoFA(
-      username: username,
-      userId: userId,
-      twoFAOption: twoFAType.option,
-      code: twoFAType.value!,
-    );
+    try {
+      await _dataSource.verifyTwoFA(
+        username: username,
+        userId: userId,
+        twoFAOption: twoFAType.option,
+        code: twoFAType.value!,
+      );
+    } on RequestExecutionException catch (e) {
+      final exception = _mapException(e);
+      throw exception;
+    }
   }
 
   Future<void> deleteTwoFA(
@@ -73,13 +80,18 @@ class TwoFAService {
     final userId = _extractUserIdService.extractUserId(username: username);
     final base64Signature = await _generateSignature(userId, onVerifyIdentity);
 
-    await _dataSource.deleteTwoFA(
-      signature: base64Signature,
-      username: username,
-      userId: userId,
-      twoFAType: twoFAType,
-      verificationCodes: verificationCodes,
-    );
+    try {
+      await _dataSource.deleteTwoFA(
+        signature: base64Signature,
+        username: username,
+        userId: userId,
+        twoFAType: twoFAType,
+        verificationCodes: verificationCodes,
+      );
+    } on RequestExecutionException catch (e) {
+      final exception = _mapException(e);
+      throw exception;
+    }
   }
 
   Future<String> _generateSignature(
@@ -125,5 +137,16 @@ class TwoFAService {
     }
 
     return Uri.parse(url).queryParameters['secret'];
+  }
+
+  Exception _mapException(RequestExecutionException e) {
+    if (e.error is! DioException) return e;
+
+    final exception = e.error as DioException;
+    if (InvalidTwoFaCodeException.isMatch(exception)) {
+      return InvalidTwoFaCodeException();
+    }
+
+    return e;
   }
 }
