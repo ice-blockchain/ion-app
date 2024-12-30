@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
@@ -33,6 +35,9 @@ class MediaPickerPage extends HookConsumerWidget {
       mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
     );
 
+    final isAll = galleryState.valueOrNull?.selectedAlbum?.isAll ?? false;
+    final albumName = galleryState.valueOrNull?.selectedAlbum?.name ?? type.title(context);
+
     ref.listen(mediaSelectionNotifierProvider, (_, value) {
       if (maxSelection == 1 && value.selectedMedia.isNotEmpty == true) {
         Navigator.of(context).pop(value.selectedMedia);
@@ -50,9 +55,17 @@ class MediaPickerPage extends HookConsumerWidget {
       SliverAppBar(
         primary: false,
         flexibleSpace: NavigationAppBar.modal(
-          title: Text(
-            title ?? type.title(context),
-            style: context.theme.appTextThemes.subtitle,
+          title: Button.dropdown(
+            onPressed: () {
+              AlbumSelectionRoute(mediaPickerType: type).push<void>(context);
+            },
+            label: Text(
+              isAll ? context.i18n.core_all : albumName,
+              style: context.theme.appTextThemes.subtitle,
+            ),
+            trailingIconOffset: 2.0.s,
+            backgroundColor: Colors.transparent,
+            borderColor: Colors.transparent,
           ),
           onBackPress: () => Navigator.of(context).pop(),
           actions: [

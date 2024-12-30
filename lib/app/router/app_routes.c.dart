@@ -54,6 +54,7 @@ import 'package:ion/app/features/feed/views/pages/notifications_history_page/not
 import 'package:ion/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
 import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
+import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';
 import 'package:ion/app/features/gallery/views/pages/gallery_camera_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
