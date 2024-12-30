@@ -18,7 +18,7 @@ class ProfileDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '';
     final userMetadataValue = ref.watch(currentUserMetadataProvider).valueOrNull;
     final followersCount = ref.watch(followersCountProvider(currentPubkey)).valueOrNull;
     final followList = ref.watch(followListProvider(currentPubkey));

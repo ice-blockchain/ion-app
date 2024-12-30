@@ -12,7 +12,7 @@ class SelfProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
     if (currentPubkey == null) {
       return const SizedBox.shrink();

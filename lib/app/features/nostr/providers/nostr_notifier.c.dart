@@ -233,7 +233,7 @@ class NostrNotifier extends _$NostrNotifier {
     switch (actionSource) {
       case ActionSourceCurrentUser():
         {
-          final pubkey = ref.read(currentPubkeySelectorProvider);
+          final pubkey = await ref.read(currentPubkeySelectorProvider.future);
           if (pubkey == null) {
             throw UserMasterPubkeyNotFoundException();
           }
@@ -263,7 +263,7 @@ class NostrNotifier extends _$NostrNotifier {
         }
       case ActionSourceCurrentUserChat():
         {
-          final pubkey = ref.read(currentPubkeySelectorProvider);
+          final pubkey = await ref.read(currentPubkeySelectorProvider.future);
           if (pubkey == null) {
             throw UserMasterPubkeyNotFoundException();
           }

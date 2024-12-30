@@ -23,7 +23,7 @@ class SettingsModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
+    final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '';
 
     VoidCallback getOnPressed(SettingsAction option) {
       return switch (option) {

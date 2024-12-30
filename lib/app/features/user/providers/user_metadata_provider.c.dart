@@ -38,7 +38,7 @@ Future<UserMetadataEntity?> userMetadata(
 
 @Riverpod(keepAlive: true)
 Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
   if (currentPubkey == null) {
     return null;
   }

@@ -22,7 +22,7 @@ List<EntitiesDataSource>? repliesDataSource(
   Ref ref, {
   required EventReference eventReference,
 }) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
   final entity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
 
   if (currentPubkey == null || entity == null) {

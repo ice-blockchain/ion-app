@@ -11,7 +11,7 @@ part 'create_group_form_controller_provider.c.g.dart';
 class CreateGroupFormController extends _$CreateGroupFormController {
   @override
   CreateGroupFormData build() {
-    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+    final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
     return CreateGroupFormData(
       members: {
         if (currentPubkey != null) currentPubkey,
@@ -27,7 +27,7 @@ class CreateGroupFormController extends _$CreateGroupFormController {
 
   void toggleMember(String member) {
     // User cannot remove himself from the participants during group creation
-    if (member == ref.read(currentPubkeySelectorProvider)) return;
+    if (member == ref.read(currentPubkeySelectorProvider).valueOrNull) return;
 
     final updatedMembers = state.members.toSet();
     updatedMembers.contains(member) ? updatedMembers.remove(member) : updatedMembers.add(member);

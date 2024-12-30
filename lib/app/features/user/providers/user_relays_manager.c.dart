@@ -21,7 +21,7 @@ Future<UserRelaysEntity?> userRelay(Ref ref, String pubkey) async {
 
 @riverpod
 Future<UserRelaysEntity?> currentUserRelay(Ref ref) async {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
   if (currentPubkey == null) {
     return null;
   }

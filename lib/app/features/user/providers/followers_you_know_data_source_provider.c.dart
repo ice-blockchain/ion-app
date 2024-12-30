@@ -14,7 +14,7 @@ part 'followers_you_know_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? followersYouKnowDataSource(Ref ref, String pubkey) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
   if (currentPubkey == null || pubkey == currentPubkey) {
     return null;

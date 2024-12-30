@@ -54,7 +54,7 @@ class TabEntitiesList extends ConsumerWidget {
         else if (entities.isEmpty)
           EmptyState(
             type: type,
-            isCurrentUserProfile: pubkey == ref.watch(currentPubkeySelectorProvider),
+            isCurrentUserProfile: pubkey == ref.watch(currentPubkeySelectorProvider).valueOrNull,
             username: prefixUsername(username: userMetadata?.data.name, context: context),
           )
         else

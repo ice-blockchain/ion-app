@@ -23,7 +23,7 @@ class ArticlePreview extends ConsumerWidget {
     final title = ref.watch(draftArticleProvider).title;
     final selectedImage = ref.watch(draftArticleProvider).image;
     final content = ref.watch(draftArticleProvider).content;
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
     if (currentPubkey == null) {
       return const Skeleton(child: PostSkeleton());

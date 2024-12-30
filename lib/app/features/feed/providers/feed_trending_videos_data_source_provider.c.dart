@@ -20,7 +20,7 @@ part 'feed_trending_videos_data_source_provider.c.g.dart';
 List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
   final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
   if (filterRelays == null || currentPubkey == null) return null;
 

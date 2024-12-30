@@ -63,7 +63,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
 
 @riverpod
 Future<Map<BookmarksSetType, BookmarksSetEntity?>> currentUserBookmarks(Ref ref) async {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
   if (currentPubkey == null) {
     return {};
   }
@@ -116,8 +116,7 @@ class BookmarksNotifier extends _$BookmarksNotifier {
   }) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final currentPubkey = ref.read(currentPubkeySelectorProvider);
-
+      final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
       if (currentPubkey == null) {
         throw UserMasterPubkeyNotFoundException();
       }
