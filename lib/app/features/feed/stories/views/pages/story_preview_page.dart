@@ -12,8 +12,10 @@ import 'package:ion/app/features/feed/stories/views/components/story_preview/act
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/user/verified_account_list_item.dart';
+import 'package:ion/app/features/feed/views/pages/visibility_settings_modal/visibility_settings_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class StoryPreviewPage extends ConsumerWidget {
@@ -55,7 +57,17 @@ class StoryPreviewPage extends ConsumerWidget {
                       },
                     ),
                     SizedBox(height: 8.0.s),
-                    const VerifiedAccountListItem(),
+                    GestureDetector(
+                      onTap: () async {
+                        await showSimpleBottomSheet<bool>(
+                          context: context,
+                          child: VisibilitySettingsModal(
+                            title: context.i18n.story_settings_title,
+                          ),
+                        );
+                      },
+                      child: const VerifiedAccountListItem(),
+                    ),
                   ],
                 ),
               ),
