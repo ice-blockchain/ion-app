@@ -43,6 +43,8 @@ class ForceUpdate extends _$ForceUpdate {
   }
 
   Future<void> _checkAndUpdateConfig() async {
+    await ref.read(envProvider.future);
+
     final refetchIntervalInMilliseconds =
         ref.read(envProvider.notifier).get<int>(EnvVariable.VERSIONS_CONFIG_REFETCH_INTERVAL);
 
