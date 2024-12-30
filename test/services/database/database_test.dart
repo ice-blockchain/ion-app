@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
+import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/database/ion_database.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
