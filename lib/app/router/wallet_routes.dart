@@ -119,9 +119,9 @@ class ManageNftsRoute extends BaseRouteData {
 class CoinSendScanRoute extends BaseRouteData {
   CoinSendScanRoute()
       : super(
-    child: const WalletScanModalPage(),
-    type: IceRouteType.bottomSheet,
-  );
+          child: const WalletScanModalPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class CoinSendRoute extends BaseRouteData {
