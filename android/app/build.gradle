@@ -31,6 +31,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "io.ion.app"
+    // TODO: use flutter.compileSdkVersion when flutter upgraded
     compileSdkVersion 35
     ndkVersion flutter.ndkVersion
 
