@@ -15,7 +15,7 @@ class SearchedUsersList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(usersDataSourceProvider);
+    final dataSource = ref.watch(usersDataSourceProvider).valueOrNull;
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final users = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
     final slivers = [

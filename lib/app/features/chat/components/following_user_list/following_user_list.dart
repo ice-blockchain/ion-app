@@ -23,15 +23,25 @@ class FollowingUsersList extends ConsumerWidget {
 
     return ListView.builder(
       itemBuilder: (context, index) {
-        final user = ref.watch(userMetadataProvider(pubkeys[index])).valueOrNull;
-
-        return ListItem.user(
-          title: Text(user?.data.displayName ?? ''),
-          subtitle: Text(prefixUsername(username: user?.data.name ?? '', context: context)),
-          profilePicture: user?.data.picture,
-        );
+        return _FollowingUserListItem(pubkey: pubkeys[index]);
       },
       itemCount: pubkeys.length,
+    );
+  }
+}
+
+class _FollowingUserListItem extends ConsumerWidget {
+  const _FollowingUserListItem({required this.pubkey});
+
+  final String pubkey;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
+    return ListItem.user(
+      title: Text(user?.data.displayName ?? ''),
+      subtitle: Text(prefixUsername(username: user?.data.name ?? '', context: context)),
+      profilePicture: user?.data.picture,
     );
   }
 }

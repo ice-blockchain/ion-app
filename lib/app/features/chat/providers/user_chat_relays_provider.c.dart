@@ -34,17 +34,17 @@ Future<UserChatRelaysEntity?> userChatRelays(Ref ref, String pubkey) async {
       );
 }
 
-@riverpod
-class UserChatRelaysManager extends _$UserChatRelaysManager {
-  @override
-  FutureOr<void> build() {}
+class UserChatRelaysManager {
+  UserChatRelaysManager(this.ref);
+
+  final Ref ref;
 
   ///
   /// Fetches user relays and sets them as chat relays if they differ
   /// If chat relays already match user relays, does nothing
   /// Signs and broadcasts new chat relay list if an update is needed
   ///
-  Future<void> set() async {
+  Future<void> sync() async {
     final pubkey = ref.watch(currentPubkeySelectorProvider);
     if (pubkey == null) {
       throw UserMasterPubkeyNotFoundException();
@@ -70,4 +70,9 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
     await ref.read(nostrNotifierProvider.notifier).sendEvents([chatRelaysEvent]);
     ref.invalidate(userChatRelaysProvider(pubkey));
   }
+}
+
+@riverpod
+UserChatRelaysManager userChatRelaysManager(Ref ref) {
+  return UserChatRelaysManager(ref);
 }
