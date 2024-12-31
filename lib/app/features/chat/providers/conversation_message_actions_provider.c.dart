@@ -208,7 +208,7 @@ class ConversationMessageActionsService {
       createdAt: createdAt,
       pubkey: signer.publicKey,
       kind: PrivateMessageReactionEntity.kind,
-      sig: null,
+      sig: await signer.sign(message: id),
     );
 
     Logger.log('Event message $eventMessage');
