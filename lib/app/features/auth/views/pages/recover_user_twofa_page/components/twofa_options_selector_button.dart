@@ -12,6 +12,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
     required this.isOpened,
     required this.controller,
     required this.optionIndex,
+    this.enabled = true,
     super.key,
   });
 
@@ -19,6 +20,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
   final ValueNotifier<bool> isOpened;
   final MenuController controller;
   final int optionIndex;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
       ),
       opened: isOpened.value,
       onPressed: () {
+        if (!enabled) return;
         isOpened.value = !isOpened.value;
         if (controller.isOpen) {
           controller.close();
