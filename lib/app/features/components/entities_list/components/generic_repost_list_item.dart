@@ -26,6 +26,7 @@ class GenericRepostListItem extends StatelessWidget {
     return GestureDetector(
       onTap: () =>
           ArticleDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
+      behavior: HitTestBehavior.opaque,
       child: ScreenSideOffset.small(
         child: Column(
           children: [

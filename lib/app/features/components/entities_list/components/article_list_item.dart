@@ -20,6 +20,7 @@ class ArticleListItem extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 12.0.s),
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () =>
             ArticleDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
         child: Article(
