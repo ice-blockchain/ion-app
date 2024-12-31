@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/modal_action_button/modal_action_button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/components/accounts_list/accounts_list.dart';
-import 'package:ion/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -36,7 +36,7 @@ class SwitchAccountModal extends ConsumerWidget {
                   NavigationCloseButton(onPressed: context.pop),
                 ],
               ),
-              ActionButton(
+              ModalActionButton(
                 icon: Assets.svg.iconChannelType.icon(color: context.theme.appColors.primaryAccent),
                 label: context.i18n.profile_create_new_account,
                 onTap: () {},
@@ -44,7 +44,7 @@ class SwitchAccountModal extends ConsumerWidget {
               SizedBox(height: 16.0.s),
               const AccountsList(),
               SizedBox(height: 16.0.s),
-              ActionButton(
+              ModalActionButton(
                 icon: Assets.svg.iconMenuLogout.icon(size: 24.0.s),
                 label: context.i18n.profile_log_out(
                   prefixUsername(username: userMetadataValue?.data.name, context: context),

@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/modal_action_button/modal_action_button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
-import 'package:ion/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -40,7 +40,7 @@ class ProfileSettingsModal extends ConsumerWidget {
               separator: SizedBox(height: 9.0.s),
               mainAxisSize: MainAxisSize.min,
               children: [
-                ActionButton(
+                ModalActionButton(
                   icon: Assets.svg.iconProfileUser.icon(
                     color: primaryColor,
                   ),
@@ -49,7 +49,7 @@ class ProfileSettingsModal extends ConsumerWidget {
                     ProfileEditRoute().go(context);
                   },
                 ),
-                ActionButton(
+                ModalActionButton(
                   icon: Assets.svg.iconSelectLanguage.icon(
                     color: primaryColor,
                   ),
@@ -62,7 +62,7 @@ class ProfileSettingsModal extends ConsumerWidget {
                     AppLanguagesRoute().push<void>(context);
                   },
                 ),
-                ActionButton(
+                ModalActionButton(
                   icon: Assets.svg.iconSelectLanguage.icon(
                     color: primaryColor,
                   ),
