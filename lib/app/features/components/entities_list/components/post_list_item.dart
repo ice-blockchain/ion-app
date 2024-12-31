@@ -22,6 +22,7 @@ class PostListItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
+      behavior: HitTestBehavior.opaque,
       child: ScreenSideOffset.small(
         child: Post(eventReference: eventReference, showParent: showParent),
       ),
