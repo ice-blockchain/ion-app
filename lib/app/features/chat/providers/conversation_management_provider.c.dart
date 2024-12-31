@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<ConversationManagementService> conversationManagementService(
+Future<Raw<ConversationManagementService>> conversationManagementService(
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
