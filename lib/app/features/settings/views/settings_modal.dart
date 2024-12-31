@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/modal_action_button/modal_action_button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
@@ -11,7 +12,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/settings/model/settings_action.dart';
-import 'package:ion/app/features/user/pages/switch_account_modal/components/action_button/action_button.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -57,7 +57,7 @@ class SettingsModal extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 for (final option in SettingsAction.values)
-                  ActionButton(
+                  ModalActionButton(
                     icon: option.getIcon(context),
                     label: option.getLabel(context),
                     onTap: getOnPressed(option),

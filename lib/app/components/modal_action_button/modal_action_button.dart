@@ -9,8 +9,8 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ActionButton extends StatelessWidget {
-  const ActionButton({
+class ModalActionButton extends StatelessWidget {
+  const ModalActionButton({
     required this.icon,
     required this.label,
     required this.onTap,
