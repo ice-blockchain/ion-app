@@ -212,3 +212,16 @@ class ConversationNotFoundException extends IONException {
 class ParticipantNotFoundException extends IONException {
   ParticipantNotFoundException() : super(10044, 'Failed to find conversation participant');
 }
+
+class ConfigPlatformNotSupportException extends IONException {
+  ConfigPlatformNotSupportException() : super(10045, 'Platform not supported');
+}
+
+class ForceUpdateCouldntLaunchUrlException extends IONException {
+  ForceUpdateCouldntLaunchUrlException({required String url})
+      : super(10046, 'Could not launch $url');
+}
+
+class ForceUpdateFetchConfigException extends IONException {
+  ForceUpdateFetchConfigException() : super(10047, 'Failed to get version config');
+}

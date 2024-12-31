@@ -15,6 +15,7 @@ enum EnvVariable {
   SHOW_DEBUG_INFO,
   BANUBA_TOKEN,
   STORY_EXPIRATION_HOURS,
+  VERSIONS_CONFIG_REFETCH_INTERVAL,
 }
 
 @Riverpod(keepAlive: true)
