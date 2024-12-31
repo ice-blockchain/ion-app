@@ -120,9 +120,12 @@ class ArticleData with _$ArticleData implements EventSerializable {
     List<RelatedHashtag>? relatedHashtags,
     Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
   }) {
-    final setting = whoCanReplySettings.isNotEmpty
-        ? WhoCanReplyEventSetting(values: whoCanReplySettings)
-        : null;
+    final setting = whoCanReplySettings.isEmpty ||
+            whoCanReplySettings.every(
+              (option) => option.tagValue == null,
+            )
+        ? null
+        : WhoCanReplyEventSetting(values: whoCanReplySettings);
 
     return ArticleData(
       content: content,
