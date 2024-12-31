@@ -45,15 +45,15 @@ class UserChatRelaysManager {
   /// Signs and broadcasts new chat relay list if an update is needed
   ///
   Future<void> sync() async {
-    final pubkey = ref.watch(currentPubkeySelectorProvider);
+    final pubkey = ref.read(currentPubkeySelectorProvider);
     if (pubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
 
-    final userRelays = await ref.watch(userRelaysManagerProvider.notifier).fetch([pubkey]);
+    final userRelays = await ref.read(userRelaysManagerProvider.notifier).fetch([pubkey]);
     final relayUrls = userRelays.first.data.list.map((e) => e.url).toList();
 
-    final userChatRelays = await ref.watch(userChatRelaysProvider(pubkey).future);
+    final userChatRelays = await ref.read(userChatRelaysProvider(pubkey).future);
     if (userChatRelays != null) {
       final chatRelays = userChatRelays.data.list.map((e) => e.url).toList();
       if (chatRelays.toSet().containsAll(relayUrls) && relayUrls.toSet().containsAll(chatRelays)) {
