@@ -36,7 +36,7 @@ class ReplyInputField extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController();
 
-    final inputContainerKey = useRef(UniqueKey());
+    final inputContainerKey = useRef(GlobalKey());
     final focusNode = useFocusNode();
     final hasFocus = useNodeFocused(focusNode);
     final attachedMediaNotifier = useState(<MediaFile>[]);
