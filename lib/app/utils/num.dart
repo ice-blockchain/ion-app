@@ -16,3 +16,9 @@ String formatDoubleCompact(num value) {
 String formatToCurrency(double value, [String? symbol]) {
   return NumberFormat.currency(symbol: symbol ?? r'$', decimalDigits: 2).format(value);
 }
+
+String formatUSD(double usdAmount) => NumberFormat.currency(
+      locale: 'en_US',
+      symbol: '',
+      decimalDigits: 2,
+    ).format(usdAmount);

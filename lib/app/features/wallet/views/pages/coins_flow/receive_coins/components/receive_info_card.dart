@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallet/components/coin_icon_with_network/coin_icon_with_network.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -42,7 +43,10 @@ class ReceiveInfoCard extends HookConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 20.0.s),
-                coinData.iconUrl.icon(size: 46.0.s),
+                CoinIconWithNetwork.medium(
+                  coinData,
+                  network: networkType,
+                ),
                 SizedBox(height: 10.0.s),
                 Text(
                   coinData.name,

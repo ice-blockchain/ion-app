@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/num.dart';
 
 class TransactionAmountSummary extends StatelessWidget {
   const TransactionAmountSummary({
@@ -37,7 +38,7 @@ class TransactionAmountSummary extends StatelessWidget {
         ),
         SizedBox(height: 4.0.s),
         Text(
-          '~ $usdAmount USD',
+          '~ ${formatUSD(usdAmount)} USD',
           style: textTheme.caption2.copyWith(
             color: colors.secondaryText,
           ),

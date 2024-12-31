@@ -7,6 +7,7 @@ import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/validators.dart';
 
 class CoinAmountInput extends ConsumerWidget {
@@ -59,7 +60,9 @@ class CoinAmountInput extends ConsumerWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  locale.wallet_approximate_in_usd('21.43'),
+                  locale.wallet_approximate_in_usd(
+                    formatUSD(coinData?.balance ?? 0.0),
+                  ),
                   style: textTheme.caption2.copyWith(
                     color: colors.tertararyText,
                   ),

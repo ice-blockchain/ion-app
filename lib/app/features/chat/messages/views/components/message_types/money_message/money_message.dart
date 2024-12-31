@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_reaction
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 part 'components/amount_display.dart';

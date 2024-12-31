@@ -16,4 +16,6 @@ class CoinData with _$CoinData {
     required String asset,
     required String network,
   }) = _CoinData;
+
+  const CoinData._();
 }
