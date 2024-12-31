@@ -30,7 +30,8 @@ part 'conversation_message_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Raw<ConversationMessageManagementService>> conversationMessageManagementService(
-    Ref ref,) async {
+  Ref ref,
+) async {
   final eventSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
 
   return ConversationMessageManagementService(
