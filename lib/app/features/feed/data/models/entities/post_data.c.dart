@@ -106,9 +106,12 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         .map((match) => RelatedHashtag(value: match.text))
         .toList();
 
-    final setting = whoCanReplySettings.isNotEmpty
-        ? WhoCanReplyEventSetting(values: whoCanReplySettings)
-        : null;
+    final setting = whoCanReplySettings.isEmpty ||
+            whoCanReplySettings.every(
+              (option) => option.tagValue == null,
+            )
+        ? null
+        : WhoCanReplyEventSetting(values: whoCanReplySettings);
 
     return PostData(
       content: parsedContent,
