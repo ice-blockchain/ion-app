@@ -16,7 +16,6 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/article_c
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
@@ -41,7 +40,8 @@ class FeedPage extends HookConsumerWidget {
           children: [
             if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
             if (feedCategory != FeedCategory.articles) const Stories(),
-            if (feedCategory == FeedCategory.feed) const TrendingVideos(),
+            // TODO: Uncomment when TrendingVideos should be returned to the feed
+            // if (feedCategory == FeedCategory.feed) const TrendingVideos(),
           ],
         ),
       ),
