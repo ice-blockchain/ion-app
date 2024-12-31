@@ -67,6 +67,7 @@ class TwoFaOptionSelector extends HookWidget {
                 controller: controller,
                 isOpened: isOpened,
                 optionIndex: optionIndex,
+                enabled: availableOptions.isNotEmpty,
               );
             },
             menuChildren: <MenuItemButton>[
