@@ -1,21 +1,24 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/modal_action_button/modal_action_button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
+import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/generated/assets.gen.dart';
 
-class RepostOptionsModal extends ConsumerWidget {
+class RepostOptionsModal extends HookConsumerWidget {
   const RepostOptionsModal({
     required this.eventReference,
     super.key,
@@ -26,6 +29,9 @@ class RepostOptionsModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(repostNotifierProvider);
+
+    final selectedAction = useState<RepostOptionAction?>(null);
+
     final repostLoading = ref.watch(repostNotifierProvider).isLoading;
 
     return SheetContent(
@@ -36,47 +42,42 @@ class RepostOptionsModal extends ConsumerWidget {
             NavigationAppBar.modal(
               showBackButton: false,
               title: Text(context.i18n.feed_repost_type),
-              leading: NavigationCloseButton(onPressed: context.pop),
+              actions: [NavigationCloseButton(onPressed: context.pop)],
             ),
-            SizedBox(height: 11.0.s),
+            SizedBox(height: 6.0.s),
             ScreenSideOffset.small(
-              child: Button(
-                type: ButtonType.secondary,
-                mainAxisSize: MainAxisSize.max,
-                disabled: repostLoading,
-                onPressed: () async {
-                  await ref
-                      .read(repostNotifierProvider.notifier)
-                      .repost(eventReference: eventReference);
-                  if (!ref.read(repostNotifierProvider).hasError) {
-                    if (context.mounted) {
-                      context.pop();
-                    }
-                  }
-                },
-                leadingIcon: repostLoading
-                    ? const IONLoadingIndicator(type: IndicatorType.dark)
-                    : Assets.svg.iconFeedRepost.icon(size: 18.0.s),
-                leadingIconOffset: 12.0.s,
-                label: Text(context.i18n.feed_repost),
-              ),
-            ),
-            SizedBox(height: 16.0.s),
-            ScreenSideOffset.small(
-              child: Button(
-                type: ButtonType.secondary,
-                mainAxisSize: MainAxisSize.max,
-                onPressed: () {
-                  CreatePostRoute(quotedEvent: eventReference.toString()).pushReplacement(context);
-                },
-                leadingIcon: Assets.svg.iconFeedQuote.icon(size: 18.0.s),
-                leadingIconOffset: 12.0.s,
-                label: Text(
-                  context.i18n.feed_quote_post,
-                ),
+              child: SeparatedColumn(
+                separator: SizedBox(height: 9.0.s),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final option in RepostOptionAction.values)
+                    ModalActionButton(
+                      icon: (repostLoading && selectedAction.value == option)
+                          ? const IONLoadingIndicator(type: IndicatorType.dark)
+                          : option.getIcon(context),
+                      label: option.getLabel(context),
+                      onTap: () async {
+                        selectedAction.value = option;
+                        if (option == RepostOptionAction.repost) {
+                          await ref
+                              .read(repostNotifierProvider.notifier)
+                              .repost(eventReference: eventReference);
+                          if (!ref.read(repostNotifierProvider).hasError) {
+                            if (context.mounted) {
+                              context.pop();
+                            }
+                          }
+                        } else if (option == RepostOptionAction.quotePost) {
+                          CreatePostRoute(quotedEvent: eventReference.toString()).go(context);
+                        }
+                        selectedAction.value = null;
+                      },
+                    ),
+                ],
               ),
             ),
             SizedBox(height: 20.0.s),
+            ScreenBottomOffset(),
           ],
         ),
       ),
