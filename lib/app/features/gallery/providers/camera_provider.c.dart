@@ -4,11 +4,13 @@ import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:collection/collection.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:mime/mime.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'camera_provider.c.g.dart';
@@ -218,12 +220,25 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       ready: (controller, isRecording, isFlashOn) async {
         if (isRecording) {
           try {
-            final file = await controller.stopVideoRecording();
+            final videoFile = await controller.stopVideoRecording();
             state = CameraState.ready(
               controller: controller,
               isFlashOn: isFlashOn,
             );
-            return file;
+
+            final mimeType = lookupMimeType(videoFile.path);
+
+            if (mimeType == null) {
+              final path = await FileSaver.instance.saveFile(
+                name: videoFile.name,
+                filePath: videoFile.path,
+                ext: '.mp4',
+              );
+
+              return XFile(path, mimeType: 'video/mp4');
+            }
+
+            return videoFile;
           } catch (e) {
             Logger.log('Error stopping video recording', error: e);
             state = CameraState.error(message: 'Error stopping video recording: $e');

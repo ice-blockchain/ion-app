@@ -61,6 +61,7 @@ dependencies:
   lottie: ^3.1.0
   markdown_quill: ^4.1.0
   meta: ^1.15.0
+  mime: ^2.0.0
   mocktail: ^1.0.4
   nip44:
     git:
@@ -75,7 +76,7 @@ dependencies:
   path: ^1.9.0
   path_provider: ^2.1.4
   permission_handler: ^11.3.0
-  photo_manager: ^3.3.0
+  photo_manager: ^3.6.3
   photo_manager_image_provider: ^2.1.1
   pretty_dio_logger: ^1.4.0
   qr_code_scanner:
@@ -91,6 +92,7 @@ dependencies:
   smooth_sheets: ^1.0.0-f324.0.9.4
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
+  uri_to_file: ^1.0.0
   url_launcher: ^6.0.12
   uuid: ^4.5.1
   ve_sdk_flutter: ^0.9.0

@@ -137,9 +137,6 @@ class MediaService {
       imageFile.path,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}.jpg',
     );
-
-    if (asset == null) return null;
-
     final file = await asset.file;
 
     if (file == null) return null;
@@ -161,8 +158,6 @@ class MediaService {
       videoFile,
       title: 'Camera_${DateTime.now().millisecondsSinceEpoch}',
     );
-
-    if (asset == null) return null;
 
     final file = await asset.file;
 

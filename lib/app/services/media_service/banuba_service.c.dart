@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -9,6 +11,7 @@ import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uri_to_file/uri_to_file.dart';
 import 'package:ve_sdk_flutter/features_config.dart';
 import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
@@ -43,7 +46,17 @@ class BanubaService {
 
       if (result is Map) {
         final exportedPhotoFilePath = result[argExportedPhotoFile];
-        return exportedPhotoFilePath as String? ?? filePath;
+
+        if (exportedPhotoFilePath == null) {
+          return filePath;
+        }
+
+        if (Platform.isAndroid) {
+          final file = await toFile(exportedPhotoFilePath as String);
+          return file.path;
+        }
+
+        return exportedPhotoFilePath as String;
       }
       return filePath;
     } on PlatformException catch (e) {
