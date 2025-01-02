@@ -1,16 +1,23 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/widgets.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/container_skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/nfts/nfts_tab.dart';
 
-class GridLoader extends StatelessWidget {
+class GridLoader extends ConsumerWidget {
   const GridLoader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final buyNftFeatureEnabled =
+        ref.watch(featureFlagsProvider.notifier).getWalletFlag(WalletFeatureFlag.buyNftEnabled);
+
     final width =
         (MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2 - 12.0.s) / 2;
     final height = width / NftsTab.aspectRatio;
@@ -27,13 +34,14 @@ class GridLoader extends StatelessWidget {
                 ContainerSkeleton(width: width, height: height),
               ],
             ),
-            // TODO: Uncomment when user will be allowed to buy NFT
-            // SizedBox(
-            //   height: 16.0.s,
-            // ),
-            // ItemLoadingState(
-            //   itemHeight: 60.0.s,
-            // ),
+            if (buyNftFeatureEnabled) ...[
+              SizedBox(
+                height: 16.0.s,
+              ),
+              ItemLoadingState(
+                itemHeight: 60.0.s,
+              ),
+            ],
           ],
         ),
       ),
