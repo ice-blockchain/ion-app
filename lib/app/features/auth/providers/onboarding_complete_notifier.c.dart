@@ -13,7 +13,6 @@ import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/interests.c.dart';
-import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
@@ -41,11 +40,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
-        // Build user chat relays
-        final userChatRelaysEvent = await _buildUserChatRelays(
-          relayUrls: relayUrls,
-        );
-
         // Send user delegation event in advance so all subsequent events pass delegation attestation
         final userDelegationEvent = await _buildUserDelegation(
           pubkey: eventSigner.publicKey,
@@ -54,7 +48,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         await ref
             .read(nostrNotifierProvider.notifier)
-            .sendEvents([userDelegationEvent, userRelaysEvent, userChatRelaysEvent]);
+            .sendEvents([userDelegationEvent, userRelaysEvent]);
 
         final uploadedAvatar = await _uploadAvatar();
 
@@ -116,15 +110,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     ref.read(nostrCacheProvider.notifier).cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
 
     return userRelaysEvent;
-  }
-
-  Future<EventMessage> _buildUserChatRelays({required List<String> relayUrls}) async {
-    final userChatRelays = UserChatRelaysData(
-      list: relayUrls.map((url) => UserRelay(url: url)).toList(),
-    );
-
-    final userChatRelaysEvent = await ref.read(nostrNotifierProvider.notifier).sign(userChatRelays);
-    return userChatRelaysEvent;
   }
 
   UserMetadata _buildUserMetadata({MediaAttachment? avatarAttachment}) {
