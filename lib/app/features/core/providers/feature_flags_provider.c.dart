@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feature_flags_provider.c.g.dart';
@@ -11,7 +11,7 @@ abstract class FeatureFlagsService {
 
   bool? get(FeatureFlag flag);
 
-  List<FeatureFlag> get supportedFlags;
+  Set<FeatureFlag> get supportedFlags;
 }
 
 final class LocalFeatureFlagsService extends FeatureFlagsService {
@@ -30,10 +30,7 @@ final class LocalFeatureFlagsService extends FeatureFlagsService {
   bool? get(FeatureFlag flag) => _featuresMap[flag];
 
   @override
-  List<FeatureFlag> get supportedFlags => [
-        WalletFeatureFlag.buyNftEnabled,
-        FeedFeatureFlag.showTrendingVideo,
-      ];
+  Set<FeatureFlag> get supportedFlags => _featuresMap.keys.toSet();
 }
 
 @Riverpod(keepAlive: true)
@@ -47,19 +44,19 @@ class FeatureFlags extends _$FeatureFlags {
     };
   }
 
-  bool get(FeatureFlag flag) {
+  bool get(FeatureFlag flag, {bool defaultValue = false}) {
     for (final service in _services) {
       if (service.supportedFlags.contains(flag)) {
         final value = service.get(flag);
 
-        if (value == null) {
-          throw FeatureFlagNotFound(flag: flag.key);
+        if (value != null) {
+          return value;
         }
-
-        return value;
       }
     }
 
-    throw FeatureFlagNotFound(flag: flag.key);
+    Logger.log('${flag.key} not found.');
+
+    return defaultValue;
   }
 }

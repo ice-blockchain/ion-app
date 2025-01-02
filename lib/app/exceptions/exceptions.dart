@@ -225,7 +225,3 @@ class ForceUpdateCouldntLaunchUrlException extends IONException {
 class ForceUpdateFetchConfigException extends IONException {
   ForceUpdateFetchConfigException() : super(10047, 'Failed to get version config');
 }
-
-class FeatureFlagNotFound extends IONException {
-  FeatureFlagNotFound({required String flag}) : super(10048, 'Feature flag not found: $flag');
-}
