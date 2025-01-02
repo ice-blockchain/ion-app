@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/services/logger/config.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,6 +22,7 @@ Future<Raw<IONIdentity>> ionIdentity(Ref ref) async {
   final config = IONIdentityConfig(
     appId: appId,
     origin: envController.get(EnvVariable.ION_ORIGIN),
+    logging: LoggerConfig.ionIdentityLogsEnabled,
   );
 
   final ionClient = IONIdentity.createDefault(config: config);

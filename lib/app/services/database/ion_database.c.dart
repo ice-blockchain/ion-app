@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/wallet/data/coins/database/coins_table.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -310,6 +311,9 @@ class ConversationsDBService {
   }
 }
 
+@Riverpod(keepAlive: true)
+IONDatabase ionDatabase(Ref ref) => IONDatabase();
+
 // DO NOT create or use database directly, use proxy notifier
 // [IONDatabaseNotifier] methods instead
 @DriftDatabase(
@@ -317,6 +321,7 @@ class ConversationsDBService {
     EventMessagesTable,
     ConversationMessagesTable,
     ConversationReactionsTable,
+    CoinsTable,
   ],
 )
 class IONDatabase extends _$IONDatabase {
