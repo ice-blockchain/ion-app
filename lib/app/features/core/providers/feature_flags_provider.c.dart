@@ -10,44 +10,56 @@ abstract class FeatureFlagsService {
   const FeatureFlagsService();
 
   bool? get(FeatureFlag flag);
+
+  List<FeatureFlag> get supportedFlags;
 }
 
 final class LocalFeatureFlagsService extends FeatureFlagsService {
   factory LocalFeatureFlagsService() {
-    return LocalFeatureFlagsService._({
-      WalletFeatureFlag.buyNftEnabled.key: false,
-      FeedFeatureFlag.showTrendingVideo.key: false,
+    return const LocalFeatureFlagsService._({
+      WalletFeatureFlag.buyNftEnabled: false,
+      FeedFeatureFlag.showTrendingVideo: false,
     });
   }
 
   const LocalFeatureFlagsService._(this._featuresMap);
 
-  final Map<String, bool> _featuresMap;
+  final Map<FeatureFlag, bool> _featuresMap;
 
   @override
-  bool? get(FeatureFlag flag) => _featuresMap[flag.key];
+  bool? get(FeatureFlag flag) => _featuresMap[flag];
+
+  @override
+  List<FeatureFlag> get supportedFlags => [
+        WalletFeatureFlag.buyNftEnabled,
+        FeedFeatureFlag.showTrendingVideo,
+      ];
 }
 
 @Riverpod(keepAlive: true)
 class FeatureFlags extends _$FeatureFlags {
-  late final FeatureFlagsService _service;
+  late final Set<FeatureFlagsService> _services;
 
   @override
   Future<void> build() async {
-    _service = LocalFeatureFlagsService();
+    _services = {
+      LocalFeatureFlagsService(),
+    };
   }
 
-  bool _get(FeatureFlag flag) {
-    final value = _service.get(flag);
+  bool get(FeatureFlag flag) {
+    for (final service in _services) {
+      if (service.supportedFlags.contains(flag)) {
+        final value = service.get(flag);
 
-    if (value == null) {
-      throw FeatureFlagNotFound(flag: flag.key);
+        if (value == null) {
+          throw FeatureFlagNotFound(flag: flag.key);
+        }
+
+        return value;
+      }
     }
 
-    return value;
+    throw FeatureFlagNotFound(flag: flag.key);
   }
-
-  bool getWalletFlag(WalletFeatureFlag flag) => _get(flag);
-
-  bool getFeedFlag(FeedFeatureFlag flag) => _get(flag);
 }

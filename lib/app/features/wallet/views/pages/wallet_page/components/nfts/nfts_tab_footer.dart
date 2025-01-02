@@ -21,7 +21,7 @@ class NftsTabFooter extends ConsumerWidget {
     final searchVisibleProvider = walletSearchVisibilityProvider(tabType);
     final isSearchVisible = ref.watch(searchVisibleProvider);
     final buyNftFeatureEnabled =
-        ref.watch(featureFlagsProvider.notifier).getWalletFlag(WalletFeatureFlag.buyNftEnabled);
+        ref.watch(featureFlagsProvider.notifier).get(WalletFeatureFlag.buyNftEnabled);
 
     return SliverToBoxAdapter(
       child: buyNftFeatureEnabled && !isSearchVisible
