@@ -69,6 +69,22 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     );
   }
 
+  Future<void> addDelegation(OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () async {
+        final eventSigner = await _generateNostrEventSigner();
+
+        final userDelegationEvent = await _buildUserDelegation(
+          pubkey: eventSigner.publicKey,
+          onVerifyIdentity: onVerifyIdentity,
+        );
+
+        await ref.read(nostrNotifierProvider.notifier).sendEvents([userDelegationEvent]);
+      },
+    );
+  }
+
   Future<List<String>> _assignUserRelays() async {
     final UserDetails(:ionConnectRelays) = (await ref.read(currentUserIdentityProvider.future))!;
     if (ionConnectRelays != null && ionConnectRelays.isNotEmpty) {

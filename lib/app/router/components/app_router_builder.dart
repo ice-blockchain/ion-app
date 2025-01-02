@@ -8,6 +8,7 @@ import 'package:ion/app/components/global_notification_bar/global_notification_b
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/hooks/use_interval.dart';
+import 'package:ion/app/services/ui_event_queue/ui_event_queue_listener.dart';
 
 class AppRouterBuilder extends HookConsumerWidget {
   const AppRouterBuilder({super.key, this.child});
@@ -39,6 +40,7 @@ class AppRouterBuilder extends HookConsumerWidget {
         child: Column(
           children: [
             const GlobalNotificationBar(),
+            const UiEventQueueListener(),
             Expanded(
               child: child ?? const SizedBox.shrink(),
             ),
