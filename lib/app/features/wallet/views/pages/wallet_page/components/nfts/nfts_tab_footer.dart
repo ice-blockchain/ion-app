@@ -2,9 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
-import 'package:ion/app/features/wallet/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/tab_type.dart';
 
 class NftsTabFooter extends ConsumerWidget {
@@ -19,7 +16,7 @@ class NftsTabFooter extends ConsumerWidget {
     return const SliverToBoxAdapter(
       child: SizedBox.shrink(),
     );
-    
+
     // TODO: Uncomment when user will be allowed to buy NFT
     // final searchVisibleProvider = walletSearchVisibilityProvider(tabType);
     // final isSearchVisible = ref.watch(searchVisibleProvider);
