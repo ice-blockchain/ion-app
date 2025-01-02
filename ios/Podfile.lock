@@ -400,7 +400,7 @@ SPEC CHECKSUMS:
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   quill_native_bridge: e5afa7d49c08cf68c52a5e23bc272eba6925c622
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
-  share_plus: 8875f4f2500512ea181eef553c3e27dba5135aad
+  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
   sqlite3: 7559e33dae4c78538df563795af3a86fc887ee71
