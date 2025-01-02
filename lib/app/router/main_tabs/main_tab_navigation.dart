@@ -97,25 +97,24 @@ class _BottomNavBarContent extends ConsumerWidget {
                     ),
                   ],
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: TabItem.values.map((tabItem) {
-              final isSelected = currentTab == tabItem;
-              return Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => onTabPressed(tabItem),
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: 9.0.s,
-                      bottom: MediaQuery.of(context).padding.bottom > 0 ? 23.0.s : 9.0.s,
+          child: SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: TabItem.values.map((tabItem) {
+                final isSelected = currentTab == tabItem;
+                return Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onTabPressed(tabItem),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 9.0.s),
+                      color: context.theme.appColors.secondaryBackground,
+                      child: tabItem.getIcon(isSelected: isSelected),
                     ),
-                    color: context.theme.appColors.secondaryBackground,
-                    child: tabItem.getIcon(isSelected: isSelected),
                   ),
-                ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
         ),
         if (conversationsEditMode && currentTab == TabItem.chat) const ConversationEditBottomBar(),
