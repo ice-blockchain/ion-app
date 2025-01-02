@@ -28,12 +28,13 @@ class GridLoader extends StatelessWidget {
                 ContainerSkeleton(width: width, height: height),
               ],
             ),
-            SizedBox(
-              height: 16.0.s,
-            ),
-            ItemLoadingState(
-              itemHeight: 60.0.s,
-            ),
+            // TODO: Uncomment when user will be allowed to buy NFT
+            // SizedBox(
+            //   height: 16.0.s,
+            // ),
+            // ItemLoadingState(
+            //   itemHeight: 60.0.s,
+            // ),
           ],
         ),
       ),
