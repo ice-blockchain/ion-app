@@ -28,7 +28,7 @@ class MainTabNavigation extends HookConsumerWidget {
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
 
     useOnInit(() {
-      ref.read(userChatRelaysManagerProvider).sync();
+      ref.read(userChatRelaysManagerProvider.notifier).sync();
     });
 
     return Scaffold(

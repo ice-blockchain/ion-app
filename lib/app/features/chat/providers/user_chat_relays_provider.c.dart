@@ -34,10 +34,10 @@ Future<UserChatRelaysEntity?> userChatRelays(Ref ref, String pubkey) async {
       );
 }
 
-class UserChatRelaysManager {
-  UserChatRelaysManager(this.ref);
-
-  final Ref ref;
+@riverpod
+class UserChatRelaysManager extends _$UserChatRelaysManager {
+  @override
+  FutureOr<void> build() async {}
 
   ///
   /// Fetches user relays and sets them as chat relays if they differ
@@ -70,9 +70,4 @@ class UserChatRelaysManager {
     await ref.read(nostrNotifierProvider.notifier).sendEvents([chatRelaysEvent]);
     ref.invalidate(userChatRelaysProvider(pubkey));
   }
-}
-
-@riverpod
-UserChatRelaysManager userChatRelaysManager(Ref ref) {
-  return UserChatRelaysManager(ref);
 }
