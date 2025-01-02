@@ -21,6 +21,7 @@ class DeleteAuthenticatorInputStep extends ConsumerWidget {
       headerTitle: locale.authenticator_delete_title,
       headerDescription: locale.authenticator_delete_description,
       headerIcon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
+      contentPadding: 8.0.s,
       child: DeleteTwoFAInputStep(
         twoFaToDelete: TwoFaType.auth,
         onDeleteSuccess: () => AuthenticatorDeleteSuccessRoute().push<void>(context),

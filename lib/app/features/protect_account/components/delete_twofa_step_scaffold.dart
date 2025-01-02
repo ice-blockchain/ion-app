@@ -15,6 +15,7 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
     required this.headerDescription,
     required this.headerIcon,
     required this.child,
+    this.contentPadding,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
   final String headerDescription;
   final Widget headerIcon;
   final Widget child;
+  final double? contentPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,7 +48,7 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
             description: headerDescription,
             icon: AuthHeaderIcon(icon: headerIcon),
           ),
-          SizedBox(height: 64.0.s),
+          SizedBox(height: contentPadding ?? 64.0.s),
           Expanded(child: child),
         ],
       ),
