@@ -11,14 +11,13 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
-import 'package:ion/app/features/chat/providers/create_chat_group_provider.c.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
-import 'package:ion/app/features/chat/providers/groups_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -168,14 +167,28 @@ class CreateGroupModal extends HookConsumerWidget {
                   color: context.theme.appColors.onPrimaryAccent,
                 ),
                 label: Text(context.i18n.group_create_create_button),
-                onPressed: () {
+                onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    final newGroup = ref.read(createChatGroupProvider);
+                    if (createGroupForm.type == GroupType.encrypted) {
+                      final groupConversationService = await ref.watch(
+                        e2eeGroupConversationManagementServiceProvider,
+                      );
 
-                    ref.read(groupsProvider.notifier).setGroup(newGroup.id, newGroup);
-                    ref.read(conversationsProvider.notifier).addGroupConversation(newGroup);
+                      final avatarProcessorState = ref.read(avatarProcessorNotifierProvider);
 
-                    GroupRoute(pubkey: newGroup.id).replace(context);
+                      final groupPicture = avatarProcessorState.whenOrNull(
+                        cropped: (file) => file,
+                        processed: (file) => file,
+                      );
+
+                      await groupConversationService.createGroup(
+                        groupImage: groupPicture!,
+                        subject: createGroupForm.name!,
+                        participantsPubkeys: createGroupForm.members.toList(),
+                      );
+                    } else {
+                      throw UnimplementedError();
+                    }
                   }
                 },
               ),
