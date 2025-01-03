@@ -35,13 +35,19 @@ class QuotedEntity extends HookConsumerWidget {
       () {
         switch (nostrEntity) {
           case PostEntity():
-            return Post(
-              eventReference: eventReference,
-              header: UserInfo(pubkey: eventReference.pubkey),
-              footer: const SizedBox.shrink(),
+            return QuotedEntityFrame.post(
+              child: Post(
+                eventReference: eventReference,
+                header: UserInfo(pubkey: eventReference.pubkey),
+                footer: const SizedBox.shrink(),
+              ),
             );
           case ArticleEntity():
-            return Article(eventReference: eventReference);
+            return QuotedEntityFrame.article(
+              child: Article.quoted(
+                eventReference: eventReference,
+              ),
+            );
           default:
             return const SizedBox.shrink();
         }
@@ -51,9 +57,7 @@ class QuotedEntity extends HookConsumerWidget {
 
     return Padding(
       padding: EdgeInsets.only(left: 40.0.s, top: 16.0.s),
-      child: QuotedEntityFrame.post(
-        child: quoteChild,
-      ),
+      child: quoteChild,
     );
   }
 }

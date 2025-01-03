@@ -18,7 +18,7 @@ class ArticleListItem extends ConsumerWidget {
     final eventReference = EventReference.fromNostrEntity(article);
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 12.0.s),
+      padding: EdgeInsets.only(top: 12.0.s, bottom: 12.0.s, right: 16.0.s),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () =>
