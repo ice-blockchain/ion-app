@@ -31,7 +31,7 @@ class ProfileEditPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
-    final pubkey = ref.watch(currentPubkeySelectorProvider)!;
+    final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull!;
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
 
     if (userMetadata == null) {

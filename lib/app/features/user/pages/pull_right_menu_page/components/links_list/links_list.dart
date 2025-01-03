@@ -20,7 +20,7 @@ class LinksList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '';
 
     return Container(
       alignment: Alignment.center,

@@ -5,15 +5,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
+import 'package:ion/app/features/auth/views/pages/link_new_device/link_new_device_dialog.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/providers/init_provider.c.dart';
 import 'package:ion/app/features/core/providers/splash_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_router_listenable.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/logger/config.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/ui_event_queue/ui_event_queue_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'go_router_provider.c.g.dart';
@@ -51,10 +54,10 @@ GoRouter goRouter(Ref ref) {
   );
 }
 
-FutureOr<String?> _mainRedirect({
+Future<String?> _mainRedirect({
   required String location,
   required Ref ref,
-}) {
+}) async {
   final hasAuthenticated = (ref.read(authProvider).valueOrNull?.hasAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
@@ -81,6 +84,14 @@ FutureOr<String?> _mainRedirect({
     }
 
     if (!onboardingComplete && !isOnOnboarding) {
+      if (location == FeedRoute().location) {
+        return null;
+      }
+      final userMetadata = await ref.read(currentUserMetadataProvider.future);
+      if (userMetadata != null) {
+        ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowLinkNewDeviceDialogEvent());
+        return FeedRoute().location;
+      }
       return FillProfileRoute().location;
     }
   }

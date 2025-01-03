@@ -13,7 +13,7 @@ class ChannelAdmins extends _$ChannelAdmins {
     if (initialAdmins != null) {
       return Map<String, ChannelAdminType>.unmodifiable(initialAdmins);
     } else {
-      final currentPubkey = ref.read(currentPubkeySelectorProvider);
+      final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
       final result = <String, ChannelAdminType>{};
       if (currentPubkey != null) {
         result.putIfAbsent(currentPubkey, () => ChannelAdminType.owner);

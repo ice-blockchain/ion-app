@@ -45,7 +45,7 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
   /// Signs and broadcasts new chat relay list if an update is needed
   ///
   Future<void> sync() async {
-    final pubkey = ref.read(currentPubkeySelectorProvider);
+    final pubkey = await ref.read(currentPubkeySelectorProvider.future);
     if (pubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }

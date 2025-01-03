@@ -23,7 +23,7 @@ class FetchConversations extends _$FetchConversations {
   }
 
   Future<void> fetchAndSync() async {
-    final pubkey = ref.read(currentPubkeySelectorProvider);
+    final pubkey = await ref.read(currentPubkeySelectorProvider.future);
     if (pubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }

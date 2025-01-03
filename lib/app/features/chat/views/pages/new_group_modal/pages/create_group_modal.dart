@@ -33,7 +33,7 @@ class CreateGroupModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);

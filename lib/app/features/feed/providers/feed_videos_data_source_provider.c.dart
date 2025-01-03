@@ -26,7 +26,7 @@ List<EntitiesDataSource>? feedVideosDataSource(
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
   final until =
       ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull?.createdAt;
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
   if (filterRelays == null || until == null || currentPubkey == null) return null;
 

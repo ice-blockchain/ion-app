@@ -13,7 +13,7 @@ part 'replied_events_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Stream<Set<String>?> repliedEvents(Ref ref) async* {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
 
   if (currentPubkey == null) {
     yield {};
