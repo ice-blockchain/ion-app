@@ -19,6 +19,7 @@ final class LocalFeatureFlagsService extends FeatureFlagsService {
     return const LocalFeatureFlagsService._({
       WalletFeatureFlag.buyNftEnabled: false,
       FeedFeatureFlag.showTrendingVideo: false,
+      FeedFeatureFlag.showMentionsSuggestions: false,
     });
   }
 
