@@ -36,7 +36,8 @@ class MediaPickerPage extends HookConsumerWidget {
     );
 
     final isAll = galleryState.valueOrNull?.selectedAlbum?.isAll ?? false;
-    final albumName = galleryState.valueOrNull?.selectedAlbum?.name ?? type.title(context);
+    final albumName =
+        galleryState.valueOrNull?.selectedAlbum?.name ?? type.title(context);
 
     ref.listen(mediaSelectionNotifierProvider, (_, value) {
       if (maxSelection == 1 && value.selectedMedia.isNotEmpty == true) {
@@ -46,7 +47,9 @@ class MediaPickerPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        ref.read(mediaSelectionNotifierProvider.notifier).updateMaxSelection(maxSelection);
+        ref
+            .read(mediaSelectionNotifierProvider.notifier)
+            .updateMaxSelection(maxSelection);
       },
       [maxSelection],
     );
@@ -81,6 +84,7 @@ class MediaPickerPage extends HookConsumerWidget {
       ),
       GalleryGridView(
         type: type,
+        showSelectionBadge: maxSelection > 1,
         galleryState: galleryState.valueOrNull ??
             GalleryState(
               mediaData: [],
@@ -94,7 +98,9 @@ class MediaPickerPage extends HookConsumerWidget {
     final loadMoreBuilder = LoadMoreBuilder(
       slivers: slivers,
       hasMore: galleryState.value?.hasMore ?? false,
-      onLoadMore: () => ref.read(galleryNotifierProvider(type: type).notifier).fetchNextPage(),
+      onLoadMore: () => ref
+          .read(galleryNotifierProvider(type: type).notifier)
+          .fetchNextPage(),
       builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
 
