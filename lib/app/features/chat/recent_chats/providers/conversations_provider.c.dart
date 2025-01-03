@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/chat/model/channel_data.c.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/group.c.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -44,19 +41,11 @@ class Conversations extends _$Conversations {
 
   void addChannelConversation(ChannelData channelData) {
     update((currentData) {
-      final newConversation = RecentChatDataModel(
-        MessageAuthor(
-          name: channelData.name,
-          imageUrl: 'https://x.com/ice_blockchain/photo',
-          isApproved: true,
-        ),
-        1,
-        TextRecentChatMessage(
-          'The channel has been created',
-          DateTime.now(),
-        ),
-        channelData.id,
-        type: ChatType.channel,
+      final newConversation = PrivateDirectMessageEntity(
+        id: 'id',
+        pubkey: 'pubKey',
+        createdAt: DateTime.now(),
+        data: const PrivateDirectMessageData(content: [], media: {}),
       );
       final newData = [
         newConversation,
@@ -68,19 +57,11 @@ class Conversations extends _$Conversations {
 
   void addGroupConversation(Group group) {
     update((currentData) {
-      final newConversation = RecentChatDataModel(
-        MessageAuthor(
-          name: group.name,
-          imageUrl: 'https://x.com/ice_blockchain/photo',
-          isApproved: true,
-        ),
-        1,
-        TextRecentChatMessage(
-          'The group has been created',
-          DateTime.now(),
-        ),
-        group.id,
-        type: ChatType.group,
+      final newConversation = PrivateDirectMessageEntity(
+        id: group.id,
+        pubkey: 'pubKey',
+        createdAt: DateTime.now(),
+        data: const PrivateDirectMessageData(content: [], media: {}),
       );
       final newData = [
         newConversation,

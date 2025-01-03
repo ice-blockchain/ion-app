@@ -40,10 +40,8 @@ class _NavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return NavigationAppBar.modal(
-      actions: [
-        NavigationCloseButton(
-          onPressed: Navigator.of(context, rootNavigator: true).pop,
-        ),
+      actions: const [
+        NavigationCloseButton(),
       ],
     );
   }

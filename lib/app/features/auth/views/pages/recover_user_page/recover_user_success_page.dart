@@ -27,9 +27,7 @@ class RecoverUserSuccessPage extends StatelessWidget {
       body: AuthScrollContainer(
         showBackButton: false,
         actions: [
-          NavigationCloseButton(
-            onPressed: onLogin,
-          ),
+          NavigationCloseButton(onPressed: onLogin),
         ],
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,

@@ -42,7 +42,7 @@ class RepostOptionsModal extends HookConsumerWidget {
             NavigationAppBar.modal(
               showBackButton: false,
               title: Text(context.i18n.feed_repost_type),
-              actions: [NavigationCloseButton(onPressed: context.pop)],
+              actions: const [NavigationCloseButton()],
             ),
             SizedBox(height: 6.0.s),
             ScreenSideOffset.small(

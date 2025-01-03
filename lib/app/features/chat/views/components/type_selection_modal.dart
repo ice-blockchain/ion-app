@@ -35,10 +35,8 @@ class TypeSelectionModal<T extends SelectableType> extends HookConsumerWidget {
       children: [
         NavigationAppBar.modal(
           showBackButton: false,
-          actions: [
-            NavigationCloseButton(
-              onPressed: Navigator.of(context, rootNavigator: true).pop,
-            ),
+          actions: const [
+            NavigationCloseButton(),
           ],
           title: Text(title),
         ),
