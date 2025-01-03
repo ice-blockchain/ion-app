@@ -6,9 +6,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/providers/group_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
-import 'package:ion/app/features/chat/views/pages/channel_page/components/empty_state_copy_link.dart';
+//import 'package:ion/app/features/chat/views/pages/channel_page/components/empty_state_copy_link.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
-import 'package:ion/generated/assets.gen.dart';
+//import 'package:ion/generated/assets.gen.dart';
 
 class GroupPage extends ConsumerWidget {
   const GroupPage({
@@ -61,7 +61,7 @@ class GroupPage extends ConsumerWidget {
     );
   }
 }
-
+/*
 class _EmptyState extends StatelessWidget {
   const _EmptyState({required this.link});
 
@@ -87,3 +87,4 @@ class _EmptyState extends StatelessWidget {
     );
   }
 }
+*/
