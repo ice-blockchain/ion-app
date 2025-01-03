@@ -7,6 +7,8 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
@@ -16,6 +18,7 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/article_c
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
@@ -31,6 +34,8 @@ class FeedPage extends HookConsumerWidget {
       entitiesPagedDataProvider(ref.watch(feedPostsDataSourceProvider))
           .select((state) => (state?.hasMore).falseOrValue),
     );
+    final showTrendingVideos =
+        ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo);
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
@@ -40,8 +45,7 @@ class FeedPage extends HookConsumerWidget {
           children: [
             if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
             if (feedCategory != FeedCategory.articles) const Stories(),
-            // TODO: Uncomment when TrendingVideos should be returned to the feed
-            // if (feedCategory == FeedCategory.feed) const TrendingVideos(),
+            if (feedCategory == FeedCategory.feed && showTrendingVideos) const TrendingVideos(),
           ],
         ),
       ),
