@@ -81,6 +81,7 @@ class MediaPickerPage extends HookConsumerWidget {
       ),
       GalleryGridView(
         type: type,
+        showSelectionBadge: maxSelection > 1,
         galleryState: galleryState.valueOrNull ??
             GalleryState(
               mediaData: [],

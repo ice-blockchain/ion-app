@@ -9,6 +9,7 @@ import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 class GalleryGridView extends StatelessWidget {
   const GalleryGridView({
     required this.galleryState,
+    required this.showSelectionBadge,
     this.type = MediaPickerType.common,
     super.key,
   });
@@ -18,6 +19,7 @@ class GalleryGridView extends StatelessWidget {
 
   final GalleryState galleryState;
   final MediaPickerType type;
+  final bool showSelectionBadge;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class GalleryGridView extends StatelessWidget {
             key: ValueKey(mediaData.path),
             mediaFile: mediaData,
             type: type,
+            showSelectionBadge: showSelectionBadge,
           );
         },
         childCount: totalCount,
