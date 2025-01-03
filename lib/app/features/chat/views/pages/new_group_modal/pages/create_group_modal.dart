@@ -34,8 +34,7 @@ class CreateGroupModal extends HookConsumerWidget {
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
-    final createGroupFormNotifier =
-        ref.watch(createGroupFormControllerProvider.notifier);
+    final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
     final members = createGroupForm.members.toList();
 
@@ -115,8 +114,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         Assets.svg.iconCategoriesFollowing.icon(size: 16.0.s),
                         SizedBox(width: 6.0.s),
                         Text(
-                          context.i18n
-                              .group_create_members_number(members.length),
+                          context.i18n.group_create_members_number(members.length),
                         ),
                         const Spacer(),
                         TextButton(
@@ -174,8 +172,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         e2eeGroupConversationManagementServiceProvider,
                       );
 
-                      final avatarProcessorState =
-                          ref.read(avatarProcessorNotifierProvider);
+                      final avatarProcessorState = ref.read(avatarProcessorNotifierProvider);
 
                       final groupPicture = avatarProcessorState.whenOrNull(
                         cropped: (file) => file,
