@@ -41,9 +41,8 @@ class TypeSelectionListItem<T extends SelectableType> extends StatelessWidget {
                     ),
                     color: colors.attentionBlock,
                   ),
-                  margin: EdgeInsets.only(
-                      top:
-                          ListItem.defaultConstraints.minHeight - borderRadius),
+                  margin:
+                      EdgeInsets.only(top: ListItem.defaultConstraints.minHeight - borderRadius),
                   padding: EdgeInsets.only(
                     left: 16.0.s,
                     right: 16.0.s,

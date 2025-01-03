@@ -23,8 +23,7 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
-    final createGroupFormNotifier =
-        ref.read(createGroupFormControllerProvider.notifier);
+    final createGroupFormNotifier = ref.read(createGroupFormControllerProvider.notifier);
 
     final searchValue = useState('');
 
@@ -43,16 +42,12 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
                     entity.data.displayName
                         .toLowerCase()
                         .contains(searchValue.value.toLowerCase()) ||
-                    entity.data.name
-                        .toLowerCase()
-                        .contains(searchValue.value.toLowerCase()),
+                    entity.data.name.toLowerCase().contains(searchValue.value.toLowerCase()),
               )
               .toList() ??
           [])
         ..sort(
-          (a, b) => a.data.displayName
-              .toLowerCase()
-              .compareTo(b.data.displayName.toLowerCase()),
+          (a, b) => a.data.displayName.toLowerCase().compareTo(b.data.displayName.toLowerCase()),
         ),
       [contentCreators, searchValue.value],
     );

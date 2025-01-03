@@ -61,14 +61,14 @@ class GalleryGridCell extends ConsumerWidget {
                     children: [
                       child,
                       if (showSelectionBadge)
-                      Positioned(
-                        top: 8.0.s,
-                        right: 8.0.s,
-                        child: SelectionBadge(
-                          isSelected: selectionState.isSelected,
-                          selectionOrder: selectionState.order.toString(),
+                        Positioned(
+                          top: 8.0.s,
+                          right: 8.0.s,
+                          child: SelectionBadge(
+                            isSelected: selectionState.isSelected,
+                            selectionOrder: selectionState.order.toString(),
+                          ),
                         ),
-                      ),
                       if (asset.type == AssetType.video)
                         Positioned(
                           bottom: 4.0.s,
