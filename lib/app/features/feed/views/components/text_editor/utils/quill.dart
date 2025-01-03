@@ -19,6 +19,7 @@ QuillController decodeArticleContent(String encodedContent) {
     return QuillController(
       document: Document.fromDelta(delta),
       selection: const TextSelection.collapsed(offset: 0),
+      readOnly: true,
     );
   } catch (error) {
     throw QuillParseException(error);

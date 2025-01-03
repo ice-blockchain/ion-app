@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
@@ -8,7 +9,7 @@ import 'package:ion/app/features/feed/views/components/text_editor/components/cu
 import 'package:ion/app/features/feed/views/components/text_editor/utils/quill.dart';
 import 'package:ion/app/features/nostr/model/media_attachment.dart';
 
-class TextEditorPreview extends StatelessWidget {
+class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
     required this.content,
     this.media,
@@ -18,18 +19,24 @@ class TextEditorPreview extends StatelessWidget {
   final String content;
   final Map<String, MediaAttachment>? media;
 
-  QuillController _getControllerFromContent(String content) {
-    try {
-      return decodeArticleContent(content);
-    } catch (e) {
-      return QuillController.basic();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final controller = useMemoized(
+      () {
+        try {
+          return decodeArticleContent(content);
+        } catch (e) {
+          return null;
+        }
+      },
+      [content],
+    );
+
+    if (controller == null) {
+      return const SizedBox.shrink();
+    }
     return QuillEditor.basic(
-      controller: _getControllerFromContent(content),
+      controller: controller,
       configurations: QuillEditorConfigurations(
         enableSelectionToolbar: false,
         floatingCursorDisabled: true,
