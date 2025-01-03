@@ -26,7 +26,7 @@ class QuotedEntityFrame extends StatelessWidget {
     Key? key,
   }) {
     return QuotedEntityFrame._(
-      padding: EdgeInsets.only(left: 0.0.s, right: 16.0.s, bottom: 10.0.s),
+      padding: EdgeInsets.only(top: 12.0.s, right: 16.0.s, bottom: 12.0.s),
       key: key,
       child: child,
     );
