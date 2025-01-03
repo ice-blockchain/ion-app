@@ -56,7 +56,7 @@ class TextInputDecoration extends InputDecoration {
           ),
           errorStyle: const TextStyle(fontSize: 0),
           floatingLabelStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
-            return context.theme.appTextThemes.subtitle2.copyWith(
+            return context.theme.appTextThemes.caption2.copyWith(
               color: states.contains(WidgetState.error)
                   ? context.theme.appColors.attentionRed
                   : states.contains(WidgetState.focused) && !verified
