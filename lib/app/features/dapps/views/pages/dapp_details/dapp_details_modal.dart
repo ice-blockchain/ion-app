@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/read_more_text/read_more_text.dart';
@@ -48,7 +47,7 @@ class DAppDetailsModal extends HookConsumerWidget {
           NavigationAppBar.modal(
             showBackButton: false,
             title: Text(app.title),
-            actions: [NavigationCloseButton(onPressed: context.pop)],
+            actions: const [NavigationCloseButton()],
           ),
           Flexible(
             child: ScreenSideOffset.small(

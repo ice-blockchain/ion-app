@@ -25,10 +25,8 @@ class SecureAccountErrorAlert extends ConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(locale.protect_account_header_security),
-            actions: [
-              NavigationCloseButton(
-                onPressed: Navigator.of(context, rootNavigator: true).pop,
-              ),
+            actions: const [
+              NavigationCloseButton(),
             ],
           ),
           SizedBox(height: 16.0.s),

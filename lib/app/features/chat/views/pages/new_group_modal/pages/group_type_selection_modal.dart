@@ -30,10 +30,8 @@ class GroupTypeSelectionModal extends HookConsumerWidget {
       children: [
         NavigationAppBar.modal(
           showBackButton: false,
-          actions: [
-            NavigationCloseButton(
-              onPressed: Navigator.of(context, rootNavigator: true).pop,
-            ),
+          actions: const [
+            NavigationCloseButton(),
           ],
           title: Text(context.i18n.group_create_type_title),
         ),

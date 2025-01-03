@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
@@ -36,8 +35,8 @@ class CoinsListView extends ConsumerWidget {
           child: NavigationAppBar.screen(
             title: Text(title),
             showBackButton: showBackButton,
-            actions: [
-              NavigationCloseButton(onPressed: () => context.pop()),
+            actions: const [
+              NavigationCloseButton(),
             ],
           ),
         ),

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -23,7 +22,7 @@ class IdentityInfo extends StatelessWidget {
         NavigationAppBar.modal(
           showBackButton: false,
           title: Text(context.i18n.common_information),
-          actions: [NavigationCloseButton(onPressed: () => context.pop())],
+          actions: const [NavigationCloseButton()],
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0.s),

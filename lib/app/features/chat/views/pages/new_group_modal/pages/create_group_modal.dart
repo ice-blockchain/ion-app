@@ -58,10 +58,8 @@ class CreateGroupModal extends HookConsumerWidget {
           NavigationAppBar.modal(
             showBackButton: false,
             title: Text(context.i18n.group_create_title),
-            actions: [
-              NavigationCloseButton(
-                onPressed: Navigator.of(context, rootNavigator: true).pop,
-              ),
+            actions: const [
+              NavigationCloseButton(),
             ],
           ),
           SizedBox(height: 27.0.s),

@@ -29,7 +29,7 @@ class ScheduleModal extends HookWidget {
       children: [
         NavigationAppBar.modal(
           title: Text(context.i18n.schedule_modal_nav_title),
-          actions: [NavigationCloseButton(onPressed: () => context.pop())],
+          actions: const [NavigationCloseButton()],
           onBackPress: () => context.pop(),
         ),
         Padding(

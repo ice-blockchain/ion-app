@@ -29,10 +29,8 @@ class ProfileSettingsModal extends ConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.common_profile),
-            actions: [
-              NavigationCloseButton(
-                onPressed: Navigator.of(context, rootNavigator: true).pop,
-              ),
+            actions: const [
+              NavigationCloseButton(),
             ],
           ),
           ScreenSideOffset.small(
