@@ -34,10 +34,8 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
           AppBar(
             primary: false,
             flexibleSpace: NavigationAppBar.modal(
-              actions: [
-                NavigationCloseButton(
-                  onPressed: Navigator.of(context, rootNavigator: true).pop,
-                ),
+              actions: const [
+                NavigationCloseButton(),
               ],
             ),
             toolbarHeight: NavigationAppBar.modalHeaderHeight,

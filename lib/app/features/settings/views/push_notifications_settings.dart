@@ -55,10 +55,8 @@ class PushNotificationsSettings extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.settings_push_notifications),
-            actions: [
-              NavigationCloseButton(
-                onPressed: Navigator.of(context, rootNavigator: true).pop,
-              ),
+            actions: const [
+              NavigationCloseButton(),
             ],
           ),
           Expanded(

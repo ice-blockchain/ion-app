@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
@@ -30,7 +29,7 @@ class NewChatModal extends HookConsumerWidget {
           NavigationAppBar.modal(
             showBackButton: false,
             title: Text(context.i18n.new_chat_modal_title),
-            actions: [NavigationCloseButton(onPressed: () => context.pop())],
+            actions: const [NavigationCloseButton()],
           ),
           SizedBox(height: 9.0.s),
           Expanded(

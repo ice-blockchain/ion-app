@@ -33,10 +33,8 @@ class PhoneSetupPage extends ConsumerWidget {
                   primary: false,
                   flexibleSpace: NavigationAppBar.modal(
                     showBackButton: step != PhoneSetupSteps.success,
-                    actions: [
-                      NavigationCloseButton(
-                        onPressed: Navigator.of(context, rootNavigator: true).pop,
-                      ),
+                    actions: const [
+                      NavigationCloseButton(),
                     ],
                   ),
                   toolbarHeight: NavigationAppBar.modalHeaderHeight,

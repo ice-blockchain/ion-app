@@ -27,10 +27,8 @@ class ManageWalletsModal extends StatelessWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.wallet_manage_wallets),
-              actions: [
-                NavigationCloseButton(
-                  onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                ),
+              actions: const [
+                NavigationCloseButton(),
               ],
             ),
             SizedBox(

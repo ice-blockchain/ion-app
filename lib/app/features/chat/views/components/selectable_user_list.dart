@@ -63,10 +63,8 @@ class SelectableUserList extends HookConsumerWidget {
           primary: false,
           flexibleSpace: NavigationAppBar.modal(
             showBackButton: false,
-            actions: [
-              NavigationCloseButton(
-                onPressed: Navigator.of(context, rootNavigator: true).pop,
-              ),
+            actions: const [
+              NavigationCloseButton(),
             ],
             title: Text(title),
           ),

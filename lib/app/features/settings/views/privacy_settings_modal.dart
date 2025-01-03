@@ -34,10 +34,8 @@ class PrivacySettingsModal extends HookWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.settings_privacy),
-            actions: [
-              NavigationCloseButton(
-                onPressed: Navigator.of(context, rootNavigator: true).pop,
-              ),
+            actions: const [
+              NavigationCloseButton(),
             ],
           ),
           ScreenSideOffset.small(
