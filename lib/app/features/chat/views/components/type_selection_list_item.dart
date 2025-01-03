@@ -41,9 +41,8 @@ class TypeSelectionListItem<T extends SelectableType> extends StatelessWidget {
                     ),
                     color: colors.attentionBlock,
                   ),
-                  margin: EdgeInsets.only(
-                      top:
-                          ListItem.defaultConstraints.minHeight - borderRadius),
+                  margin:
+                      EdgeInsets.only(top: ListItem.defaultConstraints.minHeight - borderRadius),
                   padding: EdgeInsets.only(
                     left: 16.0.s,
                     right: 16.0.s,
@@ -52,8 +51,7 @@ class TypeSelectionListItem<T extends SelectableType> extends StatelessWidget {
                   ),
                   child: Text(
                     type.getDescription(context),
-                    style: textStyles.caption2
-                        .copyWith(color: colors.quaternaryText),
+                    style: textStyles.caption2.copyWith(color: colors.quaternaryText),
                   ),
                 )
               : const SizedBox(width: double.maxFinite),
