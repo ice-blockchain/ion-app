@@ -129,6 +129,7 @@ class BookmarksNotifier extends _$BookmarksNotifier {
 
       final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
       final bookmarksSet = bookmarksMap[type];
+      final bookmarksSetsData = bookmarksMap.map((key, value) => MapEntry(key, value?.data));
 
       if (nostrEntity is PostEntity) {
         final postId = nostrEntity.id;
@@ -145,7 +146,7 @@ class BookmarksNotifier extends _$BookmarksNotifier {
           articlesRefs: bookmarksSet?.data.articlesRefs ?? [],
         );
 
-        bookmarksMap[type] = bookmarksSet?.copyWith(data: newSingleBookmarksSetData);
+        bookmarksSetsData[type] = newSingleBookmarksSetData;
       } else if (nostrEntity is ArticleEntity) {
         final articleRef = nostrEntity.toReplaceableEventReference();
         final bookmarksRefs =
@@ -162,20 +163,20 @@ class BookmarksNotifier extends _$BookmarksNotifier {
           articlesRefs: bookmarksRefs.toList(),
         );
 
-        bookmarksMap[type] = bookmarksSet?.copyWith(data: newSingleBookmarksSetData);
+        bookmarksSetsData[type] = newSingleBookmarksSetData;
       }
 
       final bookmarksData = BookmarksData(
         ids: [],
-        bookmarksSetRefs: bookmarksMap.values
-            .map((bookmarksSet) => bookmarksSet?.data.toReplaceableEventReference(currentPubkey))
+        bookmarksSetRefs: bookmarksSetsData.values
+            .map((data) => data?.toReplaceableEventReference(currentPubkey))
             .whereNotNull()
             .toList(),
       );
 
       await ref
           .read(nostrNotifierProvider.notifier)
-          .sendEntitiesData([bookmarksMap[type]!.data, bookmarksData]);
+          .sendEntitiesData([bookmarksSetsData[type]!, bookmarksData]);
     });
   }
 }
