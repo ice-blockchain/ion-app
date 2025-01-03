@@ -15,6 +15,7 @@ import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class AddGroupParticipantsModal extends HookConsumerWidget {
   const AddGroupParticipantsModal({super.key});
@@ -22,7 +23,8 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
-    final createGroupFormNotifier = ref.read(createGroupFormControllerProvider.notifier);
+    final createGroupFormNotifier =
+        ref.read(createGroupFormControllerProvider.notifier);
 
     final searchValue = useState('');
 
@@ -41,12 +43,16 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
                     entity.data.displayName
                         .toLowerCase()
                         .contains(searchValue.value.toLowerCase()) ||
-                    entity.data.name.toLowerCase().contains(searchValue.value.toLowerCase()),
+                    entity.data.name
+                        .toLowerCase()
+                        .contains(searchValue.value.toLowerCase()),
               )
               .toList() ??
           [])
         ..sort(
-          (a, b) => a.data.displayName.toLowerCase().compareTo(b.data.displayName.toLowerCase()),
+          (a, b) => a.data.displayName
+              .toLowerCase()
+              .compareTo(b.data.displayName.toLowerCase()),
         ),
       [contentCreators, searchValue.value],
     );
@@ -77,6 +83,9 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
                   },
                   label: Text(context.i18n.button_next),
                   mainAxisSize: MainAxisSize.max,
+                  trailingIcon: Assets.svg.iconButtonNext.icon(
+                    color: context.theme.appColors.onPrimaryAccent,
+                  ),
                 ),
               ),
             ),
