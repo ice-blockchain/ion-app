@@ -59,7 +59,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
         return null;
       },
-      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
+      retryWhen: (error) =>
+          error is RelayRequestFailedException || _isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -71,13 +72,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final result = await sendEvents([event], actionSource: actionSource, cache: cache);
+    final result =
+        await sendEvents([event], actionSource: actionSource, cache: cache);
     return result?.elementAtOrNull(0);
   }
 
   Future<void> sendAuthEvent(IonConnectRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
-    if (challenge == null && challenge.isEmpty) throw AuthChallengeIsEmptyException();
+    if (challenge == null && challenge.isEmpty)
+      throw AuthChallengeIsEmptyException();
 
     final authEvent = AuthEvent(
       challenge: challenge!,
@@ -117,7 +120,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final entities = await sendEntitiesData([entityData], actionSource: actionSource, cache: cache);
+    final entities = await sendEntitiesData([entityData],
+        actionSource: actionSource, cache: cache);
     return entities?.elementAtOrNull(0);
   }
 
@@ -149,7 +153,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
       },
-      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
+      retryWhen: (error) =>
+          error is RelayRequestFailedException || _isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -160,7 +165,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final eventsStream = requestEvents(requestMessage, actionSource: actionSource);
+    final eventsStream =
+        requestEvents(requestMessage, actionSource: actionSource);
     final events = await eventsStream.toList();
     return events.isNotEmpty ? events.first : null;
   }
@@ -169,11 +175,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
-    await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
+    await for (final event
+        in requestEvents(requestMessage, actionSource: actionSource)) {
       try {
         yield _parseAndCache(event);
       } catch (error, stackTrace) {
-        Logger.log('Failed to process event ${event.id}', error: error, stackTrace: stackTrace);
+        Logger.log('Failed to process event ${event.id}',
+            error: error, stackTrace: stackTrace);
       }
     }
   }
@@ -182,7 +190,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final entitiesStream = requestEntities(requestMessage, actionSource: actionSource);
+    final entitiesStream =
+        requestEntities(requestMessage, actionSource: actionSource);
     final entities = await entitiesStream.toList();
     return entities.isNotEmpty ? entities.first as T : null;
   }
@@ -195,11 +204,14 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     final relay = await _getRelay(actionSource);
     relay.sendMessage(requestEventMessage);
     return relay.messages
-        .where((message) => message is EventMessage && message.kind == EventCountResultEntity.kind)
+        .where((message) =>
+            message is EventMessage &&
+            message.kind == EventCountResultEntity.kind)
         .cast<EventMessage>()
         .map(EventCountResultEntity.fromEventMessage)
         .firstWhere(
-          (countResult) => countResult.data.requestEventId == requestEventMessage.id,
+          (countResult) =>
+              countResult.data.requestEventId == requestEventMessage.id,
         );
   }
 
@@ -224,7 +236,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }
 
   bool _isAuthRequired(Object? error) =>
-      error != null && (error is SendEventException) && error.code.startsWith('auth-required');
+      error != null &&
+      (error is SendEventException) &&
+      error.code.startsWith('auth-required');
 
   Future<IonConnectRelay> _getRelay(
     ActionSource actionSource, {
@@ -238,13 +252,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             throw UserMasterPubkeyNotFoundException();
           }
           final userRelays = await _getUserRelays(pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
+          final relays = _userRelaysAvoidingDislikedUrls(
+              userRelays.data.list, dislikedUrls);
           return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceUser():
         {
           final userRelays = await _getUserRelays(actionSource.pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
+          final relays = _userRelaysAvoidingDislikedUrls(
+              userRelays.data.list, dislikedUrls);
           return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceIndexers():
@@ -268,13 +284,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             throw UserMasterPubkeyNotFoundException();
           }
           final userChatRelays = await _getUserChatRelays(pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
+          final relays = _userRelaysAvoidingDislikedUrls(
+              userChatRelays.data.list, dislikedUrls);
           return await ref.read(relayProvider(relays.random.url).future);
         }
       case ActionSourceUserChat():
         {
           final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
+          final relays = _userRelaysAvoidingDislikedUrls(
+              userChatRelays.data.list, dislikedUrls);
           return await ref.read(relayProvider(relays.random.url).future);
         }
     }
@@ -309,13 +327,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     List<UserRelay> relays,
     Set<String> dislikedRelaysUrls,
   ) {
-    final urls = relays.where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
+    final urls = relays
+        .where((relay) => !dislikedRelaysUrls.contains(relay.url))
+        .toList();
     if (urls.isEmpty) return relays;
     return urls;
   }
 
-  List<String> _indexersAvoidingDislikedUrls(List<String> indexers, Set<String> dislikedUrls) {
-    var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
+  List<String> _indexersAvoidingDislikedUrls(
+      List<String> indexers, Set<String> dislikedUrls) {
+    var urls =
+        indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
     if (urls.isEmpty) {
       urls = indexers;
     }

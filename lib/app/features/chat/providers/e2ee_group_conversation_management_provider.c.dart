@@ -5,32 +5,48 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'conversation_management_provider.c.g.dart';
+part 'e2ee_group_conversation_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<Raw<ConversationManagementService>> conversationManagementService(
+Raw<Future<E2EEGroupConversationManagementService>>
+    e2eeGroupConversationManagementService(
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
   final conversationMessageManagementService =
-      ref.watch(conversationMessageManagementServiceProvider).requireValue;
+      await ref.watch(conversationMessageManagementServiceProvider);
 
-  return ConversationManagementService(
+  return E2EEGroupConversationManagementService(
     databaseService: databaseService,
     conversationMessageManagementService: conversationMessageManagementService,
   );
 }
 
-class ConversationManagementService {
-  ConversationManagementService({
+class E2EEGroupConversationManagementService {
+  E2EEGroupConversationManagementService({
     required this.databaseService,
     required this.conversationMessageManagementService,
   });
 
   final ConversationsDBService databaseService;
-  final ConversationMessageManagementService conversationMessageManagementService;
+  final ConversationMessageManagementService
+      conversationMessageManagementService;
+
+  Future<void> createGroup({
+    required String subject,
+    required MediaFile groupImage,
+    required List<String> participantsPubkeys,
+  }) async {
+    await conversationMessageManagementService.sentMessage(
+      content: '',
+      subject: subject,
+      mediaFiles: [groupImage],
+      participantsPubkeys: participantsPubkeys,
+    );
+  }
 
   Future<void> addParticipant(
     String conversationSubject,
@@ -39,10 +55,12 @@ class ConversationManagementService {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-    final conversationsEventMessages = await databaseService.getAllConversations();
+    final conversationsEventMessages =
+        await databaseService.getAllConversations();
 
-    final conversationsEntities =
-        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+    final conversationsEntities = conversationsEventMessages
+        .map(PrivateDirectMessageEntity.fromEventMessage)
+        .toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
@@ -69,10 +87,12 @@ class ConversationManagementService {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-    final conversationsEventMessages = await databaseService.getAllConversations();
+    final conversationsEventMessages =
+        await databaseService.getAllConversations();
 
-    final conversationsEntities =
-        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+    final conversationsEntities = conversationsEventMessages
+        .map(PrivateDirectMessageEntity.fromEventMessage)
+        .toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
@@ -103,10 +123,12 @@ class ConversationManagementService {
     assert(currentSubject.isNotEmpty, 'Current conversation subject is empty');
     assert(newSubject.isNotEmpty, 'New conversation subject is empty');
 
-    final conversationsEventMessages = await databaseService.getAllConversations();
+    final conversationsEventMessages =
+        await databaseService.getAllConversations();
 
-    final conversationsEntities =
-        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+    final conversationsEntities = conversationsEventMessages
+        .map(PrivateDirectMessageEntity.fromEventMessage)
+        .toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
