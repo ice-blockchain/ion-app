@@ -10,7 +10,7 @@ part 'ui_event_queue_notifier.c.g.dart';
 abstract class UiEvent {
   const UiEvent();
 
-  void process(BuildContext context);
+  void performAction(BuildContext context);
 }
 
 @Riverpod(keepAlive: true)

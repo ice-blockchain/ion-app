@@ -38,7 +38,7 @@ Future<Raw<ConversationMessageActionsService>> conversationMessageActionsService
     eventSigner: eventSigner,
     databaseService: databaseService,
     env: ref.watch(envProvider.notifier),
-    userPubkey: ref.watch(currentPubkeySelectorProvider),
+    userPubkey: await ref.watch(currentPubkeySelectorProvider.future),
     sealService: ref.watch(ionConnectSealServiceProvider),
     nostrNotifier: ref.watch(nostrNotifierProvider.notifier),
     wrapService: ref.watch(ionConnectGiftWrapServiceProvider),

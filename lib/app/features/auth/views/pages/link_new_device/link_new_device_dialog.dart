@@ -18,7 +18,7 @@ class ShowLinkNewDeviceDialogEvent extends UiEvent {
   const ShowLinkNewDeviceDialogEvent();
 
   @override
-  void process(BuildContext context) {
+  void performAction(BuildContext context) {
     showSimpleBottomSheet<void>(
       context: context,
       isDismissible: false,
