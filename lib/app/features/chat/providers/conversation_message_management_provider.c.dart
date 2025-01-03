@@ -9,7 +9,6 @@ import 'package:cryptography/cryptography.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
@@ -30,7 +29,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_message_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<ConversationMessageManagementService> conversationMessageManagementService(
+Future<Raw<ConversationMessageManagementService>> conversationMessageManagementService(
   Ref ref,
 ) async {
   final eventSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
@@ -141,27 +140,6 @@ class ConversationMessageManagementService {
     }
   }
 
-  Future<void> sendMessageReceivedStatus({
-    required String eventId,
-    required String receiverPubkey,
-  }) async {
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
-
-    await _createSealWrapSendMessage(
-      signer: eventSigner!,
-      content: 'received',
-      receiverPubkey: receiverPubkey,
-      kind: PrivateMessageReactionEntity.kind,
-      tags: [
-        ['k', PrivateDirectMessageEntity.kind.toString()],
-        ['p', receiverPubkey],
-        ['e', eventId],
-      ],
-    );
-  }
-
   // Works in progress with https://pub.dev/packages/flutter_cache_manager
   Future<List<File>> downloadDecryptDecompressMedia(
     PrivateDirectMessageEntity privateDirectMessageEntity,
@@ -239,14 +217,13 @@ class ConversationMessageManagementService {
     required String receiverPubkey,
     required EventSigner signer,
     required List<List<String>> tags,
-    int? kind,
   }) async {
     final createdAt = DateTime.now().toUtc();
 
     final id = EventMessage.calculateEventId(
       publicKey: signer.publicKey,
       createdAt: createdAt,
-      kind: kind ?? PrivateDirectMessageEntity.kind,
+      kind: PrivateDirectMessageEntity.kind,
       tags: tags,
       content: content,
     );
@@ -257,7 +234,7 @@ class ConversationMessageManagementService {
       content: content,
       createdAt: createdAt,
       pubkey: signer.publicKey,
-      kind: kind ?? PrivateDirectMessageEntity.kind,
+      kind: PrivateDirectMessageEntity.kind,
       sig: null,
     );
 
@@ -271,20 +248,11 @@ class ConversationMessageManagementService {
 
     Logger.log('Seal message $seal');
 
-    final expirationTag = EntityExpiration(
-      value: DateTime.now().add(
-        Duration(
-          hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS),
-        ),
-      ),
-    ).toTag();
-
     final wrap = await wrapService.createWrap(
       seal,
       receiverPubkey,
       signer,
-      kind ?? PrivateDirectMessageEntity.kind,
-      expirationTag: kind == PrivateDirectMessageEntity.kind ? expirationTag : null,
+      PrivateDirectMessageEntity.kind,
     );
 
     Logger.log('Wrap message $wrap');

@@ -6,7 +6,7 @@ import 'package:ion/app/features/chat/model/entities/private_direct_message_data
 import 'package:ion/app/features/chat/model/group.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
-import 'package:ion/app/services/database/ion_database.c.dart';
+import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversations_provider.c.g.dart';

@@ -4,13 +4,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
-import 'package:ion/app/services/database/ion_database.c.dart';
+import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversation_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<ConversationManagementService> conversationManagementService(
+Future<Raw<ConversationManagementService>> conversationManagementService(
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
