@@ -20,6 +20,7 @@ abstract class BaseRouteData extends GoRouteData {
     required this.child,
     this.type = IceRouteType.single,
   });
+
   final IceRouteType type;
 
   final Widget child;
@@ -107,12 +108,17 @@ class MainModalSheetPage extends ModalSheetPage<void> {
           swipeDismissible: true,
           barrierColor: context.theme.appColors.backgroundSheet,
           key: state.pageKey,
+          swipeDismissSensitivity: const SwipeDismissSensitivity(
+            minDragDistance: 100,
+            minFlingVelocityRatio: 1.5,
+          ),
           // DraggableSheet does not work with scrollable widgets.
           // If you want to use a scrollable widget as its content,
           // use ScrollableSheet instead.
           // See example in smooth_sheets package.
           child: DraggableSheet(
             controller: DefaultSheetController.of(context),
+            physics: const ClampingSheetPhysics(),
             child: MainModalContent(
               state: state,
               child: child,

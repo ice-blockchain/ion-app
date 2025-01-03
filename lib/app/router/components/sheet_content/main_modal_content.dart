@@ -19,7 +19,7 @@ class MainModalContent extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) {
-          final metrics = controller.value;
+          final metrics = controller.metrics;
 
           if (metrics.hasDimensions) {
             context.go(state.currentTab.baseRouteLocation);

@@ -33,6 +33,7 @@ class FeedMainModalPage extends StatelessWidget {
           ),
           ListView.separated(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             separatorBuilder: (_, __) => const HorizontalSeparator(),
             itemCount: feedTypeValues.length,
             itemBuilder: (BuildContext context, int index) {
