@@ -3,7 +3,6 @@
 import 'package:ion/app/features/chat/model/channel_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/group.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
@@ -57,30 +56,6 @@ class Conversations extends _$Conversations {
         ),
         channelData.id,
         type: ChatType.channel,
-      );
-      final newData = [
-        newConversation,
-        ...currentData,
-      ];
-      return List<PrivateDirectMessageEntity>.unmodifiable(newData);
-    });
-  }
-
-  void addGroupConversation(Group group) {
-    update((currentData) {
-      final newConversation = RecentChatDataModel(
-        MessageAuthor(
-          name: group.name,
-          imageUrl: 'https://x.com/ice_blockchain/photo',
-          isApproved: true,
-        ),
-        1,
-        TextRecentChatMessage(
-          'The group has been created',
-          DateTime.now(),
-        ),
-        group.id,
-        type: ChatType.group,
       );
       final newData = [
         newConversation,
