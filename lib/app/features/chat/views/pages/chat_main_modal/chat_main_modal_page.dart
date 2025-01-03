@@ -28,6 +28,7 @@ class ChatMainModalPage extends StatelessWidget {
           ),
           ListView.separated(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             separatorBuilder: (_, __) => const HorizontalSeparator(),
             itemCount: menuItems.length,
             itemBuilder: (BuildContext context, int index) {

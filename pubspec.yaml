@@ -89,7 +89,7 @@ dependencies:
   share_plus: ^10.0.2
   shared_preferences: ^2.2.2
   shimmer: ^3.0.0
-  smooth_sheets: ^1.0.0-f324.0.9.4
+  smooth_sheets: ^1.0.0-f324.0.10.2
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
   uri_to_file: ^1.0.0
