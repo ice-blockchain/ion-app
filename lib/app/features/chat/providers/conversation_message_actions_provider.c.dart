@@ -25,16 +25,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_message_actions_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Raw<Future<ConversationMessageActionsService>>
-    conversationMessageActionsService(
+Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService(
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
   final conversationMessageManagementService =
       await ref.watch(conversationMessageManagementServiceProvider);
 
-  final eventSigner =
-      await ref.watch(currentUserNostrEventSignerProvider.future);
+  final eventSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
 
   return ConversationMessageActionsService(
     eventSigner: eventSigner,
@@ -67,8 +65,7 @@ class ConversationMessageActionsService {
   final IonConnectSealService sealService;
   final IonConnectGiftWrapService wrapService;
   final ConversationsDBService databaseService;
-  final ConversationMessageManagementService
-      conversationMessageManagementService;
+  final ConversationMessageManagementService conversationMessageManagementService;
 
   Future<void> deleteMessage(String id) async {
     await databaseService.markConversationMessageAsDeleted(id);

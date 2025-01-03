@@ -11,8 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'e2ee_group_conversation_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Raw<Future<E2EEGroupConversationManagementService>>
-    e2eeGroupConversationManagementService(
+Raw<Future<E2EEGroupConversationManagementService>> e2eeGroupConversationManagementService(
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
@@ -32,8 +31,7 @@ class E2EEGroupConversationManagementService {
   });
 
   final ConversationsDBService databaseService;
-  final ConversationMessageManagementService
-      conversationMessageManagementService;
+  final ConversationMessageManagementService conversationMessageManagementService;
 
   Future<void> createGroup({
     required String subject,
@@ -55,12 +53,10 @@ class E2EEGroupConversationManagementService {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-    final conversationsEventMessages =
-        await databaseService.getAllConversations();
+    final conversationsEventMessages = await databaseService.getAllConversations();
 
-    final conversationsEntities = conversationsEventMessages
-        .map(PrivateDirectMessageEntity.fromEventMessage)
-        .toList();
+    final conversationsEntities =
+        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
@@ -87,12 +83,10 @@ class E2EEGroupConversationManagementService {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-    final conversationsEventMessages =
-        await databaseService.getAllConversations();
+    final conversationsEventMessages = await databaseService.getAllConversations();
 
-    final conversationsEntities = conversationsEventMessages
-        .map(PrivateDirectMessageEntity.fromEventMessage)
-        .toList();
+    final conversationsEntities =
+        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
@@ -123,12 +117,10 @@ class E2EEGroupConversationManagementService {
     assert(currentSubject.isNotEmpty, 'Current conversation subject is empty');
     assert(newSubject.isNotEmpty, 'New conversation subject is empty');
 
-    final conversationsEventMessages =
-        await databaseService.getAllConversations();
+    final conversationsEventMessages = await databaseService.getAllConversations();
 
-    final conversationsEntities = conversationsEventMessages
-        .map(PrivateDirectMessageEntity.fromEventMessage)
-        .toList();
+    final conversationsEntities =
+        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
     final pubkeys = conversationsEntities
             .singleWhere(
