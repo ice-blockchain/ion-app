@@ -13,8 +13,9 @@ Future<List<String>> hashtagSuggestions(Ref ref, String query) async {
     return [];
   }
   await ref.debounce();
-  await Future<void>.delayed(const Duration(milliseconds: 300));
 
+  // TODO: Replace mocked hashtags with real hashtags
+  await Future<void>.delayed(const Duration(milliseconds: 300));
   final filteredHashtags =
       hashtags.where((hashtag) => hashtag.toLowerCase().contains(query.toLowerCase())).toList();
 

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:math';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/article/mocked_pubkeys.dart';
+import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'mention_suggestions_provider.c.g.dart';
@@ -15,13 +15,24 @@ Future<List<String>> mentionSuggestions(Ref ref, String query) async {
     return [];
   }
   await ref.debounce();
-  await Future<void>.delayed(const Duration(milliseconds: 500));
 
-  final random = Random();
-  final randomKeys = <String>{};
-  while (randomKeys.length < 6) {
-    randomKeys.add(pubKeys[random.nextInt(pubKeys.length)]);
+  final searchQuery = query.substring(1).toLowerCase();
+
+  final requestMessage = RequestMessage()
+    ..addFilter(
+      RequestFilter(
+        kinds: const [UserMetadataEntity.kind],
+        search: searchQuery,
+        limit: 10,
+      ),
+    );
+  final nostr = ref.read(nostrNotifierProvider.notifier);
+
+  final pubKeys = <String>{};
+
+  await for (final entity in nostr.requestEntities(requestMessage)) {
+    pubKeys.add(entity.pubkey);
   }
 
-  return randomKeys.toList();
+  return pubKeys.toList();
 }
