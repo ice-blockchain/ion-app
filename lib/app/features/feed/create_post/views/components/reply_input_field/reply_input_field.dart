@@ -123,6 +123,19 @@ class ReplyInputField extends HookConsumerWidget {
                 parentEvent: eventReference,
                 mediaFiles: attachedMediaNotifier.value,
                 createOption: CreatePostOption.reply,
+                onSubmitted: () {
+                  focusNode.unfocus();
+                  attachedMediaNotifier.value = [];
+
+                  /// calling `.replaceText` instead of `.clear` due to missing `ignoreFocus` parameter.
+                  textEditorController.replaceText(
+                    0,
+                    textEditorController.plainTextEditingValue.text.length - 1,
+                    '',
+                    const TextSelection.collapsed(offset: 0),
+                    ignoreFocus: true,
+                  );
+                },
               ),
             ),
         ],
