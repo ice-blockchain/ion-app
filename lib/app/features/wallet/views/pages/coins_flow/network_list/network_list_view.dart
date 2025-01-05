@@ -14,14 +14,16 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-enum NetworkListViewType {
-  send,
-  receive,
-}
+enum NetworkListViewType { send, receive }
 
 class NetworkListView extends ConsumerWidget {
-  const NetworkListView({this.type = NetworkListViewType.send, super.key});
+  const NetworkListView({
+    this.type = NetworkListViewType.send,
+    this.onSelectReturnType = false,
+    super.key,
+  });
 
+  final bool onSelectReturnType;
   final NetworkListViewType type;
 
   @override
@@ -31,6 +33,22 @@ class NetworkListView extends ConsumerWidget {
       NetworkListViewType.send => ref.watch(sendAssetFormControllerProvider()).selectedCoin!,
       NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin,
     };
+
+    void onTap(NetworkType network) {
+      if (onSelectReturnType) {
+        Navigator.of(context).pop(network);
+        return;
+      }
+
+      switch (type) {
+        case NetworkListViewType.send:
+          ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network);
+          CoinsSendFormRoute().push<void>(context);
+        case NetworkListViewType.receive:
+          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
+          ShareAddressRoute().push<void>(context);
+      }
+    }
 
     return SheetContent(
       body: Column(
@@ -53,22 +71,11 @@ class NetworkListView extends ConsumerWidget {
                 itemCount: networks.length,
                 separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                 itemBuilder: (BuildContext context, int index) {
+                  final network = networks[index];
                   return NetworkItem(
                     coinData: coinData,
                     networkType: networks[index],
-                    onTap: () {
-                      if (type == NetworkListViewType.send) {
-                        ref
-                            .read(sendAssetFormControllerProvider().notifier)
-                            .setNetwork(networks[index]);
-                        CoinsSendFormRoute().push<void>(context);
-                      } else {
-                        ref
-                            .read(receiveCoinsFormControllerProvider.notifier)
-                            .setNetwork(networks[index]);
-                        ShareAddressRoute().push<void>(context);
-                      }
-                    },
+                    onTap: () => onTap(network),
                   );
                 },
               ),

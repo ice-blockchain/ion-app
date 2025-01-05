@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/tooltip/copied_tooltip.dart';
@@ -9,6 +10,8 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -27,6 +30,9 @@ class CoinAddressTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final address = ref.watch(
+      receiveCoinsFormControllerProvider.select((state) => state.address),
+    );
     final isCopied = useState<bool>(false);
     final tooltipLeftPosition = useState<double>(0);
 
@@ -69,7 +75,7 @@ class CoinAddressTile extends HookConsumerWidget {
                 height: 7.0.s,
               ),
               Text(
-                shortenAddress('0x122abc456def789ghij012klmno345pqrs678tuv'),
+                shortenAddress(address),
                 style: context.theme.appTextThemes.caption.copyWith(
                   color: context.theme.appColors.tertararyText,
                 ),
@@ -85,9 +91,12 @@ class CoinAddressTile extends HookConsumerWidget {
                   color: context.theme.appColors.primaryText,
                 ),
                 size: buttonSize,
-                onPressed: () {
+                onPressed: () async {
+                  await Clipboard.setData(ClipboardData(text: address));
+
                   isCopied.value = true;
-                  Future<void>.delayed(const Duration(seconds: 3)).then((_) {
+
+                  await Future<void>.delayed(const Duration(seconds: 3)).then((_) {
                     isCopied.value = false;
                   });
                 },
@@ -114,7 +123,9 @@ class CoinAddressTile extends HookConsumerWidget {
             icon: Assets.svg.iconButtonQrcode.icon(
               color: context.theme.appColors.primaryText,
             ),
-            onPressed: () {},
+            onPressed: () {
+              ShareAddressCoinDetailsRoute().push<void>(context);
+            },
           ),
         ],
       ),

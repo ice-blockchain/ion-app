@@ -26,6 +26,8 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<CoinReceiveRoute>(path: 'coin-receive'),
+        TypedGoRoute<ShareAddressCoinDetailsRoute>(path: 'share-wallet-address'),
+        TypedGoRoute<ChangeNetworkShareWalletRoute>(path: 'change-wallet-network'),
       ],
     ),
     TypedShellRoute<ModalShellRouteData>(
@@ -160,6 +162,25 @@ class NetworkSelectSendRoute extends BaseRouteData {
   NetworkSelectSendRoute()
       : super(
           child: const NetworkListView(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ChangeNetworkShareWalletRoute extends BaseRouteData {
+  ChangeNetworkShareWalletRoute()
+      : super(
+          child: const NetworkListView(
+            type: NetworkListViewType.receive,
+            onSelectReturnType: true,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ShareAddressCoinDetailsRoute extends BaseRouteData {
+  ShareAddressCoinDetailsRoute()
+      : super(
+          child: const ShareAddressView(),
           type: IceRouteType.bottomSheet,
         );
 }
