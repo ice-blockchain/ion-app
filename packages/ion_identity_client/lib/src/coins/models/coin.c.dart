@@ -17,8 +17,22 @@ class Coin with _$Coin {
     required double priceUSD,
     required String symbol,
     required String symbolGroup,
-    required int syncFrequency,
+    @DurationConverter() required Duration syncFrequency,
   }) = _Coin;
 
-  factory Coin.fromJson(Map<String, dynamic> json) => _$CoinFromJson(json);
+  factory Coin.fromJson(Map<String, dynamic> json) {
+    return _$CoinFromJson(json);
+  }
+}
+
+class DurationConverter implements JsonConverter<Duration, int> {
+  const DurationConverter();
+
+  @override
+  Duration fromJson(int json) {
+    return Duration(milliseconds: json);
+  }
+
+  @override
+  int toJson(Duration object) => object.inMilliseconds;
 }

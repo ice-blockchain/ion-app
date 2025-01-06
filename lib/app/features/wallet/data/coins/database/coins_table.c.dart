@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
+import 'package:ion/app/features/wallet/data/coins/database/duration_type.dart';
 
 @DataClassName('Coin')
 class CoinsTable extends Table {
@@ -18,5 +19,5 @@ class CoinsTable extends Table {
   @JsonKey('symbolGroup')
   TextColumn get symbolGroup => text()();
   @JsonKey('syncFrequency')
-  IntColumn get syncFrequency => integer()();
+  Column<Duration> get syncFrequency => customType(const DurationType())();
 }

@@ -33,7 +33,9 @@ class CoinInitializer {
         .expand(
           (group) =>
               // ignore: avoid_dynamic_calls
-              (group['coins'] as List).map((coin) => Coin.fromJson(coin as Map<String, dynamic>)),
+              (group['coins'] as List).map((coin) {
+                return Coin.fromJson(coin as Map<String, dynamic>);
+              }),
         )
         .toList();
 

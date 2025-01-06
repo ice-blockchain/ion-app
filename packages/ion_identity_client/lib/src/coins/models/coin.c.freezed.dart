@@ -29,7 +29,8 @@ mixin _$Coin {
   double get priceUSD => throw _privateConstructorUsedError;
   String get symbol => throw _privateConstructorUsedError;
   String get symbolGroup => throw _privateConstructorUsedError;
-  int get syncFrequency => throw _privateConstructorUsedError;
+  @DurationConverter()
+  Duration get syncFrequency => throw _privateConstructorUsedError;
 
   /// Serializes this Coin to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +56,7 @@ abstract class $CoinCopyWith<$Res> {
       double priceUSD,
       String symbol,
       String symbolGroup,
-      int syncFrequency});
+      @DurationConverter() Duration syncFrequency});
 }
 
 /// @nodoc
@@ -124,7 +125,7 @@ class _$CoinCopyWithImpl<$Res, $Val extends Coin>
       syncFrequency: null == syncFrequency
           ? _value.syncFrequency
           : syncFrequency // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Duration,
     ) as $Val);
   }
 }
@@ -146,7 +147,7 @@ abstract class _$$CoinImplCopyWith<$Res> implements $CoinCopyWith<$Res> {
       double priceUSD,
       String symbol,
       String symbolGroup,
-      int syncFrequency});
+      @DurationConverter() Duration syncFrequency});
 }
 
 /// @nodoc
@@ -212,7 +213,7 @@ class __$$CoinImplCopyWithImpl<$Res>
       syncFrequency: null == syncFrequency
           ? _value.syncFrequency
           : syncFrequency // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Duration,
     ));
   }
 }
@@ -230,7 +231,7 @@ class _$CoinImpl implements _Coin {
       required this.priceUSD,
       required this.symbol,
       required this.symbolGroup,
-      required this.syncFrequency});
+      @DurationConverter() required this.syncFrequency});
 
   factory _$CoinImpl.fromJson(Map<String, dynamic> json) =>
       _$$CoinImplFromJson(json);
@@ -254,7 +255,8 @@ class _$CoinImpl implements _Coin {
   @override
   final String symbolGroup;
   @override
-  final int syncFrequency;
+  @DurationConverter()
+  final Duration syncFrequency;
 
   @override
   String toString() {
@@ -315,7 +317,7 @@ abstract class _Coin implements Coin {
       required final double priceUSD,
       required final String symbol,
       required final String symbolGroup,
-      required final int syncFrequency}) = _$CoinImpl;
+      @DurationConverter() required final Duration syncFrequency}) = _$CoinImpl;
 
   factory _Coin.fromJson(Map<String, dynamic> json) = _$CoinImpl.fromJson;
 
@@ -338,7 +340,8 @@ abstract class _Coin implements Coin {
   @override
   String get symbolGroup;
   @override
-  int get syncFrequency;
+  @DurationConverter()
+  Duration get syncFrequency;
 
   /// Create a copy of Coin
   /// with the given fields replaced by the non-null parameter values.

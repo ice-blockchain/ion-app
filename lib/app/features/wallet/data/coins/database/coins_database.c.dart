@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/data/coins/database/coins_table.c.dart';
+import 'package:ion/app/features/wallet/data/coins/database/duration_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_database.c.g.dart';
