@@ -39,6 +39,14 @@ class LocalStorage {
     return _prefs.getDouble(key);
   }
 
+  Future<bool> setInt(String key, int value) {
+    return _prefs.setInt(key, value);
+  }
+
+  int? getInt(String key) {
+    return _prefs.getInt(key);
+  }
+
   Future<bool> setString(String key, String value) {
     return _prefs.setString(key, value);
   }

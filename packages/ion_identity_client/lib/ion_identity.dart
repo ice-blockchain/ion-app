@@ -6,6 +6,7 @@ export 'src/auth/dtos/dtos.dart';
 export 'src/auth/ion_identity_auth.dart';
 export 'src/auth/services/create_credentials/models/create_recovery_credentials_success.dart';
 export 'src/auth/services/twofa/models/twofa_type.c.dart';
+export 'src/coins/models/coin.c.dart';
 export 'src/core/types/ion_exception.dart';
 export 'src/core/types/types.dart';
 export 'src/core/types/user_token.c.dart';

@@ -7,6 +7,7 @@ import 'package:ion/app/features/core/permissions/providers/permissions_provider
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
+import 'package:ion/app/features/wallet/data/coins/domain/coin_initializer.c.dart';
 import 'package:ion/app/services/nostr/nostr.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,6 +28,7 @@ Future<void> initApp(Ref ref) async {
     ref.read(appTemplateProvider.future),
     ref.read(authProvider.future),
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
+    ref.read(coinInitializerProvider).initialize(),
   ]);
 
   await ref.read(onboardingCompleteProvider.future);
