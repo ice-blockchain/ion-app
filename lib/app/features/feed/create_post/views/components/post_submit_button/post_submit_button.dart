@@ -28,6 +28,7 @@ class PostSubmitButton extends HookConsumerWidget {
     this.parentEvent,
     this.quotedEvent,
     this.mediaFiles = const [],
+    this.onSubmitted,
   });
 
   final QuillController textEditorController;
@@ -39,6 +40,8 @@ class PostSubmitButton extends HookConsumerWidget {
   final List<MediaFile> mediaFiles;
 
   final CreatePostOption createOption;
+
+  final VoidCallback? onSubmitted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,7 +90,9 @@ class PostSubmitButton extends HookConsumerWidget {
               ),
         );
 
-        if (context.mounted) {
+        if (onSubmitted != null) {
+          onSubmitted!();
+        } else if (context.mounted) {
           ref.context.pop();
         }
       },
