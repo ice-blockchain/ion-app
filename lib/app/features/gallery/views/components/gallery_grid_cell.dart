@@ -15,12 +15,14 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 class GalleryGridCell extends ConsumerWidget {
   const GalleryGridCell({
     required this.mediaFile,
+    required this.showSelectionBadge,
     this.type = MediaPickerType.common,
     super.key,
   });
 
   final MediaFile mediaFile;
   final MediaPickerType type;
+  final bool showSelectionBadge;
 
   static double get cellHeight => 120.0.s;
   static double get cellWidth => 122.0.s;
@@ -58,14 +60,15 @@ class GalleryGridCell extends ConsumerWidget {
                     fit: StackFit.expand,
                     children: [
                       child,
-                      Positioned(
-                        top: 8.0.s,
-                        right: 8.0.s,
-                        child: SelectionBadge(
-                          isSelected: selectionState.isSelected,
-                          selectionOrder: selectionState.order.toString(),
+                      if (showSelectionBadge)
+                        Positioned(
+                          top: 8.0.s,
+                          right: 8.0.s,
+                          child: SelectionBadge(
+                            isSelected: selectionState.isSelected,
+                            selectionOrder: selectionState.order.toString(),
+                          ),
                         ),
-                      ),
                       if (asset.type == AssetType.video)
                         Positioned(
                           bottom: 4.0.s,

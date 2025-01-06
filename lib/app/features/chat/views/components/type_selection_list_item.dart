@@ -51,7 +51,7 @@ class TypeSelectionListItem<T extends SelectableType> extends StatelessWidget {
                   ),
                   child: Text(
                     type.getDescription(context),
-                    style: textStyles.body.copyWith(color: colors.quaternaryText),
+                    style: textStyles.caption2.copyWith(color: colors.quaternaryText),
                   ),
                 )
               : const SizedBox(width: double.maxFinite),
