@@ -9,7 +9,6 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
@@ -67,14 +66,11 @@ class Balance extends ConsumerWidget {
             padding: EdgeInsets.only(bottom: 20.0.s, top: 11.0.s),
             child: BalanceActions(
               onReceive: () {
-                ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(networkType);
+                ref.read(receiveCoinsFormControllerProvider.notifier)
+                  ..setCoin(coinData)
+                  ..setNetwork(networkType);
 
-                CoinReceiveRoute(
-                  $extra: CoinReceiveModalData(
-                    coinData: coinData,
-                    networkType: networkType,
-                  ),
-                ).push<void>(context);
+                CoinReceiveRoute().push<void>(context);
               },
               onSend: () {
                 ref.read(sendAssetFormControllerProvider().notifier).setCoin(coinData);

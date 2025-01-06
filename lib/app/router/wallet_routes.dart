@@ -272,13 +272,11 @@ class CoinsDetailsRoute extends BaseRouteData {
 }
 
 class CoinReceiveRoute extends BaseRouteData {
-  CoinReceiveRoute({required this.$extra})
+  CoinReceiveRoute()
       : super(
-          child: CoinReceiveModal(payload: $extra),
+          child: const CoinReceiveModal(),
           type: IceRouteType.bottomSheet,
         );
-
-  final CoinReceiveModalData $extra;
 }
 
 class ManageCoinsRoute extends BaseRouteData {

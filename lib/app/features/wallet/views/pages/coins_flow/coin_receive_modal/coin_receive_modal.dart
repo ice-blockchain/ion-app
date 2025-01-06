@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -12,7 +11,6 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/components/coin_address_tile/coin_address_tile.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -21,22 +19,19 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class CoinReceiveModal extends HookConsumerWidget {
-  const CoinReceiveModal({required this.payload, super.key});
-
-  final CoinReceiveModalData payload;
+  const CoinReceiveModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final networkType = useState<NetworkType>(payload.networkType);
+    final receiveCoinState = ref.watch(receiveCoinsFormControllerProvider);
 
     void updateNetwork(NetworkType network) {
-      networkType.value = network == NetworkType.all ? NetworkType.arbitrum : network;
-      ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(networkType.value);
+      final clarifiedNetwork = network == NetworkType.all ? NetworkType.arbitrum : network;
+      ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(clarifiedNetwork);
     }
 
     useOnInit(
-      () => updateNetwork(payload.networkType),
-      [payload],
+      () => updateNetwork(receiveCoinState.selectedNetwork),
     );
 
     return SheetContent(
@@ -53,7 +48,7 @@ class CoinReceiveModal extends HookConsumerWidget {
           ),
           ScreenSideOffset.small(
             child: CoinAddressTile(
-              coinData: payload.coinData,
+              coinData: receiveCoinState.selectedCoin,
             ),
           ),
           SizedBox(
@@ -62,9 +57,9 @@ class CoinReceiveModal extends HookConsumerWidget {
           ScreenSideOffset.small(
             child: ListItem(
               title: Text(context.i18n.wallet_network),
-              subtitle: Text(networkType.value.getDisplayName(context)),
+              subtitle: Text(receiveCoinState.selectedNetwork.getDisplayName(context)),
               switchTitleStyles: true,
-              leading: networkType.value.iconAsset.icon(size: 36.0.s),
+              leading: receiveCoinState.selectedNetwork.iconAsset.icon(size: 36.0.s),
               trailing: Text(
                 context.i18n.wallet_change,
                 style: context.theme.appTextThemes.caption.copyWith(
