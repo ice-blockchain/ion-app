@@ -29,6 +29,7 @@ class SheetContent extends StatelessWidget {
       primary: true,
       extendBody: true,
       appBar: SheetDragHandle(topPadding: topPadding),
+      bottomBar: const SizedBox.shrink(),
       body: SheetShape(
         backgroundColor: backgroundColor,
         bottomPadding: bottomPadding,
