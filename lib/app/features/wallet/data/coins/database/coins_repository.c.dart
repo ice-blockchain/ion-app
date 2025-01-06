@@ -17,7 +17,9 @@ class CoinsRepository {
   final CoinsDatabase _db;
 
   Future<bool> hasAny() async {
-    return _db.select(_db.coinsTable).getSingleOrNull().then((value) => value != null);
+    final query = _db.select(_db.coinsTable)..limit(1);
+    final result = await query.get();
+    return result.isNotEmpty;
   }
 
   Future<void> upsertAll(List<Coin> coins) async {

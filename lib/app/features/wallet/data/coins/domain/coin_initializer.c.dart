@@ -4,9 +4,10 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallet/data/coins/database/coins_database.c.dart';
 import 'package:ion/app/features/wallet/data/coins/database/coins_repository.c.dart';
+import 'package:ion/app/features/wallet/data/coins/domain/coins_mapper.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coin_initializer.c.g.dart';
@@ -33,12 +34,10 @@ class CoinInitializer {
         .expand(
           (group) =>
               // ignore: avoid_dynamic_calls
-              (group['coins'] as List).map((coin) {
-                return Coin.fromJson(coin as Map<String, dynamic>);
-              }),
+              (group['coins'] as List).map((coin) => Coin.fromJson(coin as Map<String, dynamic>)),
         )
         .toList();
 
-    await _coinsRepository.upsertAll(coinEntities);
+    await _coinsRepository.upsertAll(CoinsMapper.fromIONIdentityCoins(coinEntities));
   }
 }
