@@ -114,7 +114,6 @@ import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_receive_modal/model/coin_receive_modal_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/network_list/network_list_view.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/components/share_address_view.dart';
