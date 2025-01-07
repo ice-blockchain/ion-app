@@ -8,6 +8,7 @@ class IONIdentityConfig {
   IONIdentityConfig({
     required this.appId,
     required this.origin,
+    this.logging = false,
   });
 
   /// The application identifier used to uniquely identify the app within the ION Identity API.
@@ -17,6 +18,9 @@ class IONIdentityConfig {
   /// and securing API requests.
   final String origin;
 
+  /// Whether to enable logging for the ION Identity client.
+  final bool logging;
+
   @override
-  String toString() => 'IONIdentityConfig(appId: $appId, origin: $origin)';
+  String toString() => 'IONIdentityConfig(appId: $appId, origin: $origin, logging: $logging)';
 }

@@ -9,5 +9,7 @@ class LoggerConfig {
 
   static const bool nostrLogsEnabled = true;
 
+  static const bool ionIdentityLogsEnabled = true;
+
   static const bool dioLogsEnabled = true;
 }
