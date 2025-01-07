@@ -5,8 +5,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
 
@@ -85,7 +87,8 @@ class MentionsHashtagsHandler {
           } finally {
             controller.addListener(_editorListener);
           }
-          // showOverlay();
+
+          showOverlay();
         } else if (char == ' ' || char == '\n') {
           _applyTagIfNeeded(cursorIndex);
           removeOverlay();
@@ -177,6 +180,11 @@ class MentionsHashtagsHandler {
   }
 
   void showOverlay() {
+    final showMentionsSuggestions =
+        ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showMentionsSuggestions);
+
+    if (!showMentionsSuggestions) return;
+
     removeOverlay();
     overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(overlayEntry!);
@@ -188,8 +196,11 @@ class MentionsHashtagsHandler {
   }
 
   OverlayEntry _createOverlayEntry() {
-    final screenHeight = MediaQuery.sizeOf(context).height;
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return OverlayEntry(builder: (_) => const SizedBox());
+
+    final position = renderBox.localToGlobal(Offset.zero);
+
     final suggestions = ref.read(suggestionsNotifierProvider);
     final itemsLength = taggingCharacter == '@'
         ? (suggestions.length > maxMentionsLength ? maxMentionsLength : suggestions.length)
@@ -199,14 +210,16 @@ class MentionsHashtagsHandler {
         taggingCharacter == '@' ? mentionContainerPadding : hashtagContainerPadding;
 
     final totalSuggestionHeight = itemsLength * itemSize + containerPadding * 2;
-    final topPosition = screenHeight - keyboardHeight - totalSuggestionHeight - toolbarHeight;
+
+    final topPosition = position.dy - totalSuggestionHeight;
 
     return OverlayEntry(
       builder: (context) => Positioned(
         left: 0,
-        top: topPosition,
+        top: topPosition - 8.0.s,
         right: 0,
-        child: SizedBox(
+        child: Container(
+          color: context.theme.appColors.secondaryBackground,
           height: totalSuggestionHeight,
           child: taggingCharacter == '@'
               ? MentionsSuggestions(
