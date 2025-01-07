@@ -32,7 +32,10 @@ class GenericRepostListItem extends StatelessWidget {
           children: [
             RepostAuthorHeader(pubkey: repost.masterPubkey),
             SizedBox(height: 6.0.s),
-            Article(eventReference: eventReference),
+            Padding(
+              padding: EdgeInsets.only(right: 16.0.s),
+              child: Article(eventReference: eventReference),
+            ),
           ],
         ),
       ),

@@ -18,8 +18,17 @@ import 'package:ion/app/utils/algorithm.dart';
 class Article extends ConsumerWidget {
   const Article({
     required this.eventReference,
+    this.showActionButtons = true,
     super.key,
   });
+
+  factory Article.quoted({
+    required EventReference eventReference,
+  }) {
+    return Article(eventReference: eventReference, showActionButtons: false);
+  }
+
+  final bool showActionButtons;
 
   final EventReference eventReference;
 
@@ -55,12 +64,14 @@ class Article extends ConsumerWidget {
                 children: [
                   UserInfo(
                     pubkey: eventReference.pubkey,
-                    trailing: Row(
-                      children: [
-                        BookmarkButton.article(eventReference: eventReference),
-                        UserInfoMenu(pubkey: eventReference.pubkey),
-                      ],
-                    ),
+                    trailing: showActionButtons
+                        ? Row(
+                            children: [
+                              BookmarkButton.article(eventReference: eventReference),
+                              UserInfoMenu(pubkey: eventReference.pubkey),
+                            ],
+                          )
+                        : null,
                   ),
                   SizedBox(height: 10.0.s),
                   ArticleImage(
@@ -72,7 +83,6 @@ class Article extends ConsumerWidget {
                 ],
               ),
             ),
-            SizedBox(width: 16.0.s),
           ],
         ),
       ),

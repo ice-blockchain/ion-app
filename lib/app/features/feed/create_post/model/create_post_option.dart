@@ -13,7 +13,7 @@ enum CreatePostOption {
   String getTitle(BuildContext context) {
     return switch (this) {
       CreatePostOption.reply => context.i18n.button_reply,
-      CreatePostOption.quote => context.i18n.feed_write_comment,
+      CreatePostOption.quote => context.i18n.feed_quote_post,
       CreatePostOption.plain => context.i18n.create_post_modal_title,
       CreatePostOption.video => context.i18n.create_video_new_video,
       _ => throw ArgumentError()

@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
-import 'package:ion/app/features/feed/views/components/post/components/quoted_post_frame/quoted_post_frame.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
+import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
@@ -73,28 +76,73 @@ class Post extends ConsumerWidget {
   }
 }
 
-class _FramedEvent extends StatelessWidget {
+class _FramedEvent extends HookConsumerWidget {
   const _FramedEvent({required this.eventReference});
 
   final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final nostrEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
+
+    final quotedEntity = useMemoized(
+      () {
+        switch (nostrEntity) {
+          case PostEntity():
+            return _QuotedPost(eventReference: eventReference);
+          case ArticleEntity():
+            return _QuotedArticle(eventReference: eventReference);
+          default:
+            return const SizedBox.shrink();
+        }
+      },
+      [nostrEntity],
+    );
+
     return Padding(
       padding: EdgeInsets.only(top: 6.0.s),
-      child: QuotedPostFrame(
-        child: GestureDetector(
-          // Open a post by clicking on any part of the widget, including the author's avatar or name.
-          onTap: () =>
-              PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
-          child: AbsorbPointer(
-            child: Post(
-              eventReference: eventReference,
-              header: UserInfo(pubkey: eventReference.pubkey),
-              footer: const SizedBox.shrink(),
-            ),
+      child: quotedEntity,
+    );
+  }
+}
+
+final class _QuotedPost extends ConsumerWidget {
+  const _QuotedPost({required this.eventReference});
+
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return QuotedEntityFrame.post(
+      child: GestureDetector(
+        onTap: () {
+          PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context);
+        },
+        child: AbsorbPointer(
+          child: Post(
+            eventReference: eventReference,
+            header: UserInfo(pubkey: eventReference.pubkey),
+            footer: const SizedBox.shrink(),
           ),
         ),
+      ),
+    );
+  }
+}
+
+final class _QuotedArticle extends ConsumerWidget {
+  const _QuotedArticle({required this.eventReference});
+
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return QuotedEntityFrame.article(
+      child: GestureDetector(
+        onTap: () {
+          ArticleDetailsRoute(eventReference: eventReference.toString()).push<void>(context);
+        },
+        child: AbsorbPointer(child: Article.quoted(eventReference: eventReference)),
       ),
     );
   }
