@@ -6,19 +6,13 @@ class DurationType implements CustomSqlType<Duration> {
   const DurationType();
 
   @override
-  String mapToSqlLiteral(Duration dartValue) {
-    return dartValue.inMilliseconds.toString();
-  }
+  String mapToSqlLiteral(Duration dartValue) => dartValue.inMilliseconds.toString();
 
   @override
-  Object mapToSqlParameter(Duration dartValue) {
-    return dartValue.inMilliseconds;
-  }
+  Object mapToSqlParameter(Duration dartValue) => dartValue.inMilliseconds;
 
   @override
-  Duration read(Object fromSql) {
-    return Duration(milliseconds: fromSql as int);
-  }
+  Duration read(Object fromSql) => Duration(milliseconds: fromSql as int);
 
   @override
   String sqlTypeName(GenerationContext context) => 'integer';
