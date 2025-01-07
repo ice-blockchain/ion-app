@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -12,12 +11,10 @@ import 'package:ion/generated/assets.gen.dart';
 class BookmarkFooterButton extends ConsumerWidget {
   const BookmarkFooterButton({
     required this.eventReference,
-    required this.type,
     super.key,
   });
 
   final EventReference? eventReference;
-  final BookmarksSetType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +34,6 @@ class BookmarkFooterButton extends ConsumerWidget {
       ),
       onPressed: () => ref.read(bookmarksNotifierProvider.notifier).toggleBookmark(
             eventReference!,
-            type: type,
           ),
     );
   }
