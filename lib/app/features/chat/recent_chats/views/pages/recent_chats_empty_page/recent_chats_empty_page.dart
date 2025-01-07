@@ -43,7 +43,7 @@ class RecentChatsEmptyPage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  NewChatModalRoute().push<void>(context);
+                  ShareProfileModalRoute().push<void>(context);
                 },
                 child: Padding(
                   padding: EdgeInsets.all(UiConstants.hitSlop),

@@ -5,17 +5,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/users_data_source_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/search_users_data_source_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class SearchedUsersList extends ConsumerWidget {
-  const SearchedUsersList({super.key});
+  const SearchedUsersList({required this.onUserSelected, super.key});
+
+  final void Function(UserMetadataEntity user) onUserSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(usersDataSourceProvider).valueOrNull;
+    final dataSource = ref.watch(searchUsersDataSourceProvider).valueOrNull;
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final users = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
     final slivers = [
@@ -31,6 +33,7 @@ class SearchedUsersList extends ConsumerWidget {
               title: Text(user.data.displayName),
               subtitle: Text(prefixUsername(username: user.data.name, context: context)),
               profilePicture: user.data.picture,
+              onTap: () => onUserSelected(user),
             );
           },
         ),
