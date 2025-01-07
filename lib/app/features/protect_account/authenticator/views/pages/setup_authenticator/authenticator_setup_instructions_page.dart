@@ -56,10 +56,8 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
           SliverAppBar(
             primary: false,
             flexibleSpace: NavigationAppBar.modal(
-              actions: [
-                NavigationCloseButton(
-                  onPressed: Navigator.of(context, rootNavigator: true).pop,
-                ),
+              actions: const [
+                NavigationCloseButton(),
               ],
             ),
             automaticallyImplyLeading: false,

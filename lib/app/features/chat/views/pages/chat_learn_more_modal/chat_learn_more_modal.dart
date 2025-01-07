@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -23,7 +22,7 @@ class ChatLearnMoreModal extends ConsumerWidget {
           NavigationAppBar.modal(
             showBackButton: false,
             title: Text(context.i18n.common_information),
-            actions: [NavigationCloseButton(onPressed: () => context.pop())],
+            actions: const [NavigationCloseButton()],
           ),
           ScreenSideOffset.medium(
             child: Padding(

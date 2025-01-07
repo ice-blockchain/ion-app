@@ -33,10 +33,8 @@ class EmailSetupPage extends ConsumerWidget {
                   primary: false,
                   flexibleSpace: NavigationAppBar.modal(
                     showBackButton: step != EmailSetupSteps.success,
-                    actions: [
-                      NavigationCloseButton(
-                        onPressed: Navigator.of(context, rootNavigator: true).pop,
-                      ),
+                    actions: const [
+                      NavigationCloseButton(),
                     ],
                   ),
                   toolbarHeight: NavigationAppBar.modalHeaderHeight,

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
@@ -15,7 +14,7 @@ class FollowAppBar extends StatelessWidget {
     return SliverAppBar(
       primary: false,
       flexibleSpace: NavigationAppBar.modal(
-        actions: [NavigationCloseButton(onPressed: context.pop)],
+        actions: const [NavigationCloseButton()],
         title: Text(title),
       ),
       automaticallyImplyLeading: false,
