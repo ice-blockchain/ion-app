@@ -67,7 +67,7 @@ class Article extends ConsumerWidget {
                     trailing: showActionButtons
                         ? Row(
                             children: [
-                              BookmarkButton.article(eventReference: eventReference),
+                              BookmarkButton(eventReference: eventReference),
                               UserInfoMenu(pubkey: eventReference.pubkey),
                             ],
                           )
