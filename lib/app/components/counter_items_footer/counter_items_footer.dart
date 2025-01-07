@@ -2,16 +2,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/counter_items_footer/bookmark_footer_button.dart';
 import 'package:ion/app/components/counter_items_footer/likes_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/replies_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/reposts_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/share_button.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 
 class CounterItemsFooter extends HookConsumerWidget {
   CounterItemsFooter({
     required this.eventReference,
+    required this.type,
     double? bottomPadding,
     double? topPadding,
     this.color,
@@ -20,6 +23,7 @@ class CounterItemsFooter extends HookConsumerWidget {
         topPadding = topPadding ?? 10.0.s;
 
   final EventReference eventReference;
+  final BookmarksSetType type;
   final double bottomPadding;
   final double topPadding;
   final Color? color;
@@ -48,6 +52,10 @@ class CounterItemsFooter extends HookConsumerWidget {
               eventReference: eventReference,
               color: color,
             ),
+          ),
+          BookmarkFooterButton(
+            eventReference: eventReference,
+            type: type,
           ),
           ShareButton(
             eventReference: eventReference,

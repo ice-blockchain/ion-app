@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
@@ -90,6 +91,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                       child: CounterItemsFooter(
                         eventReference: eventReference,
                         bottomPadding: 10.0.s,
+                        type: BookmarksSetType.articles,
                       ),
                     ),
                     Container(color: context.theme.appColors.primaryBackground, height: 8.0.s),

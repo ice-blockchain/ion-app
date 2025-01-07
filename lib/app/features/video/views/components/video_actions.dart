@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 
 class VideoActions extends StatelessWidget {
@@ -24,6 +25,7 @@ class VideoActions extends StatelessWidget {
         topPadding: 0,
         eventReference: eventReference,
         color: context.theme.appColors.secondaryBackground,
+        type: BookmarksSetType.videos,
       ),
     );
   }

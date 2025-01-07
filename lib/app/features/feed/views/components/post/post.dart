@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
@@ -55,7 +56,7 @@ class Post extends ConsumerWidget {
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (framedEvent != null) _FramedEvent(eventReference: framedEvent),
-        footer ?? CounterItemsFooter(eventReference: eventReference),
+        footer ?? CounterItemsFooter(eventReference: eventReference, type: BookmarksSetType.posts),
       ],
     );
   }
