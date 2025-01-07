@@ -18,3 +18,14 @@ final class FeedFeatureFlag extends FeatureFlag {
   static const showTrendingVideo = FeedFeatureFlag._(key: 'showTrendingVideo');
   static const showMentionsSuggestions = FeedFeatureFlag._(key: 'showMentionsSuggestions');
 }
+
+///
+/// TODO: remove this once before production release
+/// It hides creators without picture from the discover creators page
+///
+final class HideCreatorsWithoutPicture extends FeatureFlag {
+  const HideCreatorsWithoutPicture._({required super.key});
+
+  static const hideCreatorsWithoutPicture =
+      HideCreatorsWithoutPicture._(key: 'hideCreatorsWithoutPicture');
+}

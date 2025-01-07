@@ -20,6 +20,7 @@ final class LocalFeatureFlagsService extends FeatureFlagsService {
       WalletFeatureFlag.buyNftEnabled: false,
       FeedFeatureFlag.showTrendingVideo: false,
       FeedFeatureFlag.showMentionsSuggestions: false,
+      HideCreatorsWithoutPicture.hideCreatorsWithoutPicture: true,
     });
   }
 

@@ -18,6 +18,8 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart'
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
@@ -34,7 +36,13 @@ class DiscoverCreators extends HookConsumerWidget {
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final contentCreators = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>();
 
-    final filteredCreators = contentCreators?.where((creator) => creator.data.picture != null);
+    final hideCreatorsWithoutPicture = ref
+        .read(featureFlagsProvider.notifier)
+        .get(HideCreatorsWithoutPicture.hideCreatorsWithoutPicture);
+
+    final filteredCreators = hideCreatorsWithoutPicture
+        ? contentCreators?.where((creator) => creator.data.picture != null)
+        : contentCreators;
 
     ref.displayErrors(onboardingCompleteNotifierProvider);
 
