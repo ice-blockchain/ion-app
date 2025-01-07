@@ -9,11 +9,19 @@ import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/search_users_data_source_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
+import 'package:ion/generated/assets.gen.dart';
 
-class SearchedUsersList extends ConsumerWidget {
-  const SearchedUsersList({required this.onUserSelected, super.key});
+class SearchedUsers extends ConsumerWidget {
+  const SearchedUsers({
+    required this.onUserSelected,
+    this.isMultiple = false,
+    this.selectedPubkeys,
+    super.key,
+  });
 
   final void Function(UserMetadataEntity user) onUserSelected;
+  final bool isMultiple;
+  final List<String>? selectedPubkeys;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,11 +37,21 @@ class SearchedUsersList extends ConsumerWidget {
           itemCount: users.length,
           itemBuilder: (BuildContext context, int index) {
             final user = users.elementAt(index);
+            final isSelected = selectedPubkeys?.contains(user.masterPubkey) ?? false;
             return ListItem.user(
               title: Text(user.data.displayName),
               subtitle: Text(prefixUsername(username: user.data.name, context: context)),
               profilePicture: user.data.picture,
               onTap: () => onUserSelected(user),
+              trailing: !isMultiple
+                  ? null
+                  : isSelected
+                      ? Assets.svg.iconBlockCheckboxOnblue.icon(
+                          color: context.theme.appColors.success,
+                        )
+                      : Assets.svg.iconBlockCheckboxOff.icon(
+                          color: context.theme.appColors.tertararyText,
+                        ),
             );
           },
         ),

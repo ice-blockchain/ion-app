@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/views/pages/new_chat_modal/components/new_chat_initial_view/new_chat_initial_view.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/pages/user_search_modal/components/no_user_view.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FollowingUsersList extends ConsumerWidget {
-  const FollowingUsersList({
+class FollowingUsers extends ConsumerWidget {
+  const FollowingUsers({
     required this.onUserSelected,
     this.selectedPubkeys,
     this.isMultiple = false,
@@ -25,25 +25,29 @@ class FollowingUsersList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final following = ref.watch(currentUserFollowListProvider);
-    final followers = following.valueOrNull?.data.list;
-    final pubkeys = followers?.map((e) => e.pubkey).toList() ?? [];
+    final followListFuture =
+        ref.watch(currentUserFollowListProvider.selectAsync((following) => following?.data.list));
 
-    if (pubkeys.isEmpty) {
-      return const NewChatInitialView();
-    }
-
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        return _FollowingUserListItem(
-          pubkey: pubkeys[index],
-          onUserSelected: onUserSelected,
-          selectedPubkeys: selectedPubkeys,
-          isMultiple: isMultiple,
-        );
+    return FutureBuilder(
+      future: followListFuture,
+      builder: (data, snapshot) {
+        if (snapshot.hasData) {
+          final pubkeys = snapshot.data?.map((e) => e.pubkey).toList() ?? [];
+          return ListView.separated(
+            itemBuilder: (context, index) {
+              return _FollowingUserListItem(
+                pubkey: pubkeys[index],
+                onUserSelected: onUserSelected,
+                selectedPubkeys: selectedPubkeys,
+                isMultiple: isMultiple,
+              );
+            },
+            itemCount: pubkeys.length,
+            separatorBuilder: (context, index) => SizedBox(height: 14.0.s),
+          );
+        }
+        return const NoUserView();
       },
-      itemCount: pubkeys.length,
-      separatorBuilder: (context, index) => SizedBox(height: 14.0.s),
     );
   }
 }

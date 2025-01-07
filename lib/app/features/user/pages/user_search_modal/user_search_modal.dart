@@ -6,8 +6,8 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/components/following_user_list.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/components/searched_user_list.dart';
+import 'package:ion/app/features/user/pages/user_search_modal/components/follower_users.dart';
+import 'package:ion/app/features/user/pages/user_search_modal/components/searched_users.dart';
 import 'package:ion/app/features/user/providers/search_users_data_source_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -20,13 +20,14 @@ class UserSearchModal extends HookConsumerWidget {
     super.key,
     this.selectedPubkeys,
     this.isMultiple = false,
+    this.bottomContent,
   });
 
   final NavigationAppBar navigationBar;
   final Widget? header;
   final List<String>? selectedPubkeys;
   final bool isMultiple;
-
+  final Widget? bottomContent;
   final void Function(UserMetadataEntity user) onUserSelected;
 
   @override
@@ -58,17 +59,18 @@ class UserSearchModal extends HookConsumerWidget {
                     ),
                   Expanded(
                     child: searchText.isEmpty
-                        ? FollowingUsersList(
+                        ? FollowerUsers(
                             onUserSelected: onUserSelected,
                             selectedPubkeys: selectedPubkeys,
                             isMultiple: isMultiple,
                           )
-                        : SearchedUsersList(
+                        : SearchedUsers(
                             onUserSelected: onUserSelected,
-                            // selectedPubkeys: selectedPubkeys,
-                            // isMultiple: isMultiple,
+                            selectedPubkeys: selectedPubkeys,
+                            isMultiple: isMultiple,
                           ),
                   ),
+                  bottomContent ?? const SizedBox.shrink(),
                 ],
               ),
             ),
