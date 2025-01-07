@@ -18,6 +18,8 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart'
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/discover_creators/creator_list_item.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
@@ -32,14 +34,22 @@ class DiscoverCreators extends HookConsumerWidget {
     final finishNotifier = ref.watch(onboardingCompleteNotifierProvider);
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final contentCreators = entitiesPagedData?.data.items;
+    final contentCreators = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>();
+
+    final hideCreatorsWithoutPicture = ref
+        .watch(featureFlagsProvider.notifier)
+        .get(HideCreatorsWithoutPicture.hideCreatorsWithoutPicture);
+
+    final filteredCreators = hideCreatorsWithoutPicture
+        ? contentCreators?.where((creator) => creator.data.picture != null)
+        : contentCreators;
 
     ref.displayErrors(onboardingCompleteNotifierProvider);
 
     final (selectedCreators, toggleCreatorSelection) = useSelectedState(<UserMetadataEntity>[]);
 
     final slivers = [
-      if (contentCreators == null || contentCreators.isEmpty)
+      if (filteredCreators == null || filteredCreators.isEmpty)
         SliverToBoxAdapter(
           child: ScreenSideOffset.small(
             child: Skeleton(
@@ -53,17 +63,14 @@ class DiscoverCreators extends HookConsumerWidget {
       else
         SliverList.separated(
           separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-          itemCount: contentCreators.length,
+          itemCount: filteredCreators.length,
           itemBuilder: (BuildContext context, int index) {
-            final creator = contentCreators.elementAt(index);
-            if (creator is UserMetadataEntity) {
-              return CreatorListItem(
-                userMetadataEntity: creator,
-                selected: selectedCreators.contains(creator),
-                onPressed: () => toggleCreatorSelection(creator),
-              );
-            }
-            return null;
+            final creator = filteredCreators.elementAt(index);
+            return CreatorListItem(
+              userMetadataEntity: creator,
+              selected: selectedCreators.contains(creator),
+              onPressed: () => toggleCreatorSelection(creator),
+            );
           },
         ),
       SliverPadding(padding: EdgeInsets.only(top: 16.0.s)),
