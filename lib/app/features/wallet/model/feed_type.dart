@@ -46,9 +46,9 @@ enum FeedType implements MainModalListItem {
   String get iconAsset {
     return switch (this) {
       FeedType.post => Assets.svg.iconFeedPost,
-      FeedType.story => Assets.svg.iconFeedStory,
+      FeedType.story => Assets.svg.iconFeedStories,
       FeedType.video => Assets.svg.iconVideosTrading,
-      FeedType.article => Assets.svg.iconFeedStories,
+      FeedType.article => Assets.svg.iconFeedArticles,
     };
   }
 }
