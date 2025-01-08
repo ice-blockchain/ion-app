@@ -43,7 +43,7 @@ enum ConversationType implements MainModalListItem {
     return switch (this) {
       ConversationType.private => Assets.svg.iconChatCreatenew,
       ConversationType.group => Assets.svg.iconSearchGroups,
-      ConversationType.channel => Assets.svg.iconFeedArticles,
+      ConversationType.channel => Assets.svg.iconSearchChannel,
     };
   }
 }
