@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/toggle_styles.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarLinkButton extends StatelessWidget {
@@ -36,12 +36,7 @@ class ToolbarLinkButton extends StatelessWidget {
         if (!localContext.mounted) return;
 
         if (resultLink != null) {
-          if (resultLink.isNotEmpty) {
-            wipeAllStyles(textEditorController);
-            textEditorController.formatSelection(LinkAttribute(resultLink));
-          } else {
-            textEditorController.formatSelection(const LinkAttribute(null));
-          }
+          toggleLinkStyle(textEditorController, resultLink);
         }
       },
     );

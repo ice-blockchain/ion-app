@@ -2,35 +2,47 @@
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 enum FontType { regular, bold, italic, h1, h2, h3, underline }
 
-FontType useTextEditorFontStyle(QuillController textEditorController) {
-  final fontType = useState<FontType>(FontType.regular);
+Set<FontType> useTextEditorFontStyles(QuillController textEditorController) {
+  final fontStyles = useState<Set<FontType>>({});
 
   final textEditorListener = useCallback(
     () {
       final style = textEditorController.getSelectionStyle();
+      final activeStyles = <FontType>{};
 
+      Logger.log('style.attributes: ${style.attributes}');
+
+      // Check for header styles (h1, h2, h3)
       if (style.attributes.containsKey(Attribute.header.key)) {
         final headerValue = style.attributes[Attribute.header.key]!.value;
-
         if (headerValue == 1) {
-          fontType.value = FontType.h1;
+          activeStyles.add(FontType.h1);
         } else if (headerValue == 2) {
-          fontType.value = FontType.h2;
+          activeStyles.add(FontType.h2);
         } else if (headerValue == 3) {
-          fontType.value = FontType.h3;
+          activeStyles.add(FontType.h3);
         }
-      } else if (style.attributes.containsKey(Attribute.bold.key)) {
-        fontType.value = FontType.bold;
-      } else if (style.attributes.containsKey(Attribute.italic.key)) {
-        fontType.value = FontType.italic;
-      } else if (style.attributes.containsKey(Attribute.underline.key)) {
-        fontType.value = FontType.underline;
       } else {
-        fontType.value = FontType.regular;
+        // If no header is applied, mark it as regular
+        activeStyles.add(FontType.regular);
       }
+
+      // Check for bold, italic, and underline styles
+      if (style.attributes.containsKey(Attribute.bold.key)) {
+        activeStyles.add(FontType.bold);
+      }
+      if (style.attributes.containsKey(Attribute.italic.key)) {
+        activeStyles.add(FontType.italic);
+      }
+      if (style.attributes.containsKey(Attribute.underline.key)) {
+        activeStyles.add(FontType.underline);
+      }
+
+      fontStyles.value = activeStyles;
     },
     [textEditorController],
   );
@@ -45,5 +57,5 @@ FontType useTextEditorFontStyle(QuillController textEditorController) {
     [textEditorListener, textEditorController],
   );
 
-  return fontType.value;
+  return fontStyles.value;
 }
