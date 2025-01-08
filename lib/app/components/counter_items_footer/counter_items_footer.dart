@@ -6,7 +6,8 @@ import 'package:ion/app/components/counter_items_footer/likes_counter_button.dar
 import 'package:ion/app/components/counter_items_footer/replies_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/reposts_counter_button.dart';
 import 'package:ion/app/components/counter_items_footer/share_button.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 
 class CounterItemsFooter extends HookConsumerWidget {
@@ -48,6 +49,12 @@ class CounterItemsFooter extends HookConsumerWidget {
               eventReference: eventReference,
               color: color,
             ),
+          ),
+          BookmarkButton(
+            eventReference: eventReference,
+            iconSize: 16.0.s,
+            colorFilter:
+                ColorFilter.mode(context.theme.appColors.onTertararyBackground, BlendMode.srcIn),
           ),
           ShareButton(
             eventReference: eventReference,

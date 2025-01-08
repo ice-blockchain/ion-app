@@ -8,9 +8,16 @@ import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BookmarkButton extends ConsumerWidget {
-  const BookmarkButton({required this.eventReference, super.key});
+  const BookmarkButton({
+    required this.eventReference,
+    this.iconSize,
+    this.colorFilter,
+    super.key,
+  });
 
   final EventReference? eventReference;
+  final double? iconSize;
+  final ColorFilter? colorFilter;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,9 +26,13 @@ class BookmarkButton extends ConsumerWidget {
     }
 
     final isBookmarked = ref.watch(isBookmarkedProvider(eventReference!)).value ?? false;
+
     return IconButton(
       icon: SvgPicture.asset(
         isBookmarked ? Assets.svg.iconBookmarksOn : Assets.svg.iconBookmarks,
+        width: iconSize,
+        height: iconSize,
+        colorFilter: isBookmarked ? null : colorFilter,
       ),
       onPressed: () => ref.read(bookmarksNotifierProvider.notifier).toggleBookmark(
             eventReference!,
