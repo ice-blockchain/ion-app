@@ -56,7 +56,7 @@ class UserPickerSheet extends HookConsumerWidget {
                 SizedBox(height: 12.0.s),
                 if (header != null)
                   Column(
-                    children: <Widget>[
+                    children: [
                       header!,
                       SizedBox(height: 12.0.s),
                     ],

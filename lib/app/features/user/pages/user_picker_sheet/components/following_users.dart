@@ -25,29 +25,25 @@ class FollowingUsers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followListFuture =
-        ref.watch(currentUserFollowListProvider.selectAsync((following) => following?.data.list));
+    final followList = ref.watch(currentUserFollowListProvider);
 
-    return FutureBuilder(
-      future: followListFuture,
-      builder: (data, snapshot) {
-        if (snapshot.hasData) {
-          final pubkeys = snapshot.data?.map((e) => e.pubkey).toList() ?? [];
-          return ListView.separated(
-            itemBuilder: (context, index) {
-              return _FollowingUserListItem(
-                pubkey: pubkeys[index],
-                onUserSelected: onUserSelected,
-                selectedPubkeys: selectedPubkeys,
-                selectable: selectable,
-              );
-            },
-            itemCount: pubkeys.length,
-            separatorBuilder: (context, index) => SizedBox(height: 14.0.s),
-          );
-        }
-        return const NoUserView();
+    return followList.maybeWhen(
+      data: (data) {
+        final pubkeys = data?.data.list.map((e) => e.pubkey).toList() ?? [];
+        return ListView.separated(
+          itemBuilder: (context, index) {
+            return _FollowingUserListItem(
+              pubkey: pubkeys[index],
+              onUserSelected: onUserSelected,
+              selectedPubkeys: selectedPubkeys,
+              selectable: selectable,
+            );
+          },
+          itemCount: pubkeys.length,
+          separatorBuilder: (context, index) => SizedBox(height: 14.0.s),
+        );
       },
+      orElse: () => const NoUserView(),
     );
   }
 }

@@ -21,7 +21,7 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
-    final createGroupFormNotifier = ref.read(createGroupFormControllerProvider.notifier);
+    final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
 
     return SheetContent(
       topPadding: 0,
@@ -43,7 +43,7 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
           ],
         ),
         bottomContent: Column(
-          children: <Widget>[
+          children: [
             const HorizontalSeparator(),
             ScreenBottomOffset(
               margin: 32.0.s,
