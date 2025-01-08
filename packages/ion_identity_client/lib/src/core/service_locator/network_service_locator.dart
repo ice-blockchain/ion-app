@@ -9,7 +9,6 @@ import 'package:ion_identity_client/src/core/service_locator/ion_identity_client
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class NetworkServiceLocator
     with _Dio, _Interceptors, _TokenStorage, _PrivateKeyStorage, _NetworkClient {
@@ -64,7 +63,7 @@ mixin _Dio {
     final dio = Dio(dioOptions);
 
     final interceptors = [
-      if (config.logging) NetworkServiceLocator().loggerInterceptor(),
+      if (config.logger != null) config.logger!,
     ];
     dio.interceptors.addAll(interceptors);
 
@@ -73,11 +72,15 @@ mixin _Dio {
 }
 
 mixin _Interceptors {
+  final StringBuffer _logBuffer = StringBuffer();
+  String get logs => _logBuffer.toString();
+
   Iterable<Interceptor> interceptors({
     required IONIdentityConfig config,
   }) {
+    final logger = config.logger;
     return <Interceptor>[
-      if (config.logging) loggerInterceptor(),
+      if (config.logger != null) logger!,
       authInterceptor(config: config),
     ];
   }
@@ -88,13 +91,6 @@ mixin _Interceptors {
     return AuthInterceptor(
       dio: NetworkServiceLocator()._refreshTokenDio(config),
       delegatedLoginService: AuthClientServiceLocator().delegatedLogin(config: config),
-    );
-  }
-
-  Interceptor loggerInterceptor() {
-    return PrettyDioLogger(
-      requestBody: true,
-      requestHeader: true,
     );
   }
 }

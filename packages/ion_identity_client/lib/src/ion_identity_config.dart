@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:dio/dio.dart';
+
 /// A configuration class for the ION Identity client, containing the necessary
 /// identifiers and origin information required to initialize the client.
 class IONIdentityConfig {
@@ -8,7 +10,7 @@ class IONIdentityConfig {
   IONIdentityConfig({
     required this.appId,
     required this.origin,
-    this.logging = false,
+    this.logger,
   });
 
   /// The application identifier used to uniquely identify the app within the ION Identity API.
@@ -18,9 +20,10 @@ class IONIdentityConfig {
   /// and securing API requests.
   final String origin;
 
-  /// Whether to enable logging for the ION Identity client.
-  final bool logging;
+  /// The logger interceptor to use for logging requests and responses.
+  final Interceptor? logger;
 
   @override
-  String toString() => 'IONIdentityConfig(appId: $appId, origin: $origin, logging: $logging)';
+  String toString() =>
+      'IONIdentityConfig(appId: $appId, origin: $origin, logger: ${logger?.toString() ?? 'null'})';
 }

@@ -3,33 +3,35 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/wallet/data/coins/domain/coin_initializer.c.dart';
 import 'package:ion/app/services/nostr/nostr.dart';
+import 'package:ion/app/services/nostr/nostr_logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'init_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<void> initApp(Ref ref) async {
-  Nostr.initialize();
+  final logNostrDart = ref.watch(featureFlagsProvider.notifier).get(LoggerFeatureFlag.logNostrDart);
+
+  Nostr.initialize(
+    logNostrDart ? '${(await getTemporaryDirectory()).path}/${NostrLogger.logFileName}' : null,
+  );
 
   await Future.wait([
     ref.read(windowManagerProvider.notifier).show(),
-    ref.read(envProvider.future),
     ref.read(sharedPreferencesProvider.future),
-  ]);
-
-  await Future.wait([
     ref.read(appTemplateProvider.future),
     ref.read(authProvider.future),
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
     ref.read(coinInitializerProvider).initialize(),
+    ref.read(onboardingCompleteProvider.future),
   ]);
-
-  await ref.read(onboardingCompleteProvider.future);
 }

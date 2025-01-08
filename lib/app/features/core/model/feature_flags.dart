@@ -19,6 +19,15 @@ final class FeedFeatureFlag extends FeatureFlag {
   static const showMentionsSuggestions = FeedFeatureFlag._(key: 'showMentionsSuggestions');
 }
 
+final class LoggerFeatureFlag extends FeatureFlag {
+  const LoggerFeatureFlag._({required super.key});
+
+  static const logApp = FeedFeatureFlag._(key: 'logApp');
+  static const logRouters = FeedFeatureFlag._(key: 'logRouters');
+  static const logNostrDart = FeedFeatureFlag._(key: 'logNostrDart');
+  static const logIonIdentityClient = FeedFeatureFlag._(key: 'logIonIdentityClient');
+}
+
 ///
 /// TODO: remove this once before production release
 /// It hides creators without picture from the discover creators page

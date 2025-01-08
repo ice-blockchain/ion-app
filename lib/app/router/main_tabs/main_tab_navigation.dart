@@ -9,6 +9,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/conversation_edit_bottom_bar.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/debug/views/debug_page.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/main_tabs/components/components.dart';
 
@@ -106,6 +108,15 @@ class _BottomNavBarContent extends ConsumerWidget {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => onTabPressed(tabItem),
+                    onLongPress:
+                        ref.read(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO) &&
+                                tabItem == TabItem.profile
+                            ? () => Navigator.of(context).push(
+                                  MaterialPageRoute<DebugPage>(
+                                    builder: (context) => const DebugPage(),
+                                  ),
+                                )
+                            : null,
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 9.0.s),
                       color: context.theme.appColors.secondaryBackground,
