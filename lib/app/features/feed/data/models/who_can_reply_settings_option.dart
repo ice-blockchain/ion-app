@@ -7,8 +7,6 @@ import 'package:ion/generated/assets.gen.dart';
 enum WhoCanReplySettingsOption {
   everyone(null),
   followedAccounts('following'),
-  // TODO: Add support for verified accounts setting when API is ready
-  verifiedAccounts(null),
   mentionedAccounts('mentioned');
 
   const WhoCanReplySettingsOption(this.tagValue);
@@ -24,8 +22,6 @@ enum WhoCanReplySettingsOption {
       WhoCanReplySettingsOption.everyone => context.i18n.visibility_settings_everyone,
       WhoCanReplySettingsOption.followedAccounts =>
         context.i18n.visibility_settings_followed_accounts,
-      WhoCanReplySettingsOption.verifiedAccounts =>
-        context.i18n.visibility_settings_verified_accounts,
       WhoCanReplySettingsOption.mentionedAccounts =>
         context.i18n.visibility_settings_mentioned_accounts,
     };
@@ -35,7 +31,6 @@ enum WhoCanReplySettingsOption {
     final icon = switch (this) {
       WhoCanReplySettingsOption.everyone => Assets.svg.iconPostEveryone,
       WhoCanReplySettingsOption.followedAccounts => Assets.svg.iconSearchFollow,
-      WhoCanReplySettingsOption.verifiedAccounts => Assets.svg.iconPostVerifyaccount,
       WhoCanReplySettingsOption.mentionedAccounts => Assets.svg.iconFieldNickname,
     };
 

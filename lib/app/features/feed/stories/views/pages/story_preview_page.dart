@@ -12,11 +12,8 @@ import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_pr
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_preview/user/verified_account_list_item.dart';
-import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class StoryPreviewPage extends ConsumerWidget {
@@ -57,18 +54,6 @@ class StoryPreviewPage extends ConsumerWidget {
                         MediaType.audio => const CenteredLoadingIndicator(),
                         MediaType.unknown => const CenteredLoadingIndicator(),
                       },
-                    ),
-                    SizedBox(height: 8.0.s),
-                    GestureDetector(
-                      onTap: () async {
-                        await showSimpleBottomSheet<bool>(
-                          context: context,
-                          child: WhoCanReplySettingsModal(
-                            title: context.i18n.story_settings_title,
-                          ),
-                        );
-                      },
-                      child: const VerifiedAccountListItem(),
                     ),
                   ],
                 ),
