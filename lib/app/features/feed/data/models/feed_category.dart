@@ -29,7 +29,7 @@ enum FeedCategory {
     final icon = switch (this) {
       FeedCategory.feed => Assets.svg.iconProfileFeed,
       FeedCategory.videos => Assets.svg.iconVideosTrading,
-      FeedCategory.articles => Assets.svg.iconFeedStories,
+      FeedCategory.articles => Assets.svg.iconFeedArticles,
     };
 
     return icon.icon(color: color ?? defaultColor);
