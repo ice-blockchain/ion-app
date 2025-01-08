@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/user_search_modal.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -26,10 +26,10 @@ class AddAdminModal extends HookConsumerWidget {
 
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.8,
-      child: UserSearchModal(
+      child: UserPickerSheet(
         onUserSelected: (UserMetadataEntity user) => selectedPubkey.value = user.masterPubkey,
         selectedPubkeys: selectedPubkey.value != null ? [selectedPubkey.value!] : null,
-        isMultiple: true,
+        selectable: true,
         navigationBar: NavigationAppBar.modal(
           title: Text(context.i18n.channel_create_admins_action),
           showBackButton: false,

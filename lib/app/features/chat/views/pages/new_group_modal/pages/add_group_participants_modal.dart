@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/user_search_modal.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -25,10 +25,10 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
 
     return SheetContent(
       topPadding: 0,
-      body: UserSearchModal(
+      body: UserPickerSheet(
         key: const Key('add-group-participants-modal'),
         selectedPubkeys: createGroupForm.members.toList(),
-        isMultiple: true,
+        selectable: true,
         initialUserListType: UserListType.follower,
         onUserSelected: (user) {
           createGroupFormNotifier.toggleMember(user.masterPubkey);

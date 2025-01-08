@@ -14,13 +14,13 @@ import 'package:ion/generated/assets.gen.dart';
 class SearchedUsers extends ConsumerWidget {
   const SearchedUsers({
     required this.onUserSelected,
-    this.isMultiple = false,
+    this.selectable = false,
     this.selectedPubkeys,
     super.key,
   });
 
   final void Function(UserMetadataEntity user) onUserSelected;
-  final bool isMultiple;
+  final bool selectable;
   final List<String>? selectedPubkeys;
 
   @override
@@ -43,7 +43,7 @@ class SearchedUsers extends ConsumerWidget {
               subtitle: Text(prefixUsername(username: user.data.name, context: context)),
               profilePicture: user.data.picture,
               onTap: () => onUserSelected(user),
-              trailing: !isMultiple
+              trailing: !selectable
                   ? null
                   : isSelected
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(

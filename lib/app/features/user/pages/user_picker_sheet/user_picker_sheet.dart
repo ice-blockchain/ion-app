@@ -6,9 +6,9 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/components/follower_users.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/components/following_users.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/components/searched_users.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/components/follower_users.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/components/following_users.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/components/searched_users.dart';
 import 'package:ion/app/features/user/providers/search_users_data_source_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
@@ -17,14 +17,14 @@ enum UserListType {
   following,
 }
 
-class UserSearchModal extends HookConsumerWidget {
-  const UserSearchModal({
+class UserPickerSheet extends HookConsumerWidget {
+  const UserPickerSheet({
     required this.navigationBar,
     required this.onUserSelected,
     this.header,
     super.key,
     this.selectedPubkeys,
-    this.isMultiple = false,
+    this.selectable = false,
     this.bottomContent,
     this.initialUserListType = UserListType.following,
   });
@@ -32,7 +32,7 @@ class UserSearchModal extends HookConsumerWidget {
   final NavigationAppBar navigationBar;
   final Widget? header;
   final List<String>? selectedPubkeys;
-  final bool isMultiple;
+  final bool selectable;
   final Widget? bottomContent;
   final void Function(UserMetadataEntity user) onUserSelected;
   final UserListType initialUserListType;
@@ -67,17 +67,17 @@ class UserSearchModal extends HookConsumerWidget {
                           ? FollowerUsers(
                               onUserSelected: onUserSelected,
                               selectedPubkeys: selectedPubkeys,
-                              isMultiple: isMultiple,
+                              selectable: selectable,
                             )
                           : FollowingUsers(
                               onUserSelected: onUserSelected,
                               selectedPubkeys: selectedPubkeys,
-                              isMultiple: isMultiple,
+                              selectable: selectable,
                             )
                       : SearchedUsers(
                           onUserSelected: onUserSelected,
                           selectedPubkeys: selectedPubkeys,
-                          isMultiple: isMultiple,
+                          selectable: selectable,
                         ),
                 ),
                 bottomContent ?? const SizedBox.shrink(),

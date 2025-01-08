@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/user_search_modal.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -25,7 +25,7 @@ class FriendsModal extends HookConsumerWidget {
 
     return SheetContent(
       topPadding: 0,
-      body: UserSearchModal(
+      body: UserPickerSheet(
         navigationBar: NavigationAppBar.modal(
           title: Text(context.i18n.friends_modal_title),
           actions: const [NavigationCloseButton()],

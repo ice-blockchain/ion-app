@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/components/no_user_view.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/components/no_user_view.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -15,13 +15,13 @@ class FollowingUsers extends ConsumerWidget {
   const FollowingUsers({
     required this.onUserSelected,
     this.selectedPubkeys,
-    this.isMultiple = false,
+    this.selectable = false,
     super.key,
   });
 
   final void Function(UserMetadataEntity user) onUserSelected;
   final List<String>? selectedPubkeys;
-  final bool isMultiple;
+  final bool selectable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +39,7 @@ class FollowingUsers extends ConsumerWidget {
                 pubkey: pubkeys[index],
                 onUserSelected: onUserSelected,
                 selectedPubkeys: selectedPubkeys,
-                isMultiple: isMultiple,
+                selectable: selectable,
               );
             },
             itemCount: pubkeys.length,
@@ -57,13 +57,13 @@ class _FollowingUserListItem extends ConsumerWidget {
     required this.pubkey,
     required this.onUserSelected,
     this.selectedPubkeys,
-    this.isMultiple = false,
+    this.selectable = false,
   });
 
   final String pubkey;
   final void Function(UserMetadataEntity user) onUserSelected;
   final List<String>? selectedPubkeys;
-  final bool isMultiple;
+  final bool selectable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,7 +74,7 @@ class _FollowingUserListItem extends ConsumerWidget {
       title: Text(user?.data.displayName ?? ''),
       subtitle: Text(prefixUsername(username: user?.data.name ?? '', context: context)),
       profilePicture: user?.data.picture,
-      trailing: !isMultiple
+      trailing: !selectable
           ? null
           : isSelected
               ? Assets.svg.iconBlockCheckboxOnblue.icon(

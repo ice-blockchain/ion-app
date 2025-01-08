@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/pages/user_search_modal/user_search_modal.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -28,7 +28,7 @@ class NewChatModal extends HookConsumerWidget {
 
     return SheetContent(
       topPadding: 0,
-      body: UserSearchModal(
+      body: UserPickerSheet(
         navigationBar: NavigationAppBar.modal(
           showBackButton: false,
           title: Text(context.i18n.new_chat_modal_title),
