@@ -153,7 +153,6 @@ class BookmarksNotifier extends _$BookmarksNotifier {
   BookmarksSetType? _getBookmarkType(NostrEntity entity) {
     return switch (entity) {
       ArticleEntity() => BookmarksSetType.articles,
-      PostEntity(data: PostData(isStory: true)) => BookmarksSetType.stories,
       PostEntity(data: PostData(hasVideo: true)) => BookmarksSetType.videos,
       PostEntity() => BookmarksSetType.posts,
       _ => null,
