@@ -72,9 +72,6 @@ mixin _Dio {
 }
 
 mixin _Interceptors {
-  final StringBuffer _logBuffer = StringBuffer();
-  String get logs => _logBuffer.toString();
-
   Iterable<Interceptor> interceptors({
     required IONIdentityConfig config,
   }) {
