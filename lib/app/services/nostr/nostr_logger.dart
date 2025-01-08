@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
