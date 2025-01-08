@@ -67,10 +67,8 @@ class _FollowingUserListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('pubkey: $pubkey');
     final user = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     final isSelected = selectedPubkeys?.contains(pubkey) ?? false;
-    print(selectedPubkeys);
     return ListItem.user(
       onTap: () => onUserSelected(user!),
       title: Text(user?.data.displayName ?? ''),
