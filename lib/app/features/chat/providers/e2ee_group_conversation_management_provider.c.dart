@@ -33,6 +33,13 @@ class E2EEGroupConversationManagementService {
   final ConversationsDBService databaseService;
   final ConversationMessageManagementService conversationMessageManagementService;
 
+  Future<void> createOneOnOneConversation(List<String> participantsPubkeys) async {
+    await conversationMessageManagementService.sentMessage(
+      content: '',
+      participantsPubkeys: participantsPubkeys,
+    );
+  }
+
   Future<void> createGroup({
     required String subject,
     required MediaFile groupImage,

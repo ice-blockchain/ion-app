@@ -168,7 +168,7 @@ class CreateGroupModal extends HookConsumerWidget {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
-                      final groupConversationService = await ref.watch(
+                      final ee2eGroupConversationService = await ref.watch(
                         e2eeGroupConversationManagementServiceProvider,
                       );
 
@@ -179,7 +179,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      await groupConversationService.createGroup(
+                      await ee2eGroupConversationService.createGroup(
                         groupImage: groupPicture!,
                         subject: createGroupForm.name!,
                         participantsPubkeys: createGroupForm.members.toList(),
