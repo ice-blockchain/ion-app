@@ -13,11 +13,13 @@ import 'package:ion/app/features/wallet/components/coin_sync/coins_sync_wrapper.
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
-import 'package:ion/app/services/riverpod/root_provider_scope.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
+
+const _riverpodLoggerEnabled = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,8 +27,11 @@ void main() async {
   await dotenv.load(fileName: Assets.aApp);
 
   runApp(
-    const RiverpodRootProviderScope(
-      child: IONApp(),
+    ProviderScope(
+      observers: <ProviderObserver>[
+        if (_riverpodLoggerEnabled) TalkerRiverpodObserver(),
+      ],
+      child: const IONApp(),
     ),
   );
 }
