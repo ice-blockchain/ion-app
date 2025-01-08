@@ -12,17 +12,16 @@ import 'package:ion/app/features/wallet/data/coins/domain/coin_initializer.c.dar
 import 'package:ion/app/services/nostr/nostr.dart';
 import 'package:ion/app/services/nostr/nostr_logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'init_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<void> initApp(Ref ref) async {
-  final logNostrDart = ref.watch(featureFlagsProvider.notifier).get(LoggerFeatureFlag.logNostrDart);
+  final logNostrDart = ref.read(featureFlagsProvider.notifier).get(LoggerFeatureFlag.logNostrDart);
 
   Nostr.initialize(
-    logNostrDart ? '${(await getTemporaryDirectory()).path}/${NostrLogger.logFileName}' : null,
+    logNostrDart ? NostrLogger() : null,
   );
 
   await Future.wait([

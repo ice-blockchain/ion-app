@@ -38,6 +38,7 @@ import 'package:ion/app/features/core/views/photo_gallery_page/photo_gallery_pag
 import 'package:ion/app/features/dapps/views/pages/dapp_details/dapp_details_modal.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
+import 'package:ion/app/features/debug/views/debug_page.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/create_article_modal.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/create_article_topics.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/create_article_preview_modal.dart';

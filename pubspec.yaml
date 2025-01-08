@@ -58,7 +58,6 @@ dependencies:
   ion_screenshot_detector:
     path: packages/ion_screenshot_detector
   json_annotation: ^4.8.1
-  logger: ^2.5.0
   lottie: ^3.1.0
   markdown_quill: ^4.1.0
   meta: ^1.15.0
@@ -79,7 +78,6 @@ dependencies:
   permission_handler: ^11.3.0
   photo_manager: ^3.6.3
   photo_manager_image_provider: ^2.1.1
-  pretty_dio_logger: ^1.4.0
   qr_code_scanner:
     git:
       url: https://github.com/ice-blockchain/qr_code_scanner
@@ -91,6 +89,9 @@ dependencies:
   shared_preferences: ^2.2.2
   shimmer: ^3.0.0
   smooth_sheets: ^1.0.0-f324.0.10.2
+  talker_dio_logger: 4.5.4
+  talker_flutter: 4.5.4
+  talker_riverpod_logger: 4.5.4
   timeago: ^3.6.1
   timeago_flutter: ^3.6.0
   uri_to_file: ^1.0.0

@@ -1,55 +1,45 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:developer' as developer;
-import 'dart:io';
-
-import 'package:path_provider/path_provider.dart';
+import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
+import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class Logger {
   Logger._();
 
-  static String logFileName = 'app_logs.txt';
-  static File? _logFile;
+  static final Talker talker = TalkerFlutter.init();
+
+  static final talkerDioLogger = TalkerDioLogger(
+    talker: talker,
+    settings: TalkerDioLoggerSettings(
+      printRequestHeaders: true,
+      printResponseHeaders: true,
+      requestPen: AnsiPen()..cyan(),
+      responsePen: AnsiPen()..green(),
+      errorPen: AnsiPen()..red(),
+    ),
+  );
 
   static void log(
     String message, {
-    String name = '',
     Object? error,
     StackTrace? stackTrace,
   }) {
-    developer.log(message, name: name, error: error, stackTrace: stackTrace);
-    _writeToLogs(message, name: name, error: error, stackTrace: stackTrace);
-  }
+    talker.log(message);
 
-  static Future<void> _initLogFile() async {
-    if (_logFile != null) return;
-    final dir = await getTemporaryDirectory();
-    _logFile = File('${dir.path}/$logFileName');
-  }
-
-  static Future<void> _writeToLogs(
-    String message, {
-    String name = '',
-    Object? error,
-    StackTrace? stackTrace,
-  }) async {
-    await _initLogFile();
-
-    final timestamp = DateTime.now().toIso8601String();
-    final separator = '=' * 50;
-
-    final logEntry = '$separator\n'
-        '📝 Log Entry at $timestamp\n'
-        '${name.isNotEmpty ? '📌 Context: $name\n' : ''}'
-        '💬 Message: $message\n'
-        '${error != null ? '❌ Error: $error\n' : ''}'
-        '${stackTrace != null ? '🔍 Stack Trace:\n$stackTrace\n' : ''}'
-        '$separator\n\n';
-
-    try {
-      await _logFile?.writeAsString(logEntry, mode: FileMode.append);
-    } catch (e) {
-      developer.log('Failed to write to log file: $e');
+    if (error != null) {
+      talker.error(error, stackTrace);
     }
+  }
+
+  static void info(String message) => talker.info(message);
+
+  static void warning(String message) => talker.warning(message);
+
+  static void error(
+    Object error, {
+    StackTrace? stackTrace,
+  }) {
+    talker.error(error, stackTrace);
   }
 }

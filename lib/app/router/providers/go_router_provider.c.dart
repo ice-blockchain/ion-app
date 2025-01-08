@@ -50,7 +50,7 @@ GoRouter goRouter(Ref ref) {
     routes: $appRoutes,
     errorBuilder: (context, state) => ErrorPage(error: state.error ?? Exception('Unknown error')),
     initialLocation: SplashRoute().location,
-    debugLogDiagnostics: ref.watch(featureFlagsProvider.notifier).get(LoggerFeatureFlag.logRouters),
+    debugLogDiagnostics: ref.read(featureFlagsProvider.notifier).get(LoggerFeatureFlag.logRouters),
     navigatorKey: rootNavigatorKey,
   );
 }

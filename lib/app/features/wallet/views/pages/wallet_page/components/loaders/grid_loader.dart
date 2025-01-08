@@ -16,7 +16,7 @@ class GridLoader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final buyNftFeatureEnabled =
-        ref.watch(featureFlagsProvider.notifier).get(WalletFeatureFlag.buyNftEnabled);
+        ref.read(featureFlagsProvider.notifier).get(WalletFeatureFlag.buyNftEnabled);
 
     final width =
         (MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2 - 12.0.s) / 2;

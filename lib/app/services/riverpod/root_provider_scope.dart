@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/services/riverpod/riverpod_logger.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
 
 const _riverpodLoggerEnabled = false;
 
@@ -18,7 +18,7 @@ class RiverpodRootProviderScope extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ProviderScope(
       observers: <ProviderObserver>[
-        if (_riverpodLoggerEnabled) RiverpodLogger(),
+        if (_riverpodLoggerEnabled) TalkerRiverpodObserver(),
       ],
       child: child,
     );
