@@ -30,11 +30,11 @@ class NotificationItem extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0.s),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ScreenSideOffset.small(
-            child: Row(
+      child: ScreenSideOffset.small(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
                 NotificationTypeIcon(
                   notificationsType: notificationData.type,
@@ -51,24 +51,24 @@ class NotificationItem extends StatelessWidget {
                 }),
               ],
             ),
-          ),
-          SizedBox(
-            height: 8.0.s,
-          ),
-          ScreenSideOffset.small(child: NotificationInfo(notificationData: notificationData)),
-          if (notificationData.postEntity != null) ...[
             SizedBox(
               height: 8.0.s,
             ),
-            Post(
-              eventReference: EventReference.fromNostrEntity(
-                notificationData.postEntity!,
+            NotificationInfo(notificationData: notificationData),
+            if (notificationData.postEntity != null) ...[
+              SizedBox(
+                height: 8.0.s,
               ),
-              header: const SizedBox.shrink(),
-              footer: const SizedBox.shrink(),
-            ),
+              Post(
+                eventReference: EventReference.fromNostrEntity(
+                  notificationData.postEntity!,
+                ),
+                header: const SizedBox.shrink(),
+                footer: const SizedBox.shrink(),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
