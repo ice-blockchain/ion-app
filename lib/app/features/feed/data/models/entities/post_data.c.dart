@@ -8,6 +8,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -21,7 +22,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 
 part 'post_data.c.freezed.dart';
 

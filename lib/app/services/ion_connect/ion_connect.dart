@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_signature_verifier.dart';
 import 'package:ion/app/services/logger/config.dart';
 import 'package:ion/app/services/nostr/nostr_logger.dart';

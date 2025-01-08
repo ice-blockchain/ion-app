@@ -3,10 +3,10 @@
 import 'dart:math';
 
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 
 Future<PostEntity> generateFakePost() async {
   final keyStore = await Ed25519KeyStore.generate();

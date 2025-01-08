@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 
 class IonConnectSignatureVerifier extends SchnorrSignatureVerifier {
   IonConnectSignatureVerifier();

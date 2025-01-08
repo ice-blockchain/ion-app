@@ -9,6 +9,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
+import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -25,8 +27,6 @@ import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
-import 'package:nostr_dart/nostr_dart.dart' as nd;
-import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_notifier.c.g.dart';
@@ -138,7 +138,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         }
 
         await for (final event
-            in nd.requestEvents(requestMessage, relay!, keepSubscription: keepSubscription)) {
+            in ion.requestEvents(requestMessage, relay!, keepSubscription: keepSubscription)) {
           if (event is NoticeMessage || event is ClosedMessage) {
             throw RelayRequestFailedException(
               relayUrl: relay!.url,
