@@ -12,7 +12,6 @@ import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_pr
 import 'package:ion/app/features/feed/stories/views/components/story_preview/actions/story_share_button.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_preview/user/verified_account_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -68,7 +67,6 @@ class StoryPreviewPage extends ConsumerWidget {
                           ),
                         );
                       },
-                      child: const VerifiedAccountListItem(),
                     ),
                   ],
                 ),
