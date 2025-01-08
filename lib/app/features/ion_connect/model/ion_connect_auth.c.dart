@@ -5,21 +5,21 @@ import 'dart:convert';
 import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-part 'nostr_auth.c.freezed.dart';
+part 'ion_connect_auth.c.freezed.dart';
 
 //TODO: move core nostr related models to nostr-lib
 @freezed
-class NostrAuth with _$NostrAuth implements EventSerializable {
-  const factory NostrAuth({
+class IonConnectAuth with _$IonConnectAuth implements EventSerializable {
+  const factory IonConnectAuth({
     required String url,
     required String method,
     List<int>? payload,
-  }) = _NostrAuth;
+  }) = _IonConnectAuth;
 
-  const NostrAuth._();
+  const IonConnectAuth._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/98.md
   @override
@@ -53,7 +53,7 @@ class NostrAuth with _$NostrAuth implements EventSerializable {
   String toAuthorizationHeader(EventMessage event) {
     final eventPayload = event.toJson().last;
     final headerValue = base64Encode(utf8.encode(jsonEncode(eventPayload)));
-    return 'Nostr $headerValue';
+    return 'IonConnect $headerValue';
   }
 
   static const int kind = 27235;

@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
-import 'package:ion/app/services/nostr/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {

@@ -18,8 +18,8 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -33,8 +33,9 @@ class ArticleDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull
-        as ArticleEntity?;
+    final articleEntity = ref
+        .watch(ionConnectEntityProvider(eventReference: eventReference))
+        .valueOrNull as ArticleEntity?;
 
     if (articleEntity == null) {
       return const SizedBox.shrink();

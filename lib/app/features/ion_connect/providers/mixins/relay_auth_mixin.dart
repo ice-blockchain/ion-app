@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/nostr/providers/auth_challenge_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/auth_challenge_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 mixin RelayAuthMixin {

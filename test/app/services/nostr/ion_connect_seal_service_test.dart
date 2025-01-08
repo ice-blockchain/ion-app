@@ -2,8 +2,8 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/services/nostr/ed25519_key_store.dart';
-import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {

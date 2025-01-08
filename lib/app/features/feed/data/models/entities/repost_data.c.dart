@@ -6,15 +6,15 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'repost_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class RepostEntity with _$RepostEntity, NostrEntity implements CacheableEntity {
+class RepostEntity with _$RepostEntity, IonConnectEntity implements CacheableEntity {
   const factory RepostEntity({
     required String id,
     required String pubkey,

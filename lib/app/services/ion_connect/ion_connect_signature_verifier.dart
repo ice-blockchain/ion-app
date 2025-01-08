@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/services/nostr/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-class NostrSignatureVerifier extends SchnorrSignatureVerifier {
-  NostrSignatureVerifier();
+class IonConnectSignatureVerifier extends SchnorrSignatureVerifier {
+  IonConnectSignatureVerifier();
 
   @override
   Future<bool> verify({

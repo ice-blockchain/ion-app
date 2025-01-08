@@ -10,18 +10,18 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
-import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/model/file_alt.dart';
-import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/model/related_event.c.dart';
-import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
-import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
@@ -75,7 +75,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       if (parentEvent != null) {
         final parentEntity =
-            await ref.read(nostrEntityProvider(eventReference: parentEvent).future);
+            await ref.read(ionConnectEntityProvider(eventReference: parentEvent).future);
         if (parentEntity == null) {
           throw EventNotFoundException(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
         }
@@ -103,7 +103,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       }
 
       //TODO: check the event json according to notion when defined
-      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, data]);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, data]);
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
@@ -121,7 +121,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     ];
   }
 
-  List<RelatedEvent> _buildRelatedEvents(NostrEntity parentEntity) {
+  List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
     if (parentEntity is ArticleEntity) {
       return [
         RelatedEvent(
@@ -146,7 +146,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     }
   }
 
-  List<RelatedPubkey> _buildRelatedPubkeys(NostrEntity parentEntity) {
+  List<RelatedPubkey> _buildRelatedPubkeys(IonConnectEntity parentEntity) {
     if (parentEntity is ArticleEntity) {
       return [RelatedPubkey(value: parentEntity.masterPubkey)];
     } else if (parentEntity is PostEntity) {
@@ -185,7 +185,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         );
 
     final uploadResult = await ref
-        .read(nostrUploadNotifierProvider.notifier)
+        .read(ionConnectUploadNotifierProvider.notifier)
         .upload(compressedImage, alt: _getFileAlt());
 
     return (
@@ -200,14 +200,15 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final compressedVideo = await ref.read(compressServiceProvider).compressVideo(file);
 
     final videoUploadResult = await ref
-        .read(nostrUploadNotifierProvider.notifier)
+        .read(ionConnectUploadNotifierProvider.notifier)
         .upload(compressedVideo, alt: _getFileAlt());
 
     final thumbImage =
         await ref.read(compressServiceProvider).getThumbnail(compressedVideo, thumb: file.thumb);
 
-    final thumbUploadResult =
-        await ref.read(nostrUploadNotifierProvider.notifier).upload(thumbImage, alt: _getFileAlt());
+    final thumbUploadResult = await ref
+        .read(ionConnectUploadNotifierProvider.notifier)
+        .upload(thumbImage, alt: _getFileAlt());
 
     final thumbUrl = thumbUploadResult.fileMetadata.url;
 

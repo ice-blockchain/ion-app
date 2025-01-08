@@ -2,7 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
 

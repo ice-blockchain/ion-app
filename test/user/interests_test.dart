@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/nostr/model/replaceable_event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/user/model/interests.c.dart';
-import 'package:ion/app/services/nostr/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {

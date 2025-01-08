@@ -7,7 +7,7 @@ import 'package:ion/app/features/components/entities_list/components/repost_auth
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class GenericRepostListItem extends StatelessWidget {

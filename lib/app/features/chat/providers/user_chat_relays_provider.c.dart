@@ -3,9 +3,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
@@ -17,7 +17,7 @@ part 'user_chat_relays_provider.c.g.dart';
 @riverpod
 Future<UserChatRelaysEntity?> userChatRelays(Ref ref, String pubkey) async {
   final cached = ref.watch(
-    nostrCacheProvider.select<UserChatRelaysEntity?>(
+    ionConnectCacheProvider.select<UserChatRelaysEntity?>(
       cacheSelector(UserChatRelaysEntity.cacheKeyBuilder(pubkey: pubkey)),
     ),
   );
@@ -28,7 +28,7 @@ Future<UserChatRelaysEntity?> userChatRelays(Ref ref, String pubkey) async {
       RequestFilter(kinds: const [UserChatRelaysEntity.kind], authors: [pubkey]),
     );
 
-  return ref.watch(nostrNotifierProvider.notifier).requestEntity<UserChatRelaysEntity>(
+  return ref.watch(ionConnectNotifierProvider.notifier).requestEntity<UserChatRelaysEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
@@ -65,9 +65,9 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
-    final chatRelaysEvent = await ref.read(nostrNotifierProvider.notifier).sign(chatRelays);
+    final chatRelaysEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(chatRelays);
 
-    await ref.read(nostrNotifierProvider.notifier).sendEvents([chatRelaysEvent]);
+    await ref.read(ionConnectNotifierProvider.notifier).sendEvents([chatRelaysEvent]);
     ref.invalidate(userChatRelaysProvider(pubkey));
   }
 }

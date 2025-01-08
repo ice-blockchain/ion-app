@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 class PostMediaCarouselHorizontal extends HookConsumerWidget {
   const PostMediaCarouselHorizontal({

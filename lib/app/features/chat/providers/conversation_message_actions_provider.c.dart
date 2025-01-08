@@ -10,14 +10,14 @@ import 'package:ion/app/features/chat/model/entities/private_message_reaction_da
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
-import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/nostr/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
 import 'package:nip44/nip44.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,7 +32,7 @@ Future<Raw<ConversationMessageActionsService>> conversationMessageActionsService
   final conversationMessageManagementService =
       ref.watch(conversationMessageManagementServiceProvider).requireValue;
 
-  final eventSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
   return ConversationMessageActionsService(
     eventSigner: eventSigner,
@@ -40,7 +40,7 @@ Future<Raw<ConversationMessageActionsService>> conversationMessageActionsService
     env: ref.watch(envProvider.notifier),
     userPubkey: await ref.watch(currentPubkeySelectorProvider.future),
     sealService: ref.watch(ionConnectSealServiceProvider),
-    nostrNotifier: ref.watch(nostrNotifierProvider.notifier),
+    nostrNotifier: ref.watch(ionConnectNotifierProvider.notifier),
     wrapService: ref.watch(ionConnectGiftWrapServiceProvider),
     conversationMessageManagementService: conversationMessageManagementService,
   );
@@ -61,7 +61,7 @@ class ConversationMessageActionsService {
   final Env env;
   final String? userPubkey;
   final EventSigner? eventSigner;
-  final NostrNotifier nostrNotifier;
+  final IonConnectNotifier nostrNotifier;
   final IonConnectSealService sealService;
   final IonConnectGiftWrapService wrapService;
   final ConversationsDBService databaseService;
@@ -184,7 +184,7 @@ class ConversationMessageActionsService {
     );
   }
 
-  Future<NostrEntity?> _createSealWrapSendReaction({
+  Future<IonConnectEntity?> _createSealWrapSendReaction({
     required String content,
     required EventSigner signer,
     required String receiverPubkey,

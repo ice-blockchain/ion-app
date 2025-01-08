@@ -3,13 +3,13 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
-import 'package:ion/app/features/nostr/model/file_alt.dart';
-import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/interests.c.dart';
@@ -35,7 +35,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = await AsyncValue.guard(
       () async {
         final (relayUrls, eventSigner) =
-            await (_assignUserRelays(), _generateNostrEventSigner()).wait;
+            await (_assignUserRelays(), _generateIonConnectEventSigner()).wait;
 
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
@@ -47,7 +47,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         );
 
         await ref
-            .read(nostrNotifierProvider.notifier)
+            .read(ionConnectNotifierProvider.notifier)
             .sendEvents([userDelegationEvent, userRelaysEvent]);
 
         final uploadedAvatar = await _uploadAvatar();
@@ -58,7 +58,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         final followList = _buildFollowList();
 
-        await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([
+        await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([
           userMetadata,
           followList,
           interestSetData,
@@ -73,14 +73,14 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final eventSigner = await _generateNostrEventSigner();
+        final eventSigner = await _generateIonConnectEventSigner();
 
         final userDelegationEvent = await _buildUserDelegation(
           pubkey: eventSigner.publicKey,
           onVerifyIdentity: onVerifyIdentity,
         );
 
-        await ref.read(nostrNotifierProvider.notifier).sendEvents([userDelegationEvent]);
+        await ref.read(ionConnectNotifierProvider.notifier).sendEvents([userDelegationEvent]);
       },
     );
   }
@@ -95,11 +95,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
   }
 
-  Future<EventSigner> _generateNostrEventSigner() async {
-    final currentUserNostrEventSigner = await ref.read(currentUserNostrEventSignerProvider.future);
-    if (currentUserNostrEventSigner != null) {
+  Future<EventSigner> _generateIonConnectEventSigner() async {
+    final currentUserIonConnectEventSigner =
+        await ref.read(currentUserIonConnectEventSignerProvider.future);
+    if (currentUserIonConnectEventSigner != null) {
       // Event signer already exists, reuse it
-      return currentUserNostrEventSigner;
+      return currentUserIonConnectEventSigner;
     }
 
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
@@ -108,12 +109,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     if (privateKey != null) {
       // Private key was generated during the auth flow (password), reuse it
       return ref
-          .read(nostrEventSignerProvider(currentIdentityKeyName).notifier)
+          .read(ionConnectEventSignerProvider(currentIdentityKeyName).notifier)
           .generateFromPrivate(privateKey);
     }
 
     // Generate a new event signer
-    return ref.read(nostrEventSignerProvider(currentIdentityKeyName).notifier).generate();
+    return ref.read(ionConnectEventSignerProvider(currentIdentityKeyName).notifier).generate();
   }
 
   Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
@@ -121,9 +122,11 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       list: relayUrls.map((url) => UserRelay(url: url)).toList(),
     );
 
-    final userRelaysEvent = await ref.read(nostrNotifierProvider.notifier).sign(userRelays);
+    final userRelaysEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(userRelays);
 
-    ref.read(nostrCacheProvider.notifier).cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
+    ref
+        .read(ionConnectCacheProvider.notifier)
+        .cache(UserRelaysEntity.fromEventMessage(userRelaysEvent));
 
     return userRelaysEvent;
   }
@@ -200,7 +203,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       final avatar = ref.read(onboardingDataProvider).avatar;
       if (avatar != null) {
         return await ref
-            .read(nostrUploadNotifierProvider.notifier)
+            .read(ionConnectUploadNotifierProvider.notifier)
             .upload(avatar, alt: FileAlt.avatar);
       }
     } catch (error, stackTrace) {

@@ -8,7 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_author.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_likes_button.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_video_menu_button.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class TrendingVideoListItem extends ConsumerWidget {
@@ -23,7 +23,7 @@ class TrendingVideoListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventReference = EventReference.fromNostrEntity(video);
+    final eventReference = EventReference.fromIonConnectEntity(video);
 
     final thumbnailUrl = video.data.primaryVideo?.thumb;
     if (thumbnailUrl == null || thumbnailUrl.isEmpty) {

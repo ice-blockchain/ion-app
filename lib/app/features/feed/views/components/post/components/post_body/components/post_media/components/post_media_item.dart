@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 class PostMediaItem extends StatelessWidget {
   const PostMediaItem({

@@ -8,16 +8,16 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
-import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
-import 'package:ion/app/features/nostr/model/entity_media_data.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:ion/app/features/nostr/model/event_setting.c.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/model/related_event.c.dart';
-import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
-import 'package:ion/app/features/nostr/model/related_pubkey.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/text_match.dart';
 import 'package:ion/app/services/text_parser/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
@@ -26,7 +26,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'post_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class PostEntity with _$PostEntity, NostrEntity implements CacheableEntity {
+class PostEntity with _$PostEntity, IonConnectEntity implements CacheableEntity {
   const factory PostEntity({
     required String id,
     required String pubkey,

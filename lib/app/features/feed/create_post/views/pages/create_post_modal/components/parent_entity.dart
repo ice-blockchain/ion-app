@@ -11,6 +11,8 @@ import 'package:ion/app/features/feed/views/components/post/components/post_body
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -26,15 +28,16 @@ class ParentEntity extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nostrEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
+    final ionEntity =
+        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(eventReference.pubkey)).valueOrNull;
 
-    if (nostrEntity == null || userMetadata == null) {
+    if (ionEntity == null || userMetadata == null) {
       return const Skeleton(child: PostSkeleton());
     }
 
-    if (nostrEntity is! PostEntity) {
-      return Text('Replying to ${nostrEntity.runtimeType} is not supported yet');
+    if (ionEntity is! PostEntity) {
+      return Text('Replying to ${ionEntity.runtimeType} is not supported yet');
     }
 
     return Column(
@@ -64,7 +67,7 @@ class ParentEntity extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  PostBody(postEntity: nostrEntity),
+                  PostBody(postEntity: ionEntity),
                   SizedBox(height: 12.0.s),
                   ReplyingTo(name: userMetadata.data.name),
                   SizedBox(height: 16.0.s),

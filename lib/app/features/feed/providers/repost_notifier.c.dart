@@ -6,9 +6,9 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repost_notifier.c.g.dart';
@@ -24,7 +24,7 @@ class RepostNotifier extends _$RepostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final entity = ref.read(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
+      final entity = ref.read(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
       if (entity == null) {
         throw EntityNotFoundException(eventReference.eventId);
@@ -45,7 +45,7 @@ class RepostNotifier extends _$RepostNotifier {
         _ => throw UnsupportedRepostException(eventId: eventReference.eventId),
       };
 
-      await ref.read(nostrNotifierProvider.notifier).sendEntityData(data);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
       ref.read(repostsCountProvider(eventReference).notifier).addOne();
     });
   }

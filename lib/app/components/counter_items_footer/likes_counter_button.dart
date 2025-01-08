@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 

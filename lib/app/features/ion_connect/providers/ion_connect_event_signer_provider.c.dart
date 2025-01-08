@@ -2,15 +2,15 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/services/nostr/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nostr_event_signer_provider.c.g.dart';
+part 'ion_connect_event_signer_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-class NostrEventSigner extends _$NostrEventSigner {
+class IonConnectEventSigner extends _$IonConnectEventSigner {
   @override
   Future<EventSigner?> build(String identityKeyName) async {
     final storage = ref.watch(secureStorageProvider);
@@ -46,10 +46,10 @@ class NostrEventSigner extends _$NostrEventSigner {
 }
 
 @Riverpod(keepAlive: true)
-Future<EventSigner?> currentUserNostrEventSigner(Ref ref) async {
+Future<EventSigner?> currentUserIonConnectEventSigner(Ref ref) async {
   final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentIdentityKeyName == null) {
     return null;
   }
-  return ref.watch(nostrEventSignerProvider(currentIdentityKeyName).future);
+  return ref.watch(ionConnectEventSignerProvider(currentIdentityKeyName).future);
 }

@@ -15,8 +15,8 @@ import 'package:ion/app/features/feed/views/components/list_separator/list_separ
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/trending_videos_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/components/video_icon.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class TrendingVideos extends ConsumerWidget {
@@ -47,7 +47,7 @@ class TrendingVideos extends ConsumerWidget {
       children: [
         SectionHeader(
           onPress: () {
-            final eventReference = EventReference.fromNostrEntity(videos.first);
+            final eventReference = EventReference.fromIonConnectEntity(videos.first);
             VideosRoute(eventReference: eventReference.toString()).push<void>(context);
           },
           title: context.i18n.feed_trending_videos,

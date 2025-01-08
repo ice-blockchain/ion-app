@@ -11,18 +11,18 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
-import 'package:ion/app/features/nostr/model/entity_expiration.c.dart';
-import 'package:ion/app/features/nostr/model/file_alt.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/services/nostr/ion_connect_gift_wrap_service.c.dart';
-import 'package:ion/app/services/nostr/ion_connect_seal_service.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,7 +32,7 @@ part 'conversation_message_management_provider.c.g.dart';
 Future<Raw<ConversationMessageManagementService>> conversationMessageManagementService(
   Ref ref,
 ) async {
-  final eventSigner = await ref.watch(currentUserNostrEventSignerProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
   return ConversationMessageManagementService(
     eventSigner: eventSigner,
@@ -40,9 +40,9 @@ Future<Raw<ConversationMessageManagementService>> conversationMessageManagementS
     fileCacheService: ref.watch(fileCacheServiceProvider),
     sealService: ref.watch(ionConnectSealServiceProvider),
     compressionService: ref.watch(compressServiceProvider),
-    nostrNotifier: ref.watch(nostrNotifierProvider.notifier),
+    ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
     wrapService: ref.watch(ionConnectGiftWrapServiceProvider),
-    nostrUploadNotifier: ref.watch(nostrUploadNotifierProvider.notifier),
+    ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
   );
 }
 
@@ -52,22 +52,22 @@ class ConversationMessageManagementService {
     required this.wrapService,
     required this.sealService,
     required this.eventSigner,
-    required this.nostrNotifier,
+    required this.ionConnectNotifier,
     required this.fileCacheService,
-    required this.nostrUploadNotifier,
+    required this.ionConnectUploadNotifier,
     required this.compressionService,
   });
 
   final Env env;
   final EventSigner? eventSigner;
-  final NostrNotifier nostrNotifier;
+  final IonConnectNotifier ionConnectNotifier;
   final FileCacheService fileCacheService;
   final IonConnectSealService sealService;
   final IonConnectGiftWrapService wrapService;
   final CompressionService compressionService;
-  final NostrUploadNotifier nostrUploadNotifier;
+  final IonConnectUploadNotifier ionConnectUploadNotifier;
 
-  Future<List<NostrEntity?>> sentMessage({
+  Future<List<IonConnectEntity?>> sentMessage({
     required String content,
     required List<String> participantsPubkeys,
     String? subject,
@@ -96,7 +96,7 @@ class ConversationMessageManagementService {
               final nonce = encryptedMediaFile.$3;
               final mac = encryptedMediaFile.$4;
 
-              final uploadResult = await nostrUploadNotifier.upload(
+              final uploadResult = await ionConnectUploadNotifier.upload(
                 mediaFile,
                 alt: FileAlt.message,
               );
@@ -212,7 +212,7 @@ class ConversationMessageManagementService {
     return tags;
   }
 
-  Future<NostrEntity?> _createSealWrapSendMessage({
+  Future<IonConnectEntity?> _createSealWrapSendMessage({
     required String content,
     required String receiverPubkey,
     required EventSigner signer,
@@ -257,7 +257,7 @@ class ConversationMessageManagementService {
 
     Logger.log('Wrap message $wrap');
 
-    final result = await nostrNotifier.sendEvent(wrap, cache: false);
+    final result = await ionConnectNotifier.sendEvent(wrap, cache: false);
 
     Logger.log('Sent message $result');
 

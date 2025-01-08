@@ -11,7 +11,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class EntitiesList extends StatelessWidget {
@@ -22,7 +22,7 @@ class EntitiesList extends StatelessWidget {
     super.key,
   });
 
-  final List<NostrEntity> entities;
+  final List<IonConnectEntity> entities;
   final double? separatorHeight;
   final bool showParent;
 
@@ -48,7 +48,7 @@ class _EntityListItem extends ConsumerWidget {
     required this.showParent,
   });
 
-  final NostrEntity entity;
+  final IonConnectEntity entity;
   final double? separatorHeight;
   final bool showParent;
 

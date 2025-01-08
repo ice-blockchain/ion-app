@@ -7,11 +7,11 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
-import 'package:ion/app/features/nostr/model/file_alt.dart';
-import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -56,7 +56,7 @@ class CreateArticle extends _$CreateArticle {
         whoCanReplySettings: {whoCanReply},
       );
 
-      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
     });
   }
 
@@ -123,7 +123,7 @@ class CreateArticle extends _$CreateArticle {
           quality: 70,
         );
 
-    return ref.read(nostrUploadNotifierProvider.notifier).upload(
+    return ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           compressedImage,
           alt: FileAlt.article,
         );

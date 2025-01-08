@@ -6,10 +6,10 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/model/replaceable_event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'interest_set.c.freezed.dart';
@@ -17,7 +17,7 @@ part 'interest_set.c.freezed.dart';
 enum InterestSetType { languages, unknown }
 
 @Freezed(equal: false)
-class InterestSetEntity with _$InterestSetEntity, NostrEntity implements CacheableEntity {
+class InterestSetEntity with _$InterestSetEntity, IonConnectEntity implements CacheableEntity {
   const factory InterestSetEntity({
     required String id,
     required String pubkey,

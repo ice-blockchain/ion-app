@@ -8,13 +8,13 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/model/replaceable_event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -29,7 +29,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
     BookmarksSetType.values.map((type) {
       final cacheKey = BookmarksSetEntity.cacheKeyBuilder(pubkey: pubkey, type: type);
       final bookmarkSet = ref.watch(
-        nostrCacheProvider.select(cacheSelector<BookmarksSetEntity>(cacheKey)),
+        ionConnectCacheProvider.select(cacheSelector<BookmarksSetEntity>(cacheKey)),
       );
       return MapEntry(type, bookmarkSet);
     }),
@@ -48,7 +48,7 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
       ),
     );
 
-  final eventsStream = ref.read(nostrNotifierProvider.notifier).requestEntities(
+  final eventsStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
@@ -73,20 +73,20 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> currentUserBookmarks(Ref ref)
 
 @riverpod
 Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
-  final nostrEntity = await ref.read(
-    nostrEntityProvider(eventReference: eventReference).future,
+  final ionEntity = await ref.read(
+    ionConnectEntityProvider(eventReference: eventReference).future,
   );
-  if (nostrEntity == null) return false;
+  if (ionEntity == null) return false;
 
   final currentBookmarks = await ref.watch(currentUserBookmarksProvider.future);
-  return switch (nostrEntity) {
+  return switch (ionEntity) {
     PostEntity() => currentBookmarks.values.any(
-        (bookmarksSet) => bookmarksSet?.data.postsIds.contains(nostrEntity.id) ?? false,
+        (bookmarksSet) => bookmarksSet?.data.postsIds.contains(ionEntity.id) ?? false,
       ),
     ArticleEntity() => currentBookmarks[BookmarksSetType.articles]
             ?.data
             .articlesRefs
-            .contains(nostrEntity.toReplaceableEventReference()) ??
+            .contains(ionEntity.toReplaceableEventReference()) ??
         false,
     _ => false,
   };
@@ -105,12 +105,12 @@ class BookmarksNotifier extends _$BookmarksNotifier {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final nostrEntity = await ref.read(
-        nostrEntityProvider(eventReference: eventReference).future,
+      final ionEntity = await ref.read(
+        ionConnectEntityProvider(eventReference: eventReference).future,
       );
-      if (nostrEntity == null) return;
+      if (ionEntity == null) return;
 
-      final bookmarkType = _getBookmarkType(nostrEntity);
+      final bookmarkType = _getBookmarkType(ionEntity);
       if (bookmarkType == null) return;
 
       final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
@@ -121,11 +121,11 @@ class BookmarksNotifier extends _$BookmarksNotifier {
       final articlesRefs =
           Set<ReplaceableEventReference>.from(bookmarksSet?.data.articlesRefs ?? []);
 
-      switch (nostrEntity) {
+      switch (ionEntity) {
         case PostEntity():
-          _togglePostBookmark(postsIds, nostrEntity);
+          _togglePostBookmark(postsIds, ionEntity);
         case ArticleEntity():
-          _toggleArticleBookmark(articlesRefs, nostrEntity);
+          _toggleArticleBookmark(articlesRefs, ionEntity);
         default:
           return;
       }
@@ -145,12 +145,12 @@ class BookmarksNotifier extends _$BookmarksNotifier {
       );
 
       await ref
-          .read(nostrNotifierProvider.notifier)
+          .read(ionConnectNotifierProvider.notifier)
           .sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
     });
   }
 
-  BookmarksSetType? _getBookmarkType(NostrEntity entity) {
+  BookmarksSetType? _getBookmarkType(IonConnectEntity entity) {
     return switch (entity) {
       ArticleEntity() => BookmarksSetType.articles,
       PostEntity(data: PostData(hasVideo: true)) => BookmarksSetType.videos,

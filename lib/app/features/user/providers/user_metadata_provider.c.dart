@@ -3,9 +3,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,7 +19,7 @@ Future<UserMetadataEntity?> userMetadata(
   bool cacheOnly = false,
 }) async {
   final userMetadata = ref.watch(
-    nostrCacheProvider.select(
+    ionConnectCacheProvider.select(
       cacheSelector<UserMetadataEntity>(UserMetadataEntity.cacheKeyBuilder(pubkey: pubkey)),
     ),
   );
@@ -30,7 +30,7 @@ Future<UserMetadataEntity?> userMetadata(
 
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [UserMetadataEntity.kind], authors: [pubkey], limit: 1));
-  return ref.read(nostrNotifierProvider.notifier).requestEntity<UserMetadataEntity>(
+  return ref.read(ionConnectNotifierProvider.notifier).requestEntity<UserMetadataEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );

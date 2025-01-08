@@ -8,9 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_videos_data_source_provider.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
 
@@ -26,15 +26,16 @@ class VideosPage extends HookConsumerWidget {
     final dataSource = ref.watch(feedVideosDataSourceProvider(eventReference: eventReference));
     final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
 
-    final nostrEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
-    if (nostrEntity is! PostEntity) {
+    final ionEntity =
+        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+    if (ionEntity is! PostEntity) {
       return Center(
         child: Text(context.i18n.video_not_found),
       );
     }
 
     final videosItems = videosData?.data.items?.whereType<PostEntity>().toList() ?? [];
-    final videos = [nostrEntity, ...videosItems];
+    final videos = [ionEntity, ...videosItems];
 
     final userPageController = usePageController();
 

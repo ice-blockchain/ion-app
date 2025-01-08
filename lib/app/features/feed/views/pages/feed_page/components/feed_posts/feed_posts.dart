@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 
 class FeedPosts extends ConsumerWidget {
   const FeedPosts({super.key});
@@ -15,7 +15,7 @@ class FeedPosts extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dataSource = ref.watch(feedPostsDataSourceProvider);
 
-    List<NostrEntity>? entities;
+    List<IonConnectEntity>? entities;
 
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     if (entitiesPagedData?.data.items != null) {
