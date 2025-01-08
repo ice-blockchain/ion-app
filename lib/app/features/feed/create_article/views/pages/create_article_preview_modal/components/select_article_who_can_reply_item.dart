@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
-import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
+import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_view_settings_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -46,7 +46,7 @@ class SelectArticleWhoCanReplyItem extends ConsumerWidget {
         onTap: () {
           showSimpleBottomSheet<void>(
             context: context,
-            child: WhoCanReplySettingsModal(title: context.i18n.article_settings_title),
+            child: WhoCanViewSettingsModal(title: context.i18n.article_settings_title),
           );
         },
       ),

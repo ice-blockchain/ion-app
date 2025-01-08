@@ -7,8 +7,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/components/who_can_reply_settings_list.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
-class WhoCanReplySettingsModal extends StatelessWidget {
-  const WhoCanReplySettingsModal({
+class WhoCanViewSettingsModal extends StatelessWidget {
+  const WhoCanViewSettingsModal({
     this.title,
     super.key,
   });
