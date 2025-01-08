@@ -46,7 +46,7 @@ class WalletRoutes {
         TypedGoRoute<NftSendFormRoute>(
           path: 'nft-send',
           routes: [
-            TypedGoRoute<NftContactsListRoute>(path: 'nft-contacts-list'),
+            TypedGoRoute<NftSelectFriendRoute>(path: 'select-friend'),
           ],
         ),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
@@ -65,7 +65,7 @@ class WalletRoutes {
         TypedGoRoute<CoinsSendFormRoute>(
           path: 'coin-send-form',
           routes: [
-            TypedGoRoute<ContactsListRoute>(path: 'contacts-list'),
+            TypedGoRoute<CoinsSelectFriendRoute>(path: 'select-friend'),
           ],
         ),
         TypedGoRoute<CoinSendScanRoute>(path: 'scan-receiver-wallet'),
@@ -209,33 +209,20 @@ class CoinsSendFormRoute extends BaseRouteData {
         );
 }
 
-class ContactsListRoute extends BaseRouteData {
-  ContactsListRoute({required this.title, this.action = ContactRouteAction.pop})
+class CoinsSelectFriendRoute extends BaseRouteData {
+  CoinsSelectFriendRoute()
       : super(
-          child: ContactsListView(
-            appBarTitle: title,
-            action: action,
-          ),
+          child: const FriendsModal(),
           type: IceRouteType.bottomSheet,
         );
-
-  final String title;
-  final ContactRouteAction action;
 }
 
-class NftContactsListRoute extends BaseRouteData {
-  NftContactsListRoute({required this.title, this.action = ContactRouteAction.pop})
+class NftSelectFriendRoute extends BaseRouteData {
+  NftSelectFriendRoute()
       : super(
-          child: ContactsListView(
-            action: action,
-            appBarTitle: title,
-            showBackButton: true,
-          ),
+          child: const FriendsModal(),
           type: IceRouteType.bottomSheet,
         );
-
-  final String title;
-  final ContactRouteAction action;
 }
 
 class CoinsSendFormConfirmationRoute extends BaseRouteData {

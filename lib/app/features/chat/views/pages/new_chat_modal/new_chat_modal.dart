@@ -11,6 +11,7 @@ import 'package:ion/app/features/user/pages/user_search_modal/user_search_modal.
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NewChatModal extends HookConsumerWidget {
@@ -25,31 +26,35 @@ class NewChatModal extends HookConsumerWidget {
       [],
     );
 
-    return UserSearchModal(
-      navigationBar: NavigationAppBar.modal(
-        showBackButton: false,
-        title: Text(context.i18n.new_chat_modal_title),
-        actions: const [NavigationCloseButton()],
-      ),
-      onUserSelected: onUserSelected,
-      header: Row(
-        children: [
-          _HeaderButton(
-            icon: Assets.svg.iconSearchGroups,
-            title: context.i18n.new_chat_modal_new_group_button,
-            onTap: () {
-              AddParticipantsToGroupModalRoute().push<void>(context);
-            },
-          ),
-          SizedBox(width: 20.0.s),
-          _HeaderButton(
-            icon: Assets.svg.iconSearchChannel,
-            title: context.i18n.new_chat_modal_new_channel_button,
-            onTap: () {
-              NewChannelModalRoute().replace(context);
-            },
-          ),
-        ],
+    return SheetContent(
+      topPadding: 0,
+      body: UserSearchModal(
+        navigationBar: NavigationAppBar.modal(
+          showBackButton: false,
+          title: Text(context.i18n.new_chat_modal_title),
+          actions: const [NavigationCloseButton()],
+        ),
+        initialUserListType: UserListType.follower,
+        onUserSelected: onUserSelected,
+        header: Row(
+          children: [
+            _HeaderButton(
+              icon: Assets.svg.iconSearchGroups,
+              title: context.i18n.new_chat_modal_new_group_button,
+              onTap: () {
+                AddParticipantsToGroupModalRoute().push<void>(context);
+              },
+            ),
+            SizedBox(width: 20.0.s),
+            _HeaderButton(
+              icon: Assets.svg.iconSearchChannel,
+              title: context.i18n.new_chat_modal_new_channel_button,
+              onTap: () {
+                NewChannelModalRoute().replace(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

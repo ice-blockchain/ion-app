@@ -78,12 +78,10 @@ class SendCoinsForm extends HookConsumerWidget {
                       contactId: selectedContact?.id,
                       onClearTap: (contactId) => notifier.setContact(null),
                       onContactTap: () async {
-                        final contactId = await ContactsListRoute(
-                          title: context.i18n.contacts_select_title,
-                        ).push<String>(context);
+                        final pubkey = await CoinsSelectFriendRoute().push<String>(context);
 
-                        if (contactId != null) {
-                          final contact = ref.read(contactByIdProvider(id: contactId));
+                        if (pubkey != null) {
+                          final contact = ref.read(contactByIdProvider(id: pubkey));
                           notifier.setContact(contact);
                         }
                       },
