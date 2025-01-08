@@ -2,7 +2,6 @@
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:ion/app/services/logger/logger.dart';
 
 enum FontType { regular, bold, italic, h1, h2, h3, underline }
 
@@ -14,9 +13,6 @@ Set<FontType> useTextEditorFontStyles(QuillController textEditorController) {
       final style = textEditorController.getSelectionStyle();
       final activeStyles = <FontType>{};
 
-      Logger.log('style.attributes: ${style.attributes}');
-
-      // Check for header styles (h1, h2, h3)
       if (style.attributes.containsKey(Attribute.header.key)) {
         final headerValue = style.attributes[Attribute.header.key]!.value;
         if (headerValue == 1) {
@@ -27,11 +23,9 @@ Set<FontType> useTextEditorFontStyles(QuillController textEditorController) {
           activeStyles.add(FontType.h3);
         }
       } else {
-        // If no header is applied, mark it as regular
         activeStyles.add(FontType.regular);
       }
 
-      // Check for bold, italic, and underline styles
       if (style.attributes.containsKey(Attribute.bold.key)) {
         activeStyles.add(FontType.bold);
       }

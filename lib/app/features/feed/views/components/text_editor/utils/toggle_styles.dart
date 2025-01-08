@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:ion/app/services/logger/logger.dart';
 
 void toggleHeaderStyle(QuillController controller, Attribute<dynamic> headerAttribute) {
   final currentStyle = controller.getSelectionStyle();
@@ -21,7 +20,6 @@ void toggleTextStyle(QuillController controller, Attribute<dynamic> textAttribut
 
   final mutuallyExclusiveStyles = [Attribute.bold.key, Attribute.italic.key];
 
-  Logger.log('currentStyle.attributes: ${currentStyle.attributes}');
   final hasHeaderOrLink = currentStyle.attributes.keys.any(
     (key) => ['h1', 'h2', 'h3', Attribute.link.key].contains(key),
   );
