@@ -15,6 +15,7 @@ class DebugPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final featureFlags = ref.watch(featureFlagsProvider);
+    final talker = Logger.talker;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -30,21 +31,22 @@ class DebugPage extends ConsumerWidget {
             child: ListView(
               shrinkWrap: true,
               children: [
-                Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.bug_report),
-                    title: const Text('View Debug Logs'),
-                    subtitle: const Text('Check application logs and diagnostics'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute<TalkerScreen>(
-                        builder: (context) => TalkerScreen(
-                          talker: Logger.talker,
+                if (talker != null)
+                  Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.bug_report),
+                      title: const Text('View Debug Logs'),
+                      subtitle: const Text('Check application logs and diagnostics'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute<TalkerScreen>(
+                          builder: (context) => TalkerScreen(
+                            talker: talker,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
                 SizedBox(height: 16.0.s),
                 ExpansionTile(
                   title: const Text('Feature Flags'),

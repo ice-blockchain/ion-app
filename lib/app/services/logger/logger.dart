@@ -7,39 +7,49 @@ import 'package:talker_flutter/talker_flutter.dart';
 class Logger {
   Logger._();
 
-  static final Talker talker = TalkerFlutter.init();
+  static Talker? _talker;
 
-  static final talkerDioLogger = TalkerDioLogger(
-    talker: talker,
-    settings: TalkerDioLoggerSettings(
-      printRequestHeaders: true,
-      printResponseHeaders: true,
-      requestPen: AnsiPen()..cyan(),
-      responsePen: AnsiPen()..green(),
-      errorPen: AnsiPen()..red(),
-    ),
-  );
+  static void init() {
+    _talker = TalkerFlutter.init();
+  }
+
+  static Talker? get talker => _talker;
+
+  static TalkerDioLogger? get talkerDioLogger => TalkerDioLogger(
+        talker: talker,
+        settings: TalkerDioLoggerSettings(
+          printRequestHeaders: true,
+          printResponseHeaders: true,
+          requestPen: AnsiPen()..cyan(),
+          responsePen: AnsiPen()..green(),
+          errorPen: AnsiPen()..red(),
+        ),
+      );
 
   static void log(
     String message, {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    talker.log(message);
+    _talker?.log(message);
 
     if (error != null) {
-      talker.error(error, stackTrace);
+      _talker?.error(error, stackTrace);
     }
   }
 
-  static void info(String message) => talker.info(message);
+  static void info(String message) {
+    _talker?.info(message);
+  }
 
-  static void warning(String message) => talker.warning(message);
+  static void warning(String message) {
+    _talker?.warning(message);
+  }
 
   static void error(
     Object error, {
     StackTrace? stackTrace,
   }) {
-    talker.error(error, stackTrace);
+    _talker?.error(error, stackTrace);
   }
 }
