@@ -14,7 +14,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 part 'bookmarks_set.c.freezed.dart';
 
-enum BookmarksSetType { posts, stories, videos, articles, unknown }
+enum BookmarksSetType { posts, videos, articles, unknown }
 
 @Freezed(equal: false)
 class BookmarksSetEntity with _$BookmarksSetEntity, NostrEntity implements CacheableEntity {

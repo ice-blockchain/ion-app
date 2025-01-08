@@ -169,8 +169,6 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     return replyId ?? rootReplyId;
   }
 
-  bool get isStory => expiration != null;
-
   bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
 }
 
