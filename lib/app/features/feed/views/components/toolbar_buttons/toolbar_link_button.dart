@@ -16,6 +16,8 @@ class ToolbarLinkButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styleManager = QuillStyleManager(textEditorController);
+
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleLink,
       onPressed: () async {
@@ -36,7 +38,7 @@ class ToolbarLinkButton extends StatelessWidget {
         if (!localContext.mounted) return;
 
         if (resultLink != null) {
-          toggleLinkStyle(textEditorController, resultLink);
+          styleManager.toggleLinkStyle(resultLink);
         }
       },
     );

@@ -15,12 +15,13 @@ class ToolbarItalicButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final fontStyles = useTextEditorFontStyles(textEditorController);
+    final styleManager = QuillStyleManager(textEditorController);
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconPostItalictextOff,
       iconSelected: Assets.svg.iconPostItalictextOn,
       onPressed: () {
-        toggleTextStyle(textEditorController, Attribute.italic);
+        styleManager.toggleTextStyle(Attribute.italic);
       },
       selected: fontStyles.contains(FontType.italic),
     );

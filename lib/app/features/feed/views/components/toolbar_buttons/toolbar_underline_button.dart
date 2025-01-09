@@ -15,12 +15,13 @@ class ToolbarUnderlineButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final fontStyles = useTextEditorFontStyles(textEditorController);
+    final styleManager = QuillStyleManager(textEditorController);
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleUnderlineOff,
       iconSelected: Assets.svg.iconArticleUnderlineOn,
       onPressed: () {
-        toggleTextStyle(textEditorController, Attribute.underline);
+        styleManager.toggleTextStyle(Attribute.underline);
       },
       selected: fontStyles.contains(FontType.underline),
     );

@@ -15,12 +15,13 @@ class ToolbarH1Button extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final fontStyles = useTextEditorFontStyles(textEditorController);
+    final styleManager = QuillStyleManager(textEditorController);
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleH1Off,
       iconSelected: Assets.svg.iconArticleH1On,
       onPressed: () {
-        toggleHeaderStyle(textEditorController, Attribute.h1);
+        styleManager.toggleHeaderStyle(Attribute.h1);
       },
       selected: fontStyles.contains(FontType.h1),
     );

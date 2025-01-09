@@ -15,12 +15,13 @@ class ToolbarBoldButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final fontStyles = useTextEditorFontStyles(textEditorController);
+    final styleManager = QuillStyleManager(textEditorController);
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconPostBoldtextOff,
       iconSelected: Assets.svg.iconPostBoldtextOn,
       onPressed: () {
-        toggleTextStyle(textEditorController, Attribute.bold);
+        styleManager.toggleTextStyle(Attribute.bold);
       },
       selected: fontStyles.contains(FontType.bold),
     );

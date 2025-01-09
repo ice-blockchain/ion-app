@@ -15,13 +15,12 @@ class ToolbarRegularButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final fontStyles = useTextEditorFontStyles(textEditorController);
+    final styleManager = QuillStyleManager(textEditorController);
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconPostRegulartextOff,
       iconSelected: Assets.svg.iconPostRegulartextOn,
-      onPressed: () {
-        toggleRegularStyle(textEditorController);
-      },
+      onPressed: styleManager.toggleRegularStyle,
       selected: fontStyles.contains(FontType.regular),
     );
   }
