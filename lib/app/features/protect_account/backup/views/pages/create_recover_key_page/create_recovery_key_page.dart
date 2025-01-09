@@ -23,12 +23,14 @@ class CreateRecoveryKeyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const SheetContent(
-      body: Column(
-        children: [
-          _NavBar(),
-          _Header(),
-          _Body(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _NavBar(),
+            _Header(),
+            _Body(),
+          ],
+        ),
       ),
     );
   }
