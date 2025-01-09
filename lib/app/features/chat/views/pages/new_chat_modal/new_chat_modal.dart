@@ -38,8 +38,7 @@ class NewChatModal extends ConsumerWidget {
       final ee2eGroupConversationService =
           ref.watch(e2EEGroupConversationManagementProvider.notifier);
 
-      final currentPubkey =
-          ref.watch(currentPubkeySelectorProvider).valueOrNull;
+      final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
       if (currentPubkey == null) {
         throw UserMasterPubkeyNotFoundException();
