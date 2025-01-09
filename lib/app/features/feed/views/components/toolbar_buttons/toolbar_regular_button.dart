@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_font_style.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/quill_style_manager.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarRegularButton extends HookWidget {
@@ -14,15 +14,15 @@ class ToolbarRegularButton extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fontType = useTextEditorFontStyle(textEditorController);
+    final fontStyles = useTextEditorFontStyles(textEditorController);
+    final styleManager =
+        useMemoized(() => QuillStyleManager(textEditorController), [textEditorController]);
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconPostRegulartextOff,
       iconSelected: Assets.svg.iconPostRegulartextOn,
-      onPressed: () {
-        wipeAllStyles(textEditorController);
-      },
-      selected: fontType == FontType.regular,
+      onPressed: styleManager.toggleRegularStyle,
+      selected: fontStyles.contains(FontType.regular),
     );
   }
 }

@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/wipe_styles.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/quill_style_manager.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ToolbarLinkButton extends StatelessWidget {
+class ToolbarLinkButton extends HookWidget {
   const ToolbarLinkButton({
     required this.textEditorController,
     super.key,
@@ -16,6 +17,9 @@ class ToolbarLinkButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final styleManager =
+        useMemoized(() => QuillStyleManager(textEditorController), [textEditorController]);
+
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleLink,
       onPressed: () async {
@@ -36,12 +40,7 @@ class ToolbarLinkButton extends StatelessWidget {
         if (!localContext.mounted) return;
 
         if (resultLink != null) {
-          if (resultLink.isNotEmpty) {
-            wipeAllStyles(textEditorController);
-            textEditorController.formatSelection(LinkAttribute(resultLink));
-          } else {
-            textEditorController.formatSelection(const LinkAttribute(null));
-          }
+          styleManager.toggleLinkStyle(resultLink);
         }
       },
     );
