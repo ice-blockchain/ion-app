@@ -23,7 +23,7 @@ Future<void> initApp(Ref ref) async {
   final logApp = featureFlagsNotifier.get(LoggerFeatureFlag.logApp);
   final logNostrDart = featureFlagsNotifier.get(LoggerFeatureFlag.logNostrDart);
 
-  if (logApp) Logger.init();
+  if (logApp) Logger().init();
 
   Nostr.initialize(logNostrDart ? NostrLogger() : null);
 

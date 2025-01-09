@@ -15,7 +15,7 @@ class DebugPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final featureFlags = ref.watch(featureFlagsProvider);
-    final talker = Logger.talker;
+    final talker = Logger().talker;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

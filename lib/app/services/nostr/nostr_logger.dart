@@ -8,19 +8,19 @@ class NostrLogger implements NostrDartLogger {
 
   @override
   void info(String message, [Object? error, StackTrace? stackTrace]) {
-    Logger.info('$_prefix $message');
+    Logger().info('$_prefix $message');
 
     if (error != null) {
-      Logger.error('$_prefix $error', stackTrace: stackTrace);
+      Logger().error('$_prefix $error', stackTrace: stackTrace);
     }
   }
 
   @override
   void warning(String message, [Object? error, StackTrace? stackTrace]) {
-    Logger.warning('$_prefix $message');
+    Logger().warning('$_prefix $message');
 
     if (error != null) {
-      Logger.error('$_prefix $error', stackTrace: stackTrace);
+      Logger().error('$_prefix $error', stackTrace: stackTrace);
     }
   }
 }

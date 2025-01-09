@@ -49,7 +49,7 @@ class AlbumService {
   }) async {
     final assetPath = _albumsCache[albumId];
     if (assetPath == null) {
-      Logger.log('Album not found in cache: $albumId');
+      Logger().log('Album not found in cache: $albumId');
       return [];
     }
 

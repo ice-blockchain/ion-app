@@ -41,7 +41,7 @@ class MessageItemWrapper extends HookWidget {
             ),
           );
         } catch (e, st) {
-          Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
+          Logger().log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
       [messageItemKey, isMe],

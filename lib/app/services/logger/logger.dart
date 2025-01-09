@@ -5,17 +5,23 @@ import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class Logger {
+  factory Logger() {
+    return _instance;
+  }
+
   Logger._();
 
-  static Talker? _talker;
+  static final Logger _instance = Logger._();
 
-  static void init() {
+  Talker? _talker;
+
+  Talker? get talker => _talker;
+
+  void init() {
     _talker = TalkerFlutter.init();
   }
 
-  static Talker? get talker => _talker;
-
-  static TalkerDioLogger? get talkerDioLogger => TalkerDioLogger(
+  TalkerDioLogger? get talkerDioLogger => TalkerDioLogger(
         talker: talker,
         settings: TalkerDioLoggerSettings(
           printRequestHeaders: true,
@@ -26,7 +32,7 @@ class Logger {
         ),
       );
 
-  static void log(
+  void log(
     String message, {
     Object? error,
     StackTrace? stackTrace,
@@ -38,15 +44,15 @@ class Logger {
     }
   }
 
-  static void info(String message) {
+  void info(String message) {
     _talker?.info(message);
   }
 
-  static void warning(String message) {
+  void warning(String message) {
     _talker?.warning(message);
   }
 
-  static void error(
+  void error(
     Object error, {
     StackTrace? stackTrace,
   }) {

@@ -205,7 +205,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       }
     } catch (error, stackTrace) {
       // intentionally ignore upload avatar exceptions
-      Logger.log('Upload avatar exception', error: error, stackTrace: stackTrace);
+      Logger().log('Upload avatar exception', error: error, stackTrace: stackTrace);
     }
     return null;
   }

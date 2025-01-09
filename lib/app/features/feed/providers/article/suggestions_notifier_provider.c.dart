@@ -27,7 +27,7 @@ class SuggestionsNotifier extends _$SuggestionsNotifier {
           newSuggestions = await ref.read(mentionSuggestionsProvider(query).future);
         }
       } catch (error) {
-        Logger.log('Error fetching suggestions: $error');
+        Logger().log('Error fetching suggestions: $error');
       }
 
       state = newSuggestions;

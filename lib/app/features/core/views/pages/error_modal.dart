@@ -15,7 +15,7 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ErrorModal extends ConsumerWidget {
   ErrorModal({required this.error, super.key}) {
-    Logger.error(error);
+    Logger().error(error);
   }
 
   final Object error;

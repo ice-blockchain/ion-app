@@ -101,7 +101,7 @@ class ConversationMessageManagementService {
                 alt: FileAlt.message,
               );
 
-              Logger.log(
+              Logger().log(
                 'Uploaded media file: ${uploadResult.fileMetadata.url}, ${uploadResult.fileMetadata.mimeType} ${uploadResult.fileMetadata.size}',
               );
 
@@ -147,7 +147,7 @@ class ConversationMessageManagementService {
     final decryptedDecompressedFiles = <File>[];
 
     for (final attachment in privateDirectMessageEntity.data.media.values) {
-      Logger.log('Attachment: $attachment');
+      Logger().log('Attachment: $attachment');
       if (attachment.encryptionKey != null &&
           attachment.encryptionNonce != null &&
           attachment.encryptionMac != null) {
@@ -157,7 +157,7 @@ class ConversationMessageManagementService {
 
         final file = await fileCacheService.getFile(attachment.url);
 
-        Logger.log(
+        Logger().log(
           'Downloaded encrypted media file: ${file.path}, ${attachment.mimeType} ${file.lengthSync()}',
         );
 
@@ -184,7 +184,7 @@ class ConversationMessageManagementService {
           fileExtension: attachment.mimeType.split('/').last,
         );
 
-        Logger.log(
+        Logger().log(
           'Decrypted media file: ${decryptedFile.path}, ${attachment.mimeType} ${decryptedFile.lengthSync()}',
         );
 
@@ -238,7 +238,7 @@ class ConversationMessageManagementService {
       sig: null,
     );
 
-    Logger.log('Event message $eventMessage');
+    Logger().log('Event message $eventMessage');
 
     final seal = await sealService.createSeal(
       eventMessage,
@@ -246,7 +246,7 @@ class ConversationMessageManagementService {
       receiverPubkey,
     );
 
-    Logger.log('Seal message $seal');
+    Logger().log('Seal message $seal');
 
     final wrap = await wrapService.createWrap(
       seal,
@@ -255,11 +255,11 @@ class ConversationMessageManagementService {
       PrivateDirectMessageEntity.kind,
     );
 
-    Logger.log('Wrap message $wrap');
+    Logger().log('Wrap message $wrap');
 
     final result = await nostrNotifier.sendEvent(wrap, cache: false);
 
-    Logger.log('Sent message $result');
+    Logger().log('Sent message $result');
 
     return result;
   }
@@ -273,7 +273,7 @@ class ConversationMessageManagementService {
       mediaFiles.map(
         (mediaFile) async {
           final size = File(mediaFile.path).lengthSync();
-          Logger.log(
+          Logger().log(
             'Original media file: ${mediaFile.path}, ${mediaFile.mimeType} $size',
           );
 
@@ -298,7 +298,7 @@ class ConversationMessageManagementService {
           };
 
           final compressedSize = File(compressedMediaFile.path).lengthSync();
-          Logger.log(
+          Logger().log(
             'Compressed media file: ${compressedMediaFile.path}, ${compressedMediaFile.mimeType} $compressedSize',
           );
 
@@ -342,7 +342,7 @@ class ConversationMessageManagementService {
             mimeType: compressedMediaFile.mimeType,
           );
 
-          Logger.log(
+          Logger().log(
             'Encrypted media file ${compressedEncryptedMediaFile.mimeType} ${compressedEncryptedFile.lengthSync()}',
           );
 

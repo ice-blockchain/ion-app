@@ -60,7 +60,7 @@ class BanubaService {
       }
       return filePath;
     } on PlatformException catch (e) {
-      Logger.log(
+      Logger().log(
         'Start Photo Editor error',
         error: e,
         stackTrace: StackTrace.current,
@@ -92,7 +92,7 @@ Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
   final filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
 
   if (filePath == null) {
-    Logger.log(
+    Logger().log(
       'File path or mime type is null',
       error: mediaFile,
       stackTrace: StackTrace.current,
@@ -101,7 +101,7 @@ Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
   }
 
   if (mediaFile.mimeType == null) {
-    Logger.log(
+    Logger().log(
       'Mime type is null',
       error: mediaFile,
       stackTrace: StackTrace.current,
