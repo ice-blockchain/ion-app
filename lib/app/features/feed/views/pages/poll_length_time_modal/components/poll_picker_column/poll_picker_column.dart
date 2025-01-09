@@ -51,13 +51,13 @@ class PollPickerColumn extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 70.0.s,
+          width: 75.0.s,
           child: Text(
             labelBuilder(selectedValue.value),
             textAlign: TextAlign.left,
             style: context.theme.appTextThemes.body2.copyWith(
               color: context.theme.appColors.primaryText,
-              fontSize: 23.0.s,
+              fontSize: 22.0.s,
             ),
           ),
         ),
