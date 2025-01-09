@@ -3,8 +3,8 @@
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-class NostrLogger implements NostrDartLogger {
-  static const _prefix = '🦩 Nostr:';
+class IonConnectLogger implements NostrDartLogger {
+  static const _prefix = '🦩 IonConnect:';
 
   @override
   void info(String message, [Object? error, StackTrace? stackTrace]) {

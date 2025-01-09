@@ -13,8 +13,6 @@ import 'package:ion/app/features/feed/views/components/replying_to/replying_to.d
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 

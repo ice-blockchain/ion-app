@@ -21,7 +21,7 @@ class FeatureFlags extends _$FeatureFlags {
       if (ref.watch(envProvider.notifier).get(EnvVariable.SHOW_DEBUG_INFO)) ...{
         LoggerFeatureFlag.logApp: true,
         LoggerFeatureFlag.logRouters: false,
-        LoggerFeatureFlag.logNostrDart: true,
+        LoggerFeatureFlag.logIonConnect: true,
         LoggerFeatureFlag.logIonIdentityClient: true,
       },
     };
