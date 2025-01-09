@@ -36,6 +36,7 @@ class UserPickerSheet extends HookConsumerWidget {
   final Widget? bottomContent;
   final void Function(UserMetadataEntity user) onUserSelected;
   final UserListType initialUserListType;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = ref.watch(searchUsersQueryProvider);

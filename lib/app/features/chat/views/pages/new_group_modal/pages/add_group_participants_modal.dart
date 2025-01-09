@@ -36,10 +36,8 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
         navigationBar: NavigationAppBar.modal(
           title: Text(context.i18n.group_create_title),
           showBackButton: false,
-          actions: [
-            NavigationCloseButton(
-              onPressed: Navigator.of(context, rootNavigator: true).pop,
-            ),
+          actions: const [
+            NavigationCloseButton(),
           ],
         ),
         bottomContent: Column(

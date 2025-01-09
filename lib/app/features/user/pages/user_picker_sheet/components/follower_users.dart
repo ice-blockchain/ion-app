@@ -2,15 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/components/selectable_user_list_item.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.c.dart';
-import 'package:ion/app/utils/username.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class FollowerUsers extends ConsumerWidget {
   const FollowerUsers({
@@ -39,21 +37,11 @@ class FollowerUsers extends ConsumerWidget {
           itemCount: users.length,
           itemBuilder: (BuildContext context, int index) {
             final user = users.elementAt(index);
-            final isSelected = selectedPubkeys?.contains(user.masterPubkey) ?? false;
-            return ListItem.user(
-              title: Text(user.data.displayName),
-              subtitle: Text(prefixUsername(username: user.data.name, context: context)),
-              profilePicture: user.data.picture,
-              onTap: () => onUserSelected(user),
-              trailing: !selectable
-                  ? null
-                  : isSelected
-                      ? Assets.svg.iconBlockCheckboxOnblue.icon(
-                          color: context.theme.appColors.success,
-                        )
-                      : Assets.svg.iconBlockCheckboxOff.icon(
-                          color: context.theme.appColors.tertararyText,
-                        ),
+            return SelectableUserListItem(
+              pubkey: user.masterPubkey,
+              onUserSelected: onUserSelected,
+              selectedPubkeys: selectedPubkeys,
+              selectable: selectable,
             );
           },
         ),

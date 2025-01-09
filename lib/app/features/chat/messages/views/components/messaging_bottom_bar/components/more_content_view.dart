@@ -47,9 +47,8 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPerson,
                 title: context.i18n.common_profile,
-                onTap: () async {
-                  await ShareProfileModalRoute().push<String>(context);
-
+                onTap: () {
+                  ShareProfileModalRoute().push<String>(context);
                   ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                 },
               ),

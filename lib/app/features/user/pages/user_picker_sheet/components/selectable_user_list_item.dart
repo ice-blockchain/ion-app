@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/utils/username.dart';
+import 'package:ion/generated/assets.gen.dart';
+
+class SelectableUserListItem extends ConsumerWidget {
+  const SelectableUserListItem({
+    required this.pubkey,
+    required this.onUserSelected,
+    super.key,
+    this.selectedPubkeys,
+    this.selectable = false,
+  });
+
+  final String pubkey;
+  final void Function(UserMetadataEntity user) onUserSelected;
+  final List<String>? selectedPubkeys;
+  final bool selectable;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userMetadataResult = ref.watch(userMetadataProvider(pubkey));
+
+    return userMetadataResult.maybeWhen(
+      data: (user) {
+        if (user == null) return const SizedBox.shrink();
+
+        final isSelected = selectedPubkeys?.contains(pubkey) ?? false;
+        return ListItem.user(
+          onTap: () => onUserSelected(user),
+          title: Text(user.data.displayName),
+          subtitle: Text(prefixUsername(username: user.data.name, context: context)),
+          profilePicture: user.data.picture,
+          trailing: selectable
+              ? isSelected
+                  ? Assets.svg.iconBlockCheckboxOnblue.icon(
+                      color: context.theme.appColors.success,
+                    )
+                  : Assets.svg.iconBlockCheckboxOff.icon(
+                      color: context.theme.appColors.tertararyText,
+                    )
+              : null,
+        );
+      },
+      orElse: SizedBox.shrink,
+    );
+  }
+}

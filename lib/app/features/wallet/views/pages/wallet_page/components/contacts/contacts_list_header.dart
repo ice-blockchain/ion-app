@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/ui.dart';
@@ -34,7 +36,7 @@ class ContactListHeader extends StatelessWidget {
               final pubkey = await NftSelectFriendRoute().push<String>(context);
               if (pubkey != null) {
                 if (context.mounted) {
-                  await ContactRoute(contactId: pubkey).push<void>(context);
+                  unawaited(ContactRoute(contactId: pubkey).push<void>(context));
                 }
               }
             },
