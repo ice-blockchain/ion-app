@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
+import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/nostr/model/event_reference.c.dart';
 import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -43,6 +44,9 @@ class ParentEntity extends ConsumerWidget {
           title: Text(userMetadata.data.displayName),
           subtitle: Text(prefixUsername(username: userMetadata.data.name, context: context)),
           profilePicture: userMetadata.data.picture,
+          trailing: UserInfoMenu(
+            pubkey: eventReference.pubkey,
+          ),
         ),
         SizedBox(height: 8.0.s),
         Padding(
