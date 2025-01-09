@@ -7,7 +7,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
   const pubkey = '477318cfb5427b9cfc66a9fa376150c1ddbc62115ae27cef72417eb959691396';
-  NostrDart.configure(logLevel: NostrLogLevel.ALL);
+  NostrDart.configure();
 
   group('UserDelegation Tests', () {
     test('UserDelegation.fromEventMessage should work when all data is there', () async {

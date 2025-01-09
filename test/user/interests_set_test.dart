@@ -6,7 +6,7 @@ import 'package:ion/app/services/nostr/ed25519_key_store.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 void main() {
-  NostrDart.configure(logLevel: NostrLogLevel.ALL);
+  NostrDart.configure();
 
   group('InterestsSet Tests', () {
     test('InterestSet.fromEventMessage should work when all data is there', () async {

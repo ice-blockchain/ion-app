@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/global_notification_bar/global_notification_bar.dart';
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/debug/views/debug_shake_gesture.dart';
 import 'package:ion/app/hooks/use_interval.dart';
 import 'package:ion/app/services/ui_event_queue/ui_event_queue_listener.dart';
 
@@ -41,7 +42,9 @@ class AppRouterBuilder extends HookConsumerWidget {
             const GlobalNotificationBar(),
             const UiEventQueueListener(),
             Expanded(
-              child: child ?? const SizedBox.shrink(),
+              child: DebugShakeGesture(
+                child: child ?? const SizedBox.shrink(),
+              ),
             ),
           ],
         ),

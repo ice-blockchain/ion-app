@@ -35,7 +35,7 @@ class FeedPage extends HookConsumerWidget {
           .select((state) => (state?.hasMore).falseOrValue),
     );
     final showTrendingVideos =
-        ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo);
+        ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo);
 
     useScrollTopOnTabPress(context, scrollController: scrollController);
 

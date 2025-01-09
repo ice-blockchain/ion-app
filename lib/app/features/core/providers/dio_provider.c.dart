@@ -2,8 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/services/logger/config.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'dio_provider.c.g.dart';
@@ -11,8 +10,12 @@ part 'dio_provider.c.g.dart';
 @riverpod
 Dio dio(Ref ref) {
   final dio = Dio();
-  if (LoggerConfig.dioLogsEnabled) {
-    dio.interceptors.add(PrettyDioLogger());
+
+  final logger = Logger.talkerDioLogger;
+
+  if (logger != null) {
+    dio.interceptors.add(logger);
   }
+
   return dio;
 }

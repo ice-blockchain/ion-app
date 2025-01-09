@@ -3,15 +3,27 @@ package io.ion.app
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import com.banuba.sdk.pe.PhotoCreationActivity
+import android.view.KeyEvent
 import com.banuba.sdk.pe.BanubaPhotoEditor
+import com.banuba.sdk.pe.PhotoCreationActivity
 import com.banuba.sdk.pe.data.PhotoEditorConfig
+import dev.fluttercommunity.shake_gesture_android.ShakeGesturePlugin
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.File
 
 class MainActivity : FlutterActivity() {
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            this.flutterEngine?.plugins?.get(ShakeGesturePlugin::class.java).let { plugin ->
+                if (plugin is ShakeGesturePlugin)
+                    plugin.onShake()
+            }
+        }
+
+        return super.onKeyDown(keyCode, event)
+    }
 
     companion object {
         // For Photo Editor

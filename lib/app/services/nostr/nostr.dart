@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/logger/config.dart';
+import 'package:ion/app/services/nostr/nostr_logger.dart';
 import 'package:ion/app/services/nostr/nostr_signature_verifier.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 class Nostr {
   Nostr._();
 
-  static void initialize() {
+  static void initialize(NostrLogger? logger) {
     NostrDart.configure(
-      // ignore: avoid_redundant_argument_values
-      logLevel: LoggerConfig.nostrLogsEnabled ? NostrLogLevel.ALL : NostrLogLevel.OFF,
       signatureVerifier: NostrSignatureVerifier(),
+      logger: logger,
     );
   }
 }

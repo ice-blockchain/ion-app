@@ -9,6 +9,7 @@ Future<T?> showSimpleBottomSheet<T>({
   required Widget child,
   bool useRootNavigator = true,
   bool isDismissible = true,
+  PopInvokedWithResultCallback<T>? onPopInvokedWithResult,
 }) {
   return showModalBottomSheet<T>(
     useRootNavigator: useRootNavigator,
@@ -20,6 +21,7 @@ Future<T?> showSimpleBottomSheet<T>({
     builder: (context) {
       return PopScope(
         canPop: isDismissible,
+        onPopInvokedWithResult: onPopInvokedWithResult,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
