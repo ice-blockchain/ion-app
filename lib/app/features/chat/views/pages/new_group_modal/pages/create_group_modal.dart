@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
@@ -17,6 +18,7 @@ import 'package:ion/app/features/chat/views/components/general_selection_button.
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -36,7 +38,22 @@ class CreateGroupModal extends HookConsumerWidget {
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
+
     final members = createGroupForm.members.toList();
+
+    final e2EEGroupConversationManagement = ref.watch(e2EEGroupConversationManagementProvider);
+
+    ref.listen(
+      e2EEGroupConversationManagementProvider,
+      (previous, next) async {
+        if (next is AsyncError) {
+          await showSimpleBottomSheet<void>(
+            context: context,
+            child: ErrorModal(error: next.error),
+          );
+        }
+      },
+    );
 
     useEffect(
       () {
@@ -159,17 +176,24 @@ class CreateGroupModal extends HookConsumerWidget {
             margin: 32.0.s,
             child: ScreenSideOffset.large(
               child: Button(
+                disabled: e2EEGroupConversationManagement.maybeWhen(
+                  loading: () => true,
+                  orElse: () => false,
+                ),
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: Assets.svg.iconPlusCreatechannel.icon(
-                  color: context.theme.appColors.onPrimaryAccent,
+                leadingIcon: e2EEGroupConversationManagement.maybeWhen(
+                  loading: () => const IONLoadingIndicator(),
+                  orElse: () => Assets.svg.iconPlusCreatechannel.icon(
+                    color: context.theme.appColors.onPrimaryAccent,
+                  ),
                 ),
                 label: Text(context.i18n.group_create_create_button),
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
-                      final ee2eGroupConversationService = await ref.watch(
-                        e2eeGroupConversationManagementServiceProvider,
+                      final ee2eGroupConversationProvider = ref.read(
+                        e2EEGroupConversationManagementProvider.notifier,
                       );
 
                       final avatarProcessorState = ref.read(avatarProcessorNotifierProvider);
@@ -179,7 +203,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      await ee2eGroupConversationService.createGroup(
+                      await ee2eGroupConversationProvider.createGroup(
                         groupImage: groupPicture!,
                         subject: createGroupForm.name!,
                         participantsPubkeys: createGroupForm.members.toList(),
