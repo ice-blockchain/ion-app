@@ -88,7 +88,7 @@ class MediaService {
 
       return mediaFiles;
     } catch (e) {
-      Logger().log('Error fetching gallery images: $e');
+      Logger.log('Error fetching gallery images: $e');
       return [];
     }
   }
@@ -198,7 +198,7 @@ class MediaService {
       }
       return null;
     } catch (e, st) {
-      Logger().log('Error capturing widget as image:', error: e, stackTrace: st);
+      Logger.log('Error capturing widget as image:', error: e, stackTrace: st);
       return null;
     }
   }

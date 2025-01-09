@@ -91,7 +91,7 @@ class UserRelaysManager extends _$UserRelaysManager {
         try {
           return await ionIdentity.users.details(userId: pubkey);
         } catch (error, stackTrace) {
-          Logger().log('Error fetching user relays', error: error, stackTrace: stackTrace);
+          Logger.log('Error fetching user relays', error: error, stackTrace: stackTrace);
         }
       }),
     );

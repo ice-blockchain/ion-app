@@ -58,7 +58,7 @@ bool _containsPollKey(dynamic customData) {
     try {
       parsedData = jsonDecode(customData) as Map<String, dynamic>?;
     } catch (e) {
-      Logger().log('Failed to parse custom data: $e');
+      Logger.log('Failed to parse custom data: $e');
     }
   }
 

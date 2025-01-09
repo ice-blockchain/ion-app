@@ -11,7 +11,7 @@ part 'dio_provider.c.g.dart';
 Dio dio(Ref ref) {
   final dio = Dio();
 
-  final logger = Logger().talkerDioLogger;
+  final logger = Logger.talkerDioLogger;
 
   if (logger != null) {
     dio.interceptors.add(logger);

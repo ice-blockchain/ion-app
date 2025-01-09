@@ -54,7 +54,7 @@ class MoreContentView extends ConsumerWidget {
                   ).push<String>(context);
 
                   //TODO: use contactId to share profile
-                  Logger().log(contactId ?? 'No contact selected');
+                  Logger.log(contactId ?? 'No contact selected');
 
                   ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                 },

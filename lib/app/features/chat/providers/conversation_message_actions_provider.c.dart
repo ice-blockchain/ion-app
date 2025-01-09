@@ -87,7 +87,7 @@ class ConversationMessageActionsService {
       ['encrypted'],
     ];
 
-    Logger().log('Encoded rumor $encodedRumor');
+    Logger.log('Encoded rumor $encodedRumor');
 
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
@@ -95,7 +95,7 @@ class ConversationMessageActionsService {
       receiverPubkey,
     );
 
-    Logger().log('Encrypted rumor $encryptedRumor');
+    Logger.log('Encrypted rumor $encryptedRumor');
 
     final id = EventMessage.calculateEventId(
       tags: tags,
@@ -115,7 +115,7 @@ class ConversationMessageActionsService {
       sig: null,
     );
 
-    Logger().log('Bookmark message $bookmarkMessage');
+    Logger.log('Bookmark message $bookmarkMessage');
 
     await nostrNotifier.sendEvent(bookmarkMessage, cache: false);
   }
@@ -211,7 +211,7 @@ class ConversationMessageActionsService {
       sig: await signer.sign(message: id),
     );
 
-    Logger().log('Event message $eventMessage');
+    Logger.log('Event message $eventMessage');
 
     final seal = await sealService.createSeal(
       eventMessage,
@@ -219,7 +219,7 @@ class ConversationMessageActionsService {
       receiverPubkey,
     );
 
-    Logger().log('Seal message $seal');
+    Logger.log('Seal message $seal');
 
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
@@ -235,11 +235,11 @@ class ConversationMessageActionsService {
       expirationTag: expirationTag,
     );
 
-    Logger().log('Wrap message $wrap');
+    Logger.log('Wrap message $wrap');
 
     final result = await nostrNotifier.sendEvent(wrap, cache: false);
 
-    Logger().log('Sent message $result');
+    Logger.log('Sent message $result');
 
     return result;
   }

@@ -173,7 +173,7 @@ class NostrNotifier extends _$NostrNotifier {
       try {
         yield _parseAndCache(event);
       } catch (error, stackTrace) {
-        Logger().log('Failed to process event ${event.id}', error: error, stackTrace: stackTrace);
+        Logger.log('Failed to process event ${event.id}', error: error, stackTrace: stackTrace);
       }
     }
   }

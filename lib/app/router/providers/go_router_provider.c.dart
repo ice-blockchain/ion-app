@@ -36,7 +36,7 @@ GoRouter goRouter(Ref ref) {
       final isInitError = initState.hasError;
 
       if (isInitError) {
-        Logger().log('Init error', error: initState.error);
+        Logger.log('Init error', error: initState.error);
         return ErrorRoute().location;
       }
 

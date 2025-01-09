@@ -84,13 +84,13 @@ class CompressionService {
       final match = RegExp(r'Stream.*Video:.* (\d+)x(\d+)').firstMatch(logs);
 
       if (match == null) {
-        Logger().log('Failed to compress video. Dimension not found. Logs: $logs');
+        Logger.log('Failed to compress video. Dimension not found. Logs: $logs');
         throw CompressVideoException('no-dim');
       }
 
       if (!ReturnCode.isSuccess(returnCode)) {
         final stackTrace = await session.getFailStackTrace();
-        Logger().log('Failed to compress video. Logs: $logs, StackTrace: $stackTrace');
+        Logger.log('Failed to compress video. Logs: $logs, StackTrace: $stackTrace');
         throw CompressVideoException(returnCode);
       }
 
@@ -101,7 +101,7 @@ class CompressionService {
         height: int.parse(match.group(2)!),
       );
     } catch (error, stackTrace) {
-      Logger().log('Error during video compression!', error: error, stackTrace: stackTrace);
+      Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);
       rethrow;
     }
   }
@@ -144,7 +144,7 @@ class CompressionService {
         height: outputDimension.height,
       );
     } catch (error, stackTrace) {
-      Logger().log('Error during image compression!', error: error, stackTrace: stackTrace);
+      Logger.log('Error during image compression!', error: error, stackTrace: stackTrace);
       rethrow;
     }
   }
@@ -169,7 +169,7 @@ class CompressionService {
       }
       final logs = await session.getAllLogsAsString();
       final stackTrace = await session.getFailStackTrace();
-      Logger().log('Failed to convert audio to opus. Logs: $logs, StackTrace: $stackTrace');
+      Logger.log('Failed to convert audio to opus. Logs: $logs, StackTrace: $stackTrace');
       throw CompressAudioException();
     });
   }
@@ -195,7 +195,7 @@ class CompressionService {
       }
       final logs = await session.getAllLogsAsString();
       final stackTrace = await session.getFailStackTrace();
-      Logger().log('Failed to convert audio to wav. Logs: $logs, StackTrace: $stackTrace');
+      Logger.log('Failed to convert audio to wav. Logs: $logs, StackTrace: $stackTrace');
       throw CompressAudioToWavException();
     });
   }
@@ -246,7 +246,7 @@ class CompressionService {
 
       return compressedImage;
     } catch (error, stackTrace) {
-      Logger().log('Error during thumbnail extraction!', error: error, stackTrace: stackTrace);
+      Logger.log('Error during thumbnail extraction!', error: error, stackTrace: stackTrace);
       rethrow;
     }
   }
@@ -271,7 +271,7 @@ class CompressionService {
 
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
-      Logger().log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
+      Logger.log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
       throw CompressWithBrotliException();
     }
   }
@@ -287,7 +287,7 @@ class CompressionService {
       );
       return _saveBytesIntoFile(bytes: decompressedData, extension: outputExtension);
     } catch (error, stackTrace) {
-      Logger().log('Error during Brotli decompression!', error: error, stackTrace: stackTrace);
+      Logger.log('Error during Brotli decompression!', error: error, stackTrace: stackTrace);
       throw DecompressBrotliException();
     }
   }

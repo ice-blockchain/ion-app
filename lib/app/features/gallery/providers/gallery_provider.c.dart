@@ -53,7 +53,7 @@ class GalleryNotifier extends _$GalleryNotifier {
     final hasPermission = ref.read(hasPermissionProvider(Permission.photos));
 
     if (!hasPermission) {
-      Logger().log('Photos Permission denied');
+      Logger.log('Photos Permission denied');
       return GalleryState(
         mediaData: [],
         currentPage: 0,

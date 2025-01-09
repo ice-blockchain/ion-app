@@ -26,7 +26,7 @@ Future<Raw<IONIdentity>> ionIdentity(Ref ref) async {
   final config = IONIdentityConfig(
     appId: appId,
     origin: env.get(EnvVariable.ION_ORIGIN),
-    logger: logIonIdentityClient ? Logger().talkerDioLogger : null,
+    logger: logIonIdentityClient ? Logger.talkerDioLogger : null,
   );
 
   final ionClient = IONIdentity.createDefault(config: config);

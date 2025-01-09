@@ -33,7 +33,7 @@ class AudioWavePlaybackService {
         await preparePlayer(savedFilePath, audioPlaybackController, playerWaveStyle);
       }
     } catch (e, s) {
-      Logger().log('Error initializing player', error: e, stackTrace: s);
+      Logger.log('Error initializing player', error: e, stackTrace: s);
     }
   }
 
@@ -48,7 +48,7 @@ class AudioWavePlaybackService {
         noOfSamples: playerWaveStyle.getSamplesForWidth(158.0.s),
       );
     } catch (e, s) {
-      Logger().log('Error preparing player', error: e, stackTrace: s);
+      Logger.log('Error preparing player', error: e, stackTrace: s);
     }
   }
 

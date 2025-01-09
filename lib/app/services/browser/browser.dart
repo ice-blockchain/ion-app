@@ -15,7 +15,7 @@ Future<bool> openUrl(
       return false;
     }
   } catch (error) {
-    Logger().log('Could not launch $url', error: error);
+    Logger.log('Could not launch $url', error: error);
     return false;
   }
 }
