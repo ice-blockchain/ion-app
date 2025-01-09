@@ -16,6 +16,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -69,6 +70,10 @@ EntitiesDataSource _buildArticlesDataSource({
       GenericIncludeSearchExtension(
         forKind: ArticleEntity.kind,
         includeKind: UserMetadataEntity.kind,
+      ),
+      GenericIncludeSearchExtension(
+        forKind: ArticleEntity.kind,
+        includeKind: BlockListEntity.kind,
       ),
     ],
     currentPubkey: currentPubkey,
@@ -136,6 +141,10 @@ EntitiesDataSource _buildVideosDataSource({
               forKind: PostEntity.kind,
               includeKind: UserMetadataEntity.kind,
             ),
+            GenericIncludeSearchExtension(
+              forKind: PostEntity.kind,
+              includeKind: BlockListEntity.kind,
+            ),
           ],
           currentPubkey: currentPubkey,
         ).toString(),
@@ -175,6 +184,10 @@ EntitiesDataSource _buildPostsDataSource({
             GenericIncludeSearchExtension(
               forKind: PostEntity.kind,
               includeKind: UserMetadataEntity.kind,
+            ),
+            GenericIncludeSearchExtension(
+              forKind: PostEntity.kind,
+              includeKind: BlockListEntity.kind,
             ),
           ],
           currentPubkey: currentPubkey,

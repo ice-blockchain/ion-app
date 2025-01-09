@@ -24,6 +24,8 @@ class Stories extends ConsumerWidget {
           .select((state) => (state?.hasMore).falseOrValue),
     );
 
+    return SizedBox();
+
     return Column(
       children: [
         SizedBox(height: 3.0.s),

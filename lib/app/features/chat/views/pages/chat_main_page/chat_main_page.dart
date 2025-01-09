@@ -22,6 +22,7 @@ class ChatMainPage extends HookConsumerWidget {
 
     final conversations = ref.watch(conversationsProvider);
 
+    return SizedBox();
     return Scaffold(
       appBar: const ChatMainAppBar(),
       body: ScreenSideOffset.small(

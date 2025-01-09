@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -46,6 +47,9 @@ class TabEntitiesList extends ConsumerWidget {
     final dataSource = ref.watch(tabDataSourceProvider(type: type, pubkey: pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items;
+    final dataHasMore = entitiesPagedData?.hasMore ?? false;
+    final isBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(pubkey)).value ?? false;
+    final hasMore = dataHasMore && !isBlockedOrBlocking;
 
     return LoadMoreBuilder(
       slivers: [
@@ -61,7 +65,7 @@ class TabEntitiesList extends ConsumerWidget {
           builder != null ? builder!(entities.toList()) : EntitiesList(entities: entities.toList()),
       ],
       onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-      hasMore: entitiesPagedData?.hasMore ?? true,
+      hasMore: hasMore,
       builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
   }

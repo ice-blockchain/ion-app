@@ -7,58 +7,51 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-part 'block_list.c.freezed.dart';
+part 'not_authoritative_event.c.freezed.dart';
 
 @Freezed(equal: false)
-class BlockListEntity with _$BlockListEntity, IonConnectEntity implements CacheableEntity {
-  const factory BlockListEntity({
+class NotAuthoritativeEvent with _$NotAuthoritativeEvent, IonConnectEntity {
+  const factory NotAuthoritativeEvent({
     required String id,
     required String pubkey,
     required String masterPubkey,
     required String signature,
     required DateTime createdAt,
-    required BlockListData data,
-  }) = _BlockListEntity;
+    required NotAuthoritativeEventData data,
+  }) = _NotAuthoritativeEvent;
 
-  const BlockListEntity._();
+  const NotAuthoritativeEvent._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/51.md#standard-lists
-  factory BlockListEntity.fromEventMessage(EventMessage eventMessage) {
+  factory NotAuthoritativeEvent.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
-    return BlockListEntity(
+    return NotAuthoritativeEvent(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
-      data: BlockListData.fromEventMessage(eventMessage),
+      data: NotAuthoritativeEventData.fromEventMessage(eventMessage),
     );
   }
 
-  @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
-
-  static const int kind = 10000;
+  static const int kind = 20002;
 }
 
 @freezed
-class BlockListData with _$BlockListData implements EventSerializable {
-  const factory BlockListData({
+class NotAuthoritativeEventData with _$NotAuthoritativeEventData implements EventSerializable {
+  const factory NotAuthoritativeEventData({
     required List<String> pubkeys,
-  }) = _BlockListData;
+  }) = _NotAuthoritativeEventData;
 
-  const BlockListData._();
+  const NotAuthoritativeEventData._();
 
-  factory BlockListData.fromEventMessage(EventMessage eventMessage) {
-    return BlockListData(
+  factory NotAuthoritativeEventData.fromEventMessage(EventMessage eventMessage) {
+    return NotAuthoritativeEventData(
       pubkeys: eventMessage.tags.where((tag) => tag[0] == 'p').map((tag) => tag[1]).toList(),
     );
   }
@@ -72,7 +65,7 @@ class BlockListData with _$BlockListData implements EventSerializable {
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
-      kind: BlockListEntity.kind,
+      kind: NotAuthoritativeEvent.kind,
       tags: [
         ...tags,
         ...pubkeys.map((pubkey) => ['p', pubkey]),

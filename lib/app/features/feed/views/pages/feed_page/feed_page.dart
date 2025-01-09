@@ -71,6 +71,7 @@ class FeedPage extends HookConsumerWidget {
             builder: (context, slivers) {
               return CustomScrollView(
                 controller: scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
                 slivers: slivers,
               );
             },

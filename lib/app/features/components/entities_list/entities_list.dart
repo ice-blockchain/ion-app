@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class EntitiesList extends StatelessWidget {
@@ -56,8 +57,10 @@ class _EntityListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata =
         ref.watch(userMetadataProvider(entity.masterPubkey, cacheOnly: true)).valueOrNull;
+    final isBlockedOrBlocking =
+        ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: true)).value ?? false;
 
-    if (userMetadata == null) {
+    if (userMetadata == null || isBlockedOrBlocking) {
       /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
       /// we don't need to fetch the user metadata explicitly - it is returned as a side effect to the
       /// main request.
