@@ -56,5 +56,5 @@ class ForceUpdateUtil {
 
 @riverpod
 ForceUpdateUtil forceUpdateService(Ref ref) {
-  return ForceUpdateUtil(ref.read(envProvider.notifier));
+  return ForceUpdateUtil(ref.watch(envProvider.notifier));
 }

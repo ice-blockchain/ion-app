@@ -36,7 +36,7 @@ Future<Raw<ConversationMessageManagementService>> conversationMessageManagementS
 
   return ConversationMessageManagementService(
     eventSigner: eventSigner,
-    env: ref.read(envProvider.notifier),
+    env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
     sealService: ref.watch(ionConnectSealServiceProvider),
     compressionService: ref.watch(compressServiceProvider),

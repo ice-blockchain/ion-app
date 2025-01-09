@@ -14,7 +14,7 @@ part 'ion_identity_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Raw<IONIdentity>> ionIdentity(Ref ref) async {
-  final env = ref.read(envProvider.notifier);
+  final env = ref.watch(envProvider.notifier);
 
   final appId = env.get<String>(
     Platform.isAndroid ? EnvVariable.ION_ANDROID_APP_ID : EnvVariable.ION_IOS_APP_ID,

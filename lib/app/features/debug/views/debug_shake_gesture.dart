@@ -18,7 +18,7 @@ class DebugShakeGesture extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showDebugInfo = ref.read(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO);
+    final showDebugInfo = ref.watch(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO);
 
     if (!showDebugInfo) return child;
 

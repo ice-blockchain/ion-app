@@ -22,7 +22,7 @@ class ErrorModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showDebugInfo = ref.read(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO);
+    final showDebugInfo = ref.watch(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO);
 
     final errorInfo = switch (error) {
       Object _ when showDebugInfo => error.toString(),

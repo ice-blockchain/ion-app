@@ -84,7 +84,7 @@ class BanubaService {
 
 @riverpod
 BanubaService banubaService(Ref ref) {
-  return BanubaService(ref.read(envProvider.notifier));
+  return BanubaService(ref.watch(envProvider.notifier));
 }
 
 @riverpod

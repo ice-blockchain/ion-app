@@ -18,7 +18,7 @@ class FeatureFlags extends _$FeatureFlags {
       HideCreatorsWithoutPicture.hideCreatorsWithoutPicture: true,
 
       /// Log flags
-      if (ref.read(envProvider.notifier).get(EnvVariable.SHOW_DEBUG_INFO)) ...{
+      if (ref.watch(envProvider.notifier).get(EnvVariable.SHOW_DEBUG_INFO)) ...{
         LoggerFeatureFlag.logApp: true,
         LoggerFeatureFlag.logRouters: false,
         LoggerFeatureFlag.logNostrDart: true,
