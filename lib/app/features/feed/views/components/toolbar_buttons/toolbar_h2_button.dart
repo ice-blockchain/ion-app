@@ -15,7 +15,8 @@ class ToolbarH2Button extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final fontStyles = useTextEditorFontStyles(textEditorController);
-    final styleManager = QuillStyleManager(textEditorController);
+    final styleManager =
+        useMemoized(() => QuillStyleManager(textEditorController), [textEditorController]);
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleH2Off,
