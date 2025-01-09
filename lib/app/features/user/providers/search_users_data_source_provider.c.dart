@@ -8,11 +8,11 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'users_data_source_provider.c.g.dart';
+part 'search_users_data_source_provider.c.g.dart';
 
 @riverpod
-Future<List<EntitiesDataSource>> usersDataSource(Ref ref) async {
-  final searchText = ref.watch(usersSearchTextProvider);
+Future<List<EntitiesDataSource>> searchUsersDataSource(Ref ref) async {
+  final searchText = ref.watch(searchUsersQueryProvider);
 
   await ref.debounce();
   return [
@@ -31,7 +31,7 @@ Future<List<EntitiesDataSource>> usersDataSource(Ref ref) async {
 }
 
 @riverpod
-class UsersSearchText extends _$UsersSearchText {
+class SearchUsersQuery extends _$SearchUsersQuery {
   @override
   String build() {
     return '';

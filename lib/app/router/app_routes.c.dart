@@ -28,7 +28,7 @@ import 'package:ion/app/features/chat/views/pages/new_channel_modal/new_channel_
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
-import 'package:ion/app/features/contacts/pages/contacts_list_view.dart';
+import 'package:ion/app/features/chat/views/pages/share_profile_modal/share_profile_modal.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
@@ -123,6 +123,7 @@ import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/compon
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/send_coins_form.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/send_coin_modal_page.dart';
 import 'package:ion/app/features/wallet/views/pages/contact_modal_page/contact_modal_page.dart';
+import 'package:ion/app/features/wallet/views/pages/friends_modal/friends_modal.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_nfts/manage_nfts_page.dart';
 import 'package:ion/app/features/wallet/views/pages/nft_details/nft_details_page.dart';

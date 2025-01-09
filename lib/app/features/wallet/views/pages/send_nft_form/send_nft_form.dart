@@ -68,12 +68,10 @@ class SendNftForm extends ConsumerWidget {
                           notifier.setContact(null),
                         },
                         onContactTap: () async {
-                          final contactId = await NftContactsListRoute(
-                            title: context.i18n.contacts_select_title,
-                          ).push<String>(context);
+                          final pubkey = await NftSelectFriendRoute().push<String>(context);
 
-                          if (contactId != null) {
-                            final contact = ref.read(contactByIdProvider(id: contactId));
+                          if (pubkey != null) {
+                            final contact = ref.read(contactByIdProvider(id: pubkey));
                             notifier.setContact(contact);
                           }
                         },
