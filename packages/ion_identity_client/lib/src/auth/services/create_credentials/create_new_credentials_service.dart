@@ -53,21 +53,7 @@ class CreateNewCredentialsService {
         );
       },
       onBiometricsFlow: ({required String localisedReason}) {
-        return identitySigner.registerWithPasskey(
-          UserRegistrationChallenge(
-            null,
-            credentialChallenge.rp,
-            credentialChallenge.user,
-            null,
-            null,
-            credentialChallenge.challenge,
-            credentialChallenge.authenticatorSelection,
-            credentialChallenge.attestation,
-            credentialChallenge.pubKeyCredParams,
-            credentialChallenge.excludeCredentials ?? [],
-            null,
-          ),
-        );
+        throw UnimplementedError('Cannot register with biometrics');
       },
     );
 

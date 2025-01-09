@@ -69,7 +69,7 @@
 		<string>This app needs access to your photo library to save images.</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>This app requires microphone access for recording audio.</string>
-		<key>NSFaceIDUsageDescription</key>
+        <key>NSFaceIDUsageDescription</key>
         <string>This app uses Face ID to authenticate the user.</string>
 
 	</dict>
