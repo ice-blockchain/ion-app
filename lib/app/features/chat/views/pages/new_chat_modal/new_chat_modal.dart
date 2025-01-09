@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -14,18 +11,11 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class NewChatModal extends HookConsumerWidget {
+class NewChatModal extends StatelessWidget {
   const NewChatModal({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final onUserSelected = useCallback(
-      (UserMetadataEntity user) {
-        context.pop();
-      },
-      [],
-    );
-
+  Widget build(BuildContext context) {
     return SheetContent(
       topPadding: 0,
       body: UserPickerSheet(
@@ -35,7 +25,7 @@ class NewChatModal extends HookConsumerWidget {
           actions: const [NavigationCloseButton()],
         ),
         initialUserListType: UserListType.follower,
-        onUserSelected: onUserSelected,
+        onUserSelected: (_) => context.pop(),
         header: Row(
           children: [
             _HeaderButton(
