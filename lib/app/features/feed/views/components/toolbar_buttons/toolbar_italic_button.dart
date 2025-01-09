@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_text_editor_font_style.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/toggle_styles.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/quill_style_manager.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarItalicButton extends HookWidget {

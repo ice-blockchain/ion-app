@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/toggle_styles.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/quill_style_manager.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarLinkButton extends StatelessWidget {
