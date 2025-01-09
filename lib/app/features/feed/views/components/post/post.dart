@@ -84,12 +84,12 @@ class _FramedEvent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionEntity =
+    final ionConnectEntity =
         ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
     final quotedEntity = useMemoized(
       () {
-        switch (ionEntity) {
+        switch (ionConnectEntity) {
           case PostEntity():
             return _QuotedPost(eventReference: eventReference);
           case ArticleEntity():
@@ -98,7 +98,7 @@ class _FramedEvent extends HookConsumerWidget {
             return const SizedBox.shrink();
         }
       },
-      [ionEntity],
+      [ionConnectEntity],
     );
 
     return Padding(

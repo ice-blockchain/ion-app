@@ -7,13 +7,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relays_provider.c.g.dart';
 
-typedef RelaysState = Map<String, NostrRelay>;
+typedef RelaysState = Map<String, IonConnectRelay>;
 
 @Riverpod(keepAlive: true)
 class Relay extends _$Relay with RelayTimerMixin, RelayAuthMixin {
   @override
-  Future<NostrRelay> build(String url) async {
-    final relay = await NostrRelay.connect(url);
+  Future<IonConnectRelay> build(String url) async {
+    final relay = await IonConnectRelay.connect(url);
 
     initializeRelayTimer(relay, ref);
     initializeAuthMessageListener(relay, ref);

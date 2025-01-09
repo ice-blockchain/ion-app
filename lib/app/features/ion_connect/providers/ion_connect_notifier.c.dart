@@ -42,7 +42,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
   }) async {
     final dislikedRelaysUrls = <String>{};
-    NostrRelay? relay;
+    ion.IonConnectRelay? relay;
     return withRetry(
       ({error}) async {
         relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
@@ -75,7 +75,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return result?.elementAtOrNull(0);
   }
 
-  Future<void> sendAuthEvent(NostrRelay relay) async {
+  Future<void> sendAuthEvent(IonConnectRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
     if (challenge == null && challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
@@ -127,7 +127,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool keepSubscription = false,
   }) async* {
     final dislikedRelaysUrls = <String>{};
-    NostrRelay? relay;
+    IonConnectRelay? relay;
 
     yield* withRetryStream(
       ({error}) async* {
@@ -226,7 +226,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   bool _isAuthRequired(Object? error) =>
       error != null && (error is SendEventException) && error.code.startsWith('auth-required');
 
-  Future<NostrRelay> _getRelay(
+  Future<IonConnectRelay> _getRelay(
     ActionSource actionSource, {
     Set<String> dislikedUrls = const {},
   }) async {

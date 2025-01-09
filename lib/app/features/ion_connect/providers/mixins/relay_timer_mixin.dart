@@ -12,7 +12,7 @@ mixin RelayTimerMixin {
   late StreamSubscription<int> _subscriptionsCountSubscription;
   int? _subscribersLength;
 
-  void initializeRelayTimer(NostrRelay relay, Ref ref) {
+  void initializeRelayTimer(IonConnectRelay relay, Ref ref) {
     _timer = RestartableTimer(
       const Duration(seconds: 30),
       () => _processUpdate(relay, ref.invalidateSelf),
@@ -31,7 +31,7 @@ mixin RelayTimerMixin {
     });
   }
 
-  void _processUpdate(NostrRelay relay, void Function() onInvalidate) {
+  void _processUpdate(IonConnectRelay relay, void Function() onInvalidate) {
     if (_subscribersLength == 0 && !_timer.isActive) {
       _timer.cancel();
       relay.close();

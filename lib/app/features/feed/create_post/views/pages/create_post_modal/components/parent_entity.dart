@@ -26,16 +26,16 @@ class ParentEntity extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionEntity =
+    final ionConnectEntity =
         ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(eventReference.pubkey)).valueOrNull;
 
-    if (ionEntity == null || userMetadata == null) {
+    if (ionConnectEntity == null || userMetadata == null) {
       return const Skeleton(child: PostSkeleton());
     }
 
-    if (ionEntity is! PostEntity) {
-      return Text('Replying to ${ionEntity.runtimeType} is not supported yet');
+    if (ionConnectEntity is! PostEntity) {
+      return Text('Replying to ${ionConnectEntity.runtimeType} is not supported yet');
     }
 
     return Column(
@@ -65,7 +65,7 @@ class ParentEntity extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  PostBody(postEntity: ionEntity),
+                  PostBody(postEntity: ionConnectEntity),
                   SizedBox(height: 12.0.s),
                   ReplyingTo(name: userMetadata.data.name),
                   SizedBox(height: 16.0.s),

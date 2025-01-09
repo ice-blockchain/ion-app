@@ -25,16 +25,16 @@ class QuotedEntity extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionEntity =
+    final ionConnectEntity =
         ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-    if (ionEntity == null) {
+    if (ionConnectEntity == null) {
       return const Skeleton(child: PostSkeleton());
     }
 
     final quoteChild = useMemoized(
       () {
-        switch (ionEntity) {
+        switch (ionConnectEntity) {
           case PostEntity():
             return QuotedEntityFrame.post(
               child: Post(
@@ -53,7 +53,7 @@ class QuotedEntity extends HookConsumerWidget {
             return const SizedBox.shrink();
         }
       },
-      [ionEntity],
+      [ionConnectEntity],
     );
 
     return Padding(

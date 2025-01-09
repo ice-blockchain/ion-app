@@ -26,16 +26,16 @@ class VideosPage extends HookConsumerWidget {
     final dataSource = ref.watch(feedVideosDataSourceProvider(eventReference: eventReference));
     final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
 
-    final ionEntity =
+    final ionConnectEntity =
         ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
-    if (ionEntity is! PostEntity) {
+    if (ionConnectEntity is! PostEntity) {
       return Center(
         child: Text(context.i18n.video_not_found),
       );
     }
 
     final videosItems = videosData?.data.items?.whereType<PostEntity>().toList() ?? [];
-    final videos = [ionEntity, ...videosItems];
+    final videos = [ionConnectEntity, ...videosItems];
 
     final userPageController = usePageController();
 

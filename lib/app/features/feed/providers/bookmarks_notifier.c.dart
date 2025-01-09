@@ -73,20 +73,20 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> currentUserBookmarks(Ref ref)
 
 @riverpod
 Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
-  final ionEntity = await ref.read(
+  final ionConnectEntity = await ref.read(
     ionConnectEntityProvider(eventReference: eventReference).future,
   );
-  if (ionEntity == null) return false;
+  if (ionConnectEntity == null) return false;
 
   final currentBookmarks = await ref.watch(currentUserBookmarksProvider.future);
-  return switch (ionEntity) {
+  return switch (ionConnectEntity) {
     PostEntity() => currentBookmarks.values.any(
-        (bookmarksSet) => bookmarksSet?.data.postsIds.contains(ionEntity.id) ?? false,
+        (bookmarksSet) => bookmarksSet?.data.postsIds.contains(ionConnectEntity.id) ?? false,
       ),
     ArticleEntity() => currentBookmarks[BookmarksSetType.articles]
             ?.data
             .articlesRefs
-            .contains(ionEntity.toReplaceableEventReference()) ??
+            .contains(ionConnectEntity.toReplaceableEventReference()) ??
         false,
     _ => false,
   };
@@ -105,12 +105,12 @@ class BookmarksNotifier extends _$BookmarksNotifier {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final ionEntity = await ref.read(
+      final ionConnectEntity = await ref.read(
         ionConnectEntityProvider(eventReference: eventReference).future,
       );
-      if (ionEntity == null) return;
+      if (ionConnectEntity == null) return;
 
-      final bookmarkType = _getBookmarkType(ionEntity);
+      final bookmarkType = _getBookmarkType(ionConnectEntity);
       if (bookmarkType == null) return;
 
       final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
@@ -121,11 +121,11 @@ class BookmarksNotifier extends _$BookmarksNotifier {
       final articlesRefs =
           Set<ReplaceableEventReference>.from(bookmarksSet?.data.articlesRefs ?? []);
 
-      switch (ionEntity) {
+      switch (ionConnectEntity) {
         case PostEntity():
-          _togglePostBookmark(postsIds, ionEntity);
+          _togglePostBookmark(postsIds, ionConnectEntity);
         case ArticleEntity():
-          _toggleArticleBookmark(articlesRefs, ionEntity);
+          _toggleArticleBookmark(articlesRefs, ionConnectEntity);
         default:
           return;
       }
