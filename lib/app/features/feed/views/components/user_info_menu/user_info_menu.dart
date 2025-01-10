@@ -12,6 +12,8 @@ import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu_item.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -57,11 +59,12 @@ class UserInfoMenu extends ConsumerWidget {
                 _FollowUserMenuItem(
                   pubkey: pubkey,
                   username: userMetadata.data.name,
+                  closeMenu: closeMenu,
                 ),
-                UserInfoMenuItem(
-                  label: context.i18n.post_menu_block_nickname(userMetadata.data.name),
-                  icon: Assets.svg.iconBlock.icon(size: iconSize),
-                  onPressed: closeMenu,
+                _BlockUserMenuItem(
+                  pubkey: pubkey,
+                  username: userMetadata.data.name,
+                  closeMenu: closeMenu,
                 ),
                 UserInfoMenuItem(
                   label: context.i18n.post_menu_report_post,
@@ -81,11 +84,15 @@ class UserInfoMenu extends ConsumerWidget {
 }
 
 class _FollowUserMenuItem extends ConsumerWidget {
-  const _FollowUserMenuItem({required this.pubkey, required this.username});
+  const _FollowUserMenuItem({
+    required this.pubkey,
+    required this.username,
+    required this.closeMenu,
+  });
 
   final String pubkey;
-
   final String username;
+  final VoidCallback closeMenu;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -94,9 +101,12 @@ class _FollowUserMenuItem extends ConsumerWidget {
       label: following
           ? context.i18n.post_menu_unfollow_nickname(username)
           : context.i18n.post_menu_follow_nickname(username),
-      icon: Assets.svg.iconFollowuser
-          .icon(size: 20.0.s, color: context.theme.appColors.onTertararyBackground),
+      icon: Assets.svg.iconFollowuser.icon(
+        size: UserInfoMenu.iconSize,
+        color: context.theme.appColors.onTertararyBackground,
+      ),
       onPressed: () {
+        closeMenu();
         if (following) {
           showSimpleBottomSheet<void>(
             context: context,
@@ -104,6 +114,40 @@ class _FollowUserMenuItem extends ConsumerWidget {
           );
         } else {
           ref.read(followListManagerProvider.notifier).toggleFollow(pubkey);
+        }
+      },
+    );
+  }
+}
+
+class _BlockUserMenuItem extends ConsumerWidget {
+  const _BlockUserMenuItem({
+    required this.pubkey,
+    required this.username,
+    required this.closeMenu,
+  });
+
+  final String pubkey;
+  final String username;
+  final VoidCallback closeMenu;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBlocked = ref.watch(isBlockedProvider(pubkey)).value ?? false;
+    return UserInfoMenuItem(
+      label: isBlocked
+          ? context.i18n.post_menu_unblock_nickname(username)
+          : context.i18n.post_menu_block_nickname(username),
+      icon: Assets.svg.iconBlock.icon(size: UserInfoMenu.iconSize),
+      onPressed: () {
+        closeMenu();
+        if (!isBlocked) {
+          showSimpleBottomSheet<void>(
+            context: context,
+            child: BlockUserModal(pubkey: pubkey),
+          );
+        } else {
+          ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
         }
       },
     );

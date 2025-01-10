@@ -27,28 +27,40 @@ class LoadMoreBuilder extends HookWidget {
   Widget build(BuildContext context) {
     final loading = useState(false);
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: (notification) {
-        final metrics = notification.metrics;
-        if (hasMore &&
-            !loading.value &&
-            metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
-          loading.value = true;
-          onLoadMore().whenComplete(() => loading.value = false);
-        }
-        return true;
-      },
-      child: builder(
-        context,
-        loading.value
-            ? [
-                ...slivers,
-                const SliverToBoxAdapter(
-                  child: Center(child: CircularProgressIndicator.adaptive()),
-                ),
-              ]
-            : slivers,
+    // A ScrollMetricsNotification allows listeners to be notified for an
+    // initial state, as well as if the content dimensions change without
+    // scrolling.
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: (notification) => _onMetricsChanged(notification.asScrollUpdate(), loading),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) => _onMetricsChanged(notification, loading),
+        child: builder(
+          context,
+          loading.value
+              ? [
+                  ...slivers,
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: Center(child: CircularProgressIndicator.adaptive()),
+                    ),
+                  ),
+                ]
+              : slivers,
+        ),
       ),
     );
+  }
+
+  bool _onMetricsChanged(
+    ScrollNotification notification,
+    ValueNotifier<bool> loading,
+  ) {
+    final metrics = notification.metrics;
+    if (hasMore && !loading.value && metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
+      loading.value = true;
+      onLoadMore().whenComplete(() => loading.value = false);
+    }
+    return true;
   }
 }

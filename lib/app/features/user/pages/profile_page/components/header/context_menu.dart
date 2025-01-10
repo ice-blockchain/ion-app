@@ -11,6 +11,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/header/conte
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -50,18 +51,10 @@ class ContextMenu extends HookConsumerWidget {
                 onLayout: updateWidth,
               ),
               const ContextMenuItemDivider(),
-              ContextMenuItem(
-                label: context.i18n.button_block,
-                iconAsset: Assets.svg.iconBlockClose3,
-                onPressed: () {
-                  showSimpleBottomSheet<void>(
-                    context: context,
-                    child: BlockUserModal(
-                      pubkey: pubkey,
-                    ),
-                  );
-                },
+              _BlockUserMenuItem(
+                pubkey: pubkey,
                 onLayout: updateWidth,
+                closeMenu: closeMenu,
               ),
               const ContextMenuItemDivider(),
               ContextMenuItem(
@@ -87,6 +80,39 @@ class ContextMenu extends HookConsumerWidget {
         opacity: opacity,
         assetName: Assets.svg.iconMorePopup,
       ),
+    );
+  }
+}
+
+class _BlockUserMenuItem extends ConsumerWidget {
+  const _BlockUserMenuItem({
+    required this.pubkey,
+    required this.onLayout,
+    required this.closeMenu,
+  });
+
+  final String pubkey;
+  final void Function(Size) onLayout;
+  final VoidCallback closeMenu;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isBlocked = ref.watch(isBlockedProvider(pubkey)).value ?? false;
+    return ContextMenuItem(
+      label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
+      iconAsset: Assets.svg.iconBlockClose3,
+      onLayout: onLayout,
+      onPressed: () {
+        closeMenu();
+        if (!isBlocked) {
+          showSimpleBottomSheet<void>(
+            context: context,
+            child: BlockUserModal(pubkey: pubkey),
+          );
+        } else {
+          ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
+        }
+      },
     );
   }
 }

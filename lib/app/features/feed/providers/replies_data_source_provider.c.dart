@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -53,6 +54,10 @@ List<EntitiesDataSource>? repliesDataSource(
               GenericIncludeSearchExtension(
                 forKind: PostEntity.kind,
                 includeKind: UserMetadataEntity.kind,
+              ),
+              GenericIncludeSearchExtension(
+                forKind: PostEntity.kind,
+                includeKind: BlockListEntity.kind,
               ),
             ],
             currentPubkey: currentPubkey,

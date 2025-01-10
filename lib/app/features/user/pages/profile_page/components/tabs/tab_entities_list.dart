@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -45,13 +46,14 @@ class TabEntitiesList extends ConsumerWidget {
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     final dataSource = ref.watch(tabDataSourceProvider(type: type, pubkey: pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final isBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(pubkey)).value;
     final entities = entitiesPagedData?.data.items;
 
     return LoadMoreBuilder(
       slivers: [
-        if (entities == null)
+        if (entities == null || isBlockedOrBlocking == null)
           const EntitiesListSkeleton()
-        else if (entities.isEmpty)
+        else if (entities.isEmpty || isBlockedOrBlocking)
           EmptyState(
             type: type,
             isCurrentUserProfile: pubkey == ref.watch(currentPubkeySelectorProvider).valueOrNull,

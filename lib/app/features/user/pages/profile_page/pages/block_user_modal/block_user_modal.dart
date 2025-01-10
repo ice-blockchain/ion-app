@@ -7,6 +7,7 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -56,7 +57,10 @@ class BlockUserModal extends ConsumerWidget {
                   label: Text(context.i18n.button_block),
                   minimumSize: minSize,
                   backgroundColor: context.theme.appColors.attentionRed,
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
+                    rootNavigatorKey.currentState?.pop();
+                  },
                 ),
               ),
             ],
