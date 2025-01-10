@@ -2,6 +2,7 @@
 
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 
@@ -21,7 +22,7 @@ class RegisterDataSource {
     return networkClient.post(
       registerInitPath,
       data: RegisterInitRequest(email: username).toJson(),
-      decoder: UserRegistrationChallenge.fromJson,
+      decoder: (result) => parseJsonObject(result, fromJson: UserRegistrationChallenge.fromJson),
     );
   }
 
@@ -32,7 +33,7 @@ class RegisterDataSource {
     return networkClient.post(
       registerCompletePath,
       data: SignedChallenge(firstFactorCredential: credentialData).toJson(),
-      decoder: RegistrationCompleteResponse.fromJson,
+      decoder: (result) => parseJsonObject(result, fromJson: RegistrationCompleteResponse.fromJson),
       headers: RequestHeaders.getTokenHeader(token: temporaryAuthenticationToken),
     );
   }

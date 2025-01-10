@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 
@@ -18,7 +19,7 @@ class LogoutDataSource {
   }) async {
     return networkClient.put(
       logoutPath,
-      decoder: SimpleMessageResponse.fromJson,
+      decoder: (result) => parseJsonObject(result, fromJson: SimpleMessageResponse.fromJson),
       headers: RequestHeaders.getAuthorizationHeaders(
         token: token,
         username: username,

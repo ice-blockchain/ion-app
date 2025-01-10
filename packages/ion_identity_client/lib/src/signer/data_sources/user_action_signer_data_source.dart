@@ -2,6 +2,7 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/http_method.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
@@ -36,7 +37,7 @@ class UserActionSignerDataSource {
         token: token.token,
         username: username,
       ),
-      decoder: UserActionChallenge.fromJson,
+      decoder: (result) => parseJsonObject(result, fromJson: UserActionChallenge.fromJson),
     );
   }
 
@@ -90,7 +91,7 @@ class UserActionSignerDataSource {
           request.path,
           data: request.body,
           headers: headers,
-          decoder: responseDecoder,
+          decoder: (result) => parseJsonObject(result, fromJson: responseDecoder),
         ),
       _ => throw UnimplementedError('Method ${request.method} is not supported'),
     };

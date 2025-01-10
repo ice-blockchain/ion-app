@@ -2,6 +2,7 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 
@@ -31,7 +32,7 @@ class UserDetailsDataSource {
         token: token.token,
         username: username,
       ),
-      decoder: UserDetails.fromJson,
+      decoder: (result) => parseJsonObject(result, fromJson: UserDetails.fromJson),
     );
 
     return response;

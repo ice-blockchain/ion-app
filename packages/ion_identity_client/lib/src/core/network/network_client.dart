@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
 
-typedef Decoder<T> = T Function(JsonObject response);
+typedef Decoder<T> = T Function(dynamic response);
 
 /// A generic network client that wraps around Dio and provides methods for
 /// making GET and POST requests with automatic error handling and decoding
@@ -70,7 +70,7 @@ class NetworkClient {
     Object? data,
   }) async {
     return _makeRequest(
-      request: () => dio.patch<JsonObject>(
+      request: () => dio.patch<dynamic>(
         path,
         queryParameters: queryParams,
         data: data,
@@ -121,7 +121,7 @@ class NetworkClient {
   ///
   /// Throws a [NetworkException] if the request fails or the response cannot be decoded.
   Future<Result> _makeRequest<Result>({
-    required Future<Response<JsonObject>> Function() request,
+    required Future<Response<dynamic>> Function() request,
     required Decoder<Result> decoder,
   }) async {
     try {
@@ -131,7 +131,7 @@ class NetworkClient {
       if (data == null) {
         final statusCode = response.statusCode ?? 500;
         if (statusCode >= 200 && statusCode < 300) {
-          return decoder(const {});
+          return decoder(null);
         }
         throw ResponseFormatException(data);
       }

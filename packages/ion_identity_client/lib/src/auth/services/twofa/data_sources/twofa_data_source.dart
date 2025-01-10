@@ -3,6 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/models/init_twofa_request.c.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:sprintf/sprintf.dart';
@@ -54,7 +55,7 @@ class TwoFADataSource {
               ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
               RequestHeaders.ionIdentityUserAction: signature,
             },
-      decoder: (response) => response,
+      decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
     );
   }
 
@@ -73,7 +74,7 @@ class TwoFADataSource {
       sprintf(twoFaPath, [userId, twoFAOption]),
       queryParams: {'code': code},
       headers: RequestHeaders.getAuthorizationHeaders(token: token, username: username),
-      decoder: (response) => response,
+      decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
     );
   }
 

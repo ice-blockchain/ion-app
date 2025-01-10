@@ -40,7 +40,7 @@ class ResponseFormatException extends NetworkException {
 class DecodeException extends NetworkException {
   const DecodeException(this.map, this.error, this.stackTrace) : super('Failed to decode response');
 
-  final JsonObject map;
+  final dynamic map;
   final Object error;
   final StackTrace stackTrace;
 

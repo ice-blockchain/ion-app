@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion_identity_client/src/coins/models/coin.c.dart';
 import 'package:ion_identity_client/src/coins/models/coins_response.c.dart';
 import 'package:ion_identity_client/src/coins/services/data_sources/get_coins_data_source.dart';
 
@@ -14,11 +15,21 @@ class GetCoinsService {
     required String username,
     required String userId,
     required int currentVersion,
-  }) async {
+  }) {
     return _getCoinsDataSource.getCoins(
       username: username,
       userId: userId,
       currentVersion: currentVersion,
+    );
+  }
+
+  Future<List<Coin>> syncCoins({
+    required String username,
+    required List<Coin> coins,
+  }) {
+    return _getCoinsDataSource.syncCoins(
+      username: username,
+      coins: coins,
     );
   }
 }

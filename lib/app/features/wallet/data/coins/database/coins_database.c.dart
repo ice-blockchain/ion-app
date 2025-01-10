@@ -5,6 +5,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/data/coins/database/coins_table.c.dart';
 import 'package:ion/app/features/wallet/data/coins/database/duration_type.dart';
+import 'package:ion/app/features/wallet/data/coins/database/sync_coins_table.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_database.c.g.dart';
@@ -17,6 +18,7 @@ CoinsDatabase coinsDatabase(Ref ref) => CoinsDatabase();
 @DriftDatabase(
   tables: [
     CoinsTable,
+    SyncCoinsTable,
   ],
 )
 class CoinsDatabase extends _$CoinsDatabase {
@@ -26,9 +28,19 @@ class CoinsDatabase extends _$CoinsDatabase {
   CoinsDatabase.test(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'coins_database');
   }
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (migration) => migration.createAll(),
+        onUpgrade: (migration, from, to) async {
+          if (from <= 1) {
+            await migration.createTable(syncCoinsTable);
+          }
+        },
+      );
 }
