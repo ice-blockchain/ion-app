@@ -50,7 +50,7 @@ class IdentitySigner {
     required String credentialId,
     required CredentialKind credentialKind,
   }) async {
-    return passwordSigner.createCredentialAssertion(
+    return passwordSigner.signWithPassword(
       challenge: challenge,
       encryptedPrivateKey: encryptedPrivateKey,
       password: password,
@@ -59,7 +59,37 @@ class IdentitySigner {
     );
   }
 
-  Future<bool> isPasskeyAvailable() async {
+  Future<AssertionRequestData> signWithBiometrics({
+    required String username,
+    required String localisedReason,
+    required String challenge,
+    required String credentialId,
+    required CredentialKind credentialKind,
+  }) async {
+    return passwordSigner.signWithBiometrics(
+      username: username,
+      localisedReason: localisedReason,
+      challenge: challenge,
+      credentialKind: credentialKind,
+      credentialId: credentialId,
+    );
+  }
+
+  Future<bool> isPasskeyAvailable() {
     return passkeySigner.canAuthenticate();
+  }
+
+  Future<void> rejectToUseBiometrics(String username) {
+    return passwordSigner.rejectToUseBiometrics(username);
+  }
+
+  Future<void> enrollToUseBiometrics({
+    required String username,
+    required String localisedReason,
+  }) {
+    return passwordSigner.enrollToUseBiometrics(
+      username: username,
+      localisedReason: localisedReason,
+    );
   }
 }

@@ -30,6 +30,10 @@ class PasskeyValidationException extends IONIdentityException {
   const PasskeyValidationException() : super('Passkey validation failed');
 }
 
+class BiometricsValidationException extends IONIdentityException {
+  const BiometricsValidationException() : super('Biometrics validation failed');
+}
+
 class PasswordFlowNotAvailableForTheUserException extends IONIdentityException {
   const PasswordFlowNotAvailableForTheUserException()
       : super('Password flow is not available for this user');

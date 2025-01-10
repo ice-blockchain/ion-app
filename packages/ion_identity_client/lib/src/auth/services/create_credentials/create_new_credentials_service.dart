@@ -52,6 +52,9 @@ class CreateNewCredentialsService {
           ),
         );
       },
+      onBiometricsFlow: ({required String localisedReason}) {
+        throw UnimplementedError('Cannot register with biometrics');
+      },
     );
 
     final credentialRequest = dataSource.buildCreateCredentialSigningRequest(

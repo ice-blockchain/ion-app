@@ -103,6 +103,11 @@ class UserDelegationManager extends _$UserDelegationManager {
             .wallets
             .generateHashSignatureWithPasskey(mainWallet.id, eventId);
       },
+      onBiometricsFlow: ({required String localisedReason}) {
+        return ionIdentity(username: currentIdentityKeyName)
+            .wallets
+            .generateHashSignatureWithBiometrics(mainWallet.id, eventId, localisedReason);
+      },
     );
 
     final curveName = switch (mainWallet.signingKey.curve) {

@@ -7,8 +7,10 @@ import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
+import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
+import 'package:local_auth/local_auth.dart';
 
 enum SignatureEncryption { hex, base64Url }
 
@@ -17,11 +19,13 @@ class PasswordSigner {
     required this.config,
     required this.keyService,
     required this.privateKeyStorage,
+    required this.biometricsStateStorage,
   });
 
   final KeyService keyService;
   final IONIdentityConfig config;
   final PrivateKeyStorage privateKeyStorage;
+  final BiometricsStateStorage biometricsStateStorage;
 
   Future<CredentialRequestData> createCredentialInfo({
     required String challenge,
@@ -31,26 +35,26 @@ class PasswordSigner {
   }) async {
     final keyPair = await keyService.generateKeyPair();
 
-    final clientData = buildClientData(
+    final clientData = _buildClientData(
       challenge: challenge,
       origin: config.origin,
       clientDataType: ClientDataType.createKey,
     );
 
-    final clientDataHash = sha256Hash(utf8.encode(clientData));
+    final clientDataHash = _sha256Hash(utf8.encode(clientData));
 
-    final credentialInfoFingerprint = buildCredentialInfoFingerprint(
+    final credentialInfoFingerprint = _buildCredentialInfoFingerprint(
       clientDataHash: clientDataHash,
       publicKeyPem: keyPair.publicKeyPem,
     );
 
-    final signature = await signDataWithPrivateKey(
+    final signature = await _signDataWithPrivateKey(
       data: credentialInfoFingerprint,
       privateKey: keyPair.keyPair,
       signatureEncryption: SignatureEncryption.hex,
     );
 
-    final attestationData = buildAttestationData(
+    final attestationData = _buildAttestationData(
       publicKeyPem: keyPair.publicKeyPem,
       signatureHex: signature,
     );
@@ -58,7 +62,7 @@ class PasswordSigner {
     final clientDataBase64Url = base64UrlEncode(utf8.encode(clientData));
     final attestationDataBase64Url = base64UrlEncode(utf8.encode(attestationData));
 
-    final credId = generateCredId(keyPair.publicKey);
+    final credId = _generateCredId(keyPair.publicKey);
 
     final encryptedPrivateKey = await keyService.encryptPrivateKey(
       keyPair.privateKeyPem,
@@ -66,10 +70,13 @@ class PasswordSigner {
     );
 
     if (credentialKind == CredentialKind.PasswordProtectedKey) {
-      await privateKeyStorage.setPrivateKey(
-        username: username,
-        privateKey: hex.encode(keyPair.privateKeyBytes),
-      );
+      await Future.wait([
+        privateKeyStorage.setPrivateKey(
+          username: username,
+          privateKey: hex.encode(keyPair.privateKeyBytes),
+        ),
+        _updateStateToCanSuggest(username),
+      ]);
     }
 
     return CredentialRequestData(
@@ -83,7 +90,7 @@ class PasswordSigner {
     );
   }
 
-  Future<AssertionRequestData> createCredentialAssertion({
+  Future<AssertionRequestData> signWithPassword({
     required String challenge,
     required String encryptedPrivateKey,
     required String password,
@@ -92,29 +99,103 @@ class PasswordSigner {
   }) async {
     final keyPair =
         await keyService.reconstructKeyPairFromEncryptedPrivateKey(encryptedPrivateKey, password);
-    final clientData = buildClientData(
+    return _createCredentialAssertion(
+      keyPair: keyPair,
       challenge: challenge,
-      origin: config.origin,
-      clientDataType: ClientDataType.getKey,
-    );
-
-    final signature = await signDataWithPrivateKey(
-      data: clientData,
-      privateKey: keyPair.keyPair,
-      signatureEncryption: SignatureEncryption.base64Url,
-    );
-
-    return AssertionRequestData(
-      kind: credentialKind,
-      credentialAssertion: CredentialAssertionData(
-        clientData: base64UrlEncode(utf8.encode(clientData)),
-        credId: credentialId,
-        signature: signature,
-      ),
+      credentialId: credentialId,
+      credentialKind: credentialKind,
     );
   }
 
-  String buildClientData({
+  Future<AssertionRequestData> signWithBiometrics({
+    required String challenge,
+    required String credentialId,
+    required String username,
+    required String localisedReason,
+    required CredentialKind credentialKind,
+  }) async {
+    final biometricsState = biometricsStateStorage.getBiometricsState(username: username);
+    if (biometricsState != BiometricsState.enabled) {
+      throw const BiometricsValidationException();
+    }
+    final privateKey = privateKeyStorage.getPrivateKey(
+      username: username,
+    );
+    if (privateKey == null) {
+      throw const BiometricsValidationException();
+    }
+
+    final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
+    if (didAuthenticate == false) {
+      throw const BiometricsValidationException();
+    }
+
+    final keyPair = await keyService.reconstructKeyPairFromPrivateKeyBytes(privateKey);
+    return _createCredentialAssertion(
+      keyPair: keyPair,
+      challenge: challenge,
+      credentialId: credentialId,
+      credentialKind: credentialKind,
+    );
+  }
+
+  Future<void> rejectToUseBiometrics(String username) {
+    return biometricsStateStorage.updateBiometricsState(
+      username: username,
+      biometricsState: BiometricsState.rejected,
+    );
+  }
+
+  Future<void> enrollToUseBiometrics({
+    required String username,
+    required String localisedReason,
+  }) async {
+    final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
+    await biometricsStateStorage.updateBiometricsState(
+      username: username,
+      biometricsState: didAuthenticate ? BiometricsState.enabled : BiometricsState.failed,
+    );
+  }
+
+  Future<bool> _authWithBiometrics({
+    required String localisedReason,
+  }) async {
+    final localAuth = LocalAuthentication();
+    try {
+      return await localAuth.authenticate(
+        localizedReason: localisedReason,
+        options: const AuthenticationOptions(stickyAuth: true),
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> _updateStateToCanSuggest(String username) async {
+    final biometricsAvailable = await isBiometricsAvailable();
+    if (biometricsAvailable) {
+      await biometricsStateStorage.updateBiometricsState(
+        username: username,
+        biometricsState: BiometricsState.canSuggest,
+      );
+    }
+  }
+
+  Future<bool> isBiometricsAvailable() async {
+    final localAuth = LocalAuthentication();
+
+    final results = await Future.wait<bool>([
+      localAuth.canCheckBiometrics,
+      localAuth.isDeviceSupported(),
+    ]);
+
+    final canCheckBiometrics = results[0];
+    final isDeviceSupported = results[1];
+
+    return canCheckBiometrics && isDeviceSupported;
+  }
+
+  String _buildClientData({
     required String challenge,
     required String origin,
     required ClientDataType clientDataType,
@@ -135,13 +216,13 @@ class PasswordSigner {
   }
 
   // Computes SHA256 hash
-  String sha256Hash(List<int> data) {
+  String _sha256Hash(List<int> data) {
     final hash = sha256.convert(data);
     return hash.toString();
   }
 
   // Builds the credential info fingerprint JSON string
-  String buildCredentialInfoFingerprint({
+  String _buildCredentialInfoFingerprint({
     required String clientDataHash,
     required String publicKeyPem,
   }) {
@@ -158,7 +239,7 @@ class PasswordSigner {
     return jsonEncode(sortedFingerprintMap);
   }
 
-  Future<String> signDataWithPrivateKey({
+  Future<String> _signDataWithPrivateKey({
     required String data,
     required crypto.SimpleKeyPairData privateKey,
     required SignatureEncryption signatureEncryption,
@@ -178,7 +259,7 @@ class PasswordSigner {
   }
 
   // Builds the attestation data JSON string
-  String buildAttestationData({
+  String _buildAttestationData({
     required String publicKeyPem,
     required String signatureHex,
   }) {
@@ -195,7 +276,7 @@ class PasswordSigner {
     return jsonEncode(sortedAttestationDataMap);
   }
 
-  String generateCredId(crypto.SimplePublicKey publicKey) {
+  String _generateCredId(crypto.SimplePublicKey publicKey) {
     final digest = sha256.convert(publicKey.bytes).bytes.sublist(0, 16);
 
     final base36Str = BigInt.parse(hex.encode(digest), radix: 16)
@@ -209,5 +290,33 @@ class PasswordSigner {
     return formattedStr.endsWith('-')
         ? formattedStr.substring(0, formattedStr.length - 1)
         : formattedStr;
+  }
+
+  Future<AssertionRequestData> _createCredentialAssertion({
+    required KeyPairData keyPair,
+    required String challenge,
+    required String credentialId,
+    required CredentialKind credentialKind,
+  }) async {
+    final clientData = _buildClientData(
+      challenge: challenge,
+      origin: config.origin,
+      clientDataType: ClientDataType.getKey,
+    );
+
+    final signature = await _signDataWithPrivateKey(
+      data: clientData,
+      privateKey: keyPair.keyPair,
+      signatureEncryption: SignatureEncryption.base64Url,
+    );
+
+    return AssertionRequestData(
+      kind: credentialKind,
+      credentialAssertion: CredentialAssertionData(
+        clientData: base64UrlEncode(utf8.encode(clientData)),
+        credId: credentialId,
+        signature: signature,
+      ),
+    );
   }
 }

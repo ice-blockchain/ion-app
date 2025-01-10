@@ -9,6 +9,7 @@ import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
+import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
@@ -29,6 +30,7 @@ class IONIdentityAuth {
     required this.loginService,
     required this.logoutService,
     required this.privateKeyStorage,
+    required this.biometricsStateStorage,
     required this.createRecoveryCredentialsService,
     required this.createNewCredentialsService,
     required this.recoverUserService,
@@ -45,9 +47,10 @@ class IONIdentityAuth {
   final RecoverUserService recoverUserService;
   final DelegatedLoginService delegatedLoginService;
   final TwoFAService twoFAService;
+  final PrivateKeyStorage privateKeyStorage;
+  final BiometricsStateStorage biometricsStateStorage;
 
   final String username;
-  final PrivateKeyStorage privateKeyStorage;
 
   Future<void> registerUser() => registerService.registerUser();
 
@@ -68,6 +71,17 @@ class IONIdentityAuth {
   Future<bool> isPasskeyAvailable() => identitySigner.isPasskeyAvailable();
 
   bool isPasswordFlowUser() => privateKeyStorage.getPrivateKey(username: username) != null;
+
+  BiometricsState? getBiometricsState() =>
+      biometricsStateStorage.getBiometricsState(username: username);
+
+  Future<void> rejectToUseBiometrics() => identitySigner.rejectToUseBiometrics(username);
+
+  Future<void> enrollToUseBiometrics({required String localisedReason}) =>
+      identitySigner.enrollToUseBiometrics(
+        username: username,
+        localisedReason: localisedReason,
+      );
 
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials(
     OnVerifyIdentity<CredentialResponse> onVerifyIdentity,

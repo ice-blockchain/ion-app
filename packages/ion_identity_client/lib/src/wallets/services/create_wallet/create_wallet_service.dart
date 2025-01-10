@@ -41,6 +41,13 @@ class CreateWalletService {
           Wallet.fromJson,
         );
       },
+      onBiometricsFlow: ({required String localisedReason}) {
+        return _userActionSigner.signWithBiometrics(
+          request,
+          Wallet.fromJson,
+          localisedReason,
+        );
+      },
     );
   }
 }

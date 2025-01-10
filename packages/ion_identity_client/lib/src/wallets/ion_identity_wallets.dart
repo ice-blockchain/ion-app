@@ -124,4 +124,15 @@ class IONIdentityWallets {
         hash: hash,
         password: password,
       );
+
+  Future<GenerateSignatureResponse> generateHashSignatureWithBiometrics(
+    String walletId,
+    String hash,
+    String localisedReason,
+  ) =>
+      _generateSignatureService.generateHashSignatureWithBiometrics(
+        walletId: walletId,
+        hash: hash,
+        localisedReason: localisedReason,
+      );
 }
