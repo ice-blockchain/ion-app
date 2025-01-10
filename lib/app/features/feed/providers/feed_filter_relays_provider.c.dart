@@ -17,9 +17,10 @@ Future<Map<String, List<String>>> feedFilterRelays(Ref ref, FeedFilter filter) a
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
   final followListRelays = followList != null
-      ? await ref
-          .read(userRelaysManagerProvider.notifier)
-          .fetch(followList.pubkeys, actionSource: const ActionSourceCurrentUser())
+      ? await ref.read(userRelaysManagerProvider.notifier).fetch(
+            followList.pubkeys,
+            actionSource: const ActionSourceCurrentUser(),
+          )
       : <UserRelaysEntity>[];
 
   switch (filter) {

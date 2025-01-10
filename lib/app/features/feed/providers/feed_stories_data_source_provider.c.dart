@@ -17,7 +17,7 @@ part 'feed_stories_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
-  final filterRelays = ref.watch(feedFilterRelaysProvider(FeedFilter.following)).valueOrNull;
+  final filterRelays = ref.watch(feedFilterRelaysProvider(FeedFilter.forYou)).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
   if (filterRelays == null || currentPubkey == null) {
