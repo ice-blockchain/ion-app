@@ -26,6 +26,7 @@ import 'package:ion/app/features/feed/views/components/who_can_reply_toolbar/who
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -82,12 +83,15 @@ class CreatePostModal extends HookConsumerWidget {
         body: Column(
           children: [
             NavigationAppBar.modal(
+              showBackButton: false,
               title: Text(
                 createOption.getTitle(context),
               ),
-              onBackPress: onBack,
               actions: [
-                if (showCollapseButton) CollapseButton(textEditorController: textEditorController),
+                if (showCollapseButton)
+                  CollapseButton(textEditorController: textEditorController)
+                else
+                  const NavigationCloseButton(),
               ],
             ),
             Expanded(
