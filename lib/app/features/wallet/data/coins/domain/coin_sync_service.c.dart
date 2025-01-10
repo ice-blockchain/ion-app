@@ -7,6 +7,7 @@ import 'package:ion/app/features/wallet/data/coins/database/coins_database.c.dar
 import 'package:ion/app/features/wallet/data/coins/domain/coins_mapper.dart';
 import 'package:ion/app/features/wallet/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -103,6 +104,8 @@ class CoinSyncService {
   }
 
   void removeActiveCoinsSyncQueue() {
+    Logger.log('Remove active coins sync queue');
+
     _stopActiveCoinsSyncQueue();
     _coinsRepository.removeSyncQueue();
   }
@@ -124,6 +127,7 @@ class CoinSyncService {
     _syncQueueInitialized = true;
 
     final difference = nextUpdate.difference(DateTime.now());
+    Logger.log('Active coins queue is active. The next sync will be on the $nextUpdate');
 
     if (difference.isNegative) {
       // Wait until first group in queue should be synced
