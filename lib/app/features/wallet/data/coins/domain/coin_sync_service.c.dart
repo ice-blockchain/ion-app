@@ -85,7 +85,6 @@ class CoinSyncService {
       final completer = Completer<void>();
       final subscription = _coinsRepository.watchCoins().listen((coins) async {
         if (coins.isNotEmpty) {
-          // Skip sync queue build in case it's ready
           if (await isQueueNotReady()) {
             await _updateCoinsSyncQueue(CoinsMapper.toIONIdentityCoins(coins));
           }
