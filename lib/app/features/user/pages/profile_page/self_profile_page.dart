@@ -18,8 +18,6 @@ class SelfProfilePage extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return SizedBox();
-
     return ProfilePage(
       pubkey: currentPubkey,
       showBackButton: false,

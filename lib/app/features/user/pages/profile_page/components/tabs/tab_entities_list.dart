@@ -46,16 +46,14 @@ class TabEntitiesList extends ConsumerWidget {
     final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     final dataSource = ref.watch(tabDataSourceProvider(type: type, pubkey: pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final isBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(pubkey)).value;
     final entities = entitiesPagedData?.data.items;
-    final dataHasMore = entitiesPagedData?.hasMore ?? false;
-    final isBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(pubkey)).value ?? false;
-    final hasMore = dataHasMore && !isBlockedOrBlocking;
 
     return LoadMoreBuilder(
       slivers: [
-        if (entities == null)
+        if (entities == null || isBlockedOrBlocking == null)
           const EntitiesListSkeleton()
-        else if (entities.isEmpty)
+        else if (entities.isEmpty || isBlockedOrBlocking)
           EmptyState(
             type: type,
             isCurrentUserProfile: pubkey == ref.watch(currentPubkeySelectorProvider).valueOrNull,
@@ -65,7 +63,7 @@ class TabEntitiesList extends ConsumerWidget {
           builder != null ? builder!(entities.toList()) : EntitiesList(entities: entities.toList()),
       ],
       onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-      hasMore: hasMore,
+      hasMore: entitiesPagedData?.hasMore ?? true,
       builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
   }

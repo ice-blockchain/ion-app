@@ -58,13 +58,14 @@ class _EntityListItem extends ConsumerWidget {
     final userMetadata =
         ref.watch(userMetadataProvider(entity.masterPubkey, cacheOnly: true)).valueOrNull;
     final isBlockedOrBlocking =
-        ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: true)).value ?? false;
+        ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: true)).value ?? true;
 
     if (userMetadata == null || isBlockedOrBlocking) {
       /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
-      /// we don't need to fetch the user metadata explicitly - it is returned as a side effect to the
+      /// we don't need to fetch the user metadata or block list explicitly - it is returned as a side effect to the
       /// main request.
-      /// In such cases, we just have to wait until the metadata appears in cache and then show the post.
+      /// In such cases, we just have to wait until the metadata and block list appears
+      /// in cache and then show the post (or not, if author is blocked/blocking).
       return const SizedBox.shrink();
     }
 

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
@@ -28,7 +27,6 @@ class FeedPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = useScrollController();
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
     final feedHasMore = ref.watch(
       entitiesPagedDataProvider(ref.watch(feedPostsDataSourceProvider))
@@ -37,7 +35,7 @@ class FeedPage extends HookConsumerWidget {
     final showTrendingVideos =
         ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo);
 
-    useScrollTopOnTabPress(context, scrollController: scrollController);
+    useScrollTopOnTabPress(context, scrollController: PrimaryScrollController.of(context));
 
     final slivers = [
       SliverToBoxAdapter(
@@ -68,13 +66,7 @@ class FeedPage extends HookConsumerWidget {
             refreshIndicatorEdgeOffset: FeedControls.height +
                 MediaQuery.paddingOf(context).top +
                 ScreenTopOffset.defaultMargin,
-            builder: (context, slivers) {
-              return CustomScrollView(
-                controller: scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: slivers,
-              );
-            },
+            builder: (context, slivers) => CustomScrollView(slivers: slivers),
           );
         },
       ),

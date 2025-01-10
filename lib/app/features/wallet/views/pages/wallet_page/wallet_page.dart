@@ -37,8 +37,6 @@ class WalletPage extends HookConsumerWidget {
     final nftsState = ref.watch(filteredNftsProvider);
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
-    return SizedBox();
-
     Widget getActiveTabContent() {
       if (activeTab.value == WalletTabType.coins) {
         return coinsState.isLoading ? const ListLoader() : const CoinsTab();

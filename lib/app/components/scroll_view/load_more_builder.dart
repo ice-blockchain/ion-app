@@ -29,8 +29,7 @@ class LoadMoreBuilder extends HookWidget {
 
     // A ScrollMetricsNotification allows listeners to be notified for an
     // initial state, as well as if the content dimensions change without
-    // scrolling. Useful when there is not enough content to scroll,
-    // but hasMore is true and more content should be loaded.
+    // scrolling.
     return NotificationListener<ScrollMetricsNotification>(
       onNotification: (notification) => _onMetricsChanged(notification.asScrollUpdate(), loading),
       child: NotificationListener<ScrollNotification>(
@@ -41,7 +40,10 @@ class LoadMoreBuilder extends HookWidget {
               ? [
                   ...slivers,
                   const SliverToBoxAdapter(
-                    child: Center(child: CircularProgressIndicator.adaptive()),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: Center(child: CircularProgressIndicator.adaptive()),
+                    ),
                   ),
                 ]
               : slivers,
@@ -50,7 +52,10 @@ class LoadMoreBuilder extends HookWidget {
     );
   }
 
-  bool _onMetricsChanged(ScrollNotification notification, ValueNotifier<bool> loading) {
+  bool _onMetricsChanged(
+    ScrollNotification notification,
+    ValueNotifier<bool> loading,
+  ) {
     final metrics = notification.metrics;
     if (hasMore && !loading.value && metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
       loading.value = true;
