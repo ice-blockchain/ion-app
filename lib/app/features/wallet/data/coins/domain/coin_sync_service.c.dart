@@ -76,14 +76,16 @@ class CoinSyncService {
   }
 
   Future<void> startActiveCoinsSyncQueue() async {
-    if (!(await _coinsRepository.hasSyncQueue())) {
+    Future<bool> isQueueNotReady() async => !(await _coinsRepository.hasSyncQueue());
+
+    if (await isQueueNotReady()) {
       // Since we have different ways to add first coins data into database,
       // we need one place to detect first coins insert to build the sync queue
       final completer = Completer<void>();
       final subscription = _coinsRepository.watchCoins().listen((coins) async {
         if (coins.isNotEmpty) {
           // Skip sync queue build in case it's ready
-          if (!(await _coinsRepository.hasSyncQueue())) {
+          if (await isQueueNotReady()) {
             await _updateCoinsSyncQueue(CoinsMapper.toIONIdentityCoins(coins));
           }
           completer.complete();
