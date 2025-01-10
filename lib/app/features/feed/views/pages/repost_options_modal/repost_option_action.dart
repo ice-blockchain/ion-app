@@ -10,7 +10,7 @@ enum RepostOptionAction {
 
   String getLabel(BuildContext context) => switch (this) {
         RepostOptionAction.repost => context.i18n.feed_repost,
-        RepostOptionAction.quotePost => context.i18n.feed_quote_post,
+        RepostOptionAction.quotePost => context.i18n.feed_quote,
       };
 
   Color getIconColor(BuildContext context) => switch (this) {
