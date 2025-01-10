@@ -12,7 +12,7 @@ Future<BiometricsState?> userBiometricsState(
   Ref ref, {
   required String username,
 }) async {
-  final ionIdentity = await ref.read(ionIdentityProvider.future);
+  final ionIdentity = await ref.watch(ionIdentityProvider.future);
   return ionIdentity(username: username).auth.getBiometricsState();
 }
 
