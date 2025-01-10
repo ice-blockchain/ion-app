@@ -106,15 +106,14 @@ class _FollowUserMenuItem extends ConsumerWidget {
         color: context.theme.appColors.onTertararyBackground,
       ),
       onPressed: () {
+        closeMenu();
         if (following) {
           showSimpleBottomSheet<void>(
             context: context,
             child: UnfollowUserModal(pubkey: pubkey),
           );
-          closeMenu();
         } else {
           ref.read(followListManagerProvider.notifier).toggleFollow(pubkey);
-          closeMenu();
         }
       },
     );
@@ -141,15 +140,14 @@ class _BlockUserMenuItem extends ConsumerWidget {
           : context.i18n.post_menu_block_nickname(username),
       icon: Assets.svg.iconBlock.icon(size: UserInfoMenu.iconSize),
       onPressed: () {
+        closeMenu();
         if (!isBlocked) {
           showSimpleBottomSheet<void>(
             context: context,
             child: BlockUserModal(pubkey: pubkey),
           );
-          closeMenu();
         } else {
           ref.read(blockListNotifierProvider.notifier).toggleBlocked(pubkey);
-          closeMenu();
         }
       },
     );

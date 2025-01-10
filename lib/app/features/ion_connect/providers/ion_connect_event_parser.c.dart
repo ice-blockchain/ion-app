@@ -48,7 +48,7 @@ class EventParser {
       BlockListEntity.kind => BlockListEntity.fromEventMessage(eventMessage),
       NotAuthoritativeEvent.kind => NotAuthoritativeEvent.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
-    } as IonConnectEntity;
+    };
   }
 }
 
