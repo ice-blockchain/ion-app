@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 List<T> parseList<T>(
   dynamic input, {
   required T Function(Map<String, dynamic>) fromJson,
