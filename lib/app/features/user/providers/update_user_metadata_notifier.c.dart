@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/nostr/model/file_alt.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_upload_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,13 +43,13 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
         );
       }
 
-      await ref.read(nostrNotifierProvider.notifier).sendEntitiesData([...files, data]);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, data]);
     });
   }
 
   Future<UploadResult?> _upload(MediaFile? file, {required FileAlt alt}) {
     return file != null
-        ? ref.read(nostrUploadNotifierProvider.notifier).upload(file, alt: alt)
+        ? ref.read(ionConnectUploadNotifierProvider.notifier).upload(file, alt: alt)
         : Future<UploadResult?>.value();
   }
 }

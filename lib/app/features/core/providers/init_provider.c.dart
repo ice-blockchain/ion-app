@@ -9,9 +9,9 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/wallet/data/coins/domain/coin_initializer.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/nostr/nostr.dart';
-import 'package:ion/app/services/nostr/nostr_logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,11 +21,11 @@ part 'init_provider.c.g.dart';
 Future<void> initApp(Ref ref) async {
   final featureFlagsNotifier = ref.read(featureFlagsProvider.notifier);
   final logApp = featureFlagsNotifier.get(LoggerFeatureFlag.logApp);
-  final logNostrDart = featureFlagsNotifier.get(LoggerFeatureFlag.logNostrDart);
+  final logIonConnect = featureFlagsNotifier.get(LoggerFeatureFlag.logIonConnect);
 
   if (logApp) Logger.init();
 
-  Nostr.initialize(logNostrDart ? NostrLogger() : null);
+  IonConnect.initialize(logIonConnect ? IonConnectLogger() : null);
 
   await Future.wait([
     ref.read(windowManagerProvider.notifier).show(),

@@ -3,16 +3,18 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'user_delegation.c.freezed.dart';
 
 enum DelegationStatus { active, inactive, revoked }
 
 @Freezed(equal: false)
-class UserDelegationEntity with _$UserDelegationEntity, NostrEntity implements CacheableEntity {
+class UserDelegationEntity
+    with _$UserDelegationEntity, IonConnectEntity
+    implements CacheableEntity {
   const factory UserDelegationEntity({
     required String id,
     required String pubkey,

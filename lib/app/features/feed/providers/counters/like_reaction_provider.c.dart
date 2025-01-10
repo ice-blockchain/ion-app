@@ -3,8 +3,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'like_reaction_provider.c.g.dart';
@@ -18,7 +18,7 @@ ReactionEntity? likeReaction(Ref ref, EventReference eventReference) {
   }
 
   final reactionEntity = ref.watch(
-    nostrCacheProvider.select(
+    ionConnectCacheProvider.select(
       cacheSelector<ReactionEntity>(
         ReactionEntity.cacheKeyBuilder(
           eventId: eventReference.eventId,

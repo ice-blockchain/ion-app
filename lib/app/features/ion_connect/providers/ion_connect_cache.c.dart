@@ -3,19 +3,19 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nostr_cache.c.g.dart';
+part 'ion_connect_cache.c.g.dart';
 
-final _nostrCacheStreamController = StreamController<NostrEntity>.broadcast();
+final _ionConnectCacheStreamController = StreamController<IonConnectEntity>.broadcast();
 
-mixin CacheableEntity on NostrEntity {
+mixin CacheableEntity on IonConnectEntity {
   String get cacheKey;
 }
 
 @Riverpod(keepAlive: true)
-class NostrCache extends _$NostrCache {
+class IonConnectCache extends _$IonConnectCache {
   @override
   Map<String, CacheableEntity> build() {
     return {};
@@ -23,7 +23,7 @@ class NostrCache extends _$NostrCache {
 
   void cache(CacheableEntity event) {
     state = {...state, event.cacheKey: event};
-    _nostrCacheStreamController.sink.add(event);
+    _ionConnectCacheStreamController.sink.add(event);
   }
 
   void remove(String key) {
@@ -32,15 +32,15 @@ class NostrCache extends _$NostrCache {
 }
 
 @Riverpod(keepAlive: true)
-Raw<Stream<NostrEntity>> nostrCacheStream(Ref ref) {
-  return _nostrCacheStreamController.stream;
+Raw<Stream<IonConnectEntity>> ionConnectCacheStream(Ref ref) {
+  return _ionConnectCacheStreamController.stream;
 }
 
 // TODO:
-// Move to a generic family provider instead of current `nostrCacheProvider.select(cacheSelector<...>())` function
+// Move to a generic family provider instead of current `ionConnectCacheProvider.select(cacheSelector<...>())` function
 // when riverpod_generator v3 is released:
 // https://pub.dev/packages/riverpod_generator/versions/3.0.0-dev.11/changelog#300-dev7---2023-10-29
-T? Function(Map<String, CacheableEntity>) cacheSelector<T extends NostrEntity>(
+T? Function(Map<String, CacheableEntity>) cacheSelector<T extends IonConnectEntity>(
   String key,
 ) {
   return (Map<String, CacheableEntity> state) => state[key] as T?;

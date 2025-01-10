@@ -11,8 +11,8 @@ import 'package:ion/app/features/feed/views/components/article/components/articl
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
 
 class Article extends ConsumerWidget {
@@ -34,8 +34,9 @@ class Article extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull
-        as ArticleEntity?;
+    final articleEntity = ref
+        .watch(ionConnectEntityProvider(eventReference: eventReference))
+        .valueOrNull as ArticleEntity?;
 
     if (articleEntity == null) {
       return const Skeleton(child: PostSkeleton());

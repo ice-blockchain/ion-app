@@ -5,9 +5,9 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reposted_events_provider.c.g.dart';
@@ -19,7 +19,7 @@ Stream<Set<String>?> repostedEvents(Ref ref) async* {
   if (currentPubkey == null) {
     yield {};
   } else {
-    final cache = ref.read(nostrCacheProvider);
+    final cache = ref.read(ionConnectCacheProvider);
     var repostedIds = cache.values.fold<Set<String>>({}, (result, entity) {
       final repostedId = _getCurrentUserRepostedId(entity, currentPubkey: currentPubkey);
       if (repostedId != null) {
@@ -30,7 +30,7 @@ Stream<Set<String>?> repostedEvents(Ref ref) async* {
 
     yield repostedIds;
 
-    await for (final entity in ref.watch(nostrCacheStreamProvider)) {
+    await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
       final repostedId = _getCurrentUserRepostedId(entity, currentPubkey: currentPubkey);
       if (repostedId != null) {
         yield repostedIds = {...repostedIds, repostedId};
@@ -39,7 +39,7 @@ Stream<Set<String>?> repostedEvents(Ref ref) async* {
   }
 }
 
-String? _getCurrentUserRepostedId(NostrEntity entity, {required String currentPubkey}) {
+String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String currentPubkey}) {
   if (entity.masterPubkey != currentPubkey) {
     return null;
   }

@@ -9,15 +9,17 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
-import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/model/auth_event.c.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/auth_challenge_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_event_parser.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/relays_provider.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
+import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/auth_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/auth_challenge_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
@@ -25,24 +27,22 @@ import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
-import 'package:nostr_dart/nostr_dart.dart' as nd;
-import 'package:nostr_dart/nostr_dart.dart' hide requestEvents;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nostr_notifier.c.g.dart';
+part 'ion_connect_notifier.c.g.dart';
 
 @riverpod
-class NostrNotifier extends _$NostrNotifier {
+class IonConnectNotifier extends _$IonConnectNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<List<NostrEntity>?> sendEvents(
+  Future<List<IonConnectEntity>?> sendEvents(
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
     final dislikedRelaysUrls = <String>{};
-    NostrRelay? relay;
+    ion.IonConnectRelay? relay;
     return withRetry(
       ({error}) async {
         relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
@@ -66,7 +66,7 @@ class NostrNotifier extends _$NostrNotifier {
     );
   }
 
-  Future<NostrEntity?> sendEvent(
+  Future<IonConnectEntity?> sendEvent(
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
@@ -75,7 +75,7 @@ class NostrNotifier extends _$NostrNotifier {
     return result?.elementAtOrNull(0);
   }
 
-  Future<void> sendAuthEvent(NostrRelay relay) async {
+  Future<void> sendAuthEvent(IonConnectRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
     if (challenge == null && challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
@@ -103,7 +103,7 @@ class NostrNotifier extends _$NostrNotifier {
     ref.read(authChallengeProvider(relay.url).notifier).clearChallenge();
   }
 
-  Future<List<NostrEntity>?> sendEntitiesData(
+  Future<List<IonConnectEntity>?> sendEntitiesData(
     List<EventSerializable> entitiesData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
@@ -112,7 +112,7 @@ class NostrNotifier extends _$NostrNotifier {
     return sendEvents(events, actionSource: actionSource, cache: cache);
   }
 
-  Future<NostrEntity?> sendEntityData(
+  Future<IonConnectEntity?> sendEntityData(
     EventSerializable entityData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
@@ -127,7 +127,7 @@ class NostrNotifier extends _$NostrNotifier {
     bool keepSubscription = false,
   }) async* {
     final dislikedRelaysUrls = <String>{};
-    NostrRelay? relay;
+    IonConnectRelay? relay;
 
     yield* withRetryStream(
       ({error}) async* {
@@ -138,7 +138,7 @@ class NostrNotifier extends _$NostrNotifier {
         }
 
         await for (final event
-            in nd.requestEvents(requestMessage, relay!, keepSubscription: keepSubscription)) {
+            in ion.requestEvents(requestMessage, relay!, keepSubscription: keepSubscription)) {
           if (event is NoticeMessage || event is ClosedMessage) {
             throw RelayRequestFailedException(
               relayUrl: relay!.url,
@@ -165,7 +165,7 @@ class NostrNotifier extends _$NostrNotifier {
     return events.isNotEmpty ? events.first : null;
   }
 
-  Stream<NostrEntity> requestEntities(
+  Stream<IonConnectEntity> requestEntities(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
@@ -178,7 +178,7 @@ class NostrNotifier extends _$NostrNotifier {
     }
   }
 
-  Future<T?> requestEntity<T extends NostrEntity>(
+  Future<T?> requestEntity<T extends IonConnectEntity>(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
@@ -204,7 +204,7 @@ class NostrNotifier extends _$NostrNotifier {
   }
 
   Future<EventMessage> sign(EventSerializable entityData) async {
-    final eventSigner = ref.read(currentUserNostrEventSignerProvider).valueOrNull;
+    final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
 
     if (eventSigner == null) {
@@ -226,7 +226,7 @@ class NostrNotifier extends _$NostrNotifier {
   bool _isAuthRequired(Object? error) =>
       error != null && (error is SendEventException) && error.code.startsWith('auth-required');
 
-  Future<NostrRelay> _getRelay(
+  Future<IonConnectRelay> _getRelay(
     ActionSource actionSource, {
     Set<String> dislikedUrls = const {},
   }) async {
@@ -296,11 +296,11 @@ class NostrNotifier extends _$NostrNotifier {
     return userRelays;
   }
 
-  NostrEntity _parseAndCache(EventMessage event) {
+  IonConnectEntity _parseAndCache(EventMessage event) {
     final parser = ref.read(eventParserProvider);
     final entity = parser.parse(event);
     if (entity is CacheableEntity) {
-      ref.read(nostrCacheProvider.notifier).cache(entity);
+      ref.read(ionConnectCacheProvider.notifier).cache(entity);
     }
     return entity;
   }

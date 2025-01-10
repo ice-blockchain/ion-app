@@ -5,10 +5,10 @@ import 'dart:async';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/paged.c.dart';
-import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'entities_paged_data_provider.c.freezed.dart';
@@ -19,7 +19,7 @@ class EntitiesDataSource with _$EntitiesDataSource {
   const factory EntitiesDataSource({
     required ActionSource actionSource,
     required List<RequestFilter> requestFilters,
-    required bool Function(NostrEntity entity) entityFilter,
+    required bool Function(IonConnectEntity entity) entityFilter,
   }) = _EntitiesDataSource;
 }
 
@@ -27,7 +27,7 @@ class EntitiesDataSource with _$EntitiesDataSource {
 class EntitiesPagedDataState with _$EntitiesPagedDataState {
   factory EntitiesPagedDataState({
     // Processing pagination params per data source
-    required Paged<NostrEntity, Map<ActionSource, PaginationParams>> data,
+    required Paged<IonConnectEntity, Map<ActionSource, PaginationParams>> data,
   }) = _EntitiesPagedDataState;
 
   EntitiesPagedDataState._();
@@ -92,7 +92,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
       );
     }
 
-    final entitiesStream = ref.read(nostrNotifierProvider.notifier).requestEntities(
+    final entitiesStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
           requestMessage,
           actionSource: dataSource.actionSource,
         );

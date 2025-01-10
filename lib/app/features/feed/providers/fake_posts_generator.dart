@@ -3,10 +3,10 @@
 import 'dart:math';
 
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/nostr/model/file_alt.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/services/nostr/ed25519_key_store.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 
 Future<PostEntity> generateFakePost() async {
   final keyStore = await Ed25519KeyStore.generate();
@@ -30,9 +30,9 @@ const _fakeFeedMessages = [
   // Short messages
 
   'Wow! #amazing',
-  'Amazing deal! #nostr',
+  'Amazing deal! #ionConnect',
   'This is incredible. @jack ⚡️',
-  'Cant believe this! #nostr',
+  'Cant believe this! #ionConnect',
   'Epic moment. #bitcoin ⚡️',
 
   // Medium-length messages
@@ -43,7 +43,7 @@ const _fakeFeedMessages = [
   'Dinner with friends was amazing. @carol @dave #foodie',
   'My latest painting is finally done! #art',
   'Workout complete, feeling strong. @gym_buddy #fitness',
-  'Exploring a new trail this weekend. https://nostr.com #hiking',
+  'Exploring a new trail this weekend. https://ionConnect.com #hiking',
 
   // Long messages
 
@@ -83,14 +83,14 @@ Future<PostEntity> generateFakePostWithVideo() async {
 }
 
 const fakeVideos = [
-  'https://video.nostr.build/bc67beeea49b061306dcb80e8c3180b419c9fb05227eee285b13636967d2e2b6.mp4',
-  'https://video.nostr.build/14c39a2bb10c7b9ec3689fdc3612de1f7ab247021c161851d7dc874e61d23bbb.mp4',
-  'https://video.nostr.build/3b6bf05571aa4a82444f1f37d72cc1dd7232ae0e8a5718c07f3c22af9e1089f2.mp4',
-  'https://video.nostr.build/54c76e67e631e9ebaada08af4631a9c2bce517d9bf57f99fe2d1fa1f861ae1ea.mp4',
-  'https://video.nostr.build/438d750bd0ed94e47cda768cdb8202cdc3adf2862bf4dc284b48e80fd56ef289.mp4',
-  'https://video.nostr.build/f40c068814cb2015fa897de0bd50145f8e0c5fc98008f11c8ab18e6f733e6ec3.mp4',
-  'https://video.nostr.build/3d2fabff0b8a547b30d226ca61796926a8009df9cdd9911ee2cc9c95e3dcc8a0.mp4',
-  'https://video.nostr.build/6b9e731da06738746194712812bf05ea43bf021e9ab5039e58295cbb0e002698.mp4',
+  'https://video.ionConnect.build/bc67beeea49b061306dcb80e8c3180b419c9fb05227eee285b13636967d2e2b6.mp4',
+  'https://video.ionConnect.build/14c39a2bb10c7b9ec3689fdc3612de1f7ab247021c161851d7dc874e61d23bbb.mp4',
+  'https://video.ionConnect.build/3b6bf05571aa4a82444f1f37d72cc1dd7232ae0e8a5718c07f3c22af9e1089f2.mp4',
+  'https://video.ionConnect.build/54c76e67e631e9ebaada08af4631a9c2bce517d9bf57f99fe2d1fa1f861ae1ea.mp4',
+  'https://video.ionConnect.build/438d750bd0ed94e47cda768cdb8202cdc3adf2862bf4dc284b48e80fd56ef289.mp4',
+  'https://video.ionConnect.build/f40c068814cb2015fa897de0bd50145f8e0c5fc98008f11c8ab18e6f733e6ec3.mp4',
+  'https://video.ionConnect.build/3d2fabff0b8a547b30d226ca61796926a8009df9cdd9911ee2cc9c95e3dcc8a0.mp4',
+  'https://video.ionConnect.build/6b9e731da06738746194712812bf05ea43bf021e9ab5039e58295cbb0e002698.mp4',
 ];
 
 const _fakeThumbnails = [

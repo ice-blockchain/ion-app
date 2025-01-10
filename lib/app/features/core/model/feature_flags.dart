@@ -24,7 +24,7 @@ final class LoggerFeatureFlag extends FeatureFlag {
 
   static const logApp = FeedFeatureFlag._(key: 'logApp');
   static const logRouters = FeedFeatureFlag._(key: 'logRouters');
-  static const logNostrDart = FeedFeatureFlag._(key: 'logNostrDart');
+  static const logIonConnect = FeedFeatureFlag._(key: 'logIonConnect');
   static const logIonIdentityClient = FeedFeatureFlag._(key: 'logIonIdentityClient');
 }
 

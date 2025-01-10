@@ -10,8 +10,9 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
-import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/interests.c.dart';
@@ -19,13 +20,12 @@ import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nostr_event_parser.c.g.dart';
+part 'ion_connect_event_parser.c.g.dart';
 
 class EventParser {
-  NostrEntity parse(EventMessage eventMessage) {
+  IonConnectEntity parse(EventMessage eventMessage) {
     return switch (eventMessage.kind) {
       UserMetadataEntity.kind => UserMetadataEntity.fromEventMessage(eventMessage),
       PostEntity.kind => PostEntity.fromEventMessage(eventMessage),
@@ -44,7 +44,7 @@ class EventParser {
       BookmarksSetEntity.kind => BookmarksSetEntity.fromEventMessage(eventMessage),
       BookmarksEntity.kind => BookmarksEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
-    } as NostrEntity;
+    } as IonConnectEntity;
   }
 }
 

@@ -4,11 +4,11 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/nostr/model/action_source.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'follow_list_provider.c.g.dart';
@@ -16,7 +16,7 @@ part 'follow_list_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 Future<FollowListEntity?> followList(Ref ref, String pubkey) async {
   final followList = ref.watch(
-    nostrCacheProvider
+    ionConnectCacheProvider
         .select(cacheSelector<FollowListEntity>(FollowListEntity.cacheKeyBuilder(pubkey: pubkey))),
   );
   if (followList != null) {
@@ -25,7 +25,7 @@ Future<FollowListEntity?> followList(Ref ref, String pubkey) async {
 
   final requestMessage = RequestMessage()
     ..addFilter(RequestFilter(kinds: const [FollowListEntity.kind], authors: [pubkey], limit: 1));
-  return ref.read(nostrNotifierProvider.notifier).requestEntity<FollowListEntity>(
+  return ref.read(ionConnectNotifierProvider.notifier).requestEntity<FollowListEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
@@ -80,7 +80,7 @@ class FollowListManager extends _$FollowListManager {
         followees.add(Followee(pubkey: pubkey));
       }
       await ref
-          .read(nostrNotifierProvider.notifier)
+          .read(ionConnectNotifierProvider.notifier)
           .sendEntityData(followList.data.copyWith(list: followees));
     });
   }

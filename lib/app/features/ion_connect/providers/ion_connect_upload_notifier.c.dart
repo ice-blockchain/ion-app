@@ -8,23 +8,23 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
-import 'package:ion/app/features/nostr/model/file_alt.dart';
-import 'package:ion/app/features/nostr/model/file_metadata.c.dart';
-import 'package:ion/app/features/nostr/model/file_storage_metadata.c.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/features/nostr/model/nostr_auth.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_storage_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_auth.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'nostr_upload_notifier.c.freezed.dart';
-part 'nostr_upload_notifier.c.g.dart';
+part 'ion_connect_upload_notifier.c.freezed.dart';
+part 'ion_connect_upload_notifier.c.g.dart';
 
 typedef UploadResult = ({FileMetadata fileMetadata, MediaAttachment mediaAttachment});
 
 @riverpod
-class NostrUploadNotifier extends _$NostrUploadNotifier {
+class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
   @override
   FutureOr<void> build() {}
 
@@ -105,15 +105,15 @@ class NostrUploadNotifier extends _$NostrUploadNotifier {
       'content_type': file.mimeType,
     });
 
-    final nostrAuth = NostrAuth(url: url, method: 'POST', payload: fileBytes);
-    final authEvent = await ref.read(nostrNotifierProvider.notifier).sign(nostrAuth);
+    final ionConnectAuth = IonConnectAuth(url: url, method: 'POST', payload: fileBytes);
+    final authEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(ionConnectAuth);
 
     try {
       final response = await ref.read(dioProvider).post<dynamic>(
             url,
             data: formData,
             options: Options(
-              headers: {'Authorization': nostrAuth.toAuthorizationHeader(authEvent)},
+              headers: {'Authorization': ionConnectAuth.toAuthorizationHeader(authEvent)},
             ),
           );
 

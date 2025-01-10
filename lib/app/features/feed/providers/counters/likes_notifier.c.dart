@@ -3,10 +3,10 @@
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
-import 'package:ion/app/features/nostr/model/deletion_request.c.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'likes_notifier.c.g.dart';
@@ -30,8 +30,8 @@ class LikesNotifier extends _$LikesNotifier {
         final data = DeletionRequest(
           events: [EventToDelete(eventId: likeEntity.id, kind: ReactionEntity.kind)],
         );
-        await ref.read(nostrNotifierProvider.notifier).sendEntityData(data, cache: false);
-        ref.read(nostrCacheProvider.notifier).remove(likeEntity.cacheKey);
+        await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data, cache: false);
+        ref.read(ionConnectCacheProvider.notifier).remove(likeEntity.cacheKey);
         ref.read(likesCountProvider(eventReference).notifier).removeOne();
       } else {
         final data = ReactionData(
@@ -39,7 +39,7 @@ class LikesNotifier extends _$LikesNotifier {
           eventId: eventReference.eventId,
           pubkey: eventReference.pubkey,
         );
-        await ref.read(nostrNotifierProvider.notifier).sendEntityData(data);
+        await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
         ref.read(likesCountProvider(eventReference).notifier).addOne();
       }
     });

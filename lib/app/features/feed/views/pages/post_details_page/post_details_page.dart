@@ -9,7 +9,7 @@ import 'package:ion/app/features/feed/create_post/views/components/reply_input_f
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_list/reply_list.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class PostDetailsPage extends StatelessWidget {

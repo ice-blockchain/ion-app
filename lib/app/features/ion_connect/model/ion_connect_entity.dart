@@ -3,11 +3,11 @@
 import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 
 @immutable
-abstract mixin class NostrEntity {
+abstract mixin class IonConnectEntity {
   String get id;
   String get pubkey;
   String get masterPubkey;
@@ -26,7 +26,7 @@ abstract mixin class NostrEntity {
 
   @override
   bool operator ==(Object other) {
-    return other is NostrEntity && id == other.id;
+    return other is IonConnectEntity && id == other.id;
   }
 
   @override

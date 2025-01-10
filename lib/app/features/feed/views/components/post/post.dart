@@ -14,8 +14,8 @@ import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
-import 'package:ion/app/features/nostr/model/event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_entity_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class Post extends ConsumerWidget {
@@ -34,8 +34,9 @@ class Post extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity =
-        ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull as PostEntity?;
+    final postEntity = ref
+        .watch(ionConnectEntityProvider(eventReference: eventReference))
+        .valueOrNull as PostEntity?;
 
     if (postEntity == null) {
       return const Skeleton(child: PostSkeleton());
@@ -83,11 +84,12 @@ class _FramedEvent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nostrEntity = ref.watch(nostrEntityProvider(eventReference: eventReference)).valueOrNull;
+    final ionConnectEntity =
+        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
     final quotedEntity = useMemoized(
       () {
-        switch (nostrEntity) {
+        switch (ionConnectEntity) {
           case PostEntity():
             return _QuotedPost(eventReference: eventReference);
           case ArticleEntity():
@@ -96,7 +98,7 @@ class _FramedEvent extends HookConsumerWidget {
             return const SizedBox.shrink();
         }
       },
-      [nostrEntity],
+      [ionConnectEntity],
     );
 
     return Padding(

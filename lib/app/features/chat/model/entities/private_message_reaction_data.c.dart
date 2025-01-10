@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 part 'private_message_reaction_data.c.freezed.dart';
 

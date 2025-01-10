@@ -3,8 +3,8 @@
 import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 
 part 'auth_event.c.freezed.dart';
 

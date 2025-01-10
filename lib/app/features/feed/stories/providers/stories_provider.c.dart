@@ -6,7 +6,7 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stories_provider.c.g.dart';

@@ -14,7 +14,7 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/c
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/mock.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 
 class StoryList extends ConsumerWidget {
   const StoryList({

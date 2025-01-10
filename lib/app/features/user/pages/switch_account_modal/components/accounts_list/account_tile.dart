@@ -6,7 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -22,7 +22,7 @@ class AccountsTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
-    final eventSigner = ref.watch(nostrEventSignerProvider(identityKeyName)).valueOrNull;
+    final eventSigner = ref.watch(ionConnectEventSignerProvider(identityKeyName)).valueOrNull;
 
     if (eventSigner == null) {
       return Skeleton(child: ListItem());

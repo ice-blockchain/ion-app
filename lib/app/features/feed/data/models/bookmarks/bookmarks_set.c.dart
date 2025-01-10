@@ -6,18 +6,18 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/model/replaceable_event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'bookmarks_set.c.freezed.dart';
 
 enum BookmarksSetType { posts, videos, articles, unknown }
 
 @Freezed(equal: false)
-class BookmarksSetEntity with _$BookmarksSetEntity, NostrEntity implements CacheableEntity {
+class BookmarksSetEntity with _$BookmarksSetEntity, IonConnectEntity implements CacheableEntity {
   const factory BookmarksSetEntity({
     required String id,
     required String pubkey,

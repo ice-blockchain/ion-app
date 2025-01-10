@@ -9,11 +9,11 @@ import 'package:ion/app/features/feed/data/models/entities/event_count_request_d
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/model/related_event.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 
 part 'event_count_result_data.c.freezed.dart';
 
@@ -26,7 +26,9 @@ enum EventCountResultType {
 }
 
 @Freezed(equal: false)
-class EventCountResultEntity with _$EventCountResultEntity, NostrEntity implements CacheableEntity {
+class EventCountResultEntity
+    with _$EventCountResultEntity, IonConnectEntity
+    implements CacheableEntity {
   const factory EventCountResultEntity({
     required String id,
     required String pubkey,

@@ -6,8 +6,8 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_state.dart';
 import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
@@ -36,7 +36,7 @@ class TabEntitiesList extends ConsumerWidget {
 
   final String pubkey;
 
-  final Widget Function(List<NostrEntity> entities)? builder;
+  final Widget Function(List<IonConnectEntity> entities)? builder;
 
   final TabEntityType type;
 

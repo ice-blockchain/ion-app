@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/nostr/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followers_you_know/followed_by_avatars.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/followers_you_know/followed_by_text.dart';
 import 'package:ion/app/features/user/providers/followers_you_know_data_source_provider.c.dart';

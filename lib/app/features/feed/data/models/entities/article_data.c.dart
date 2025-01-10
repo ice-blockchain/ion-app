@@ -8,22 +8,22 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
-import 'package:ion/app/features/nostr/model/event_serializable.dart';
-import 'package:ion/app/features/nostr/model/event_setting.c.dart';
-import 'package:ion/app/features/nostr/model/media_attachment.dart';
-import 'package:ion/app/features/nostr/model/nostr_entity.dart';
-import 'package:ion/app/features/nostr/model/related_hashtag.c.dart';
-import 'package:ion/app/features/nostr/model/replaceable_event_reference.c.dart';
-import 'package:ion/app/features/nostr/providers/nostr_cache.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 
 part 'article_data.c.freezed.dart';
 
 const textEditorSingleImageKey = 'text-editor-single-image';
 
 @Freezed(equal: false)
-class ArticleEntity with _$ArticleEntity, NostrEntity implements CacheableEntity {
+class ArticleEntity with _$ArticleEntity, IonConnectEntity implements CacheableEntity {
   const factory ArticleEntity({
     required String id,
     required String pubkey,
