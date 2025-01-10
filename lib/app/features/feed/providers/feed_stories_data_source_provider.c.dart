@@ -45,7 +45,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
                 ),
               ],
             ).toString(),
-            limit: 70,
+            limit: 10,
           ),
           RequestFilter(
             kinds: const [PostEntity.kind, RepostEntity.kind],
@@ -62,7 +62,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
                 ),
               ],
             ).toString(),
-            limit: 70,
+            limit: 10,
           ),
         ],
       ),
