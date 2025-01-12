@@ -2,6 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -45,6 +46,7 @@ class EventParser {
       BlockListEntity.kind => BlockListEntity.fromEventMessage(eventMessage),
       NotAuthoritativeEvent.kind => NotAuthoritativeEvent.fromEventMessage(eventMessage),
       ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(eventMessage),
+      CommunityDefinitionEntity.kind => CommunityDefinitionEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }

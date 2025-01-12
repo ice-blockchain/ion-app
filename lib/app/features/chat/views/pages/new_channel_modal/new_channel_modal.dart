@@ -8,8 +8,9 @@ import 'package:ion/app/components/controllers/hooks/use_text_editing_with_highl
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/channel_data.c.dart';
+import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
+import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
@@ -19,14 +20,19 @@ import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/c
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/media_service/image_proccessing_config.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:uuid/uuid.dart';
 
 class NewChannelModal extends HookConsumerWidget {
   const NewChannelModal({super.key});
@@ -105,26 +111,54 @@ class NewChannelModal extends HookConsumerWidget {
             BottomStickyButton(
               label: context.i18n.channel_create_action,
               iconAsset: Assets.svg.iconPlusCreatechannel,
-              onPressed: () {
+              onPressed: () async {
                 if (formKey.currentState!.validate()) {
-                  final newChannelData = ChannelData(
-                    id: 'new_channel',
-                    link: 'https://ice.io/iceofficialchannel',
+                  final avatarFile = ref.read(avatarProcessorNotifierProvider).whenOrNull(
+                        processed: (file) => file,
+                      );
+
+                  final avatarUrl = avatarFile?.path;
+
+                  final compressedImage = await ref.read(compressServiceProvider).compressImage(
+                        MediaFile(path: avatarFile!.path),
+                        quality: 70,
+                      );
+
+                  final uploadAvatarResult =
+                      await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
+                            compressedImage,
+                            alt: FileAlt.avatar,
+                          );
+
+                  final communityDefinitionData = CommunityDefinitionData(
+                    uuid: const Uuid().v7(),
                     name: titleController.text,
                     description: descController.text,
-                    channelType: channelType.value,
-                    admins: channelAdmins,
-                    users: channelAdmins.keys.toList(),
-                    image: ref
-                        .read(imageProcessorNotifierProvider(ImageProcessingType.avatar))
-                        .mapOrNull(
-                          cropped: (file) => file.file,
-                          processed: (file) => file.file,
-                        ),
+                    isPublic: channelType.value == ChannelType.public,
+                    isOpen: channelType.value == ChannelType.public,
+                    commentsEnabled: true,
+                    roleRequiredForPosting: RoleRequiredForPosting.moderator,
+                    moderators: channelAdmins.entries
+                        .where((entry) => entry.value == ChannelAdminType.moderator)
+                        .map((entry) => entry.key)
+                        .toList(),
+                    admins: channelAdmins.entries
+                        .where((entry) => entry.value == ChannelAdminType.admin)
+                        .map((entry) => entry.key)
+                        .toList(),
                   );
                   ref.read(channelsProvider.notifier).setChannel(newChannelData.id, newChannelData);
 
                   ChannelRoute(pubkey: newChannelData.id).replace(context);
+
+                  final result = await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
+                        communityDefinitionData,
+                      );
+                  if (result != null) {
+                    if (context.mounted) {
+                      ChannelRoute(pubkey: result.id).replace(context);
+                    }
+                  }
                 }
               },
             ),
