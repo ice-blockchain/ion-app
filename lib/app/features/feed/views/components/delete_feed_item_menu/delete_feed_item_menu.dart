@@ -21,6 +21,7 @@ class DeleteFeedItemMenu extends ConsumerWidget {
   const DeleteFeedItemMenu({
     required this.postEntity,
     this.iconColor,
+    this.onDelete,
     super.key,
   });
 
@@ -28,6 +29,7 @@ class DeleteFeedItemMenu extends ConsumerWidget {
 
   final PostEntity postEntity;
   final Color? iconColor;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,6 +47,7 @@ class DeleteFeedItemMenu extends ConsumerWidget {
               onPressed: () async {
                 closeMenu();
                 await _deletePost(ref, postEntity);
+                onDelete?.call();
               },
             ),
           ),
@@ -67,9 +70,10 @@ class DeleteFeedItemMenu extends ConsumerWidget {
 
     ref.read(ionConnectCacheProvider.notifier).remove(postEntity.cacheKey);
 
-    final dataSources = ref.read(feedPostsDataSourceProvider) ?? [];
-    if (dataSources.isNotEmpty) {
-      await ref.read(entitiesPagedDataProvider(dataSources).notifier).deleteEntity(postEntity);
+    final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
+
+    if (feedDataSources.isNotEmpty) {
+      await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(postEntity);
     }
   }
 }
