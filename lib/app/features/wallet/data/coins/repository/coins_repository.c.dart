@@ -42,7 +42,8 @@ class CoinsRepository {
 
   /// Returns Stream of coins. Expects a list of coins to watch.
   /// If the [coins] list is not provided, all coins will be watched.
-  Stream<List<Coin>> watchCoins([List<Coin>? coins]) => _coinsDao.watch(coins?.map((coin) => coin.id));
+  Stream<List<Coin>> watchCoins([List<Coin>? coins]) =>
+      _coinsDao.watch(coins?.map((coin) => coin.id));
 
   /// Returns Future of coins. Expects a list of coins to get.
   /// If the [coins] list is not provided, all coins will be returned.

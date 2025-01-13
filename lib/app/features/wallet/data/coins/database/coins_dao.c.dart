@@ -32,14 +32,14 @@ class CoinsDao extends DatabaseAccessor<CoinsDatabase> with _$CoinsDaoMixin {
   }
 
   Stream<List<Coin>> watch(Iterable<String>? coinIds) {
-    if (coinIds?.isEmpty ?? true){
+    if (coinIds?.isEmpty ?? true) {
       return select(coinsTable).watch();
     }
     return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).watch();
   }
 
   Future<List<Coin>> get(Iterable<String>? coinIds) {
-    if (coinIds?.isEmpty ?? true){
+    if (coinIds?.isEmpty ?? true) {
       return select(coinsTable).get();
     }
     return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).get();
