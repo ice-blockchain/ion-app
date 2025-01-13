@@ -94,14 +94,14 @@ EntitiesDataSource _buildArticlesDataSource({
         kinds: const [ArticleEntity.kind],
         authors: authors,
         search: search,
-        limit: 10,
+        limit: 20,
       ),
       RequestFilter(
         kinds: const [GenericRepostEntity.kind],
         authors: authors,
         search: search,
         k: [ArticleEntity.kind.toString()],
-        limit: 10,
+        limit: 20,
       ),
     ],
   );
@@ -149,7 +149,7 @@ EntitiesDataSource _buildVideosDataSource({
           currentPubkey: currentPubkey,
         ).toString(),
         authors: authors,
-        limit: 10,
+        limit: 20,
       ),
     ],
   );
@@ -193,7 +193,7 @@ EntitiesDataSource _buildPostsDataSource({
           currentPubkey: currentPubkey,
         ).toString(),
         authors: authors,
-        limit: 10,
+        limit: 20,
       ),
     ],
   );
