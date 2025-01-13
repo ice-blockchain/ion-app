@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
@@ -31,7 +32,13 @@ class RecentChatTile extends ConsumerWidget {
         } else {
           switch (chat.type) {
             case ChatType.chat:
-              MessagesRoute().push<void>(context);
+              MessagesRoute(
+                ConversationData(
+                  members: [],
+                  type: chat.type,
+                  name: chat.sender.name,
+                ),
+              ).push<void>(context);
             case ChatType.channel:
               ChannelRoute(pubkey: chat.id).push<void>(context);
             case ChatType.group:

@@ -244,8 +244,6 @@ class ConversationMessageManagementService {
       ),
     ).toTag();
 
-    Logger.log('Participant pubkey: $receiverPubkey');
-    Logger.log('Pubkey: ${signer.publicKey}');
     Logger.log('Event message $eventMessage');
 
     final seal = await sealService.createSeal(

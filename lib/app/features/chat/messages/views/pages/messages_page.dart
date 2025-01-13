@@ -9,20 +9,55 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/providers/chat_messages_provider.c.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/conversation_data.c.dart';
+import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
+import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 const String hasPrivacyModalShownKey = 'hasPrivacyModalShownKey';
 
 class MessagesPage extends HookConsumerWidget {
-  const MessagesPage({super.key});
+  const MessagesPage(this.conversationData, {super.key});
+
+  final ConversationData conversationData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEmpty = useMemoized(() => Random().nextBool(), []);
     final messages = ref.watch(chatMessagesProvider);
+
+    // TODO: Should be called if there is no conversation messages yet in DB
+    Future<void> initConversation() async {
+      final ee2eGroupConversationService =
+          ref.read(e2EEGroupConversationManagementProvider.notifier);
+
+      if (conversationData.type == ChatType.chat) {
+        await ee2eGroupConversationService.createOneOnOneConversation(conversationData.members);
+      } else if (conversationData.type == ChatType.group && conversationData.mediaImage != null) {
+        await ee2eGroupConversationService.createGroup(
+          subject: conversationData.name,
+          groupImage: conversationData.mediaImage!,
+          participantsPubkeys: conversationData.members,
+        );
+      }
+    }
+
+    ref.listen(
+      e2EEGroupConversationManagementProvider,
+      (previous, next) async {
+        if (next is AsyncError) {
+          await showSimpleBottomSheet<void>(
+            context: context,
+            child: ErrorModal(error: next.error),
+          );
+        }
+      },
+    );
 
     return GestureDetector(
       onTap: () => hideKeyboard(context),
@@ -36,11 +71,12 @@ class MessagesPage extends HookConsumerWidget {
           child: Column(
             children: [
               MessagingHeader(
-                imageUrl: 'https://i.pravatar.cc/150?u=@anna',
-                isVerified: true,
-                name: 'Selena Maringue',
+                imageUrl: conversationData.imageUrl,
+                name: conversationData.name,
                 subtitle: Text(
-                  '@selenamaringue',
+                  conversationData.type == ChatType.chat
+                      ? conversationData.nickname ?? ''
+                      : conversationData.members.length.toString(),
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: context.theme.appColors.quaternaryText,
                   ),

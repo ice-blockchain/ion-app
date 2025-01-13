@@ -20,7 +20,7 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
     state = const AsyncLoading();
 
     final conversationMessageManagementService =
-        await ref.watch(conversationMessageManagementServiceProvider);
+        await ref.read(conversationMessageManagementServiceProvider);
 
     state = await AsyncValue.guard(() async {
       await conversationMessageManagementService.sentMessage(
@@ -38,7 +38,7 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
     state = const AsyncLoading();
 
     final conversationMessageManagementService =
-        await ref.watch(conversationMessageManagementServiceProvider);
+        await ref.read(conversationMessageManagementServiceProvider);
 
     state = await AsyncValue.guard(() async {
       await conversationMessageManagementService.sentMessage(
@@ -97,9 +97,9 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
 
     state = const AsyncLoading();
 
-    final databaseService = ref.watch(conversationsDBServiceProvider);
+    final databaseService = ref.read(conversationsDBServiceProvider);
     final conversationMessageManagementService =
-        await ref.watch(conversationMessageManagementServiceProvider);
+        await ref.read(conversationMessageManagementServiceProvider);
 
     final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -139,7 +139,7 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
 
     state = const AsyncLoading();
 
-    final databaseService = ref.watch(conversationsDBServiceProvider);
+    final databaseService = ref.read(conversationsDBServiceProvider);
     final conversationMessageManagementService =
         await ref.watch(conversationMessageManagementServiceProvider);
 

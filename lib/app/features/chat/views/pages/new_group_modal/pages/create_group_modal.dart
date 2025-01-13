@@ -11,6 +11,8 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
 import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
@@ -18,7 +20,6 @@ import 'package:ion/app/features/chat/views/components/general_selection_button.
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -42,18 +43,6 @@ class CreateGroupModal extends HookConsumerWidget {
     final members = createGroupForm.members.toList();
 
     final e2EEGroupConversationManagement = ref.watch(e2EEGroupConversationManagementProvider);
-
-    ref.listen(
-      e2EEGroupConversationManagementProvider,
-      (previous, next) async {
-        if (next is AsyncError) {
-          await showSimpleBottomSheet<void>(
-            context: context,
-            child: ErrorModal(error: next.error),
-          );
-        }
-      },
-    );
 
     useEffect(
       () {
@@ -192,10 +181,6 @@ class CreateGroupModal extends HookConsumerWidget {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
-                      final ee2eGroupConversationProvider = ref.read(
-                        e2EEGroupConversationManagementProvider.notifier,
-                      );
-
                       final avatarProcessorState = ref.read(avatarProcessorNotifierProvider);
 
                       final groupPicture = avatarProcessorState.whenOrNull(
@@ -203,11 +188,14 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      await ee2eGroupConversationProvider.createGroup(
-                        groupImage: groupPicture!,
-                        subject: createGroupForm.name!,
-                        participantsPubkeys: createGroupForm.members.toList(),
+                      final conversationData = ConversationData(
+                        type: ChatType.group,
+                        mediaImage: groupPicture,
+                        name: createGroupForm.name!,
+                        members: createGroupForm.members.toList(),
                       );
+
+                      await MessagesRoute(conversationData).push<void>(context);
                     } else {
                       throw UnimplementedError();
                     }

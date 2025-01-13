@@ -33,20 +33,6 @@ class GroupPage extends ConsumerWidget {
           bottom: false,
           child: Column(
             children: [
-              //MessagingHeader(
-              //  onTap: () {},
-              //  imageUrl: group.imageUrl,
-              //  name: group.name,
-              //  subtitle: Text(
-              //    context.i18n.members_count(group.members.length),
-              //    style: context.theme.appTextThemes.caption2.copyWith(
-              //      color: context.theme.appColors.quaternaryText,
-              //    ),
-              //  ),
-              //),
-              //if (messages.isEmpty)
-              //  _EmptyState(link: group.link)
-              //else
               Expanded(
                 child: ChatMessagesList(
                   messages,
