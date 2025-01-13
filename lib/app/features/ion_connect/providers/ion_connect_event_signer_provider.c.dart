@@ -42,6 +42,7 @@ class IonConnectEventSigner extends _$IonConnectEventSigner {
     return signer;
   }
 
+  // TODO: Introduce and migrate into ionConnect key store
   String get _storageKey => '${identityKeyName}_nostr_key_store';
 }
 
