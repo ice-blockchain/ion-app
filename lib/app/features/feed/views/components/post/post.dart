@@ -26,6 +26,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.showParent = false,
+    this.onDelete,
     super.key,
   });
 
@@ -33,6 +34,7 @@ class Post extends ConsumerWidget {
   final bool showParent;
   final Widget? header;
   final Widget? footer;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +58,7 @@ class Post extends ConsumerWidget {
             UserInfo(
               pubkey: eventReference.pubkey,
               trailing: isOwnedByCurrentUser
-                  ? DeleteFeedItemMenu(postEntity: postEntity)
+                  ? DeleteFeedItemMenu(postEntity: postEntity, onDelete: onDelete)
                   : UserInfoMenu(pubkey: eventReference.pubkey),
             ),
         SizedBox(height: 10.0.s),
