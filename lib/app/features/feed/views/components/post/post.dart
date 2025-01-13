@@ -17,9 +17,7 @@ import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quote
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class Post extends ConsumerWidget {
@@ -41,14 +39,6 @@ class Post extends ConsumerWidget {
     final postEntity = ref
         .watch(ionConnectEntityProvider(eventReference: eventReference))
         .valueOrNull as PostEntity?;
-
-    final userMetadata = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<UserMetadataEntity>(
-          UserMetadataEntity.cacheKeyBuilder(pubkey: eventReference.pubkey),
-        ),
-      ),
-    );
 
     if (postEntity == null) {
       return const Skeleton(child: PostSkeleton());
