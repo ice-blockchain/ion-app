@@ -87,7 +87,7 @@ class SendButton extends HookConsumerWidget {
           )
         : isSending
             ? Padding(
-                padding: const EdgeInsets.only(right: 16),
+                padding: EdgeInsets.only(right: 16.0.s),
                 child: IONLoadingIndicator(
                   type: isLightTheme ? IndicatorType.dark : IndicatorType.light,
                 ),

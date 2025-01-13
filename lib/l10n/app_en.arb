@@ -126,6 +126,7 @@
   "two_fa_failure_title": "2FA Verification error",
   "two_fa_failure_desc": "Please ensure all codes are correct and try again",
   "two_fa_failure_invalid_code_desc": "Please ensure validation code you provided is correct and try again",
+  "two_fa_failure_method_not_configured_desc": "This 2FA method is not configured for this account",
   "two_fa_failure_authenticator_title": "Authenticator not available",
   "two_fa_failure_authenticator_description": "To set up an Authenticator app, please first link an email address or phone number to your account",
   "two_fa_failure_invalid_code_short": "Invalid code",

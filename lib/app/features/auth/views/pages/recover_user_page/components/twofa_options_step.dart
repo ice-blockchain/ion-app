@@ -21,11 +21,13 @@ class TwoFAOptionsStep extends HookConsumerWidget {
   const TwoFAOptionsStep({
     required this.twoFAOptionsCount,
     required this.onConfirm,
+    required this.onBackPress,
     super.key,
   });
 
   final int twoFAOptionsCount;
   final VoidCallback onConfirm;
+  final VoidCallback onBackPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,6 +39,7 @@ class TwoFAOptionsStep extends HookConsumerWidget {
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
         icon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
+        onBackPress: onBackPress,
         children: [
           Column(
             children: [
@@ -54,6 +57,7 @@ class TwoFAOptionsStep extends HookConsumerWidget {
                             child: TwoFaOptionSelector(
                               availableOptions: optionsState.availableOptions,
                               optionIndex: option + 1,
+                              initialValue: optionsState.selectedValues[option],
                               onSaved: (value) {
                                 ref
                                     .read(selectedTwoFAOptionsNotifierProvider.notifier)
@@ -65,7 +69,9 @@ class TwoFAOptionsStep extends HookConsumerWidget {
                       ),
                       Button(
                         onPressed: () {
-                          final hasValues = optionsState.selectedValues.nonNulls.isNotEmpty;
+                          final optionsAmount = optionsState.optionsAmount;
+                          final hasValues =
+                              optionsState.selectedValues.nonNulls.length == optionsAmount;
                           final isValidValues =
                               !optionsState.selectedValues.contains(TwoFaType.auth) ||
                                   optionsState.selectedValues.nonNulls.length > 1;

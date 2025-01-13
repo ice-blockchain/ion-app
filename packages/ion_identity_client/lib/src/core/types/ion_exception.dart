@@ -98,3 +98,20 @@ class InvalidTwoFaCodeException extends IONIdentityException {
     }
   }
 }
+
+class TwoFaMethodNotConfiguredException extends IONIdentityException {
+  TwoFaMethodNotConfiguredException() : super('2FA option not configured for the account');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        return responseData['code'] == '2FA_NOT_CONFIGURED';
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+}

@@ -14,11 +14,13 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
 import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_password.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -26,11 +28,13 @@ class TwoFAInputStep extends HookConsumerWidget {
   const TwoFAInputStep({
     required this.recoveryIdentityKeyName,
     required this.onContinuePressed,
+    required this.onBackPress,
     super.key,
   });
 
   final String recoveryIdentityKeyName;
   final void Function(Map<TwoFaType, String>) onContinuePressed;
+  final VoidCallback onBackPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +44,7 @@ class TwoFAInputStep extends HookConsumerWidget {
       ),
     );
 
-    ref.displayErrors(requestTwoFaCodeNotifierProvider);
+    _listenRequestTwoFaErrorResult(context, ref);
 
     final twoFaTypes = ref.watch(selectedTwoFaOptionsProvider);
 
@@ -56,6 +60,7 @@ class TwoFAInputStep extends HookConsumerWidget {
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
         icon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
+        onBackPress: onBackPress,
         children: [
           Column(
             children: [
@@ -124,6 +129,22 @@ class TwoFAInputStep extends HookConsumerWidget {
   void _onConfirm(WidgetRef ref, Map<TwoFaType, TextEditingController> controllers) {
     onContinuePressed({
       for (final entry in controllers.entries) entry.key: entry.value.text,
+    });
+  }
+
+  void _listenRequestTwoFaErrorResult(
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    ref.listenError(requestTwoFaCodeNotifierProvider, (error) {
+      if (error is TwoFaMethodNotConfiguredException) {
+        showSimpleBottomSheet<void>(
+          context: ref.context,
+          child: TwoFaTryAgainPage(
+            description: context.i18n.two_fa_failure_method_not_configured_desc,
+          ),
+        );
+      }
     });
   }
 }
