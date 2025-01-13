@@ -2,31 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
-import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/attached_media_preview_list.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/collaple_button.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/current_user_avatar.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_keyboard_scroll_handler.dart';
-import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/create_post_app_bar.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/create_post_bottom_panel.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/create_post_content.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
-import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_buttons.dart';
-import 'package:ion/app/features/feed/views/components/who_can_reply_toolbar/who_can_reply_toolbar.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -51,138 +37,50 @@ class CreatePostModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController(defaultText: content);
     final scrollController = useScrollController();
-
-    final whoCanReplyToolbarKey = useMemoized(GlobalKey.new);
-    final actionsToolbarKey = useMemoized(GlobalKey.new);
-    final textInputKey = useMemoized(GlobalKey.new);
-
-    useKeyboardScrollHandler(
-      scrollController: scrollController,
-      keysToMeasure: [whoCanReplyToolbarKey, actionsToolbarKey, textInputKey],
-    );
-
-    final createOption = videoPath != null
-        ? CreatePostOption.video
-        : parentEvent != null
-            ? CreatePostOption.reply
-            : quotedEvent != null
-                ? CreatePostOption.quote
-                : CreatePostOption.plain;
-
-    Future<void> onBack() async =>
-        textEditorController.document.isEmpty() ? context.pop() : _showCancelCreationModal(context);
+    final createOption = _determineCreateOption();
 
     final attachedMediaNotifier = useState<List<MediaFile>>([]);
-    final attachedVideoNotifier =
-        useState<MediaFile?>(videoPath != null ? MediaFile(path: videoPath!) : null);
+    final attachedVideoNotifier = useState<MediaFile?>(
+      videoPath != null ? MediaFile(path: videoPath!) : null,
+    );
 
     return BackHardwareButtonInterceptor(
-      onBackPress: (_) => onBack(),
+      onBackPress: (_) async => textEditorController.document.isEmpty()
+          ? context.pop()
+          : await showSimpleBottomSheet<void>(
+              context: context,
+              child: CancelCreationModal(
+                title: context.i18n.cancel_creation_post_title,
+                onCancel: () => Navigator.of(context).pop(),
+              ),
+            ),
       child: SheetContent(
         topPadding: 0,
         body: Column(
           children: [
-            NavigationAppBar.modal(
-              showBackButton: false,
-              title: Text(
-                createOption.getTitle(context),
-              ),
-              actions: [
-                if (showCollapseButton)
-                  CollapseButton(textEditorController: textEditorController)
-                else
-                  const NavigationCloseButton(),
-              ],
+            CreatePostAppBar(
+              showCollapseButton: showCollapseButton,
+              createOption: createOption,
+              textEditorController: textEditorController,
             ),
             Expanded(
-              child: KeyboardDismissOnTap(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    children: [
-                      ScreenSideOffset.small(
-                        child: VideoPreviewCover(attachedVideoNotifier: attachedVideoNotifier),
-                      ),
-                      if (parentEvent != null)
-                        ScreenSideOffset.small(
-                          child: ParentEntity(eventReference: parentEvent!),
-                        ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10.0.s),
-                        child: Row(
-                          key: textInputKey,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: ScreenSideOffset.defaultSmallMargin,
-                              ),
-                              child: const CurrentUserAvatar(),
-                            ),
-                            SizedBox(width: 10.0.s),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  top: 6.0.s,
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextEditor(
-                                      textEditorController,
-                                      placeholder: createOption.getPlaceholder(context),
-                                    ),
-                                    if (attachedMediaNotifier.value.isNotEmpty) ...[
-                                      SizedBox(height: 12.0.s),
-                                      AttachedMediaPreview(
-                                        attachedMediaNotifier: attachedMediaNotifier,
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (quotedEvent != null)
-                        ScreenSideOffset.small(
-                          child: QuotedEntity(eventReference: quotedEvent!),
-                        ),
-                    ],
-                  ),
-                ),
+              child: CreatePostContent(
+                scrollController: scrollController,
+                attachedVideoNotifier: attachedVideoNotifier,
+                parentEvent: parentEvent,
+                textEditorController: textEditorController,
+                createOption: createOption,
+                attachedMediaNotifier: attachedMediaNotifier,
+                quotedEvent: quotedEvent,
               ),
             ),
-            const HorizontalSeparator(),
-            ScreenSideOffset.small(
-              key: whoCanReplyToolbarKey,
-              child: const WhoCanReplyToolbar(),
-            ),
-            ScreenSideOffset.small(
-              key: actionsToolbarKey,
-              child: ActionsToolbar(
-                actions: [
-                  ToolbarImageButton(
-                    delegate: AttachedMediaHandler(attachedMediaNotifier),
-                  ),
-                  ToolbarPollButton(textEditorController: textEditorController),
-                  ToolbarRegularButton(textEditorController: textEditorController),
-                  ToolbarItalicButton(textEditorController: textEditorController),
-                  ToolbarBoldButton(textEditorController: textEditorController),
-                ],
-                trailing: PostSubmitButton(
-                  textEditorController: textEditorController,
-                  parentEvent: parentEvent,
-                  quotedEvent: quotedEvent,
-                  mediaFiles: [
-                    ...attachedMediaNotifier.value,
-                    if (attachedVideoNotifier.value != null) attachedVideoNotifier.value!,
-                  ],
-                  createOption: createOption,
-                ),
-              ),
+            CreatePostBottomPanel(
+              textEditorController: textEditorController,
+              parentEvent: parentEvent,
+              quotedEvent: quotedEvent,
+              attachedMediaNotifier: attachedMediaNotifier,
+              attachedVideoNotifier: attachedVideoNotifier,
+              createOption: createOption,
             ),
           ],
         ),
@@ -190,13 +88,11 @@ class CreatePostModal extends HookConsumerWidget {
     );
   }
 
-  Future<void> _showCancelCreationModal(BuildContext context) async {
-    await showSimpleBottomSheet<void>(
-      context: context,
-      child: CancelCreationModal(
-        title: context.i18n.cancel_creation_post_title,
-        onCancel: () => Navigator.of(context).pop(),
-      ),
-    );
+  CreatePostOption _determineCreateOption() {
+    if (videoPath != null) return CreatePostOption.video;
+    if (parentEvent != null) return CreatePostOption.reply;
+    if (quotedEvent != null) return CreatePostOption.quote;
+    
+    return CreatePostOption.plain;
   }
 }
