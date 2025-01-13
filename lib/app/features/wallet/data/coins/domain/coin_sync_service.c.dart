@@ -128,7 +128,7 @@ class CoinSyncService {
     final difference = nextUpdate.difference(DateTime.now());
     Logger.log('Active coins queue is active. The next sync will be on the $nextUpdate');
 
-    if (difference.isNegative) {
+    if (!difference.isNegative) {
       // Wait until first group in queue should be synced
       await Future<void>.delayed(difference.abs());
     }
