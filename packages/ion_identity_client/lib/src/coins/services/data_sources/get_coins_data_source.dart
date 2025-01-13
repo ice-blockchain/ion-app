@@ -17,15 +17,20 @@ class GetCoinsDataSource {
   final TokenStorage _tokenStorage;
   final NetworkClient _networkClient;
 
+  String _getToken(String username) {
+    final token = _tokenStorage.getToken(username: username)?.token;
+    if (token == null) {
+      throw const UnauthenticatedException();
+    }
+    return token;
+  }
+
   Future<CoinsResponse> getCoins({
     required String username,
     required String userId,
     required int currentVersion,
   }) async {
-    final token = _tokenStorage.getToken(username: username)?.token;
-    if (token == null) {
-      throw const UnauthenticatedException();
-    }
+    final token = _getToken(username);
 
     final response = await _networkClient.get(
       '/v1/users/$userId/coins',
@@ -56,16 +61,27 @@ class GetCoinsDataSource {
     required String username,
     required List<Coin> coins,
   }) async {
-    final token = _tokenStorage.getToken(username: username)?.token;
-    if (token == null) {
-      throw const UnauthenticatedException();
-    }
+    final token = _getToken(username);
 
     return _networkClient.patch(
       '/v1/sync-coins',
       queryParams: {
         'symbolGroup': coins.map((coin) => coin.symbolGroup).toSet().toList(),
       },
+      headers: RequestHeaders.getTokenHeader(token: token),
+      decoder: (result) => parseList(result, fromJson: Coin.fromJson),
+    );
+  }
+
+  Future<List<Coin>> getCoinsBySymbolGroup({
+    required String username,
+    required String userId,
+    required String symbolGroup,
+  }) async {
+    final token = _getToken(username);
+
+    return _networkClient.get(
+      '/v1/users/$userId/coins/$symbolGroup',
       headers: RequestHeaders.getTokenHeader(token: token),
       decoder: (result) => parseList(result, fromJson: Coin.fromJson),
     );
