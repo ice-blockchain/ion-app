@@ -9,6 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/riverpod.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
@@ -38,6 +39,8 @@ class TwoFAInputStep extends HookConsumerWidget {
         (value) => value.isLoading,
       ),
     );
+
+    ref.displayErrors(requestTwoFaCodeNotifierProvider);
 
     final twoFaTypes = ref.watch(selectedTwoFaOptionsProvider);
 

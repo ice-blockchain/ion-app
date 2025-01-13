@@ -86,7 +86,12 @@ class SendButton extends HookConsumerWidget {
             ),
           )
         : isSending
-            ? IONLoadingIndicator(type: isLightTheme ? IndicatorType.dark : IndicatorType.light)
+            ? Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: IONLoadingIndicator(
+                  type: isLightTheme ? IndicatorType.dark : IndicatorType.light,
+                ),
+              )
             : TextInputTextButton(
                 onPressed: () {
                   onRequestCode?.call().then((_) {
