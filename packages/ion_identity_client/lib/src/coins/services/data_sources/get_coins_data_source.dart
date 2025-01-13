@@ -46,7 +46,7 @@ class GetCoinsDataSource {
           response,
           fromJson: (response) {
             if (response.isEmpty) {
-              return const CoinsResponse(coins: [], version: 0);
+              return CoinsResponse(coins: [], version: currentVersion);
             }
 
             return CoinsResponse.fromJson(response);

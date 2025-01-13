@@ -33,7 +33,10 @@ Future<void> initApp(Ref ref) async {
     ref.read(appTemplateProvider.future),
     ref.read(authProvider.future),
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
-    ref.read(coinInitializerProvider).initialize(),
     ref.read(onboardingCompleteProvider.future),
   ]);
+
+  await [
+    ref.read(coinInitializerProvider).initialize(),
+  ].wait;
 }

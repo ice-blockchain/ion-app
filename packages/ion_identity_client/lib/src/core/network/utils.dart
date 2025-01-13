@@ -14,8 +14,11 @@ T parseJsonObject<T>(
   dynamic input, {
   required T Function(Map<String, dynamic>) fromJson,
 }) {
-  if (input is Map<String, dynamic>) {
-    return fromJson(input);
-  }
-  throw FormatException('Expected a Map<String, dynamic>, but got: ${input.runtimeType}');
+  return switch (input) {
+    null => fromJson({}),
+    Map<String, dynamic>() => fromJson(input),
+    _ => throw FormatException(
+        'Expected a Map<String, dynamic>, but got: ${input.runtimeType}',
+      ),
+  };
 }

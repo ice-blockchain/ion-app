@@ -166,6 +166,7 @@ flutter:
     - assets/emoji_data_sets/emojis-by-group.json
     - assets/emoji_data_sets/emoji-keywords.json
     - assets/ion_identity/coins.json
+    - assets/ion_identity/coins_version.txt
 
 flutter_gen:
   output: lib/generated/

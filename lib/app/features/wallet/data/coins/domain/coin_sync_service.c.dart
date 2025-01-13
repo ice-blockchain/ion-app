@@ -16,9 +16,10 @@ part 'coin_sync_service.c.g.dart';
 
 @riverpod
 Future<CoinSyncService> coinSyncService(Ref ref) async {
+  await ref.watch(sharedPreferencesProvider.future);
+
   return CoinSyncService(
     ref.watch(coinsRepositoryProvider),
-    ref.watch(localStorageProvider),
     await ref.watch(ionIdentityClientProvider.future),
   );
 }
@@ -26,7 +27,6 @@ Future<CoinSyncService> coinSyncService(Ref ref) async {
 class CoinSyncService {
   CoinSyncService(
     this._coinsRepository,
-    this._localStorage,
     this._ionIdentityClient,
   );
 
@@ -35,7 +35,6 @@ class CoinSyncService {
   Timer? _syncTimer;
 
   final CoinsRepository _coinsRepository;
-  final LocalStorage _localStorage;
   final IONIdentityClient _ionIdentityClient;
 
   var _syncQueueActive = false;
@@ -52,7 +51,7 @@ class CoinSyncService {
   }
 
   Future<void> syncAllCoins() async {
-    final lastSyncTime = _localStorage.getInt('coins_last_sync_time');
+    final lastSyncTime = _coinsRepository.getLastSyncTime();
     final currentTime = DateTime.now().millisecondsSinceEpoch;
     final syncInterval = _syncInterval.inMilliseconds;
 
@@ -60,12 +59,12 @@ class CoinSyncService {
       return;
     }
 
-    final version = _localStorage.getInt('coins_version');
-    final response = await _ionIdentityClient.coins.getCoins(currentVersion: version ?? 0);
+    final version = _coinsRepository.getCoinsVersion() ?? 0;
+    final response = await _ionIdentityClient.coins.getCoins(currentVersion: version);
 
     await (
-      _localStorage.setInt('coins_version', response.version),
-      _localStorage.setInt('coins_last_sync_time', currentTime),
+      _coinsRepository.setCoinsVersion(response.version),
+      _coinsRepository.setLastSyncTime(currentTime),
     ).wait;
 
     if (response.coins.isEmpty) {
