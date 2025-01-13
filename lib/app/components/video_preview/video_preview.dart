@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,11 +15,13 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoPreview extends HookConsumerWidget {
   const VideoPreview({
     required this.videoUrl,
+    this.thumbnailUrl,
     this.videoController,
     super.key,
   });
 
   final String videoUrl;
+  final String? thumbnailUrl;
   final VideoPlayerController? videoController;
 
   @override
@@ -29,34 +33,43 @@ class VideoPreview extends HookConsumerWidget {
             looping: true,
           ),
         )!;
+
     final isMuted = useState(true);
 
-    useEffect(
-      () {
-        controller.setVolume(0);
+    void handleVisibilityChange(VisibilityInfo info) {
+      if (!context.mounted || !controller.value.isInitialized) return;
 
-        return null;
-      },
-      [controller],
-    );
+      if (info.visibleFraction == 0) {
+        controller
+          ..pause()
+          ..setVolume(0);
+        isMuted.value = true;
+      } else {
+        controller.play();
+      }
+    }
 
     return VisibilityDetector(
       key: ValueKey(controller.dataSource),
-      onVisibilityChanged: (info) {
-        if (info.visibleFraction == 0) {
-          controller
-            ..pause()
-            ..setVolume(0);
-          isMuted.value = true;
-        } else {
-          controller.play();
-        }
-      },
+      onVisibilityChanged: handleVisibilityChange,
       child: Stack(
         children: [
-          AspectRatio(
-            aspectRatio: controller.value.aspectRatio,
-            child: VideoPlayer(controller),
+          if (thumbnailUrl != null)
+            Positioned.fill(
+              child: _BlurredThumbnail(
+                thumbnailUrl: thumbnailUrl!,
+                isVisible: !controller.value.isInitialized,
+              ),
+            ),
+          Positioned.fill(
+            child: FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                width: controller.value.size.width,
+                height: controller.value.size.height,
+                child: VideoPlayer(controller),
+              ),
+            ),
           ),
           Positioned(
             bottom: 5.0.s,
@@ -83,7 +96,9 @@ class VideoPreview extends HookConsumerWidget {
 }
 
 class _VideoDurationLabel extends StatelessWidget {
-  const _VideoDurationLabel({required this.duration});
+  const _VideoDurationLabel({
+    required this.duration,
+  });
 
   final Duration duration;
 
@@ -106,13 +121,18 @@ class _VideoDurationLabel extends StatelessWidget {
 }
 
 class _MuteButton extends StatelessWidget {
-  const _MuteButton({required this.isMuted, required this.onToggle});
+  const _MuteButton({
+    required this.isMuted,
+    required this.onToggle,
+  });
 
   final bool isMuted;
   final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context) {
+    final icon = isMuted ? Assets.svg.iconChannelMute : Assets.svg.iconChannelUnmute;
+
     return GestureDetector(
       onTap: onToggle,
       child: Container(
@@ -121,15 +141,78 @@ class _MuteButton extends StatelessWidget {
           color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(12.0.s),
         ),
-        child: isMuted
-            ? Assets.svg.iconChannelMute.icon(
-                size: 16.0.s,
-                color: context.theme.appColors.onPrimaryAccent,
-              )
-            : Assets.svg.iconChannelUnmute.icon(
-                size: 16.0.s,
-                color: context.theme.appColors.onPrimaryAccent,
+        child: icon.icon(
+          size: 16.0.s,
+          color: context.theme.appColors.onPrimaryAccent,
+        ),
+      ),
+    );
+  }
+}
+
+class _BlurredThumbnail extends HookWidget {
+  const _BlurredThumbnail({
+    required this.thumbnailUrl,
+    required this.isVisible,
+  });
+
+  final String thumbnailUrl;
+  final bool isVisible;
+
+  @override
+  Widget build(BuildContext context) {
+    final imageAspectRatio = useState<double?>(null);
+    final isImageLoaded = useState(false);
+
+    useEffect(
+      () {
+        final imageStream = Image.network(thumbnailUrl).image.resolve(ImageConfiguration.empty);
+        final listener = ImageStreamListener((info, _) {
+          if (!context.mounted) return;
+
+          imageAspectRatio.value = info.image.width / info.image.height;
+          isImageLoaded.value = true;
+        });
+
+        imageStream.addListener(listener);
+        return () => imageStream.removeListener(listener);
+      },
+      [thumbnailUrl],
+    );
+
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: isVisible ? 1 : 0,
+      curve: Curves.easeInOut,
+      child: AspectRatio(
+        aspectRatio: imageAspectRatio.value ?? 16 / 9,
+        child: Stack(
+          children: [
+            AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: isImageLoaded.value ? 1 : 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(thumbnailUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
+            ),
+            ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

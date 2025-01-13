@@ -32,6 +32,7 @@ class PostMediaItem extends StatelessWidget {
             ),
           MediaType.video => VideoPreview(
               videoUrl: mediaItem.url,
+              thumbnailUrl: mediaItem.thumb,
             ),
           _ => const SizedBox.shrink(),
         },
