@@ -9,8 +9,8 @@ class LoadMoreBuilder extends HookWidget {
     required this.slivers,
     required this.onLoadMore,
     required this.hasMore,
+    this.loadMoreOffset,
     super.key,
-    this.loadMoreOffset = 300,
   });
 
   final Widget Function(BuildContext context, List<Widget> slivers) builder;
@@ -19,7 +19,7 @@ class LoadMoreBuilder extends HookWidget {
 
   final Future<void> Function() onLoadMore;
 
-  final double loadMoreOffset;
+  final double? loadMoreOffset;
 
   final bool hasMore;
 
@@ -57,6 +57,7 @@ class LoadMoreBuilder extends HookWidget {
     ValueNotifier<bool> loading,
   ) {
     final metrics = notification.metrics;
+    final loadMoreOffset = this.loadMoreOffset ?? metrics.viewportDimension;
     if (hasMore && !loading.value && metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
       loading.value = true;
       onLoadMore().whenComplete(() => loading.value = false);
