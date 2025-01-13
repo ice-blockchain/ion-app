@@ -69,7 +69,7 @@ class DeleteFeedItemMenu extends ConsumerWidget {
 
     final dataSources = ref.read(feedPostsDataSourceProvider) ?? [];
     if (dataSources.isNotEmpty) {
-      ref.invalidate(entitiesPagedDataProvider(dataSources));
+      await ref.read(entitiesPagedDataProvider(dataSources).notifier).deleteEntity(postEntity);
     }
   }
 }
