@@ -40,5 +40,11 @@ class CoinsRepository {
   Future<List<Coin>> getCoinsToSync(DateTime expirationDate) =>
       _syncCoinsDao.getCoinsToSync(expirationDate);
 
-  Stream<List<Coin>> watchCoins() => _coinsDao.watchCoins();
+  /// Returns Stream of coins. Expects a list of coins to watch.
+  /// If the [coins] list is not provided, all coins will be watched.
+  Stream<List<Coin>> watchCoins([List<Coin>? coins]) => _coinsDao.watch(coins?.map((coin) => coin.id));
+
+  /// Returns Future of coins. Expects a list of coins to get.
+  /// If the [coins] list is not provided, all coins will be returned.
+  Future<List<Coin>> getCoins([List<Coin>? coins]) => _coinsDao.get(coins?.map((coin) => coin.id));
 }
