@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 import 'package:ion_identity_client/src/wallets/exceptions/wallets_exceptions.dart';
@@ -38,7 +39,7 @@ class GetWalletTransferRequestsDataSource {
           username: username,
         ),
         queryParams: pageToken != null ? {'paginationToken': pageToken} : {},
-        decoder: WalletTransferRequests.fromJson,
+          decoder: (result) => parseJsonObject(result, fromJson: WalletTransferRequests.fromJson),
       );
     } on NetworkException catch (e) {
       if (e is RequestExecutionException && e.error is DioException) {

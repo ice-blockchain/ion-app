@@ -4,8 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallet/data/coins/database/coins_repository.c.dart';
 import 'package:ion/app/features/wallet/data/coins/domain/coins_mapper.dart';
+import 'package:ion/app/features/wallet/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,7 +23,7 @@ class CoinInitializer {
   final CoinsRepository _coinsRepository;
 
   Future<void> initialize() async {
-    final hasCoins = await _coinsRepository.hasAny();
+    final hasCoins = await _coinsRepository.hasSavedCoins();
     if (hasCoins) return;
 
     // load coins from assets file
@@ -38,6 +38,6 @@ class CoinInitializer {
         )
         .toList();
 
-    await _coinsRepository.upsertAll(CoinsMapper.fromIONIdentityCoins(coinEntities));
+    await _coinsRepository.updateCoins(CoinsMapper.fromIONIdentityCoins(coinEntities));
   }
 }

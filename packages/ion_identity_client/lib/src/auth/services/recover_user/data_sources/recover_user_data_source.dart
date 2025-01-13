@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/network_exception.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
 
 class RecoverUserDataSource {
@@ -31,7 +32,7 @@ class RecoverUserDataSource {
             for (final twoFAType in twoFATypes ?? []) twoFAType.option: twoFAType.value,
           },
         },
-        decoder: UserRegistrationChallenge.fromJson,
+        decoder: (result) => parseJsonObject(result, fromJson: UserRegistrationChallenge.fromJson),
       );
     } on RequestExecutionException catch (e) {
       final dioException = e.error is DioException ? e.error as DioException : null;
@@ -53,7 +54,7 @@ class RecoverUserDataSource {
       recoverUserPath,
       data: recoveryData,
       headers: RequestHeaders.getTokenHeader(token: temporaryAuthenticationToken),
-      decoder: (json) => json,
+      decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
     );
   }
 }

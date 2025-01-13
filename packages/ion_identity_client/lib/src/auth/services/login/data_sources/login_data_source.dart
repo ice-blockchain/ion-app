@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
+import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 
 class LoginDataSource {
@@ -21,7 +22,7 @@ class LoginDataSource {
     return networkClient.post(
       loginInitPath,
       data: requestData.toJson(),
-      decoder: UserActionChallenge.fromJson,
+      decoder: (result) => parseJsonObject(result, fromJson: UserActionChallenge.fromJson),
     );
   }
 
@@ -37,7 +38,7 @@ class LoginDataSource {
     return networkClient.post(
       loginCompletePath,
       data: requestData.toJson(),
-      decoder: Authentication.fromJson,
+      decoder: (result) => parseJsonObject(result, fromJson: Authentication.fromJson),
     );
   }
 }
