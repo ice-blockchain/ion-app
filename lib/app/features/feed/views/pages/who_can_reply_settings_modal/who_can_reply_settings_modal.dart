@@ -22,7 +22,7 @@ class WhoCanReplySettingsModal extends StatelessWidget {
       children: [
         NavigationAppBar.modal(
           showBackButton: false,
-          title: Text(title ?? context.i18n.visibility_settings_title_video),
+          title: Text(title ?? context.i18n.visibility_settings_title_post),
         ),
         SizedBox(height: 12.0.s),
         const HorizontalSeparator(),
