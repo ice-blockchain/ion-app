@@ -53,7 +53,7 @@ class IonConnectAuth with _$IonConnectAuth implements EventSerializable {
   String toAuthorizationHeader(EventMessage event) {
     final eventPayload = event.toJson().last;
     final headerValue = base64Encode(utf8.encode(jsonEncode(eventPayload)));
-    return 'IonConnect $headerValue';
+    return 'Bearer $headerValue';
   }
 
   static const int kind = 27235;
