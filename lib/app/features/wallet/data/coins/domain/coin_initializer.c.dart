@@ -26,6 +26,11 @@ class CoinInitializer {
     final hasCoins = await _coinsRepository.hasSavedCoins();
     if (hasCoins) return;
 
+    await _loadCoins();
+    await _loadCoinsVersion();
+  }
+
+  Future<void> _loadCoins() async {
     // load coins from assets file
     final coinsJson =
         (await rootBundle.loadString(Assets.ionIdentity.coins).then(jsonDecode)) as List<dynamic>;
@@ -39,5 +44,11 @@ class CoinInitializer {
         .toList();
 
     await _coinsRepository.updateCoins(CoinsMapper.fromIONIdentityCoins(coinEntities));
+  }
+
+  Future<void> _loadCoinsVersion() async {
+    final coinsVersion =
+        await rootBundle.loadString(Assets.ionIdentity.coinsVersion).then(int.parse);
+    await _coinsRepository.setCoinsVersion(coinsVersion);
   }
 }

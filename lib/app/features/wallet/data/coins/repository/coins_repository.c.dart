@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallet/data/coins/database/coins_dao.c.dart';
 import 'package:ion/app/features/wallet/data/coins/database/coins_database.c.dart';
 import 'package:ion/app/features/wallet/data/coins/database/sync_coins_dao.c.dart';
+import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_repository.c.g.dart';
@@ -12,17 +13,24 @@ part 'coins_repository.c.g.dart';
 CoinsRepository coinsRepository(Ref ref) => CoinsRepository(
       coinsDao: ref.watch(coinsDaoProvider),
       syncCoinsDao: ref.watch(syncCoinsDaoProvider),
+      localStorage: ref.watch(localStorageProvider),
     );
 
 class CoinsRepository {
   CoinsRepository({
     required CoinsDao coinsDao,
     required SyncCoinsDao syncCoinsDao,
+    required LocalStorage localStorage,
   })  : _coinsDao = coinsDao,
-        _syncCoinsDao = syncCoinsDao;
+        _syncCoinsDao = syncCoinsDao,
+        _localStorage = localStorage;
+
+  static const _lastSyncTimeKey = 'coins_last_sync_time';
+  static const _coinsVersionKey = 'coins_version';
 
   final CoinsDao _coinsDao;
   final SyncCoinsDao _syncCoinsDao;
+  final LocalStorage _localStorage;
 
   Future<bool> hasSavedCoins() => _coinsDao.hasAny();
 
@@ -48,4 +56,12 @@ class CoinsRepository {
   /// Returns Future of coins. Expects a list of coins to get.
   /// If the [coins] list is not provided, all coins will be returned.
   Future<List<Coin>> getCoins([List<Coin>? coins]) => _coinsDao.get(coins?.map((coin) => coin.id));
+
+  int? getLastSyncTime() => _localStorage.getInt(_lastSyncTimeKey);
+
+  int? getCoinsVersion() => _localStorage.getInt(_coinsVersionKey);
+
+  Future<void> setLastSyncTime(int time) => _localStorage.setInt(_lastSyncTimeKey, time);
+
+  Future<void> setCoinsVersion(int version) => _localStorage.setInt(_coinsVersionKey, version);
 }

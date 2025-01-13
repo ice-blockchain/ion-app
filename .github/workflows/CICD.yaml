@@ -62,11 +62,17 @@ jobs:
           set -a
           source ./.app.env
           set +a
+          
+          # Save headers and body separately
           curl -X 'GET' \
             "${ION_ORIGIN}/v1/coins" \
             -H 'accept: application/json' \
             -H "X-API-Key: ${{ secrets.IDENTITY_IO_API_KEY }}" \
+            -D ./assets/ion_identity/coins_headers.txt \
             -o ./assets/ion_identity/coins.json
+          
+          # Extract 'x-version' header from coins_headers.txt and save it
+          grep -i 'x-version:' ./assets/ion_identity/coins_headers.txt | awk '{print $2}' | tr -d '\r' > ./assets/ion_identity/coins_version.txt
       - name: Mask APP environment and keys in logs
         id: mask-secrets
         run: |
