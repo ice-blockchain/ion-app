@@ -34,4 +34,13 @@ class IONIdentityCoins {
       coins: coins,
     );
   }
+
+  Future<List<Coin>> getCoinsBySymbolGroup(String symbolGroup) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _getCoinsService.getCoinsBySymbolGroup(
+      userId: userId,
+      username: username,
+      symbolGroup: symbolGroup,
+    );
+  }
 }

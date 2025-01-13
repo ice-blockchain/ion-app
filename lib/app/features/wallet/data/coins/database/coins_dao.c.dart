@@ -31,5 +31,17 @@ class CoinsDao extends DatabaseAccessor<CoinsDatabase> with _$CoinsDaoMixin {
     await delete(coinsTable).go();
   }
 
-  Stream<List<Coin>> watchCoins() => select(coinsTable).watch();
+  Stream<List<Coin>> watch(Iterable<String>? coinIds) {
+    if (coinIds?.isEmpty ?? true) {
+      return select(coinsTable).watch();
+    }
+    return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).watch();
+  }
+
+  Future<List<Coin>> get(Iterable<String>? coinIds) {
+    if (coinIds?.isEmpty ?? true) {
+      return select(coinsTable).get();
+    }
+    return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).get();
+  }
 }

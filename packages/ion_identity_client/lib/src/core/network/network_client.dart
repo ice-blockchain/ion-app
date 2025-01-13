@@ -30,7 +30,7 @@ class NetworkClient {
     JsonObject headers = const {},
   }) async {
     return _makeRequest(
-      request: () => dio.get<JsonObject>(
+      request: () => dio.get<dynamic>(
         path,
         queryParameters: queryParams,
         options: Options(headers: headers),
@@ -52,7 +52,7 @@ class NetworkClient {
     Object? data,
   }) async {
     return _makeRequest(
-      request: () => dio.post<JsonObject>(
+      request: () => dio.post<dynamic>(
         path,
         queryParameters: queryParams,
         data: data,
@@ -88,7 +88,7 @@ class NetworkClient {
     Object? data,
   }) async {
     return _makeRequest(
-      request: () => dio.put<JsonObject>(
+      request: () => dio.put<dynamic>(
         path,
         queryParameters: queryParams,
         data: data,
@@ -106,7 +106,7 @@ class NetworkClient {
     Object? data,
   }) async {
     return _makeRequest(
-      request: () => dio.delete<JsonObject>(
+      request: () => dio.delete<dynamic>(
         path,
         queryParameters: queryParams,
         data: data,

@@ -32,4 +32,16 @@ class GetCoinsService {
       coins: coins,
     );
   }
+
+  Future<List<Coin>> getCoinsBySymbolGroup({
+    required String username,
+    required String userId,
+    required String symbolGroup,
+  }) {
+    return _getCoinsDataSource.getCoinsBySymbolGroup(
+      userId: userId,
+      username: username,
+      symbolGroup: symbolGroup,
+    );
+  }
 }
