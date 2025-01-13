@@ -92,7 +92,7 @@ class CreatePostModal extends HookConsumerWidget {
     if (videoPath != null) return CreatePostOption.video;
     if (parentEvent != null) return CreatePostOption.reply;
     if (quotedEvent != null) return CreatePostOption.quote;
-    
+
     return CreatePostOption.plain;
   }
 }
