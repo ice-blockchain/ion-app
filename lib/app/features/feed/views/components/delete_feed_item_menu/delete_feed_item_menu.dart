@@ -9,8 +9,10 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu_item.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -64,5 +66,10 @@ class DeleteFeedItemMenu extends ConsumerWidget {
         .sendEntityData(deletionRequest, cache: false);
 
     ref.read(ionConnectCacheProvider.notifier).remove(postEntity.cacheKey);
+
+    final dataSources = ref.read(feedPostsDataSourceProvider) ?? [];
+    if (dataSources.isNotEmpty) {
+      ref.invalidate(entitiesPagedDataProvider(dataSources));
+    }
   }
 }
