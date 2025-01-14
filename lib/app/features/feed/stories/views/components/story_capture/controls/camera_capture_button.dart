@@ -36,7 +36,7 @@ class CameraCaptureButton extends StatelessWidget {
           shape: BoxShape.circle,
           color: onRecordingStart == null
               ? Colors.transparent
-              : (isRecording ? Colors.white.withOpacity(0.5) : Colors.transparent),
+              : (isRecording ? Colors.white.withValues(alpha: 0.5) : Colors.transparent),
           border: Border.all(
             color: context.theme.appColors.onPrimaryAccent,
             width: isRecording ? 0.0.s : 4.0.s,

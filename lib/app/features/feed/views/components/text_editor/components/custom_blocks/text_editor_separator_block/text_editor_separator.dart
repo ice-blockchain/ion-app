@@ -37,7 +37,7 @@ class TextEditorSeparator extends HookWidget {
             height: 24.0.s,
             decoration: BoxDecoration(
               color: isSelected.value
-                  ? context.theme.appColors.primaryAccent.withOpacity(0.15)
+                  ? context.theme.appColors.primaryAccent.withValues(alpha: 0.15)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(16.0.s),
             ),

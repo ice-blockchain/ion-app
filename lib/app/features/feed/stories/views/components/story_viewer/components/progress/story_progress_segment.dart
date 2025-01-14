@@ -25,7 +25,7 @@ class StoryProgressSegment extends StatelessWidget {
       margin: margin,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: context.theme.appColors.onPrimaryAccent.withOpacity(0.3),
+        color: context.theme.appColors.onPrimaryAccent.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(1.0.s),
       ),
       child: StoryProgressFill(

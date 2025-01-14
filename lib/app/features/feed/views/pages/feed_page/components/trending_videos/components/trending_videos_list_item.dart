@@ -54,7 +54,7 @@ class _PlaceholderThumbnail extends StatelessWidget {
       width: size.width,
       height: size.height,
       decoration: BoxDecoration(
-        color: context.theme.appColors.sheetLine.withOpacity(0.3),
+        color: context.theme.appColors.sheetLine.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       child: Center(

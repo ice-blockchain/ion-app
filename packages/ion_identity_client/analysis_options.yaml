@@ -9,6 +9,7 @@ analyzer:
     public_member_api_docs: ignore
     unnecessary_library_directive: ignore
     invalid_annotation_target: ignore
+    comment_references: ignore
   plugins:
     - custom_lint
   exclude:

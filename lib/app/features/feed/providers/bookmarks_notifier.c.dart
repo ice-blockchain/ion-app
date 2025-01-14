@@ -140,7 +140,7 @@ class BookmarksNotifier extends _$BookmarksNotifier {
         ids: [],
         bookmarksSetRefs: bookmarksSetsData.values
             .map((data) => data?.toReplaceableEventReference(currentPubkey))
-            .whereNotNull()
+            .nonNulls
             .toList(),
       );
 

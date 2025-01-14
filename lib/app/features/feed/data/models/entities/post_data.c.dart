@@ -118,7 +118,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
       content: parsedContent,
       relatedHashtags: hashtags,
       media: {},
-      settings: [setting].whereNotNull().toList(),
+      settings: [setting].nonNulls.toList(),
     );
   }
 

@@ -92,7 +92,7 @@ class _VideoDurationLabel extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 1.0.s),
       decoration: BoxDecoration(
-        color: context.theme.appColors.backgroundSheet.withOpacity(0.7),
+        color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
         borderRadius: BorderRadius.circular(6.0.s),
       ),
       child: Text(
@@ -118,7 +118,7 @@ class _MuteButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(6.0.s),
         decoration: BoxDecoration(
-          color: context.theme.appColors.backgroundSheet.withOpacity(0.7),
+          color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
           borderRadius: BorderRadius.circular(12.0.s),
         ),
         child: isMuted

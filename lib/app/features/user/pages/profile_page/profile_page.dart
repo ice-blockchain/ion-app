@@ -105,7 +105,7 @@ class ProfilePage extends HookConsumerWidget {
               alignment: Alignment.topCenter,
               child: Container(
                 padding: EdgeInsets.only(bottom: paddingTop - HeaderAction.buttonSize),
-                color: backgroundColor.withOpacity(opacity),
+                color: backgroundColor.withValues(alpha: opacity),
                 child: Header(
                   opacity: opacity,
                   pubkey: pubkey,

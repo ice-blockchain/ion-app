@@ -19,9 +19,9 @@ class StoryHeaderGradient extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              context.theme.appColors.primaryText.withOpacity(0.3),
-              context.theme.appColors.primaryText.withOpacity(0.15),
-              context.theme.appColors.primaryText.withOpacity(0),
+              context.theme.appColors.primaryText.withValues(alpha: 0.3),
+              context.theme.appColors.primaryText.withValues(alpha: 0.15),
+              context.theme.appColors.primaryText.withValues(alpha: 0),
             ],
             stops: const [0.0, 0.5, 1.0],
           ),

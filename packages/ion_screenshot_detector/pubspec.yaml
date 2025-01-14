@@ -13,7 +13,7 @@ dependencies:
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
-  custom_lint: ^0.6.4
+  custom_lint: ^0.6.10
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter

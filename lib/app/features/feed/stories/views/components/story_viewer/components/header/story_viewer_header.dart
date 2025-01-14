@@ -29,7 +29,7 @@ class StoryViewerHeader extends ConsumerWidget {
           1.5.s,
         ),
         blurRadius: 1.5,
-        color: context.theme.appColors.primaryText.withOpacity(0.25),
+        color: context.theme.appColors.primaryText.withValues(alpha: 0.25),
       ),
     ];
 
