@@ -22,23 +22,25 @@ class NewChatModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onUserSelected = useMemoized(() => (UserMetadataEntity user) {
-          final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    final onUserSelected = useMemoized(
+      () => (UserMetadataEntity user) {
+        final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
-          if (currentPubkey == null) {
-            throw UserMasterPubkeyNotFoundException();
-          }
+        if (currentPubkey == null) {
+          throw UserMasterPubkeyNotFoundException();
+        }
 
-          final conversationData = ConversationData(
-            type: ChatType.chat,
-            name: user.data.displayName,
-            imageUrl: user.data.picture,
-            nickname: '@${user.data.name}',
-            members: [user.pubkey, currentPubkey],
-          );
+        final conversationData = ConversationData(
+          type: ChatType.chat,
+          name: user.data.displayName,
+          imageUrl: user.data.picture,
+          nickname: '@${user.data.name}',
+          members: [user.pubkey, currentPubkey],
+        );
 
-          return MessagesRoute(conversationData).push<void>(context);
-        });
+        return MessagesRoute(conversationData).push<void>(context);
+      },
+    );
 
     return SheetContent(
       topPadding: 0,
