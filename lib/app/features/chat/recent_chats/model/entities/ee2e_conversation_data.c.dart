@@ -13,6 +13,7 @@ class Ee2eConversationEntity with _$Ee2eConversationEntity {
     required DateTime lastMessageAt,
     required List<String> participants,
     required String lastMessageContent,
+    String? nickname,
     String? imageUrl,
     String? imagePath,
   }) = _PrivateDirectMessageEntity;

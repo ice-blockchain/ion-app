@@ -39,11 +39,16 @@ class MessagingHeader extends StatelessWidget {
             onTap: onTap,
             child: Row(
               children: [
-                Avatar(
-                  size: 36.0.s,
-                  imageUrl: imageUrl,
-                  imageWidget: imageWidget,
-                ),
+                if (imageUrl != null)
+                  Avatar(
+                    size: 36.0.s,
+                    imageUrl: imageUrl,
+                  )
+                else if (imageWidget != null)
+                  Avatar(
+                    size: 36.0.s,
+                    imageWidget: imageWidget,
+                  ),
                 SizedBox(width: 10.0.s),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

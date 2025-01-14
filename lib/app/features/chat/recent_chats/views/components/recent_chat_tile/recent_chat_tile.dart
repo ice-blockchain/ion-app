@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
@@ -12,6 +11,7 @@ import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversat
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -28,22 +28,18 @@ class RecentChatTile extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isEditMode) {
-          ref.read(selectedConversationsIdsProvider.notifier).toggle(chat.id);
+          ref.read(selectedConversationsIdsProvider.notifier).toggle(conversation.name);
         } else {
-          switch (chat.type) {
-            case ChatType.chat:
-              MessagesRoute(
-                ConversationData(
-                  members: [],
-                  type: chat.type,
-                  name: chat.sender.name,
-                ),
-              ).push<void>(context);
-            case ChatType.channel:
-              ChannelRoute(pubkey: chat.id).push<void>(context);
-            case ChatType.group:
-              GroupRoute(pubkey: chat.id).push<void>(context);
-          }
+          MessagesRoute(
+            ConversationData(
+              type: conversation.type,
+              name: conversation.name,
+              imageUrl: conversation.imageUrl,
+              members: conversation.participants,
+              nickname: '@${conversation.nickname}',
+              mediaImage: conversation.imagePath != null ? MediaFile(path: conversation.imagePath!) : null,
+            ),
+          ).push<void>(context);
         }
       },
       behavior: HitTestBehavior.opaque,
@@ -187,24 +183,6 @@ class ChatPreview extends StatelessWidget {
       ],
     );
   }
-
-  String _getMessageContentText(
-    RecentChatMessage message,
-    BuildContext context,
-  ) =>
-      switch (message) {
-        final SystemRecentChatMessage message => message.text,
-        final TextRecentChatMessage textMessage => textMessage.text,
-        final ReplayRecentChatMessage replayMessage => replayMessage.text,
-        final DocumentRecentChatMessage documentMessage => documentMessage.fileName,
-        final LinkRecentChatMessage linkMessage => linkMessage.link,
-        final ProfileShareRecentChatMessage profileShareMessage => profileShareMessage.displayName,
-        MoneyRequestRecentChatMessage _ => context.i18n.chat_recents_money_request_message,
-        PhotoRecentChatMessage _ => context.i18n.common_photo,
-        VoiceRecentChatMessage _ => context.i18n.common_voice_message,
-        VideoRecentChatMessage _ => context.i18n.common_video,
-        PollRecentChatMessage _ => context.i18n.common_poll,
-      };
 }
 
 class RecentChatMessageIcon extends StatelessWidget {
