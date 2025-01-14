@@ -36,22 +36,20 @@ class VideoPreview extends HookConsumerWidget {
 
     final isMuted = useState(true);
 
-    void handleVisibilityChange(VisibilityInfo info) {
-      if (!context.mounted || !controller.value.isInitialized) return;
-
-      if (info.visibleFraction == 0) {
-        controller
-          ..pause()
-          ..setVolume(0);
-        isMuted.value = true;
-      } else {
-        controller.play();
-      }
-    }
-
     return VisibilityDetector(
       key: ValueKey(controller.dataSource),
-      onVisibilityChanged: handleVisibilityChange,
+      onVisibilityChanged: (info) {
+        if (!context.mounted || !controller.value.isInitialized) return;
+
+        if (info.visibleFraction == 0) {
+          controller
+            ..pause()
+            ..setVolume(0);
+          isMuted.value = true;
+        } else {
+          controller.play();
+        }
+      },
       child: Stack(
         children: [
           if (thumbnailUrl != null)
