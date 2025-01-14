@@ -33,7 +33,7 @@ class NewChatModal extends ConsumerWidget {
         name: user.data.displayName,
         imageUrl: user.data.picture,
         nickname: '@${user.data.name}',
-        members: [user.id, currentPubkey],
+        members: [user.pubkey, currentPubkey],
       );
 
       return MessagesRoute(conversationData).push<void>(context);

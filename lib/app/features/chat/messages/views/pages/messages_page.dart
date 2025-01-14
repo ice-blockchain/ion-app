@@ -32,8 +32,7 @@ class MessagesPage extends HookConsumerWidget {
     final messages = ref.watch(chatMessagesProvider);
 
     // TODO: Should be called if there is no conversation messages yet in DB
-    // ignore: unused_element
-    Future<void> initConversation() async {
+    useCallback(() async {
       final ee2eGroupConversationService =
           ref.read(e2EEGroupConversationManagementProvider.notifier);
 
@@ -46,7 +45,7 @@ class MessagesPage extends HookConsumerWidget {
           participantsPubkeys: conversationData.members,
         );
       }
-    }
+    });
 
     ref.listen(
       e2EEGroupConversationManagementProvider,

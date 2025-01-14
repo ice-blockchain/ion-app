@@ -19,10 +19,10 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
   ) async {
     state = const AsyncLoading();
 
-    final conversationMessageManagementService =
-        await ref.read(conversationMessageManagementServiceProvider);
-
     state = await AsyncValue.guard(() async {
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+
       await conversationMessageManagementService.sentMessage(
         content: '',
         participantsPubkeys: participantsPubkeys,
@@ -37,10 +37,10 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
   }) async {
     state = const AsyncLoading();
 
-    final conversationMessageManagementService =
-        await ref.read(conversationMessageManagementServiceProvider);
-
     state = await AsyncValue.guard(() async {
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+
       await conversationMessageManagementService.sentMessage(
         content: '',
         subject: subject,
@@ -59,27 +59,27 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
 
     state = const AsyncLoading();
 
-    final databaseService = ref.read(conversationsDBServiceProvider);
-    final conversationMessageManagementService =
-        await ref.read(conversationMessageManagementServiceProvider);
-
-    final conversationsEventMessages = await databaseService.getAllConversations();
-
-    final conversationsEntities =
-        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
-
-    final pubkeys = conversationsEntities
-            .singleWhere(
-              (e) => e.data.relatedSubject?.value == conversationSubject,
-              orElse: () => throw ConversationNotFoundException(),
-            )
-            .data
-            .relatedPubkeys
-            ?.map((e) => e.value)
-            .toList() ??
-        [];
-
     state = await AsyncValue.guard(() async {
+      final databaseService = ref.read(conversationsDBServiceProvider);
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+
+      final conversationsEventMessages = await databaseService.getAllConversations();
+
+      final conversationsEntities =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+
+      final pubkeys = conversationsEntities
+              .singleWhere(
+                (e) => e.data.relatedSubject?.value == conversationSubject,
+                orElse: () => throw ConversationNotFoundException(),
+              )
+              .data
+              .relatedPubkeys
+              ?.map((e) => e.value)
+              .toList() ??
+          [];
+
       await conversationMessageManagementService.sentMessage(
         content: '',
         subject: conversationSubject,
@@ -97,31 +97,31 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
 
     state = const AsyncLoading();
 
-    final databaseService = ref.read(conversationsDBServiceProvider);
-    final conversationMessageManagementService =
-        await ref.read(conversationMessageManagementServiceProvider);
-
-    final conversationsEventMessages = await databaseService.getAllConversations();
-
-    final conversationsEntities =
-        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
-
-    final pubkeys = conversationsEntities
-            .singleWhere(
-              (e) => e.data.relatedSubject?.value == conversationSubject,
-              orElse: () => throw ConversationNotFoundException(),
-            )
-            .data
-            .relatedPubkeys
-            ?.map((e) => e.value)
-            .toList() ??
-        [];
-
-    if (!pubkeys.contains(participantPubkey)) {
-      throw ParticipantNotFoundException();
-    }
-
     state = await AsyncValue.guard(() async {
+      final databaseService = ref.read(conversationsDBServiceProvider);
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+
+      final conversationsEventMessages = await databaseService.getAllConversations();
+
+      final conversationsEntities =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+
+      final pubkeys = conversationsEntities
+              .singleWhere(
+                (e) => e.data.relatedSubject?.value == conversationSubject,
+                orElse: () => throw ConversationNotFoundException(),
+              )
+              .data
+              .relatedPubkeys
+              ?.map((e) => e.value)
+              .toList() ??
+          [];
+
+      if (!pubkeys.contains(participantPubkey)) {
+        throw ParticipantNotFoundException();
+      }
+
       await conversationMessageManagementService.sentMessage(
         content: '',
         subject: conversationSubject,
@@ -139,27 +139,27 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
 
     state = const AsyncLoading();
 
-    final databaseService = ref.read(conversationsDBServiceProvider);
-    final conversationMessageManagementService =
-        await ref.read(conversationMessageManagementServiceProvider);
-
-    final conversationsEventMessages = await databaseService.getAllConversations();
-
-    final conversationsEntities =
-        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
-
-    final pubkeys = conversationsEntities
-            .singleWhere(
-              (e) => e.data.relatedSubject?.value == currentSubject,
-              orElse: () => throw ConversationNotFoundException(),
-            )
-            .data
-            .relatedPubkeys
-            ?.map((e) => e.value)
-            .toList() ??
-        [];
-
     state = await AsyncValue.guard(() async {
+      final databaseService = ref.read(conversationsDBServiceProvider);
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+
+      final conversationsEventMessages = await databaseService.getAllConversations();
+
+      final conversationsEntities =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+
+      final pubkeys = conversationsEntities
+              .singleWhere(
+                (e) => e.data.relatedSubject?.value == currentSubject,
+                orElse: () => throw ConversationNotFoundException(),
+              )
+              .data
+              .relatedPubkeys
+              ?.map((e) => e.value)
+              .toList() ??
+          [];
+
       await conversationMessageManagementService.sentMessage(
         content: '',
         subject: newSubject,
