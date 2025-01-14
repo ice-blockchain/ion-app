@@ -25,28 +25,44 @@ class CreatePostAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isVideo = createOption == CreatePostOption.video;
+
     return NavigationAppBar.modal(
-      showBackButton: false,
+      showBackButton: isVideo,
       title: Text(createOption.getTitle(context)),
+      onBackPress: () async {
+        if (textEditorController.document.isEmpty()) {
+          context.pop(false);
+        } else {
+          await showSimpleBottomSheet<void>(
+            context: context,
+            child: CancelCreationModal(
+              title: context.i18n.cancel_creation_post_title,
+              onCancel: () => Navigator.of(context).pop(false),
+            ),
+          );
+        }
+      },
       actions: [
         if (showCollapseButton)
           CollapseButton(textEditorController: textEditorController)
         else
           NavigationCloseButton(
             onPressed: () async {
+              final shouldReturnToMediaPicker = isVideo;
+
               if (textEditorController.document.isEmpty()) {
-                context.pop();
-              } else {
-                await showSimpleBottomSheet<void>(
-                  context: context,
-                  child: CancelCreationModal(
-                    title: context.i18n.cancel_creation_post_title,
-                    onCancel: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                );
+                context.pop(shouldReturnToMediaPicker);
+                return;
               }
+
+              await showSimpleBottomSheet<void>(
+                context: context,
+                child: CancelCreationModal(
+                  title: context.i18n.cancel_creation_post_title,
+                  onCancel: () => Navigator.of(context).pop(shouldReturnToMediaPicker),
+                ),
+              );
             },
           ),
       ],
