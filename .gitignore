@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -56,9 +58,6 @@ fastlane/keys
 
 # Third-party tools
 .cursorrules
-
-# FVM Version Cache
-.fvm/
 
 assets/ion_identity/coins.json
 assets/ion_identity/coins_version.txt

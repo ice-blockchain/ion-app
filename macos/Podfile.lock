@@ -1,24 +1,27 @@
 PODS:
   - device_info_plus (0.0.1):
     - FlutterMacOS
-  - ffmpeg-kit-macos-min-gpl (5.1)
-  - ffmpeg_kit_flutter_min_gpl (5.1.0):
-    - ffmpeg_kit_flutter_min_gpl/min-gpl (= 5.1.0)
+  - ffmpeg-kit-macos-full-gpl (6.0)
+  - ffmpeg_kit_flutter_full_gpl (6.0.3):
+    - ffmpeg_kit_flutter_full_gpl/full-gpl (= 6.0.3)
     - FlutterMacOS
-  - ffmpeg_kit_flutter_min_gpl/min-gpl (5.1.0):
-    - ffmpeg-kit-macos-min-gpl (= 5.1)
+  - ffmpeg_kit_flutter_full_gpl/full-gpl (6.0.3):
+    - ffmpeg-kit-macos-full-gpl (= 6.0)
     - FlutterMacOS
   - file_saver (0.0.1):
     - FlutterMacOS
   - file_selector_macos (0.0.1):
     - FlutterMacOS
-  - flutter_image_compress_macos (1.0.0):
+  - flutter_inappwebview_macos (0.0.1):
     - FlutterMacOS
+    - OrderedSet (~> 6.0.3)
   - flutter_secure_storage_macos (6.1.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
-  - image_compression_flutter (1.0.0):
+  - local_auth_darwin (0.0.1):
+    - Flutter
     - FlutterMacOS
+  - OrderedSet (6.0.3)
   - package_info_plus (0.0.1):
     - FlutterMacOS
   - path_provider_foundation (0.0.1):
@@ -37,6 +40,25 @@ PODS:
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
+  - sqlite3 (3.47.2):
+    - sqlite3/common (= 3.47.2)
+  - sqlite3/common (3.47.2)
+  - sqlite3/dbstatvtab (3.47.2):
+    - sqlite3/common
+  - sqlite3/fts5 (3.47.2):
+    - sqlite3/common
+  - sqlite3/perf-threadsafe (3.47.2):
+    - sqlite3/common
+  - sqlite3/rtree (3.47.2):
+    - sqlite3/common
+  - sqlite3_flutter_libs (0.0.1):
+    - Flutter
+    - FlutterMacOS
+    - sqlite3 (~> 3.47.1)
+    - sqlite3/dbstatvtab
+    - sqlite3/fts5
+    - sqlite3/perf-threadsafe
+    - sqlite3/rtree
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
   - video_player_avfoundation (0.0.1):
@@ -47,13 +69,13 @@ PODS:
 
 DEPENDENCIES:
   - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
-  - ffmpeg_kit_flutter_min_gpl (from `Flutter/ephemeral/.symlinks/plugins/ffmpeg_kit_flutter_min_gpl/macos`)
+  - ffmpeg_kit_flutter_full_gpl (from `Flutter/ephemeral/.symlinks/plugins/ffmpeg_kit_flutter_full_gpl/macos`)
   - file_saver (from `Flutter/ephemeral/.symlinks/plugins/file_saver/macos`)
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
-  - flutter_image_compress_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_image_compress_macos/macos`)
+  - flutter_inappwebview_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview_macos/macos`)
   - flutter_secure_storage_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
-  - image_compression_flutter (from `Flutter/ephemeral/.symlinks/plugins/image_compression_flutter/macos`)
+  - local_auth_darwin (from `Flutter/ephemeral/.symlinks/plugins/local_auth_darwin/darwin`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - photo_manager (from `Flutter/ephemeral/.symlinks/plugins/photo_manager/macos`)
@@ -61,31 +83,34 @@ DEPENDENCIES:
   - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/darwin`)
+  - sqlite3_flutter_libs (from `Flutter/ephemeral/.symlinks/plugins/sqlite3_flutter_libs/darwin`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
   - video_player_avfoundation (from `Flutter/ephemeral/.symlinks/plugins/video_player_avfoundation/darwin`)
   - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 SPEC REPOS:
   trunk:
-    - ffmpeg-kit-macos-min-gpl
+    - ffmpeg-kit-macos-full-gpl
+    - OrderedSet
+    - sqlite3
 
 EXTERNAL SOURCES:
   device_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos
-  ffmpeg_kit_flutter_min_gpl:
-    :path: Flutter/ephemeral/.symlinks/plugins/ffmpeg_kit_flutter_min_gpl/macos
+  ffmpeg_kit_flutter_full_gpl:
+    :path: Flutter/ephemeral/.symlinks/plugins/ffmpeg_kit_flutter_full_gpl/macos
   file_saver:
     :path: Flutter/ephemeral/.symlinks/plugins/file_saver/macos
   file_selector_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
-  flutter_image_compress_macos:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_image_compress_macos/macos
+  flutter_inappwebview_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview_macos/macos
   flutter_secure_storage_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_secure_storage_macos/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
-  image_compression_flutter:
-    :path: Flutter/ephemeral/.symlinks/plugins/image_compression_flutter/macos
+  local_auth_darwin:
+    :path: Flutter/ephemeral/.symlinks/plugins/local_auth_darwin/darwin
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
   path_provider_foundation:
@@ -100,6 +125,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
   sqflite:
     :path: Flutter/ephemeral/.symlinks/plugins/sqflite/darwin
+  sqlite3_flutter_libs:
+    :path: Flutter/ephemeral/.symlinks/plugins/sqlite3_flutter_libs/darwin
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
   video_player_avfoundation:
@@ -108,25 +135,28 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
-  device_info_plus: ce1b7762849d3ec103d0e0517299f2db7ad60720
-  ffmpeg-kit-macos-min-gpl: d21cda1f1ca994304f4abdd5143cbe4a6562ba15
-  ffmpeg_kit_flutter_min_gpl: 56421f6b1e50eacdea85af38688094bb255896f8
-  file_saver: 44e6fbf666677faf097302460e214e977fdd977b
-  file_selector_macos: 54fdab7caa3ac3fc43c9fac4d7d8d231277f8cf2
-  flutter_image_compress_macos: c26c3c13ea0f28ae6dea4e139b3292e7729f99f1
-  flutter_secure_storage_macos: 59459653abe1adb92abbc8ea747d79f8d19866c9
+  device_info_plus: a56e6e74dbbd2bb92f2da12c64ddd4f67a749041
+  ffmpeg-kit-macos-full-gpl: c9bd04ddd4dc777db0ecda4e342bb4f5ad972157
+  ffmpeg_kit_flutter_full_gpl: d381c7a487cb0eb535a19d87dbee2e3d57837e8c
+  file_saver: e35bd97de451dde55ff8c38862ed7ad0f3418d0f
+  file_selector_macos: 585232b688707857504f9cb5f985a7c97fe4dd30
+  flutter_inappwebview_macos: c2d68649f9f8f1831bfcd98d73fd6256366d9d1d
+  flutter_secure_storage_macos: b2d62a774c23b060f0b99d0173b0b36abb4a8632
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  image_compression_flutter: 8a67d9fb207a804ddc10d7fd6bc3f2359dbdc34a
-  package_info_plus: 02d7a575e80f194102bef286361c6c326e4c29ce
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  photo_manager: ff695c7a1dd5bc379974953a2b5c0a293f7c4c8a
-  screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
-  share_plus: 36537c04ce0c3e3f5bd297ce4318b6d5ee5fd6cf
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
-  url_launcher_macos: 5f437abeda8c85500ceb03f5c1938a8c5a705399
-  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
-  window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
+  local_auth_darwin: 553ce4f9b16d3fdfeafce9cf042e7c9f77c1c391
+  OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
+  package_info_plus: 122abb51244f66eead59ce7c9c200d6b53111779
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  photo_manager: d2fbcc0f2d82458700ee6256a15018210a81d413
+  screen_retriever: 4f97c103641aab8ce183fa5af3b87029df167936
+  share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sqflite: c35dad70033b8862124f8337cc994a809fcd9fa3
+  sqlite3: 7559e33dae4c78538df563795af3a86fc887ee71
+  sqlite3_flutter_libs: f0b59f6bb2a18597d0796558725007e5a7428397
+  url_launcher_macos: de10e46d8d8b9e3a7b8a133e8de92b104379f05e
+  video_player_avfoundation: 2cef49524dd1f16c5300b9cd6efd9611ce03639b
+  window_manager: 1d01fa7ac65a6e6f83b965471b1a7fdd3f06166c
 
 PODFILE CHECKSUM: 9ebaf0ce3d369aaa26a9ea0e159195ed94724cf3
 
