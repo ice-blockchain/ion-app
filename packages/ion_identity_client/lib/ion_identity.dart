@@ -23,6 +23,7 @@ export 'src/wallets/models/wallet.c.dart';
 export 'src/wallets/models/wallet_signing_key.c.dart';
 export 'src/wallets/services/generate_signature/models/generate_signature_response.c.dart';
 export 'src/wallets/services/get_wallet_assets/exceptions/get_wallet_assets_exception.dart';
+export 'src/wallets/services/get_wallet_assets/models/wallet_asset.c.dart';
 export 'src/wallets/services/get_wallet_assets/models/wallet_assets.c.dart';
 export 'src/wallets/services/get_wallet_history/models/wallet_history.c.dart';
 export 'src/wallets/services/get_wallet_nfts/models/wallet_nfts.c.dart';

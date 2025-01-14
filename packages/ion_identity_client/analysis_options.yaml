@@ -10,6 +10,7 @@ analyzer:
     unnecessary_library_directive: ignore
     invalid_annotation_target: ignore
     comment_references: ignore
+    one_member_abstracts: ignore
   plugins:
     - custom_lint
   exclude:

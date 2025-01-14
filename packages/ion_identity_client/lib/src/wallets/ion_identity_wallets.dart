@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/broadcast_transaction_service.dart';
+import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/models/transaction_request.dart';
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/generate_signature/generate_signature_service.dart';
@@ -32,6 +34,7 @@ class IONIdentityWallets {
     required GenerateSignatureService generateSignatureService,
     required WalletViewsService walletViewsService,
     required ExtractUserIdService extractUserIdService,
+    required BroadcastTransactionService broadcastTransactionService,
   })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
@@ -40,7 +43,8 @@ class IONIdentityWallets {
         _getWalletTransferRequestsService = getWalletTransferRequestsService,
         _generateSignatureService = generateSignatureService,
         _walletViewsService = walletViewsService,
-        _extractUserIdService = extractUserIdService;
+        _extractUserIdService = extractUserIdService,
+        _broadcastTransactionService = broadcastTransactionService;
 
   final String username;
 
@@ -53,6 +57,7 @@ class IONIdentityWallets {
   final GenerateSignatureService _generateSignatureService;
   final WalletViewsService _walletViewsService;
   final ExtractUserIdService _extractUserIdService;
+  final BroadcastTransactionService _broadcastTransactionService;
 
   Future<Wallet> createWallet({
     required String network,
@@ -171,4 +176,17 @@ class IONIdentityWallets {
     final userId = _extractUserIdService.extractUserId(username: username);
     return _walletViewsService.deleteWalletView(walletViewId, userId);
   }
+
+  Future<Map<String, dynamic>> broadcastTransaction(
+    Wallet wallet,
+    String destinationAddress,
+    String amount,
+  ) =>
+      _broadcastTransactionService.broadcastTransaction(
+        TransactionRequest(
+          wallet,
+          destinationAddress,
+          amount,
+        ),
+      );
 }

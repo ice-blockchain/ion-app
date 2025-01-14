@@ -12,7 +12,6 @@ import 'package:ion_identity_client_example/pages/wallet_history/wallet_history_
 import 'package:ion_identity_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
 import 'package:ion_identity_client_example/pages/wallet_transfer_requests/wallet_transfer_requests_page.dart';
 import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
-import 'package:ion_identity_client_example/providers/secure_payment_notifier.c.dart';
 
 class UserWalletsPage extends HookConsumerWidget {
   const UserWalletsPage({
@@ -53,7 +52,7 @@ class _CreateWalletAction extends ConsumerWidget {
 
     return IconButton(
       onPressed: () {
-        ref.read(createWalletNotifierProvider.notifier).createWallet('BitcoinTestnet3');
+        ref.read(createWalletNotifierProvider.notifier).createWallet('TonTestnet');
       },
       icon: isLoading ? const CircularProgressIndicator() : const Icon(Icons.add),
     );
@@ -142,8 +141,6 @@ class _SuccessState extends HookWidget {
                       _HistoryButton(walletId: wallet.id),
                       const SizedBox(width: 8),
                       _TransferRequestsButton(walletId: wallet.id),
-                      const SizedBox(width: 8),
-                      _MakeTransferButton(walletId: wallet.id),
                     ],
                   ),
                 ),
@@ -235,27 +232,6 @@ class _TransferRequestsButton extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => WalletTransferRequestsPage(walletId: walletId)),
         );
-      },
-    );
-  }
-}
-
-class _MakeTransferButton extends ConsumerWidget {
-  const _MakeTransferButton({
-    required this.walletId,
-  });
-
-  final String walletId;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ElevatedButton(
-      child: const Text('Make Transfer'),
-      onPressed: () {
-        ref.read(securePaymentNotifierProvider.notifier).startSecurePayment(
-              '0xB6c9f17A54c503De2ed287b9c93FB7021529149B',
-              '2',
-            );
       },
     );
   }

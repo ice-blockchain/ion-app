@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 List<T> parseList<T>(
   dynamic input, {
   required T Function(Map<String, dynamic>) fromJson,
@@ -19,6 +21,7 @@ T parseJsonObject<T>(
   return switch (input) {
     null => fromJson(emptyResponse),
     final String stringInput when stringInput.isEmpty => fromJson(emptyResponse),
+    final String stringInput => fromJson(jsonDecode(stringInput) as Map<String, dynamic>),
     Map<String, dynamic>() => fromJson(input),
     _ => throw FormatException(
         'Expected a Map<String, dynamic>, but got: ${input.runtimeType}',

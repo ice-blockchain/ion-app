@@ -2,6 +2,8 @@
 
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -19,6 +21,13 @@ Future<IONIdentity> ionIdentity(Ref ref) async {
   final config = IONIdentityConfig(
     appId: appId,
     origin: origin,
+    logger: LogInterceptor(
+      requestHeader: false,
+      requestBody: true,
+      responseHeader: false,
+      responseBody: true,
+      logPrint: (object) => debugPrint(object.toString()),
+    ),
   );
   final ionIdentity = IONIdentity.createDefault(config: config);
   await ionIdentity.init();
