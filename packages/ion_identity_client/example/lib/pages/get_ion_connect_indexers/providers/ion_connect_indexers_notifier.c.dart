@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
-import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_connect_indexers_notifier.g.dart';
+part 'ion_connect_indexers_notifier.c.g.dart';
 
 @riverpod
 class IndexersNotifier extends _$IndexersNotifier {

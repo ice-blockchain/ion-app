@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client_example/pages/wallet_assets/providers/wallet_assets_provider.dart';
+import 'package:ion_identity_client_example/pages/wallet_assets/providers/wallet_assets_provider.c.dart';
 
 class WalletAssetsPage extends HookConsumerWidget {
   const WalletAssetsPage({

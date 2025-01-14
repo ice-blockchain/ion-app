@@ -2,11 +2,11 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
-import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'wallet_transfer_requests_provider.g.dart';
+part 'wallet_transfer_requests_provider.c.g.dart';
 
 @riverpod
 Future<WalletTransferRequests> walletTransferRequests(

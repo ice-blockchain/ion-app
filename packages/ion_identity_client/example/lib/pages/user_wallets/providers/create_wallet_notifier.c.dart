@@ -3,8 +3,8 @@
 import 'dart:math';
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
-import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_wallet_notifier.c.g.dart';
@@ -16,7 +16,7 @@ class CreateWalletNotifier extends _$CreateWalletNotifier {
     return null;
   }
 
-  Future<void> createWallet() async {
+  Future<void> createWallet(String network) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(
@@ -24,8 +24,8 @@ class CreateWalletNotifier extends _$CreateWalletNotifier {
         final username = ref.read(currentUsernameNotifierProvider) ?? 'ERROR';
         final ionIdentity = await ref.read(ionIdentityProvider.future);
         return ionIdentity(username: username).wallets.createWallet(
-              network: 'KeyEdDSA',
-              name: 'KeyEdDSA ${Random().nextInt(1000000)}',
+              network: network,
+              name: '$network ${Random().nextInt(1000000)}',
               onVerifyIdentity: (
                       {required onBiometricsFlow,
                       required onPasskeyFlow,

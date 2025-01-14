@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_identity_provider.g.dart';
+part 'ion_identity_provider.c.g.dart';
 
 @riverpod
 Future<IONIdentity> ionIdentity(Ref ref) async {

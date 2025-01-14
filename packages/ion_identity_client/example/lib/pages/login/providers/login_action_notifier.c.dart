@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'login_action_notifier.g.dart';
+part 'login_action_notifier.c.g.dart';
 
 @riverpod
 class LoginActionNotifier extends _$LoginActionNotifier {

@@ -2,7 +2,7 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'current_username_notifier.g.dart';
+part 'current_username_notifier.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class CurrentUsernameNotifier extends _$CurrentUsernameNotifier {
