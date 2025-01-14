@@ -6,6 +6,7 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:cryptography/cryptography.dart' as crypto;
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/auth/dtos/private_key_data.c.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
@@ -73,7 +74,10 @@ class PasswordSigner {
       await Future.wait([
         privateKeyStorage.setPrivateKey(
           username: username,
-          privateKey: hex.encode(keyPair.privateKeyBytes),
+          privateKeyData: PrivateKeyData(
+            hexEncodedPrivateKeyBytes: hex.encode(keyPair.privateKeyBytes),
+            encryptedPrivateKey: encryptedPrivateKey,
+          ),
         ),
         _updateStateToCanSuggest(username),
       ]);
@@ -118,9 +122,11 @@ class PasswordSigner {
     if (biometricsState != BiometricsState.enabled) {
       throw const BiometricsValidationException();
     }
-    final privateKey = privateKeyStorage.getPrivateKey(
-      username: username,
-    );
+    final privateKey = privateKeyStorage
+        .getPrivateKey(
+          username: username,
+        )
+        ?.hexEncodedPrivateKeyBytes;
     if (privateKey == null) {
       throw const BiometricsValidationException();
     }
