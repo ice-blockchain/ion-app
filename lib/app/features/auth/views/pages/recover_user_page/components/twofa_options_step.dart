@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -66,10 +65,10 @@ class TwoFAOptionsStep extends HookConsumerWidget {
                       ),
                       Button(
                         onPressed: () {
-                          final hasValues = optionsState.selectedValues.whereNotNull().isNotEmpty;
+                          final hasValues = optionsState.selectedValues.nonNulls.isNotEmpty;
                           final isValidValues =
                               !optionsState.selectedValues.contains(TwoFaType.auth) ||
-                                  optionsState.selectedValues.whereNotNull().length > 1;
+                                  optionsState.selectedValues.nonNulls.length > 1;
 
                           if ((hasValues && isValidValues) ||
                               formKey.value.currentState!.validate()) {

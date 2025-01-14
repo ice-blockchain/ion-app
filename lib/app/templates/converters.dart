@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:ion/app/extensions/color.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 class ColorConverter implements JsonConverter<Color, String> {
@@ -17,10 +18,10 @@ class ColorConverter implements JsonConverter<Color, String> {
 
   @override
   String toJson(Color color) => '#'
-      '${color.alpha.toRadixString(16).padLeft(2, '0')}'
-      '${color.red.toRadixString(16).padLeft(2, '0')}'
-      '${color.green.toRadixString(16).padLeft(2, '0')}'
-      '${color.blue.toRadixString(16).padLeft(2, '0')}';
+      '${color.intAlpha.toRadixString(16).padLeft(2, '0')}'
+      '${color.intRed.toRadixString(16).padLeft(2, '0')}'
+      '${color.intGreen.toRadixString(16).padLeft(2, '0')}'
+      '${color.intBlue.toRadixString(16).padLeft(2, '0')}';
 }
 
 class FontWeightConverter implements JsonConverter<FontWeight, int> {

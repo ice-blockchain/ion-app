@@ -24,7 +24,7 @@ class SvgShadow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        if (color.alpha != 0)
+        if (color.a != 0)
           Transform.translate(
             offset: offset ?? Offset(0, 1.5.s),
             child: ImageFiltered(

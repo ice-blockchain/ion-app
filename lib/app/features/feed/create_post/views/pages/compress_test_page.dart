@@ -285,7 +285,7 @@ class VideoPlayerTab extends HookConsumerWidget {
                       remoteVideoController,
                       colors: VideoProgressColors(
                         playedColor: Colors.red,
-                        bufferedColor: Colors.grey.withOpacity(0.5),
+                        bufferedColor: Colors.grey.withValues(alpha: 0.5),
                         backgroundColor: Colors.white,
                       ),
                       padding: const EdgeInsets.all(20),

@@ -75,7 +75,7 @@ class MessageReactionDialog extends HookConsumerWidget {
           behavior: HitTestBehavior.opaque,
           child: BackdropFilter(
             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: context.theme.appColors.primaryText.withOpacity(0.5)),
+            child: Container(color: context.theme.appColors.primaryText.withValues(alpha: 0.5)),
           ),
         ),
         Positioned(

@@ -33,7 +33,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference {
   List<String> toTag() {
     return [
       tagName,
-      [kind, pubkey, dTag].whereNotNull().join(':'),
+      [kind, pubkey, dTag].nonNulls.join(':'),
     ];
   }
 

@@ -20,14 +20,13 @@ class HexColor extends Color {
   }
 }
 
-class ColorToHex extends Color {
-  ColorToHex(Color color) : super(_convertColorTHex(color));
+extension IntColorComponents on Color {
+  int get intAlpha => _floatToInt8(a);
+  int get intRed => _floatToInt8(r);
+  int get intGreen => _floatToInt8(g);
+  int get intBlue => _floatToInt8(b);
 
-  ///convert material colors to hex color
-  static int _convertColorTHex(Color color) {
-    final hex = '${color.value}';
-    return int.parse(
-      hex,
-    );
+  int _floatToInt8(double x) {
+    return (x * 255.0).round() & 0xff;
   }
 }

@@ -49,7 +49,7 @@ class StoryReactionNotification extends ConsumerWidget {
                   vertical: 8.0.s,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(16.0.s),
                 ),
                 child: Row(

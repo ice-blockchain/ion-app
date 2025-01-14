@@ -21,7 +21,7 @@ class VideoButton extends StatelessWidget {
         height: 36.0.s,
         width: 36.0.s,
         decoration: BoxDecoration(
-          color: context.theme.appColors.primaryText.withOpacity(0.5),
+          color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
           shape: BoxShape.circle,
         ),
         child: Center(

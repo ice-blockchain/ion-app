@@ -29,7 +29,7 @@ class StoryControlButton extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: context.theme.appColors.primaryText.withOpacity(0.5),
+              color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
             ),
             child: Padding(
               padding: EdgeInsets.all(iconPadding ?? 6.0.s),

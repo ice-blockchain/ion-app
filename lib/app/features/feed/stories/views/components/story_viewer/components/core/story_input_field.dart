@@ -78,7 +78,7 @@ class StoryInputField extends HookConsumerWidget {
                         focusNode: focusNode,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: context.theme.appColors.primaryText.withOpacity(0.5),
+                          fillColor: context.theme.appColors.primaryText.withValues(alpha: 0.5),
                           contentPadding: EdgeInsets.only(
                             left: 12.0.s,
                             top: 9.0.s,

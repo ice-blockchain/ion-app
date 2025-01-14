@@ -30,9 +30,9 @@ class VideoPostInfo extends HookConsumerWidget {
               end: Alignment.topCenter,
               stops: const [0.0, 0.55, 1.0],
               colors: [
-                context.theme.appColors.primaryText.withOpacity(1),
-                context.theme.appColors.primaryText.withOpacity(0.71),
-                context.theme.appColors.primaryText.withOpacity(0),
+                context.theme.appColors.primaryText.withValues(alpha: 1),
+                context.theme.appColors.primaryText.withValues(alpha: 0.71),
+                context.theme.appColors.primaryText.withValues(alpha: 0),
               ],
             ),
           ),
