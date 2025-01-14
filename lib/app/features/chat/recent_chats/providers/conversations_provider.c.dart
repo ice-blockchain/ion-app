@@ -2,7 +2,6 @@
 
 import 'package:ion/app/features/chat/model/channel_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/group.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,22 +42,6 @@ class Conversations extends _$Conversations {
     update((currentData) {
       final newConversation = PrivateDirectMessageEntity(
         id: 'id',
-        pubkey: 'pubKey',
-        createdAt: DateTime.now(),
-        data: const PrivateDirectMessageData(content: [], media: {}),
-      );
-      final newData = [
-        newConversation,
-        ...currentData,
-      ];
-      return List<PrivateDirectMessageEntity>.unmodifiable(newData);
-    });
-  }
-
-  void addGroupConversation(Group group) {
-    update((currentData) {
-      final newConversation = PrivateDirectMessageEntity(
-        id: group.id,
         pubkey: 'pubKey',
         createdAt: DateTime.now(),
         data: const PrivateDirectMessageData(content: [], media: {}),

@@ -29,7 +29,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_message_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<Raw<ConversationMessageManagementService>> conversationMessageManagementService(
+Raw<Future<ConversationMessageManagementService>> conversationMessageManagementService(
   Ref ref,
 ) async {
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
@@ -238,6 +238,12 @@ class ConversationMessageManagementService {
       sig: null,
     );
 
+    final expirationTag = EntityExpiration(
+      value: DateTime.now().add(
+        Duration(hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS)),
+      ),
+    ).toTag();
+
     Logger.log('Event message $eventMessage');
 
     final seal = await sealService.createSeal(
@@ -253,6 +259,7 @@ class ConversationMessageManagementService {
       receiverPubkey,
       signer,
       PrivateDirectMessageEntity.kind,
+      expirationTag: expirationTag,
     );
 
     Logger.log('Wrap message $wrap');

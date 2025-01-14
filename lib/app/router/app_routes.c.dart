@@ -16,6 +16,7 @@ import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passke
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
+import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/channel_page.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channel_page/edit_channel_page.dart';
@@ -331,7 +332,13 @@ class WalletMainModalRoute extends BaseRouteData {
   routes: [],
 )
 class MessagesRoute extends BaseRouteData {
-  MessagesRoute() : super(child: const MessagesPage());
+  MessagesRoute(this.$extra)
+      : super(
+          child: MessagesPage($extra),
+          type: IceRouteType.fade,
+        );
+
+  final ConversationData $extra;
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

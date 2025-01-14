@@ -4,21 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
-import 'package:ion/app/features/chat/providers/create_chat_group_provider.c.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
-import 'package:ion/app/features/chat/providers/groups_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -37,7 +39,10 @@ class CreateGroupModal extends HookConsumerWidget {
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
+
     final members = createGroupForm.members.toList();
+
+    final e2EEGroupConversationManagement = ref.watch(e2EEGroupConversationManagementProvider);
 
     useEffect(
       () {
@@ -160,20 +165,40 @@ class CreateGroupModal extends HookConsumerWidget {
             margin: 32.0.s,
             child: ScreenSideOffset.large(
               child: Button(
+                disabled: e2EEGroupConversationManagement.maybeWhen(
+                  loading: () => true,
+                  orElse: () => false,
+                ),
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: Assets.svg.iconPlusCreatechannel.icon(
-                  color: context.theme.appColors.onPrimaryAccent,
+                leadingIcon: e2EEGroupConversationManagement.maybeWhen(
+                  loading: () => const IONLoadingIndicator(),
+                  orElse: () => Assets.svg.iconPlusCreatechannel.icon(
+                    color: context.theme.appColors.onPrimaryAccent,
+                  ),
                 ),
                 label: Text(context.i18n.group_create_create_button),
-                onPressed: () {
+                onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    final newGroup = ref.read(createChatGroupProvider);
+                    if (createGroupForm.type == GroupType.encrypted) {
+                      final avatarProcessorState = ref.read(avatarProcessorNotifierProvider);
 
-                    ref.read(groupsProvider.notifier).setGroup(newGroup.id, newGroup);
-                    ref.read(conversationsProvider.notifier).addGroupConversation(newGroup);
+                      final groupPicture = avatarProcessorState.whenOrNull(
+                        cropped: (file) => file,
+                        processed: (file) => file,
+                      );
 
-                    GroupRoute(pubkey: newGroup.id).replace(context);
+                      final conversationData = ConversationData(
+                        type: ChatType.group,
+                        mediaImage: groupPicture,
+                        name: createGroupForm.name!,
+                        members: createGroupForm.members.toList(),
+                      );
+
+                      await MessagesRoute(conversationData).push<void>(context);
+                    } else {
+                      throw UnimplementedError();
+                    }
                   }
                 },
               ),
