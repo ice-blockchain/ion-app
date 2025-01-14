@@ -28,7 +28,8 @@ class MessagesPage extends HookConsumerWidget {
     // TODO: Should be called if there is no conversation messages yet in DB
     useOnInit(
       useCallback(() async {
-        final ee2eGroupConversationService = ref.read(e2EEGroupConversationManagementProvider.notifier);
+        final ee2eGroupConversationService =
+            ref.read(e2EEGroupConversationManagementProvider.notifier);
 
         if (conversationData.type == ChatType.chat) {
           await ee2eGroupConversationService.createOneOnOneConversation(conversationData.members);
@@ -67,8 +68,9 @@ class MessagesPage extends HookConsumerWidget {
             children: [
               MessagingHeader(
                 imageUrl: conversationData.imageUrl,
-                imageWidget:
-                    conversationData.mediaImage != null ? Image.asset(conversationData.mediaImage!.path) : null,
+                imageWidget: conversationData.mediaImage != null
+                    ? Image.asset(conversationData.mediaImage!.path)
+                    : null,
                 name: conversationData.name,
                 subtitle: conversationData.type == ChatType.chat
                     ? Text(

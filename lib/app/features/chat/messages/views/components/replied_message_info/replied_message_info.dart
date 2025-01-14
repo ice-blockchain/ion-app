@@ -72,7 +72,8 @@ class _SideVerticalDivider extends StatelessWidget {
       width: 2.0.s,
       margin: EdgeInsets.only(right: 6.0.s),
       decoration: BoxDecoration(
-        color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
+        color:
+            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
         borderRadius: BorderRadius.circular(2.0.s),
       ),
     );

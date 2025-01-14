@@ -14,8 +14,10 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   FutureOr<List<Ee2eConversationEntity>> build() async {
-    final conversationSubscription =
-        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
+    final conversationSubscription = ref
+        .read(conversationsDBServiceProvider)
+        .watchConversations()
+        .listen((conversationsEventMessages) async {
       final lastPrivateDirectMesssages =
           conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
@@ -54,7 +56,8 @@ class Conversations extends _$Conversations {
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
 
     if (type == ChatType.chat) {
-      final userMetadata = ref.watch(userMetadataProvider(message.data.relatedPubkeys!.first.value)).valueOrNull;
+      final userMetadata =
+          ref.watch(userMetadataProvider(message.data.relatedPubkeys!.first.value)).valueOrNull;
 
       if (userMetadata != null) {
         nickname = userMetadata.data.name;
@@ -65,8 +68,10 @@ class Conversations extends _$Conversations {
       name = message.data.relatedSubject?.value ?? '';
 
       try {
-        final conversationMessageManagementService = await ref.watch(conversationMessageManagementServiceProvider);
-        final imageUrls = await conversationMessageManagementService.downloadDecryptDecompressMedia(message);
+        final conversationMessageManagementService =
+            await ref.watch(conversationMessageManagementServiceProvider);
+        final imageUrls =
+            await conversationMessageManagementService.downloadDecryptDecompressMedia(message);
         imagePath = imageUrls.first.path;
       } catch (e) {
         // Handle
@@ -74,7 +79,8 @@ class Conversations extends _$Conversations {
     }
 
     final lastMessageAt = message.createdAt;
-    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants =
+        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.toString();
 
     return Ee2eConversationEntity(

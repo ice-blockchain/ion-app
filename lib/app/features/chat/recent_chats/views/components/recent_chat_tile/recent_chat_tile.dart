@@ -37,7 +37,8 @@ class RecentChatTile extends ConsumerWidget {
               imageUrl: conversation.imageUrl,
               members: conversation.participants,
               nickname: '@${conversation.nickname}',
-              mediaImage: conversation.imagePath != null ? MediaFile(path: conversation.imagePath!) : null,
+              mediaImage:
+                  conversation.imagePath != null ? MediaFile(path: conversation.imagePath!) : null,
             ),
           ).push<void>(context);
         }
