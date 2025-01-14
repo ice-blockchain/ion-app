@@ -20,9 +20,7 @@ class Coin with _$Coin {
     @DurationConverter() required Duration syncFrequency,
   }) = _Coin;
 
-  factory Coin.fromJson(Map<String, dynamic> json) {
-    return _$CoinFromJson(json);
-  }
+  factory Coin.fromJson(Map<String, dynamic> json) => _$CoinFromJson(json);
 }
 
 class DurationConverter implements JsonConverter<Duration, int> {
