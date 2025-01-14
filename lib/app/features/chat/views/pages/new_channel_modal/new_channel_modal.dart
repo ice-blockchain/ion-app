@@ -12,7 +12,6 @@ import 'package:ion/app/features/chat/model/channel_data.c.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/components/bottom_sticky_button.dart';
@@ -121,7 +120,7 @@ class NewChannelModal extends HookConsumerWidget {
                         ),
                   );
                   ref.read(channelsProvider.notifier).setChannel(newChannelData.id, newChannelData);
-                  ref.read(conversationsProvider.notifier).addChannelConversation(newChannelData);
+
                   ChannelRoute(pubkey: newChannelData.id).replace(context);
                 }
               },

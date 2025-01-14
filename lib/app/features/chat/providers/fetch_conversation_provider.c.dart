@@ -15,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fetch_conversation_provider.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class FetchConversations extends _$FetchConversations {
   @override
   Future<void> build() async {
@@ -33,8 +33,7 @@ class FetchConversations extends _$FetchConversations {
       throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate =
-        await ref.read(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final lastMessageDate = await ref.read(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
