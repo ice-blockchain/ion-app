@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -21,23 +22,23 @@ class NewChatModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<void> onUserSelected(UserMetadataEntity user) {
-      final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    final onUserSelected = useMemoized(() => (UserMetadataEntity user) {
+          final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
-      if (currentPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
+          if (currentPubkey == null) {
+            throw UserMasterPubkeyNotFoundException();
+          }
 
-      final conversationData = ConversationData(
-        type: ChatType.chat,
-        name: user.data.displayName,
-        imageUrl: user.data.picture,
-        nickname: '@${user.data.name}',
-        members: [user.pubkey, currentPubkey],
-      );
+          final conversationData = ConversationData(
+            type: ChatType.chat,
+            name: user.data.displayName,
+            imageUrl: user.data.picture,
+            nickname: '@${user.data.name}',
+            members: [user.pubkey, currentPubkey],
+          );
 
-      return MessagesRoute(conversationData).push<void>(context);
-    }
+          return MessagesRoute(conversationData).push<void>(context);
+        });
 
     return SheetContent(
       topPadding: 0,
