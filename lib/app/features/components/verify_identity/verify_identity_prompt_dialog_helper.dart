@@ -12,11 +12,16 @@ import 'package:ion_identity_client/ion_identity.dart';
 
 Future<void> guardPasskeyDialog(
   BuildContext context,
-  Widget Function(Widget child) passkeyRequestBuilder,
-) async {
+  Widget Function(Widget child) passkeyRequestBuilder, {
+  String? identityKeyName,
+}) async {
   return showSimpleBottomSheet<void>(
     context: context,
-    child: passkeyRequestBuilder(const VerifyIdentityPromptDialog()),
+    child: passkeyRequestBuilder(
+      VerifyIdentityPromptDialog(
+        identityKeyName: identityKeyName,
+      ),
+    ),
   );
 }
 
@@ -25,12 +30,14 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
     required this.child,
     required this.provider,
     required this.requestWithVerifyIdentity,
+    this.identityKeyName,
     super.key,
   });
 
   final Widget child;
   final ProviderListenable<AsyncValue<T>> provider;
   final WithVerifyIdentity<P> requestWithVerifyIdentity;
+  final String? identityKeyName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,6 +63,7 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
               onPasskeyFlow: onPasskeyFlow,
               onBiometricsFlow: onBiometricsFlow,
               localisedReasonForBiometricsDialog: context.i18n.verify_with_biometrics_title,
+              identityKeyName: identityKeyName,
             ).future,
           );
         });

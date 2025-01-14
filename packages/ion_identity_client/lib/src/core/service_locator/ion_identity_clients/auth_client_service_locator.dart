@@ -96,6 +96,7 @@ class AuthClientServiceLocator {
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
       ),
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
     );
   }
 

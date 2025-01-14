@@ -11,6 +11,7 @@ import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class LoginForm extends HookConsumerWidget {
   const LoginForm({super.key});
@@ -41,9 +42,12 @@ class LoginForm extends HookConsumerWidget {
                     (authState.valueOrNull?.hasAuthenticated).falseOrValue
                 ? const IONLoadingIndicator()
                 : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
-            onPressed: () {
+            onPressed: () async {
               if (formKey.value.currentState!.validate()) {
-                _showPasskeyDialog(ref, identityKeyNameController.text);
+                await ref
+                    .read(loginActionNotifierProvider.notifier)
+                    .verifyUserLoginFlow(keyName: identityKeyNameController.text);
+                await _showPasskeyDialog(ref, identityKeyNameController.text);
               }
             },
             label: Text(context.i18n.button_continue),
@@ -60,10 +64,15 @@ class LoginForm extends HookConsumerWidget {
   ) {
     return guardPasskeyDialog(
       ref.context,
+      identityKeyName: identityKeyName,
       (child) => RiverpodVerifyIdentityRequestBuilder(
         provider: loginActionNotifierProvider,
-        requestWithVerifyIdentity: (_) {
-          ref.read(loginActionNotifierProvider.notifier).signIn(keyName: identityKeyName);
+        identityKeyName: identityKeyName,
+        requestWithVerifyIdentity: (OnVerifyIdentity<AssertionRequestData> onVerifyIdentity) {
+          ref.read(loginActionNotifierProvider.notifier).signIn(
+                keyName: identityKeyName,
+                onVerifyIdentity: onVerifyIdentity,
+              );
         },
         child: child,
       ),

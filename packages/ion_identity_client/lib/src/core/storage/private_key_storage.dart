@@ -2,23 +2,24 @@
 
 import 'dart:async';
 
+import 'package:ion_identity_client/src/auth/dtos/private_key_data.c.dart';
 import 'package:ion_identity_client/src/core/storage/data_storage.dart';
 
-class PrivateKeyStorage extends DataStorage<String> {
+class PrivateKeyStorage extends DataStorage<PrivateKeyData> {
   PrivateKeyStorage({
     required super.secureStorage,
   }) : super(
           storageKey: 'ion_identity_client_private_keys_key',
-          // fromJson: Assuming the stored map looks like {"value": "the_private_key"}
-          fromJson: (json) => json['value'] as String,
-          // toJson: Convert the string into a map {"value": stringValue}
-          toJson: (value) => {'value': value},
+          // Use the generated fromJson
+          fromJson: PrivateKeyData.fromJson,
+          // Use the generated toJson
+          toJson: (data) => data.toJson(),
         );
 
-  String? getPrivateKey({required String username}) => super.getData(key: username);
+  PrivateKeyData? getPrivateKey({required String username}) => super.getData(key: username);
 
-  Future<void> setPrivateKey({required String username, required String privateKey}) =>
-      super.setData(key: username, value: privateKey);
+  Future<void> setPrivateKey({required String username, required PrivateKeyData privateKeyData}) =>
+      super.setData(key: username, value: privateKeyData);
 
   Future<void> removePrivateKey({required String username}) => super.removeData(key: username);
 

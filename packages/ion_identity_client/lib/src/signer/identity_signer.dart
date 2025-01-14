@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/signer/dtos/assertion_request_data.c.dart';
-import 'package:ion_identity_client/src/signer/dtos/user_action_challenge.c.dart';
+import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/passkey_signer.dart';
 import 'package:ion_identity_client/src/signer/password_signer.dart';
 
@@ -91,5 +90,17 @@ class IdentitySigner {
       username: username,
       localisedReason: localisedReason,
     );
+  }
+
+  PublicKeyCredentialDescriptor extractPasswordProtectedCredentials(
+    UserActionChallenge challenge,
+  ) {
+    final credentialDescriptor = challenge.allowCredentials.passwordProtectedKey?.firstOrNull;
+    // If no password-protected credential is available, throw an exception.
+    if (credentialDescriptor == null || credentialDescriptor.encryptedPrivateKey == null) {
+      throw const PasswordFlowNotAvailableForTheUserException();
+    }
+
+    return credentialDescriptor;
   }
 }

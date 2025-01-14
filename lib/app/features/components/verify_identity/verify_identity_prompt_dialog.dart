@@ -13,8 +13,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class VerifyIdentityPromptDialog extends ConsumerWidget {
   const VerifyIdentityPromptDialog({
+    this.identityKeyName,
     super.key,
   });
+
+  final String? identityKeyName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +25,11 @@ class VerifyIdentityPromptDialog extends ConsumerWidget {
     final textThemes = context.theme.appTextThemes;
     final isThemeLight = ref.watch(appThemeModeProvider) == ThemeMode.light;
 
-    final verifyIdentityType = ref.watch(verifyIdentityTypeProvider).valueOrNull;
+    final verifyIdentityType = ref
+        .watch(
+          verifyIdentityTypeProvider(identityKeyName: identityKeyName),
+        )
+        .valueOrNull;
 
     final maxHeight = MediaQuery.sizeOf(context).height * 0.8;
 

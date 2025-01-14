@@ -14,6 +14,7 @@ export 'src/core/types/user_token.c.dart';
 export 'src/ion_identity.dart';
 export 'src/ion_identity_client.dart';
 export 'src/ion_identity_config.dart';
+export 'src/signer/dtos/assertion_request_data.c.dart';
 export 'src/signer/dtos/user_registration_challenge.c.dart';
 export 'src/users/ion_connect_indexers/models/ion_connect_indexers_response.c.dart';
 export 'src/users/set_ion_connect_relays/models/set_ion_connect_relays_response.c.dart';

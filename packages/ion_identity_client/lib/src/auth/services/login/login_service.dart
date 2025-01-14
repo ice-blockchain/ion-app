@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/auth/dtos/private_key_data.c.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
+import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
+import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class LoginService {
@@ -11,12 +14,40 @@ class LoginService {
     required this.identitySigner,
     required this.dataSource,
     required this.tokenStorage,
+    required this.privateKeyStorage,
   });
 
   final String username;
   final IdentitySigner identitySigner;
   final LoginDataSource dataSource;
   final TokenStorage tokenStorage;
+  final PrivateKeyStorage privateKeyStorage;
+
+  /// Initializes the login process for the specified [username].
+  ///
+  /// 1. Invokes loginInit to retrieve the [UserActionChallenge] data.
+  /// 2. Checks whether the challenge's [UserActionChallenge.supportedCredentialKinds] contains [CredentialKind.Fido2].
+  ///    - If **Fido2** is not supported, passkey authentication is not available for the account.
+  ///    - In this case, checks if the user is a password-based user by examining the `passwordProtectedKey` field.
+  ///    - If an encrypted private key exists, it is securely stored.
+  ///
+  /// This flow ensures that if **Fido2**-based authentication is not available,
+  /// a password-based credential (if present) is captured and stored appropriately.
+  Future<void> verifyUserLoginFlow() async {
+    final challenge = await dataSource.loginInit(username: username);
+    if (challenge.supportedCredentialKinds
+            .any((SupportedCredentialKinds2 credKind) => credKind.kind == CredentialKind.Fido2) ==
+        false) {
+      final credentialDescriptor = challenge.allowCredentials.passwordProtectedKey?.firstOrNull;
+      final encryptedPrivateKey = credentialDescriptor?.encryptedPrivateKey;
+      if (encryptedPrivateKey != null) {
+        await privateKeyStorage.setPrivateKey(
+          username: username,
+          privateKeyData: PrivateKeyData(encryptedPrivateKey: encryptedPrivateKey),
+        );
+      }
+    }
+  }
 
   /// Logs in an existing user using the provided username, handling the necessary
   /// API interactions and storing the authentication token securely.
@@ -36,18 +67,39 @@ class LoginService {
   /// - [PasskeyValidationException] if the passkey validation fails.
   /// - [UnknownIONIdentityException] for any other unexpected errors during the login process.
   Future<void> loginUser({
+    required OnVerifyIdentity<AssertionRequestData> onVerifyIdentity,
     bool preferImmediatelyAvailableCredentials = false,
   }) async {
-    final canAuthenticate = await identitySigner.isPasskeyAvailable();
-    if (!canAuthenticate) {
-      throw const PasskeyNotAvailableException();
-    }
-
     final challenge = await dataSource.loginInit(username: username);
-    final assertion = await identitySigner.signWithPasskey(
-      challenge,
-      preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+    final assertion = await onVerifyIdentity(
+      onPasskeyFlow: () {
+        return identitySigner.signWithPasskey(
+          challenge,
+          preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+        );
+      },
+      onPasswordFlow: ({required String password}) {
+        final credentialDescriptor = identitySigner.extractPasswordProtectedCredentials(challenge);
+        return identitySigner.signWithPassword(
+          challenge: challenge.challenge,
+          encryptedPrivateKey: credentialDescriptor.encryptedPrivateKey!,
+          credentialId: credentialDescriptor.id,
+          credentialKind: CredentialKind.PasswordProtectedKey,
+          password: password,
+        );
+      },
+      onBiometricsFlow: ({required String localisedReason}) {
+        final credentialDescriptor = identitySigner.extractPasswordProtectedCredentials(challenge);
+        return identitySigner.signWithBiometrics(
+          challenge: challenge.challenge,
+          username: username,
+          credentialId: credentialDescriptor.id,
+          credentialKind: CredentialKind.PasswordProtectedKey,
+          localisedReason: localisedReason,
+        );
+      },
     );
+
     final tokens = await dataSource.loginComplete(
       challengeIdentifier: challenge.challengeIdentifier,
       assertion: assertion,
