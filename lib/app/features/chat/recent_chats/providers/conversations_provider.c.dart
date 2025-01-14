@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/chat/model/channel_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,6 +47,7 @@ class Conversations extends _$Conversations {
 
   Future<Ee2eConversationEntity> getConversationData(PrivateDirectMessageEntity message) async {
     var name = 'Unknown';
+    String? nickname;
     String? imageUrl;
     String? imagePath;
 
@@ -54,6 +57,7 @@ class Conversations extends _$Conversations {
       final userMetadata = ref.watch(userMetadataProvider(message.data.relatedPubkeys!.first.value)).valueOrNull;
 
       if (userMetadata != null) {
+        nickname = userMetadata.data.name;
         name = userMetadata.data.displayName;
         imageUrl = userMetadata.data.picture ?? '';
       }
@@ -61,8 +65,7 @@ class Conversations extends _$Conversations {
       name = message.data.relatedSubject?.value ?? '';
 
       try {
-        final conversationMessageManagementService =
-            await ref.watch(conversationMessageManagementServiceProvider.future);
+        final conversationMessageManagementService = await ref.watch(conversationMessageManagementServiceProvider);
         final imageUrls = await conversationMessageManagementService.downloadDecryptDecompressMedia(message);
         imagePath = imageUrls.first.path;
       } catch (e) {
@@ -77,10 +80,11 @@ class Conversations extends _$Conversations {
     return Ee2eConversationEntity(
       name: name,
       type: type,
+      nickname: nickname,
       imageUrl: imageUrl,
       imagePath: imagePath,
-      lastMessageAt: lastMessageAt,
       participants: participants,
+      lastMessageAt: lastMessageAt,
       lastMessageContent: lastMessageContent,
     );
   }
