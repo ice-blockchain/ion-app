@@ -69,9 +69,9 @@ class Conversations extends _$Conversations {
 
       try {
         final conversationMessageManagementService =
-            await ref.watch(conversationMessageManagementServiceProvider);
-        final imageUrls =
-            await conversationMessageManagementService.downloadDecryptDecompressMedia(message);
+            await ref.read(conversationMessageManagementServiceProvider);
+        final imageUrls = await conversationMessageManagementService
+            .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
         imagePath = imageUrls.first.path;
       } catch (e) {
         // Handle
