@@ -50,11 +50,16 @@ class FetchConversations extends _$FetchConversations {
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 
+    NostrSubscription? subscription;
+
     final events = ref.read(ionConnectNotifierProvider.notifier).requestEvents(
-          requestMessage,
-          actionSource: const ActionSourceCurrentUserChat(),
-          keepSubscription: true,
-        );
+      requestMessage,
+      actionSource: const ActionSourceCurrentUserChat(),
+      subscriptionBuilder: (requestMessage, relay) {
+        subscription = relay.subscribe(requestMessage);
+        return subscription!.messages;
+      },
+    );
 
     final dbProvider = ref.read(conversationsDBServiceProvider);
 
