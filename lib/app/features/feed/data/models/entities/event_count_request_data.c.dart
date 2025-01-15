@@ -87,7 +87,7 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
       signer: signer,
       createdAt: createdAt,
       kind: EventCountRequestEntity.kind,
-      content: json.encode(filters.map((filter) => filter.toString()).toList()),
+      content: json.encode(filters),
       tags: [
         ...tags,
         ...params.toTags(),
