@@ -56,13 +56,11 @@ Future<int?> followersCount(Ref ref, String pubkey) async {
         cache: false,
       );
 
-  await Future<void>.delayed(const Duration(seconds: 5));
-
   final requestMessage = RequestMessage()
     ..addFilter(
-      const RequestFilter(
-        kinds: [EventCountResultEntity.kind],
-        // e: [followersCountRequestEvent.id],
+      RequestFilter(
+        kinds: const [EventCountResultEntity.kind],
+        e: [followersCountRequestEvent.id],
         limit: 1,
       ),
     );
