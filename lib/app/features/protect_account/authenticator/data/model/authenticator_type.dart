@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum AuthenticatorType {
@@ -10,15 +11,13 @@ enum AuthenticatorType {
   authy,
   userLockPush;
 
-  String getDisplayName(BuildContext context) {
-    return switch (this) {
-      AuthenticatorType.google => 'Google Authenticator',
-      AuthenticatorType.microsoft => 'Microsoft Authenticator',
-      AuthenticatorType.lastpass => 'LastPass Authenticator',
-      AuthenticatorType.authy => 'Authy',
-      AuthenticatorType.userLockPush => 'UserLock Push',
-    };
-  }
+  String getDisplayName(BuildContext context) => switch (this) {
+        AuthenticatorType.google => context.i18n.authenticator_google,
+        AuthenticatorType.microsoft => context.i18n.authenticator_microsoft,
+        AuthenticatorType.lastpass => context.i18n.authenticator_lastpass,
+        AuthenticatorType.authy => context.i18n.authenticator_authy,
+        AuthenticatorType.userLockPush => context.i18n.authenticator_userLockPush,
+      };
 
   String get iconAsset {
     return switch (this) {
