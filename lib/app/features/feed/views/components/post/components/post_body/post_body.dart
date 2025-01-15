@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder.dart';
 import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
@@ -32,11 +33,16 @@ class PostBody extends HookConsumerWidget {
       onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
     );
 
+    final processedPostText = useMemoized(
+      () => _postProcessTextSpan(postText),
+      [postText],
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text.rich(
-          postMedia.isNotEmpty ? _postProcessTextSpan(postText) : postText,
+          postMedia.isNotEmpty ? processedPostText : postText,
         ),
         if (postMedia.isNotEmpty)
           Padding(
