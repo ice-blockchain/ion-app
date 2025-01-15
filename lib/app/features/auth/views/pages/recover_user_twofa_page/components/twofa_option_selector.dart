@@ -14,12 +14,14 @@ class TwoFaOptionSelector extends HookWidget {
     required this.availableOptions,
     required this.optionIndex,
     required this.onSaved,
+    this.initialValue,
     super.key,
   });
 
   final Set<TwoFaType> availableOptions;
   final int optionIndex;
   final FormFieldSetter<TwoFaType?> onSaved;
+  final TwoFaType? initialValue;
 
   static double get height => 58.0.s;
 
@@ -36,6 +38,7 @@ class TwoFaOptionSelector extends HookWidget {
     return FormField<TwoFaType?>(
       validator: (option) => option == null ? '' : null,
       onSaved: onSaved,
+      initialValue: initialValue,
       builder: (state) {
         return SizedBox(
           width: double.infinity,

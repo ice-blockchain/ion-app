@@ -52,6 +52,7 @@ class RecoverUserPage extends HookConsumerWidget {
           child: TwoFAOptionsStep(
             twoFAOptionsCount: twoFAOptionsCount.value,
             onConfirm: () => step.value = RecoverUserStep.twoFAInput,
+            onBackPress: () => step.value = RecoverUserStep.recoveryCreds,
           ),
         ),
       RecoverUserStep.twoFAInput => ProviderScope(
@@ -66,6 +67,7 @@ class RecoverUserPage extends HookConsumerWidget {
               twoFAOptions.value = twoFaTypes;
               _makeRecoverUserRequest(ref, recoveryCreds.value!, twoFaTypes);
             },
+            onBackPress: () => step.value = RecoverUserStep.twoFAOptions,
           ),
         ),
     };

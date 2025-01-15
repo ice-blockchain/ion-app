@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/errors/screenshot_security_alert.dart';
@@ -56,10 +57,13 @@ class CreateRecoveryKeySuccessState extends HookWidget {
           SizedBox(height: 20.0.s),
           const _StoringKeysWarning(),
           SizedBox(height: 20.0.s),
-          Button(
-            mainAxisSize: MainAxisSize.max,
-            label: Text(locale.button_continue),
-            onPressed: () => ValidateRecoveryKeyRoute().push<void>(context),
+          ScreenBottomOffset(
+            margin: 36.0.s,
+            child: Button(
+              mainAxisSize: MainAxisSize.max,
+              label: Text(locale.button_continue),
+              onPressed: () => ValidateRecoveryKeyRoute().push<void>(context),
+            ),
           ),
         ],
       ),
