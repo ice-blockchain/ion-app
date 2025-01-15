@@ -76,7 +76,6 @@ class Article extends ConsumerWidget {
                               if (isOwnedByCurrentUser)
                                 DeleteFeedItemMenu(
                                   entity: articleEntity,
-                                  kind: ArticleEntity.kind,
                                 )
                               else
                                 UserInfoMenu(pubkey: eventReference.pubkey),

@@ -61,7 +61,6 @@ class Post extends ConsumerWidget {
                   ? DeleteFeedItemMenu(
                       entity: postEntity,
                       onDelete: onDelete,
-                      kind: PostEntity.kind,
                     )
                   : UserInfoMenu(pubkey: eventReference.pubkey),
             ),
