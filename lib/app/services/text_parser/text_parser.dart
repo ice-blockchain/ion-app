@@ -101,6 +101,25 @@ class TextParser {
       result.add(TextMatch(substring, offset: offset));
     }
 
+    // Post-process to handle spaces in text matches after URLs
+    if (result.any((match) => match.matcher is UrlMatcher)) {
+      for (var i = 0; i < result.length - 1; i++) {
+        if (result[i].matcher is UrlMatcher && result[i + 1].matcher == null) {
+          result[i + 1] = _trimTextMatch(result[i + 1]);
+        }
+      }
+    }
+
     return result;
+  }
+
+  TextMatch _trimTextMatch(TextMatch match) {
+    final text = match.text;
+    if (!text.startsWith(' ')) return match;
+
+    return TextMatch(
+      text.trimLeft(),
+      offset: match.offset + (text.length - text.trimLeft().length),
+    );
   }
 }
