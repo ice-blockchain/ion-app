@@ -14,8 +14,11 @@ T parseJsonObject<T>(
   dynamic input, {
   required T Function(Map<String, dynamic>) fromJson,
 }) {
+  const emptyResponse = <String, dynamic>{};
+
   return switch (input) {
-    null => fromJson({}),
+    null => fromJson(emptyResponse),
+    final String stringInput when stringInput.isEmpty => fromJson(emptyResponse),
     Map<String, dynamic>() => fromJson(input),
     _ => throw FormatException(
         'Expected a Map<String, dynamic>, but got: ${input.runtimeType}',
