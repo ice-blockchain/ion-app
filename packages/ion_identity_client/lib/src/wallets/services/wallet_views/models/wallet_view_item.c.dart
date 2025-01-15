@@ -2,13 +2,13 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'wallet_view_item.freezed.dart';
-part 'wallet_view_item.g.dart';
+part 'wallet_view_item.c.freezed.dart';
+part 'wallet_view_item.c.g.dart';
 
 @freezed
 class WalletViewItem with _$WalletViewItem {
   const factory WalletViewItem({
-    required String coin,
+    required String coinId,
     required String walletId,
   }) = _WalletViewItem;
 

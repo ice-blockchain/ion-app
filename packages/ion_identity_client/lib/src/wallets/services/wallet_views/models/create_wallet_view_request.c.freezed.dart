@@ -22,6 +22,7 @@ CreateWalletViewRequest _$CreateWalletViewRequestFromJson(
 /// @nodoc
 mixin _$CreateWalletViewRequest {
   List<WalletViewItem> get items => throw _privateConstructorUsedError;
+  List<String> get symbolGroups => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
   /// Serializes this CreateWalletViewRequest to a JSON map.
@@ -40,7 +41,8 @@ abstract class $CreateWalletViewRequestCopyWith<$Res> {
           $Res Function(CreateWalletViewRequest) then) =
       _$CreateWalletViewRequestCopyWithImpl<$Res, CreateWalletViewRequest>;
   @useResult
-  $Res call({List<WalletViewItem> items, String name});
+  $Res call(
+      {List<WalletViewItem> items, List<String> symbolGroups, String name});
 }
 
 /// @nodoc
@@ -60,6 +62,7 @@ class _$CreateWalletViewRequestCopyWithImpl<$Res,
   @override
   $Res call({
     Object? items = null,
+    Object? symbolGroups = null,
     Object? name = null,
   }) {
     return _then(_value.copyWith(
@@ -67,6 +70,10 @@ class _$CreateWalletViewRequestCopyWithImpl<$Res,
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
               as List<WalletViewItem>,
+      symbolGroups: null == symbolGroups
+          ? _value.symbolGroups
+          : symbolGroups // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -84,7 +91,8 @@ abstract class _$$CreateWalletViewRequestImplCopyWith<$Res>
       __$$CreateWalletViewRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<WalletViewItem> items, String name});
+  $Res call(
+      {List<WalletViewItem> items, List<String> symbolGroups, String name});
 }
 
 /// @nodoc
@@ -103,6 +111,7 @@ class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? items = null,
+    Object? symbolGroups = null,
     Object? name = null,
   }) {
     return _then(_$CreateWalletViewRequestImpl(
@@ -110,6 +119,10 @@ class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
               as List<WalletViewItem>,
+      symbolGroups: null == symbolGroups
+          ? _value._symbolGroups
+          : symbolGroups // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -122,8 +135,11 @@ class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
   const _$CreateWalletViewRequestImpl(
-      {required final List<WalletViewItem> items, required this.name})
-      : _items = items;
+      {required final List<WalletViewItem> items,
+      required final List<String> symbolGroups,
+      required this.name})
+      : _items = items,
+        _symbolGroups = symbolGroups;
 
   factory _$CreateWalletViewRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateWalletViewRequestImplFromJson(json);
@@ -136,12 +152,20 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
     return EqualUnmodifiableListView(_items);
   }
 
+  final List<String> _symbolGroups;
+  @override
+  List<String> get symbolGroups {
+    if (_symbolGroups is EqualUnmodifiableListView) return _symbolGroups;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_symbolGroups);
+  }
+
   @override
   final String name;
 
   @override
   String toString() {
-    return 'CreateWalletViewRequest(items: $items, name: $name)';
+    return 'CreateWalletViewRequest(items: $items, symbolGroups: $symbolGroups, name: $name)';
   }
 
   @override
@@ -150,13 +174,18 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
         (other.runtimeType == runtimeType &&
             other is _$CreateWalletViewRequestImpl &&
             const DeepCollectionEquality().equals(other._items, _items) &&
+            const DeepCollectionEquality()
+                .equals(other._symbolGroups, _symbolGroups) &&
             (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_items), name);
+      runtimeType,
+      const DeepCollectionEquality().hash(_items),
+      const DeepCollectionEquality().hash(_symbolGroups),
+      name);
 
   /// Create a copy of CreateWalletViewRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -178,6 +207,7 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
 abstract class _CreateWalletViewRequest implements CreateWalletViewRequest {
   const factory _CreateWalletViewRequest(
       {required final List<WalletViewItem> items,
+      required final List<String> symbolGroups,
       required final String name}) = _$CreateWalletViewRequestImpl;
 
   factory _CreateWalletViewRequest.fromJson(Map<String, dynamic> json) =
@@ -185,6 +215,8 @@ abstract class _CreateWalletViewRequest implements CreateWalletViewRequest {
 
   @override
   List<WalletViewItem> get items;
+  @override
+  List<String> get symbolGroups;
   @override
   String get name;
 

@@ -2,8 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'wallet_view_wallet.freezed.dart';
-part 'wallet_view_wallet.g.dart';
+part 'wallet_view_wallet.c.freezed.dart';
+part 'wallet_view_wallet.c.g.dart';
 
 @freezed
 class WalletViewWallet with _$WalletViewWallet {
