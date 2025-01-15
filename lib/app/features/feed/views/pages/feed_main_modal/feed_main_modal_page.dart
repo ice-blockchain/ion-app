@@ -69,10 +69,12 @@ class FeedMainModalPage extends StatelessWidget {
                       );
 
                       if (result != null && result.isNotEmpty && context.mounted) {
-                        final shouldShowPicker = !(await CreatePostRoute(
+                        final postWasCreated = await CreatePostRoute(
                               videoPath: result[0].path,
                             ).push<bool>(context) ??
-                            false);
+                            false;
+                            
+                        final shouldShowPicker = !postWasCreated;
 
                         if (shouldShowPicker && context.mounted) {
                           await showMediaPickerAndCreatePost();
