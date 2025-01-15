@@ -16,7 +16,6 @@ import 'package:ion/generated/assets.gen.dart';
 class DeleteFeedItemMenu extends ConsumerWidget {
   const DeleteFeedItemMenu({
     required this.entity,
-    required this.kind,
     this.iconColor,
     this.onDelete,
     super.key,
@@ -25,7 +24,6 @@ class DeleteFeedItemMenu extends ConsumerWidget {
   static double get iconSize => 20.0.s;
 
   final CacheableEntity entity;
-  final int kind;
   final Color? iconColor;
   final VoidCallback? onDelete;
 
