@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,7 +33,7 @@ abstract class IonConnectGiftWrapService {
 }
 
 class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
-  static const int wrapKind = 1059;
+  static const int kind = 1059;
 
   @override
   Future<EventMessage> createWrap(
@@ -42,10 +43,18 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     int contentKind, {
     List<String>? expirationTag,
   }) async {
+    final conversationKey = Nip44.deriveConversationKey(
+      await Ed25519KeyStore.getSharedSecret(
+        privateKey: signer.privateKey,
+        publicKey: receiverPubkey,
+      ),
+    );
+
     final encryptedEvent = await Nip44.encryptMessage(
       jsonEncode(event.toJson().last),
       signer.privateKey,
       receiverPubkey,
+      customConversationKey: conversationKey,
     );
 
     final createdAt = randomDateBefore(
@@ -54,7 +63,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
 
     return EventMessage.fromData(
       signer: signer,
-      kind: wrapKind,
+      kind: kind,
       createdAt: createdAt,
       content: encryptedEvent,
       tags: [
@@ -71,10 +80,15 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     String pubkey,
     EventSigner signer,
   ) async {
+    final conversationKey = Nip44.deriveConversationKey(
+      await Ed25519KeyStore.getSharedSecret(privateKey: signer.privateKey, publicKey: pubkey),
+    );
+
     final decryptedContent = await Nip44.decryptMessage(
       content,
       signer.privateKey,
       pubkey,
+      customConversationKey: conversationKey,
     );
 
     return EventMessage.fromPayloadJson(
