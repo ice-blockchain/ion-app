@@ -15,6 +15,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -24,6 +25,7 @@ import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dar
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversation_message_management_provider.c.g.dart';
@@ -101,13 +103,14 @@ class ConversationMessageManagementService {
                 alt: FileAlt.message,
               );
 
-              Logger.log(
-                'Uploaded media file: ${uploadResult.fileMetadata.url}, ${uploadResult.fileMetadata.mimeType} ${uploadResult.fileMetadata.size}',
-              );
-
               return (uploadResult, secretKey, nonce, mac);
             }),
           );
+
+          for (final mediaFile in encryptedMediaFiles) {
+            final file = File(mediaFile.$1.path);
+            await file.delete();
+          }
 
           final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
 
@@ -121,6 +124,11 @@ class ConversationMessageManagementService {
           );
         }),
       );
+
+      for (final mediaFile in compressedMediaFiles) {
+        final file = File(mediaFile.path);
+        await file.delete();
+      }
 
       return results;
     } else {
@@ -141,13 +149,10 @@ class ConversationMessageManagementService {
   }
 
   // Works in progress with https://pub.dev/packages/flutter_cache_manager
-  Future<List<File>> downloadDecryptDecompressMedia(
-    PrivateDirectMessageEntity privateDirectMessageEntity,
-  ) async {
+  Future<List<File>> downloadDecryptDecompressMedia(List<MediaAttachment> mediaAttachments) async {
     final decryptedDecompressedFiles = <File>[];
 
-    for (final attachment in privateDirectMessageEntity.data.media.values) {
-      Logger.log('Attachment: $attachment');
+    for (final attachment in mediaAttachments) {
       if (attachment.encryptionKey != null &&
           attachment.encryptionNonce != null &&
           attachment.encryptionMac != null) {
@@ -157,10 +162,6 @@ class ConversationMessageManagementService {
 
         final file = await fileCacheService.getFile(attachment.url);
 
-        Logger.log(
-          'Downloaded encrypted media file: ${file.path}, ${attachment.mimeType} ${file.lengthSync()}',
-        );
-
         final fileBytes = await file.readAsBytes();
 
         final secretBox = SecretBox(
@@ -168,7 +169,6 @@ class ConversationMessageManagementService {
           nonce: nonce,
           mac: Mac(mac),
         );
-
         // Wrong Mac authentication error described here
         // https://github.com/dint-dev/cryptography/issues/147
         final decryptedFileBytesList = await AesGcm.with256bits().decrypt(
@@ -182,10 +182,6 @@ class ConversationMessageManagementService {
           url: file.path,
           bytes: decryptedFileBytes,
           fileExtension: attachment.mimeType.split('/').last,
-        );
-
-        Logger.log(
-          'Decrypted media file: ${decryptedFile.path}, ${attachment.mimeType} ${decryptedFile.lengthSync()}',
         );
 
         if (attachment.mediaType == MediaType.unknown) {
@@ -279,11 +275,6 @@ class ConversationMessageManagementService {
     final compressedMediaFiles = await Future.wait(
       mediaFiles.map(
         (mediaFile) async {
-          final size = File(mediaFile.path).lengthSync();
-          Logger.log(
-            'Original media file: ${mediaFile.path}, ${mediaFile.mimeType} $size',
-          );
-
           final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
           final compressedMediaFile = switch (mediaType) {
@@ -304,11 +295,6 @@ class ConversationMessageManagementService {
               )
           };
 
-          final compressedSize = File(compressedMediaFile.path).lengthSync();
-          Logger.log(
-            'Compressed media file: ${compressedMediaFile.path}, ${compressedMediaFile.mimeType} $compressedSize',
-          );
-
           return compressedMediaFile;
         },
       ).toList(),
@@ -320,6 +306,7 @@ class ConversationMessageManagementService {
   Future<List<(MediaFile, String, String, String)>> _encryptMediaFiles(
     List<MediaFile> compressedMediaFiles,
   ) async {
+    final documentsDir = await getApplicationDocumentsDirectory();
     final encryptedMediaFiles = await Future.wait(
       compressedMediaFiles.map(
         (compressedMediaFile) => Isolate.run<(MediaFile, String, String, String)>(() async {
@@ -338,8 +325,9 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile = File('${compressedMediaFile.path}.enc');
-          // Rewrite compressed fieles with encrypted data
+          final compressedEncryptedFile =
+              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 
           final compressedEncryptedMediaFile = MediaFile(
@@ -347,10 +335,6 @@ class ConversationMessageManagementService {
             width: compressedMediaFile.width,
             height: compressedMediaFile.height,
             mimeType: compressedMediaFile.mimeType,
-          );
-
-          Logger.log(
-            'Encrypted media file ${compressedEncryptedMediaFile.mimeType} ${compressedEncryptedFile.lengthSync()}',
           );
 
           return (

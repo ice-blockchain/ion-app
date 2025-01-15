@@ -12,7 +12,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
 import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
@@ -188,14 +187,14 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      final conversationData = ConversationData(
-                        type: ChatType.group,
-                        mediaImage: groupPicture,
+                      await MessagesRoute(
+                        chatType: ChatType.group,
                         name: createGroupForm.name!,
-                        members: createGroupForm.members.toList(),
-                      );
-
-                      await MessagesRoute(conversationData).push<void>(context);
+                        imageUrl: groupPicture!.path,
+                        imageWidth: groupPicture.width,
+                        imageHeight: groupPicture.height,
+                        participants: createGroupForm.members.toList(),
+                      ).push<void>(context);
                     } else {
                       throw UnimplementedError();
                     }

@@ -41,7 +41,7 @@ class MessagingHeader extends StatelessWidget {
               children: [
                 Avatar(
                   size: 36.0.s,
-                  imageUrl: imageUrl,
+                  imageUrl: imageWidget != null ? null : imageUrl,
                   imageWidget: imageWidget,
                 ),
                 SizedBox(width: 10.0.s),

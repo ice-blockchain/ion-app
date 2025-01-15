@@ -2,9 +2,9 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,7 +29,7 @@ abstract class IonConnectSealService {
 }
 
 class IonConnectSealServiceImpl implements IonConnectSealService {
-  static const int sealKind = 13;
+  static const int kind = 13;
 
   @override
   Future<EventMessage> createSeal(
@@ -39,10 +39,18 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   ) async {
     final encodedRumor = jsonEncode(rumor.toJson().last);
 
+    final conversationKey = Nip44.deriveConversationKey(
+      await Ed25519KeyStore.getSharedSecret(
+        privateKey: signer.privateKey,
+        publicKey: receiverPubkey,
+      ),
+    );
+
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
       signer.privateKey,
       receiverPubkey,
+      customConversationKey: conversationKey,
     );
 
     final createdAt = randomDateBefore(
@@ -51,7 +59,7 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
 
     return EventMessage.fromData(
       signer: signer,
-      kind: sealKind,
+      kind: kind,
       createdAt: createdAt,
       content: encryptedRumor,
     );
@@ -63,10 +71,15 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
     EventSigner signer,
     String pubkey,
   ) async {
+    final conversationKey = Nip44.deriveConversationKey(
+      await Ed25519KeyStore.getSharedSecret(privateKey: signer.privateKey, publicKey: pubkey),
+    );
+
     final decryptedContent = await Nip44.decryptMessage(
       seal.content,
       signer.privateKey,
       pubkey,
+      customConversationKey: conversationKey,
     );
 
     return EventMessage.fromPayloadJson(
