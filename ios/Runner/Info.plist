@@ -29,6 +29,11 @@
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>https</string>
+			<string>totp</string>
+			<string>msauthv3</string>
+			<string>lastpassmfa</string>
+			<string>authy</string>
+			<string>userlock</string>
 		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true />

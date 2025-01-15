@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -15,6 +18,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthenticatorSetupOptionsPage extends StatelessWidget {
   const AuthenticatorSetupOptionsPage({
@@ -23,7 +27,7 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const authenticatorTypes = AutethenticatorType.values;
+    const authenticatorTypes = AuthenticatorType.values;
 
     return SheetContent(
       body: CustomScrollView(
@@ -69,7 +73,7 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
                                 isEnabled: false,
                                 title: type.getDisplayName(context),
                                 icon: type.iconAsset.icon(),
-                                onTap: () {},
+                                onTap: () => _onOptionTap(type),
                               ),
                             );
                           },
@@ -94,5 +98,23 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _onOptionTap(AuthenticatorType type) async {
+    // LaunchApp currently doesn't work on iOS because of a bug
+    // https://github.com/GeekyAnts/external_app_launcher/issues/41
+    // TODO: Replace canLaunch and launchUrl with LaunchApp.openApp when library is fixed
+    if (Platform.isAndroid) {
+      await LaunchApp.openApp(
+        androidPackageName: type.androidPackageName,
+      );
+    } else {
+      final canLaunch = await canLaunchUrl(Uri.parse(type.iosAppUrlScheme));
+      if (canLaunch) {
+        await launchUrl(Uri.parse(type.iosAppUrlScheme));
+      } else {
+        await launchUrl(Uri.parse(type.appStoreLink));
+      }
+    }
   }
 }
