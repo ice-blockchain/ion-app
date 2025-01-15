@@ -9,12 +9,15 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/components/identity_key_name_input/identity_key_name_input.dart';
-import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion_identity_client/ion_identity.dart';
 
 class LoginForm extends HookConsumerWidget {
-  const LoginForm({super.key});
+  const LoginForm({
+    required this.onLogin,
+    super.key,
+  });
+
+  final void Function(String username) onLogin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,8 +26,6 @@ class LoginForm extends HookConsumerWidget {
 
     final authState = ref.watch(authProvider);
     final loginActionState = ref.watch(loginActionNotifierProvider);
-
-    ref.displayErrors(loginActionNotifierProvider);
 
     return Form(
       key: formKey.value,
@@ -42,39 +43,15 @@ class LoginForm extends HookConsumerWidget {
                     (authState.valueOrNull?.isAuthenticated).falseOrValue
                 ? const IONLoadingIndicator()
                 : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
-            onPressed: () async {
+            onPressed: () {
               if (formKey.value.currentState!.validate()) {
-                await ref
-                    .read(loginActionNotifierProvider.notifier)
-                    .verifyUserLoginFlow(keyName: identityKeyNameController.text);
-                await _showPasskeyDialog(ref, identityKeyNameController.text);
+                onLogin(identityKeyNameController.text);
               }
             },
             label: Text(context.i18n.button_continue),
             mainAxisSize: MainAxisSize.max,
           ),
         ],
-      ),
-    );
-  }
-
-  Future<void> _showPasskeyDialog(
-    WidgetRef ref,
-    String identityKeyName,
-  ) {
-    return guardPasskeyDialog(
-      ref.context,
-      identityKeyName: identityKeyName,
-      (child) => RiverpodVerifyIdentityRequestBuilder(
-        provider: loginActionNotifierProvider,
-        identityKeyName: identityKeyName,
-        requestWithVerifyIdentity: (OnVerifyIdentity<AssertionRequestData> onVerifyIdentity) {
-          ref.read(loginActionNotifierProvider.notifier).signIn(
-                keyName: identityKeyName,
-                onVerifyIdentity: onVerifyIdentity,
-              );
-        },
-        child: child,
       ),
     );
   }

@@ -29,16 +29,21 @@ extension DebounceExtension on Ref {
 }
 
 extension DisplayErrorsExtension on WidgetRef {
-  void displayErrors<T>(ProviderListenable<AsyncValue<T>> provider) {
+  void displayErrors<T>(
+    ProviderListenable<AsyncValue<T>> provider, {
+    Set<Type> excludedExceptions = const {},
+  }) {
     listen(provider, (_, next) {
+      final error = next.error;
       if (!next.isLoading &&
           next.hasError &&
-          next.error != null &&
+          error != null &&
           context.isCurrentRoute &&
-          context.mounted) {
+          context.mounted &&
+          !excludedExceptions.contains(error.runtimeType)) {
         showSimpleBottomSheet<void>(
           context: context,
-          child: ErrorModal(error: next.error!),
+          child: ErrorModal(error: error),
         );
       }
     });

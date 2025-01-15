@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
@@ -26,15 +27,17 @@ import 'package:ion_identity_client/ion_identity.dart';
 
 class TwoFAInputStep extends HookConsumerWidget {
   const TwoFAInputStep({
-    required this.recoveryIdentityKeyName,
+    required this.identityKeyName,
     required this.onContinuePressed,
     required this.onBackPress,
+    this.isLoading = false,
     super.key,
   });
 
-  final String recoveryIdentityKeyName;
+  final String identityKeyName;
   final void Function(Map<TwoFaType, String>) onContinuePressed;
   final VoidCallback onBackPress;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,7 +83,7 @@ class TwoFAInputStep extends HookConsumerWidget {
                               onRequestCode: () async {
                                 await ref
                                     .read(requestTwoFaCodeNotifierProvider.notifier)
-                                    .requestRecoveryTwoFaCode(twoFaType, recoveryIdentityKeyName, ({
+                                    .requestRecoveryTwoFaCode(twoFaType, identityKeyName, ({
                                   required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
                                   required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
                                   required OnBiometricsFlow<GenerateSignatureResponse>
@@ -103,6 +106,8 @@ class TwoFAInputStep extends HookConsumerWidget {
                           ),
                       ],
                       Button(
+                        disabled: isLoading,
+                        trailingIcon: isLoading ? const IONLoadingIndicator() : null,
                         onPressed: () {
                           if (formKey.value.currentState!.validate()) {
                             _onConfirm(ref, controllers);

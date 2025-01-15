@@ -61,10 +61,12 @@ class IONIdentityAuth {
 
   Future<void> loginUser({
     required OnVerifyIdentity<AssertionRequestData> onVerifyIdentity,
+    required List<TwoFAType> twoFATypes,
     bool preferImmediatelyAvailableCredentials = false,
   }) =>
       loginService.loginUser(
         onVerifyIdentity: onVerifyIdentity,
+        twoFATypes: twoFATypes,
         preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
       );
 

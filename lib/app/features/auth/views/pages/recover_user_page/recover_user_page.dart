@@ -6,9 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/recovery_creds_step.dart';
-import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_input_step.dart';
-import 'package:ion/app/features/auth/views/pages/recover_user_page/components/twofa_options_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/models/recover_user_step.dart';
+import 'package:ion/app/features/auth/views/pages/two_fa/twofa_input_step.dart';
+import 'package:ion/app/features/auth/views/pages/two_fa/twofa_options_step.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
@@ -62,7 +62,7 @@ class RecoverUserPage extends HookConsumerWidget {
             ),
           ],
           child: TwoFAInputStep(
-            recoveryIdentityKeyName: recoveryCreds.value!.name,
+            identityKeyName: recoveryCreds.value!.name,
             onContinuePressed: (twoFaTypes) {
               twoFAOptions.value = twoFaTypes;
               _makeRecoverUserRequest(ref, recoveryCreds.value!, twoFaTypes);
