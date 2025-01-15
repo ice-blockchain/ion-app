@@ -19,7 +19,7 @@ class Replies extends _$Replies {
 
     final subscription = ref
         .watch(ionConnectCacheStreamProvider)
-        .where((entity) => _isReply(entity, eventReference))
+        .where((entity) => isReply(entity, eventReference))
         .distinct()
         .listen((entity) {
       state = state?.copyWith.data(items: {entity, ...state?.data.items ?? {}});
@@ -29,7 +29,23 @@ class Replies extends _$Replies {
     return entitiesPagedData;
   }
 
-  bool _isReply(IonConnectEntity entity, EventReference parentEventReference) {
+  bool isReply(IonConnectEntity entity, EventReference parentEventReference) {
     return entity is PostEntity && entity.data.parentEvent?.eventId == parentEventReference.eventId;
+  }
+
+  Future<void> deleteReply({
+    required CacheableEntity entity,
+  }) async {
+    final currentState = state;
+    if (currentState != null) {
+      final updatedItems =
+          currentState.data.items?.where((entity) => entity.id != entity.id).toSet() ?? {};
+      state = currentState.copyWith(
+        data: currentState.data.copyWith(
+          items: updatedItems,
+          pagination: currentState.data.pagination,
+        ),
+      );
+    }
   }
 }
