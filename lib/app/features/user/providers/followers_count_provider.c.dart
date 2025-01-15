@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -64,15 +65,19 @@ class FollowersCount extends _$FollowersCount {
     // And unsubscribe
     relay.unsubscribe(subscription.id);
 
-    //TODO::currently it fails on parsing
-    // 1. BE should add `b` tag to the event
-    // 2. The content is `{}`, so either request params are wrong or BE calculates it incorrectly
-    final eventCountResultEntity =
-        EventCountResultEntity.fromEventMessage(responseMessage as EventMessage);
+    EventCountResultEntity eventCountResultEntity;
+
+    try {
+      eventCountResultEntity =
+          EventCountResultEntity.fromEventMessage(responseMessage as EventMessage);
+    } on EventMasterPubkeyNotFoundException catch (e) {
+      Logger.error(e);
+      rethrow;
+    }
 
     ref.watch(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
-    return eventCountResultEntity.data.content as int?;
+    return (eventCountResultEntity.data.content as Map<String, dynamic>?)?.length;
   }
 
   Future<NostrRelay> _getRandomUserRelay() async {
