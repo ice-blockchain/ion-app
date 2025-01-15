@@ -10,12 +10,13 @@ class Ee2eConversationEntity with _$Ee2eConversationEntity {
   const factory Ee2eConversationEntity({
     required String name,
     required ChatType type,
-    required DateTime lastMessageAt,
     required List<String> participants,
-    required String lastMessageContent,
+    int? imageWidgth,
+    int? imageHeight,
     String? nickname,
     String? imageUrl,
-    String? imagePath,
+    DateTime? lastMessageAt,
+    String? lastMessageContent,
   }) = _PrivateDirectMessageEntity;
 
   const Ee2eConversationEntity._();
