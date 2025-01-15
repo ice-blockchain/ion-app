@@ -39,7 +39,7 @@ class FetchConversations extends _$FetchConversations {
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
     final requestFilter = RequestFilter(
-      kinds: const [1059],
+      kinds: const [IonConnectGiftWrapServiceImpl.kind],
       k: [
         PrivateDirectMessageEntity.kind.toString(),
         PrivateMessageReactionEntity.kind.toString(),
@@ -74,8 +74,8 @@ class FetchConversations extends _$FetchConversations {
 
         await dbProvider.insertEventMessage(unwrappedSeal);
       }
-    } catch (_) {
-      throw FetchAndSyncConversationsException();
+    } catch (error) {
+      throw FetchAndSyncConversationsException(error);
     }
   }
 }

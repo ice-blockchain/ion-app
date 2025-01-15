@@ -202,7 +202,8 @@ class AuthChallengeIsEmptyException extends IONException {
 }
 
 class FetchAndSyncConversationsException extends IONException {
-  FetchAndSyncConversationsException() : super(10042, 'Failed to fetch and sync conversations');
+  FetchAndSyncConversationsException(dynamic error)
+      : super(10042, 'Failed to fetch and sync conversations $error');
 }
 
 class ConversationNotFoundException extends IONException {

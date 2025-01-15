@@ -9,11 +9,12 @@ import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dar
 void main() {
   late IonConnectGiftWrapService giftWrapService;
   late EventSigner signer;
-  const pubkey = 'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377';
+  late String pubkey;
 
   setUp(() async {
     giftWrapService = IonConnectGiftWrapServiceImpl();
     signer = await Ed25519KeyStore.generate();
+    pubkey = (await Ed25519KeyStore.generate()).publicKey;
   });
 
   group('IonConnectGiftWrapService', () {
@@ -38,27 +39,26 @@ void main() {
       expect(wrap.tags[1][1], equals('14'));
     });
 
-    //TODO: Investigate why this is failing on CI
-    // test('decodes wrap back to original event', () async {
-    //   final event =
-    //       await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: pubkey);
+    test('decodes wrap back to original event', () async {
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: pubkey);
 
-    //   final wrap = await giftWrapService.createWrap(
-    //     event,
-    //     pubkey,
-    //     signer,
-    //     PrivateDirectMessageEntity.kind,
-    //   );
+      final wrap = await giftWrapService.createWrap(
+        event,
+        pubkey,
+        signer,
+        PrivateDirectMessageEntity.kind,
+      );
 
-    //   final decodedWrap = await giftWrapService.decodeWrap(
-    //     wrap,
-    //     pubkey,
-    //     signer,
-    //   );
+      final decodedWrap = await giftWrapService.decodeWrap(
+        wrap.content,
+        pubkey,
+        signer,
+      );
 
-    //   expect(decodedWrap.kind, equals(14));
-    //   expect(decodedWrap.content, equals(event.content));
-    //   expect(decodedWrap.tags, equals(event.tags));
-    // });
+      expect(decodedWrap.kind, equals(14));
+      expect(decodedWrap.content, equals(event.content));
+      expect(decodedWrap.tags, equals(event.tags));
+    });
   });
 }

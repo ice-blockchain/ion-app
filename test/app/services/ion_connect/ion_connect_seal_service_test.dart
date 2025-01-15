@@ -9,11 +9,12 @@ import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 void main() {
   late IonConnectSealService sealService;
   late EventSigner signer;
-  const pubkey = 'c95c07ad5aad2d81a3890f13b3eaa80a3d8aca173a91dc2be9fd04720a5a9377';
+  late String pubkey;
 
   setUp(() async {
     sealService = IonConnectSealServiceImpl();
     signer = await Ed25519KeyStore.generate();
+    pubkey = (await Ed25519KeyStore.generate()).publicKey;
   });
 
   group('IonConnectSealService', () {
@@ -33,26 +34,25 @@ void main() {
       expect(seal.tags, isEmpty);
     });
 
-    //TODO: Investigate why this is failing on CI
-    // test('decodes seal back to original event', () async {
-    //   final rumor =
-    //       await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: pubkey);
+    test('decodes seal back to original event', () async {
+      final rumor =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: pubkey);
 
-    //   final seal = await sealService.createSeal(
-    //     rumor,
-    //     signer,
-    //     pubkey,
-    //   );
+      final seal = await sealService.createSeal(
+        rumor,
+        signer,
+        pubkey,
+      );
 
-    //   final decodedSeal = await sealService.decodeSeal(
-    //     seal,
-    //     signer,
-    //     pubkey,
-    //   );
+      final decodedSeal = await sealService.decodeSeal(
+        seal,
+        signer,
+        pubkey,
+      );
 
-    //   expect(decodedSeal.kind, equals(14));
-    //   expect(decodedSeal.content, equals(rumor.content));
-    //   expect(decodedSeal.tags, equals(rumor.tags));
-    // });
+      expect(decodedSeal.kind, equals(14));
+      expect(decodedSeal.content, equals(rumor.content));
+      expect(decodedSeal.tags, equals(rumor.tags));
+    });
   });
 }
