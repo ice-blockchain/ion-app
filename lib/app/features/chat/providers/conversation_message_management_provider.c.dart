@@ -328,7 +328,6 @@ class ConversationMessageManagementService {
           final compressedEncryptedFile =
               File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
 
-          // Rewrite compressed fieles with encrypted data
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 
           final compressedEncryptedMediaFile = MediaFile(

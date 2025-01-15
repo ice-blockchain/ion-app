@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/conversation_data.c.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -31,15 +30,11 @@ class RecentChatTile extends ConsumerWidget {
           ref.read(selectedConversationsIdsProvider.notifier).toggle(conversation.name);
         } else {
           MessagesRoute(
-            ConversationData(
-              type: conversation.type,
-              name: conversation.name,
-              imageUrl: conversation.imageUrl,
-              members: conversation.participants,
-              nickname: '@${conversation.nickname}',
-              mediaImage:
-                  conversation.imagePath != null ? MediaFile(path: conversation.imagePath!) : null,
-            ),
+            name: conversation.name,
+            chatType: conversation.type,
+            imageUrl: conversation.imageUrl ?? '',
+            participants: conversation.participants,
+            nickname: '@${conversation.nickname}',
           ).push<void>(context);
         }
       },
@@ -61,14 +56,10 @@ class RecentChatTile extends ConsumerWidget {
               children: [
                 if (conversation.imageUrl != null)
                   Avatar(
-                    imageUrl: conversation.imageUrl,
-                    size: 40.0.s,
-                  )
-                else if (conversation.imagePath != null)
-                  Avatar(
-                    imageWidget: Image.asset(
-                      conversation.imagePath!,
-                    ),
+                    imageUrl: conversation.type == ChatType.chat ? conversation.imageUrl : null,
+                    imageWidget: conversation.type == ChatType.group
+                        ? Image.asset(conversation.imageUrl!)
+                        : null,
                     size: 40.0.s,
                   ),
                 SizedBox(width: 12.0.s),
@@ -83,10 +74,10 @@ class RecentChatTile extends ConsumerWidget {
                           SenderSummary(
                             sender: MessageAuthor(
                               name: conversation.name,
-                              imageUrl: conversation.imageUrl ?? conversation.imagePath ?? '',
+                              imageUrl: conversation.imageUrl ?? '',
                             ),
                           ),
-                          _ChatTimestamp(conversation.lastMessageAt),
+                          _ChatTimestamp(conversation.lastMessageAt!),
                         ],
                       ),
                       SizedBox(height: 2.0.s),
@@ -94,7 +85,7 @@ class RecentChatTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: ChatPreview(content: conversation.lastMessageContent),
+                            child: ChatPreview(content: conversation.lastMessageContent!),
                           ),
                           //UnreadCountBadge(
                           //    unreadCount: chat.unreadMessageCount),

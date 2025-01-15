@@ -29,7 +29,7 @@ class Conversations extends _$Conversations {
     ref.onDispose(conversationSubscription.cancel);
 
     state = const AsyncValue.loading();
-    try {
+    state = await AsyncValue.guard(() async {
       final database = ref.read(conversationsDBServiceProvider);
       final conversationsEventMessages = await database.getAllConversations();
 
@@ -41,17 +41,15 @@ class Conversations extends _$Conversations {
       state = AsyncValue.data(conversations);
 
       return conversations;
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-      rethrow;
-    }
+    });
+
+    return state.requireValue;
   }
 
   Future<Ee2eConversationEntity> getConversationData(PrivateDirectMessageEntity message) async {
     var name = 'Unknown';
     String? nickname;
     String? imageUrl;
-    String? imagePath;
 
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
 
@@ -67,15 +65,11 @@ class Conversations extends _$Conversations {
     } else {
       name = message.data.relatedSubject?.value ?? '';
 
-      try {
-        final conversationMessageManagementService =
-            await ref.read(conversationMessageManagementServiceProvider);
-        final imageUrls = await conversationMessageManagementService
-            .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
-        imagePath = imageUrls.first.path;
-      } catch (e) {
-        // Handle
-      }
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+      final imageUrls = await conversationMessageManagementService
+          .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
+      imageUrl = imageUrls.first.path;
     }
 
     final lastMessageAt = message.createdAt;
@@ -88,7 +82,6 @@ class Conversations extends _$Conversations {
       type: type,
       nickname: nickname,
       imageUrl: imageUrl,
-      imagePath: imagePath,
       participants: participants,
       lastMessageAt: lastMessageAt,
       lastMessageContent: lastMessageContent,

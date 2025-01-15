@@ -8,7 +8,6 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -30,15 +29,13 @@ class NewChatModal extends HookConsumerWidget {
           throw UserMasterPubkeyNotFoundException();
         }
 
-        final conversationData = ConversationData(
-          type: ChatType.chat,
+        return MessagesRoute(
+          chatType: ChatType.chat,
           name: user.data.displayName,
-          imageUrl: user.data.picture,
           nickname: '@${user.data.name}',
-          members: [user.pubkey, currentPubkey],
-        );
-
-        return MessagesRoute(conversationData).push<void>(context);
+          imageUrl: user.data.picture ?? '',
+          participants: [user.pubkey, currentPubkey],
+        ).push<void>(context);
       },
     );
 
