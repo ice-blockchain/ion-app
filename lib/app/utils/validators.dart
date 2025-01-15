@@ -19,6 +19,10 @@ class Validators {
     return isEmpty(value) || !EmailValidator.validate(value!);
   }
 
+  static bool isInvalidDisplayName(String? value) {
+      return RegExp(r'^[A-Za-z\s\'\-]+$').hasMatch(value!);
+  }
+
   static bool isInvalidNickname(String? value) {
     return isEmpty(value) || !RegExp(r'^[a-zA-Z0-9.]+$').hasMatch(value!);
   }
