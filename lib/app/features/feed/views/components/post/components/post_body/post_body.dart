@@ -36,7 +36,7 @@ class PostBody extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text.rich(
-          postText,
+          postMedia.isNotEmpty ? _postProcessTextSpan(postText) : postText,
         ),
         if (postMedia.isNotEmpty)
           Padding(
@@ -47,5 +47,25 @@ class PostBody extends HookConsumerWidget {
           ),
       ],
     );
+  }
+
+  // Post-process text span to remove leading space
+  TextSpan _postProcessTextSpan(TextSpan postText) {
+    final children = postText.children;
+    if (children == null || children.isEmpty) return postText;
+
+    final firstSpan = children.first;
+    if (firstSpan is! TextSpan) return postText;
+
+    final text = firstSpan.text;
+    if (text == null || !text.startsWith(' ')) return postText;
+
+    children[0] = TextSpan(
+      text: text.substring(1),
+      style: firstSpan.style,
+      recognizer: firstSpan.recognizer,
+    );
+
+    return postText;
   }
 }
