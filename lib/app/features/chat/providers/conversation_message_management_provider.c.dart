@@ -124,7 +124,7 @@ class ConversationMessageManagementService {
           );
         }),
       );
-  
+
       for (final mediaFile in compressedMediaFiles) {
         final file = File(mediaFile.path);
         await file.delete();
@@ -153,7 +153,9 @@ class ConversationMessageManagementService {
     final decryptedDecompressedFiles = <File>[];
 
     for (final attachment in mediaAttachments) {
-      if (attachment.encryptionKey != null && attachment.encryptionNonce != null && attachment.encryptionMac != null) {
+      if (attachment.encryptionKey != null &&
+          attachment.encryptionNonce != null &&
+          attachment.encryptionMac != null) {
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
@@ -323,7 +325,8 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile = File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+          final compressedEncryptedFile =
+              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
 
           // Rewrite compressed fieles with encrypted data
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
