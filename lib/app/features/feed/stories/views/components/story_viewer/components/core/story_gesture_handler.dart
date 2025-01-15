@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 
@@ -20,15 +21,14 @@ class StoryGestureHandler extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tapPosition = useState<Offset?>(null);
+    final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
 
     return GestureDetector(
       behavior: HitTestBehavior.deferToChild,
       onTapDown: (details) => tapPosition.value = details.globalPosition,
       onTap: () {
-        final focusScope = FocusScope.of(context);
-
-        if (focusScope.hasFocus) {
-          focusScope.unfocus();
+        if (isKeyboardVisible) {
+          FocusScope.of(context).unfocus();
           return;
         }
 
