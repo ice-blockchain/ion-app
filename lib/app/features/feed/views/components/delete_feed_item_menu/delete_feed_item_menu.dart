@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu_item.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -19,7 +18,8 @@ import 'package:ion/generated/assets.gen.dart';
 
 class DeleteFeedItemMenu extends ConsumerWidget {
   const DeleteFeedItemMenu({
-    required this.postEntity,
+    required this.entity,
+    required this.kind,
     this.iconColor,
     this.onDelete,
     super.key,
@@ -27,7 +27,8 @@ class DeleteFeedItemMenu extends ConsumerWidget {
 
   static double get iconSize => 20.0.s;
 
-  final PostEntity postEntity;
+  final CacheableEntity entity;
+  final int kind;
   final Color? iconColor;
   final VoidCallback? onDelete;
 
@@ -46,7 +47,7 @@ class DeleteFeedItemMenu extends ConsumerWidget {
               ),
               onPressed: () async {
                 closeMenu();
-                await _deletePost(ref, postEntity);
+                await _deleteEntity(ref, entity);
                 onDelete?.call();
               },
             ),
@@ -59,21 +60,21 @@ class DeleteFeedItemMenu extends ConsumerWidget {
     );
   }
 
-  Future<void> _deletePost(WidgetRef ref, PostEntity postEntity) async {
+  Future<void> _deleteEntity(WidgetRef ref, CacheableEntity entity) async {
     final deletionRequest = DeletionRequest(
-      events: [EventToDelete(eventId: postEntity.id, kind: PostEntity.kind)],
+      events: [EventToDelete(eventId: entity.id, kind: kind)],
     );
 
     await ref
         .read(ionConnectNotifierProvider.notifier)
         .sendEntityData(deletionRequest, cache: false);
 
-    ref.read(ionConnectCacheProvider.notifier).remove(postEntity.cacheKey);
+    ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
 
     final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
 
     if (feedDataSources.isNotEmpty) {
-      await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(postEntity);
+      await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
     }
   }
 }
