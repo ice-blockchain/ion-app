@@ -73,7 +73,7 @@ class FeedMainModalPage extends StatelessWidget {
                               videoPath: result[0].path,
                             ).push<bool>(context) ??
                             false;
-                            
+
                         final shouldShowPicker = !postWasCreated;
 
                         if (shouldShowPicker && context.mounted) {
