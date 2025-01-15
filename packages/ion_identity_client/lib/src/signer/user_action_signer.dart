@@ -2,7 +2,6 @@
 
 import 'package:ion_identity_client/src/auth/dtos/credential_request_data.c.dart';
 import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
-import 'package:ion_identity_client/src/core/types/ion_exception.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 import 'package:ion_identity_client/src/signer/data_sources/user_action_signer_data_source.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
@@ -52,7 +51,7 @@ class UserActionSigner {
       // The assertion here is obtained by using the password to unlock
       // a password-protected key. If this key is unavailable, an exception is thrown.
       obtainAssertion: (challenge) async {
-        final credentialDescriptor = _extractPasswordProtectedCredentials(challenge);
+        final credentialDescriptor = identitySigner.extractPasswordProtectedCredentials(challenge);
 
         return identitySigner.signWithPassword(
           challenge: challenge.challenge,
@@ -74,7 +73,7 @@ class UserActionSigner {
       request: request,
       responseDecoder: responseDecoder,
       obtainAssertion: (challenge) async {
-        final credentialDescriptor = _extractPasswordProtectedCredentials(challenge);
+        final credentialDescriptor = identitySigner.extractPasswordProtectedCredentials(challenge);
 
         return identitySigner.signWithBiometrics(
           challenge: challenge.challenge,
@@ -85,18 +84,6 @@ class UserActionSigner {
         );
       },
     );
-  }
-
-  PublicKeyCredentialDescriptor _extractPasswordProtectedCredentials(
-    UserActionChallenge challenge,
-  ) {
-    final credentialDescriptor = challenge.allowCredentials.passwordProtectedKey?.firstOrNull;
-    // If no password-protected credential is available, throw an exception.
-    if (credentialDescriptor == null || credentialDescriptor.encryptedPrivateKey == null) {
-      throw const PasswordFlowNotAvailableForTheUserException();
-    }
-
-    return credentialDescriptor;
   }
 
   /// A private helper method that encapsulates the shared logic for both signWithPasskey and signWithPassword.
