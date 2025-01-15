@@ -58,7 +58,11 @@ class Post extends ConsumerWidget {
             UserInfo(
               pubkey: eventReference.pubkey,
               trailing: isOwnedByCurrentUser
-                  ? DeleteFeedItemMenu(postEntity: postEntity, onDelete: onDelete)
+                  ? DeleteFeedItemMenu(
+                      entity: postEntity,
+                      onDelete: onDelete,
+                      kind: PostEntity.kind,
+                    )
                   : UserInfoMenu(pubkey: eventReference.pubkey),
             ),
         SizedBox(height: 10.0.s),
