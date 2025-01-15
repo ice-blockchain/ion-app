@@ -9,12 +9,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'current_user_wallets_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<Wallet>> currentUserWallets(Ref ref) async {
-  final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+Future<List<WalletView>> currentUserWallets(Ref ref) async {
+  final currentIdentityKeyName =
+      ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentIdentityKeyName == null) {
     return [];
   }
 
   final ionIdentity = await ref.watch(ionIdentityProvider.future);
-  return ionIdentity(username: currentIdentityKeyName).wallets.getWallets();
+  final identity = ionIdentity(username: currentIdentityKeyName);
+
+  final shortViews = await identity.wallets.getWalletViews();
+  final viewsDetails = await Future.wait(
+    shortViews.map((e) => identity.wallets.getWalletView(e.name)),
+  );
+
+  return viewsDetails;
 }

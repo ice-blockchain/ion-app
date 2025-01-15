@@ -172,7 +172,7 @@ class __$$WalletAssetImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$WalletAssetImpl implements _WalletAsset {
-  _$WalletAssetImpl(
+  const _$WalletAssetImpl(
       {required this.name,
       required this.contract,
       required this.symbol,
@@ -239,7 +239,7 @@ class _$WalletAssetImpl implements _WalletAsset {
 }
 
 abstract class _WalletAsset implements WalletAsset {
-  factory _WalletAsset(
+  const factory _WalletAsset(
       {required final String? name,
       required final String? contract,
       required final String symbol,

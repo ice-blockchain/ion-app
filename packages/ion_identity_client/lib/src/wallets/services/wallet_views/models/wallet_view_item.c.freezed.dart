@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'wallet_view_item.dart';
+part of 'wallet_view_item.c.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -20,7 +20,7 @@ WalletViewItem _$WalletViewItemFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WalletViewItem {
-  String get coin => throw _privateConstructorUsedError;
+  String get coinId => throw _privateConstructorUsedError;
   String get walletId => throw _privateConstructorUsedError;
 
   /// Serializes this WalletViewItem to a JSON map.
@@ -39,7 +39,7 @@ abstract class $WalletViewItemCopyWith<$Res> {
           WalletViewItem value, $Res Function(WalletViewItem) then) =
       _$WalletViewItemCopyWithImpl<$Res, WalletViewItem>;
   @useResult
-  $Res call({String coin, String walletId});
+  $Res call({String coinId, String walletId});
 }
 
 /// @nodoc
@@ -57,13 +57,13 @@ class _$WalletViewItemCopyWithImpl<$Res, $Val extends WalletViewItem>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? coin = null,
+    Object? coinId = null,
     Object? walletId = null,
   }) {
     return _then(_value.copyWith(
-      coin: null == coin
-          ? _value.coin
-          : coin // ignore: cast_nullable_to_non_nullable
+      coinId: null == coinId
+          ? _value.coinId
+          : coinId // ignore: cast_nullable_to_non_nullable
               as String,
       walletId: null == walletId
           ? _value.walletId
@@ -81,7 +81,7 @@ abstract class _$$WalletViewItemImplCopyWith<$Res>
       __$$WalletViewItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String coin, String walletId});
+  $Res call({String coinId, String walletId});
 }
 
 /// @nodoc
@@ -97,13 +97,13 @@ class __$$WalletViewItemImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? coin = null,
+    Object? coinId = null,
     Object? walletId = null,
   }) {
     return _then(_$WalletViewItemImpl(
-      coin: null == coin
-          ? _value.coin
-          : coin // ignore: cast_nullable_to_non_nullable
+      coinId: null == coinId
+          ? _value.coinId
+          : coinId // ignore: cast_nullable_to_non_nullable
               as String,
       walletId: null == walletId
           ? _value.walletId
@@ -116,19 +116,19 @@ class __$$WalletViewItemImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$WalletViewItemImpl implements _WalletViewItem {
-  const _$WalletViewItemImpl({required this.coin, required this.walletId});
+  const _$WalletViewItemImpl({required this.coinId, required this.walletId});
 
   factory _$WalletViewItemImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletViewItemImplFromJson(json);
 
   @override
-  final String coin;
+  final String coinId;
   @override
   final String walletId;
 
   @override
   String toString() {
-    return 'WalletViewItem(coin: $coin, walletId: $walletId)';
+    return 'WalletViewItem(coinId: $coinId, walletId: $walletId)';
   }
 
   @override
@@ -136,14 +136,14 @@ class _$WalletViewItemImpl implements _WalletViewItem {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$WalletViewItemImpl &&
-            (identical(other.coin, coin) || other.coin == coin) &&
+            (identical(other.coinId, coinId) || other.coinId == coinId) &&
             (identical(other.walletId, walletId) ||
                 other.walletId == walletId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, coin, walletId);
+  int get hashCode => Object.hash(runtimeType, coinId, walletId);
 
   /// Create a copy of WalletViewItem
   /// with the given fields replaced by the non-null parameter values.
@@ -164,14 +164,14 @@ class _$WalletViewItemImpl implements _WalletViewItem {
 
 abstract class _WalletViewItem implements WalletViewItem {
   const factory _WalletViewItem(
-      {required final String coin,
+      {required final String coinId,
       required final String walletId}) = _$WalletViewItemImpl;
 
   factory _WalletViewItem.fromJson(Map<String, dynamic> json) =
       _$WalletViewItemImpl.fromJson;
 
   @override
-  String get coin;
+  String get coinId;
   @override
   String get walletId;
 

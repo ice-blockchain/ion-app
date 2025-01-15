@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'wallet_view_coin_data.dart';
+part of 'wallet_view_coin_data.c.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -9,15 +9,13 @@ part of 'wallet_view_coin_data.dart';
 _$WalletViewCoinDataImpl _$$WalletViewCoinDataImplFromJson(
         Map<String, dynamic> json) =>
     _$WalletViewCoinDataImpl(
-      totalBalance: json['totalBalance'] as Map<String, dynamic>,
-      wallets: (json['wallets'] as List<dynamic>)
-          .map((e) => WalletViewWallet.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      walletId: json['walletId'] as String,
+      coinId: json['coinId'] as String,
     );
 
 Map<String, dynamic> _$$WalletViewCoinDataImplToJson(
         _$WalletViewCoinDataImpl instance) =>
     <String, dynamic>{
-      'totalBalance': instance.totalBalance,
-      'wallets': instance.wallets.map((e) => e.toJson()).toList(),
+      'walletId': instance.walletId,
+      'coinId': instance.coinId,
     };

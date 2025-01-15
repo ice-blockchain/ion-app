@@ -5,14 +5,14 @@ import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/contact_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
-import 'package:ion/app/features/wallet/model/wallet_data.c.dart';
+import 'package:ion/app/features/wallet/model/wallet_view_data.c.dart';
 
 part 'crypto_asset_data.c.freezed.dart';
 
 @freezed
 class CryptoAssetData with _$CryptoAssetData {
   const factory CryptoAssetData({
-    required WalletData wallet,
+    required WalletViewData wallet,
     required NetworkType selectedNetwork,
     required int arrivalTime,
     required DateTime arrivalDateTime,

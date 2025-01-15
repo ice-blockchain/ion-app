@@ -1,0 +1,33 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'short_wallet_view.c.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$ShortWalletViewImpl _$$ShortWalletViewImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ShortWalletViewImpl(
+      name: json['name'] as String,
+      coins: (json['coins'] as List<dynamic>)
+          .map((e) => WalletViewCoinData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      symbolGroups: (json['symbolGroups'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String,
+      userId: json['userId'] as String,
+    );
+
+Map<String, dynamic> _$$ShortWalletViewImplToJson(
+        _$ShortWalletViewImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'coins': instance.coins.map((e) => e.toJson()).toList(),
+      'symbolGroups': instance.symbolGroups,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'userId': instance.userId,
+    };

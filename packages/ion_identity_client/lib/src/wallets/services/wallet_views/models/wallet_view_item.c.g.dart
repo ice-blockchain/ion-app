@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'wallet_view_item.dart';
+part of 'wallet_view_item.c.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -8,13 +8,13 @@ part of 'wallet_view_item.dart';
 
 _$WalletViewItemImpl _$$WalletViewItemImplFromJson(Map<String, dynamic> json) =>
     _$WalletViewItemImpl(
-      coin: json['coin'] as String,
+      coinId: json['coinId'] as String,
       walletId: json['walletId'] as String,
     );
 
 Map<String, dynamic> _$$WalletViewItemImplToJson(
         _$WalletViewItemImpl instance) =>
     <String, dynamic>{
-      'coin': instance.coin,
+      'coinId': instance.coinId,
       'walletId': instance.walletId,
     };

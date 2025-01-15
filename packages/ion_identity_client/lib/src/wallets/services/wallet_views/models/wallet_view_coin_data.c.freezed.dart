@@ -20,8 +20,8 @@ WalletViewCoinData _$WalletViewCoinDataFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WalletViewCoinData {
-  Map<String, dynamic> get totalBalance => throw _privateConstructorUsedError;
-  List<WalletViewWallet> get wallets => throw _privateConstructorUsedError;
+  String get walletId => throw _privateConstructorUsedError;
+  String get coinId => throw _privateConstructorUsedError;
 
   /// Serializes this WalletViewCoinData to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,8 +39,7 @@ abstract class $WalletViewCoinDataCopyWith<$Res> {
           WalletViewCoinData value, $Res Function(WalletViewCoinData) then) =
       _$WalletViewCoinDataCopyWithImpl<$Res, WalletViewCoinData>;
   @useResult
-  $Res call(
-      {Map<String, dynamic> totalBalance, List<WalletViewWallet> wallets});
+  $Res call({String walletId, String coinId});
 }
 
 /// @nodoc
@@ -58,18 +57,18 @@ class _$WalletViewCoinDataCopyWithImpl<$Res, $Val extends WalletViewCoinData>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? totalBalance = null,
-    Object? wallets = null,
+    Object? walletId = null,
+    Object? coinId = null,
   }) {
     return _then(_value.copyWith(
-      totalBalance: null == totalBalance
-          ? _value.totalBalance
-          : totalBalance // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      wallets: null == wallets
-          ? _value.wallets
-          : wallets // ignore: cast_nullable_to_non_nullable
-              as List<WalletViewWallet>,
+      walletId: null == walletId
+          ? _value.walletId
+          : walletId // ignore: cast_nullable_to_non_nullable
+              as String,
+      coinId: null == coinId
+          ? _value.coinId
+          : coinId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -82,8 +81,7 @@ abstract class _$$WalletViewCoinDataImplCopyWith<$Res>
       __$$WalletViewCoinDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Map<String, dynamic> totalBalance, List<WalletViewWallet> wallets});
+  $Res call({String walletId, String coinId});
 }
 
 /// @nodoc
@@ -99,18 +97,18 @@ class __$$WalletViewCoinDataImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? totalBalance = null,
-    Object? wallets = null,
+    Object? walletId = null,
+    Object? coinId = null,
   }) {
     return _then(_$WalletViewCoinDataImpl(
-      totalBalance: null == totalBalance
-          ? _value._totalBalance
-          : totalBalance // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>,
-      wallets: null == wallets
-          ? _value._wallets
-          : wallets // ignore: cast_nullable_to_non_nullable
-              as List<WalletViewWallet>,
+      walletId: null == walletId
+          ? _value.walletId
+          : walletId // ignore: cast_nullable_to_non_nullable
+              as String,
+      coinId: null == coinId
+          ? _value.coinId
+          : coinId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -119,33 +117,19 @@ class __$$WalletViewCoinDataImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WalletViewCoinDataImpl implements _WalletViewCoinData {
   const _$WalletViewCoinDataImpl(
-      {required final Map<String, dynamic> totalBalance,
-      required final List<WalletViewWallet> wallets})
-      : _totalBalance = totalBalance,
-        _wallets = wallets;
+      {required this.walletId, required this.coinId});
 
   factory _$WalletViewCoinDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletViewCoinDataImplFromJson(json);
 
-  final Map<String, dynamic> _totalBalance;
   @override
-  Map<String, dynamic> get totalBalance {
-    if (_totalBalance is EqualUnmodifiableMapView) return _totalBalance;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_totalBalance);
-  }
-
-  final List<WalletViewWallet> _wallets;
+  final String walletId;
   @override
-  List<WalletViewWallet> get wallets {
-    if (_wallets is EqualUnmodifiableListView) return _wallets;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_wallets);
-  }
+  final String coinId;
 
   @override
   String toString() {
-    return 'WalletViewCoinData(totalBalance: $totalBalance, wallets: $wallets)';
+    return 'WalletViewCoinData(walletId: $walletId, coinId: $coinId)';
   }
 
   @override
@@ -153,17 +137,14 @@ class _$WalletViewCoinDataImpl implements _WalletViewCoinData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$WalletViewCoinDataImpl &&
-            const DeepCollectionEquality()
-                .equals(other._totalBalance, _totalBalance) &&
-            const DeepCollectionEquality().equals(other._wallets, _wallets));
+            (identical(other.walletId, walletId) ||
+                other.walletId == walletId) &&
+            (identical(other.coinId, coinId) || other.coinId == coinId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_totalBalance),
-      const DeepCollectionEquality().hash(_wallets));
+  int get hashCode => Object.hash(runtimeType, walletId, coinId);
 
   /// Create a copy of WalletViewCoinData
   /// with the given fields replaced by the non-null parameter values.
@@ -184,17 +165,16 @@ class _$WalletViewCoinDataImpl implements _WalletViewCoinData {
 
 abstract class _WalletViewCoinData implements WalletViewCoinData {
   const factory _WalletViewCoinData(
-          {required final Map<String, dynamic> totalBalance,
-          required final List<WalletViewWallet> wallets}) =
-      _$WalletViewCoinDataImpl;
+      {required final String walletId,
+      required final String coinId}) = _$WalletViewCoinDataImpl;
 
   factory _WalletViewCoinData.fromJson(Map<String, dynamic> json) =
       _$WalletViewCoinDataImpl.fromJson;
 
   @override
-  Map<String, dynamic> get totalBalance;
+  String get walletId;
   @override
-  List<WalletViewWallet> get wallets;
+  String get coinId;
 
   /// Create a copy of WalletViewCoinData
   /// with the given fields replaced by the non-null parameter values.

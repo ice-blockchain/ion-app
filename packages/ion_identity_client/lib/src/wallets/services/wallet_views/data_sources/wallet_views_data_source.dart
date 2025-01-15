@@ -2,11 +2,11 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
-import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_wallet_view_request.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_wallet_view_request.c.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.c.dart';
 import 'package:sprintf/sprintf.dart';
 
 class WalletViewsDataSource {
@@ -21,119 +21,96 @@ class WalletViewsDataSource {
   static const _basePath = '/v1/users/%s/wallet-views';
   static const _specificViewPath = '/v1/users/%s/wallet-views/%s';
 
-  Future<List<WalletView>> getWalletViews(String username, String userId) async {
+  UserToken _token(String username) {
     final token = _tokenStorage.getToken(username: username);
     if (token == null) {
       throw const UnauthenticatedException();
     }
-
-    try {
-      final response = await _networkClient.get(
-        sprintf(_basePath, [userId]),
-        headers: RequestHeaders.getAuthorizationHeaders(
-          token: token.token,
-          username: username,
-        ),
-        decoder: (json) => parseList(json, fromJson: WalletView.fromJson),
-      );
-      return response;
-    } on NetworkException {
-      rethrow;
-    }
+    return token;
   }
 
-  Future<WalletView> createWalletView(
+  Future<List<ShortWalletView>> getWalletViews(
+    String username,
+    String userId,
+  ) async {
+    final token = _token(username);
+
+    final result = await _networkClient.get(
+      sprintf(_basePath, [userId]),
+      headers: RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
+      decoder: (json) => parseList(json, fromJson: ShortWalletView.fromJson),
+    );
+    return result;
+  }
+
+  Future<ShortWalletView> createWalletView(
     String username,
     CreateWalletViewRequest request,
-  ) async {
-    final token = _tokenStorage.getToken(username: username);
-    if (token == null) {
-      throw const UnauthenticatedException();
-    }
+  ) {
+    final token = _token(username);
 
-    try {
-      return await _networkClient.post(
-        sprintf(_basePath, [username]),
-        headers: RequestHeaders.getAuthorizationHeaders(
-          token: token.token,
-          username: username,
-        ),
-        data: request.toJson(),
-        decoder: (json) => parseJsonObject(json, fromJson: WalletView.fromJson),
-      );
-    } on NetworkException {
-      rethrow;
-    }
+    return _networkClient.post(
+      sprintf(_basePath, [username]),
+      headers: RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
+      data: request.toJson(),
+      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+    );
   }
 
-  Future<WalletView> getWalletView(
-    String username,
-    String viewName,
-  ) async {
-    final token = _tokenStorage.getToken(username: username);
-    if (token == null) {
-      throw const UnauthenticatedException();
-    }
+  Future<WalletView> getWalletView({
+    required String userId,
+    required String username,
+    required String viewName,
+  }) async {
+    final token = _token(username);
 
-    try {
-      return await _networkClient.get(
-        sprintf(_specificViewPath, [username, viewName]),
-        headers: RequestHeaders.getAuthorizationHeaders(
-          token: token.token,
-          username: username,
-        ),
-        decoder: (json) => parseJsonObject(json, fromJson: WalletView.fromJson),
-      );
-    } on NetworkException {
-      rethrow;
-    }
+    return _networkClient.get(
+      sprintf(_specificViewPath, [userId, viewName]),
+      headers: RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
+      decoder: (json) => parseJsonObject(json, fromJson: WalletView.fromJson),
+    );
   }
 
-  Future<WalletView> updateWalletView(
+  Future<ShortWalletView> updateWalletView(
     String username,
     String viewName,
     CreateWalletViewRequest request,
-  ) async {
-    final token = _tokenStorage.getToken(username: username);
-    if (token == null) {
-      throw const UnauthenticatedException();
-    }
+  ) {
+    final token = _token(username);
 
-    try {
-      return await _networkClient.put(
-        sprintf(_specificViewPath, [username, viewName]),
-        headers: RequestHeaders.getAuthorizationHeaders(
-          token: token.token,
-          username: username,
-        ),
-        data: request.toJson(),
-        decoder: (json) => parseJsonObject(json, fromJson: WalletView.fromJson),
-      );
-    } on NetworkException {
-      rethrow;
-    }
+    return _networkClient.put(
+      sprintf(_specificViewPath, [username, viewName]),
+      headers: RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
+      data: request.toJson(),
+      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+    );
   }
 
   Future<void> deleteWalletView(
     String username,
     String viewName,
   ) async {
-    final token = _tokenStorage.getToken(username: username);
-    if (token == null) {
-      throw const UnauthenticatedException();
-    }
+    final token = _token(username);
 
-    try {
-      await _networkClient.delete(
-        sprintf(_specificViewPath, [username, viewName]),
-        headers: RequestHeaders.getAuthorizationHeaders(
-          token: token.token,
-          username: username,
-        ),
-        decoder: (json) => null,
-      );
-    } on NetworkException {
-      rethrow;
-    }
+    await _networkClient.delete(
+      sprintf(_specificViewPath, [username, viewName]),
+      headers: RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
+      decoder: (json) => null,
+    );
   }
 }

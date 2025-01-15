@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallet/model/wallet_data.c.dart';
+import 'package:ion/app/features/wallet/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
 
 class WalletsList extends ConsumerWidget {
@@ -12,7 +12,7 @@ class WalletsList extends ConsumerWidget {
     super.key,
   });
 
-  final Widget Function(WalletData) itemBuilder;
+  final Widget Function(WalletViewData) itemBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

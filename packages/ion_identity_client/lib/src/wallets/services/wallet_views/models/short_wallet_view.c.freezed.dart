@@ -14,83 +14,82 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-WalletView _$WalletViewFromJson(Map<String, dynamic> json) {
-  return _WalletView.fromJson(json);
+ShortWalletView _$ShortWalletViewFromJson(Map<String, dynamic> json) {
+  return _ShortWalletView.fromJson(json);
 }
 
 /// @nodoc
-mixin _$WalletView {
-  Map<String, WalletViewCoinData> get coins =>
-      throw _privateConstructorUsedError;
-  String get createdAt => throw _privateConstructorUsedError;
-  List<WalletViewItem> get items => throw _privateConstructorUsedError;
+mixin _$ShortWalletView {
   String get name => throw _privateConstructorUsedError;
+  List<WalletViewCoinData> get coins => throw _privateConstructorUsedError;
+  List<String> get symbolGroups => throw _privateConstructorUsedError;
+  String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
 
-  /// Serializes this WalletView to a JSON map.
+  /// Serializes this ShortWalletView to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of WalletView
+  /// Create a copy of ShortWalletView
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $WalletViewCopyWith<WalletView> get copyWith =>
+  $ShortWalletViewCopyWith<ShortWalletView> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $WalletViewCopyWith<$Res> {
-  factory $WalletViewCopyWith(
-          WalletView value, $Res Function(WalletView) then) =
-      _$WalletViewCopyWithImpl<$Res, WalletView>;
+abstract class $ShortWalletViewCopyWith<$Res> {
+  factory $ShortWalletViewCopyWith(
+          ShortWalletView value, $Res Function(ShortWalletView) then) =
+      _$ShortWalletViewCopyWithImpl<$Res, ShortWalletView>;
   @useResult
   $Res call(
-      {Map<String, WalletViewCoinData> coins,
+      {String name,
+      List<WalletViewCoinData> coins,
+      List<String> symbolGroups,
       String createdAt,
-      List<WalletViewItem> items,
-      String name,
       String updatedAt,
       String userId});
 }
 
 /// @nodoc
-class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView>
-    implements $WalletViewCopyWith<$Res> {
-  _$WalletViewCopyWithImpl(this._value, this._then);
+class _$ShortWalletViewCopyWithImpl<$Res, $Val extends ShortWalletView>
+    implements $ShortWalletViewCopyWith<$Res> {
+  _$ShortWalletViewCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of WalletView
+  /// Create a copy of ShortWalletView
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? coins = null,
-    Object? createdAt = null,
-    Object? items = null,
     Object? name = null,
+    Object? coins = null,
+    Object? symbolGroups = null,
+    Object? createdAt = null,
     Object? updatedAt = null,
     Object? userId = null,
   }) {
     return _then(_value.copyWith(
-      coins: null == coins
-          ? _value.coins
-          : coins // ignore: cast_nullable_to_non_nullable
-              as Map<String, WalletViewCoinData>,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
-      items: null == items
-          ? _value.items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<WalletViewItem>,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      coins: null == coins
+          ? _value.coins
+          : coins // ignore: cast_nullable_to_non_nullable
+              as List<WalletViewCoinData>,
+      symbolGroups: null == symbolGroups
+          ? _value.symbolGroups
+          : symbolGroups // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
       updatedAt: null == updatedAt
           ? _value.updatedAt
@@ -105,58 +104,58 @@ class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView>
 }
 
 /// @nodoc
-abstract class _$$WalletViewImplCopyWith<$Res>
-    implements $WalletViewCopyWith<$Res> {
-  factory _$$WalletViewImplCopyWith(
-          _$WalletViewImpl value, $Res Function(_$WalletViewImpl) then) =
-      __$$WalletViewImplCopyWithImpl<$Res>;
+abstract class _$$ShortWalletViewImplCopyWith<$Res>
+    implements $ShortWalletViewCopyWith<$Res> {
+  factory _$$ShortWalletViewImplCopyWith(_$ShortWalletViewImpl value,
+          $Res Function(_$ShortWalletViewImpl) then) =
+      __$$ShortWalletViewImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {Map<String, WalletViewCoinData> coins,
+      {String name,
+      List<WalletViewCoinData> coins,
+      List<String> symbolGroups,
       String createdAt,
-      List<WalletViewItem> items,
-      String name,
       String updatedAt,
       String userId});
 }
 
 /// @nodoc
-class __$$WalletViewImplCopyWithImpl<$Res>
-    extends _$WalletViewCopyWithImpl<$Res, _$WalletViewImpl>
-    implements _$$WalletViewImplCopyWith<$Res> {
-  __$$WalletViewImplCopyWithImpl(
-      _$WalletViewImpl _value, $Res Function(_$WalletViewImpl) _then)
+class __$$ShortWalletViewImplCopyWithImpl<$Res>
+    extends _$ShortWalletViewCopyWithImpl<$Res, _$ShortWalletViewImpl>
+    implements _$$ShortWalletViewImplCopyWith<$Res> {
+  __$$ShortWalletViewImplCopyWithImpl(
+      _$ShortWalletViewImpl _value, $Res Function(_$ShortWalletViewImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of WalletView
+  /// Create a copy of ShortWalletView
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? coins = null,
-    Object? createdAt = null,
-    Object? items = null,
     Object? name = null,
+    Object? coins = null,
+    Object? symbolGroups = null,
+    Object? createdAt = null,
     Object? updatedAt = null,
     Object? userId = null,
   }) {
-    return _then(_$WalletViewImpl(
-      coins: null == coins
-          ? _value._coins
-          : coins // ignore: cast_nullable_to_non_nullable
-              as Map<String, WalletViewCoinData>,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
-      items: null == items
-          ? _value._items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<WalletViewItem>,
+    return _then(_$ShortWalletViewImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      coins: null == coins
+          ? _value._coins
+          : coins // ignore: cast_nullable_to_non_nullable
+              as List<WalletViewCoinData>,
+      symbolGroups: null == symbolGroups
+          ? _value._symbolGroups
+          : symbolGroups // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
       updatedAt: null == updatedAt
           ? _value.updatedAt
@@ -172,40 +171,40 @@ class __$$WalletViewImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$WalletViewImpl implements _WalletView {
-  const _$WalletViewImpl(
-      {required final Map<String, WalletViewCoinData> coins,
+class _$ShortWalletViewImpl implements _ShortWalletView {
+  const _$ShortWalletViewImpl(
+      {required this.name,
+      required final List<WalletViewCoinData> coins,
+      required final List<String> symbolGroups,
       required this.createdAt,
-      required final List<WalletViewItem> items,
-      required this.name,
       required this.updatedAt,
       required this.userId})
       : _coins = coins,
-        _items = items;
+        _symbolGroups = symbolGroups;
 
-  factory _$WalletViewImpl.fromJson(Map<String, dynamic> json) =>
-      _$$WalletViewImplFromJson(json);
+  factory _$ShortWalletViewImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ShortWalletViewImplFromJson(json);
 
-  final Map<String, WalletViewCoinData> _coins;
   @override
-  Map<String, WalletViewCoinData> get coins {
-    if (_coins is EqualUnmodifiableMapView) return _coins;
+  final String name;
+  final List<WalletViewCoinData> _coins;
+  @override
+  List<WalletViewCoinData> get coins {
+    if (_coins is EqualUnmodifiableListView) return _coins;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_coins);
+    return EqualUnmodifiableListView(_coins);
+  }
+
+  final List<String> _symbolGroups;
+  @override
+  List<String> get symbolGroups {
+    if (_symbolGroups is EqualUnmodifiableListView) return _symbolGroups;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_symbolGroups);
   }
 
   @override
   final String createdAt;
-  final List<WalletViewItem> _items;
-  @override
-  List<WalletViewItem> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
-  }
-
-  @override
-  final String name;
   @override
   final String updatedAt;
   @override
@@ -213,19 +212,20 @@ class _$WalletViewImpl implements _WalletView {
 
   @override
   String toString() {
-    return 'WalletView(coins: $coins, createdAt: $createdAt, items: $items, name: $name, updatedAt: $updatedAt, userId: $userId)';
+    return 'ShortWalletView(name: $name, coins: $coins, symbolGroups: $symbolGroups, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$WalletViewImpl &&
+            other is _$ShortWalletViewImpl &&
+            (identical(other.name, name) || other.name == name) &&
             const DeepCollectionEquality().equals(other._coins, _coins) &&
+            const DeepCollectionEquality()
+                .equals(other._symbolGroups, _symbolGroups) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
-            (identical(other.name, name) || other.name == name) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.userId, userId) || other.userId == userId));
@@ -235,58 +235,59 @@ class _$WalletViewImpl implements _WalletView {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_coins),
-      createdAt,
-      const DeepCollectionEquality().hash(_items),
       name,
+      const DeepCollectionEquality().hash(_coins),
+      const DeepCollectionEquality().hash(_symbolGroups),
+      createdAt,
       updatedAt,
       userId);
 
-  /// Create a copy of WalletView
+  /// Create a copy of ShortWalletView
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$WalletViewImplCopyWith<_$WalletViewImpl> get copyWith =>
-      __$$WalletViewImplCopyWithImpl<_$WalletViewImpl>(this, _$identity);
+  _$$ShortWalletViewImplCopyWith<_$ShortWalletViewImpl> get copyWith =>
+      __$$ShortWalletViewImplCopyWithImpl<_$ShortWalletViewImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$WalletViewImplToJson(
+    return _$$ShortWalletViewImplToJson(
       this,
     );
   }
 }
 
-abstract class _WalletView implements WalletView {
-  const factory _WalletView(
-      {required final Map<String, WalletViewCoinData> coins,
+abstract class _ShortWalletView implements ShortWalletView {
+  const factory _ShortWalletView(
+      {required final String name,
+      required final List<WalletViewCoinData> coins,
+      required final List<String> symbolGroups,
       required final String createdAt,
-      required final List<WalletViewItem> items,
-      required final String name,
       required final String updatedAt,
-      required final String userId}) = _$WalletViewImpl;
+      required final String userId}) = _$ShortWalletViewImpl;
 
-  factory _WalletView.fromJson(Map<String, dynamic> json) =
-      _$WalletViewImpl.fromJson;
+  factory _ShortWalletView.fromJson(Map<String, dynamic> json) =
+      _$ShortWalletViewImpl.fromJson;
 
-  @override
-  Map<String, WalletViewCoinData> get coins;
-  @override
-  String get createdAt;
-  @override
-  List<WalletViewItem> get items;
   @override
   String get name;
+  @override
+  List<WalletViewCoinData> get coins;
+  @override
+  List<String> get symbolGroups;
+  @override
+  String get createdAt;
   @override
   String get updatedAt;
   @override
   String get userId;
 
-  /// Create a copy of WalletView
+  /// Create a copy of ShortWalletView
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$WalletViewImplCopyWith<_$WalletViewImpl> get copyWith =>
+  _$$ShortWalletViewImplCopyWith<_$ShortWalletViewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

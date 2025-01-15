@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/wallet/model/wallet_data.c.dart';
+import 'package:ion/app/features/wallet/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
@@ -114,7 +114,7 @@ void main() {
 
       final result = await container.read(walletByIdProvider(id: '1').future);
 
-      expect(result, isA<WalletData>());
+      expect(result, isA<WalletViewData>());
       expect(result.id, '1');
     });
 

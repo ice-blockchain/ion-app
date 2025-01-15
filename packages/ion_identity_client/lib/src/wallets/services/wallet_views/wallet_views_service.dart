@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/src/wallets/services/wallet_views/data_sources/wallet_views_data_source.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_wallet_view_request.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_wallet_view_request.c.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/short_wallet_view.c.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.c.dart';
 
 class WalletViewsService {
   const WalletViewsService(
@@ -13,19 +14,27 @@ class WalletViewsService {
   final String username;
   final WalletViewsDataSource _walletViewsDataSource;
 
-  Future<List<WalletView>> getWalletViews(String userId) async {
+  Future<List<ShortWalletView>> getWalletViews(String userId) async {
     return _walletViewsDataSource.getWalletViews(username, userId);
   }
 
-  Future<WalletView> createWalletView(CreateWalletViewRequest request) async {
+  Future<ShortWalletView> createWalletView(
+      CreateWalletViewRequest request) async {
     return _walletViewsDataSource.createWalletView(username, request);
   }
 
-  Future<WalletView> getWalletView(String viewName) async {
-    return _walletViewsDataSource.getWalletView(username, viewName);
+  Future<WalletView> getWalletView({
+    required String userId,
+    required String viewName,
+  }) async {
+    return _walletViewsDataSource.getWalletView(
+      userId: userId,
+      username: username,
+      viewName: viewName,
+    );
   }
 
-  Future<WalletView> updateWalletView(
+  Future<ShortWalletView> updateWalletView(
     String viewName,
     CreateWalletViewRequest request,
   ) async {

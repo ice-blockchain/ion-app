@@ -5,7 +5,7 @@ import 'package:ion/app/features/wallet/model/contact_data.c.dart';
 import 'package:ion/app/features/wallet/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
-import 'package:ion/app/features/wallet/model/wallet_data.c.dart';
+import 'package:ion/app/features/wallet/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,7 +23,7 @@ class SendAssetFormController extends _$SendAssetFormController {
     return CryptoAssetData(
       selectedNetwork: NetworkType.eth,
       wallet: wallet ??
-          const WalletData(
+          const WalletViewData(
             id: '1',
             name: 'Wallet 1',
             balance: 0,
