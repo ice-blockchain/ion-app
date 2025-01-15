@@ -42,15 +42,13 @@ class GetCoinsDataSource {
         username: username,
       ),
       decoder: (response) {
+        if (response is String && response.isEmpty) {
+          return CoinsResponse(coins: [], version: currentVersion);
+        }
+
         return parseJsonObject(
           response,
-          fromJson: (response) {
-            if (response.isEmpty) {
-              return CoinsResponse(coins: [], version: currentVersion);
-            }
-
-            return CoinsResponse.fromJson(response);
-          },
+          fromJson: CoinsResponse.fromJson,
         );
       },
     );
