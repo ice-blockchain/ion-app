@@ -3,8 +3,8 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/services/text_parser/text_match.dart';
-import 'package:ion/app/services/text_parser/text_matcher.dart';
+import 'package:ion/app/services/text_parser/model/text_match.c.dart';
+import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
 mixin EntityMediaDataMixin {
   List<TextMatch> get content;
@@ -23,11 +23,8 @@ mixin EntityMediaDataMixin {
           media.containsKey(previousMatch?.text) &&
           match.text.startsWith(' ')) {
         result.add(
-          TextMatch(
-            match.text.substring(1),
-            groups: match.groups,
-            matcher: match.matcher,
-            matcherIndex: match.matcherIndex,
+          match.copyWith(
+            text: match.text.substring(1),
             offset: match.offset + 1,
           ),
         );

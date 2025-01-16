@@ -24,8 +24,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/services/text_parser/text_match.dart';
-import 'package:ion/app/services/text_parser/text_matcher.dart';
+import 'package:ion/app/services/text_parser/model/text_match.c.dart';
+import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
