@@ -49,7 +49,7 @@ Future<VerifyIdentityType> verifyIdentityType(
   Ref ref, {
   String? identityKeyName,
 }) async {
-  final username = identityKeyName ?? ref.read(currentIdentityKeyNameSelectorProvider);
+  final username = identityKeyName ?? ref.watch(currentIdentityKeyNameSelectorProvider);
   final ionIdentity = await ref.read(ionIdentityProvider.future);
 
   if (username != null) {
