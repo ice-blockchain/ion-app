@@ -67,12 +67,14 @@ class ProfileEditPage extends HookConsumerWidget {
                                     SizedBox(height: paddingValue),
                                     NameInput(
                                       initialValue: userMetadata.data.displayName,
+                                      isLive: true,
                                       onChanged: (text) =>
                                           update(draftRef.value.copyWith(displayName: text)),
                                     ),
                                     SizedBox(height: paddingValue),
                                     NicknameInput(
                                       initialValue: userMetadata.data.name,
+                                      isLive: true,
                                       onChanged: (text) =>
                                           update(draftRef.value.copyWith(name: text)),
                                     ),
