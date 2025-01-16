@@ -57,16 +57,21 @@ class IONIdentityAuth {
   Future<void> registerUserWithPassword(String password) =>
       registerService.registerWithPassword(password);
 
+  Future<void> verifyUserLoginFlow() => loginService.verifyUserLoginFlow();
+
   Future<void> loginUser({
+    required OnVerifyIdentity<AssertionRequestData> onVerifyIdentity,
     bool preferImmediatelyAvailableCredentials = false,
   }) =>
       loginService.loginUser(
+        onVerifyIdentity: onVerifyIdentity,
         preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
       );
 
   Future<void> logOut() => logoutService.logOut();
 
-  String? getUserPrivateKey() => privateKeyStorage.getPrivateKey(username: username);
+  String? getUserPrivateKey() =>
+      privateKeyStorage.getPrivateKey(username: username)?.hexEncodedPrivateKeyBytes;
 
   Future<bool> isPasskeyAvailable() => identitySigner.isPasskeyAvailable();
 

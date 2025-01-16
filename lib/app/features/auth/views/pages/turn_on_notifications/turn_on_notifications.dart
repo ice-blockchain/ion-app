@@ -7,7 +7,6 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/descriptions.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/notifications.dart';
@@ -18,10 +17,6 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class TurnOnNotifications extends ConsumerWidget {
   const TurnOnNotifications({super.key});
-
-  void handleSignIn(WidgetRef ref) {
-    ref.read(loginActionNotifierProvider.notifier).signIn(keyName: '123');
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -18,9 +18,10 @@ AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
   required OnPasskeyFlow<T> onPasskeyFlow,
   required OnBiometricsFlow<T> onBiometricsFlow,
   required String localisedReasonForBiometricsDialog,
+  String? identityKeyName,
 }) {
   return FutureProvider.autoDispose<T>((ref) async {
-    final username = ref.read(currentIdentityKeyNameSelectorProvider)!;
+    final username = identityKeyName ?? ref.read(currentIdentityKeyNameSelectorProvider)!;
     final ionIdentity = await ref.read(ionIdentityProvider.future);
     final isPasswordFlowUser = ionIdentity(username: username).auth.isPasswordFlowUser();
     final biometricsState = ionIdentity(username: username).auth.getBiometricsState();
@@ -44,8 +45,11 @@ AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
 }
 
 @riverpod
-Future<VerifyIdentityType> verifyIdentityType(Ref ref) async {
-  final username = ref.read(currentIdentityKeyNameSelectorProvider);
+Future<VerifyIdentityType> verifyIdentityType(
+  Ref ref, {
+  String? identityKeyName,
+}) async {
+  final username = identityKeyName ?? ref.watch(currentIdentityKeyNameSelectorProvider);
   final ionIdentity = await ref.read(ionIdentityProvider.future);
 
   if (username != null) {

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion_identity_client/src/core/types/types.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'supported_credential_kinds_2.c.g.dart';
@@ -17,7 +17,7 @@ class SupportedCredentialKinds2 {
     return _$SupportedCredentialKinds2FromJson(json);
   }
 
-  final String kind;
+  final CredentialKind kind;
   final String factor;
   final bool requiresSecondFactor;
 

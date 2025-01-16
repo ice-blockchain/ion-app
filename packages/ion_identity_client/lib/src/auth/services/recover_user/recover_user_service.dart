@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/data_sources/recover_user_data_source.dart';
-import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
 class RecoverUserService {
