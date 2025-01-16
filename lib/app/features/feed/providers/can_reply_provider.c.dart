@@ -12,6 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'can_reply_provider.c.g.dart';
 
+const _maxCacheAge = Duration(seconds: 5);
+
 @riverpod
 class CanReply extends _$CanReply {
   DateTime _lastFetchDate = DateTime.now();
@@ -24,7 +26,7 @@ class CanReply extends _$CanReply {
     }
 
     final ionConnectEntity = await ref.read(
-      ionConnectEntityProvider(eventReference: eventReference, skipCache: true).future,
+      ionConnectEntityProvider(eventReference: eventReference, maxCacheAge: _maxCacheAge).future,
     );
     if (ionConnectEntity == null) {
       return true;
@@ -48,7 +50,8 @@ class CanReply extends _$CanReply {
       case WhoCanReplySettingsOption.everyone:
         return true;
       case WhoCanReplySettingsOption.followedAccounts:
-        final followers = await ref.watch(followListProvider(authorPubkey, skipCache: true).future);
+        final followers =
+            await ref.watch(followListProvider(authorPubkey, maxCacheAge: _maxCacheAge).future);
         if (followers == null) {
           return false;
         }
@@ -67,11 +70,13 @@ class CanReply extends _$CanReply {
 
   void refreshIfNeeded(EventReference eventReference) {
     final now = DateTime.now();
-    if (now.difference(_lastFetchDate).inSeconds > 60) {
+    if (now.difference(_lastFetchDate) > _maxCacheAge) {
       _lastFetchDate = now;
       ref
-        ..invalidate(followListProvider(eventReference.pubkey, skipCache: true))
-        ..invalidate(ionConnectEntityProvider(eventReference: eventReference, skipCache: true));
+        ..invalidate(followListProvider(eventReference.pubkey, maxCacheAge: _maxCacheAge))
+        ..invalidate(
+          ionConnectEntityProvider(eventReference: eventReference, maxCacheAge: _maxCacheAge),
+        );
     }
   }
 }

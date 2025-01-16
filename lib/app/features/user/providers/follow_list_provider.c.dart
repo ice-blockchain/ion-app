@@ -17,19 +17,18 @@ part 'follow_list_provider.c.g.dart';
 Future<FollowListEntity?> followList(
   Ref ref,
   String pubkey, {
-  bool skipCache = false,
+  Duration? maxCacheAge,
 }) async {
-  if (!skipCache) {
-    final followList = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<FollowListEntity>(
-          FollowListEntity.cacheKeyBuilder(pubkey: pubkey),
-        ),
+  final followList = ref.watch(
+    ionConnectCacheProvider.select(
+      cacheSelector<FollowListEntity>(
+        FollowListEntity.cacheKeyBuilder(pubkey: pubkey),
+        maxAge: maxCacheAge,
       ),
-    );
-    if (followList != null) {
-      return followList;
-    }
+    ),
+  );
+  if (followList != null) {
+    return followList;
   }
 
   final requestMessage = RequestMessage()

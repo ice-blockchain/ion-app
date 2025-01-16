@@ -14,15 +14,23 @@ mixin CacheableEntity on IonConnectEntity {
   String get cacheKey;
 }
 
+final class CacheEntry {
+  CacheEntry(this.entity, this.cacheDate);
+
+  final CacheableEntity entity;
+  final DateTime cacheDate;
+}
+
 @Riverpod(keepAlive: true)
 class IonConnectCache extends _$IonConnectCache {
   @override
-  Map<String, CacheableEntity> build() {
+  Map<String, CacheEntry> build() {
     return {};
   }
 
   void cache(CacheableEntity event) {
-    state = {...state, event.cacheKey: event};
+    final entry = CacheEntry(event, DateTime.now());
+    state = {...state, event.cacheKey: entry};
     _ionConnectCacheStreamController.sink.add(event);
   }
 
@@ -40,8 +48,18 @@ Raw<Stream<IonConnectEntity>> ionConnectCacheStream(Ref ref) {
 // Move to a generic family provider instead of current `ionConnectCacheProvider.select(cacheSelector<...>())` function
 // when riverpod_generator v3 is released:
 // https://pub.dev/packages/riverpod_generator/versions/3.0.0-dev.11/changelog#300-dev7---2023-10-29
-T? Function(Map<String, CacheableEntity>) cacheSelector<T extends IonConnectEntity>(
-  String key,
-) {
-  return (Map<String, CacheableEntity> state) => state[key] as T?;
+T? Function(Map<String, CacheEntry>) cacheSelector<T extends IonConnectEntity>(
+  String key, {
+  Duration? maxAge,
+}) {
+  return (Map<String, CacheEntry> state) {
+    final entry = state[key];
+    if (entry == null) {
+      return null;
+    }
+    if (maxAge != null && DateTime.now().difference(entry.cacheDate) > maxAge) {
+      return null;
+    }
+    return entry as T?;
+  };
 }
