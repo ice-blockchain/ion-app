@@ -10,9 +10,40 @@ mixin EntityMediaDataMixin {
   List<TextMatch> get content;
   Map<String, MediaAttachment> get media;
 
-  List<TextMatch> get contentWithoutMedia => content.where((match) {
-        return !media.values.any((media) => media.url == match.text);
-      }).toList();
+  List<TextMatch> get contentWithoutMedia {
+    if (media.isEmpty) return content;
+
+    final result = <TextMatch>[];
+    TextMatch? previousMatch;
+
+    // Post-process text to remove leading space after media URLs
+    for (final match in content) {
+      if (match.matcher == null &&
+          previousMatch?.matcher is UrlMatcher &&
+          media.containsKey(previousMatch?.text) &&
+          match.text.startsWith(' ')) {
+        result.add(
+          TextMatch(
+            match.text.substring(1),
+            groups: match.groups,
+            matcher: match.matcher,
+            matcherIndex: match.matcherIndex,
+            offset: match.offset + 1,
+          ),
+        );
+      } else {
+        result.add(match);
+      }
+
+      previousMatch = match;
+    }
+
+    // Filter out URLs from the text content that are present in the media attachments
+    // to avoid showing media URLs in the text when they're already being displayed as actual media
+    return result.where((match) {
+      return !media.values.any((media) => media.url == match.text);
+    }).toList();
+  }
 
   MediaAttachment? get primaryMedia => media.values.firstOrNull;
 
