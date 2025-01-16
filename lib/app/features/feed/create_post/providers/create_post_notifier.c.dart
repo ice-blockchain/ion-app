@@ -60,7 +60,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
         data = data.copyWith(
           content: [
-            ...attachments.map((attachment) => TextMatch('${attachment.url} ')),
+            ...attachments.map(
+              (attachment) =>
+                  TextMatch(data.content.isEmpty ? attachment.url : '${attachment.url} '),
+            ),
             ...data.content,
           ],
           media: {for (final attachment in attachments) attachment.url: attachment},
