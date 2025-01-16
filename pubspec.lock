@@ -1477,7 +1477,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.0.22"
+      ref: master
       resolved-ref: "5bb689438ad00d0a049aaa1b454b023793d644c9"
       url: "https://github.com/ice-blockchain/nostr-dart"
     source: git
