@@ -15,6 +15,7 @@ class ModalActionButton extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.trailing,
+    this.labelStyle,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class ModalActionButton extends StatelessWidget {
   final String label;
   final Widget? trailing;
   final VoidCallback onTap;
+  final TextStyle? labelStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,10 @@ class ModalActionButton extends StatelessWidget {
       title: Row(
         children: [
           Expanded(
-            child: Text(label, style: context.theme.appTextThemes.body),
+            child: Text(
+              label,
+              style: labelStyle ?? context.theme.appTextThemes.body,
+            ),
           ),
           if (trailing != null) ...[
             SizedBox(width: 16.0.s),

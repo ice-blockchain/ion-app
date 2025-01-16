@@ -65,6 +65,9 @@ class RepostOptionsModal extends HookConsumerWidget {
                           ? const IONLoadingIndicator(type: IndicatorType.dark)
                           : option.getIcon(context),
                       label: option.getLabel(context),
+                      labelStyle: context.theme.appTextThemes.body.copyWith(
+                        color: option.getLabelColor(context),
+                      ),
                       onTap: () async {
                         selectedAction.value = option;
                         switch (option) {
