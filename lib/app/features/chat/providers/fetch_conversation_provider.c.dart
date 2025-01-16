@@ -16,7 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'fetch_conversation_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class FetchConversations extends _$FetchConversations {
   @override
   Future<void> build() async {
