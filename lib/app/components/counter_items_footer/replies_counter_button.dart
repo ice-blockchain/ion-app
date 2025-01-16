@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/can_reply_provider.c.dart';
+import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replied_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_info_modal/who_can_reply_info_modal.dart';

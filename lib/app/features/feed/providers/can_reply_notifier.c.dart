@@ -10,7 +10,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'can_reply_provider.c.g.dart';
+part 'can_reply_notifier.c.g.dart';
 
 const _maxCacheAge = Duration(minutes: 1);
 

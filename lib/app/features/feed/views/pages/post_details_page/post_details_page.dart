@@ -7,7 +7,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_input_field.dart';
-import 'package:ion/app/features/feed/providers/can_reply_provider.c.dart';
+import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/components/reply_list/reply_list.dart';
