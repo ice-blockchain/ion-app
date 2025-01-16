@@ -35,4 +35,28 @@ enum UserNotificationsType {
         return context.i18n.profile_articles;
     }
   }
+
+  static Set<UserNotificationsType> toggleNotificationType(
+    Set<UserNotificationsType> currentSet,
+    UserNotificationsType option,
+  ) {
+    final newSet = {...currentSet};
+    if (option == UserNotificationsType.none) {
+      newSet
+        ..clear()
+        ..add(UserNotificationsType.none);
+    } else {
+      if (newSet.contains(UserNotificationsType.none)) {
+        newSet.remove(UserNotificationsType.none);
+      }
+
+      if (!newSet.add(option)) {
+        newSet.remove(option);
+        if (newSet.isEmpty) {
+          newSet.add(UserNotificationsType.none);
+        }
+      }
+    }
+    return newSet;
+  }
 }

@@ -30,32 +30,14 @@ class AccountNotificationsModal extends HookConsumerWidget {
 
     final handleOptionSelection = useCallback(
       (UserNotificationsType option) {
-        final newSelected = {...selectedOptions.value};
-
-        if (option == UserNotificationsType.none) {
-          newSelected
-            ..clear()
-            ..add(UserNotificationsType.none);
-        } else {
-          if (newSelected.contains(UserNotificationsType.none)) {
-            newSelected.remove(UserNotificationsType.none);
-          }
-
-          if (newSelected.contains(option)) {
-            newSelected.remove(option);
-            if (newSelected.isEmpty) {
-              newSelected.add(UserNotificationsType.none);
-            }
-          } else {
-            newSelected.add(option);
-          }
-        }
-
-        selectedOptions.value = newSelected;
+        selectedOptions.value = UserNotificationsType.toggleNotificationType(
+          selectedOptions.value,
+          option,
+        );
 
         ref
             .read(userNotificationsNotifierProvider.notifier)
-            .updateNotifications(newSelected.toList());
+            .updateNotifications(selectedOptions.value.toList());
       },
       [selectedOptions, ref],
     );
