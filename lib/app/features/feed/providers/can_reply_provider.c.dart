@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -14,42 +13,65 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'can_reply_provider.c.g.dart';
 
 @riverpod
-Future<bool> canReply(Ref ref, EventReference eventReference) async {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).value;
-  if (currentPubkey == null) return true;
+class CanReply extends _$CanReply {
+  DateTime _lastFetchDate = DateTime.now();
 
-  final ionConnectEntity = await ref.read(
-    ionConnectEntityProvider(eventReference: eventReference).future,
-  );
-  if (ionConnectEntity == null) return true;
-
-  final authorPubkey = ionConnectEntity.masterPubkey;
-  if (authorPubkey == currentPubkey) return true;
-
-  final whoCanReplySetting = switch (ionConnectEntity) {
-    PostEntity() => ionConnectEntity.data.whoCanReplySetting,
-    ArticleEntity() => ionConnectEntity.data.whoCanReplySetting,
-    _ => null,
-  };
-  if (whoCanReplySetting == null) return true;
-
-  switch (whoCanReplySetting) {
-    case WhoCanReplySettingsOption.everyone:
+  @override
+  Future<bool> build(EventReference eventReference) async {
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider).value;
+    if (currentPubkey == null) {
       return true;
-    case WhoCanReplySettingsOption.followedAccounts:
-      final followers = await ref.watch(followListProvider(authorPubkey).future);
-      if (followers == null) {
-        return false;
-      }
-      return followers.data.list.any((followee) => followee.pubkey == currentPubkey);
-    case WhoCanReplySettingsOption.mentionedAccounts:
-      final mentions = switch (ionConnectEntity) {
-        // TODO: Add support for mentions inside posts and articles
-        _ => <RelatedPubkey>[],
-      };
-      if (mentions.isEmpty) {
-        return false;
-      }
-      return mentions.any((pubKey) => pubKey.value == currentPubkey);
+    }
+
+    final ionConnectEntity = await ref.read(
+      ionConnectEntityProvider(eventReference: eventReference, skipCache: true).future,
+    );
+    if (ionConnectEntity == null) {
+      return true;
+    }
+
+    final authorPubkey = ionConnectEntity.masterPubkey;
+    if (authorPubkey == currentPubkey) {
+      return true;
+    }
+
+    final whoCanReplySetting = switch (ionConnectEntity) {
+      PostEntity() => ionConnectEntity.data.whoCanReplySetting,
+      ArticleEntity() => ionConnectEntity.data.whoCanReplySetting,
+      _ => null,
+    };
+    if (whoCanReplySetting == null) {
+      return true;
+    }
+
+    switch (whoCanReplySetting) {
+      case WhoCanReplySettingsOption.everyone:
+        return true;
+      case WhoCanReplySettingsOption.followedAccounts:
+        final followers = await ref.watch(followListProvider(authorPubkey, skipCache: true).future);
+        if (followers == null) {
+          return false;
+        }
+        return followers.data.list.any((followee) => followee.pubkey == currentPubkey);
+      case WhoCanReplySettingsOption.mentionedAccounts:
+        final mentions = switch (ionConnectEntity) {
+          // TODO: Add support for mentions inside posts and articles
+          _ => <RelatedPubkey>[],
+        };
+        if (mentions.isEmpty) {
+          return false;
+        }
+        return mentions.any((pubKey) => pubKey.value == currentPubkey);
+    }
+  }
+
+  void refreshIfNeeded(EventReference eventReference) {
+    final now = DateTime.now();
+    if (now.difference(_lastFetchDate).inSeconds > 60) {
+      _lastFetchDate = now;
+      ref
+        ..invalidate(followListProvider(eventReference.pubkey, skipCache: true))
+        ..invalidate(ionConnectEntityProvider(eventReference: eventReference, skipCache: true));
+    }
   }
 }

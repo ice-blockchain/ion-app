@@ -13,14 +13,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'follow_list_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
-Future<FollowListEntity?> followList(Ref ref, String pubkey) async {
-  final followList = ref.watch(
-    ionConnectCacheProvider
-        .select(cacheSelector<FollowListEntity>(FollowListEntity.cacheKeyBuilder(pubkey: pubkey))),
-  );
-  if (followList != null) {
-    return followList;
+@riverpod
+Future<FollowListEntity?> followList(
+  Ref ref,
+  String pubkey, {
+  bool skipCache = false,
+}) async {
+  if (!skipCache) {
+    final followList = ref.watch(
+      ionConnectCacheProvider.select(
+        cacheSelector<FollowListEntity>(
+          FollowListEntity.cacheKeyBuilder(pubkey: pubkey),
+        ),
+      ),
+    );
+    if (followList != null) {
+      return followList;
+    }
   }
 
   final requestMessage = RequestMessage()
@@ -31,7 +40,7 @@ Future<FollowListEntity?> followList(Ref ref, String pubkey) async {
       );
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
   final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
   if (currentPubkey == null) {

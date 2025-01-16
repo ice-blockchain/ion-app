@@ -32,7 +32,7 @@ class RepliesCounterButton extends ConsumerWidget {
     final canReply = ref.watch(canReplyProvider(eventReference)).value ?? false;
 
     return GestureDetector(
-      onTap: () => _onTap(context, canReply),
+      onTap: () => _onTap(context, ref),
       child: TextActionButton(
         icon: Assets.svg.iconBlockComment.icon(
           size: 16.0.s,
@@ -59,12 +59,15 @@ class RepliesCounterButton extends ConsumerWidget {
     );
   }
 
-  void _onTap(BuildContext context, bool canReply) {
+  Future<void> _onTap(BuildContext context, WidgetRef ref) async {
+    ref.read(canReplyProvider(eventReference).notifier).refreshIfNeeded(eventReference);
+    final canReply = await ref.read(canReplyProvider(eventReference).future);
+    if (!context.mounted) return;
     if (canReply) {
-      HapticFeedback.lightImpact();
-      CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
+      await CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
+      await HapticFeedback.lightImpact();
     } else {
-      showSimpleBottomSheet<void>(
+      await showSimpleBottomSheet<void>(
         context: context,
         child: WhoCanReplyInfoModal(
           eventReference: eventReference,
