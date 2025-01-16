@@ -18,7 +18,6 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,17 +33,13 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final (relayUrls, eventSigner) =
-            await (_assignUserRelays(), _generateIonConnectEventSigner()).wait;
+        final relayUrls = await _assignUserRelays();
 
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
         // Send user delegation event in advance so all subsequent events pass delegation attestation
-        final userDelegationEvent = await _buildUserDelegation(
-          pubkey: eventSigner.publicKey,
-          onVerifyIdentity: onVerifyIdentity,
-        );
+        final userDelegationEvent = await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
 
         await ref
             .read(ionConnectNotifierProvider.notifier)
@@ -73,12 +68,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final eventSigner = await _generateIonConnectEventSigner();
-
-        final userDelegationEvent = await _buildUserDelegation(
-          pubkey: eventSigner.publicKey,
-          onVerifyIdentity: onVerifyIdentity,
-        );
+        final userDelegationEvent = await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
 
         await ref.read(ionConnectNotifierProvider.notifier).sendEvents([userDelegationEvent]);
       },
@@ -93,28 +83,6 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     final followees = ref.read(onboardingDataProvider).followees;
 
     return ref.read(currentUserIdentityProvider.notifier).assignUserRelays(followees: followees);
-  }
-
-  Future<EventSigner> _generateIonConnectEventSigner() async {
-    final currentUserIonConnectEventSigner =
-        await ref.read(currentUserIonConnectEventSignerProvider.future);
-    if (currentUserIonConnectEventSigner != null) {
-      // Event signer already exists, reuse it
-      return currentUserIonConnectEventSigner;
-    }
-
-    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
-    final ionIdentityClient = await ref.read(ionIdentityClientProvider.future);
-    final privateKey = ionIdentityClient.auth.getUserPrivateKey();
-    if (privateKey != null) {
-      // Private key was generated during the auth flow (password), reuse it
-      return ref
-          .read(ionConnectEventSignerProvider(currentIdentityKeyName).notifier)
-          .generateFromPrivate(privateKey);
-    }
-
-    // Generate a new event signer
-    return ref.read(ionConnectEventSignerProvider(currentIdentityKeyName).notifier).generate();
   }
 
   Future<EventMessage> _buildAndCacheUserRelays({required List<String> relayUrls}) async {
@@ -177,12 +145,17 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<EventMessage> _buildUserDelegation({
-    required String pubkey,
     required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   }) async {
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
+    }
+
     final userDelegationData = await ref
         .read(userDelegationManagerProvider.notifier)
-        .buildCurrentUserDelegationDataWith(pubkey: pubkey);
+        .buildCurrentUserDelegationDataWith(pubkey: eventSigner.publicKey);
 
     return ref.read(userDelegationManagerProvider.notifier).buildDelegationEventFrom(
           userDelegationData,

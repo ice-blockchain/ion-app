@@ -24,7 +24,7 @@ class SignUpPasswordButton extends ConsumerWidget {
     return Button(
       disabled: registerActionState.isLoading,
       trailingIcon:
-          registerActionState.isLoading || (authState.valueOrNull?.hasAuthenticated).falseOrValue
+          registerActionState.isLoading || (authState.valueOrNull?.isAuthenticated).falseOrValue
               ? const IONLoadingIndicator()
               : const SizedBox.shrink(),
       onPressed: onPressed,

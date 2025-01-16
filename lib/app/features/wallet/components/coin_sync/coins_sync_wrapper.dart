@@ -17,7 +17,7 @@ class CoinsSyncWrapper extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasAuthenticated = ref.watch(authProvider).valueOrNull?.hasAuthenticated;
+    final isAuthenticated = ref.watch(authProvider).valueOrNull?.isAuthenticated;
     final coinSyncService = ref.watch(coinSyncServiceProvider).valueOrNull;
     final appState = useAppLifecycleState();
 
@@ -27,7 +27,7 @@ class CoinsSyncWrapper extends HookConsumerWidget {
           return null;
         }
 
-        if (hasAuthenticated.falseOrValue) {
+        if (isAuthenticated.falseOrValue) {
           coinSyncService
             ..syncAllCoins()
             ..startPeriodicSync()
@@ -38,7 +38,7 @@ class CoinsSyncWrapper extends HookConsumerWidget {
 
         return coinSyncService.stopPeriodicSync;
       },
-      [coinSyncService, appState, hasAuthenticated],
+      [coinSyncService, appState, isAuthenticated],
     );
 
     return child;

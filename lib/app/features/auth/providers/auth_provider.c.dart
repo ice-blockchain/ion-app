@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
@@ -18,12 +19,13 @@ class AuthState with _$AuthState {
     required List<String> authenticatedIdentityKeyNames,
     required String? currentIdentityKeyName,
     required bool suggestToAddBiometrics,
+    required bool hasEventSigner,
   }) = _AuthState;
 
   const AuthState._();
 
-  bool get hasAuthenticated {
-    return authenticatedIdentityKeyNames.isNotEmpty && suggestToAddBiometrics == false;
+  bool get isAuthenticated {
+    return authenticatedIdentityKeyNames.isNotEmpty && !suggestToAddBiometrics && hasEventSigner;
   }
 }
 
@@ -40,12 +42,18 @@ class Auth extends _$Auth {
         : authenticatedIdentityKeyNames.lastOrNull;
     final biometricsStates = await ref.watch(biometricsStatesStreamProvider.future);
     final userBiometricsState =
-        (currentIdentityKeyName != null) ? biometricsStates[currentIdentityKeyName] : null;
+        currentIdentityKeyName != null ? biometricsStates[currentIdentityKeyName] : null;
+    final eventSigner = currentIdentityKeyName != null
+        ? await ref
+            .watch(ionConnectEventSignerProvider(currentIdentityKeyName).notifier)
+            .initEventSigner()
+        : null;
 
     return AuthState(
       authenticatedIdentityKeyNames: authenticatedIdentityKeyNames.toList(),
       currentIdentityKeyName: currentIdentityKeyName,
       suggestToAddBiometrics: userBiometricsState == BiometricsState.canSuggest,
+      hasEventSigner: eventSigner != null,
     );
   }
 
