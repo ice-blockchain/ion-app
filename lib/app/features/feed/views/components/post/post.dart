@@ -17,8 +17,11 @@ import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quote
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 class Post extends ConsumerWidget {
   const Post({
@@ -42,6 +45,14 @@ class Post extends ConsumerWidget {
         .watch(ionConnectEntityProvider(eventReference: eventReference))
         .valueOrNull as PostEntity?;
 
+    final userMetadata = ref.watch(
+      ionConnectCacheProvider.select(
+        cacheSelector<UserMetadataEntity>(
+          UserMetadataEntity.cacheKeyBuilder(pubkey: eventReference.pubkey),
+        ),
+      ),
+    );
+
     if (postEntity == null) {
       return const Skeleton(child: PostSkeleton());
     }
@@ -49,6 +60,20 @@ class Post extends ConsumerWidget {
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(postEntity.masterPubkey));
 
     final framedEvent = _getFramedEventReference(postEntity);
+
+    if (postEntity.data.content.toString().contains('Test post to delete')) {
+      Logger.log('POST WHERE I AM AUTHOR');
+      Logger.log('postEntity: $postEntity');
+      Logger.log('eventReference pubkey: ${eventReference.pubkey}');
+      Logger.log('userMetadata: $userMetadata');
+      Logger.log('isOwnedByCurrentUser: $isOwnedByCurrentUser');
+    } else {
+      Logger.log('POST WHERE I AM NOT AUTHOR');
+      Logger.log('postEntity: $postEntity');
+      Logger.log('eventReference pubkey: ${eventReference.pubkey}');
+      Logger.log('userMetadata: $userMetadata');
+      Logger.log('isOwnedByCurrentUser Some other post: $isOwnedByCurrentUser');
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
