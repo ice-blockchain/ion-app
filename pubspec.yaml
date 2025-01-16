@@ -70,8 +70,8 @@ dependencies:
       ref: master
   nostr_dart:
     git:
-      url: https://github.com/ice-blockchain/nostr-dart.git
-      ref: 0.0.21
+      url: https://github.com/ice-blockchain/nostr-dart
+      ref: bugfix/closed-message-transform
   ogp_data_extract: ^0.1.4
   package_info_plus: ^4.2.0
   path: ^1.9.0

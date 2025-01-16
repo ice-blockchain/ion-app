@@ -1477,9 +1477,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.0.21"
+      ref: "bugfix/closed-message-transform"
       resolved-ref: "926e5aa0a02cfeddb5404d0684e58ac6d4cf7f47"
-      url: "https://github.com/ice-blockchain/nostr-dart.git"
+      url: "https://github.com/ice-blockchain/nostr-dart"
     source: git
     version: "0.0.21"
   octo_image:
