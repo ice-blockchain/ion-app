@@ -23,8 +23,9 @@ class ProfileActions extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userNotificationsType = useState(UserNotificationsType.none);
-    final notificationsEnabled = userNotificationsType.value != UserNotificationsType.none;
+    final userNotificationsTypes =
+        useState<List<UserNotificationsType>>([UserNotificationsType.none]);
+    final notificationsEnabled = !userNotificationsTypes.value.contains(UserNotificationsType.none);
     final isCurrentUserFollowed = ref.watch(isCurrentUserFollowedProvider(pubkey));
 
     return Row(
@@ -49,14 +50,15 @@ class ProfileActions extends HookConsumerWidget {
         SizedBox(width: 8.0.s),
         ProfileAction(
           onPressed: () async {
-            final newUserNotificationsType = await showSimpleBottomSheet<UserNotificationsType>(
+            final newUserNotificationsTypes =
+                await showSimpleBottomSheet<List<UserNotificationsType>>(
               context: context,
               child: AccountNotificationsModal(
-                selectedUserNotificationsType: userNotificationsType.value,
+                selectedUserNotificationsTypes: userNotificationsTypes.value,
               ),
             );
-            if (newUserNotificationsType != null) {
-              userNotificationsType.value = newUserNotificationsType;
+            if (newUserNotificationsTypes != null) {
+              userNotificationsTypes.value = newUserNotificationsTypes;
             }
           },
           isAccent: notificationsEnabled,
