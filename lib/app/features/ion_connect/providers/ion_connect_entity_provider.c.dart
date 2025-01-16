@@ -15,15 +15,17 @@ part 'ion_connect_entity_provider.c.g.dart';
 Future<IonConnectEntity?> ionConnectEntity(
   Ref ref, {
   required EventReference eventReference,
-  Duration? maxCacheAge,
+  bool skipCache = false,
 }) async {
-  final entity = ref.watch(
-    ionConnectCacheProvider.select(
-      cacheSelector(eventReference.eventId, maxAge: maxCacheAge),
-    ),
-  );
-  if (entity != null) {
-    return entity;
+  if (!skipCache) {
+    final entity = ref.watch(
+      ionConnectCacheProvider.select(
+        cacheSelector(eventReference.eventId),
+      ),
+    );
+    if (entity != null) {
+      return entity;
+    }
   }
 
   final requestMessage = RequestMessage()
