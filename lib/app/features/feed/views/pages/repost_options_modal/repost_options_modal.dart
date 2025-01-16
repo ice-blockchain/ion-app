@@ -10,9 +10,13 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.c.dart';
+import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -31,8 +35,13 @@ class RepostOptionsModal extends HookConsumerWidget {
     ref.displayErrors(repostNotifierProvider);
 
     final selectedAction = useState<RepostOptionAction?>(null);
-
+    final isReposted = ref.watch(isRepostedProvider(eventReference));
     final repostLoading = ref.watch(repostNotifierProvider).isLoading;
+
+    final actions = [
+      if (isReposted) RepostOptionAction.undoRepost else RepostOptionAction.repost,
+      RepostOptionAction.quotePost,
+    ];
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -50,7 +59,7 @@ class RepostOptionsModal extends HookConsumerWidget {
                 separator: SizedBox(height: 9.0.s),
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  for (final option in RepostOptionAction.values)
+                  for (final option in actions)
                     ModalActionButton(
                       icon: (repostLoading && selectedAction.value == option)
                           ? const IONLoadingIndicator(type: IndicatorType.dark)
@@ -58,17 +67,26 @@ class RepostOptionsModal extends HookConsumerWidget {
                       label: option.getLabel(context),
                       onTap: () async {
                         selectedAction.value = option;
-                        if (option == RepostOptionAction.repost) {
-                          await ref
-                              .read(repostNotifierProvider.notifier)
-                              .repost(eventReference: eventReference);
-                          if (!ref.read(repostNotifierProvider).hasError) {
-                            if (context.mounted) {
+                        switch (option) {
+                          case RepostOptionAction.repost:
+                            await ref
+                                .read(repostNotifierProvider.notifier)
+                                .repost(eventReference: eventReference);
+                            if (!ref.read(repostNotifierProvider).hasError && context.mounted) {
                               context.pop();
                             }
-                          }
-                        } else if (option == RepostOptionAction.quotePost) {
-                          CreatePostRoute(quotedEvent: eventReference.toString()).go(context);
+
+                          case RepostOptionAction.quotePost:
+                            CreatePostRoute(quotedEvent: eventReference.toString()).go(context);
+                          case RepostOptionAction.undoRepost:
+                            final entity = ref
+                                .read(ionConnectEntityProvider(eventReference: eventReference))
+                                .valueOrNull;
+                            if (entity case final CacheableEntity cacheableEntity) {
+                              await ref
+                                  .read(deleteEntityProvider(cacheableEntity).notifier)
+                                  .delete();
+                            }
                         }
                         selectedAction.value = null;
                       },
