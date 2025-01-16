@@ -26,6 +26,7 @@ import 'package:ion/app/services/logger/logger.dart';
 class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
+    this.repostEventReference,
     this.header,
     this.footer,
     this.showParent = false,
@@ -34,6 +35,7 @@ class Post extends ConsumerWidget {
   });
 
   final EventReference eventReference;
+  final EventReference? repostEventReference;
   final bool showParent;
   final Widget? header;
   final Widget? footer;
@@ -92,7 +94,11 @@ class Post extends ConsumerWidget {
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (framedEvent != null) _FramedEvent(eventReference: framedEvent),
-        footer ?? CounterItemsFooter(eventReference: eventReference),
+        footer ??
+            CounterItemsFooter(
+              eventReference: eventReference,
+              repostEventReference: repostEventReference,
+            ),
       ],
     );
   }

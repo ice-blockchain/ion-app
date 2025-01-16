@@ -25,10 +25,12 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class RepostOptionsModal extends HookConsumerWidget {
   const RepostOptionsModal({
     required this.eventReference,
+    this.repostEventReference,
     super.key,
   });
 
   final EventReference eventReference;
+  final EventReference? repostEventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,16 +84,25 @@ class RepostOptionsModal extends HookConsumerWidget {
                           case RepostOptionAction.quotePost:
                             CreatePostRoute(quotedEvent: eventReference.toString()).go(context);
                           case RepostOptionAction.undoRepost:
-                            final entity = ref
-                                .read(ionConnectEntityProvider(eventReference: eventReference))
-                                .valueOrNull;
-                            if (entity case final CacheableEntity cacheableEntity) {
-                              await ref
-                                  .read(deleteEntityProvider(cacheableEntity).notifier)
-                                  .delete();
+                            selectedAction.value = option;
+
+                            if (repostEventReference != null) {
+                              final entity = await ref.read(
+                                ionConnectEntityProvider(eventReference: repostEventReference!)
+                                    .future,
+                              );
+
+                              if (entity case final CacheableEntity cacheableEntity) {
+                                await ref
+                                    .read(deleteEntityProvider(cacheableEntity).notifier)
+                                    .delete();
+                                if (context.mounted) {
+                                  context.pop();
+                                }
+                              }
                             }
+                            selectedAction.value = null;
                         }
-                        selectedAction.value = null;
                       },
                     ),
                 ],

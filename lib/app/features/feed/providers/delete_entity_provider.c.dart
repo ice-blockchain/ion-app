@@ -3,6 +3,8 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -25,6 +27,8 @@ class DeleteEntity extends _$DeleteEntity {
     final entityKind = switch (entity) {
       PostEntity() => PostEntity.kind,
       ArticleEntity() => ArticleEntity.kind,
+      RepostEntity() => RepostEntity.kind,
+      GenericRepostEntity() => GenericRepostEntity.kind,
       _ => throw DeleteEntityUnsupportedTypeException(),
     };
 
@@ -51,7 +55,7 @@ class DeleteEntity extends _$DeleteEntity {
           )
           .deleteReply(entity: entity);
     } else {
-      // Post or Article
+      // Post or Article or Repost or GenericRepost
       final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
       if (feedDataSources.isNotEmpty) {
         await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
