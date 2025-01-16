@@ -49,7 +49,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   flutter_svg: ^2.0.16
   freezed_annotation: ^2.4.1
-  go_router: ^14.2.0
+  go_router: ^14.6.3
   hooks_riverpod: ^2.6.1
   image_cropper: ^8.1.0
   image_picker: ^1.1.2
@@ -117,7 +117,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.4.1
-  go_router_builder: ^2.7.0
+  go_router_builder: ^2.7.3
   json_serializable: ^6.7.1
   melos: ^6.1.0
   riverpod_generator: ^2.6.1

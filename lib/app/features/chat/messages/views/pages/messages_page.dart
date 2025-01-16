@@ -6,7 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
+import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';

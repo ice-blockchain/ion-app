@@ -77,9 +77,14 @@ class Conversations extends _$Conversations {
         message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.toString();
 
+    final database = ref.read(conversationsDBServiceProvider);
+
+    final conversationId = await database.lookupConversationByEventMessageId(message.id);
+
     return Ee2eConversationEntity(
       name: name,
       type: type,
+      id: conversationId,
       nickname: nickname,
       imageUrl: imageUrl,
       participants: participants,

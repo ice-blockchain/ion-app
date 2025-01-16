@@ -13,8 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_db_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
-ConversationsDBService conversationsDBService(Ref ref) =>
-    ConversationsDBService(ref.watch(ionDatabaseProvider));
+ConversationsDBService conversationsDBService(Ref ref) => ConversationsDBService(ref.watch(ionDatabaseProvider));
 
 class ConversationsDBService {
   ConversationsDBService(this._db);
@@ -119,6 +118,18 @@ class ConversationsDBService {
   }
 
   // Check if there are conversations with the same pubkeys
+  Future<String?> lookupConversationByEventMessageId(String eventMessageId) async {
+    final conversationMessage = await (_db.select(_db.conversationMessagesTable)
+          ..where(
+            (table) => table.eventMessageId.equals(eventMessageId),
+          )
+          ..limit(1))
+        .getSingle();
+
+    return conversationMessage.conversationId;
+  }
+
+  // Check if there are conversations with the same pubkeys
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
@@ -163,8 +174,7 @@ class ConversationsDBService {
           ..where((table) => table.eventMessageId.equals(id)))
         .getSingle();
 
-    final sentConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(status: DeliveryStatus.isSent);
+    final sentConversationMessagesTableData = conversationMessagesTableData.copyWith(status: DeliveryStatus.isSent);
 
     await _db.update(_db.conversationMessagesTable).replace(sentConversationMessagesTableData);
   }
@@ -174,8 +184,7 @@ class ConversationsDBService {
           ..where((table) => table.eventMessageId.equals(id)))
         .getSingle();
 
-    final deleteConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(isDeleted: true);
+    final deleteConversationMessagesTableData = conversationMessagesTableData.copyWith(isDeleted: true);
 
     await _db.update(_db.conversationMessagesTable).replace(deleteConversationMessagesTableData);
   }
@@ -212,8 +221,7 @@ class ConversationsDBService {
 
     final allPreviousReceivedMessages = await (_db.select(_db.conversationMessagesTable)
           ..where(
-            (table) =>
-                table.conversationId.equals(latestConversationMessageTableData.conversationId),
+            (table) => table.conversationId.equals(latestConversationMessageTableData.conversationId),
           )
           ..where(
             (table) => table.status.equals(DeliveryStatus.isReceived.index),
@@ -240,7 +248,7 @@ class ConversationsDBService {
   }
 
   final _allConversationsLatestMessageQuery =
-      'SELECT * FROM (SELECT * FROM conversation_messages_table ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
+      'SELECT * FROM (SELECT * FROM conversation_messages_table WHERE is_deleted = 0 ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
 
   Future<List<EventMessage>> getAllConversations() async {
     // Select last message of each conversation
@@ -249,8 +257,7 @@ class ConversationsDBService {
       readsFrom: {_db.conversationMessagesTable},
     ).get();
 
-    final lastConversationEventMessages =
-        await _selectLastMessageOfEachConversation(uniqueConversationRows);
+    final lastConversationEventMessages = await _selectLastMessageOfEachConversation(uniqueConversationRows);
 
     return lastConversationEventMessages;
   }
@@ -277,11 +284,10 @@ class ConversationsDBService {
     final lastConversationMessagesIds =
         uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
 
-    final lastConversationEventMessages = (await (_db.select(_db.eventMessagesTable)
-              ..where((table) => table.id.isIn(lastConversationMessagesIds)))
-            .get())
-        .map((e) => e.toEventMessage())
-        .toList();
+    final lastConversationEventMessages =
+        (await (_db.select(_db.eventMessagesTable)..where((table) => table.id.isIn(lastConversationMessagesIds))).get())
+            .map((e) => e.toEventMessage())
+            .toList();
 
     return lastConversationEventMessages;
   }
@@ -297,9 +303,8 @@ class ConversationsDBService {
         .map((reactionsTableData) => reactionsTableData.reactionEventId)
         .toList();
 
-    final reactionsEventMessages = await (_db.select(_db.eventMessagesTable)
-          ..where((table) => table.id.isIn(reactionsEventMessagesIds)))
-        .get();
+    final reactionsEventMessages =
+        await (_db.select(_db.eventMessagesTable)..where((table) => table.id.isIn(reactionsEventMessagesIds))).get();
 
     final reactions = reactionsEventMessages
         .map(
@@ -312,7 +317,7 @@ class ConversationsDBService {
     return reactions;
   }
 
-  //get last createdAt date from conversation_messages_table
+  // Get last createdAt date from conversation_messages_table
   Future<DateTime?> getLastConversationMessageCreatedAt() async {
     final lastConversationMessage = await (_db.select(_db.conversationMessagesTable)
           ..orderBy([(table) => OrderingTerm.desc(table.createdAt)])
@@ -325,14 +330,6 @@ class ConversationsDBService {
   // Mark conversation as removed and all its messages prior to last message as
   // deleted
   Future<void> deleteConversation(String conversationId) async {
-    await _db.into(_db.deletedConversationTable).insert(
-          DeletedConversationTableCompanion(
-            conversationId: Value(conversationId),
-            deletedAt: Value(DateTime.now().toUtc()),
-          ),
-          mode: InsertMode.insertOrReplace,
-        );
-
     final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
           ..where((table) => table.conversationId.equals(conversationId)))
         .get();
@@ -342,10 +339,7 @@ class ConversationsDBService {
 
     await _db.batch(
       (b) {
-        b.replaceAll(
-          _db.conversationMessagesTable,
-          deleteConversationMessagesTableData,
-        );
+        b.replaceAll(_db.conversationMessagesTable, deleteConversationMessagesTableData);
       },
     );
   }

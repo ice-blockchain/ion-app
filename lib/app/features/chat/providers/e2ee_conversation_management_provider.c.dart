@@ -7,10 +7,10 @@ import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'e2ee_group_conversation_management_provider.c.g.dart';
+part 'e2ee_conversation_management_provider.c.g.dart';
 
 @riverpod
-class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement {
+class E2EEConversationManagement extends _$E2EEConversationManagement {
   @override
   FutureOr<void> build() {}
 
@@ -166,5 +166,13 @@ class E2EEGroupConversationManagement extends _$E2EEGroupConversationManagement 
         participantsPubkeys: pubkeys,
       );
     });
+  }
+
+  Future<void> deleteConversations(List<String> ids) async {
+    final databaseService = ref.read(conversationsDBServiceProvider);
+
+    for (final id in ids) {
+      await databaseService.deleteConversation(id);
+    }
   }
 }

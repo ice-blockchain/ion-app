@@ -9,7 +9,7 @@ class ChatRoutes {
     TypedGoRoute<ChatAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<DeleteConversationRoute>(path: 'delete/:conversationId'),
+        TypedGoRoute<DeleteConversationRoute>(path: 'delete'),
         TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
         TypedGoRoute<NewChannelModalRoute>(path: 'new-channel'),
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
@@ -28,13 +28,13 @@ class AppTestRoute extends BaseRouteData {
 }
 
 class DeleteConversationRoute extends BaseRouteData {
-  DeleteConversationRoute({required this.conversationId})
+  DeleteConversationRoute({required this.conversationIds})
       : super(
-          child: DeleteConversationModal(conversationId: conversationId),
+          child: DeleteConversationModal(conversationIds: conversationIds),
           type: IceRouteType.bottomSheet,
         );
 
-  final String conversationId;
+  final List<String> conversationIds;
 }
 
 class ChatSimpleSearchRoute extends BaseRouteData {

@@ -13,6 +13,7 @@ class Ee2eConversationEntity with _$Ee2eConversationEntity {
     required List<String> participants,
     int? imageWidth,
     int? imageHeight,
+    String? id,
     String? nickname,
     String? imageUrl,
     DateTime? lastMessageAt,

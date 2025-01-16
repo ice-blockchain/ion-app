@@ -6,13 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteConversationModal extends ConsumerWidget {
-  const DeleteConversationModal({required this.conversationId, super.key});
+  const DeleteConversationModal({required this.conversationIds, super.key});
 
-  final String conversationId;
+  final List<String> conversationIds;
 
   static double get buttonsSize => 56.0.s;
 
@@ -73,8 +74,13 @@ class DeleteConversationModal extends ConsumerWidget {
                     label: Text(
                       context.i18n.button_delete,
                     ),
-                    onPressed: () {
-                      context.pop();
+                    onPressed: () async {
+                      await ref
+                          .read(e2EEConversationManagementProvider.notifier)
+                          .deleteConversations(conversationIds);
+                      if (context.mounted) {
+                        context.pop();
+                      }
                     },
                     minimumSize: buttonMinimalSize,
                     backgroundColor: context.theme.appColors.attentionRed,

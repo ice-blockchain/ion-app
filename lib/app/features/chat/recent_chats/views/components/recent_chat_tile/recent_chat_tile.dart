@@ -15,9 +15,9 @@ import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
-  const RecentChatTile(this.conversation, {super.key});
+  const RecentChatTile(this.conversationData, {super.key});
 
-  final Ee2eConversationEntity conversation;
+  final Ee2eConversationEntity conversationData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,14 +27,16 @@ class RecentChatTile extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isEditMode) {
-          ref.read(selectedConversationsIdsProvider.notifier).toggle(conversation.name);
+          if (conversationData.id != null) {
+            ref.read(selectedConversationsIdsProvider.notifier).toggle(conversationData.id!);
+          }
         } else {
           MessagesRoute(
-            name: conversation.name,
-            chatType: conversation.type,
-            imageUrl: conversation.imageUrl ?? '',
-            participants: conversation.participants,
-            nickname: '@${conversation.nickname}',
+            name: conversationData.name,
+            chatType: conversationData.type,
+            imageUrl: conversationData.imageUrl ?? '',
+            participants: conversationData.participants,
+            nickname: '@${conversationData.nickname}',
           ).push<void>(context);
         }
       },
@@ -46,7 +48,7 @@ class RecentChatTile extends ConsumerWidget {
             width: isEditMode ? 40.0.s : 0,
             child: Padding(
               padding: EdgeInsets.only(right: 10.0.s),
-              child: selectedConversationsIds.contains(conversation.name)
+              child: selectedConversationsIds.contains(conversationData.id)
                   ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                   : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
             ),
@@ -54,11 +56,12 @@ class RecentChatTile extends ConsumerWidget {
           Flexible(
             child: Row(
               children: [
-                if (conversation.imageUrl != null)
+                if (conversationData.imageUrl != null)
                   Avatar(
-                    imageUrl: conversation.type == ChatType.chat ? conversation.imageUrl : null,
-                    imageWidget: conversation.type == ChatType.group
-                        ? Image.asset(conversation.imageUrl!)
+                    imageUrl:
+                        conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
+                    imageWidget: conversationData.type == ChatType.group
+                        ? Image.asset(conversationData.imageUrl!)
                         : null,
                     size: 40.0.s,
                   ),
@@ -73,11 +76,11 @@ class RecentChatTile extends ConsumerWidget {
                         children: [
                           SenderSummary(
                             sender: MessageAuthor(
-                              name: conversation.name,
-                              imageUrl: conversation.imageUrl ?? '',
+                              name: conversationData.name,
+                              imageUrl: conversationData.imageUrl ?? '',
                             ),
                           ),
-                          _ChatTimestamp(conversation.lastMessageAt!),
+                          _ChatTimestamp(conversationData.lastMessageAt!),
                         ],
                       ),
                       SizedBox(height: 2.0.s),
@@ -85,7 +88,7 @@ class RecentChatTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: ChatPreview(content: conversation.lastMessageContent!),
+                            child: ChatPreview(content: conversationData.lastMessageContent!),
                           ),
                           //UnreadCountBadge(
                           //    unreadCount: chat.unreadMessageCount),

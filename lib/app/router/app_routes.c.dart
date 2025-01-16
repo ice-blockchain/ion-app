@@ -341,10 +341,12 @@ class MessagesRoute extends BaseRouteData {
     this.nickname,
     this.imageWidth,
     this.imageHeight,
+    this.conversationId,
     this.participants = const [],
   }) : super(
           child: MessagesPage(
             Ee2eConversationEntity(
+              id: conversationId,
               name: name,
               type: chatType,
               nickname: nickname,
@@ -363,6 +365,7 @@ class MessagesRoute extends BaseRouteData {
   final int? imageWidth;
   final int? imageHeight;
   final String? nickname;
+  final String? conversationId;
   final List<String> participants;
 }
 

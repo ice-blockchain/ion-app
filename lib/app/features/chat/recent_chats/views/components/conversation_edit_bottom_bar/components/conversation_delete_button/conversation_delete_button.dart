@@ -21,10 +21,13 @@ class ConversationDeleteButton extends ConsumerWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () {
         if (selectedConversationsIds.isNotEmpty) {
-          DeleteConversationRoute(conversationId: '2').push<void>(context).then((_) {
+          DeleteConversationRoute(conversationIds: selectedConversationsIds)
+              .push<void>(context)
+              .then((_) {
             ref.read(conversationsEditModeProvider.notifier).editMode = false;
+            ref.read(selectedConversationsIdsProvider.notifier).clear();
           });
-        } else {}
+        }
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,

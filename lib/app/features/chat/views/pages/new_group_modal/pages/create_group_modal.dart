@@ -14,7 +14,7 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/general_
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
-import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
+import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
@@ -42,7 +42,7 @@ class CreateGroupModal extends HookConsumerWidget {
 
     final members = createGroupForm.members.toList();
 
-    final e2EEGroupConversationManagement = ref.watch(e2EEGroupConversationManagementProvider);
+    final e2EEConversationManagement = ref.watch(e2EEConversationManagementProvider);
 
     useEffect(
       () {
@@ -165,13 +165,13 @@ class CreateGroupModal extends HookConsumerWidget {
             margin: 32.0.s,
             child: ScreenSideOffset.large(
               child: Button(
-                disabled: e2EEGroupConversationManagement.maybeWhen(
+                disabled: e2EEConversationManagement.maybeWhen(
                   loading: () => true,
                   orElse: () => false,
                 ),
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: e2EEGroupConversationManagement.maybeWhen(
+                leadingIcon: e2EEConversationManagement.maybeWhen(
                   loading: () => const IONLoadingIndicator(),
                   orElse: () => Assets.svg.iconPlusCreatechannel.icon(
                     color: context.theme.appColors.onPrimaryAccent,
