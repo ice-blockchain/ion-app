@@ -42,7 +42,6 @@ class Conversations extends _$Conversations {
 
       final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
-
       return conversations;
     });
 
