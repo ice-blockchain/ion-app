@@ -5,13 +5,21 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 
+enum TextActionButtonState {
+  idle,
+  active,
+  disabled,
+}
+
 class TextActionButton extends StatelessWidget {
   const TextActionButton({
     required this.icon,
     required this.textColor,
     this.activeIcon,
     this.activeTextColor,
-    this.isActive = false,
+    this.disabledIcon,
+    this.disabledTextColor,
+    this.state = TextActionButtonState.idle,
     this.value,
     super.key,
   });
@@ -20,13 +28,15 @@ class TextActionButton extends StatelessWidget {
   final Color textColor;
   final Widget? activeIcon;
   final Color? activeTextColor;
-  final bool isActive;
+  final Widget? disabledIcon;
+  final Color? disabledTextColor;
+  final TextActionButtonState state;
   final String? value;
 
   @override
   Widget build(BuildContext context) {
-    final effectiveIcon = isActive ? activeIcon : icon;
-    final effectiveTextColor = isActive ? activeTextColor : textColor;
+    final effectiveIcon = _getIcon();
+    final effectiveTextColor = _getColor();
 
     return Row(
       children: [
@@ -44,4 +54,16 @@ class TextActionButton extends StatelessWidget {
       ],
     );
   }
+
+  Widget? _getIcon() => switch (state) {
+        TextActionButtonState.idle => icon,
+        TextActionButtonState.active => activeIcon ?? icon,
+        TextActionButtonState.disabled => disabledIcon ?? icon,
+      };
+
+  Color _getColor() => switch (state) {
+        TextActionButtonState.idle => textColor,
+        TextActionButtonState.active => activeTextColor ?? textColor,
+        TextActionButtonState.disabled => disabledTextColor ?? textColor,
+      };
 }

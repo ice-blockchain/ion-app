@@ -95,8 +95,8 @@ class _WhoCanReplySection extends StatelessWidget {
           context: context,
           child: WhoCanReplySettingsModal(
             title: createOption == CreatePostOption.video
-                ? context.i18n.visibility_settings_title_video
-                : context.i18n.visibility_settings_title_post,
+                ? context.i18n.who_can_reply_settings_title_video
+                : context.i18n.who_can_reply_settings_title_post,
           ),
         ),
       ),

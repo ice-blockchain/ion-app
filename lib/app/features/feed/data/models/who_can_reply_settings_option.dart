@@ -19,11 +19,11 @@ enum WhoCanReplySettingsOption {
 
   String getTitle(BuildContext context) {
     return switch (this) {
-      WhoCanReplySettingsOption.everyone => context.i18n.visibility_settings_everyone,
+      WhoCanReplySettingsOption.everyone => context.i18n.who_can_reply_settings_everyone,
       WhoCanReplySettingsOption.followedAccounts =>
-        context.i18n.visibility_settings_followed_accounts,
+        context.i18n.who_can_reply_settings_followed_accounts,
       WhoCanReplySettingsOption.mentionedAccounts =>
-        context.i18n.visibility_settings_mentioned_accounts,
+        context.i18n.who_can_reply_settings_mentioned_accounts,
     };
   }
 

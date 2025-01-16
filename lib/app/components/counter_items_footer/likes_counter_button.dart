@@ -46,7 +46,7 @@ class LikesCounterButton extends ConsumerWidget {
         ),
         activeTextColor: context.theme.appColors.attentionRed,
         value: formatDoubleCompact(likesCount),
-        isActive: isLiked,
+        state: isLiked ? TextActionButtonState.active : TextActionButtonState.idle,
       ),
     );
   }
