@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -37,6 +39,13 @@ class ArticlePreviewImage extends StatelessWidget {
                   return const ColoredBox(color: Colors.grey);
                 }
 
+                if (mediaFile!.path.contains('/')) {
+                  return Image.file(
+                    File(mediaFile!.path),
+                    fit: BoxFit.cover,
+                  );
+                }
+
                 final assetEntityAsync = ref.watch(assetEntityProvider(mediaFile!.path));
 
                 return assetEntityAsync.maybeWhen(
@@ -53,7 +62,7 @@ class ArticlePreviewImage extends StatelessWidget {
                       fit: BoxFit.cover,
                     );
                   },
-                  orElse: SizedBox.shrink,
+                  orElse: () => const SizedBox.shrink(),
                 );
               },
             ),
