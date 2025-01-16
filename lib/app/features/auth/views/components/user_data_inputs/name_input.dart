@@ -32,6 +32,9 @@ class NameInput extends StatelessWidget {
       validator: (String? value) {
         if (Validators.isEmpty(value)) return '';
 
+        if (Validators.isInvalidDisplayName(value)) {
+          return context.i18n.error_display_name_invalid;
+        }
         return null;
       },
     );
