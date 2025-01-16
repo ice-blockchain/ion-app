@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
+import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -27,30 +28,37 @@ class AccountNotificationsModal extends HookConsumerWidget {
       selectedUserNotificationsTypes.toSet(),
     );
 
-    void handleOptionSelection(UserNotificationsType option) {
-      final newSelected = {...selectedOptions.value};
+    final handleOptionSelection = useCallback(
+      (UserNotificationsType option) {
+        final newSelected = {...selectedOptions.value};
 
-      if (option == UserNotificationsType.none) {
-        newSelected
-          ..clear()
-          ..add(UserNotificationsType.none);
-      } else {
-        if (newSelected.contains(UserNotificationsType.none)) {
-          newSelected.remove(UserNotificationsType.none);
-        }
-
-        if (newSelected.contains(option)) {
-          newSelected.remove(option);
-          if (newSelected.isEmpty) {
-            newSelected.add(UserNotificationsType.none);
-          }
+        if (option == UserNotificationsType.none) {
+          newSelected
+            ..clear()
+            ..add(UserNotificationsType.none);
         } else {
-          newSelected.add(option);
-        }
-      }
+          if (newSelected.contains(UserNotificationsType.none)) {
+            newSelected.remove(UserNotificationsType.none);
+          }
 
-      selectedOptions.value = newSelected;
-    }
+          if (newSelected.contains(option)) {
+            newSelected.remove(option);
+            if (newSelected.isEmpty) {
+              newSelected.add(UserNotificationsType.none);
+            }
+          } else {
+            newSelected.add(option);
+          }
+        }
+
+        selectedOptions.value = newSelected;
+
+        ref
+            .read(userNotificationsNotifierProvider.notifier)
+            .updateNotifications(newSelected.toList());
+      },
+      [selectedOptions, ref],
+    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
