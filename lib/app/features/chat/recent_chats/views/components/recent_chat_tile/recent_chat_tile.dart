@@ -5,9 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/model/conversation_data.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -15,35 +15,27 @@ import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
-  const RecentChatTile(this.chat, {super.key});
+  const RecentChatTile(this.conversation, {super.key});
 
-  final RecentChatDataModel chat;
+  final Ee2eConversationEntity conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
-
     final selectedConversationsIds = ref.watch(selectedConversationsIdsProvider);
 
     return GestureDetector(
       onTap: () {
         if (isEditMode) {
-          ref.read(selectedConversationsIdsProvider.notifier).toggle(chat.id);
+          ref.read(selectedConversationsIdsProvider.notifier).toggle(conversation.name);
         } else {
-          switch (chat.type) {
-            case ChatType.chat:
-              MessagesRoute(
-                ConversationData(
-                  members: [],
-                  type: chat.type,
-                  name: chat.sender.name,
-                ),
-              ).push<void>(context);
-            case ChatType.channel:
-              ChannelRoute(pubkey: chat.id).push<void>(context);
-            case ChatType.group:
-              GroupRoute(pubkey: chat.id).push<void>(context);
-          }
+          MessagesRoute(
+            name: conversation.name,
+            chatType: conversation.type,
+            imageUrl: conversation.imageUrl ?? '',
+            participants: conversation.participants,
+            nickname: '@${conversation.nickname}',
+          ).push<void>(context);
         }
       },
       behavior: HitTestBehavior.opaque,
@@ -54,7 +46,7 @@ class RecentChatTile extends ConsumerWidget {
             width: isEditMode ? 40.0.s : 0,
             child: Padding(
               padding: EdgeInsets.only(right: 10.0.s),
-              child: selectedConversationsIds.contains(chat.id)
+              child: selectedConversationsIds.contains(conversation.name)
                   ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                   : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
             ),
@@ -62,10 +54,14 @@ class RecentChatTile extends ConsumerWidget {
           Flexible(
             child: Row(
               children: [
-                Avatar(
-                  imageUrl: chat.sender.imageUrl,
-                  size: 40.0.s,
-                ),
+                if (conversation.imageUrl != null)
+                  Avatar(
+                    imageUrl: conversation.type == ChatType.chat ? conversation.imageUrl : null,
+                    imageWidget: conversation.type == ChatType.group
+                        ? Image.asset(conversation.imageUrl!)
+                        : null,
+                    size: 40.0.s,
+                  ),
                 SizedBox(width: 12.0.s),
                 Expanded(
                   child: Column(
@@ -75,16 +71,24 @@ class RecentChatTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          SenderSummary(sender: chat.sender),
-                          ChatTimestamp(chat: chat),
+                          SenderSummary(
+                            sender: MessageAuthor(
+                              name: conversation.name,
+                              imageUrl: conversation.imageUrl ?? '',
+                            ),
+                          ),
+                          _ChatTimestamp(conversation.lastMessageAt!),
                         ],
                       ),
                       SizedBox(height: 2.0.s),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(child: ChatPreview(message: chat.message)),
-                          UnreadCountBadge(unreadCount: chat.unreadMessageCount),
+                          Expanded(
+                            child: ChatPreview(content: conversation.lastMessageContent!),
+                          ),
+                          //UnreadCountBadge(
+                          //    unreadCount: chat.unreadMessageCount),
                         ],
                       ),
                     ],
@@ -120,28 +124,20 @@ class SenderSummary extends StatelessWidget {
             padding: EdgeInsets.only(left: 4.0.s),
             child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
           ),
-        if (sender.isApproved)
-          Padding(
-            padding: EdgeInsets.only(left: 4.0.s),
-            child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
-          ),
       ],
     );
   }
 }
 
-class ChatTimestamp extends StatelessWidget {
-  const ChatTimestamp({
-    required this.chat,
-    super.key,
-  });
+class _ChatTimestamp extends StatelessWidget {
+  const _ChatTimestamp(this.time);
 
-  final RecentChatDataModel chat;
+  final DateTime time;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      formatMessageTimestamp(chat.message.time),
+      formatMessageTimestamp(time),
       style: context.theme.appTextThemes.body2.copyWith(
         color: context.theme.appColors.onTertararyBackground,
       ),
@@ -150,9 +146,14 @@ class ChatTimestamp extends StatelessWidget {
 }
 
 class ChatPreview extends StatelessWidget {
-  const ChatPreview({required this.message, this.textColor, this.maxLines = 2, super.key});
+  const ChatPreview({
+    required this.content,
+    this.textColor,
+    this.maxLines = 2,
+    super.key,
+  });
 
-  final RecentChatMessage message;
+  final String content;
   final Color? textColor;
   final int maxLines;
 
@@ -160,12 +161,12 @@ class ChatPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        RecentChatMessageIcon(message: message, color: textColor),
+        //RecentChatMessageIcon(message: message, color: textColor),
         Flexible(
           child: Text(
+            content,
             maxLines: maxLines,
             overflow: TextOverflow.ellipsis,
-            _getMessageContentText(message, context),
             style: context.theme.appTextThemes.body2.copyWith(
               color: textColor ?? context.theme.appColors.onTertararyBackground,
             ),
@@ -174,21 +175,6 @@ class ChatPreview extends StatelessWidget {
       ],
     );
   }
-
-  String _getMessageContentText(RecentChatMessage message, BuildContext context) =>
-      switch (message) {
-        final SystemRecentChatMessage message => message.text,
-        final TextRecentChatMessage textMessage => textMessage.text,
-        final ReplayRecentChatMessage replayMessage => replayMessage.text,
-        final DocumentRecentChatMessage documentMessage => documentMessage.fileName,
-        final LinkRecentChatMessage linkMessage => linkMessage.link,
-        final ProfileShareRecentChatMessage profileShareMessage => profileShareMessage.displayName,
-        MoneyRequestRecentChatMessage _ => context.i18n.chat_recents_money_request_message,
-        PhotoRecentChatMessage _ => context.i18n.common_photo,
-        VoiceRecentChatMessage _ => context.i18n.common_voice_message,
-        VideoRecentChatMessage _ => context.i18n.common_video,
-        PollRecentChatMessage _ => context.i18n.common_poll,
-      };
 }
 
 class RecentChatMessageIcon extends StatelessWidget {

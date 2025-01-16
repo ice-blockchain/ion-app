@@ -48,7 +48,6 @@ class RepliedMessageInfo extends HookWidget {
                 child: Column(
                   children: [
                     SenderSummary(sender: sender, textColor: textColor),
-                    ChatPreview(message: message, textColor: textColor, maxLines: 1),
                   ],
                 ),
               ),
