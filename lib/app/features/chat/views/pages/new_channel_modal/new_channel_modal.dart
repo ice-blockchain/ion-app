@@ -12,7 +12,6 @@ import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
 import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/components/bottom_sticky_button.dart';
@@ -147,10 +146,6 @@ class NewChannelModal extends HookConsumerWidget {
                         .map((entry) => entry.key)
                         .toList(),
                   );
-                  ref.read(channelsProvider.notifier).setChannel(newChannelData.id, newChannelData);
-
-                  ChannelRoute(pubkey: newChannelData.id).replace(context);
-
                   final result = await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
                         communityDefinitionData,
                       );
