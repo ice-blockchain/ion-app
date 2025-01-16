@@ -77,7 +77,7 @@ class StoryPreviewPage extends ConsumerWidget {
                       onTap: () => showSimpleBottomSheet<void>(
                         context: context,
                         child: WhoCanReplySettingsModal(
-                          title: context.i18n.visibility_settings_title_story,
+                          title: context.i18n.who_can_reply_settings_title_story,
                         ),
                       ),
                     ),

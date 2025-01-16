@@ -202,4 +202,11 @@ class ArticleData with _$ArticleData implements EventSerializable {
         if (tag.length > 1) tag[1]: MediaAttachment.fromTag(tag),
     };
   }
+
+  WhoCanReplySettingsOption? get whoCanReplySetting {
+    final whoCanReplySetting =
+        settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
+            as WhoCanReplyEventSetting?;
+    return whoCanReplySetting?.values.firstOrNull;
+  }
 }

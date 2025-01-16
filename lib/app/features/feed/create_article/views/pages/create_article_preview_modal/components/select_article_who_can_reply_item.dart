@@ -46,7 +46,8 @@ class SelectArticleWhoCanReplyItem extends ConsumerWidget {
         onTap: () {
           showSimpleBottomSheet<void>(
             context: context,
-            child: WhoCanReplySettingsModal(title: context.i18n.visibility_settings_title_article),
+            child:
+                WhoCanReplySettingsModal(title: context.i18n.who_can_reply_settings_title_article),
           );
         },
       ),

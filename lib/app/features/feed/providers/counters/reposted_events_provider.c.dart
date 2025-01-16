@@ -20,8 +20,8 @@ Stream<Set<String>?> repostedEvents(Ref ref) async* {
     yield {};
   } else {
     final cache = ref.read(ionConnectCacheProvider);
-    var repostedIds = cache.values.fold<Set<String>>({}, (result, entity) {
-      final repostedId = _getCurrentUserRepostedId(entity, currentPubkey: currentPubkey);
+    var repostedIds = cache.values.fold<Set<String>>({}, (result, entry) {
+      final repostedId = _getCurrentUserRepostedId(entry, currentPubkey: currentPubkey);
       if (repostedId != null) {
         result.add(repostedId);
       }

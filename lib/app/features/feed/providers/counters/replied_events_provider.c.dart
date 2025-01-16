@@ -19,8 +19,8 @@ Stream<Set<String>?> repliedEvents(Ref ref) async* {
     yield {};
   } else {
     final cache = ref.read(ionConnectCacheProvider);
-    var repliedIds = cache.values.fold<Set<String>>({}, (result, entity) {
-      final currentUserRepliedIds = _getCurrentUserRepliedIds(entity, currentPubkey: currentPubkey);
+    var repliedIds = cache.values.fold<Set<String>>({}, (result, entry) {
+      final currentUserRepliedIds = _getCurrentUserRepliedIds(entry, currentPubkey: currentPubkey);
       if (currentUserRepliedIds != null) {
         result.addAll(currentUserRepliedIds);
       }

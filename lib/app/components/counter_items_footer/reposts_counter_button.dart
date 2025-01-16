@@ -44,7 +44,7 @@ class RepostsCounterButton extends ConsumerWidget {
         ),
         activeTextColor: context.theme.appColors.primaryAccent,
         value: repostsCount != null ? formatDoubleCompact(repostsCount) : '',
-        isActive: isReposted,
+        state: isReposted ? TextActionButtonState.active : TextActionButtonState.idle,
       ),
     );
   }

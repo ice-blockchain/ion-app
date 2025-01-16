@@ -170,6 +170,13 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
   }
 
   bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
+
+  WhoCanReplySettingsOption? get whoCanReplySetting {
+    final whoCanReplySetting =
+        settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
+            as WhoCanReplyEventSetting?;
+    return whoCanReplySetting?.values.firstOrNull;
+  }
 }
 
 @freezed
