@@ -18,17 +18,21 @@ class Conversations extends _$Conversations {
         .read(conversationsDBServiceProvider)
         .watchConversations()
         .listen((conversationsEventMessages) async {
-      final lastPrivateDirectMesssages =
-          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+      state = await AsyncValue.guard(() async {
+        final lastPrivateDirectMesssages =
+            conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-      final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+        final conversations =
+            await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
-      state = AsyncValue.data(conversations);
+        return conversations;
+      });
     });
 
     ref.onDispose(conversationSubscription.cancel);
 
     state = const AsyncValue.loading();
+
     state = await AsyncValue.guard(() async {
       final database = ref.read(conversationsDBServiceProvider);
       final conversationsEventMessages = await database.getAllConversations();
@@ -38,7 +42,6 @@ class Conversations extends _$Conversations {
 
       final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
-      state = AsyncValue.data(conversations);
 
       return conversations;
     });
@@ -55,7 +58,7 @@ class Conversations extends _$Conversations {
 
     if (type == ChatType.chat) {
       final userMetadata =
-          ref.watch(userMetadataProvider(message.data.relatedPubkeys!.first.value)).valueOrNull;
+          await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
 
       if (userMetadata != null) {
         nickname = userMetadata.data.name;
