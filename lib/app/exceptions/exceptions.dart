@@ -203,9 +203,8 @@ class AuthChallengeIsEmptyException extends IONException {
   AuthChallengeIsEmptyException() : super(10041, 'Auth challenge is empty');
 }
 
-class FetchAndSyncConversationsException extends IONException {
-  FetchAndSyncConversationsException(dynamic error)
-      : super(10042, 'Failed to fetch and sync conversations $error');
+class DecodeE2EMessageException extends IONException {
+  DecodeE2EMessageException() : super(10042, 'Failed to decode E2E message');
 }
 
 class ConversationNotFoundException extends IONException {

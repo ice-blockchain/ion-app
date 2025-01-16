@@ -69,7 +69,11 @@ class UserRelaysManager extends _$UserRelaysManager {
     await for (final entity in entitiesStream) {
       if (entity is UserRelaysEntity) {
         result.add(entity);
-        pubkeysToFetch.remove(entity.masterPubkey);
+        pubkeysToFetch.removeWhere((pubkey) {
+          // In some corner cases we might use `pubkey` instead on `masterPubkey`,
+          // For example for kind14 chat events that don't have masterPubkey
+          return pubkey == entity.masterPubkey || pubkey == entity.pubkey;
+        });
       }
     }
 

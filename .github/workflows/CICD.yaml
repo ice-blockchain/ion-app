@@ -102,7 +102,7 @@ jobs:
         id: install-dependencies
         run: |
           cd main-repo
-          melos run pub_get
+          melos exec -- "flutter pub get"
       - name: Generate code
         id: generate-code
         run: |

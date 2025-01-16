@@ -124,7 +124,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   Stream<EventMessage> requestEvents(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
-    bool keepSubscription = false,
+    Stream<RelayMessage> Function(RequestMessage requestMessage, NostrRelay relay)?
+        subscriptionBuilder,
   }) async* {
     final dislikedRelaysUrls = <String>{};
     IonConnectRelay? relay;
@@ -142,8 +143,11 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
 
-        await for (final event
-            in ion.requestEvents(requestMessage, relay!, keepSubscription: keepSubscription)) {
+        final events = subscriptionBuilder != null
+            ? subscriptionBuilder(requestMessage, relay!)
+            : ion.requestEvents(requestMessage, relay!);
+
+        await for (final event in events) {
           if (event is NoticeMessage || event is ClosedMessage) {
             throw RelayRequestFailedException(
               relayUrl: relay!.url,
