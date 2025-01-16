@@ -59,7 +59,7 @@ Future<String?> _mainRedirect({
   required String location,
   required Ref ref,
 }) async {
-  final hasAuthenticated = (ref.read(authProvider).valueOrNull?.hasAuthenticated).falseOrValue;
+  final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
 
@@ -67,11 +67,11 @@ Future<String?> _mainRedirect({
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
 
-  if (!hasAuthenticated && !isOnAuth) {
+  if (!isAuthenticated && !isOnAuth) {
     return IntroRoute().location;
   }
 
-  if (hasAuthenticated && onboardingComplete != null) {
+  if (isAuthenticated && onboardingComplete != null) {
     if (onboardingComplete) {
       if (isOnSplash || isOnAuth) {
         return FeedRoute().location;

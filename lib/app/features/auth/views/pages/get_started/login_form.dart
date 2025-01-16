@@ -39,7 +39,7 @@ class LoginForm extends HookConsumerWidget {
           Button(
             disabled: loginActionState.isLoading,
             trailingIcon: loginActionState.isLoading ||
-                    (authState.valueOrNull?.hasAuthenticated).falseOrValue
+                    (authState.valueOrNull?.isAuthenticated).falseOrValue
                 ? const IONLoadingIndicator()
                 : Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
             onPressed: () async {

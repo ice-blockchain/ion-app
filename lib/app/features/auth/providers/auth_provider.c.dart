@@ -24,7 +24,7 @@ class AuthState with _$AuthState {
 
   const AuthState._();
 
-  bool get hasAuthenticated {
+  bool get isAuthenticated {
     return authenticatedIdentityKeyNames.isNotEmpty && !suggestToAddBiometrics && hasEventSigner;
   }
 }
