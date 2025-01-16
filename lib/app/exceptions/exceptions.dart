@@ -186,11 +186,13 @@ class UnsupportedParentEntity extends IONException {
 class RelayRequestFailedException extends IONException {
   RelayRequestFailedException({
     required String relayUrl,
-    RelayMessage? event,
+    required this.event,
   }) : super(
           10039,
           'Relay request failed: $relayUrl, event $event',
         );
+
+  RelayMessage event;
 }
 
 class UserChatRelaysNotFoundException extends IONException {

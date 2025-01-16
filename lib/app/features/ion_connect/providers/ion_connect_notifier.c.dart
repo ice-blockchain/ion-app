@@ -134,7 +134,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
         relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
-          await sendAuthEvent(relay!);
+          try {
+            // TODO: handle multiple auth requests to one connectoon properly
+            await sendAuthEvent(relay!);
+          } catch (error, stackTrace) {
+            Logger.log('Send auth exception', error: error, stackTrace: stackTrace);
+          }
         }
 
         await for (final event
@@ -223,8 +228,14 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
-  bool _isAuthRequired(Object? error) =>
-      error != null && (error is SendEventException) && error.code.startsWith('auth-required');
+  bool _isAuthRequired(Object? error) {
+    final isSubscriptionAuthRequired = error is RelayRequestFailedException &&
+        error.event is ClosedMessage &&
+        (error.event as ClosedMessage).message.startsWith('auth-required');
+    final isSendEventAuthRequired =
+        error != null && (error is SendEventException) && error.code.startsWith('auth-required');
+    return isSubscriptionAuthRequired || isSendEventAuthRequired;
+  }
 
   Future<IonConnectRelay> _getRelay(
     ActionSource actionSource, {
