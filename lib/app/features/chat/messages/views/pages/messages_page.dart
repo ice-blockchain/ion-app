@@ -13,8 +13,6 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-const String hasPrivacyModalShownKey = 'hasPrivacyModalShownKey';
-
 class MessagesPage extends HookConsumerWidget {
   const MessagesPage(this.conversationData, {super.key});
 
