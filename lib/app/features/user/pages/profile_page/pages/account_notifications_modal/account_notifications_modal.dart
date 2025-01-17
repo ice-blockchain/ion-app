@@ -8,25 +8,38 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
+import 'package:ion/app/features/user/pages/profile_page/providers/user_notifications_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AccountNotificationsModal extends HookConsumerWidget {
   const AccountNotificationsModal({
-    required this.selectedUserNotificationsType,
+    required this.selectedUserNotificationsTypes,
     super.key,
   });
 
-  final UserNotificationsType selectedUserNotificationsType;
+  final List<UserNotificationsType> selectedUserNotificationsTypes;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
     final textStyles = context.theme.appTextThemes;
-    final selectedOption = useState(selectedUserNotificationsType);
+    final selectedOptions = useState<Set<UserNotificationsType>>(
+      selectedUserNotificationsTypes.toSet(),
+    );
 
-    final iconBorderSize = Border.fromBorderSide(
-      BorderSide(color: colors.onTerararyFill, width: 1.0.s),
+    final handleOptionSelection = useCallback(
+      (UserNotificationsType option) {
+        selectedOptions.value = UserNotificationsType.toggleNotificationType(
+          selectedOptions.value,
+          option,
+        );
+
+        ref
+            .read(userNotificationsNotifierProvider.notifier)
+            .updateNotifications(selectedOptions.value.toList());
+      },
+      [selectedOptions, ref],
     );
 
     return Column(
@@ -41,10 +54,7 @@ class AccountNotificationsModal extends HookConsumerWidget {
           Column(
             children: [
               MenuItemButton(
-                onPressed: () {
-                  selectedOption.value = option;
-                  Navigator.of(context).pop(selectedOption.value);
-                },
+                onPressed: () => handleOptionSelection(option),
                 leadingIcon: ButtonIconFrame(
                   containerSize: 36.0.s,
                   borderRadius: BorderRadius.circular(10.0.s),
@@ -53,9 +63,11 @@ class AccountNotificationsModal extends HookConsumerWidget {
                     size: 24.0.s,
                     color: colors.primaryAccent,
                   ),
-                  border: iconBorderSize,
+                  border: Border.fromBorderSide(
+                    BorderSide(color: colors.onTerararyFill, width: 1.0.s),
+                  ),
                 ),
-                trailingIcon: selectedOption.value == option
+                trailingIcon: selectedOptions.value.contains(option)
                     ? Assets.svg.iconBlockCheckboxOnblue.icon(
                         color: colors.success,
                       )
