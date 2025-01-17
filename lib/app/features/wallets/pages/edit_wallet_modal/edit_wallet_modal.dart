@@ -13,30 +13,31 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/update_wallet_view_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class EditWalletModal extends HookConsumerWidget {
-  const EditWalletModal({required this.walletId, super.key});
+class EditWalletViewModal extends HookConsumerWidget {
+  const EditWalletViewModal({required this.walletId, super.key});
 
   final String walletId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(walletByIdProvider(id: walletId)).valueOrNull;
+    final walletView = ref.watch(walletViewByIdProvider(id: walletId)).valueOrNull;
 
     // TODO: add loading and error states
-    if (walletData == null) {
+    if (walletView == null) {
       return const SizedBox.shrink();
     }
 
-    final walletName = useState(walletData.name);
+    final walletName = useState(walletView.name);
     final controller = useTextEditingController(text: walletName.value);
-    final isNameChanged = walletName.value != (walletData.name) && walletName.value.isNotEmpty;
+    final isNameChanged = walletName.value != (walletView.name) && walletName.value.isNotEmpty;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -70,7 +71,12 @@ class EditWalletModal extends HookConsumerWidget {
               child: isNameChanged
                   ? Button(
                       onPressed: () {
-                        // TODO: update wallet
+                        ref.read(
+                          updateWalletViewProvider(
+                            walletView: walletView,
+                            walletViewName: walletName.value,
+                          ),
+                        );
                         context.pop();
                       },
                       label: Text(context.i18n.button_save),

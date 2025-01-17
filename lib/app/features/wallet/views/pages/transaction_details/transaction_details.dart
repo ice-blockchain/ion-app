@@ -14,8 +14,9 @@ import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
 import 'package:ion/app/features/wallet/components/timeline/timeline.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
+import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -57,12 +58,12 @@ class TransactionDetailsPage extends ConsumerWidget {
                           backgroundColor: Colors.transparent,
                         ),
                       ),
-                    if (formData.selectedCoin case final CoinData coin)
+                    if (formData.selectedCoin case final CoinInWalletData coinInWallet)
                       TransactionAmountSummary(
-                        amount: coin.amount,
-                        currency: coin.abbreviation,
-                        usdAmount: coin.balance,
-                        icon: coin.iconUrl.icon(),
+                        amount: coinInWallet.amount,
+                        currency: coinInWallet.coin.abbreviation,
+                        usdAmount: coinInWallet.balanceUSD,
+                        icon: coinInWallet.coin.iconUrl.icon(),
                       ),
                     SizedBox(height: 12.0.s),
                     Timeline(

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create_wallet_view_request.c.dart';
+part of 'create_update_wallet_view_request.c.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

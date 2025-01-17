@@ -3,7 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
-import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -29,21 +29,21 @@ void main() {
     test('build returns value from localStorage if it exists', () {
       when(
         () => mockLocalStorage.getString(
-          SelectedWalletIdNotifier.selectedWalletIdKey,
+          SelectedWalletViewIdNotifier.selectedWalletIdKey,
         ),
       ).thenReturn('testWalletId');
 
-      final result = container.read(selectedWalletIdNotifierProvider);
+      final result = container.read(selectedWalletViewIdNotifierProvider);
 
       expect(result, 'testWalletId');
 
       verify(
-        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+        () => mockLocalStorage.getString(SelectedWalletViewIdNotifier.selectedWalletIdKey),
       ).called(1);
     });
 
     test('selectedWalletId setter updates state and localStorage', () {
-      final notifier = container.read(selectedWalletIdNotifierProvider.notifier);
+      final notifier = container.read(selectedWalletViewIdNotifierProvider.notifier);
 
       when(
         () => mockLocalStorage.setString(any(), any()),
@@ -52,13 +52,13 @@ void main() {
       notifier.selectedWalletId = 'newWalletId';
 
       expect(
-        container.read(selectedWalletIdNotifierProvider),
+        container.read(selectedWalletViewIdNotifierProvider),
         'newWalletId',
       );
 
       verify(
         () => mockLocalStorage.setString(
-          SelectedWalletIdNotifier.selectedWalletIdKey,
+          SelectedWalletViewIdNotifier.selectedWalletIdKey,
           'newWalletId',
         ),
       ).called(1);
@@ -68,13 +68,13 @@ void main() {
       final listener = Listener<String?>();
 
       when(
-        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+        () => mockLocalStorage.getString(SelectedWalletViewIdNotifier.selectedWalletIdKey),
       ).thenReturn(
         mockedWalletDataArray.first.id,
       );
 
       container.listen<String?>(
-        selectedWalletIdNotifierProvider,
+        selectedWalletViewIdNotifierProvider,
         listener.call,
         fireImmediately: true,
       );
@@ -84,10 +84,10 @@ void main() {
       ).called(1);
 
       when(
-        () => mockLocalStorage.getString(SelectedWalletIdNotifier.selectedWalletIdKey),
+        () => mockLocalStorage.getString(SelectedWalletViewIdNotifier.selectedWalletIdKey),
       ).thenReturn('updatedWalletId');
 
-      container.refresh(selectedWalletIdNotifierProvider);
+      container.refresh(selectedWalletViewIdNotifierProvider);
 
       verify(
         () => listener(mockedWalletDataArray.first.id, 'updatedWalletId'),

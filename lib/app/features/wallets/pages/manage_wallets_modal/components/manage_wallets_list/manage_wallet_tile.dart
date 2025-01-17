@@ -9,22 +9,22 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/components/wallet_icon/wallet_icon.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ManageWalletTile extends ConsumerWidget {
   const ManageWalletTile({
-    required this.walletId,
+    required this.walletViewId,
     super.key,
   });
 
-  final String walletId;
+  final String walletViewId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletData = ref.watch(walletByIdProvider(id: walletId)).valueOrNull;
+    final walletData = ref.watch(walletViewByIdProvider(id: walletViewId)).valueOrNull;
 
     // TODO: add loading and error states
     if (walletData == null) {
@@ -40,14 +40,14 @@ class ManageWalletTile extends ConsumerWidget {
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem(
         onTap: () {
-          EditWalletRoute(walletId: walletId).push<void>(context);
+          EditWalletViewRoute(walletId: walletViewId).push<void>(context);
         },
         leading: const WalletIcon(),
         title: Text(
           walletData.name,
         ),
         subtitle: Text(
-          formatToCurrency(walletData.balance),
+          formatToCurrency(walletData.usdBalance),
           style: context.theme.appTextThemes.caption3.copyWith(
             color: context.theme.appColors.tertararyText,
           ),

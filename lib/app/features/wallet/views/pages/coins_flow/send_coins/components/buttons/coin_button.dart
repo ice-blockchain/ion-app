@@ -4,24 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CoinButton extends StatelessWidget {
   const CoinButton({
-    required this.coinData,
+    required this.coinInWallet,
     required this.onTap,
     super.key,
   });
 
-  final CoinData coinData;
+  final CoinInWalletData coinInWallet;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
+    final coinData = coinInWallet.coin;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -52,11 +53,11 @@ class CoinButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  coinData.amount.toString(),
+                  coinInWallet.amount.toString(),
                   style: textTheme.body,
                 ),
                 Text(
-                  formatToCurrency(coinData.balance),
+                  formatToCurrency(coinInWallet.balanceUSD),
                   style: textTheme.caption3.copyWith(
                     color: colors.secondaryText,
                   ),

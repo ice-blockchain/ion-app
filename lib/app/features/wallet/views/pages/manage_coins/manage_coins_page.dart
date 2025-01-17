@@ -71,7 +71,7 @@ class ManageCoinsPage extends HookConsumerWidget {
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
                             child: ManageCoinItem(
-                              coinId: filteredCoins[index].coinData.abbreviation,
+                              coinId: filteredCoins[index].coinInWallet.coin.abbreviation,
                             ),
                           );
                         },

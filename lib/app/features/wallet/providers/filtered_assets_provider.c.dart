@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/riverpod.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
 import 'package:ion/app/features/wallet/model/wallet_data_with_loading_state.c.dart';
 import 'package:ion/app/features/wallet/providers/coins_provider.c.dart';
@@ -22,11 +23,11 @@ class WalletSearchQueryController extends _$WalletSearchQueryController {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<CoinData>> filteredCoins(Ref ref) async {
+Future<List<CoinInWalletData>> filteredCoins(Ref ref) async {
   final searchQuery =
       ref.watch(walletSearchQueryControllerProvider(WalletAssetType.coin)).toLowerCase();
   await ref.debounce();
-  final coins = await ref.watch(coinsDataProvider.future);
+  final coins = await ref.watch(coinsInWalletProvider.future);
   return _filterCoins(coins, searchQuery);
 }
 
@@ -39,15 +40,15 @@ Future<List<NftData>> filteredNfts(Ref ref) async {
   return _filterNfts(nfts, searchQuery);
 }
 
-List<CoinData> _filterCoins(List<CoinData> coins, String query) {
+List<CoinInWalletData> _filterCoins(List<CoinInWalletData> coins, String query) {
   if (query.isEmpty) {
     return coins;
   }
   return coins
       .where(
-        (coin) =>
-            coin.name.toLowerCase().contains(query) ||
-            coin.abbreviation.toLowerCase().contains(query),
+        (coinInWallet) =>
+            coinInWallet.coin.name.toLowerCase().contains(query) ||
+            coinInWallet.coin.abbreviation.toLowerCase().contains(query),
       )
       .toList();
 }

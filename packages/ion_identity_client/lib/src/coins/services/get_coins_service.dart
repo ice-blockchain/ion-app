@@ -25,11 +25,11 @@ class GetCoinsService {
 
   Future<List<Coin>> syncCoins({
     required String username,
-    required List<Coin> coins,
+    required Set<String> symbolGroups,
   }) {
     return _getCoinsDataSource.syncCoins(
       username: username,
-      coins: coins,
+      symbolGroups: symbolGroups,
     );
   }
 

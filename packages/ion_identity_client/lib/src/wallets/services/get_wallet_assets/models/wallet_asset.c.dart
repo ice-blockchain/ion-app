@@ -13,7 +13,7 @@ class WalletAsset with _$WalletAsset {
     required String? contract,
     required String symbol,
     required int decimals,
-    required String balance,
+    required double balance,
     required bool? verified,
   }) = _WalletAsset;
 

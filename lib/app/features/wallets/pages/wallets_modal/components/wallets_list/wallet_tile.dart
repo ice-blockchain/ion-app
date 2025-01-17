@@ -9,8 +9,8 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/components/wallet_icon/wallet_icon.dart';
-import 'package:ion/app/features/wallets/providers/selected_wallet_id_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -24,7 +24,7 @@ class WalletTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedWalletId = ref.watch(currentWalletIdProvider).valueOrNull;
+    final selectedWalletId = ref.watch(currentWalletViewIdProvider).valueOrNull;
     final isSelected = walletData.id == selectedWalletId;
 
     return Padding(
@@ -33,7 +33,8 @@ class WalletTile extends ConsumerWidget {
         isSelected: isSelected,
         onTap: () {
           if (!isSelected) {
-            ref.read(selectedWalletIdNotifierProvider.notifier).selectedWalletId = walletData.id;
+            ref.read(selectedWalletViewIdNotifierProvider.notifier).selectedWalletId =
+                walletData.id;
           }
         },
         leading: const WalletIcon(),
@@ -41,7 +42,7 @@ class WalletTile extends ConsumerWidget {
           walletData.name,
         ),
         subtitle: Text(
-          formatToCurrency(walletData.balance),
+          formatToCurrency(walletData.usdBalance),
           style: context.theme.appTextThemes.caption3.copyWith(
             color: isSelected
                 ? context.theme.appColors.onPrimaryAccent

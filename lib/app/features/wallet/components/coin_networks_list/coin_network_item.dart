@@ -27,11 +27,12 @@ class CoinNetworkItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinDataResult = ref.watch(coinByIdProvider(coinId: coinId));
+    final coinDataResult = ref.watch(coinInWalletByIdProvider(coinId: coinId));
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
 
     return coinDataResult.maybeWhen(
-      data: (coinData) {
+      data: (coinInWallet) {
+        final coinData = coinInWallet.coin;
         return ListItem(
           title: Row(
             children: [
@@ -76,12 +77,12 @@ class CoinNetworkItem extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                isBalanceVisible ? coinData.amount.toString() : '****',
+                isBalanceVisible ? coinData.abbreviation : '****',
                 style: context.theme.appTextThemes.body
                     .copyWith(color: context.theme.appColors.primaryText),
               ),
               Text(
-                isBalanceVisible ? formatToCurrency(coinData.balance) : '******',
+                isBalanceVisible ? formatToCurrency(coinInWallet.balanceUSD) : '******',
                 style: context.theme.appTextThemes.caption3
                     .copyWith(color: context.theme.appColors.secondaryText),
               ),

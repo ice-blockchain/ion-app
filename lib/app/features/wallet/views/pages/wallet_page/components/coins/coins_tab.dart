@@ -43,9 +43,9 @@ class CoinsTab extends ConsumerWidget {
               itemBuilder: (BuildContext context, int index) {
                 return ScreenSideOffset.small(
                   child: CoinItem(
-                    coinData: selectedCoins[index],
+                    coinInWallet: selectedCoins[index],
                     onTap: () {
-                      CoinsDetailsRoute(coinId: selectedCoins[index].abbreviation).go(context);
+                      CoinsDetailsRoute(coinId: selectedCoins[index].coin.abbreviation).go(context);
                     },
                   ),
                 );

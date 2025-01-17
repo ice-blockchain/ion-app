@@ -26,6 +26,7 @@ mixin _$ShortWalletView {
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
 
   /// Serializes this ShortWalletView to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +50,8 @@ abstract class $ShortWalletViewCopyWith<$Res> {
       List<String> symbolGroups,
       String createdAt,
       String updatedAt,
-      String userId});
+      String userId,
+      String id});
 }
 
 /// @nodoc
@@ -73,6 +75,7 @@ class _$ShortWalletViewCopyWithImpl<$Res, $Val extends ShortWalletView>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? userId = null,
+    Object? id = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -99,6 +102,10 @@ class _$ShortWalletViewCopyWithImpl<$Res, $Val extends ShortWalletView>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -117,7 +124,8 @@ abstract class _$$ShortWalletViewImplCopyWith<$Res>
       List<String> symbolGroups,
       String createdAt,
       String updatedAt,
-      String userId});
+      String userId,
+      String id});
 }
 
 /// @nodoc
@@ -139,6 +147,7 @@ class __$$ShortWalletViewImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? userId = null,
+    Object? id = null,
   }) {
     return _then(_$ShortWalletViewImpl(
       name: null == name
@@ -165,6 +174,10 @@ class __$$ShortWalletViewImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -178,7 +191,8 @@ class _$ShortWalletViewImpl implements _ShortWalletView {
       required final List<String> symbolGroups,
       required this.createdAt,
       required this.updatedAt,
-      required this.userId})
+      required this.userId,
+      required this.id})
       : _coins = coins,
         _symbolGroups = symbolGroups;
 
@@ -209,10 +223,12 @@ class _$ShortWalletViewImpl implements _ShortWalletView {
   final String updatedAt;
   @override
   final String userId;
+  @override
+  final String id;
 
   @override
   String toString() {
-    return 'ShortWalletView(name: $name, coins: $coins, symbolGroups: $symbolGroups, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId)';
+    return 'ShortWalletView(name: $name, coins: $coins, symbolGroups: $symbolGroups, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
   }
 
   @override
@@ -228,7 +244,8 @@ class _$ShortWalletViewImpl implements _ShortWalletView {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.userId, userId) || other.userId == userId));
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -240,7 +257,8 @@ class _$ShortWalletViewImpl implements _ShortWalletView {
       const DeepCollectionEquality().hash(_symbolGroups),
       createdAt,
       updatedAt,
-      userId);
+      userId,
+      id);
 
   /// Create a copy of ShortWalletView
   /// with the given fields replaced by the non-null parameter values.
@@ -266,7 +284,8 @@ abstract class _ShortWalletView implements ShortWalletView {
       required final List<String> symbolGroups,
       required final String createdAt,
       required final String updatedAt,
-      required final String userId}) = _$ShortWalletViewImpl;
+      required final String userId,
+      required final String id}) = _$ShortWalletViewImpl;
 
   factory _ShortWalletView.fromJson(Map<String, dynamic> json) =
       _$ShortWalletViewImpl.fromJson;
@@ -283,6 +302,8 @@ abstract class _ShortWalletView implements ShortWalletView {
   String get updatedAt;
   @override
   String get userId;
+  @override
+  String get id;
 
   /// Create a copy of ShortWalletView
   /// with the given fields replaced by the non-null parameter values.

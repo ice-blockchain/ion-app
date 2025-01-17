@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/model/contact_data.c.dart';
 import 'package:ion/app/features/wallet/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
-import 'package:ion/app/features/wallet/model/wallet_view_data.c.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_asset_form_provider.c.g.dart';
@@ -18,19 +17,12 @@ class SendAssetFormController extends _$SendAssetFormController {
   // TODO: make async
   @override
   CryptoAssetData build({CryptoAssetType type = CryptoAssetType.coin}) {
-    final wallet = ref.watch(currentWalletDataProvider).valueOrNull;
+    final wallet = ref.watch(currentWalletViewDataProvider).valueOrNull;
 
     return CryptoAssetData(
       selectedNetwork: NetworkType.eth,
-      wallet: wallet ??
-          const WalletViewData(
-            id: '1',
-            name: 'Wallet 1',
-            balance: 0,
-            icon: '',
-            address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
-          ),
-      address: '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+      wallet: wallet!,
+      address: 'Not implemented', // TODO (1) not imeplemented
       arrivalTime: 15,
       arrivalDateTime: DateTime.now(),
     );
@@ -38,7 +30,7 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   void setNft(NftData nft) => state = state.copyWith(selectedNft: nft);
 
-  void setCoin(CoinData coin) => state = state.copyWith(selectedCoin: coin);
+  void setCoin(CoinInWalletData coin) => state = state.copyWith(selectedCoin: coin);
 
   void setContact(ContactData? contact) => state = state.copyWith(selectedContact: contact);
 

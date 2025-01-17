@@ -10,7 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/nft_details/components/nft_name/nft_name.dart';
 import 'package:ion/app/features/wallet/views/pages/nft_details/components/nft_picture/nft_picture.dart';
 import 'package:ion/app/router/app_routes.c.dart';

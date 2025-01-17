@@ -7,7 +7,7 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/components/coins_list/coin_item.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/providers/filtered_wallet_coins_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -20,7 +20,7 @@ class CoinsListView extends ConsumerWidget {
     super.key,
   });
 
-  final void Function(CoinData coin) onCoinItemTap;
+  final void Function(CoinInWalletData coin) onCoinItemTap;
   final String title;
   final bool showBackButton;
 
@@ -68,7 +68,7 @@ class CoinsListView extends ConsumerWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return ScreenSideOffset.small(
                     child: CoinItem(
-                      coinData: coins[index],
+                      coinInWallet: coins[index],
                       onTap: () => onCoinItemTap(coins[index]),
                     ),
                   );
