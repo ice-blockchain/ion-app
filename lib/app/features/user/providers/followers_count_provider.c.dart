@@ -10,7 +10,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +18,7 @@ part 'followers_count_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class FollowersCount extends _$FollowersCount {
   @override
-  Future<int?> build(String pubkey) async {
+  Future<int> build(String pubkey) async {
     final followersCountEntity = ref.watch(
       ionConnectCacheProvider.select(
         cacheSelector<EventCountResultEntity>(
@@ -32,13 +31,14 @@ class FollowersCount extends _$FollowersCount {
     );
 
     if (followersCountEntity != null) {
-      return followersCountEntity.data.content as int;
+      final contentMap = followersCountEntity.data.content as Map<String, dynamic>;
+
+      return contentMap.length;
     }
 
     final relay = await _getRandomUserRelay();
 
     final requestEvent = await _buildRequestEvent(relayUrl: relay.url);
-
     final subscriptionMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
@@ -48,36 +48,28 @@ class FollowersCount extends _$FollowersCount {
         ),
       );
 
-    // We first subscribe to the count response
     final subscription = relay.subscribe(subscriptionMessage);
 
-    // Then send the request event
     await ref.watch(ionConnectNotifierProvider.notifier).sendEvent(
           requestEvent,
           actionSource: ActionSourceRelayUrl(relay.url),
           cache: false,
         );
 
-    // Waiting for the response
-    final responseMessage =
-        await subscription.messages.firstWhere((message) => message is EventMessage);
+    final responseMessage = await subscription.messages
+        .firstWhere((message) => message is EventMessage)
+        .timeout(const Duration(seconds: 5));
 
-    // And unsubscribe
     relay.unsubscribe(subscription.id);
 
-    EventCountResultEntity eventCountResultEntity;
+    final eventCountResultEntity =
+        EventCountResultEntity.fromEventMessage(responseMessage as EventMessage);
 
-    try {
-      eventCountResultEntity =
-          EventCountResultEntity.fromEventMessage(responseMessage as EventMessage);
-    } on EventMasterPubkeyNotFoundException catch (e) {
-      Logger.error(e);
-      rethrow;
-    }
+    ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
-    ref.watch(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
+    final contentMap = eventCountResultEntity.data.content as Map<String, dynamic>;
 
-    return (eventCountResultEntity.data.content as Map<String, dynamic>?)?.length;
+    return contentMap.length;
   }
 
   Future<NostrRelay> _getRandomUserRelay() async {
