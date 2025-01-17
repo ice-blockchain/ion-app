@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/views/components/article/constants.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -65,10 +65,7 @@ class ArticleCoverProcessorNotifier extends _$ArticleCoverProcessorNotifier {
       final croppedImage = await mediaService.cropImage(
         uiSettings: cropUiSettings,
         path: assetFile.path,
-        aspectRatio: const CropAspectRatio(
-          ratioX: 343,
-          ratioY: 210,
-        ),
+        aspectRatio: ArticleConstants.cropAspectRatio,
       );
       if (croppedImage == null) {
         state = const ArticleCoverProcessorState.initial();
@@ -85,8 +82,8 @@ class ArticleCoverProcessorNotifier extends _$ArticleCoverProcessorNotifier {
 
       final compressedImage = await compressService.compressImage(
         croppedWithSize,
-        width: 1024,
-        height: 627,
+        width: ArticleConstants.compressedImageWidth,
+        height: ArticleConstants.compressedImageHeight,
       );
       state = ArticleCoverProcessorState.processed(file: compressedImage);
     } catch (error) {
