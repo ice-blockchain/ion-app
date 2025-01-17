@@ -14,13 +14,16 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   FutureOr<List<EE2EConversationEntity>> build() async {
-    final conversationSubscription =
-        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
+    final conversationSubscription = ref
+        .read(conversationsDBServiceProvider)
+        .watchConversations()
+        .listen((conversationsEventMessages) async {
       state = await AsyncValue.guard(() async {
         final lastPrivateDirectMesssages =
             conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-        final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+        final conversations =
+            await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
         return conversations;
       });
@@ -53,7 +56,8 @@ class Conversations extends _$Conversations {
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
 
     if (type == ChatType.chat) {
-      final userMetadata = await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
+      final userMetadata =
+          await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
 
       if (userMetadata != null) {
         nickname = userMetadata.data.name;
@@ -63,21 +67,24 @@ class Conversations extends _$Conversations {
     } else {
       name = message.data.relatedSubject?.value ?? '';
 
-      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
-      final imageUrls =
-          await conversationMessageManagementService.downloadDecryptDecompressMedia([message.data.primaryMedia!]);
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+      final imageUrls = await conversationMessageManagementService
+          .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
       imageUrl = imageUrls.first.path;
     }
 
     final lastMessageAt = message.createdAt;
-    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants =
+        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.toString();
 
     final database = ref.read(conversationsDBServiceProvider);
 
     final conversationId = await database.lookupConversationByEventMessageId(message.id);
 
-    final unreadMessagesCount = conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
+    final unreadMessagesCount =
+        conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
 
     return EE2EConversationEntity(
       name: name,

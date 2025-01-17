@@ -22,7 +22,9 @@ class ConversationReadAllButton extends ConsumerWidget {
       onTap: () async {
         selectedConversations.isEmpty
             ? await ref.read(e2EEConversationManagementProvider.notifier).readAllConversations()
-            : await ref.read(e2EEConversationManagementProvider.notifier).readConversations(selectedConversations);
+            : await ref
+                .read(e2EEConversationManagementProvider.notifier)
+                .readConversations(selectedConversations);
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
       },
       child: Row(
@@ -37,7 +39,8 @@ class ConversationReadAllButton extends ConsumerWidget {
               selectedConversations.isEmpty ? context.i18n.chat_read_all : context.i18n.chat_read,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.theme.appTextThemes.body2.copyWith(color: context.theme.appColors.primaryAccent),
+              style: context.theme.appTextThemes.body2
+                  .copyWith(color: context.theme.appColors.primaryAccent),
             ),
           ),
         ],

@@ -58,9 +58,11 @@ class RecentChatTile extends ConsumerWidget {
               children: [
                 if (conversationData.imageUrl != null)
                   Avatar(
-                    imageUrl: conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
-                    imageWidget:
-                        conversationData.type == ChatType.group ? Image.asset(conversationData.imageUrl!) : null,
+                    imageUrl:
+                        conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
+                    imageWidget: conversationData.type == ChatType.group
+                        ? Image.asset(conversationData.imageUrl!)
+                        : null,
                     size: 40.0.s,
                   ),
                 SizedBox(width: 12.0.s),
