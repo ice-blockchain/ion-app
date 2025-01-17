@@ -3,16 +3,48 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/services/text_parser/text_match.dart';
-import 'package:ion/app/services/text_parser/text_matcher.dart';
+import 'package:ion/app/services/text_parser/model/text_match.c.dart';
+import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
 mixin EntityMediaDataMixin {
   List<TextMatch> get content;
   Map<String, MediaAttachment> get media;
+  List<TextMatch> get contentWithoutMedia {
+    if (media.isEmpty) return content;
 
-  List<TextMatch> get contentWithoutMedia => content.where((match) {
-        return !media.values.any((media) => media.url == match.text);
-      }).toList();
+    final result = <TextMatch>[];
+    TextMatch? previousMatch;
+
+    // Post-process text to remove leading space after media URLs
+    for (final match in content) {
+      final isPlainTextMatcher = match.matcher == null;
+      final isPreviousUrlMatcher = previousMatch?.matcher is UrlMatcher;
+      final isMediaUrl = media.containsKey(previousMatch?.text);
+      final isStartWithSpace = match.text.startsWith(' ');
+
+      if (isPlainTextMatcher && isPreviousUrlMatcher && isMediaUrl && isStartWithSpace) {
+        final processedText = match.text.substring(1);
+        if (processedText.isNotEmpty) {
+          result.add(
+            match.copyWith(
+              text: match.text.substring(1),
+              offset: match.offset + 1,
+            ),
+          );
+        }
+      } else {
+        result.add(match);
+      }
+
+      previousMatch = match;
+    }
+
+    // Filter out URLs from the text content that are present in the media attachments
+    // to avoid showing media URLs in the text when they're already being displayed as actual media
+    return result.where((match) {
+      return !media.values.any((media) => media.url == match.text) && match.text.isNotEmpty;
+    }).toList();
+  }
 
   MediaAttachment? get primaryMedia => media.values.firstOrNull;
 

@@ -11,7 +11,7 @@ import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/services/text_parser/text_match.dart';
+import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
