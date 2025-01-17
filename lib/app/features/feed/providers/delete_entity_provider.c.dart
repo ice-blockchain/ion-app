@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_articles_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_replies_data_source_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -59,9 +60,17 @@ class DeleteEntity extends _$DeleteEntity {
       final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
       await ref.read(entitiesPagedDataProvider(dataSource).notifier).deleteEntity(entity);
     } else {
-      // Post / Article / Repost
-      final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
-      if (feedDataSources.isNotEmpty) {
+      if (entity case final ArticleEntity _) {
+        final userArticlesDataSource =
+            ref.watch(userArticlesDataSourceProvider(entity.masterPubkey));
+        final feedDataSources = ref.watch(feedPostsDataSourceProvider) ?? [];
+        await ref
+            .read(entitiesPagedDataProvider(userArticlesDataSource).notifier)
+            .deleteEntity(entity);
+        await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
+      } else {
+        // Also delete from feed if present
+        final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
         await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
       }
     }
