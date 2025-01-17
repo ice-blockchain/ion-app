@@ -39,11 +39,6 @@ class CreateArticleAddImage extends HookConsumerWidget {
             processed: (file) {
               selectedImage.value = file;
             },
-            error: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Ошибка: $message')),
-              );
-            },
           );
         });
       },
