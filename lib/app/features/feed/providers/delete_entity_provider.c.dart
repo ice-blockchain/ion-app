@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_replies_data_source_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'delete_entity_provider.c.g.dart';
@@ -54,8 +55,11 @@ class DeleteEntity extends _$DeleteEntity {
             ).notifier,
           )
           .deleteReply(entity: entity);
+
+      final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
+      await ref.read(entitiesPagedDataProvider(dataSource).notifier).deleteEntity(entity);
     } else {
-      // Post or Article or Repost or GenericRepost
+      // Post / Article / Repost
       final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
       if (feedDataSources.isNotEmpty) {
         await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
