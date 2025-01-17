@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 abstract class SearchExtension {
   String get query;
@@ -306,4 +307,25 @@ class TagMarkerSearchExtension extends SearchExtension {
 
   @override
   String get query => '${negative ? '!' : ''}${tagName}marker:$marker';
+}
+
+/// For every kind [forKind] that the subscription finds also include mentions (kind 10002)
+class MentionsSearchExtension extends IncludeSearchExtension {
+  MentionsSearchExtension({this.forKind = UserMetadataEntity.kind});
+
+  @override
+  final int forKind;
+
+  @override
+  String get query => 'kind10002';
+}
+
+/// Wraps a search query in quotes to perform an exact match search
+class QuerySearchExtension extends SearchExtension {
+  QuerySearchExtension({required this.searchQuery});
+
+  final String searchQuery;
+
+  @override
+  String get query => '"$searchQuery"';
 }
