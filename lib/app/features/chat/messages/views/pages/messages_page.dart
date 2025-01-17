@@ -16,7 +16,7 @@ import 'package:ion/generated/assets.gen.dart';
 class MessagesPage extends HookConsumerWidget {
   const MessagesPage(this.conversationData, {super.key});
 
-  final Ee2eConversationEntity conversationData;
+  final EE2EConversationEntity conversationData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

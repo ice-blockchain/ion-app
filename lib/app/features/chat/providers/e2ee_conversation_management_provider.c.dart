@@ -20,8 +20,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       await conversationMessageManagementService.sentMessage(
         content: '',
@@ -38,8 +37,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       await conversationMessageManagementService.sentMessage(
         content: '',
@@ -61,8 +59,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -99,8 +96,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -141,8 +137,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -174,5 +169,13 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
     for (final id in ids) {
       await databaseService.deleteConversation(id);
     }
+  }
+
+  Future<void> readConversations(List<String> conversationIds) async {
+    await ref.read(conversationsDBServiceProvider).markConversationsAsRead(conversationIds);
+  }
+
+  Future<void> readAllConversations() async {
+    await ref.read(conversationsDBServiceProvider).markAllConversationsAsRead();
   }
 }

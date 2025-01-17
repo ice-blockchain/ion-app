@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConversationReadAllButton extends ConsumerWidget {
@@ -13,9 +15,14 @@ class ConversationReadAllButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selectedConversations = ref.watch(selectedConversationsIdsProvider);
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
+      onTap: () async {
+        selectedConversations.isEmpty
+            ? await ref.read(e2EEConversationManagementProvider.notifier).readAllConversations()
+            : await ref.read(e2EEConversationManagementProvider.notifier).readConversations(selectedConversations);
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
       },
       child: Row(
@@ -27,11 +34,10 @@ class ConversationReadAllButton extends ConsumerWidget {
           SizedBox(width: 4.0.s),
           Flexible(
             child: Text(
-              context.i18n.chat_read_all,
+              selectedConversations.isEmpty ? context.i18n.chat_read_all : context.i18n.chat_read,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.theme.appTextThemes.body2
-                  .copyWith(color: context.theme.appColors.primaryAccent),
+              style: context.theme.appTextThemes.body2.copyWith(color: context.theme.appColors.primaryAccent),
             ),
           ),
         ],

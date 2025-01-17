@@ -6,8 +6,8 @@ import 'package:ion/app/features/chat/model/chat_type.dart';
 part 'ee2e_conversation_data.c.freezed.dart';
 
 @freezed
-class Ee2eConversationEntity with _$Ee2eConversationEntity {
-  const factory Ee2eConversationEntity({
+class EE2EConversationEntity with _$EE2EConversationEntity {
+  const factory EE2EConversationEntity({
     required String name,
     required ChatType type,
     required List<String> participants,
@@ -17,8 +17,9 @@ class Ee2eConversationEntity with _$Ee2eConversationEntity {
     String? nickname,
     String? imageUrl,
     DateTime? lastMessageAt,
+    int? unreadMessagesCount,
     String? lastMessageContent,
   }) = _PrivateDirectMessageEntity;
 
-  const Ee2eConversationEntity._();
+  const EE2EConversationEntity._();
 }

@@ -13,17 +13,14 @@ part 'conversations_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class Conversations extends _$Conversations {
   @override
-  FutureOr<List<Ee2eConversationEntity>> build() async {
-    final conversationSubscription = ref
-        .read(conversationsDBServiceProvider)
-        .watchConversations()
-        .listen((conversationsEventMessages) async {
+  FutureOr<List<EE2EConversationEntity>> build() async {
+    final conversationSubscription =
+        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
       state = await AsyncValue.guard(() async {
         final lastPrivateDirectMesssages =
             conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-        final conversations =
-            await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+        final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
         return conversations;
       });
@@ -48,7 +45,7 @@ class Conversations extends _$Conversations {
     return state.requireValue;
   }
 
-  Future<Ee2eConversationEntity> getConversationData(PrivateDirectMessageEntity message) async {
+  Future<EE2EConversationEntity> getConversationData(PrivateDirectMessageEntity message) async {
     var name = 'Unknown';
     String? nickname;
     String? imageUrl;
@@ -56,8 +53,7 @@ class Conversations extends _$Conversations {
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
 
     if (type == ChatType.chat) {
-      final userMetadata =
-          await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
+      final userMetadata = await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
 
       if (userMetadata != null) {
         nickname = userMetadata.data.name;
@@ -67,23 +63,23 @@ class Conversations extends _$Conversations {
     } else {
       name = message.data.relatedSubject?.value ?? '';
 
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
-      final imageUrls = await conversationMessageManagementService
-          .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
+      final imageUrls =
+          await conversationMessageManagementService.downloadDecryptDecompressMedia([message.data.primaryMedia!]);
       imageUrl = imageUrls.first.path;
     }
 
     final lastMessageAt = message.createdAt;
-    final participants =
-        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.toString();
 
     final database = ref.read(conversationsDBServiceProvider);
 
     final conversationId = await database.lookupConversationByEventMessageId(message.id);
 
-    return Ee2eConversationEntity(
+    final unreadMessagesCount = conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
+
+    return EE2EConversationEntity(
       name: name,
       type: type,
       id: conversationId,
@@ -92,6 +88,7 @@ class Conversations extends _$Conversations {
       participants: participants,
       lastMessageAt: lastMessageAt,
       lastMessageContent: lastMessageContent,
+      unreadMessagesCount: unreadMessagesCount,
     );
   }
 }

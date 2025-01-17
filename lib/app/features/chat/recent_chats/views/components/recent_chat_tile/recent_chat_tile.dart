@@ -17,7 +17,7 @@ import 'package:ion/generated/assets.gen.dart';
 class RecentChatTile extends ConsumerWidget {
   const RecentChatTile(this.conversationData, {super.key});
 
-  final Ee2eConversationEntity conversationData;
+  final EE2EConversationEntity conversationData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,11 +58,9 @@ class RecentChatTile extends ConsumerWidget {
               children: [
                 if (conversationData.imageUrl != null)
                   Avatar(
-                    imageUrl:
-                        conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
-                    imageWidget: conversationData.type == ChatType.group
-                        ? Image.asset(conversationData.imageUrl!)
-                        : null,
+                    imageUrl: conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
+                    imageWidget:
+                        conversationData.type == ChatType.group ? Image.asset(conversationData.imageUrl!) : null,
                     size: 40.0.s,
                   ),
                 SizedBox(width: 12.0.s),
@@ -90,8 +88,7 @@ class RecentChatTile extends ConsumerWidget {
                           Expanded(
                             child: ChatPreview(content: conversationData.lastMessageContent!),
                           ),
-                          //UnreadCountBadge(
-                          //    unreadCount: chat.unreadMessageCount),
+                          UnreadCountBadge(unreadCount: conversationData.unreadMessagesCount ?? 0),
                         ],
                       ),
                     ],

@@ -13,8 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_db_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
-ConversationsDBService conversationsDBService(Ref ref) =>
-    ConversationsDBService(ref.watch(ionDatabaseProvider));
+ConversationsDBService conversationsDBService(Ref ref) => ConversationsDBService(ref.watch(ionDatabaseProvider));
 
 class ConversationsDBService {
   ConversationsDBService(this._db);
@@ -175,8 +174,7 @@ class ConversationsDBService {
           ..where((table) => table.eventMessageId.equals(id)))
         .getSingle();
 
-    final sentConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(status: DeliveryStatus.isSent);
+    final sentConversationMessagesTableData = conversationMessagesTableData.copyWith(status: DeliveryStatus.isSent);
 
     await _db.update(_db.conversationMessagesTable).replace(sentConversationMessagesTableData);
   }
@@ -186,8 +184,7 @@ class ConversationsDBService {
           ..where((table) => table.eventMessageId.equals(id)))
         .getSingle();
 
-    final deleteConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(isDeleted: true);
+    final deleteConversationMessagesTableData = conversationMessagesTableData.copyWith(isDeleted: true);
 
     await _db.update(_db.conversationMessagesTable).replace(deleteConversationMessagesTableData);
   }
@@ -224,8 +221,7 @@ class ConversationsDBService {
 
     final allPreviousReceivedMessages = await (_db.select(_db.conversationMessagesTable)
           ..where(
-            (table) =>
-                table.conversationId.equals(latestConversationMessageTableData.conversationId),
+            (table) => table.conversationId.equals(latestConversationMessageTableData.conversationId),
           )
           ..where(
             (table) => table.status.equals(DeliveryStatus.isReceived.index),
@@ -251,6 +247,39 @@ class ConversationsDBService {
     );
   }
 
+  Future<int> getUnreadMessagesCount(String conversationId) {
+    return (_db.select(_db.conversationMessagesTable)
+          ..where((table) => table.conversationId.equals(conversationId))
+          ..where((table) => table.status.equals(DeliveryStatus.isReceived.index)))
+        .get()
+        .then((value) => value.length);
+  }
+
+  Future<void> markConversationsAsRead(List<String> conversationIds) async {
+    return _db.batch(
+      (b) {
+        b.update(
+          _db.conversationMessagesTable,
+          const ConversationMessagesTableCompanion(status: Value(DeliveryStatus.isRead)),
+          where: (table) =>
+              table.conversationId.isIn(conversationIds) & table.status.equals(DeliveryStatus.isReceived.index),
+        );
+      },
+    );
+  }
+
+  Future<void> markAllConversationsAsRead() async {
+    return _db.batch(
+      (b) {
+        b.update(
+          _db.conversationMessagesTable,
+          const ConversationMessagesTableCompanion(status: Value(DeliveryStatus.isRead)),
+          where: (table) => table.status.equals(DeliveryStatus.isReceived.index),
+        );
+      },
+    );
+  }
+
   final _allConversationsLatestMessageQuery =
       'SELECT * FROM (SELECT * FROM conversation_messages_table WHERE is_deleted = 0 ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
 
@@ -261,8 +290,7 @@ class ConversationsDBService {
       readsFrom: {_db.conversationMessagesTable},
     ).get();
 
-    final lastConversationEventMessages =
-        await _selectLastMessageOfEachConversation(uniqueConversationRows);
+    final lastConversationEventMessages = await _selectLastMessageOfEachConversation(uniqueConversationRows);
 
     return lastConversationEventMessages;
   }
@@ -289,11 +317,10 @@ class ConversationsDBService {
     final lastConversationMessagesIds =
         uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
 
-    final lastConversationEventMessages = (await (_db.select(_db.eventMessagesTable)
-              ..where((table) => table.id.isIn(lastConversationMessagesIds)))
-            .get())
-        .map((e) => e.toEventMessage())
-        .toList();
+    final lastConversationEventMessages =
+        (await (_db.select(_db.eventMessagesTable)..where((table) => table.id.isIn(lastConversationMessagesIds))).get())
+            .map((e) => e.toEventMessage())
+            .toList();
 
     return lastConversationEventMessages;
   }
@@ -309,9 +336,8 @@ class ConversationsDBService {
         .map((reactionsTableData) => reactionsTableData.reactionEventId)
         .toList();
 
-    final reactionsEventMessages = await (_db.select(_db.eventMessagesTable)
-          ..where((table) => table.id.isIn(reactionsEventMessagesIds)))
-        .get();
+    final reactionsEventMessages =
+        await (_db.select(_db.eventMessagesTable)..where((table) => table.id.isIn(reactionsEventMessagesIds))).get();
 
     final reactions = reactionsEventMessages
         .map(
