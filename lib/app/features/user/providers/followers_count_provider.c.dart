@@ -41,10 +41,8 @@ class FollowersCount extends _$FollowersCount {
     final requestEvent = await _buildRequestEvent(relayUrl: relay.url);
     final subscriptionMessage = RequestMessage()
       ..addFilter(
-        RequestFilter(
-          kinds: const [EventCountResultEntity.kind],
-          e: [requestEvent.id],
-          limit: 1,
+        const RequestFilter(
+          kinds: [EventCountResultEntity.kind, 7400],
         ),
       );
 
