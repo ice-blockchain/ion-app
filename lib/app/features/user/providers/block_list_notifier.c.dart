@@ -8,6 +8,7 @@ import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -94,8 +95,9 @@ class BlockListNotifier extends _$BlockListNotifier {
 
       final blockList = await ref.read(currentUserBlockListProvider.future);
       final blockedPubkeys = Set<String>.from(blockList?.data.pubkeys ?? []);
+      final isAlreadyBlocked = blockedPubkeys.contains(pubkey);
 
-      if (blockedPubkeys.contains(pubkey)) {
+      if (isAlreadyBlocked) {
         blockedPubkeys.remove(pubkey);
       } else {
         blockedPubkeys.add(pubkey);
@@ -103,7 +105,13 @@ class BlockListNotifier extends _$BlockListNotifier {
 
       final blockListData = BlockListData(pubkeys: blockedPubkeys.toList());
 
-      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([blockListData]);
+      await Future.wait([
+        ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([blockListData]),
+        if (!isAlreadyBlocked) ...[
+          ref.read(followListManagerProvider.notifier).unfollow(pubkey),
+          ref.read(followListManagerProvider.notifier).removeOtherUserFollowOnCurrentUser(pubkey),
+        ],
+      ]);
     });
   }
 }

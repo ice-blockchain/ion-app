@@ -25,6 +25,7 @@ class ReplyList extends ConsumerWidget {
     return EntitiesList(
       entities: entities.toList(),
       separatorHeight: 1.0.s,
+      hideBlocked: false,
     );
   }
 }
