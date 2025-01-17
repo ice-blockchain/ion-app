@@ -96,7 +96,7 @@ class MessagesPage extends HookConsumerWidget {
         groupImage: MediaFile(
           mimeType: 'image/webp',
           path: conversationData.imageUrl!,
-          width: conversationData.imageWidgth,
+          width: conversationData.imageWidth,
           height: conversationData.imageHeight,
         ),
         participantsPubkeys: conversationData.participants,
