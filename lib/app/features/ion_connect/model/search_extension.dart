@@ -54,11 +54,6 @@ class DiscoveryCreatorsSearchExtension extends SearchExtension {
   final String query = 'discover content creators to follow';
 }
 
-class ContentCreatorsSearchExtension extends SearchExtension {
-  @override
-  final String query = 'content creators to follow';
-}
-
 class MostRelevantFollowersSearchExtension extends SearchExtension {
   @override
   final String query = 'most relevant followers';

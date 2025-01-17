@@ -40,12 +40,6 @@ void main() {
       expect(extension.toString(), 'discover content creators to follow');
     });
 
-    test('ContentCreatorsSearchExtension returns correct query', () {
-      final extension = ContentCreatorsSearchExtension();
-      expect(extension.query, 'content creators to follow');
-      expect(extension.toString(), 'content creators to follow');
-    });
-
     test('MostRelevantFollowersSearchExtension returns correct query', () {
       final extension = MostRelevantFollowersSearchExtension();
       expect(extension.query, 'most relevant followers');

@@ -26,7 +26,7 @@ Future<List<String>> mentionSuggestions(Ref ref, String query) async {
         search: SearchExtensions(
           [
             QuerySearchExtension(searchQuery: searchQuery),
-            ContentCreatorsSearchExtension(),
+            DiscoveryCreatorsSearchExtension(),
             MentionsSearchExtension(),
           ],
         ).toString(),
