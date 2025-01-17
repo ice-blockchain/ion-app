@@ -45,7 +45,9 @@ List<EntitiesDataSource>? userArticlesDataSource(Ref ref, String pubkey) {
         RequestFilter(
           kinds: const [GenericRepostEntity.kind],
           authors: [pubkey],
-          k: [ArticleEntity.kind.toString()],
+          tags: {
+            '#k': [ArticleEntity.kind.toString()],
+          },
           search: search,
           limit: 10,
         ),

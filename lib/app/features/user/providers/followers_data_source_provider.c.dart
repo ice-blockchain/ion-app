@@ -20,7 +20,9 @@ List<EntitiesDataSource>? followersDataSource(Ref ref, String pubkey) {
       requestFilters: [
         RequestFilter(
           kinds: const [FollowListEntity.kind],
-          p: [pubkey],
+          tags: {
+            '#p': [pubkey],
+          },
           search: SearchExtensions(
             [
               GenericIncludeSearchExtension(

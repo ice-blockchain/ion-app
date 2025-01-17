@@ -144,17 +144,25 @@ class EventCountResultData with _$EventCountResultData {
   }
 
   String getKey(EventCountResultType type) {
-    final filter = request.data.filters.first;
+    final tags = request.data.filters.first.tags;
+    if (tags == null || tags.isEmpty) {
+      throw UnknownEventCountResultKey(eventId: eventId);
+    }
+
+    final qTag = tags['#q'];
+    final pTag = tags['#p'];
+    final eTag = tags['#e'];
+
     final key = switch (type) {
-      EventCountResultType.quotes =>
-        filter.q != null && filter.q!.isNotEmpty ? filter.q!.first : null,
-      EventCountResultType.followers =>
-        filter.p != null && filter.p!.isNotEmpty ? filter.p!.first : null,
-      _ => filter.e != null && filter.e!.isNotEmpty ? filter.e!.first : null,
+      EventCountResultType.quotes => qTag != null && qTag.isNotEmpty ? qTag.first : null,
+      EventCountResultType.followers => pTag != null && pTag.isNotEmpty ? pTag.first : null,
+      _ => eTag != null && eTag.isNotEmpty ? eTag.first : null,
     };
+
     if (key == null) {
       throw UnknownEventCountResultKey(eventId: eventId);
     }
+
     return key;
   }
 }

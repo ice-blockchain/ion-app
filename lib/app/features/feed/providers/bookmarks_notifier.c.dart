@@ -43,7 +43,9 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
     ..addFilter(
       RequestFilter(
         kinds: const [BookmarksSetEntity.kind],
-        d: BookmarksSetType.values.map((type) => type.name).toList(),
+        tags: {
+          '#d': BookmarksSetType.values.map((type) => type.name).toList(),
+        },
         authors: [pubkey],
       ),
     );

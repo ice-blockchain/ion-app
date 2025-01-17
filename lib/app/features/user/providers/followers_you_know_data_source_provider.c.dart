@@ -27,7 +27,9 @@ List<EntitiesDataSource>? followersYouKnowDataSource(Ref ref, String pubkey) {
       requestFilters: [
         RequestFilter(
           kinds: const [FollowListEntity.kind],
-          p: [pubkey, currentPubkey],
+          tags: {
+            '#p': [pubkey, currentPubkey],
+          },
           search: SearchExtensions(
             [
               MostRelevantFollowersSearchExtension(),
