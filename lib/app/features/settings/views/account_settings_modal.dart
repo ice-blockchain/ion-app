@@ -15,8 +15,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ProfileSettingsModal extends ConsumerWidget {
-  const ProfileSettingsModal({super.key});
+class AccountSettingsModal extends ConsumerWidget {
+  const AccountSettingsModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +28,7 @@ class ProfileSettingsModal extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            title: Text(context.i18n.common_profile),
+            title: Text(context.i18n.common_account),
             actions: const [
               NavigationCloseButton(),
             ],
@@ -45,6 +45,15 @@ class ProfileSettingsModal extends ConsumerWidget {
                   label: context.i18n.settings_profile_edit,
                   onTap: () {
                     ProfileEditRoute().go(context);
+                  },
+                ),
+                ModalActionButton(
+                  icon: Assets.svg.iconProfileBlockUser.icon(
+                    color: primaryColor,
+                  ),
+                  label: context.i18n.settings_blocked_users,
+                  onTap: () {
+                    BlockedUsersRoute().push<void>(context);
                   },
                 ),
                 ModalActionButton(

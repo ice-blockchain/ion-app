@@ -27,7 +27,7 @@ class SettingsModal extends ConsumerWidget {
 
     VoidCallback getOnPressed(SettingsAction option) {
       return switch (option) {
-        SettingsAction.profile => () => ProfileSettingsRoute().push<void>(context),
+        SettingsAction.account => () => AccountSettingsRoute().push<void>(context),
         SettingsAction.security => () => SecureAccountOptionsRoute().push<void>(context),
         SettingsAction.privacy => () => PrivacySettingsRoute().push<void>(context),
         SettingsAction.pushNotifications => () =>

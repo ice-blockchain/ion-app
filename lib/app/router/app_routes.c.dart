@@ -88,11 +88,12 @@ import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/fe
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
+import 'package:ion/app/features/settings/views/account_settings_modal.dart';
 import 'package:ion/app/features/settings/views/app_language_modal.dart';
+import 'package:ion/app/features/settings/views/blocked_users_modal.dart';
 import 'package:ion/app/features/settings/views/content_language_modal.dart';
 import 'package:ion/app/features/settings/views/logout_confirm_modal.dart';
 import 'package:ion/app/features/settings/views/privacy_settings_modal.dart';
-import 'package:ion/app/features/settings/views/profile_settings_modal.dart';
 import 'package:ion/app/features/settings/views/push_notifications_settings.dart';
 import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
