@@ -28,6 +28,11 @@ class DeleteEntity extends _$DeleteEntity {
   }
 
   Future<void> delete() async {
+    await _deleteFromServer();
+    await _deleteFromDataSources();
+  }
+
+  Future<void> _deleteFromServer() async {
     final entityKind = switch (entity) {
       PostEntity() => PostEntity.kind,
       ArticleEntity() => ArticleEntity.kind,
@@ -39,45 +44,57 @@ class DeleteEntity extends _$DeleteEntity {
     final deletionRequest = DeletionRequest(
       events: [EventToDelete(eventId: entity.id, kind: entityKind)],
     );
-
     await ref
         .read(ionConnectNotifierProvider.notifier)
         .sendEntityData(deletionRequest, cache: false);
-
     ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
+  }
 
+  Future<void> _deleteFromDataSources() async {
     if (entity case final PostEntity post when post.data.parentEvent != null) {
-      // Reply
-      await ref
-          .read(
-            repliesProvider(
-              EventReference(
-                eventId: post.data.parentEvent!.eventId,
-                pubkey: post.data.parentEvent!.pubkey,
-              ),
-            ).notifier,
-          )
-          .deleteReply(entity: entity);
-
-      final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
-      await ref.read(entitiesPagedDataProvider(dataSource).notifier).deleteEntity(entity);
+      await _deleteReply(post);
     } else if (entity case final ArticleEntity _) {
-      // Article
-      final userArticlesDataSource = ref.watch(userArticlesDataSourceProvider(entity.masterPubkey));
-      final feedDataSources = ref.watch(feedPostsDataSourceProvider) ?? [];
-      await ref
-          .read(entitiesPagedDataProvider(userArticlesDataSource).notifier)
-          .deleteEntity(entity);
-      await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
+      await _deleteArticle();
     } else {
-      final userVideosDataSource = ref.watch(userVideosDataSourceProvider(entity.masterPubkey));
-      await ref.read(entitiesPagedDataProvider(userVideosDataSource).notifier).deleteEntity(entity);
-
-      final userPostsDataSource = ref.watch(userPostsDataSourceProvider(entity.masterPubkey));
-      await ref.read(entitiesPagedDataProvider(userPostsDataSource).notifier).deleteEntity(entity);
-
-      final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
-      await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
+      await _deletePost();
     }
+  }
+
+  Future<void> _deleteReply(PostEntity post) async {
+    await ref
+        .read(
+          repliesProvider(
+            EventReference(
+              eventId: post.data.parentEvent!.eventId,
+              pubkey: post.data.parentEvent!.pubkey,
+            ),
+          ).notifier,
+        )
+        .deleteReply(entity: entity);
+
+    final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
+    await _deleteFromDataSource(dataSource);
+  }
+
+  Future<void> _deleteArticle() async {
+    final userArticlesDataSource = ref.watch(userArticlesDataSourceProvider(entity.masterPubkey));
+    final feedDataSources = ref.watch(feedPostsDataSourceProvider) ?? [];
+
+    await _deleteFromDataSource(userArticlesDataSource ?? []);
+    await _deleteFromDataSource(feedDataSources);
+  }
+
+  Future<void> _deletePost() async {
+    final userVideosDataSource = ref.watch(userVideosDataSourceProvider(entity.masterPubkey));
+    final userPostsDataSource = ref.watch(userPostsDataSourceProvider(entity.masterPubkey));
+    final feedDataSources = ref.watch(feedPostsDataSourceProvider) ?? [];
+
+    await _deleteFromDataSource(userVideosDataSource ?? []);
+    await _deleteFromDataSource(userPostsDataSource ?? []);
+    await _deleteFromDataSource(feedDataSources);
+  }
+
+  Future<void> _deleteFromDataSource(List<EntitiesDataSource> dataSource) async {
+    await ref.read(entitiesPagedDataProvider(dataSource).notifier).deleteEntity(entity);
   }
 }
