@@ -25,7 +25,7 @@ Future<List<EntitiesDataSource>> searchUsersDataSource(Ref ref) async {
           kinds: const [UserMetadataEntity.kind],
           search: SearchExtensions(
             [
-              SearchQueryExtension(searchQuery: searchText),
+              QuerySearchExtension(searchQuery: searchText),
             ],
           ).toString(),
           limit: 20,

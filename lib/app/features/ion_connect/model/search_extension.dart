@@ -326,8 +326,8 @@ class MentionsSearchExtension extends IncludeSearchExtension {
 }
 
 /// Wraps a search query in quotes to perform an exact match search
-class SearchQueryExtension extends SearchExtension {
-  SearchQueryExtension({required this.searchQuery});
+class QuerySearchExtension extends SearchExtension {
+  QuerySearchExtension({required this.searchQuery});
 
   final String searchQuery;
 

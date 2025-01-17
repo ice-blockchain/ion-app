@@ -25,7 +25,7 @@ Future<List<String>> mentionSuggestions(Ref ref, String query) async {
         kinds: const [UserMetadataEntity.kind],
         search: SearchExtensions(
           [
-            SearchQueryExtension(searchQuery: searchQuery),
+            QuerySearchExtension(searchQuery: searchQuery),
             ContentCreatorsSearchExtension(),
             MentionsSearchExtension(),
           ],

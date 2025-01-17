@@ -189,9 +189,9 @@ void main() {
     });
   });
 
-  group('Search Query Extension', () {
-    test('SearchQueryExtension wraps query in quotes', () {
-      final extension = SearchQueryExtension(searchQuery: 'test query');
+  group('Query Search Extension', () {
+    test('QuerySearchExtension wraps query in quotes', () {
+      final extension = QuerySearchExtension(searchQuery: 'test query');
       expect(extension.query, '"test query"');
       expect(extension.toString(), '"test query"');
     });
