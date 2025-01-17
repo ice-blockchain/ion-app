@@ -116,12 +116,14 @@ class ConversationMessageManagementService {
 
           final tags = conversationTags..addAll(imetaTags);
 
-          return _createSealWrapSendMessage(
+          final wrap = await _createGiftWrap(
             tags: tags,
             content: content,
             signer: eventSigner!,
             receiverPubkey: participantPubkey,
           );
+
+          return ionConnectNotifier.sendEvent(wrap, cache: false);
         }),
       );
 
@@ -135,12 +137,14 @@ class ConversationMessageManagementService {
       // Send copy of the message to each participant
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          return _createSealWrapSendMessage(
+          final wrap = await _createGiftWrap(
             content: content,
             signer: eventSigner!,
             tags: conversationTags,
             receiverPubkey: participantPubkey,
           );
+
+          return ionConnectNotifier.sendEvent(wrap, cache: false);
         }).toList(),
       );
 
@@ -208,7 +212,7 @@ class ConversationMessageManagementService {
     return tags;
   }
 
-  Future<IonConnectEntity?> _createSealWrapSendMessage({
+  Future<EventMessage> _createGiftWrap({
     required String content,
     required String receiverPubkey,
     required EventSigner signer,
@@ -260,11 +264,7 @@ class ConversationMessageManagementService {
 
     Logger.log('Wrap message $wrap');
 
-    final result = await ionConnectNotifier.sendEvent(wrap, cache: false);
-
-    Logger.log('Sent message $result');
-
-    return result;
+    return wrap;
   }
 
   Future<List<MediaFile>> _compressMediaFiles(
