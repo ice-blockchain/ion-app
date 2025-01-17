@@ -33,7 +33,7 @@ class FollowersCount extends _$FollowersCount {
     if (followersCountEntity != null) {
       final contentMap = followersCountEntity.data.content as Map<String, dynamic>;
 
-      return contentMap.length;
+      return contentMap[pubkey] as int? ?? 0;
     }
 
     final relay = await _getRandomUserRelay();
@@ -67,7 +67,7 @@ class FollowersCount extends _$FollowersCount {
 
     final contentMap = eventCountResultEntity.data.content as Map<String, dynamic>;
 
-    return contentMap.length;
+    return contentMap[pubkey] as int? ?? 0;
   }
 
   Future<NostrRelay> _getRandomUserRelay() async {
