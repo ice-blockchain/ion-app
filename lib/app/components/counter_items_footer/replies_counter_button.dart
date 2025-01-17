@@ -31,7 +31,7 @@ class RepliesCounterButton extends HookConsumerWidget {
     final repliesCount = ref.watch(repliesCountProvider(eventReference));
     final isReplied = ref.watch(isRepliedProvider(eventReference));
     final canReply = ref.watch(canReplyProvider(eventReference)).value ?? false;
-    final isLoading = useState(false);
+    final isLoading = useRef(false);
 
     return GestureDetector(
       onTap: isLoading.value
