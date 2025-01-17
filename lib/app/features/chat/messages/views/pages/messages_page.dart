@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
@@ -10,6 +9,7 @@ import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/keyboard/keyboard.dart';
@@ -27,7 +27,7 @@ class MessagesPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: Should be called if there is no conversation messages yet in DB
 
-    useCallback(() async {
+    useOnInit(() async {
       final ee2eGroupConversationService =
           ref.read(e2EEGroupConversationManagementProvider.notifier);
 
