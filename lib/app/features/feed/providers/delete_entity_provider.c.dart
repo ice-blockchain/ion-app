@@ -13,7 +13,9 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_articles_data_source_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_replies_data_source_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_videos_data_source_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'delete_entity_provider.c.g.dart';
@@ -45,7 +47,7 @@ class DeleteEntity extends _$DeleteEntity {
     ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
 
     if (entity case final PostEntity post when post.data.parentEvent != null) {
-      // Post reply
+      // Reply
       await ref
           .read(
             repliesProvider(
@@ -59,20 +61,23 @@ class DeleteEntity extends _$DeleteEntity {
 
       final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
       await ref.read(entitiesPagedDataProvider(dataSource).notifier).deleteEntity(entity);
+    } else if (entity case final ArticleEntity _) {
+      // Article
+      final userArticlesDataSource = ref.watch(userArticlesDataSourceProvider(entity.masterPubkey));
+      final feedDataSources = ref.watch(feedPostsDataSourceProvider) ?? [];
+      await ref
+          .read(entitiesPagedDataProvider(userArticlesDataSource).notifier)
+          .deleteEntity(entity);
+      await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
     } else {
-      if (entity case final ArticleEntity _) {
-        final userArticlesDataSource =
-            ref.watch(userArticlesDataSourceProvider(entity.masterPubkey));
-        final feedDataSources = ref.watch(feedPostsDataSourceProvider) ?? [];
-        await ref
-            .read(entitiesPagedDataProvider(userArticlesDataSource).notifier)
-            .deleteEntity(entity);
-        await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
-      } else {
-        // Also delete from feed if present
-        final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
-        await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
-      }
+      final userVideosDataSource = ref.watch(userVideosDataSourceProvider(entity.masterPubkey));
+      await ref.read(entitiesPagedDataProvider(userVideosDataSource).notifier).deleteEntity(entity);
+
+      final userPostsDataSource = ref.watch(userPostsDataSourceProvider(entity.masterPubkey));
+      await ref.read(entitiesPagedDataProvider(userPostsDataSource).notifier).deleteEntity(entity);
+
+      final feedDataSources = ref.read(feedPostsDataSourceProvider) ?? [];
+      await ref.read(entitiesPagedDataProvider(feedDataSources).notifier).deleteEntity(entity);
     }
   }
 }
