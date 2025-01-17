@@ -7,10 +7,10 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/num.dart';
@@ -23,12 +23,12 @@ class Balance extends ConsumerWidget {
     super.key,
   });
 
-  final CoinData coinData;
+  final CoinInWalletData coinData;
   final NetworkType networkType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final text = '${formatToCurrency(coinData.amount, '')} ${coinData.abbreviation}';
+    final text = '${formatToCurrency(coinData.amount, '')} ${coinData.coin.abbreviation}';
 
     return ScreenSideOffset.small(
       child: Column(
@@ -54,7 +54,7 @@ class Balance extends ConsumerWidget {
                   ],
                 ),
                 Text(
-                  '~ ${formatToCurrency(coinData.balance)}',
+                  '~ ${formatToCurrency(coinData.balanceUSD)}',
                   style: context.theme.appTextThemes.subtitle2.copyWith(
                     color: context.theme.appColors.onTertararyBackground,
                   ),

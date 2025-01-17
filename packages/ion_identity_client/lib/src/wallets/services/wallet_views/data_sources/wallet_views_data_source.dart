@@ -5,7 +5,7 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_wallet_view_request.c.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_update_wallet_view_request.c.dart';
 import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.c.dart';
 import 'package:sprintf/sprintf.dart';
 
@@ -35,7 +35,7 @@ class WalletViewsDataSource {
   ) async {
     final token = _token(username);
 
-    final result = await _networkClient.get(
+    return _networkClient.get(
       sprintf(_basePath, [userId]),
       headers: RequestHeaders.getAuthorizationHeaders(
         token: token.token,
@@ -43,35 +43,35 @@ class WalletViewsDataSource {
       ),
       decoder: (json) => parseList(json, fromJson: ShortWalletView.fromJson),
     );
-    return result;
   }
 
   Future<ShortWalletView> createWalletView(
+    String userId,
     String username,
-    CreateWalletViewRequest request,
+    CreateUpdateWalletViewRequest request,
   ) {
     final token = _token(username);
 
     return _networkClient.post(
-      sprintf(_basePath, [username]),
-      headers: RequestHeaders.getAuthorizationHeaders(
+      sprintf(_basePath, [userId]),
+      headers: RequestHeaders.getTokenHeader(
         token: token.token,
-        username: username,
       ),
       data: request.toJson(),
-      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+      decoder: (json) =>
+          parseJsonObject(json, fromJson: ShortWalletView.fromJson),
     );
   }
 
   Future<WalletView> getWalletView({
     required String userId,
     required String username,
-    required String viewName,
+    required String walletViewId,
   }) async {
     final token = _token(username);
 
     return _networkClient.get(
-      sprintf(_specificViewPath, [userId, viewName]),
+      sprintf(_specificViewPath, [userId, walletViewId]),
       headers: RequestHeaders.getAuthorizationHeaders(
         token: token.token,
         username: username,
@@ -80,36 +80,36 @@ class WalletViewsDataSource {
     );
   }
 
-  Future<ShortWalletView> updateWalletView(
-    String username,
-    String viewName,
-    CreateWalletViewRequest request,
-  ) {
+  Future<ShortWalletView> updateWalletView({
+    required String userId,
+    required String username,
+    required String walletViewId,
+    required CreateUpdateWalletViewRequest request,
+  }) {
     final token = _token(username);
 
     return _networkClient.put(
-      sprintf(_specificViewPath, [username, viewName]),
+      sprintf(_specificViewPath, [userId, walletViewId]),
       headers: RequestHeaders.getAuthorizationHeaders(
         token: token.token,
         username: username,
       ),
       data: request.toJson(),
-      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+      decoder: (json) =>
+          parseJsonObject(json, fromJson: ShortWalletView.fromJson),
     );
   }
 
   Future<void> deleteWalletView(
     String username,
-    String viewName,
+    String userId,
+    String walletViewId,
   ) async {
     final token = _token(username);
 
     await _networkClient.delete(
-      sprintf(_specificViewPath, [username, viewName]),
-      headers: RequestHeaders.getAuthorizationHeaders(
-        token: token.token,
-        username: username,
-      ),
+      sprintf(_specificViewPath, [userId, walletViewId]),
+      headers: RequestHeaders.getTokenHeader(token: token.token),
       decoder: (json) => null,
     );
   }

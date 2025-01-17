@@ -72,7 +72,11 @@ class CoinSyncService {
     }
 
     await _coinsRepository.updateCoins(CoinsMapper.fromIONIdentityCoins(response.coins));
-    await _updateCoinsSyncQueue(response.coins);
+    await _updateCoinsSyncQueue(
+      response.coins.map(
+        (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
+      ),
+    );
   }
 
   Future<void> startActiveCoinsSyncQueue() async {
@@ -85,7 +89,11 @@ class CoinSyncService {
       final subscription = _coinsRepository.watchCoins().listen((coins) async {
         if (coins.isNotEmpty) {
           if (await isQueueNotReady()) {
-            await _updateCoinsSyncQueue(CoinsMapper.toIONIdentityCoins(coins));
+            await _updateCoinsSyncQueue(
+              coins.map(
+                (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
+              ),
+            );
           }
           completer.complete();
         }
@@ -125,7 +133,9 @@ class CoinSyncService {
     _syncQueueInitialized = true;
 
     final difference = nextUpdate.difference(DateTime.now());
-    Logger.log('Active coins queue is active. The next sync will be on the $nextUpdate');
+    Logger.log(
+      'Active coins queue is active. The next sync will be on the $nextUpdate',
+    );
 
     if (!difference.isNegative) {
       // Wait until first group in queue should be synced
@@ -135,12 +145,11 @@ class CoinSyncService {
     // Sync queue was disabled during delay, stop syncing
     if (!_syncQueueActive) return;
 
-    final coins = CoinsMapper.toIONIdentityCoins(
-      await _coinsRepository.getCoinsToSync(DateTime.now()),
-    );
+    final coins = await _coinsRepository.getCoinsToSync(DateTime.now());
 
     if (coins.isNotEmpty) {
-      final syncedCoinsData = await _ionIdentityClient.coins.syncCoins(coins);
+      final syncedCoinsData =
+          await _ionIdentityClient.coins.syncCoins(coins.map((e) => e.symbolGroup).toSet());
 
       final syncedCoins = coins.map((coin) {
         final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coin.symbolGroup);
@@ -151,8 +160,12 @@ class CoinSyncService {
         );
       }).toList();
 
-      await _coinsRepository.updateCoins(CoinsMapper.fromIONIdentityCoins(syncedCoins));
-      await _updateCoinsSyncQueue(syncedCoins);
+      await _coinsRepository.updateCoins(syncedCoins);
+      await _updateCoinsSyncQueue(
+        syncedCoins.map(
+          (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
+        ),
+      );
     }
 
     // First section (coins with the same syncFrequency)
@@ -160,13 +173,15 @@ class CoinSyncService {
     unawaited(syncActiveCoins());
   }
 
-  Future<void> _updateCoinsSyncQueue(List<Coin> coins) async {
+  Future<void> _updateCoinsSyncQueue(
+    Iterable<({String coinId, Duration syncFrequency})> coins,
+  ) async {
     final currentDate = DateTime.now();
     await _coinsRepository.updateCoinSyncQueue(
       coins.map(
         (coin) {
           return db.SyncCoins(
-            coinId: coin.id,
+            coinId: coin.coinId,
             syncAfter: currentDate.add(coin.syncFrequency),
           );
         },

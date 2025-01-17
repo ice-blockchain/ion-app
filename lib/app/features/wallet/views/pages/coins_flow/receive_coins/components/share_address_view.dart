@@ -62,7 +62,9 @@ class ShareAddressView extends ConsumerWidget {
                     context.i18n.button_share,
                   ),
                   onPressed: () {
-                    shareContent(walletAddress);
+                    if (walletAddress != null) {
+                      shareContent(walletAddress);
+                    }
                   },
                 ),
               ],

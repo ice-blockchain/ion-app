@@ -1,28 +1,25 @@
-// SPDX-License-Identifier: ice License 1.0
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'current_user_wallets_provider.c.g.dart';
+part 'create_wallet_view_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
-Future<List<WalletView>> currentUserWallets(Ref ref) async {
-  final currentIdentityKeyName =
-      ref.watch(currentIdentityKeyNameSelectorProvider);
+@riverpod
+Future<void> createWalletView(Ref ref, {required String walletViewName}) async {
+  final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
   if (currentIdentityKeyName == null) {
-    return [];
+    return;
   }
 
   final ionIdentity = await ref.watch(ionIdentityProvider.future);
   final identity = ionIdentity(username: currentIdentityKeyName);
 
-  final shortViews = await identity.wallets.getWalletViews();
-  final viewsDetails = await Future.wait(
-    shortViews.map((e) => identity.wallets.getWalletView(e.name)),
+  await identity.wallets.createWalletView(
+    CreateUpdateWalletViewRequest(items: [], symbolGroups: [], name: walletViewName),
   );
 
-  return viewsDetails;
+  ref.invalidate(currentUserWalletViewsProvider);
 }

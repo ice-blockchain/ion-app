@@ -30,7 +30,7 @@ class ManageCoinItem extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final coinData = manageCoinData.coinData;
+    final coinData = manageCoinData.coinInWallet.coin;
 
     return ListItem(
       title: Text(coinData.name),

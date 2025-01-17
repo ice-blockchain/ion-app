@@ -36,6 +36,11 @@ class CoinAddressTile extends HookConsumerWidget {
     final isCopied = useState<bool>(false);
     final tooltipLeftPosition = useState<double>(0);
 
+    // TODO: (1) nullability is not implemented. Need to make a request to receive the wallet address
+    if (address == null) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,

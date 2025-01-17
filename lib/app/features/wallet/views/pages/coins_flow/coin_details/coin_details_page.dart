@@ -5,10 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
+import 'package:ion/app/features/wallet/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
@@ -16,9 +16,8 @@ import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/comp
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_section_header.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/providers/coin_transactions_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/coin_details/providers/hooks/use_transactions_by_date.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/delimiter/delimiter.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
@@ -29,10 +28,8 @@ class CoinDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //TODO: uncomment when API will be ready
-    // final coinData = ref.watch(coinByIdProvider(coinId: coinId)).valueOrNull;
-    final coinData = ref.watch(mockedCoinByIdProvider(coinId: coinId));
-    final walletId = ref.watch(currentWalletIdProvider).valueOrNull;
+    final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
+    final walletId = ref.watch(currentWalletViewIdProvider).valueOrNull;
     final scrollController = useScrollController();
     final coinTransactionsMap = useTransactionsByDate(context, ref);
     final isLoading = ref.watch(
@@ -54,13 +51,15 @@ class CoinDetailsPage extends HookConsumerWidget {
     );
 
     // TODO: add proper loading and error handling
-    if (coinData == null) {
+    if (coinInWallet == null) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
+
+    final coinData = coinInWallet.coin;
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -82,7 +81,7 @@ class CoinDetailsPage extends HookConsumerWidget {
               children: [
                 const Delimiter(),
                 Balance(
-                  coinData: coinData,
+                  coinData: coinInWallet,
                   networkType: activeNetworkType.value,
                 ),
                 const Delimiter(),

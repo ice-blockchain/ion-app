@@ -7,7 +7,6 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BalanceActions extends ConsumerWidget {
@@ -27,31 +26,6 @@ class BalanceActions extends ConsumerWidget {
     final child = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Button.compact(
-            leadingIcon: Assets.svg.iconButtonSend.icon(),
-            label: Text(
-              'Test button',
-            ),
-            onPressed: () async {
-              final ionIdentityClient =
-                  await ref.read(ionIdentityClientProvider.future);
-              // final wallet = await ionIdentityClient.wallets.createWallet(
-              //   network: 'TonTestnet',
-              //   name: 'TonTestnet wallet',
-              //   onVerifyIdentity: ({
-              //     required onBiometricsFlow,
-              //     required onPasskeyFlow,
-              //     required onPasswordFlow,
-              //   }) =>
-              //       onPasskeyFlow(),
-              // );
-              final wallets = await ionIdentityClient.wallets.getWallets();
-              final walletViews = await ionIdentityClient.wallets.getWalletViews();
-              print('hello');
-            },
-          ),
-        ),
         Expanded(
           child: Button.compact(
             leadingIcon: Assets.svg.iconButtonSend.icon(),

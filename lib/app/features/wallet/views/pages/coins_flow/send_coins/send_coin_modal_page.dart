@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/components/coins_list/coins_list_view.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
@@ -17,8 +17,8 @@ class SendCoinModalPage extends ConsumerWidget {
     ref.watch(sendAssetFormControllerProvider());
     return SheetContent(
       body: CoinsListView(
-        onCoinItemTap: (CoinData coin) {
-          ref.read(sendAssetFormControllerProvider().notifier).setCoin(coin);
+        onCoinItemTap: (CoinInWalletData coinInWallet) {
+          ref.read(sendAssetFormControllerProvider().notifier).setCoin(coinInWallet);
           NetworkSelectSendRoute().push<void>(context);
         },
         title: context.i18n.wallet_send_coins,

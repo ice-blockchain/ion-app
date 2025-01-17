@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/model/contact_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
@@ -17,7 +17,7 @@ class CryptoAssetData with _$CryptoAssetData {
     required int arrivalTime,
     required DateTime arrivalDateTime,
     required String address,
-    CoinData? selectedCoin,
+    CoinInWalletData? selectedCoin,
     NftData? selectedNft,
     ContactData? selectedContact,
   }) = _CryptoAssetData;
@@ -25,13 +25,13 @@ class CryptoAssetData with _$CryptoAssetData {
   const CryptoAssetData._();
 
   double? get price {
-    if (selectedCoin != null) return selectedCoin!.balance;
+    if (selectedCoin != null) return selectedCoin!.balanceUSD;
     if (selectedNft != null) return selectedNft!.price;
     return null;
   }
 
   String get networkName {
-    if (selectedCoin != null) return selectedCoin!.network;
+    if (selectedCoin != null) return selectedCoin!.coin.network;
     if (selectedNft != null) return selectedNft!.network;
     return '';
   }

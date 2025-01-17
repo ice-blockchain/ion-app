@@ -11,7 +11,7 @@ import 'package:ion/app/features/wallet/components/arrival_time/list_item_arriva
 import 'package:ion/app/features/wallet/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_recipient.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -56,6 +56,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                       ),
                       secondary: Align(
                         alignment: Alignment.centerRight,
+                        // TODO: Remove hardcode
                         child: Text(
                           '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
                           textAlign: TextAlign.right,

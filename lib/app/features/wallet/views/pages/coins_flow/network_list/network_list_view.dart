@@ -7,8 +7,8 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/network_list/network_item.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallet/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -33,6 +33,11 @@ class NetworkListView extends ConsumerWidget {
       NetworkListViewType.send => ref.watch(sendAssetFormControllerProvider()).selectedCoin!,
       NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin,
     };
+
+    // TODO: (1) null case is not implemented
+    if (coinData == null) {
+      return SizedBox.shrink();
+    }
 
     void onTap(NetworkType network) {
       if (onSelectReturnType) {
@@ -73,7 +78,7 @@ class NetworkListView extends ConsumerWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final network = networks[index];
                   return NetworkItem(
-                    coinData: coinData,
+                    coinInWallet: coinData,
                     networkType: networks[index],
                     onTap: () => onTap(network),
                   );

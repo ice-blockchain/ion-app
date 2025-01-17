@@ -47,7 +47,7 @@ class ManageWalletsModal extends StatelessWidget {
             ),
             ScreenSideOffset.small(
               child: WalletsList(
-                itemBuilder: (walletData) => ManageWalletTile(walletId: walletData.id),
+                itemBuilder: (walletData) => ManageWalletTile(walletViewId: walletData.id),
               ),
             ),
             SizedBox(height: MediaQuery.paddingOf(context).bottom + 16.0.s),

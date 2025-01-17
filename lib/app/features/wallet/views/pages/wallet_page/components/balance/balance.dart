@@ -10,7 +10,7 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallet/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/features/wallet/views/pages/wallet_page/components/balance/balance_visibility_action.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/num.dart';
 
@@ -21,9 +21,8 @@ class Balance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: get actual balance
-    final currentWalletData = ref.watch(currentWalletDataProvider).valueOrNull;
-    final walletBalance = currentWalletData?.balance ?? 0;
+    final currentWalletData = ref.watch(currentWalletViewDataProvider).valueOrNull;
+    final walletBalance = currentWalletData?.usdBalance ?? 0;
     final isLoading = currentWalletData == null;
 
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'create_wallet_view_request.c.dart';
+part of 'create_update_wallet_view_request.c.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,49 +14,51 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CreateWalletViewRequest _$CreateWalletViewRequestFromJson(
+CreateUpdateWalletViewRequest _$CreateUpdateWalletViewRequestFromJson(
     Map<String, dynamic> json) {
   return _CreateWalletViewRequest.fromJson(json);
 }
 
 /// @nodoc
-mixin _$CreateWalletViewRequest {
+mixin _$CreateUpdateWalletViewRequest {
   List<WalletViewItem> get items => throw _privateConstructorUsedError;
   List<String> get symbolGroups => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
-  /// Serializes this CreateWalletViewRequest to a JSON map.
+  /// Serializes this CreateUpdateWalletViewRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of CreateWalletViewRequest
+  /// Create a copy of CreateUpdateWalletViewRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CreateWalletViewRequestCopyWith<CreateWalletViewRequest> get copyWith =>
-      throw _privateConstructorUsedError;
+  $CreateUpdateWalletViewRequestCopyWith<CreateUpdateWalletViewRequest>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CreateWalletViewRequestCopyWith<$Res> {
-  factory $CreateWalletViewRequestCopyWith(CreateWalletViewRequest value,
-          $Res Function(CreateWalletViewRequest) then) =
-      _$CreateWalletViewRequestCopyWithImpl<$Res, CreateWalletViewRequest>;
+abstract class $CreateUpdateWalletViewRequestCopyWith<$Res> {
+  factory $CreateUpdateWalletViewRequestCopyWith(
+          CreateUpdateWalletViewRequest value,
+          $Res Function(CreateUpdateWalletViewRequest) then) =
+      _$CreateUpdateWalletViewRequestCopyWithImpl<$Res,
+          CreateUpdateWalletViewRequest>;
   @useResult
   $Res call(
       {List<WalletViewItem> items, List<String> symbolGroups, String name});
 }
 
 /// @nodoc
-class _$CreateWalletViewRequestCopyWithImpl<$Res,
-        $Val extends CreateWalletViewRequest>
-    implements $CreateWalletViewRequestCopyWith<$Res> {
-  _$CreateWalletViewRequestCopyWithImpl(this._value, this._then);
+class _$CreateUpdateWalletViewRequestCopyWithImpl<$Res,
+        $Val extends CreateUpdateWalletViewRequest>
+    implements $CreateUpdateWalletViewRequestCopyWith<$Res> {
+  _$CreateUpdateWalletViewRequestCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CreateWalletViewRequest
+  /// Create a copy of CreateUpdateWalletViewRequest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -84,7 +86,7 @@ class _$CreateWalletViewRequestCopyWithImpl<$Res,
 
 /// @nodoc
 abstract class _$$CreateWalletViewRequestImplCopyWith<$Res>
-    implements $CreateWalletViewRequestCopyWith<$Res> {
+    implements $CreateUpdateWalletViewRequestCopyWith<$Res> {
   factory _$$CreateWalletViewRequestImplCopyWith(
           _$CreateWalletViewRequestImpl value,
           $Res Function(_$CreateWalletViewRequestImpl) then) =
@@ -97,7 +99,7 @@ abstract class _$$CreateWalletViewRequestImplCopyWith<$Res>
 
 /// @nodoc
 class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
-    extends _$CreateWalletViewRequestCopyWithImpl<$Res,
+    extends _$CreateUpdateWalletViewRequestCopyWithImpl<$Res,
         _$CreateWalletViewRequestImpl>
     implements _$$CreateWalletViewRequestImplCopyWith<$Res> {
   __$$CreateWalletViewRequestImplCopyWithImpl(
@@ -105,7 +107,7 @@ class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
       $Res Function(_$CreateWalletViewRequestImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CreateWalletViewRequest
+  /// Create a copy of CreateUpdateWalletViewRequest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -165,7 +167,7 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
 
   @override
   String toString() {
-    return 'CreateWalletViewRequest(items: $items, symbolGroups: $symbolGroups, name: $name)';
+    return 'CreateUpdateWalletViewRequest(items: $items, symbolGroups: $symbolGroups, name: $name)';
   }
 
   @override
@@ -187,7 +189,7 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
       const DeepCollectionEquality().hash(_symbolGroups),
       name);
 
-  /// Create a copy of CreateWalletViewRequest
+  /// Create a copy of CreateUpdateWalletViewRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -204,7 +206,8 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
   }
 }
 
-abstract class _CreateWalletViewRequest implements CreateWalletViewRequest {
+abstract class _CreateWalletViewRequest
+    implements CreateUpdateWalletViewRequest {
   const factory _CreateWalletViewRequest(
       {required final List<WalletViewItem> items,
       required final List<String> symbolGroups,
@@ -220,7 +223,7 @@ abstract class _CreateWalletViewRequest implements CreateWalletViewRequest {
   @override
   String get name;
 
-  /// Create a copy of CreateWalletViewRequest
+  /// Create a copy of CreateUpdateWalletViewRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)

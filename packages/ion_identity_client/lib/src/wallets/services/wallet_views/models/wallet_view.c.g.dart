@@ -8,14 +8,14 @@ part of 'wallet_view.c.dart';
 
 _$WalletViewImpl _$$WalletViewImplFromJson(Map<String, dynamic> json) =>
     _$WalletViewImpl(
+      id: json['id'] as String,
       name: json['name'] as String,
-      coins: (json['coins'] as List<dynamic>)
-          .map((e) => Coin.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      aggregation: (json['aggregation'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-            k, WalletViewAggregationItem.fromJson(e as Map<String, dynamic>)),
-      ),
+      coins: const CoinInWalletListConverter().fromJson(json['coins'] as List),
+      aggregation: (json['aggregation'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k,
+                WalletViewAggregationItem.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          {},
       symbolGroups: (json['symbolGroups'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -26,8 +26,9 @@ _$WalletViewImpl _$$WalletViewImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$WalletViewImplToJson(_$WalletViewImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
-      'coins': instance.coins.map((e) => e.toJson()).toList(),
+      'coins': const CoinInWalletListConverter().toJson(instance.coins),
       'aggregation':
           instance.aggregation.map((k, e) => MapEntry(k, e.toJson())),
       'symbolGroups': instance.symbolGroups,

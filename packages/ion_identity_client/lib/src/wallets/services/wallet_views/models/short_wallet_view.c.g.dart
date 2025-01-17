@@ -19,6 +19,7 @@ _$ShortWalletViewImpl _$$ShortWalletViewImplFromJson(
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       userId: json['userId'] as String,
+      id: json['id'] as String,
     );
 
 Map<String, dynamic> _$$ShortWalletViewImplToJson(
@@ -30,4 +31,5 @@ Map<String, dynamic> _$$ShortWalletViewImplToJson(
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'userId': instance.userId,
+      'id': instance.id,
     };

@@ -9,8 +9,6 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_wallet_view_request.c.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.c.dart';
 import 'package:ion_identity_client/src/wallets/services/wallet_views/wallet_views_service.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
@@ -151,19 +149,26 @@ class IONIdentityWallets {
     return _walletViewsService.getWalletViews(userId);
   }
 
-  Future<ShortWalletView> createWalletView(CreateWalletViewRequest request) =>
-      _walletViewsService.createWalletView(request);
-
-  Future<WalletView> getWalletView(String viewName) {
+  Future<ShortWalletView> createWalletView(CreateUpdateWalletViewRequest request) {
     final userId = _extractUserIdService.extractUserId(username: username);
-    return _walletViewsService.getWalletView(userId: userId, viewName: viewName);
+    return _walletViewsService.createWalletView(request, userId);
+  }
+
+  Future<WalletView> getWalletView(String walletViewId) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.getWalletView(userId: userId, walletViewId: walletViewId);
   }
 
   Future<ShortWalletView> updateWalletView(
-    String viewName,
-    CreateWalletViewRequest request,
-  ) =>
-      _walletViewsService.updateWalletView(viewName, request);
+    String walletViewId,
+    CreateUpdateWalletViewRequest request,
+  ) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.updateWalletView(userId, walletViewId, request);
+  }
 
-  Future<void> deleteWalletView(String viewName) => _walletViewsService.deleteWalletView(viewName);
+  Future<void> deleteWalletView(String walletViewId) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.deleteWalletView(walletViewId, userId);
+  }
 }

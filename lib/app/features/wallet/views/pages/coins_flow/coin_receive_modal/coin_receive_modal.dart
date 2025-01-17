@@ -27,9 +27,11 @@ class CoinReceiveModal extends HookConsumerWidget {
     final receiveCoinState = ref.watch(receiveCoinsFormControllerProvider);
 
     final updateNetwork = useCallback(
-      (NetworkType network) {
-        final clarifiedNetwork = network == NetworkType.all ? NetworkType.arbitrum : network;
-        ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(clarifiedNetwork);
+      (NetworkType? network) {
+        if (network != null) {
+          final clarifiedNetwork = network == NetworkType.all ? NetworkType.arbitrum : network;
+          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(clarifiedNetwork);
+        }
       },
       [],
     );
@@ -50,32 +52,36 @@ class CoinReceiveModal extends HookConsumerWidget {
               ),
             ],
           ),
-          ScreenSideOffset.small(
-            child: CoinAddressTile(
-              coinData: receiveCoinState.selectedCoin,
+          // TODO: check nullability here
+          if (receiveCoinState.selectedCoin != null)
+            ScreenSideOffset.small(
+              child: CoinAddressTile(
+                coinData: receiveCoinState.selectedCoin!.coin,
+              ),
             ),
-          ),
           SizedBox(
             height: 15.0.s,
           ),
-          ScreenSideOffset.small(
-            child: ListItem(
-              title: Text(context.i18n.wallet_network),
-              subtitle: Text(receiveCoinState.selectedNetwork.getDisplayName(context)),
-              switchTitleStyles: true,
-              leading: receiveCoinState.selectedNetwork.iconAsset.icon(size: 36.0.s),
-              trailing: Text(
-                context.i18n.wallet_change,
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color: context.theme.appColors.primaryAccent,
+          // TODO: (1) Check nullability
+          if (receiveCoinState.selectedNetwork case final NetworkType network)
+            ScreenSideOffset.small(
+              child: ListItem(
+                title: Text(context.i18n.wallet_network),
+                subtitle: Text(network.getDisplayName(context)),
+                switchTitleStyles: true,
+                leading: network.iconAsset.icon(size: 36.0.s),
+                trailing: Text(
+                  context.i18n.wallet_change,
+                  style: context.theme.appTextThemes.caption.copyWith(
+                    color: context.theme.appColors.primaryAccent,
+                  ),
                 ),
+                onTap: () async {
+                  final result = await ChangeNetworkShareWalletRoute().push<NetworkType?>(context);
+                  if (result != null) updateNetwork(result);
+                },
               ),
-              onTap: () async {
-                final result = await ChangeNetworkShareWalletRoute().push<NetworkType?>(context);
-                if (result != null) updateNetwork(result);
-              },
             ),
-          ),
           ScreenBottomOffset(margin: 20.0.s),
         ],
       ),

@@ -2,46 +2,25 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/providers/wallets_data_provider.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
-import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<CoinData>> coinsData(Ref ref) async {
+Future<List<CoinInWalletData>> coinsInWallet(Ref ref) async {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentUser == null) {
     return [];
   }
-  final currentWalletId = await ref.watch(currentWalletIdProvider.future);
-
-  final ionIdentity = await ref.watch(ionIdentityProvider.future);
-  final walletAssets =
-      await ionIdentity(username: currentUser).wallets.getWalletAssets(currentWalletId);
-
-  final coins = [
-    for (final (_, asset) in walletAssets.assets.indexed)
-      // TODO: get actual coins data
-      CoinData(
-        abbreviation: asset.symbol,
-        name: asset.name ?? 'NULL',
-        amount: double.parse(asset.balance) / asset.decimals,
-        balance: 0,
-        iconUrl: Assets.images.notifications.avatar1,
-        asset: 'NULL',
-        network: 'NULL',
-      ),
-  ];
-
-  return coins;
+  final walletData = await ref.watch(currentWalletViewDataProvider.future);
+  return walletData.coins;
 }
 
 @riverpod
-Future<CoinData> coinById(Ref ref, {required String coinId}) async {
-  final coins = await ref.watch(coinsDataProvider.future);
+Future<CoinInWalletData> coinInWalletById(Ref ref, {required String coinId}) async {
+  final coins = await ref.watch(coinsInWalletProvider.future);
 
-  return coins.firstWhere((coin) => coin.abbreviation == coinId);
+  return coins.firstWhere((coin) => coin.coin.id == coinId);
 }
