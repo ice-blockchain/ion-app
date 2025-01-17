@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/model/entities/private_direct_message_data
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -116,14 +117,14 @@ class ConversationMessageManagementService {
 
           final tags = conversationTags..addAll(imetaTags);
 
-          final wrap = await _createGiftWrap(
+          final giftWrap = await _createGiftWrap(
             tags: tags,
             content: content,
             signer: eventSigner!,
             receiverPubkey: participantPubkey,
           );
 
-          return ionConnectNotifier.sendEvent(wrap, cache: false);
+          return _sendGiftWrap(giftWrap);
         }),
       );
 
@@ -137,14 +138,14 @@ class ConversationMessageManagementService {
       // Send copy of the message to each participant
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          final wrap = await _createGiftWrap(
+          final giftWrap = await _createGiftWrap(
             content: content,
             signer: eventSigner!,
             tags: conversationTags,
             receiverPubkey: participantPubkey,
           );
 
-          return ionConnectNotifier.sendEvent(wrap, cache: false);
+          return _sendGiftWrap(giftWrap);
         }).toList(),
       );
 
@@ -265,6 +266,14 @@ class ConversationMessageManagementService {
     Logger.log('Wrap message $wrap');
 
     return wrap;
+  }
+
+  Future<IonConnectEntity?> _sendGiftWrap(EventMessage giftWrap) async {
+    return ionConnectNotifier.sendEvent(
+      giftWrap,
+      //TODO:?! use other user action source
+      actionSource: const ActionSourceCurrentUserChat(anonymous: true), cache: false,
+    );
   }
 
   Future<List<MediaFile>> _compressMediaFiles(
