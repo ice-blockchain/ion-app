@@ -83,7 +83,7 @@ class DiscoverCreators extends HookConsumerWidget {
             child: LoadMoreBuilder(
               slivers: slivers,
               onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-              hasMore: entitiesPagedData?.hasMore ?? true,
+              hasMore: entitiesPagedData?.hasMore ?? false,
               builder: (context, slivers) {
                 return AuthScrollContainer(
                   title: context.i18n.discover_creators_title,

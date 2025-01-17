@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class LoadMoreBuilder extends HookWidget {
   const LoadMoreBuilder({
@@ -27,27 +28,21 @@ class LoadMoreBuilder extends HookWidget {
   Widget build(BuildContext context) {
     final loading = useState(false);
 
-    // A ScrollMetricsNotification allows listeners to be notified for an
-    // initial state, as well as if the content dimensions change without
-    // scrolling.
-    return NotificationListener<ScrollMetricsNotification>(
-      onNotification: (notification) => _onMetricsChanged(notification.asScrollUpdate(), loading),
-      child: NotificationListener<ScrollNotification>(
-        onNotification: (notification) => _onMetricsChanged(notification, loading),
-        child: builder(
-          context,
-          loading.value
-              ? [
-                  ...slivers,
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: Center(child: CircularProgressIndicator.adaptive()),
-                    ),
+    return NotificationListener<ScrollNotification>(
+      onNotification: (notification) => _onMetricsChanged(notification, loading),
+      child: builder(
+        context,
+        loading.value
+            ? [
+                ...slivers,
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8.0.s),
+                    child: const Center(child: CircularProgressIndicator.adaptive()),
                   ),
-                ]
-              : slivers,
-        ),
+                ),
+              ]
+            : slivers,
       ),
     );
   }
