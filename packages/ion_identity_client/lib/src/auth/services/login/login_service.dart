@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:dio/dio.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/dtos/private_key_data.c.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
+import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
@@ -34,18 +36,33 @@ class LoginService {
   /// This flow ensures that if **Fido2**-based authentication is not available,
   /// a password-based credential (if present) is captured and stored appropriately.
   Future<void> verifyUserLoginFlow() async {
-    final challenge = await dataSource.loginInit(username: username);
-    if (challenge.supportedCredentialKinds
-            .any((SupportedCredentialKinds2 credKind) => credKind.kind == CredentialKind.Fido2) ==
-        false) {
-      final credentialDescriptor = challenge.allowCredentials.passwordProtectedKey?.firstOrNull;
-      final encryptedPrivateKey = credentialDescriptor?.encryptedPrivateKey;
-      if (encryptedPrivateKey != null) {
+    try {
+      final challenge = await dataSource.loginInit(username: username);
+      if (challenge.supportedCredentialKinds
+              .any((SupportedCredentialKinds2 credKind) => credKind.kind == CredentialKind.Fido2) ==
+          false) {
+        final credentialDescriptor = challenge.allowCredentials.passwordProtectedKey?.firstOrNull;
+        final encryptedPrivateKey = credentialDescriptor?.encryptedPrivateKey;
+        if (encryptedPrivateKey != null) {
+          await privateKeyStorage.setPrivateKey(
+            username: username,
+            privateKeyData: PrivateKeyData(),
+          );
+        }
+      }
+    } on RequestExecutionException catch (e) {
+      final dioException = e.error is DioException ? e.error as DioException : null;
+
+      if (dioException?.response?.statusCode == 403 &&
+          dioException?.response?.data['error']['message'] == '2FA_REQUIRED') {
+        final twoFAOptionsCount = dioException?.response?.data['data']['n'] as int;
         await privateKeyStorage.setPrivateKey(
           username: username,
-          privateKeyData: PrivateKeyData(encryptedPrivateKey: encryptedPrivateKey),
+          privateKeyData: PrivateKeyData(),
         );
+        throw TwoFARequiredException(twoFAOptionsCount);
       }
+      rethrow;
     }
   }
 
@@ -68,9 +85,10 @@ class LoginService {
   /// - [UnknownIONIdentityException] for any other unexpected errors during the login process.
   Future<void> loginUser({
     required OnVerifyIdentity<AssertionRequestData> onVerifyIdentity,
+    required List<TwoFAType> twoFATypes,
     bool preferImmediatelyAvailableCredentials = false,
   }) async {
-    final challenge = await dataSource.loginInit(username: username);
+    final challenge = await dataSource.loginInit(username: username, twoFATypes: twoFATypes);
     final assertion = await onVerifyIdentity(
       onPasskeyFlow: () {
         return identitySigner.signWithPasskey(

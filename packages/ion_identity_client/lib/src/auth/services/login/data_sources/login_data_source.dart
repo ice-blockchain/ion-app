@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
-import 'package:ion_identity_client/src/auth/dtos/dtos.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
@@ -16,12 +16,16 @@ class LoginDataSource {
 
   Future<UserActionChallenge> loginInit({
     required String username,
+    List<TwoFAType>? twoFATypes,
   }) async {
-    final requestData = LoginInitRequest(username: username);
-
     return networkClient.post(
       loginInitPath,
-      data: requestData.toJson(),
+      data: {
+        'username': username,
+        '2FAVerificationCodes': {
+          for (final twoFAType in twoFATypes ?? []) twoFAType.option: twoFAType.value,
+        },
+      },
       decoder: (result) => parseJsonObject(result, fromJson: UserActionChallenge.fromJson),
     );
   }

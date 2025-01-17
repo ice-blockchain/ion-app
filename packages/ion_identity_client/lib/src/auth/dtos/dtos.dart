@@ -9,7 +9,6 @@ export 'credential_info.c.dart';
 export 'credential_request_data.c.dart';
 export 'credential_response.c.dart';
 export 'key_pair_data.dart';
-export 'login_init_request.c.dart';
 export 'login_response.dart';
 export 'recovery_challenge_response.c.dart';
 export 'recovery_key_data.dart';

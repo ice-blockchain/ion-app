@@ -7,7 +7,6 @@ part 'private_key_data.c.g.dart';
 @JsonSerializable()
 class PrivateKeyData {
   PrivateKeyData({
-    this.encryptedPrivateKey,
     this.hexEncodedPrivateKeyBytes,
   });
 
@@ -15,6 +14,5 @@ class PrivateKeyData {
 
   Map<String, dynamic> toJson() => _$PrivateKeyDataToJson(this);
 
-  final String? encryptedPrivateKey;
   final String? hexEncodedPrivateKeyBytes;
 }

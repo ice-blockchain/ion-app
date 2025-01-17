@@ -76,7 +76,6 @@ class PasswordSigner {
           username: username,
           privateKeyData: PrivateKeyData(
             hexEncodedPrivateKeyBytes: hex.encode(keyPair.privateKeyBytes),
-            encryptedPrivateKey: encryptedPrivateKey,
           ),
         ),
         _updateStateToCanSuggest(username),
