@@ -8,6 +8,7 @@ class CommunityIdentifierTag with _$CommunityIdentifierTag {
   const factory CommunityIdentifierTag({
     required String value,
   }) = _CommunityIdentifierTag;
+
   const CommunityIdentifierTag._();
 
   factory CommunityIdentifierTag.fromTags(List<List<String>> tags) {

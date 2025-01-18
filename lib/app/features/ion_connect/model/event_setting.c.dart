@@ -102,6 +102,8 @@ class RoleRequiredForPostingEventSetting
     required RoleRequiredForPosting role,
   }) = _RoleRequiredForPostingEventSetting;
 
+  const RoleRequiredForPostingEventSetting._();
+
   factory RoleRequiredForPostingEventSetting.fromTags(List<List<String>> tags) {
     final tag =
         tags.firstWhere((tag) => tag[0] == EventSetting.settingTagName && tag[1] == tagName);

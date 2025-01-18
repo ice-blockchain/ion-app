@@ -11,6 +11,8 @@ class ImetaTag with _$ImetaTag {
     required MediaAttachment? value,
   }) = _ImetaTag;
 
+  const ImetaTag._();
+
   factory ImetaTag.fromTags(List<List<String>> tags) {
     final tag = tags.firstWhereOrNull((tag) => tag[0] == tagName);
 

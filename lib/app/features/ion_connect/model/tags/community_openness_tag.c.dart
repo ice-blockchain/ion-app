@@ -9,6 +9,8 @@ class CommunityOpennessTag with _$CommunityOpennessTag {
     required bool isOpen,
   }) = _CommunityOpennessTag;
 
+  const CommunityOpennessTag._();
+
   factory CommunityOpennessTag.fromTags(List<List<String>> tags) {
     final tag = tags.firstWhere((tag) => tag[0] == openTagName || tag[0] == closedTagName);
 

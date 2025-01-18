@@ -9,6 +9,8 @@ class CommunityVisibilityTag with _$CommunityVisibilityTag {
     required bool isPublic,
   }) = _CommunityVisibilityTag;
 
+  const CommunityVisibilityTag._();
+
   factory CommunityVisibilityTag.fromTags(List<List<String>> tags) {
     final tag = tags.firstWhere((tag) => tag[0] == publicTagName || tag[0] == privateTagName);
 

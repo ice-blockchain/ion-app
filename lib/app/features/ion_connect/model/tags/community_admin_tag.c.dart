@@ -8,6 +8,8 @@ class CommunityAdminTag with _$CommunityAdminTag {
     required List<String> values,
   }) = _CommunityAdminTag;
 
+  const CommunityAdminTag._();
+
   factory CommunityAdminTag.fromTags(List<List<String>> tags) {
     final tag = tags.where((tag) => tag[0] == tagName && tag[2] == roleValue);
 
