@@ -61,13 +61,12 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
   AsyncValue<Set<ManageCoinData>> build() => const AsyncLoading();
 
   Future<void> search({required String query}) async {
-
     if (query.isEmpty) {
       state = ref.read(manageCoinsNotifierProvider).map(
-        data: (data) => AsyncData(data.value.values.toSet()),
-        error: (error) => AsyncError(error.error, error.stackTrace),
-        loading: (loading) => const AsyncLoading(),
-      );
+            data: (data) => AsyncData(data.value.values.toSet()),
+            error: (error) => AsyncError(error.error, error.stackTrace),
+            loading: (loading) => const AsyncLoading(),
+          );
       return;
     }
 
@@ -79,24 +78,24 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
         .then(CoinsMapper.fromDbToDomain); // TODO: Move converting to the repo?
 
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
-      data: (coinsInWalletView) {
-        final coinsInWallet = coinsInWalletView.values.toList();
+          data: (coinsInWalletView) {
+            final coinsInWallet = coinsInWalletView.values.toList();
 
-        final result = <ManageCoinData>{};
-        for (final manageCoin in coinsInWallet) {
-          if (searchResult.contains(manageCoin.coin)) {
-            result.add(manageCoin);
-          }
-        }
-        result.addAll(
-          searchResult.map(
-            (coin) => ManageCoinData(coin: coin, isSelected: false),
-          ),
+            final result = <ManageCoinData>{};
+            for (final manageCoin in coinsInWallet) {
+              if (searchResult.contains(manageCoin.coin)) {
+                result.add(manageCoin);
+              }
+            }
+            result.addAll(
+              searchResult.map(
+                (coin) => ManageCoinData(coin: coin, isSelected: false),
+              ),
+            );
+
+            return AsyncData(result);
+          },
+          orElse: () => const AsyncLoading(),
         );
-
-        return AsyncData(result);
-      },
-      orElse: () => const AsyncLoading(),
-    );
   }
 }
