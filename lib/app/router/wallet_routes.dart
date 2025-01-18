@@ -95,7 +95,7 @@ class WalletRoutes {
         TypedGoRoute<WalletsRoute>(path: 'wallets'),
         TypedGoRoute<ManageWalletsRoute>(path: 'manage-wallets'),
         TypedGoRoute<CreateWalletRoute>(path: 'create-wallet'),
-        TypedGoRoute<EditWalletViewRoute>(path: 'edit-wallet'),
+        TypedGoRoute<EditWalletRoute>(path: 'edit-wallet'),
         TypedGoRoute<DeleteWalletRoute>(path: 'delete-wallet'),
       ],
     ),
@@ -298,10 +298,10 @@ class CreateWalletRoute extends BaseRouteData {
         );
 }
 
-class EditWalletViewRoute extends BaseRouteData {
-  EditWalletViewRoute({required this.walletId})
+class EditWalletRoute extends BaseRouteData {
+  EditWalletRoute({required this.walletId})
       : super(
-          child: EditWalletViewModal(walletId: walletId),
+          child: EditWalletModal(walletId: walletId),
           type: IceRouteType.bottomSheet,
         );
 

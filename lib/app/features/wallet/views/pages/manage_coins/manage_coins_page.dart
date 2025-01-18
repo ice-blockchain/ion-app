@@ -39,6 +39,7 @@ class ManageCoinsPage extends HookConsumerWidget {
 
         void onRouteChange() {
           Logger.log('ManageCoinsPage has been closed. Update coins list');
+          // TODO: Implement adding coin to the wallet view
         }
 
         routerDelegate.addListener(onRouteChange);
