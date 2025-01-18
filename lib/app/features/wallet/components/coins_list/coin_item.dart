@@ -30,7 +30,7 @@ class CoinItem extends ConsumerWidget {
       title: Text(coinData.name),
       subtitle: Text(coinData.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: coinData.iconUrl.icon(size: 36.0.s),
+      leading: coinData.iconUrl.coinIcon(size: 36.0.s),
       onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,

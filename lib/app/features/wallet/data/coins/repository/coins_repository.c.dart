@@ -34,6 +34,8 @@ class CoinsRepository {
 
   Future<bool> hasSavedCoins() => _coinsDao.hasAny();
 
+  Future<List<Coin>> searchCoins(String query) => _coinsDao.search(query);
+
   Future<void> updateCoins(List<Coin> coins) => _coinsDao.upsertAll(coins);
 
   Future<void> updateCoinSyncQueue(List<SyncCoins> syncCoins) => _syncCoinsDao.insertAll(syncCoins);

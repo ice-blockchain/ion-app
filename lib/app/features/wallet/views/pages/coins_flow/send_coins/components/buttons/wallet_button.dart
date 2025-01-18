@@ -38,7 +38,7 @@ class WalletButton extends ConsumerWidget {
             title: Text(walletData.name),
             // TODO: (1) address is not implemented!
             // subtitle: Text(walletData.address ?? ''),
-            subtitle: Text(''),
+            subtitle: const Text(''),
             leading: Avatar(
               size: 36.0.s,
               // TODO: (1) What should be shown here?

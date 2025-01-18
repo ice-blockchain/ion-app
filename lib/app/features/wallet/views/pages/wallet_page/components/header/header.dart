@@ -17,28 +17,34 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const WalletSwitcher(),
-          Row(
-            children: [
-              NavigationButton(
-                onPressed: () => DAppsRoute().push<void>(context),
-                icon: Assets.svg.iconDappOff.icon(
-                  color: context.theme.appColors.primaryText,
-                ),
+      child: SizedBox(
+        height: NavigationButton.defaultSize,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: WalletSwitcher(),
               ),
-              SizedBox(width: 12.0.s),
-              NavigationButton(
-                onPressed: () => ScanWalletRoute().push<void>(context),
-                icon: Assets.svg.iconHeaderScan1.icon(
-                  color: context.theme.appColors.primaryText,
-                ),
+            ),
+            SizedBox(width: 12.0.s),
+            NavigationButton(
+              onPressed: () => DAppsRoute().push<void>(context),
+              icon: Assets.svg.iconDappOff.icon(
+                color: context.theme.appColors.primaryText,
               ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox(width: 12.0.s),
+            NavigationButton(
+              onPressed: () => ScanWalletRoute().push<void>(context),
+              icon: Assets.svg.iconHeaderScan1.icon(
+                color: context.theme.appColors.primaryText,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

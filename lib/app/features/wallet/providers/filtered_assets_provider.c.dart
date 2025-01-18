@@ -2,7 +2,6 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/riverpod.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/model/nft_data.c.dart';
 import 'package:ion/app/features/wallet/model/wallet_data_with_loading_state.c.dart';

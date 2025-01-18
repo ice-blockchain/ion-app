@@ -64,7 +64,7 @@ class CoinNetworkItem extends ConsumerWidget {
           leading: Stack(
             clipBehavior: Clip.none,
             children: [
-              coinData.iconUrl.icon(size: 36.0.s),
+              coinData.iconUrl.coinIcon(size: 36.0.s),
               Positioned(
                 bottom: -3.0.s,
                 right: -3.0.s,

@@ -54,7 +54,7 @@ class CoinIconWithNetwork extends StatelessWidget {
           Positioned(
             top: 0,
             left: 0,
-            child: coin.iconUrl.icon(size: coinSize),
+            child: coin.iconUrl.coinIcon(size: coinSize),
           ),
           Positioned(
             bottom: 0,

@@ -5,8 +5,6 @@ import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/create_update_wallet_view_request.c.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view.c.dart';
 import 'package:sprintf/sprintf.dart';
 
 class WalletViewsDataSource {
@@ -58,8 +56,7 @@ class WalletViewsDataSource {
         token: token.token,
       ),
       data: request.toJson(),
-      decoder: (json) =>
-          parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
     );
   }
 
@@ -95,8 +92,7 @@ class WalletViewsDataSource {
         username: username,
       ),
       data: request.toJson(),
-      decoder: (json) =>
-          parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
     );
   }
 

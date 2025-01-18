@@ -58,7 +58,7 @@ class CoinAddressTile extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  coinData.iconUrl.icon(size: 16.0.s),
+                  coinData.iconUrl.coinIcon(size: 16.0.s),
                   SizedBox(
                     width: 6.0.s,
                   ),
