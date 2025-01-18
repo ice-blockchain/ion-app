@@ -118,6 +118,7 @@ class TextInput extends HookWidget {
       controller: controller,
       focusNode: focusNode,
       onChanged: controller == null ? onChangedHandler : null,
+      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       initialValue: initialValue,
       maxLines: maxLines,
       minLines: minLines,

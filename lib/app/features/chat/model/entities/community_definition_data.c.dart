@@ -1,13 +1,21 @@
 // SPDX-License-Identifier: ice License 1.0
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/tags/community_admin_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/community_moderator_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/community_openness_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/community_visibility_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/description_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/imeta_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/name_tag.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
-import 'package:uuid/uuid.dart';
 
 part 'community_definition_data.c.freezed.dart';
 
@@ -46,7 +54,7 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
 @Freezed(equal: false)
 class CommunityDefinitionData with _$CommunityDefinitionData implements EventSerializable {
   const factory CommunityDefinitionData({
-    required String uuid,
+    required String communityIdentifier,
     required bool isPublic,
     required bool isOpen,
     required bool commentsEnabled,
@@ -55,38 +63,23 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required List<String> admins,
     required String name,
     required String description,
-    String? avatarUrl,
+    required MediaAttachment? avatar,
   }) = _CommunityDefinitionData;
 
   const CommunityDefinitionData._();
 
   factory CommunityDefinitionData.fromEventMessage(EventMessage eventMessage) {
     return CommunityDefinitionData(
-      uuid: eventMessage.tags.firstWhere((tag) => tag[0] == 'h').last,
-      isPublic: eventMessage.tags.firstWhere((tag) => tag[0] == 'public').isNotEmpty,
-      isOpen: eventMessage.tags.firstWhere((tag) => tag[0] == 'open').isNotEmpty,
-      commentsEnabled: eventMessage.tags
-              .firstWhere((tag) => tag[0] == 'settings' && tag[1] == 'comments_enabled')
-              .last ==
-          'true',
-      roleRequiredForPosting: RoleRequiredForPosting.values.firstWhere(
-        (role) =>
-            role.name ==
-            eventMessage.tags
-                .firstWhere((tag) => tag[0] == 'settings' && tag[1] == 'role_required_for_posting')
-                .last,
-      ),
-      moderators: eventMessage.tags
-          .where((tag) => tag[0] == 'p' && tag.last == 'moderator')
-          .map((tag) => tag[1])
-          .toList(),
-      admins: eventMessage.tags
-          .where((tag) => tag[0] == 'p' && tag.last == 'admin')
-          .map((tag) => tag[1])
-          .toList(),
-      name: eventMessage.tags.firstWhere((tag) => tag[0] == 'name').last,
-      description: eventMessage.tags.firstWhere((tag) => tag[0] == 'description').last,
-      avatarUrl: eventMessage.tags.firstWhereOrNull((tag) => tag[0] == 'imeta')?.last,
+      communityIdentifier: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
+      name: NameTag.fromTags(eventMessage.tags).value,
+      description: DescriptionTag.fromTags(eventMessage.tags).value,
+      avatar: ImetaTag.fromTags(eventMessage.tags).value,
+      isPublic: CommunityVisibilityTag.fromTags(eventMessage.tags).isPublic,
+      isOpen: CommunityOpennessTag.fromTags(eventMessage.tags).isOpen,
+      commentsEnabled: CommentsEnabledEventSetting.fromTags(eventMessage.tags).isEnabled,
+      roleRequiredForPosting: RoleRequiredForPostingEventSetting.fromTags(eventMessage.tags).role,
+      moderators: CommunityModeratorTag.fromTags(eventMessage.tags).values,
+      admins: CommunityAdminTag.fromTags(eventMessage.tags).values,
     );
   }
 
@@ -102,37 +95,18 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       kind: CommunityDefinitionEntity.kind,
       tags: [
         ...tags,
-        ['h', uuid],
-        ['name', name],
-        ['description', description],
-        if (avatarUrl != null) ['imeta', avatarUrl!],
-        if (isPublic) ['public'] else ['private'],
-        if (isOpen) ['open'] else ['closed'],
-        [
-          'settings',
-          'comments_enabled',
-          if (commentsEnabled) 'true' else 'false',
-          (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
-        ],
-        [
-          'settings',
-          'role_required_for_posting',
-          roleRequiredForPosting.name,
-          (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
-        ],
-        ...moderators.map((moderator) => ['p', moderator]),
-        ...admins.map((admin) => ['p', admin]),
+        CommunityIdentifierTag(value: communityIdentifier).toTag(),
+        NameTag(value: name).toTag(),
+        DescriptionTag(value: description).toTag(),
+        if (avatar != null) avatar!.toTag(),
+        CommunityVisibilityTag(isPublic: isPublic).toTag(),
+        CommunityOpennessTag(isOpen: isOpen).toTag(),
+        CommentsEnabledEventSetting(isEnabled: commentsEnabled).toTag(),
+        RoleRequiredForPostingEventSetting(role: roleRequiredForPosting).toTag(),
+        ...CommunityModeratorTag(values: moderators).toTag(),
+        ...CommunityAdminTag(values: admins).toTag(),
       ],
       content: '',
     );
   }
-}
-
-String generateV7UUID() {
-  return const Uuid().v7();
-}
-
-enum RoleRequiredForPosting {
-  admin,
-  moderator,
 }

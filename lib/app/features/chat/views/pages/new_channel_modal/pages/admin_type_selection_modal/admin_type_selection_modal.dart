@@ -18,12 +18,13 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
   const AdminTypeSelectionModal({
     required this.adminPubkey,
     required this.adminType,
+    required this.createChannelFlow,
     super.key,
   });
 
   final String adminPubkey;
   final ChannelAdminType adminType;
-
+  final bool createChannelFlow;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedAdminType = useState(adminType);
@@ -40,7 +41,9 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
           ],
           title: Text(context.i18n.channel_create_admin_type_title),
         ),
-        for (final ChannelAdminType adminType in ChannelAdminType.values.toSet())
+        for (final ChannelAdminType adminType in ChannelAdminType.values
+            .where((e) => !createChannelFlow || e != ChannelAdminType.owner)
+            .toSet())
           ScreenSideOffset.small(
             child: Column(
               children: [

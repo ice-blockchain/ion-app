@@ -18,12 +18,13 @@ class AdminCard extends ConsumerWidget {
     required this.channelAdminType,
     this.onTap,
     super.key,
+    this.createChannelFlow = false,
   });
 
   final String pubkey;
   final VoidCallback? onTap;
   final ChannelAdminType channelAdminType;
-
+  final bool createChannelFlow;
   static double get itemHeight => 60.0.s;
 
   @override
@@ -42,6 +43,7 @@ class AdminCard extends ConsumerWidget {
               child: AdminTypeSelectionModal(
                 adminPubkey: pubkey,
                 adminType: channelAdminType,
+                createChannelFlow: createChannelFlow,
               ),
             );
           },

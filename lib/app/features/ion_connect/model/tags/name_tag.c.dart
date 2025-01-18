@@ -1,0 +1,32 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+
+part 'name_tag.c.freezed.dart';
+
+@freezed
+class NameTag with _$NameTag {
+  const factory NameTag({
+    required String value,
+  }) = _NameTag;
+
+  const NameTag._();
+
+  factory NameTag.fromTags(List<List<String>> tags) {
+    final tag = tags.firstWhere((tag) => tag[0] == tagName);
+
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
+    }
+    if (tag.length != 2) {
+      throw IncorrectEventTagException(tag: tag.toString());
+    }
+
+    return NameTag(value: tag[1]);
+  }
+
+  static const String tagName = 'name';
+
+  List<String> toTag() {
+    return [tagName, value];
+  }
+}

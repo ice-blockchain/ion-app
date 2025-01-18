@@ -20,25 +20,22 @@ class BottomStickyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: 16.0.s,
-          horizontal: 44.0.s,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: 16.0.s,
+        horizontal: 44.0.s,
+      ),
+      child: Button(
+        type: disabled ? ButtonType.disabled : ButtonType.primary,
+        mainAxisSize: MainAxisSize.max,
+        minimumSize: Size(56.0.s, 56.0.s),
+        leadingIcon: iconAsset.icon(
+          color: context.theme.appColors.onPrimaryAccent,
         ),
-        child: Button(
-          type: disabled ? ButtonType.disabled : ButtonType.primary,
-          mainAxisSize: MainAxisSize.max,
-          minimumSize: Size(56.0.s, 56.0.s),
-          leadingIcon: iconAsset.icon(
-            color: context.theme.appColors.onPrimaryAccent,
-          ),
-          label: Text(
-            label,
-          ),
-          onPressed: onPressed,
+        label: Text(
+          label,
         ),
+        onPressed: onPressed,
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/components/no_user_view.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/selectable_user_list_item.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.c.dart';
 
@@ -28,23 +29,23 @@ class FollowerUsers extends ConsumerWidget {
     final dataSource = ref.watch(followersDataSourceProvider(pubkey!));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final users = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
+
+    if (users == null || users.isEmpty) return const NoUserView();
+
     final slivers = [
-      if (users == null || users.isEmpty)
-        const SliverToBoxAdapter(child: SizedBox.shrink())
-      else
-        SliverList.separated(
-          separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-          itemCount: users.length,
-          itemBuilder: (BuildContext context, int index) {
-            final user = users.elementAt(index);
-            return SelectableUserListItem(
-              pubkey: user.masterPubkey,
-              onUserSelected: onUserSelected,
-              selectedPubkeys: selectedPubkeys,
-              selectable: selectable,
-            );
-          },
-        ),
+      SliverList.separated(
+        separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
+        itemCount: users.length,
+        itemBuilder: (BuildContext context, int index) {
+          final user = users.elementAt(index);
+          return SelectableUserListItem(
+            pubkey: user.masterPubkey,
+            onUserSelected: onUserSelected,
+            selectedPubkeys: selectedPubkeys,
+            selectable: selectable,
+          );
+        },
+      ),
     ];
 
     return LoadMoreBuilder(

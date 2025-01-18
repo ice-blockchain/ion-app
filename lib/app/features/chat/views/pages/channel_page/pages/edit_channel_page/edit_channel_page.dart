@@ -36,6 +36,14 @@ class EditChannelPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final channelData = ref.watch(ionConnectNotifierProvider.notifier).requestEntity(
+    //       RequestMessage()
+    //         ..addFilter(
+    //           RequestFilter(
+    //             ids: [pubkey],
+    //           ),
+    //         ),
+    //     );
     final channelData = ref.watch(channelsProvider.select((channelMap) => channelMap[pubkey]));
 
     final formKey = useMemoized(GlobalKey<FormState>.new);

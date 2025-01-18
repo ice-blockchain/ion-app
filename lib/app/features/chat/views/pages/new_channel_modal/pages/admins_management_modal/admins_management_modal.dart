@@ -18,7 +18,10 @@ import 'package:ion/generated/assets.gen.dart';
 class AdminsManagementModal extends HookConsumerWidget {
   const AdminsManagementModal({
     super.key,
+    this.createChannelFlow = false,
   });
+
+  final bool createChannelFlow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,7 +72,7 @@ class AdminsManagementModal extends HookConsumerWidget {
                   onPressed: () {
                     showSimpleBottomSheet<void>(
                       context: context,
-                      child: const AddAdminModal(),
+                      child: AddAdminModal(createChannelFlow: createChannelFlow),
                     );
                   },
                 ),
@@ -84,6 +87,7 @@ class AdminsManagementModal extends HookConsumerWidget {
                 child: AdminCard(
                   pubkey: channelAdminsPubkeys[index],
                   channelAdminType: channelAdmins[channelAdminsPubkeys[index]]!,
+                  createChannelFlow: createChannelFlow,
                 ),
               );
             },

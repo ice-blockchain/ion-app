@@ -17,8 +17,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class AddAdminModal extends HookConsumerWidget {
   const AddAdminModal({
+    required this.createChannelFlow,
     super.key,
   });
+
+  final bool createChannelFlow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
