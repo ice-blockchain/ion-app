@@ -96,6 +96,5 @@ Future<String?> _mainRedirect({
       return FillProfileRoute().location;
     }
   }
-
   return null;
 }
