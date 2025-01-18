@@ -44,4 +44,15 @@ class CoinsDao extends DatabaseAccessor<CoinsDatabase> with _$CoinsDaoMixin {
     }
     return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).get();
   }
+
+  Future<List<Coin>> search(String query) {
+    final formattedQuery = '%${query.trim().toLowerCase()}%';
+
+    return (select(coinsTable)
+          ..where(
+            (row) =>
+                row.symbol.lower().like(formattedQuery) | row.name.lower().like(formattedQuery),
+          ))
+        .get();
+  }
 }

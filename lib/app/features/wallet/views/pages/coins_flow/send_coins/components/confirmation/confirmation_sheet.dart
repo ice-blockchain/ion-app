@@ -55,7 +55,7 @@ class ConfirmationSheet extends ConsumerWidget {
                       amount: coinInWallet.amount,
                       currency: coinInWallet.coin.abbreviation,
                       usdAmount: coinInWallet.balanceUSD,
-                      icon: coinInWallet.coin.iconUrl.icon(),
+                      icon: coinInWallet.coin.iconUrl.coinIcon(),
                     ),
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
@@ -67,7 +67,7 @@ class ConfirmationSheet extends ConsumerWidget {
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_asset),
                       value: coin.name,
-                      icon: coin.iconUrl.icon(
+                      icon: coin.iconUrl.coinIcon(
                         size: ScreenSideOffset.defaultSmallMargin,
                       ),
                     ),

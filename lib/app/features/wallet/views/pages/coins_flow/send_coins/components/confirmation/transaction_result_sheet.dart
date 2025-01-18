@@ -10,8 +10,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/components/nft_item/nft_item.dart';
 import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -73,7 +73,7 @@ class TransactionResultSheet extends ConsumerWidget {
                     amount: coinInWallet.amount,
                     currency: coinInWallet.coin.abbreviation,
                     usdAmount: coinInWallet.balanceUSD,
-                    icon: coinInWallet.coin.iconUrl.icon(),
+                    icon: coinInWallet.coin.iconUrl.coinIcon(),
                   ),
                 SizedBox(height: 24.0.s),
                 Row(

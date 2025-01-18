@@ -43,7 +43,7 @@ class CoinInitializer {
         )
         .toList();
 
-    await _coinsRepository.updateCoins(CoinsMapper.fromIONIdentityCoins(coinEntities));
+    await _coinsRepository.updateCoins(CoinsMapper.fromDtoToDb(coinEntities));
   }
 
   Future<void> _loadCoinsVersion() async {

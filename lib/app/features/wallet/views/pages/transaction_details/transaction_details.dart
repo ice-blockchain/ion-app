@@ -15,8 +15,8 @@ import 'package:ion/app/features/wallet/components/send_to_recipient/send_to_rec
 import 'package:ion/app/features/wallet/components/timeline/timeline.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallet/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallet/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallet/views/pages/transaction_details/transaction_details_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -63,7 +63,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                         amount: coinInWallet.amount,
                         currency: coinInWallet.coin.abbreviation,
                         usdAmount: coinInWallet.balanceUSD,
-                        icon: coinInWallet.coin.iconUrl.icon(),
+                        icon: coinInWallet.coin.iconUrl.coinIcon(),
                       ),
                     SizedBox(height: 12.0.s),
                     Timeline(
@@ -99,7 +99,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ListItem.textWithIcon(
                         title: Text(locale.wallet_asset),
                         value: coin.name,
-                        icon: coin.iconUrl.icon(
+                        icon: coin.iconUrl.coinIcon(
                           size: ScreenSideOffset.defaultSmallMargin,
                         ),
                       ),

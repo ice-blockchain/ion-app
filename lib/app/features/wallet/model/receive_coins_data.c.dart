@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
 

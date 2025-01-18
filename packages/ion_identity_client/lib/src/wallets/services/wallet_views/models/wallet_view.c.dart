@@ -2,8 +2,8 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion_identity_client/src/coins/models/coin.c.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view_aggregation_item.c.dart';
 import 'package:ion_identity_client/src/wallets/services/wallet_views/models/coin_in_wallet.c.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view_aggregation_item.c.dart';
 
 part 'wallet_view.c.freezed.dart';
 part 'wallet_view.c.g.dart';

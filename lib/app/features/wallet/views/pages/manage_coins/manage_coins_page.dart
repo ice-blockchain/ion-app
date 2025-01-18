@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
@@ -12,11 +14,11 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_text_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 class ManageCoinsPage extends HookConsumerWidget {
   const ManageCoinsPage({super.key});
@@ -24,15 +26,23 @@ class ManageCoinsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
+    final searchCoinsNotifier = ref.read(searchCoinsNotifierProvider.notifier);
+    final searchResult = ref.watch(searchCoinsNotifierProvider);
 
-    final filteredCoinsState = ref.watch(
-      filteredCoinsNotifierProvider(searchText: searchText.value),
-    );
-
-    useOnInit(
+    useEffect(
       () {
-        final notifier = filteredCoinsNotifierProvider(searchText: searchText.value).notifier;
-        ref.read(notifier).filter(searchText: searchText.value);
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          searchCoinsNotifier.search(query: searchText.value);
+        });
+
+        final routerDelegate = GoRouter.of(context).routerDelegate;
+
+        void onRouteChange() {
+          Logger.log('ManageCoinsPage has been closed. Update coins list');
+        }
+
+        routerDelegate.addListener(onRouteChange);
+        return () => routerDelegate.removeListener(onRouteChange);
       },
       [searchText.value],
     );
@@ -52,26 +62,27 @@ class ManageCoinsPage extends HookConsumerWidget {
                   child: ScreenSideOffset.small(
                     child: SearchInput(
                       onTextChanged: (String value) => searchText.value = value,
-                      loading: filteredCoinsState.isLoading,
+                      loading: searchResult.isLoading,
                     ),
                   ),
                 ),
-                filteredCoinsState.maybeWhen(
-                  data: (filteredCoins) {
-                    if (filteredCoins.isEmpty) {
+                searchResult.maybeWhen(
+                  data: (coins) {
+                    if (coins.isEmpty) {
                       return const EmptyState();
                     }
+
                     return SliverPadding(
                       padding: EdgeInsets.only(
                         bottom: ScreenBottomOffset.defaultMargin,
                       ),
                       sliver: SliverList.separated(
-                        itemCount: filteredCoins.length,
+                        itemCount: coins.length,
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
                             child: ManageCoinItem(
-                              coinId: filteredCoins[index].coinInWallet.coin.abbreviation,
+                              manageCoin: coins.elementAt(index),
                             ),
                           );
                         },

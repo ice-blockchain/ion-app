@@ -67,7 +67,7 @@ class CoinDetailsPage extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            coinData.iconUrl.icon(),
+            coinData.iconUrl.coinIcon(),
             SizedBox(width: 6.0.s),
             Text(coinData.name),
           ],

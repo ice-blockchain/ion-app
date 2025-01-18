@@ -44,7 +44,7 @@ class CoinButton extends StatelessWidget {
           style: textTheme.caption3,
         ),
         backgroundColor: Colors.transparent,
-        leading: coinData.iconUrl.icon(size: 36.0.s),
+        leading: coinData.iconUrl.coinIcon(size: 36.0.s),
         onTap: onTap,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
