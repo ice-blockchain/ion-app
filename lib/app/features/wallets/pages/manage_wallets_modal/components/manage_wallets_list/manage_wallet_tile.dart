@@ -40,7 +40,7 @@ class ManageWalletTile extends ConsumerWidget {
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ListItem(
         onTap: () {
-          EditWalletViewRoute(walletId: walletViewId).push<void>(context);
+          EditWalletRoute(walletId: walletViewId).push<void>(context);
         },
         leading: const WalletIcon(),
         title: Text(

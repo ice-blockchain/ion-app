@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/data/coins/domain/coins_mapper.dart';
 import 'package:ion/app/features/wallet/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.c.dart';
@@ -60,10 +61,9 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
   AsyncValue<Set<ManageCoinData>> build() => const AsyncLoading();
 
   Future<void> search({required String query}) async {
-    final coinsInWalletView = ref.read(manageCoinsNotifierProvider);
 
     if (query.isEmpty) {
-      state = coinsInWalletView.map(
+      state = ref.read(manageCoinsNotifierProvider).map(
         data: (data) => AsyncData(data.value.values.toSet()),
         error: (error) => AsyncError(error.error, error.stackTrace),
         loading: (loading) => const AsyncLoading(),
@@ -71,12 +71,14 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
       return;
     }
 
+    await ref.debounce();
+
     final repository = ref.read(coinsRepositoryProvider);
     final searchResult = await repository
         .searchCoins(query)
         .then(CoinsMapper.fromDbToDomain); // TODO: Move converting to the repo?
 
-    state = coinsInWalletView.maybeWhen(
+    state = ref.read(manageCoinsNotifierProvider).maybeWhen(
       data: (coinsInWalletView) {
         final coinsInWallet = coinsInWalletView.values.toList();
 

@@ -21,8 +21,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class EditWalletViewModal extends HookConsumerWidget {
-  const EditWalletViewModal({required this.walletId, super.key});
+class EditWalletModal extends HookConsumerWidget {
+  const EditWalletModal({required this.walletId, super.key});
 
   final String walletId;
 

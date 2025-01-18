@@ -5,7 +5,7 @@ import 'package:ion/app/features/wallet/model/coin_in_wallet_data.c.dart';
 
 part 'wallet_view_data.c.freezed.dart';
 
-/// Representation of the wallet view on the backend.
+/// Representation of the wallet view. Can contain many wallets/coins.
 @freezed
 class WalletViewData with _$WalletViewData {
   const factory WalletViewData({
