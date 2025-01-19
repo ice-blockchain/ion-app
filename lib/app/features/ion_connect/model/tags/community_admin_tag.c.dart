@@ -13,6 +13,10 @@ class CommunityAdminTag with _$CommunityAdminTag {
   factory CommunityAdminTag.fromTags(List<List<String>> tags) {
     final tag = tags.where((tag) => tag[0] == tagName && tag[2] == roleValue);
 
+    if (tag.isEmpty) {
+      return const CommunityAdminTag(values: []);
+    }
+
     return CommunityAdminTag(values: tag.map((tag) => tag[1]).toList());
   }
 

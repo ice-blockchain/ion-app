@@ -54,7 +54,7 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
 @Freezed(equal: false)
 class CommunityDefinitionData with _$CommunityDefinitionData implements EventSerializable {
   const factory CommunityDefinitionData({
-    required String communityIdentifier,
+    required String uuid,
     required bool isPublic,
     required bool isOpen,
     required bool commentsEnabled,
@@ -62,7 +62,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required List<String> moderators,
     required List<String> admins,
     required String name,
-    required String description,
+    required String? description,
     required MediaAttachment? avatar,
   }) = _CommunityDefinitionData;
 
@@ -70,7 +70,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
 
   factory CommunityDefinitionData.fromEventMessage(EventMessage eventMessage) {
     return CommunityDefinitionData(
-      communityIdentifier: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
+      uuid: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
       name: NameTag.fromTags(eventMessage.tags).value,
       description: DescriptionTag.fromTags(eventMessage.tags).value,
       avatar: ImetaTag.fromTags(eventMessage.tags).value,
@@ -95,16 +95,16 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       kind: CommunityDefinitionEntity.kind,
       tags: [
         ...tags,
-        CommunityIdentifierTag(value: communityIdentifier).toTag(),
+        CommunityIdentifierTag(value: uuid).toTag(),
         NameTag(value: name).toTag(),
-        DescriptionTag(value: description).toTag(),
+        if (description != null) DescriptionTag(value: description).toTag(),
         if (avatar != null) avatar!.toTag(),
         CommunityVisibilityTag(isPublic: isPublic).toTag(),
         CommunityOpennessTag(isOpen: isOpen).toTag(),
         CommentsEnabledEventSetting(isEnabled: commentsEnabled).toTag(),
         RoleRequiredForPostingEventSetting(role: roleRequiredForPosting).toTag(),
-        ...CommunityModeratorTag(values: moderators).toTag(),
-        ...CommunityAdminTag(values: admins).toTag(),
+        if (moderators.isNotEmpty) ...CommunityModeratorTag(values: moderators).toTag(),
+        if (admins.isNotEmpty) ...CommunityAdminTag(values: admins).toTag(),
       ],
       content: '',
     );

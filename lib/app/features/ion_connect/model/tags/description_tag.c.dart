@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
@@ -6,13 +7,17 @@ part 'description_tag.c.freezed.dart';
 @freezed
 class DescriptionTag with _$DescriptionTag {
   const factory DescriptionTag({
-    required String value,
+    required String? value,
   }) = _DescriptionTag;
 
   const DescriptionTag._();
 
   factory DescriptionTag.fromTags(List<List<String>> tags) {
-    final tag = tags.firstWhere((tag) => tag[0] == tagName);
+    final tag = tags.firstWhereOrNull((tag) => tag[0] == tagName);
+
+    if (tag == null) {
+      return const DescriptionTag(value: null);
+    }
 
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
@@ -27,6 +32,9 @@ class DescriptionTag with _$DescriptionTag {
   static const String tagName = 'description';
 
   List<String> toTag() {
-    return [tagName, value];
+    if (value == null) {
+      throw IncorrectEventTagValueException(tag: tagName, value: value.toString());
+    }
+    return [tagName, value!];
   }
 }

@@ -5,9 +5,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/controllers/hooks/use_text_editing_with_highlights_controller.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/channel/providers/create_channel_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
@@ -32,12 +34,35 @@ class CreateChannelModal extends HookConsumerWidget {
     final descController = useTextEditingWithHighlightsController(text: '');
     final channelType = useState<ChannelType?>(null);
     final channelAdmins = ref.watch(channelAdminsProvider());
+    final isFormValid = useState(false);
+    useEffect(() {
+      void validateFormAndUpdateState() {
+        isFormValid.value =
+            (formKey.currentState?.validate() ?? false) && channelType.value != null;
+      }
 
-    // final isFormValid = useMemoized(
-    //   () =>
-    //       channelType.value == null || titleController.text.isEmpty || descController.text.isEmpty,
-    //   [channelType, titleController.text, descController.text],
-    // );
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        titleController.addListener(validateFormAndUpdateState);
+        descController.addListener(validateFormAndUpdateState);
+
+        channelType.addListener(validateFormAndUpdateState);
+      });
+      return () {
+        titleController.removeListener(validateFormAndUpdateState);
+        descController.removeListener(validateFormAndUpdateState);
+        channelType.removeListener(validateFormAndUpdateState);
+      };
+    });
+
+    ref
+      ..listenSuccess(createChannelNotifierProvider, (next) {
+        if (next != null) {
+          Navigator.pop(context);
+        }
+      })
+      ..displayErrors(createChannelNotifierProvider);
+
+    final createChannelState = ref.watch(createChannelNotifierProvider);
 
     return SheetContent(
       topPadding: 0,
@@ -84,9 +109,9 @@ class CreateChannelModal extends HookConsumerWidget {
                                       child: TypeSelectionModal<ChannelType>(
                                         title: context.i18n.channel_create_type_select_title,
                                         values: ChannelType.values,
+                                        initiallySelectedType: channelType.value,
                                         onUpdated: (newChannelType) =>
                                             channelType.value = newChannelType,
-                                        initiallySelectedType: channelType.value,
                                       ),
                                     );
                                   },
@@ -111,11 +136,17 @@ class CreateChannelModal extends HookConsumerWidget {
                               mainAxisSize: MainAxisSize.max,
                               label: Text(context.i18n.channel_create_action),
                               leadingIcon: Assets.svg.iconPlusCreatechannel.icon(),
-                              disabled: formKey.currentState?.validate() ?? true,
-                              type: formKey.currentState?.validate() ?? false
-                                  ? ButtonType.disabled
-                                  : ButtonType.primary,
-                              onPressed: () async {},
+                              disabled: !isFormValid.value || createChannelState.isLoading,
+                              trailingIcon:
+                                  createChannelState.isLoading ? const IONLoadingIndicator() : null,
+                              type: isFormValid.value ? ButtonType.primary : ButtonType.disabled,
+                              onPressed: () {
+                                ref.read(createChannelNotifierProvider.notifier).createChannel(
+                                      titleController.text,
+                                      descController.text,
+                                      channelType.value!,
+                                    );
+                              },
                             ),
                             ScreenBottomOffset(),
                           ],
@@ -132,52 +163,3 @@ class CreateChannelModal extends HookConsumerWidget {
     );
   }
 }
-
-// final currentPubkey =
-//                               ref.watch(currentPubkeySelectorProvider).valueOrNull;
-
-//                           if (formKey.currentState!.validate()) {
-//                             final avatarFile = ref.read(avatarProcessorNotifierProvider).whenOrNull(
-//                                   processed: (file) => file,
-//                                 );
-
-//                             final compressedImage =
-//                                 await ref.read(compressServiceProvider).compressImage(
-//                                       MediaFile(path: avatarFile!.path),
-//                                       quality: 70,
-//                                     );
-
-//                             final uploadAvatarResult =
-//                                 await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-//                                       compressedImage,
-//                                       alt: FileAlt.avatar,
-//                                     );
-
-//                             final communityDefinitionData = CommunityDefinitionData(
-//                               uuid: const Uuid().v7(),
-//                               name: titleController.text,
-//                               description: descController.text,
-//                               isPublic: channelType.value == ChannelType.public,
-//                               isOpen: channelType.value == ChannelType.public,
-//                               commentsEnabled: true,
-//                               imetaTags: uploadAvatarResult.fileMetadata.imetaTags,
-//                               roleRequiredForPosting: RoleRequiredForPosting.moderator,
-//                               moderators: channelAdmins.entries
-//                                   .where((entry) => entry.value == ChannelAdminType.moderator)
-//                                   .map((entry) => entry.key)
-//                                   .toList(),
-//                               admins: channelAdmins.entries
-//                                   .where((entry) => entry.value == ChannelAdminType.admin)
-//                                   .map((entry) => entry.key)
-//                                   .toList(),
-//                             );
-//                             final result =
-//                                 await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
-//                                       communityDefinitionData,
-//                                     );
-
-//                             final data = result! as CommunityDefinitionEntity;
-
-//                             if (context.mounted) {
-//                               EditChannelRoute(pubkey: data.id).replace(context);
-//                             }

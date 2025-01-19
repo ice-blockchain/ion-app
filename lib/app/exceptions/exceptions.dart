@@ -241,3 +241,12 @@ class UnsupportedEventReference extends IONException {
 class UnsupportedEntityBookmarking extends IONException {
   UnsupportedEntityBookmarking(dynamic entity) : super(10051, 'Unsupported bookmarking of $entity');
 }
+
+class IncorrectEventTagValueException extends IONException {
+  IncorrectEventTagValueException({required String tag, required String value})
+      : super(10052, 'Incorrect event tag value $tag: $value');
+}
+
+class FailedToCreateChannelException extends IONException {
+  FailedToCreateChannelException() : super(10053, 'Failed to create channel');
+}
