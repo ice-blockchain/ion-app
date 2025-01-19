@@ -62,6 +62,7 @@ class ShareAddressView extends ConsumerWidget {
                     context.i18n.button_share,
                   ),
                   onPressed: () {
+                    // TODO: (1) Probably we should disable button at all if walletAddress is null
                     if (walletAddress != null) {
                       shareContent(walletAddress);
                     }

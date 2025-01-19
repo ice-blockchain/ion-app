@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
@@ -12,13 +11,12 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item.dart';
+import 'package:ion/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item_widget.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_text_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/logger/logger.dart';
 
 class ManageCoinsPage extends HookConsumerWidget {
   const ManageCoinsPage({super.key});
@@ -34,16 +32,7 @@ class ManageCoinsPage extends HookConsumerWidget {
         SchedulerBinding.instance.addPostFrameCallback((_) {
           searchCoinsNotifier.search(query: searchText.value);
         });
-
-        final routerDelegate = GoRouter.of(context).routerDelegate;
-
-        void onRouteChange() {
-          Logger.log('ManageCoinsPage has been closed. Update coins list');
-          // TODO: Implement adding coin to the wallet view
-        }
-
-        routerDelegate.addListener(onRouteChange);
-        return () => routerDelegate.removeListener(onRouteChange);
+        return null;
       },
       [searchText.value],
     );
@@ -53,7 +42,14 @@ class ManageCoinsPage extends HookConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(context.i18n.wallet_manage_coins),
-            actions: [NavigationTextButton(label: context.i18n.core_done)],
+            actions: [
+              NavigationTextButton(
+                label: context.i18n.core_done,
+                onPressed: () {
+                  // TODO: Implement adding/removing coins from the wallet view
+                },
+              ),
+            ],
           ),
           Expanded(
             child: CustomScrollView(
@@ -82,8 +78,8 @@ class ManageCoinsPage extends HookConsumerWidget {
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
-                            child: ManageCoinItem(
-                              manageCoin: coins.elementAt(index),
+                            child: ManageCoinItemWidget(
+                              coin: coins.elementAt(index),
                             ),
                           );
                         },

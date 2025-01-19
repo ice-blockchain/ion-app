@@ -7,31 +7,34 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.c.dart';
+import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ManageCoinItem extends ConsumerWidget {
-  const ManageCoinItem({
-    required this.manageCoin,
+class ManageCoinItemWidget extends ConsumerWidget {
+  const ManageCoinItemWidget({
+    required this.coin,
     super.key,
   });
 
-  final ManageCoinData manageCoin;
+  final CoinData coin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coin = manageCoin.coin;
+    final isSelected = ref.watch(manageCoinsNotifierProvider).maybeMap(
+          data: (data) => data.value[coin.id]?.isSelected ?? false,
+          orElse: () => false,
+        );
     return ListItem(
       title: Text(coin.name),
       subtitle: Text(coin.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: coin.iconUrl.coinIcon(size: 36.0.s),
-      trailing: manageCoin.isSelected
+      trailing: isSelected
           ? Assets.svg.iconBlockCheckboxOn.icon()
           : Assets.svg.iconBlockCheckboxOff.icon(),
       onTap: () {
-        ref.read(manageCoinsNotifierProvider.notifier).switchCoin(coinId: coin.id);
+        ref.read(manageCoinsNotifierProvider.notifier).switchCoin(coin: coin);
       },
     );
   }
