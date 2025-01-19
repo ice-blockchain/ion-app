@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/channel/providers/channel_metadata_provider.c.dart';
+import 'package:ion/app/features/chat/channel/views/components/channel_form.dart';
+import 'package:ion/app/features/chat/views/pages/channel_page/pages/channel_detail_page/components/channel_summary.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channel_page/components/edit_channel_header.dart';
-import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channel_page/edit_channel_page.dart';
 
 class ChannelDetailPage extends HookConsumerWidget {
   const ChannelDetailPage({
@@ -16,18 +20,39 @@ class ChannelDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channelData = ref.watch(channelMetadataProvider(uuid)).valueOrNull;
+    final channel = ref.watch(channelMetadataProvider(uuid)).valueOrNull;
 
-    if (channelData == null) {
+    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).requireValue;
+
+    final hasAccessToEdit = useMemoized(
+      () =>
+          (channel?.admins.contains(currentUserPubkey) ?? false) ||
+          (channel?.owner == currentUserPubkey),
+      [channel, currentUserPubkey],
+    );
+
+    if (channel == null) {
       return const SizedBox.shrink();
     }
 
     return Scaffold(
-      body: Column(
-        children: [
-          EditChannelHeader(channel: channelData),
-          EditChannelForm(channel: channelData),
-        ],
+      body: ScreenTopOffset(
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            ChannelDetailAppBar(channel: channel),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    ChannelSummary(channel: channel, hasAccessToEdit: hasAccessToEdit),
+                    if (hasAccessToEdit) ChannelForm(channel: channel),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

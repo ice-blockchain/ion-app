@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class ChannelAvatar extends HookConsumerWidget {
   const ChannelAvatar({
     required this.channel,
+    required this.hasAccessToEdit,
     super.key,
   });
 
@@ -21,16 +21,9 @@ class ChannelAvatar extends HookConsumerWidget {
   double get pictureBorderWidth => 5.0.s;
 
   final CommunityDefinitionData channel;
-
+  final bool hasAccessToEdit;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).requireValue;
-
-    final hasAccessToEdit = useMemoized(
-      () => channel.admins.contains(currentUserPubkey) || channel.owner == currentUserPubkey,
-      [channel, currentUserPubkey],
-    );
-
     return Stack(
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
@@ -65,6 +58,9 @@ class ChannelAvatar extends HookConsumerWidget {
                     fit: BoxFit.cover,
                     imageUrl: channel.avatar?.url,
                     borderRadius: BorderRadius.circular(20.0.s),
+                    defaultAvatar: Assets.svg.userPhotoArea.icon(
+                      size: pictureSize,
+                    ),
                   ),
           ),
         ),
