@@ -22,7 +22,7 @@ class SendAssetFormController extends _$SendAssetFormController {
     return CryptoAssetData(
       selectedNetwork: NetworkType.eth,
       wallet: wallet!,
-      address: 'Not implemented', // TODO (1) not imeplemented
+      address: 'Not implemented', // TODO (1) not implemented
       arrivalTime: 15,
       arrivalDateTime: DateTime.now(),
     );

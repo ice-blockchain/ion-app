@@ -52,7 +52,7 @@ class CoinReceiveModal extends HookConsumerWidget {
               ),
             ],
           ),
-          // TODO: check nullability here
+          // TODO: (1) check nullability here
           if (receiveCoinState.selectedCoin != null)
             ScreenSideOffset.small(
               child: CoinAddressTile(

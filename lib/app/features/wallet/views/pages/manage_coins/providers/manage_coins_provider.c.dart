@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/data/coins/domain/coins_mapper.dart';
 import 'package:ion/app/features/wallet/data/coins/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.c.dart';
 import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -33,18 +34,13 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     );
   }
 
-  void switchCoin({required String coinId}) {
+  void switchCoin({required CoinData coin}) {
     final currentMap = state.value ?? <String, ManageCoinData>{};
-
-    if (currentMap.containsKey(coinId)) {
-      final updatedCoin = currentMap[coinId]!.copyWith(
-        isSelected: !currentMap[coinId]!.isSelected,
-      );
-
-      state = AsyncData<Map<String, ManageCoinData>>(
-        {...currentMap, coinId: updatedCoin},
-      );
-    }
+    currentMap[coin.id] = ManageCoinData(
+      coin: coin,
+      isSelected: !(currentMap[coin.id]?.isSelected ?? false),
+    );
+    state = AsyncData<Map<String, ManageCoinData>>(currentMap);
   }
 }
 
@@ -58,12 +54,13 @@ AsyncValue<List<ManageCoinData>> selectedCoins(Ref ref) {
 @riverpod
 class SearchCoinsNotifier extends _$SearchCoinsNotifier {
   @override
-  AsyncValue<Set<ManageCoinData>> build() => const AsyncLoading();
+  AsyncValue<Set<CoinData>> build() => const AsyncLoading();
 
   Future<void> search({required String query}) async {
     if (query.isEmpty) {
       state = ref.read(manageCoinsNotifierProvider).map(
-            data: (data) => AsyncData(data.value.values.toSet()),
+            data: (data) =>
+                AsyncData(data.value.values.map((manageCoin) => manageCoin.coin).toSet()),
             error: (error) => AsyncError(error.error, error.stackTrace),
             loading: (loading) => const AsyncLoading(),
           );
@@ -79,19 +76,17 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
 
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
           data: (coinsInWalletView) {
-            final coinsInWallet = coinsInWalletView.values.toList();
+            final coinsInWallet =
+                coinsInWalletView.values.map((coinInWallet) => coinInWallet.coin).toList();
 
-            final result = <ManageCoinData>{};
-            for (final manageCoin in coinsInWallet) {
-              if (searchResult.contains(manageCoin.coin)) {
-                result.add(manageCoin);
+            // Coins from wallet should be first in the search results list
+            final result = <CoinData>{};
+            for (final coinInWallet in coinsInWallet) {
+              if (searchResult.contains(coinInWallet)) {
+                result.add(coinInWallet);
               }
             }
-            result.addAll(
-              searchResult.map(
-                (coin) => ManageCoinData(coin: coin, isSelected: false),
-              ),
-            );
+            result.addAll(searchResult);
 
             return AsyncData(result);
           },

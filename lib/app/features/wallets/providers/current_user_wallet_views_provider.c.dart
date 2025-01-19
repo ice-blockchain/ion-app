@@ -33,7 +33,7 @@ Future<List<WalletViewData>> currentUserWalletViews(Ref ref) async {
     final coins = <CoinInWalletData>[];
     final symbolGroups = <String>{};
 
-    // TODO: Check the calculation of the total balance. Are the assets from aggregation is the same as coins?
+    // TODO: (1) Check the calculation of the total balance. Are the assets from aggregation is the same as coins?
     var totalViewBalanceUSD = 0.0;
 
     for (final coinInWalletDTO in viewDTO.coins) {
@@ -50,7 +50,7 @@ Future<List<WalletViewData>> currentUserWalletViews(Ref ref) async {
 
         if (asset != null) {
           coinAmount = asset.balance;
-          // TODO: Check the result of formula with other services
+          // TODO: (1) Check the result of formula with other services
           coinBalanceUSD = (coinAmount / pow(10, coinDTO.decimals)) * coinDTO.priceUSD;
         }
       }
