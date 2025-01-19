@@ -27,9 +27,12 @@ class ManageCoinsPage extends HookConsumerWidget {
     final searchCoinsNotifier = ref.read(searchCoinsNotifierProvider.notifier);
     final searchResult = ref.watch(searchCoinsNotifierProvider);
 
-    useOnInit(() {
-      searchCoinsNotifier.search(query: searchText.value);
-    },[searchText.value],);
+    useOnInit(
+      () {
+        searchCoinsNotifier.search(query: searchText.value);
+      },
+      [searchText.value],
+    );
 
     return SheetContent(
       body: Column(
@@ -83,8 +86,7 @@ class ManageCoinsPage extends HookConsumerWidget {
                   loading: () => ListItemsLoadingState(
                     itemsCount: 7,
                     separatorHeight: 12.0.s,
-                    listItemsLoadingStateType:
-                        ListItemsLoadingStateType.scrollView,
+                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
                   ),
                   orElse: () => const EmptyState(),
                 ),
