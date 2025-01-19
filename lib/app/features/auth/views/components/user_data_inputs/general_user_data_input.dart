@@ -20,6 +20,7 @@ class GeneralUserDataInput extends HookWidget {
     this.initialValue,
     this.isLive = false,
     this.showNoErrorsIndicator = false,
+    this.enabled = true,
     super.key,
   });
 
@@ -34,7 +35,7 @@ class GeneralUserDataInput extends HookWidget {
   final String? initialValue;
   final bool isLive;
   final bool showNoErrorsIndicator;
-
+  final bool enabled;
   @override
   Widget build(BuildContext context) {
     final isValid = useState(false);
@@ -56,6 +57,7 @@ class GeneralUserDataInput extends HookWidget {
       initialValue: initialValue,
       isLive: isLive,
       verified: isValid.value,
+      enabled: enabled,
       suffixIcon: isValid.value && showNoErrorsIndicator
           ? TextInputIcons(
               icons: [Assets.svg.iconBlockCheckboxOn.icon()],

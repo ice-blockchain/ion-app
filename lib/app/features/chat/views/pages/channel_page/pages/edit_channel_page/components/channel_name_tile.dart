@@ -16,31 +16,23 @@ class ChannelNameTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-              child: Text(
-                textAlign: TextAlign.center,
-                name,
-                style: context.theme.appTextThemes.title.copyWith(
-                  color: context.theme.appColors.primaryText,
-                ),
-              ),
+        Flexible(
+          child: Text(
+            textAlign: TextAlign.center,
+            name,
+            style: context.theme.appTextThemes.title.copyWith(
+              color: context.theme.appColors.primaryText,
             ),
-            //TODO: add verified icon
-            // if ((channelData.isVerified ?? false) == true) ...[
-            //   SizedBox(width: 6.0.s),
-            //   Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
-            // ],
-          ],
+          ),
         ),
-        SizedBox(height: 3.0.s),
-        // JoinedUsersAmountTile(
-        //   amount: channelData.users.length,
-        // ),
+        //TODO: add verified icon
+        // if ((channelData.isVerified ?? false) == true) ...[
+        //   SizedBox(width: 6.0.s),
+        //   Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
+        // ],
       ],
     );
   }

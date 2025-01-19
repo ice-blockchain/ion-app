@@ -108,7 +108,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       roleRequiredForPosting: RoleRequiredForPostingEventSetting.fromTags(eventMessage.tags).role,
       moderators: CommunityModeratorTag.fromTags(eventMessage.tags).values,
       admins: CommunityAdminTag.fromTags(eventMessage.tags).values,
-      owner: eventMessage.pubkey,
+      owner: eventMessage.masterPubkey,
     );
   }
 

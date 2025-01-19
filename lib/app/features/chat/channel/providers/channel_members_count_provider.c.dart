@@ -17,7 +17,8 @@ part 'channel_members_count_provider.c.g.dart';
 
 @riverpod
 Future<int> channelMembersCount(Ref ref, String channelUuid) async {
-  final channel = await ref.watch(ionConnectNotifierProvider.notifier).requestEntity(
+  //TODO: implement
+  await ref.watch(ionConnectNotifierProvider.notifier).requestEntity(
         RequestMessage()
           ..addFilter(
             RequestFilter(

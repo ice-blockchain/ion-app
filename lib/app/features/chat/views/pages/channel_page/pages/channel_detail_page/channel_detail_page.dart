@@ -16,38 +16,19 @@ class ChannelDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channelData = ref.watch(channelMetadataProvider(uuid));
+    final channelData = ref.watch(channelMetadataProvider(uuid)).valueOrNull;
+
+    if (channelData == null) {
+      return const SizedBox.shrink();
+    }
 
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.topCenter,
+      body: Column(
         children: [
-          channelData.when(
-            data: (channel) => EditChannelForm(channel: channel),
-            error: (error, stackTrace) => const SizedBox.shrink(),
-            loading: () => const SizedBox.shrink(),
-          ),
-          const Positioned(
-            child: EditChannelHeader(),
-          ),
+          EditChannelHeader(channel: channelData),
+          EditChannelForm(channel: channelData),
         ],
       ),
     );
-
-    // return channelData.when(
-    //   data: (channel) {
-    //     return Column(
-    //       children: [
-    //         Text(channel.name),
-    //       ],
-    //     );
-    //   },
-    //   error: (error, stackTrace) {
-    //     return const SizedBox.shrink();
-    //   },
-    //   loading: () {
-    //     return const SizedBox.shrink();
-    //   },
-    // );
   }
 }
