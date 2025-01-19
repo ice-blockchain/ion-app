@@ -3,27 +3,27 @@
 part of 'app_routes.c.dart';
 
 @TypedGoRoute<ChannelRoute>(
-  path: '/channel/:pubkey',
+  path: '/channel/:uuid',
   routes: [
-    TypedGoRoute<EditChannelRoute>(path: 'channel-edit'),
+    TypedGoRoute<ChannelDetailRoute>(path: 'channel-detail'),
   ],
 )
 class ChannelRoute extends BaseRouteData {
-  ChannelRoute({required this.pubkey})
+  ChannelRoute({required this.uuid})
       : super(
           child: ChannelPage(
-            pubkey: pubkey,
+            uuid: uuid,
           ),
         );
 
-  final String pubkey;
+  final String uuid;
 }
 
-class EditChannelRoute extends BaseRouteData {
-  EditChannelRoute({required this.pubkey})
+class ChannelDetailRoute extends BaseRouteData {
+  ChannelDetailRoute({required this.uuid})
       : super(
-          child: EditChannelPage(pubkey: pubkey),
+          child: ChannelDetailPage(uuid: uuid),
         );
 
-  final String pubkey;
+  final String uuid;
 }

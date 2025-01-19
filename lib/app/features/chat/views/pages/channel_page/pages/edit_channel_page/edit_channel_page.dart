@@ -9,54 +9,37 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
+import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/components/channel_avatar.dart';
-import 'package:ion/app/features/chat/views/pages/channel_page/components/share_link_tile.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channel_page/components/channel_name_tile.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channel_page/components/edit_channel_header.dart';
-import 'package:ion/app/features/chat/views/pages/components/bottom_sticky_button.dart';
+import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class EditChannelPage extends HookConsumerWidget {
-  const EditChannelPage({
-    required this.pubkey,
+class EditChannelForm extends HookConsumerWidget {
+  const EditChannelForm({
+    required this.channel,
     super.key,
   });
 
-  final String pubkey;
+  final CommunityDefinitionData channel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final channelData = ref.watch(ionConnectNotifierProvider.notifier).requestEntity(
-    //       RequestMessage()
-    //         ..addFilter(
-    //           RequestFilter(
-    //             ids: [pubkey],
-    //           ),
-    //         ),
-    //     );
-    final channelData = ref.watch(channelsProvider.select((channelMap) => channelMap[pubkey]));
-
     final formKey = useMemoized(GlobalKey<FormState>.new);
-    final titleController = useTextEditingController(text: channelData?.name ?? '');
-    final descController =
-        useTextEditingWithHighlightsController(text: channelData?.description ?? '');
-    final channelType = useState(channelData?.channelType ?? ChannelType.public);
-    final channelAdmins = ref.watch(channelAdminsProvider(initialAdmins: channelData?.admins));
+    final titleController = useTextEditingController(text: channel.name);
+    final descController = useTextEditingWithHighlightsController(text: channel.description);
+    final channelType = useState(channel.isPublic ? ChannelType.public : ChannelType.private);
+    final channelAdmins = ref.watch(channelAdminsProvider(community: channel));
 
     final paddingValue = 16.0.s;
-    if (channelData == null) {
-      return const SizedBox.shrink();
-    }
 
     return Scaffold(
       body: KeyboardDismissOnTap(
@@ -76,21 +59,25 @@ class EditChannelPage extends HookConsumerWidget {
                               height: 40.0.s,
                             ),
                             ChannelAvatar(
-                              pubkey: pubkey,
+                              channel: channel,
                               showAvatarPicker: true,
                             ),
                             SizedBox(
                               height: 10.0.s,
                             ),
                             ChannelNameTile(
-                              pubkey: pubkey,
+                              name: channel.name,
                             ),
-                            SizedBox(
-                              height: 20.0.s,
+                            SizedBox(height: 3.0.s),
+                            JoinedUsersAmountTile(
+                              channelUuid: channel.uuid,
                             ),
-                            ShareLinkTile(
-                              pubkey: pubkey,
-                            ),
+                            // SizedBox(
+                            //   height: 20.0.s,
+                            // ),
+                            // ShareLinkTile(
+                            //   pubkey: pubkey,
+                            // ),
                             SizedBox(
                               height: 20.0.s,
                             ),
@@ -134,31 +121,29 @@ class EditChannelPage extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                  BottomStickyButton(
-                    label: context.i18n.button_save_changes,
-                    iconAsset: Assets.svg.iconProfileSave,
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        final newChannelData = channelData.copyWith(
-                          name: titleController.text,
-                          description: descController.text,
-                          channelType: channelType.value,
-                          admins: channelAdmins,
-                          image: ref
-                                  .read(imageProcessorNotifierProvider(ImageProcessingType.avatar))
-                                  .mapOrNull(
-                                    cropped: (file) => file.file,
-                                    processed: (file) => file.file,
-                                  ) ??
-                              channelData.image,
-                        );
-                        ref
-                            .read(channelsProvider.notifier)
-                            .setChannel(newChannelData.id, newChannelData);
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
+                  // BottomStickyButton(
+                  //   label: context.i18n.button_save_changes,
+                  //   iconAsset: Assets.svg.iconProfileSave,
+                  //   onPressed: () {
+                  //     if (formKey.currentState!.validate()) {
+                  //       final newChannelData = channelData.copyWith(
+                  //         name: titleController.text,
+                  //         description: descController.text,
+                  //         channelType: channelType.value,
+                  //         admins: channelAdmins,
+                  //         image: ref.read(avatarProcessorNotifierProvider).mapOrNull(
+                  //                   cropped: (file) => file.file,
+                  //                   processed: (file) => file.file,
+                  //                 ) ??
+                  //             channelData.image,
+                  //       );
+                  //       ref
+                  //           .read(channelsProvider.notifier)
+                  //           .setChannel(newChannelData.id, newChannelData);
+                  //       Navigator.of(context).pop();
+                  //     }
+                  //   },
+                  // ),
                 ],
               ),
             ),

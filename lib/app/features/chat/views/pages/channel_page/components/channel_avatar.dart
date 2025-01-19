@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
+import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 class ChannelAvatar extends ConsumerWidget {
   const ChannelAvatar({
-    required this.pubkey,
+    required this.channel,
     this.showAvatarPicker = false,
     super.key,
   });
@@ -21,16 +21,11 @@ class ChannelAvatar extends ConsumerWidget {
 
   double get pictureBorderWidth => 5.0.s;
 
-  final String pubkey;
+  final CommunityDefinitionData channel;
   final bool showAvatarPicker;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channelData = ref.watch(channelsProvider.select((channelMap) => channelMap[pubkey]));
-
-    final avatarWidget =
-        channelData?.image != null ? Image.file(File(channelData!.image!.path)) : null;
-
     return Stack(
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
@@ -58,17 +53,34 @@ class ChannelAvatar extends ConsumerWidget {
             ),
             child: showAvatarPicker
                 ? AvatarPicker(
-                    avatarWidget: avatarWidget,
+                    avatarWidget: _ChannelAvatar(avatar: channel.avatar),
                   )
                 : Avatar(
                     size: pictureSize - pictureBorderWidth * 2,
                     fit: BoxFit.cover,
-                    imageWidget: avatarWidget,
+                    imageWidget: _ChannelAvatar(avatar: channel.avatar),
                     borderRadius: BorderRadius.circular(20.0.s),
                   ),
           ),
         ),
       ],
     );
+  }
+}
+
+class _ChannelAvatar extends StatelessWidget {
+  const _ChannelAvatar({
+    required this.avatar,
+  });
+
+  final MediaAttachment? avatar;
+
+  @override
+  Widget build(BuildContext context) {
+    if (avatar == null) {
+      return const SizedBox.shrink();
+    }
+
+    return CachedNetworkImage(imageUrl: avatar!.url);
   }
 }

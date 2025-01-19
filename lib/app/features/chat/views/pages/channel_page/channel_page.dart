@@ -15,15 +15,15 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ChannelPage extends ConsumerWidget {
   const ChannelPage({
-    required this.pubkey,
+    required this.uuid,
     super.key,
   });
 
-  final String pubkey;
+  final String uuid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channelData = ref.watch(channelsProvider.select((channelMap) => channelMap[pubkey]));
+    final channelData = ref.watch(channelsProvider.select((channelMap) => channelMap[uuid]));
     if (channelData == null) {
       return const SizedBox.shrink();
     }
@@ -38,12 +38,12 @@ class ChannelPage extends ConsumerWidget {
         child: Column(
           children: [
             MessagingHeader(
-              onTap: () => EditChannelRoute(pubkey: pubkey).push<void>(context),
+              onTap: () => ChannelDetailRoute(uuid: uuid).push<void>(context),
               imageWidget:
                   channelData.image != null ? Image.file(File(channelData.image!.path)) : null,
               name: channelData.name,
               subtitle: JoinedUsersAmountTile(
-                amount: channelData.users.length,
+                channelUuid: channelData.id,
               ),
             ),
             MessagingEmptyView(

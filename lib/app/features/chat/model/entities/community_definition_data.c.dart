@@ -15,6 +15,7 @@ import 'package:ion/app/features/ion_connect/model/tags/community_visibility_tag
 import 'package:ion/app/features/ion_connect/model/tags/description_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/imeta_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/name_tag.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
 part 'community_definition_data.c.freezed.dart';
@@ -64,7 +65,34 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required String name,
     required String? description,
     required MediaAttachment? avatar,
+    required String owner,
   }) = _CommunityDefinitionData;
+
+  factory CommunityDefinitionData.fromData({
+    required String name,
+    required String? description,
+    required MediaAttachment? avatar,
+    required bool isPublic,
+    required bool isOpen,
+    required bool commentsEnabled,
+    required RoleRequiredForPosting roleRequiredForPosting,
+    required List<String> moderators,
+    required List<String> admins,
+  }) {
+    return CommunityDefinitionData(
+      uuid: generateV7UUID(),
+      name: name,
+      description: description,
+      avatar: avatar,
+      isPublic: isPublic,
+      isOpen: isOpen,
+      commentsEnabled: commentsEnabled,
+      roleRequiredForPosting: roleRequiredForPosting,
+      moderators: moderators,
+      admins: admins,
+      owner: '',
+    );
+  }
 
   const CommunityDefinitionData._();
 
@@ -80,6 +108,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       roleRequiredForPosting: RoleRequiredForPostingEventSetting.fromTags(eventMessage.tags).role,
       moderators: CommunityModeratorTag.fromTags(eventMessage.tags).values,
       admins: CommunityAdminTag.fromTags(eventMessage.tags).values,
+      owner: eventMessage.pubkey,
     );
   }
 

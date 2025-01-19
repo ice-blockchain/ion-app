@@ -13,7 +13,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifi
 import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_channel_provider.c.g.dart';
@@ -29,12 +28,10 @@ class CreateChannelNotifier extends _$CreateChannelNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      final avatar = await _uploadAvatar();
       final channelAdmins = ref.watch(channelAdminsProvider());
 
-      final avatar = await _uploadAvatar();
-
-      final communityDefinitionData = CommunityDefinitionData(
-        uuid: generateV7UUID(),
+      final communityDefinitionData = CommunityDefinitionData.fromData(
         name: name,
         description: description,
         isPublic: channelType == ChannelType.public,
@@ -60,7 +57,7 @@ class CreateChannelNotifier extends _$CreateChannelNotifier {
         throw FailedToCreateChannelException();
       }
 
-      return (result as CommunityDefinitionEntity).data.uuid;
+      return result.id;
     });
   }
 

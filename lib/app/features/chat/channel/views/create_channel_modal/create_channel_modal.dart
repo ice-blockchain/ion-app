@@ -18,6 +18,7 @@ import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/c
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -55,9 +56,9 @@ class CreateChannelModal extends HookConsumerWidget {
     });
 
     ref
-      ..listenSuccess(createChannelNotifierProvider, (next) {
-        if (next != null) {
-          Navigator.pop(context);
+      ..listenSuccess(createChannelNotifierProvider, (id) {
+        if (id != null) {
+          ChannelDetailRoute(uuid: id).push<void>(context);
         }
       })
       ..displayErrors(createChannelNotifierProvider);
