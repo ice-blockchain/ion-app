@@ -31,7 +31,7 @@ class ManageCoinItem extends ConsumerWidget {
           ? Assets.svg.iconBlockCheckboxOn.icon()
           : Assets.svg.iconBlockCheckboxOff.icon(),
       onTap: () {
-        ref.read(manageCoinsNotifierProvider.notifier).switchCoin(coinId: coin.abbreviation);
+        ref.read(manageCoinsNotifierProvider.notifier).switchCoin(coinId: coin.id);
       },
     );
   }
