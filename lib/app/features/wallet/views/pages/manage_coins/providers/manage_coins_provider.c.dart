@@ -72,7 +72,7 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
     final repository = ref.read(coinsRepositoryProvider);
     final searchResult = await repository
         .searchCoins(query)
-        .then(CoinsMapper.fromDbToDomain); // TODO: Move converting to the repo?
+        .then(CoinsMapper.fromDbToDomain); // TODO: (1) Move converting to the repo?
 
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
           data: (coinsInWalletView) {
