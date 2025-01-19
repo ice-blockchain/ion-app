@@ -2,7 +2,6 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallet/data/coins/domain/coins_mapper.dart';
 import 'package:ion/app/features/wallet/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/model/manage_coin_data.c.dart';
@@ -72,7 +71,7 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
     final repository = ref.read(coinsRepositoryProvider);
     final searchResult = await repository
         .searchCoins(query)
-        .then(CoinsMapper.fromDbToDomain); // TODO: (1) Move converting to the repo?
+        .then((result) => result.map(CoinData.fromDB)); // TODO: (1) Move converting to the repo?
 
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
           data: (coinsInWalletView) {

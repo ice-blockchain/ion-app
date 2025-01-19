@@ -16,7 +16,7 @@ Future<void> createWalletView(Ref ref, {required String walletViewName}) async {
     return;
   }
 
-  final ionIdentity = await ref.watch(ionIdentityProvider.future);
+  final ionIdentity = await ref.read(ionIdentityProvider.future);
   final identity = ionIdentity(username: currentIdentityKeyName);
 
   await identity.wallets.createWalletView(

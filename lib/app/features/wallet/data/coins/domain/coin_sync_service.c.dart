@@ -71,7 +71,7 @@ class CoinSyncService {
       return;
     }
 
-    await _coinsRepository.updateCoins(CoinsMapper.fromDtoToDb(response.coins));
+    await _coinsRepository.updateCoins(CoinsMapper().fromDtoToDb(response.coins));
     await _updateCoinsSyncQueue(
       response.coins.map(
         (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),

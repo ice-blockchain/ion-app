@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
@@ -13,6 +12,7 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/components/manage_coin_item/manage_coin_item_widget.dart';
 import 'package:ion/app/features/wallet/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_text_button.dart';
@@ -27,15 +27,9 @@ class ManageCoinsPage extends HookConsumerWidget {
     final searchCoinsNotifier = ref.read(searchCoinsNotifierProvider.notifier);
     final searchResult = ref.watch(searchCoinsNotifierProvider);
 
-    useEffect(
-      () {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          searchCoinsNotifier.search(query: searchText.value);
-        });
-        return null;
-      },
-      [searchText.value],
-    );
+    useOnInit(() {
+      searchCoinsNotifier.search(query: searchText.value);
+    },[searchText.value],);
 
     return SheetContent(
       body: Column(
@@ -89,7 +83,8 @@ class ManageCoinsPage extends HookConsumerWidget {
                   loading: () => ListItemsLoadingState(
                     itemsCount: 7,
                     separatorHeight: 12.0.s,
-                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
+                    listItemsLoadingStateType:
+                        ListItemsLoadingStateType.scrollView,
                   ),
                   orElse: () => const EmptyState(),
                 ),
