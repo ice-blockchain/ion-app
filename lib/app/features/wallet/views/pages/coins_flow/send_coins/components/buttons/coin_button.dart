@@ -57,7 +57,7 @@ class CoinButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  coinInWallet.amount.toString(),
+                  formatDouble(coinInWallet.amount),
                   style: textTheme.body,
                 ),
                 Text(

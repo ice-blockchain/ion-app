@@ -28,7 +28,7 @@ class Balance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final text = '${formatToCurrency(coinData.amount, '')} ${coinData.coin.abbreviation}';
+    final text = '${formatDouble(coinData.amount)} ${coinData.coin.abbreviation}';
 
     return ScreenSideOffset.small(
       child: Column(

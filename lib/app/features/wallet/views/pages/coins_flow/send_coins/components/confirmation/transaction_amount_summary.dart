@@ -31,7 +31,7 @@ class TransactionAmountSummary extends StatelessWidget {
             icon,
             SizedBox(width: 8.0.s),
             Text(
-              '-$amount $currency',
+              '-${formatDouble(amount)} $currency',
               style: textTheme.headline2,
             ),
           ],

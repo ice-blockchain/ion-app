@@ -82,7 +82,7 @@ class CoinNetworkItem extends ConsumerWidget {
             children: [
               Text(
                 // TODO: Probably, need to create formatting for the amount
-                isBalanceVisible ? coinInWallet.amount.toString() : '****',
+                isBalanceVisible ? formatDouble(coinInWallet.amount) : '****',
                 style: context.theme.appTextThemes.body
                     .copyWith(color: context.theme.appColors.primaryText),
               ),

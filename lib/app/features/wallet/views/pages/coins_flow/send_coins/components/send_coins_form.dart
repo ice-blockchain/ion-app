@@ -19,6 +19,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SendCoinsForm extends HookConsumerWidget {
@@ -37,7 +38,7 @@ class SendCoinsForm extends HookConsumerWidget {
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
-        text: (formController.selectedCoin?.amount ?? 0).toString(),
+        text: formatDouble(formController.selectedCoin?.amount ?? 0),
       ),
     );
 
