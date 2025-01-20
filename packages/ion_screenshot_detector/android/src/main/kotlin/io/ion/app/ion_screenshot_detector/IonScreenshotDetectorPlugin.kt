@@ -43,7 +43,7 @@ class IonScreenshotDetectorPlugin : FlutterPlugin, EventChannel.StreamHandler, A
   }
 
   override fun onDetachedFromActivity() {
-    registerScreenshotDetector()
+    unregisterScreenshotDetector()
     activity = null
   }
 
