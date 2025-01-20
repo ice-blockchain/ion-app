@@ -28,7 +28,7 @@ class DeleteWalletViewNotifier extends _$DeleteWalletViewNotifier {
 
       await identity.wallets.deleteWalletView(walletViewId);
 
-      // ref.invalidate(currentUserWalletViewsProvider);
+      ref.invalidate(currentUserWalletViewsProvider);
     });
   }
 }
