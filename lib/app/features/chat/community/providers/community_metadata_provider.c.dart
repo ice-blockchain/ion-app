@@ -10,20 +10,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'community_metadata_provider.c.g.dart';
 
 @riverpod
-Future<CommunityDefinitionEntity> communityMetadata(Ref ref, String id) async {
+Future<CommunityDefinitionEntity> communityMetadata(Ref ref, String uuid) async {
   final community =
       await ref.watch(ionConnectNotifierProvider.notifier).requestEntity<CommunityDefinitionEntity>(
             RequestMessage()
               ..addFilter(
                 RequestFilter(
                   kinds: const [CommunityDefinitionEntity.kind],
-                  ids: [id],
+                  tags: {
+                    '#h': [uuid],
+                  },
                 ),
               ),
           );
 
   if (community == null) {
-    throw FailedToFetchCommunityException(id);
+    throw FailedToFetchCommunityException(uuid);
   }
 
   return community;

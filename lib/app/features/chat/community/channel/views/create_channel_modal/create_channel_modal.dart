@@ -35,9 +35,9 @@ class CreateChannelModal extends HookConsumerWidget {
                   ),
                   Flexible(
                     child: ChannelForm(
-                      onSuccess: (String? id) {
-                        if (id != null) {
-                          ChannelDetailRoute(uuid: id).pushReplacement(context);
+                      onSuccess: (String? uuid) {
+                        if (uuid != null) {
+                          ChannelDetailRoute(uuid: uuid).pushReplacement(context);
                         }
                       },
                     ),

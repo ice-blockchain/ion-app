@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/data/channel_type.dart';
 import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
@@ -56,7 +57,7 @@ class ChannelNotifier extends _$ChannelNotifier {
         throw FailedToCreateChannelException();
       }
 
-      return result.id;
+      return (result as CommunityDefinitionEntity).data.uuid;
     });
   }
 
@@ -71,6 +72,11 @@ class ChannelNotifier extends _$ChannelNotifier {
     state = await AsyncValue.guard(() async {
       final avatar = await _uploadAvatar();
       final channelAdmins = ref.read(channelAdminsProvider());
+      final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+
+      if (pubkey == null) {
+        throw UserMasterPubkeyNotFoundException();
+      }
 
       final editedChannelEntity = channel.copyWith(
         avatar: avatar,
@@ -88,10 +94,10 @@ class ChannelNotifier extends _$ChannelNotifier {
       );
 
       final patchChannelEntity = CommunityDefinitionEditData(data: editedChannelEntity);
-
       final patchChannelResult =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchChannelEntity);
 
+      final replaceableEventReference = editedChannelEntity.toReplaceableEventReference(pubkey);
       final editChannelResult =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(editedChannelEntity);
 

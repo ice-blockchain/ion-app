@@ -153,6 +153,14 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       content: '',
     );
   }
+
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: CommunityDefinitionEntity.kind,
+      pubkey: pubkey,
+      dTag: id,
+    );
+  }
 }
 
 @Freezed(equal: false)
