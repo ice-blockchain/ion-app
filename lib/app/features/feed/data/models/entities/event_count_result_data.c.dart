@@ -65,6 +65,34 @@ class EventCountResultEntity
     );
   }
 
+  /// Factory constructor for handling count results with plain integer content
+  factory EventCountResultEntity.fromCountEventMessage({
+    required EventMessage eventMessage,
+    required String key,
+  }) {
+    if (eventMessage.kind != kind) {
+      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+    }
+
+    final data = EventCountResultData.fromEventMessage(eventMessage);
+    final type = data.getType();
+    final summary = EventCountResultSummary(
+      key: key,
+      type: type,
+      content: data.content,
+      requestEventId: data.request.id,
+    );
+
+    return EventCountResultEntity(
+      id: eventMessage.id,
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
+      signature: eventMessage.sig!,
+      createdAt: eventMessage.createdAt,
+      data: summary,
+    );
+  }
+
   @override
   String get cacheKey => cacheKeyBuilder(key: data.key, type: data.type);
 
@@ -125,14 +153,14 @@ class EventCountResultData with _$EventCountResultData {
   EventCountResultType getType() {
     final EventCountRequestData(:filters, :params) = request.data;
     final filter = filters.first;
-    if (params.group == RelatedEventMarker.reply.toShortString() ||
-        params.group == RelatedEventMarker.root.toShortString()) {
+    if (params?.group == RelatedEventMarker.reply.toShortString() ||
+        params?.group == RelatedEventMarker.root.toShortString()) {
       return EventCountResultType.replies;
     } else if (filter.kinds != null &&
         filter.kinds!.contains(RepostEntity.kind) &&
-        params.group == RelatedEvent.tagName) {
+        params?.group == RelatedEvent.tagName) {
       return EventCountResultType.reposts;
-    } else if (params.group == QuotedEvent.tagName) {
+    } else if (params?.group == QuotedEvent.tagName) {
       return EventCountResultType.quotes;
     } else if (filter.kinds != null && filter.kinds!.contains(ReactionEntity.kind)) {
       return EventCountResultType.reactions;

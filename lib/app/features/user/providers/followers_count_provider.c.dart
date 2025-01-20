@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,8 +32,7 @@ class FollowersCount extends _$FollowersCount {
     );
 
     if (followersCountEntity != null) {
-      final contentMap = followersCountEntity.data.content as Map<String, dynamic>;
-      return contentMap[pubkey] as int? ?? 0;
+      return followersCountEntity.data.content as int;
     }
 
     return _fetchFollowersCount(pubkey);
@@ -66,11 +66,11 @@ class FollowersCount extends _$FollowersCount {
           .firstWhere((message) => message is EventMessage)
           .timeout(const Duration(seconds: 10)) as EventMessage;
 
-      final eventCountResultEntity = EventCountResultEntity.fromEventMessage(responseMessage);
+      final eventCountResultEntity =
+          EventCountResultEntity.fromCountEventMessage(eventMessage: responseMessage, key: pubkey);
       ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
-      final contentMap = eventCountResultEntity.data.content as Map<String, dynamic>;
-      return contentMap[pubkey] as int? ?? 0;
+      return eventCountResultEntity.data.content as int;
     } finally {
       relay.unsubscribe(subscription.id);
     }
@@ -89,13 +89,10 @@ class FollowersCount extends _$FollowersCount {
   Future<EventMessage> _buildRequestEvent({required String relayUrl}) async {
     final followersCountRequest = EventCountRequestData(
       relays: [relayUrl],
-      params: const EventCountRequestParams(group: 'p'),
       filters: [
         RequestFilter(
           kinds: const [FollowListEntity.kind],
-          tags: {
-            '#p': [pubkey],
-          },
+          authors: [pubkey],
         ),
       ],
     );

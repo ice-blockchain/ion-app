@@ -57,7 +57,7 @@ class EventCountRequestEntity
 class EventCountRequestData with _$EventCountRequestData implements EventSerializable {
   const factory EventCountRequestData({
     required List<RequestFilter> filters,
-    required EventCountRequestParams params,
+    EventCountRequestParams? params,
     List<String>? relays,
     String? output,
   }) = _EventCountRequestData;
@@ -90,7 +90,7 @@ class EventCountRequestData with _$EventCountRequestData implements EventSeriali
       content: json.encode(filters),
       tags: [
         ...tags,
-        ...params.toTags(),
+        if (params != null) ...params!.toTags(),
         if (relays != null) ['relays', ...relays!],
       ],
     );
