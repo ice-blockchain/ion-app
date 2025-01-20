@@ -38,6 +38,7 @@ class EntitiesList extends StatelessWidget {
           entity: entities[index],
           showParent: showParent,
           separatorHeight: separatorHeight,
+          hideBlocked: hideBlocked,
         );
       },
     );
@@ -49,11 +50,13 @@ class _EntityListItem extends ConsumerWidget {
     required this.entity,
     required this.separatorHeight,
     required this.showParent,
+    required this.hideBlocked,
   });
 
   final IonConnectEntity entity;
   final double? separatorHeight;
   final bool showParent;
+  final bool hideBlocked;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,10 +64,9 @@ class _EntityListItem extends ConsumerWidget {
         ref.watch(userMetadataProvider(entity.masterPubkey, cacheOnly: true)).valueOrNull;
 
     final isBlockedOrBlocking =
-        ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: true)).valueOrNull ??
-            true;
+        ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: true)).valueOrNull ?? true;
 
-    if (userMetadata == null || isBlockedOrBlocking) {
+    if (userMetadata == null || (isBlockedOrBlocking && hideBlocked)) {
       /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
       /// we don't need to fetch the user metadata or block list explicitly - it is returned as a side effect to the
       /// main request.
