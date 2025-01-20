@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -13,8 +14,11 @@ import 'package:ion/app/features/feed/stories/providers/camera_actions_provider.
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/data/models/camera_state.c.dart';
 import 'package:ion/app/features/gallery/providers/camera_provider.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/banuba_service.c.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class StoryRecordPage extends HookConsumerWidget {
   const StoryRecordPage({super.key});
@@ -80,8 +84,29 @@ class StoryRecordPage extends HookConsumerWidget {
                       isRecording: isRecording,
                       recordingProgress: recordingProgress,
                       onCapturePhoto: isCameraReady
-                          ? () async =>
-                              ref.read(cameraActionsControllerProvider.notifier).takePhoto()
+                          ? () async {
+                              await ref.read(cameraActionsControllerProvider.notifier).takePhoto();
+
+                              final selectedFile = ref
+                                  .read(cameraActionsControllerProvider)
+                                  .whenOrNull(saved: (file) => file);
+
+                              if (selectedFile != null && context.mounted) {
+                                await ref
+                                    .read(
+                                      imageProcessorNotifierProvider(ImageProcessingType.story)
+                                          .notifier,
+                                    )
+                                    .process(
+                                      assetId: selectedFile.path,
+                                      cropUiSettings:
+                                          ref.read(mediaServiceProvider).buildCropImageUiSettings(
+                                        context,
+                                        aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+                                      ),
+                                    );
+                              }
+                            }
                           : null,
                       onRecordingStart: isCameraReady
                           ? () async => ref

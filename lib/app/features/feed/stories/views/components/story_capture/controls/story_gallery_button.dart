@@ -3,14 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/banuba_service.c.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -21,31 +24,42 @@ class StoryGalleryButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedFile = useState<MediaFile?>(null);
+    final processorState = ref.watch(imageProcessorNotifierProvider(ImageProcessingType.story));
 
-    final file = selectedFile.value;
-    if (file != null) {
-      ref
-        ..displayErrors(editMediaProvider(file))
-        ..listenSuccess(editMediaProvider(file), (path) async {
-          if (context.mounted && path != null) {
-            await StoryPreviewRoute(
-              path: path,
-              mimeType: file.mimeType,
-            ).push<void>(context);
-            selectedFile.value = null;
-          }
-        });
-    }
+    useEffect(
+      () {
+        processorState.whenOrNull(
+          processed: (file) async {
+            if (context.mounted) {
+              final editedPath = await ref.read(banubaServiceProvider).editPhoto(file.path);
+              if (context.mounted) {
+                await StoryPreviewRoute(
+                  path: editedPath,
+                  mimeType: file.mimeType,
+                ).push<void>(context);
+              }
+            }
+          },
+        );
+        return null;
+      },
+      [processorState],
+    );
 
     return PermissionAwareWidget(
       permissionType: Permission.photos,
       onGranted: () async {
-        if (context.mounted) {
-          final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
-          if (mediaFiles != null && mediaFiles.isNotEmpty) {
-            selectedFile.value = mediaFiles.first;
-          }
+        final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
+        if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+          await ref
+              .read(imageProcessorNotifierProvider(ImageProcessingType.story).notifier)
+              .process(
+                assetId: mediaFiles.first.path,
+                cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
+                  context,
+                  aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+                ),
+              );
         }
       },
       requestDialog: const PermissionRequestSheet(
