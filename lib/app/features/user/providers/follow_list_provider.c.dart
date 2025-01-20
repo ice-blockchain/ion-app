@@ -33,8 +33,15 @@ Future<FollowListEntity?> followList(
   }
 
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [FollowListEntity.kind], authors: [pubkey], limit: 1));
-  return ref.read(ionConnectNotifierProvider.notifier).requestEntity<FollowListEntity>(
+    ..addFilter(
+      RequestFilter(
+        kinds: const [FollowListEntity.kind],
+        authors: [pubkey],
+        limit: 1,
+      ),
+    );
+
+  return ref.watch(ionConnectNotifierProvider.notifier).requestEntity<FollowListEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
@@ -93,21 +100,6 @@ class FollowListManager extends _$FollowListManager {
         throw FollowListNotFoundException();
       }
       await _toggleFollow(pubkey, followList, removeOnly: true);
-    });
-  }
-
-  Future<void> removeOtherUserFollowOnCurrentUser(String otherUserPubkey) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
-      if (currentPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
-      final followList = await ref.read(followListProvider(otherUserPubkey).future);
-      if (followList == null) {
-        throw FollowListNotFoundException();
-      }
-      await _toggleFollow(currentPubkey, followList, removeOnly: true);
     });
   }
 

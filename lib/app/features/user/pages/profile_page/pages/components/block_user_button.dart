@@ -20,7 +20,7 @@ class BlockUserButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final blocking = ref.watch(isBlockedProvider(pubkey)).valueOrNull ?? false;
-    return BlockButton(
+    return _BlockButton(
       onPressed: () {
         if (!blocking) {
           showSimpleBottomSheet<void>(
@@ -38,11 +38,10 @@ class BlockUserButton extends ConsumerWidget {
   }
 }
 
-class BlockButton extends StatelessWidget {
-  const BlockButton({
+class _BlockButton extends StatelessWidget {
+  const _BlockButton({
     required this.onPressed,
     required this.blocking,
-    super.key,
   });
 
   final VoidCallback onPressed;

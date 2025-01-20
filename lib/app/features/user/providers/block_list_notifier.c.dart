@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -37,12 +36,10 @@ Future<BlockListEntity?> blockList(
       ),
     );
 
-  final eventsStream = ref.read(ionConnectNotifierProvider.notifier).requestEntities(
+  return ref.watch(ionConnectNotifierProvider.notifier).requestEntity(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
-  final blockLists = await eventsStream.cast<BlockListEntity>().toList();
-  return blockLists.firstOrNull;
 }
 
 @riverpod
@@ -109,7 +106,6 @@ class BlockListNotifier extends _$BlockListNotifier {
         ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([blockListData]),
         if (!isAlreadyBlocked) ...[
           ref.read(followListManagerProvider.notifier).unfollow(pubkey),
-          ref.read(followListManagerProvider.notifier).removeOtherUserFollowOnCurrentUser(pubkey),
         ],
       ]);
     });
