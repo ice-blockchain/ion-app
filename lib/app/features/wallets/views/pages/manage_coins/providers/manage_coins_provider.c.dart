@@ -1,11 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/manage_coin_data.c.dart';
 import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/update_wallet_view_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'manage_coins_provider.c.g.dart';
@@ -37,11 +44,18 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   }
 }
 
-@Riverpod(keepAlive: true)
-AsyncValue<List<ManageCoinData>> selectedCoins(Ref ref) {
-  final allCoinsMap = ref.watch(manageCoinsNotifierProvider).value ?? {};
-  final selected = allCoinsMap.values.where((coin) => coin.isSelected).toList();
-  return AsyncData<List<ManageCoinData>>(selected);
+    final updateRequired = !(const ListEquality<CoinData>().equals(
+      updatedCoins.toList(),
+      currentWalletView.coins.map((e) => e.coin).toList(),
+    ));
+    if (updateRequired) {
+      unawaited(
+        ref
+            .read(updateWalletViewNotifierProvider.notifier)
+            .updateWalletView(walletView: currentWalletView),
+      );
+    }
+  }
 }
 
 @riverpod

@@ -41,7 +41,7 @@ class ManageCoinsPage extends HookConsumerWidget {
               NavigationTextButton(
                 label: context.i18n.core_done,
                 onPressed: () {
-                  // TODO: Implement adding/removing coins from the wallet view
+                  ref.read(manageCoinsNotifierProvider.notifier).save();
                 },
               ),
             ],

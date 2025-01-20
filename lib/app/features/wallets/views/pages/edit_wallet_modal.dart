@@ -73,7 +73,7 @@ class EditWalletModal extends HookConsumerWidget {
                       onPressed: () {
                         ref.read(updateWalletViewNotifierProvider.notifier).updateWalletView(
                               walletView: walletView,
-                              walletViewName: walletName.value,
+                              updatedName: walletName.value,
                             );
                         context.pop();
                       },

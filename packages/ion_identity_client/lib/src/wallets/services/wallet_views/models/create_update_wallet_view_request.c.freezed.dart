@@ -21,7 +21,8 @@ CreateUpdateWalletViewRequest _$CreateUpdateWalletViewRequestFromJson(
 
 /// @nodoc
 mixin _$CreateUpdateWalletViewRequest {
-  List<WalletViewItem> get items => throw _privateConstructorUsedError;
+  List<CreateUpdateWalletViewItem> get items =>
+      throw _privateConstructorUsedError;
   List<String> get symbolGroups => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
@@ -44,7 +45,9 @@ abstract class $CreateUpdateWalletViewRequestCopyWith<$Res> {
           CreateUpdateWalletViewRequest>;
   @useResult
   $Res call(
-      {List<WalletViewItem> items, List<String> symbolGroups, String name});
+      {List<CreateUpdateWalletViewItem> items,
+      List<String> symbolGroups,
+      String name});
 }
 
 /// @nodoc
@@ -71,7 +74,7 @@ class _$CreateUpdateWalletViewRequestCopyWithImpl<$Res,
       items: null == items
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
-              as List<WalletViewItem>,
+              as List<CreateUpdateWalletViewItem>,
       symbolGroups: null == symbolGroups
           ? _value.symbolGroups
           : symbolGroups // ignore: cast_nullable_to_non_nullable
@@ -94,7 +97,9 @@ abstract class _$$CreateWalletViewRequestImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<WalletViewItem> items, List<String> symbolGroups, String name});
+      {List<CreateUpdateWalletViewItem> items,
+      List<String> symbolGroups,
+      String name});
 }
 
 /// @nodoc
@@ -120,7 +125,7 @@ class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
       items: null == items
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
-              as List<WalletViewItem>,
+              as List<CreateUpdateWalletViewItem>,
       symbolGroups: null == symbolGroups
           ? _value._symbolGroups
           : symbolGroups // ignore: cast_nullable_to_non_nullable
@@ -137,7 +142,7 @@ class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
   const _$CreateWalletViewRequestImpl(
-      {required final List<WalletViewItem> items,
+      {required final List<CreateUpdateWalletViewItem> items,
       required final List<String> symbolGroups,
       required this.name})
       : _items = items,
@@ -146,9 +151,9 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
   factory _$CreateWalletViewRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateWalletViewRequestImplFromJson(json);
 
-  final List<WalletViewItem> _items;
+  final List<CreateUpdateWalletViewItem> _items;
   @override
-  List<WalletViewItem> get items {
+  List<CreateUpdateWalletViewItem> get items {
     if (_items is EqualUnmodifiableListView) return _items;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_items);
@@ -209,7 +214,7 @@ class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
 abstract class _CreateWalletViewRequest
     implements CreateUpdateWalletViewRequest {
   const factory _CreateWalletViewRequest(
-      {required final List<WalletViewItem> items,
+      {required final List<CreateUpdateWalletViewItem> items,
       required final List<String> symbolGroups,
       required final String name}) = _$CreateWalletViewRequestImpl;
 
@@ -217,7 +222,7 @@ abstract class _CreateWalletViewRequest
       _$CreateWalletViewRequestImpl.fromJson;
 
   @override
-  List<WalletViewItem> get items;
+  List<CreateUpdateWalletViewItem> get items;
   @override
   List<String> get symbolGroups;
   @override
