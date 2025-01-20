@@ -8,9 +8,9 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
-import 'package:ion/app/features/user/providers/banner_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EditSubmitButton extends ConsumerWidget {
@@ -41,10 +41,12 @@ class EditSubmitButton extends ConsumerWidget {
             ),
       onPressed: () async {
         if (formKey.currentState!.validate()) {
-          final avatarFile =
-              ref.read(avatarProcessorNotifierProvider).whenOrNull(processed: (file) => file);
-          final bannerFile =
-              ref.read(bannerProcessorNotifierProvider).whenOrNull(processed: (file) => file);
+          final avatarFile = ref
+              .read(imageProcessorNotifierProvider(ImageProcessingType.avatar))
+              .whenOrNull(processed: (file) => file);
+          final bannerFile = ref
+              .read(imageProcessorNotifierProvider(ImageProcessingType.banner))
+              .whenOrNull(processed: (file) => file);
           await ref
               .read(updateUserMetadataNotifierProvider.notifier)
               .publish(draftRef.value, avatar: avatarFile, banner: bannerFile);

@@ -9,8 +9,9 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
-import 'package:ion/app/features/user/providers/banner_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -22,10 +23,13 @@ class BannerPickerButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBannerLoading = ref.watch(
-      bannerProcessorNotifierProvider.select((state) => state is BannerProcessorStateCropped),
+      imageProcessorNotifierProvider(ImageProcessingType.banner)
+          .select((state) => state is ImageProcessorStateCropped),
     );
 
-    ref.displayErrorsForState<BannerProcessorStateError>(bannerProcessorNotifierProvider);
+    ref.displayErrorsForState<ImageProcessorStateError>(
+      imageProcessorNotifierProvider(ImageProcessingType.banner),
+    );
 
     return PermissionAwareWidget(
       permissionType: Permission.photos,
@@ -40,7 +44,9 @@ class BannerPickerButton extends ConsumerWidget {
             ),
           );
           if (mediaFiles != null && context.mounted) {
-            await ref.read(bannerProcessorNotifierProvider.notifier).process(
+            await ref
+                .read(imageProcessorNotifierProvider(ImageProcessingType.banner).notifier)
+                .process(
                   assetId: mediaFiles.first.path,
                   cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(context),
                 );
