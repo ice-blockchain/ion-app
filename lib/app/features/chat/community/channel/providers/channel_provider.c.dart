@@ -4,6 +4,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/data/channel_type.dart';
 import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/data/entities/community_update_data.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
@@ -93,11 +94,11 @@ class ChannelNotifier extends _$ChannelNotifier {
             .toList(),
       );
 
-      final patchChannelEntity = CommunityDefinitionEditData(data: editedChannelEntity);
+      final patchChannelEntity =
+          CommunityUpdateData.fromCommunityDefinitionData(editedChannelEntity);
       final patchChannelResult =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchChannelEntity);
 
-      final replaceableEventReference = editedChannelEntity.toReplaceableEventReference(pubkey);
       final editChannelResult =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(editedChannelEntity);
 

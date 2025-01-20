@@ -3,62 +3,59 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_admin_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_moderator_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_openness_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_visibility_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/description_tag.c.dart';
-import 'package:ion/app/features/ion_connect/model/tags/identifier_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/imeta_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/name_tag.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-part 'community_definition_data.c.freezed.dart';
+part 'community_update_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEntity {
-  const factory CommunityDefinitionEntity({
+class CommunityUpdateEntity with _$CommunityUpdateEntity, IonConnectEntity {
+  const factory CommunityUpdateEntity({
     required String id,
     required String pubkey,
     required String masterPubkey,
     required String signature,
     required DateTime createdAt,
-    required CommunityDefinitionData data,
-  }) = _CommunityDefinitionEntity;
+    required CommunityUpdateData data,
+  }) = _CommunityUpdateEntity;
 
-  const CommunityDefinitionEntity._();
+  const CommunityUpdateEntity._();
 
-  factory CommunityDefinitionEntity.fromEventMessage(EventMessage eventMessage) {
+  factory CommunityUpdateEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw Exception('Incorrect event kind ${eventMessage.kind}, expected $kind');
     }
 
-    return CommunityDefinitionEntity(
+    return CommunityUpdateEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
-      data: CommunityDefinitionData.fromEventMessage(eventMessage),
+      data: CommunityUpdateData.fromEventMessage(eventMessage),
     );
   }
 
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
-  static const kind = 31750;
+  static const kind = 1753;
 }
 
 @Freezed(equal: false)
-class CommunityDefinitionData with _$CommunityDefinitionData implements EventSerializable {
-  const factory CommunityDefinitionData({
+class CommunityUpdateData with _$CommunityUpdateData implements EventSerializable {
+  const factory CommunityUpdateData({
     required String uuid,
-    required String id,
     required bool isPublic,
     required bool isOpen,
     required bool commentsEnabled,
@@ -68,43 +65,28 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required String name,
     required String? description,
     required MediaAttachment? avatar,
-    required String owner,
-  }) = _CommunityDefinitionData;
+  }) = _CommunityUpdateData;
 
-  factory CommunityDefinitionData.fromData({
-    required String name,
-    required String? description,
-    required MediaAttachment? avatar,
-    required bool isPublic,
-    required bool isOpen,
-    required bool commentsEnabled,
-    required RoleRequiredForPosting roleRequiredForPosting,
-    required List<String> moderators,
-    required List<String> admins,
-  }) {
-    final uuid = generateV7UUID();
-    return CommunityDefinitionData(
-      uuid: uuid,
-      id: uuid,
-      name: name,
-      description: description,
-      avatar: avatar,
-      isPublic: isPublic,
-      isOpen: isOpen,
-      commentsEnabled: commentsEnabled,
-      roleRequiredForPosting: roleRequiredForPosting,
-      moderators: moderators,
-      admins: admins,
-      owner: '',
+  const CommunityUpdateData._();
+
+  factory CommunityUpdateData.fromCommunityDefinitionData(CommunityDefinitionData data) {
+    return CommunityUpdateData(
+      uuid: data.uuid,
+      isPublic: data.isPublic,
+      isOpen: data.isOpen,
+      commentsEnabled: data.commentsEnabled,
+      roleRequiredForPosting: data.roleRequiredForPosting,
+      moderators: data.moderators,
+      admins: data.admins,
+      name: data.name,
+      description: data.description,
+      avatar: data.avatar,
     );
   }
 
-  const CommunityDefinitionData._();
-
-  factory CommunityDefinitionData.fromEventMessage(EventMessage eventMessage) {
-    return CommunityDefinitionData(
+  factory CommunityUpdateData.fromEventMessage(EventMessage eventMessage) {
+    return CommunityUpdateData(
       uuid: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
-      id: IdentifierTag.fromTags(eventMessage.tags).value,
       name: NameTag.fromTags(eventMessage.tags).value,
       description: DescriptionTag.fromTags(eventMessage.tags).value,
       avatar: ImetaTag.fromTags(eventMessage.tags).value,
@@ -114,7 +96,6 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       roleRequiredForPosting: RoleRequiredForPostingEventSetting.fromTags(eventMessage.tags).role,
       moderators: CommunityModeratorTag.fromTags(eventMessage.tags).values,
       admins: CommunityAdminTag.fromTags(eventMessage.tags).values,
-      owner: eventMessage.masterPubkey,
     );
   }
 
@@ -127,11 +108,10 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
-      kind: CommunityDefinitionEntity.kind,
+      kind: CommunityUpdateEntity.kind,
       tags: [
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),
-        IdentifierTag(value: uuid).toTag(),
         NameTag(value: name).toTag(),
         if (description != null) DescriptionTag(value: description).toTag(),
         if (avatar != null) avatar!.toTag(),
@@ -141,30 +121,17 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
         RoleRequiredForPostingEventSetting(role: roleRequiredForPosting).toTag(),
         if (moderators.isNotEmpty) ...CommunityModeratorTag(values: moderators).toTag(),
         if (admins.isNotEmpty) ...CommunityAdminTag(values: admins).toTag(),
-        ReplaceableEventReference(
-          kind: CommunityDefinitionEntity.kind,
-          pubkey: owner,
-          dTag: uuid,
-        ).toTag(),
       ],
       content: '',
-    );
-  }
-
-  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
-    return ReplaceableEventReference(
-      kind: CommunityDefinitionEntity.kind,
-      pubkey: pubkey,
-      dTag: id,
     );
   }
 }
 
 // @Freezed(equal: false)
 // class CommunityDefinitionEditData with _$CommunityDefinitionEditData implements EventSerializable {
-//   const factory CommunityDefinitionEditData({
-//     required CommunityDefinitionData data,
-//   }) = _CommunityDefinitionEditData;
+//   const factory CommunityUpdateEditData({
+//     required CommunityUpdateData data,
+//   }) = _CommunityUpdateEditData;
 
 //   const CommunityDefinitionEditData._();
 
