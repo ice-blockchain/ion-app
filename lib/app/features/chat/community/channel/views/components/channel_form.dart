@@ -47,21 +47,28 @@ class ChannelForm extends HookConsumerWidget {
     final channelAdmins = ref.watch(channelAdminsProvider(community: channel));
     final isFormValid = useState(false);
 
-    useEffect(() {
-      void validateFormAndUpdateState() {
-        isFormValid.value =
-            (formKey.currentState?.validate() ?? false) && channelType.value != null;
-      }
+    useEffect(
+      () {
+        void validateFormAndUpdateState() {
+          isFormValid.value =
+              (formKey.currentState?.validate() ?? false) && channelType.value != null;
+        }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        titleController.addListener(validateFormAndUpdateState);
-        channelType.addListener(validateFormAndUpdateState);
-      });
-      return () {
-        titleController.removeListener(validateFormAndUpdateState);
-        channelType.removeListener(validateFormAndUpdateState);
-      };
-    });
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (isEdit) {
+            validateFormAndUpdateState();
+          }
+
+          titleController.addListener(validateFormAndUpdateState);
+          channelType.addListener(validateFormAndUpdateState);
+        });
+        return () {
+          titleController.removeListener(validateFormAndUpdateState);
+          channelType.removeListener(validateFormAndUpdateState);
+        };
+      },
+      [isEdit],
+    );
 
     ref
       ..listenSuccess<String?>(channelNotifierProvider, onSuccess)

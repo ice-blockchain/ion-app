@@ -78,7 +78,7 @@ class TextInput extends HookWidget {
   Widget build(BuildContext context) {
     final focusNode = useFocusNode();
     final error = useState<String?>(null);
-    final hasValue = useState(initialValue.isNotEmpty);
+    final hasValue = useState(initialValue.isNotEmpty || (controller?.text.isNotEmpty ?? false));
     final hasFocus = useNodeFocused(focusNode);
     final hasBeenChanged = useState(false);
 
