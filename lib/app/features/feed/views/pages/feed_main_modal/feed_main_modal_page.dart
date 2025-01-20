@@ -76,8 +76,12 @@ class FeedMainModalPage extends StatelessWidget {
 
                         final shouldShowPicker = !postWasCreated;
 
-                        if (shouldShowPicker && context.mounted) {
+                        if (!context.mounted) return;
+
+                        if (shouldShowPicker) {
                           await showMediaPickerAndCreatePost();
+                        } else {
+                          context.go(GoRouterState.of(context).currentTab.baseRouteLocation);
                         }
                       }
                     }
