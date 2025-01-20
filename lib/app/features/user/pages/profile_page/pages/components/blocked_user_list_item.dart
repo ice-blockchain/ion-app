@@ -29,11 +29,11 @@ class BlockedUserListItem extends ConsumerWidget {
           return const SizedBox.shrink();
         }
         return ListItem.user(
-          title: Text(userMetadata.data.name),
+          title: Text(userMetadata.data.displayName),
           trailing: BlockUserButton(pubkey: pubkey),
           subtitle: Text(
             prefixUsername(
-              username: userMetadata.data.displayName,
+              username: userMetadata.data.name,
               context: context,
             ),
           ),

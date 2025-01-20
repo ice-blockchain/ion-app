@@ -18,6 +18,7 @@ class BlockedUsersModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // We fetch the data once and keep it in state so that it doesn't case users to disappear after unblocking
     final pubkeys = useState<List<String>?>(null);
     useOnInit(() async {
       final blockList = await ref.read(currentUserBlockListProvider.future);
