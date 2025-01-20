@@ -124,7 +124,7 @@ class ConversationMessageManagementService {
             receiverPubkey: participantPubkey,
           );
 
-          return _sendGiftWrap(giftWrap);
+          return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
         }),
       );
 
@@ -145,7 +145,7 @@ class ConversationMessageManagementService {
             receiverPubkey: participantPubkey,
           );
 
-          return _sendGiftWrap(giftWrap);
+          return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
         }).toList(),
       );
 
@@ -268,11 +268,11 @@ class ConversationMessageManagementService {
     return wrap;
   }
 
-  Future<IonConnectEntity?> _sendGiftWrap(EventMessage giftWrap) async {
+  Future<IonConnectEntity?> _sendGiftWrap(EventMessage giftWrap, {required String pubkey}) async {
     return ionConnectNotifier.sendEvent(
       giftWrap,
-      //TODO:?! use other user action source
-      actionSource: const ActionSourceCurrentUserChat(anonymous: true), cache: false,
+      actionSource: ActionSourceUserChat(pubkey, anonymous: true),
+      cache: false,
     );
   }
 
