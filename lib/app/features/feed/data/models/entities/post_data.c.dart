@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -169,8 +168,6 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     }
     return replyId ?? rootReplyId;
   }
-
-  bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
 
   WhoCanReplySettingsOption? get whoCanReplySetting {
     final whoCanReplySetting =

@@ -46,6 +46,8 @@ mixin EntityMediaDataMixin {
     }).toList();
   }
 
+  bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
+
   MediaAttachment? get primaryMedia => media.values.firstOrNull;
 
   MediaAttachment? get primaryVideo =>

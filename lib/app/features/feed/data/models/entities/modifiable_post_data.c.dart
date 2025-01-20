@@ -6,11 +6,12 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
+import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -75,6 +76,8 @@ class ModifiablePostData
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
+    required EntityPublishedAt publishedAt,
+    required EntityEditingEndedAt editingEndedAt,
     EntityExpiration? expiration,
     QuotedModifiableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
@@ -93,6 +96,8 @@ class ModifiablePostData
       media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
       replaceableEventId:
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
+      publishedAt: EntityPublishedAt.fromTag(tags[EntityPublishedAt.tagName]!.first),
+      editingEndedAt: EntityEditingEndedAt.fromTag(tags[EntityEditingEndedAt.tagName]!.first),
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
@@ -128,6 +133,9 @@ class ModifiablePostData
       content: parsedContent,
       relatedHashtags: hashtags,
       replaceableEventId: ReplaceableEventIdentifier.generate(),
+      publishedAt: EntityPublishedAt(value: DateTime.now()),
+      //TODO:!
+      editingEndedAt: EntityEditingEndedAt(value: DateTime.now().add(const Duration(seconds: 10))),
       media: {},
       settings: [setting].nonNulls.toList(),
     );
@@ -149,6 +157,8 @@ class ModifiablePostData
       tags: [
         ...tags,
         replaceableEventId.toTag(),
+        publishedAt.toTag(),
+        editingEndedAt.toTag(),
         if (expiration != null) expiration!.toTag(),
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
@@ -175,8 +185,6 @@ class ModifiablePostData
     }
     return replyId ?? rootReplyId;
   }
-
-  bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
 
   WhoCanReplySettingsOption? get whoCanReplySetting {
     final whoCanReplySetting =

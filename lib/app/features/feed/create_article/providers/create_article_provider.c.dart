@@ -52,7 +52,7 @@ class CreateArticle extends _$CreateArticle {
           for (final attachment in mediaAttachments) attachment.url: attachment,
         },
         relatedHashtags: relatedHashtags,
-        publishedAt: publishedAt ?? DateTime.now(),
+        publishedAt: publishedAt,
         whoCanReplySettings: {whoCanReply},
       );
 

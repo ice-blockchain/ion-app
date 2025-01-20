@@ -68,7 +68,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     SizedBox(height: 13.0.s),
                     ScreenSideOffset.small(
                       child: ArticleDetailsDateTopics(
-                        publishedAt: articleEntity.data.publishedAt,
+                        publishedAt: articleEntity.data.publishedAt.value,
                         topics: const [
                           'Technology',
                           'Crypto',
