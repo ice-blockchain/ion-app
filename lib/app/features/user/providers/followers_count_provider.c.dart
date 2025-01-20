@@ -32,10 +32,13 @@ class FollowersCount extends _$FollowersCount {
 
     if (followersCountEntity != null) {
       final contentMap = followersCountEntity.data.content as Map<String, dynamic>;
-
       return contentMap[pubkey] as int? ?? 0;
     }
 
+    return _fetchFollowersCount(pubkey);
+  }
+
+  Future<int> _fetchFollowersCount(String pubkey) async {
     final relay = await _getRandomUserRelay();
 
     final requestEvent = await _buildRequestEvent(relayUrl: relay.url);
@@ -47,38 +50,37 @@ class FollowersCount extends _$FollowersCount {
       );
 
     final subscription = relay.subscribe(subscriptionMessage);
+    EventMessage? responseMessage;
 
-    await ref.watch(ionConnectNotifierProvider.notifier).sendEvent(
-          requestEvent,
-          actionSource: ActionSourceRelayUrl(relay.url),
-          cache: false,
-        );
+    try {
+      await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
+            requestEvent,
+            actionSource: ActionSourceRelayUrl(relay.url),
+            cache: false,
+          );
 
-    final responseMessage = await subscription.messages
-        .firstWhere((message) => message is EventMessage)
-        .timeout(const Duration(seconds: 5));
+      responseMessage = await subscription.messages
+          .firstWhere((message) => message is EventMessage)
+          .timeout(const Duration(seconds: 10)) as EventMessage;
 
-    relay.unsubscribe(subscription.id);
+      final eventCountResultEntity = EventCountResultEntity.fromEventMessage(responseMessage);
+      ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
-    final eventCountResultEntity =
-        EventCountResultEntity.fromEventMessage(responseMessage as EventMessage);
-
-    ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
-
-    final contentMap = eventCountResultEntity.data.content as Map<String, dynamic>;
-
-    return contentMap[pubkey] as int? ?? 0;
+      final contentMap = eventCountResultEntity.data.content as Map<String, dynamic>;
+      return contentMap[pubkey] as int? ?? 0;
+    } finally {
+      relay.unsubscribe(subscription.id);
+    }
   }
 
   Future<NostrRelay> _getRandomUserRelay() async {
-    final userRelays = await ref.watch(currentUserRelayProvider.future);
+    final userRelays = await ref.read(currentUserRelayProvider.future);
     if (userRelays == null) {
       throw UserRelaysNotFoundException();
     }
 
     final relayUrl = userRelays.data.list.random.url;
-
-    return await ref.watch(relayProvider(relayUrl).future);
+    return await ref.read(relayProvider(relayUrl).future);
   }
 
   Future<EventMessage> _buildRequestEvent({required String relayUrl}) async {
@@ -86,10 +88,15 @@ class FollowersCount extends _$FollowersCount {
       relays: [relayUrl],
       params: const EventCountRequestParams(group: 'p'),
       filters: [
-        RequestFilter(kinds: const [FollowListEntity.kind], p: [pubkey]),
+        RequestFilter(
+          kinds: const [FollowListEntity.kind],
+          tags: {
+            '#p': [pubkey],
+          },
+        ),
       ],
     );
 
-    return ref.watch(ionConnectNotifierProvider.notifier).sign(followersCountRequest);
+    return ref.read(ionConnectNotifierProvider.notifier).sign(followersCountRequest);
   }
 }

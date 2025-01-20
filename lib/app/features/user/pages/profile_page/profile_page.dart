@@ -37,6 +37,7 @@ class ProfilePage extends HookConsumerWidget {
 
     final backgroundColor = context.theme.appColors.secondaryBackground;
 
+    return ProfileDetails(pubkey: pubkey);
     return Scaffold(
       body: ColoredBox(
         color: backgroundColor,
