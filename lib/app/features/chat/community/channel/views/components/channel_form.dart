@@ -9,7 +9,7 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/channel/providers/channel_provider.c.dart';
+import 'package:ion/app/features/chat/community/channel/providers/channel_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
 import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
