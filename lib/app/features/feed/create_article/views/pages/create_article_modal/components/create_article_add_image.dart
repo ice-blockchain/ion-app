@@ -10,7 +10,6 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/feed/create_article/views/components/article_image_container.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -26,21 +25,9 @@ class CreateArticleAddImage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaService = ref.watch(mediaServiceProvider);
-    final processorState =
-        ref.watch(imageProcessorNotifierProvider(ImageProcessingType.articleCover));
 
     ref.displayErrorsForState<ImageProcessorStateError>(
       imageProcessorNotifierProvider(ImageProcessingType.articleCover),
-    );
-
-    useOnInit(
-      () => processorState.whenOrNull(
-        processed: (file) {
-          selectedImage.value = file;
-          return null;
-        },
-      ),
-      [processorState],
     );
 
     return PermissionAwareWidget(

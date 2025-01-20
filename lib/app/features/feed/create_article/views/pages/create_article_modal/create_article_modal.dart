@@ -22,7 +22,7 @@ class CreateArticleModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleState = useCreateArticle();
+    final articleState = useCreateArticle(ref);
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
       return showSimpleBottomSheet<bool>(
@@ -63,7 +63,7 @@ class CreateArticleModal extends HookConsumerWidget {
                   borderColor: context.theme.appColors.secondaryBackground,
                   disabled: !articleState.isButtonEnabled,
                   onPressed: () {
-                    articleState.onNext(ref);
+                    articleState.onNext();
                     ArticlePreviewRoute().push<void>(context);
                   },
                 ),
