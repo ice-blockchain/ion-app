@@ -47,7 +47,6 @@ class DeleteEntity extends _$DeleteEntity {
     await ref
         .read(ionConnectNotifierProvider.notifier)
         .sendEntityData(deletionRequest, cache: false);
-    ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
   }
 
   Future<void> _deleteFromDataSources() async {
@@ -61,6 +60,8 @@ class DeleteEntity extends _$DeleteEntity {
   }
 
   Future<void> _deleteReply(PostEntity post) async {
+    final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
+
     await ref
         .read(
           repliesProvider(
@@ -72,8 +73,9 @@ class DeleteEntity extends _$DeleteEntity {
         )
         .deleteReply(entity: entity);
 
-    final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
     await _deleteFromDataSource(dataSource);
+
+    ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
   }
 
   Future<void> _deleteArticle() async {
@@ -82,6 +84,7 @@ class DeleteEntity extends _$DeleteEntity {
 
     await _deleteFromDataSource(userArticlesDataSource ?? []);
     await _deleteFromDataSource(feedDataSources);
+    ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
   }
 
   Future<void> _deletePost() async {
@@ -92,6 +95,7 @@ class DeleteEntity extends _$DeleteEntity {
     await _deleteFromDataSource(userVideosDataSource ?? []);
     await _deleteFromDataSource(userPostsDataSource ?? []);
     await _deleteFromDataSource(feedDataSources);
+    ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
   }
 
   Future<void> _deleteFromDataSource(List<EntitiesDataSource> dataSource) async {
