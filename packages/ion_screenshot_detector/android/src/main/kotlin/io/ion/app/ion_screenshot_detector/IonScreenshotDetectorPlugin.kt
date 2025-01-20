@@ -8,23 +8,21 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.EventChannel
-import kotlin.math.log
 
 /** IonScreenshotDetectorPlugin */
-class IonScreenshotDetectorPlugin: FlutterPlugin, EventChannel.StreamHandler, ActivityAware {
+class IonScreenshotDetectorPlugin : FlutterPlugin, EventChannel.StreamHandler, ActivityAware {
   private var lastDetectedPath: String? = null
   private var contentResolver: ContentResolver? = null
   private var eventSink: EventChannel.EventSink? = null
   private var screenshotObserver: ContentObserver? = null
   private lateinit var channel: EventChannel
   private var activity: Activity? = null
-  private var screenCaptureCallback: Activity.ScreenCaptureCallback? = null
+  private var screenCaptureCallback: Any? = null
 
   override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     contentResolver = binding.applicationContext.contentResolver
@@ -36,26 +34,26 @@ class IonScreenshotDetectorPlugin: FlutterPlugin, EventChannel.StreamHandler, Ac
     channel.setStreamHandler(null)
     contentResolver = null
     screenshotObserver = null
-    unregisterScreenCaptureCallback()
+    unregisterScreenshotDetector()
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     activity = binding.activity
-    registerScreenCaptureCallback()
+    registerScreenshotDetector()
   }
 
   override fun onDetachedFromActivity() {
-    unregisterScreenCaptureCallback()
+    registerScreenshotDetector()
     activity = null
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
     activity = binding.activity
-    registerScreenCaptureCallback()
+    registerScreenshotDetector()
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
-    unregisterScreenCaptureCallback()
+    unregisterScreenshotDetector()
     activity = null
   }
 
@@ -117,18 +115,23 @@ class IonScreenshotDetectorPlugin: FlutterPlugin, EventChannel.StreamHandler, Ac
 
   private fun registerScreenCaptureCallback() {
     if (screenCaptureCallback != null) return
-    screenCaptureCallback = Activity.ScreenCaptureCallback {
-      eventSink?.success("")
+    // Using anonymous class to implement Activity.ScreenCaptureCallback
+    screenCaptureCallback = object : Activity.ScreenCaptureCallback {
+      override fun onScreenCaptured() {
+        eventSink?.success("")
+      }
     }
+    // Cast screenCaptureCallback to the correct type and register
     activity?.registerScreenCaptureCallback(
       activity!!.mainExecutor,
-      screenCaptureCallback!!
+      screenCaptureCallback as Activity.ScreenCaptureCallback
     )
   }
 
   private fun unregisterScreenCaptureCallback() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && screenCaptureCallback != null) {
-      activity?.unregisterScreenCaptureCallback(screenCaptureCallback!!)
+      // Safe casting back to Activity.ScreenCaptureCallback
+      activity?.unregisterScreenCaptureCallback(screenCaptureCallback as Activity.ScreenCaptureCallback)
       screenCaptureCallback = null
     }
   }

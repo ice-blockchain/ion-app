@@ -46,7 +46,7 @@ dependencies:
     sdk: flutter
   flutter_quill: ^10.7.5
   flutter_screenutil: ^5.9.0
-  flutter_secure_storage: ^9.2.2
+  flutter_secure_storage: ^9.2.4
   flutter_svg: ^2.0.16
   freezed_annotation: ^2.4.1
   go_router: ^14.2.0
@@ -88,7 +88,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   shake_gesture: ^1.1.0
   share_plus: ^10.0.2
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.3.5
   shimmer: ^3.0.0
   smooth_sheets: ^1.0.0-f324.0.10.2
   talker_dio_logger: 4.5.4
