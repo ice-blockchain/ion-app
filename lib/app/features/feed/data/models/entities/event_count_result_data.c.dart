@@ -41,34 +41,9 @@ class EventCountResultEntity
   const EventCountResultEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/vending-machine/90.md
-  factory EventCountResultEntity.fromEventMessage(EventMessage eventMessage) {
-    if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
-    }
-
-    final data = EventCountResultData.fromEventMessage(eventMessage);
-    final type = data.getType();
-    final summary = EventCountResultSummary(
-      key: data.getKey(type),
-      type: type,
-      content: data.content,
-      requestEventId: data.request.id,
-    );
-
-    return EventCountResultEntity(
-      id: eventMessage.id,
-      pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig!,
-      createdAt: eventMessage.createdAt,
-      data: summary,
-    );
-  }
-
-  /// Factory constructor for handling count results with plain integer content
-  factory EventCountResultEntity.fromCountEventMessage({
-    required EventMessage eventMessage,
-    required String key,
+  factory EventCountResultEntity.fromEventMessage(
+    EventMessage eventMessage, {
+    String? key,
   }) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
@@ -77,7 +52,7 @@ class EventCountResultEntity
     final data = EventCountResultData.fromEventMessage(eventMessage);
     final type = data.getType();
     final summary = EventCountResultSummary(
-      key: key,
+      key: key ?? data.getKey(type),
       type: type,
       content: data.content,
       requestEventId: data.request.id,

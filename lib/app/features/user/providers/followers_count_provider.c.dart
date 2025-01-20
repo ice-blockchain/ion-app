@@ -67,7 +67,7 @@ class FollowersCount extends _$FollowersCount {
           .timeout(const Duration(seconds: 10)) as EventMessage;
 
       final eventCountResultEntity =
-          EventCountResultEntity.fromCountEventMessage(eventMessage: responseMessage, key: pubkey);
+          EventCountResultEntity.fromEventMessage(responseMessage, key: pubkey);
       ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
       return eventCountResultEntity.data.content as int;
