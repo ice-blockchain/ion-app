@@ -47,7 +47,7 @@ class FollowersCount extends _$FollowersCount {
         RequestFilter(
           kinds: const [EventCountResultEntity.kind, 7400],
           tags: {
-            '#b': [pubkey],
+            '#p': [pubkey],
           },
         ),
       );
