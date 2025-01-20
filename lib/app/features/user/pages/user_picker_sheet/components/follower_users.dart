@@ -54,7 +54,7 @@ class FollowerUsers extends ConsumerWidget {
         slivers: slivers,
       ),
       onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-      hasMore: entitiesPagedData?.hasMore ?? true,
+      hasMore: entitiesPagedData?.hasMore ?? false,
     );
   }
 }
