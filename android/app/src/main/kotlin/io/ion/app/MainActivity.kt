@@ -43,6 +43,7 @@ class MainActivity : FlutterFragmentActivity() {
     private var photoEditorSDK: BanubaPhotoEditor? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
         super.configureFlutterEngine(flutterEngine)
 
         // Set up your MethodChannel here after registration
