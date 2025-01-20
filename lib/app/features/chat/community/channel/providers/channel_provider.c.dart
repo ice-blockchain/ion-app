@@ -10,9 +10,8 @@ import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'channel_provider.c.g.dart';
@@ -104,20 +103,17 @@ class ChannelNotifier extends _$ChannelNotifier {
   }
 
   Future<MediaAttachment?> _uploadAvatar() async {
-    final avatarFile = ref.read(avatarProcessorNotifierProvider).whenOrNull(
-          processed: (file) => file,
-        );
+    final avatarFile =
+        ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar)).whenOrNull(
+              processed: (file) => file,
+            );
 
     if (avatarFile == null) {
       return null;
     }
-
-    final compressedImage =
-        await ref.read(compressServiceProvider).compressImage(MediaFile(path: avatarFile.path));
-
     final uploadAvatarResult = await ref
         .read(ionConnectUploadNotifierProvider.notifier)
-        .upload(compressedImage, alt: FileAlt.avatar);
+        .upload(avatarFile, alt: FileAlt.avatar);
 
     return uploadAvatarResult.mediaAttachment;
   }
