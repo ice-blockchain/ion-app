@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/channel/providers/channel_members_count_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_members_count_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class JoinedUsersAmountTile extends HookConsumerWidget {
@@ -16,7 +16,7 @@ class JoinedUsersAmountTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final amount = ref.watch(channelMembersCountProvider(channelUuid)).valueOrNull ?? 0;
+    final amount = ref.watch(communityMembersCountProvider(channelUuid)).valueOrNull ?? 0;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

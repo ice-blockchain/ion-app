@@ -2,16 +2,16 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'channel_metadata_provider.c.g.dart';
+part 'community_metadata_provider.c.g.dart';
 
 @riverpod
-Future<CommunityDefinitionEntity> channelMetadata(Ref ref, String id) async {
-  final channel =
+Future<CommunityDefinitionEntity> communityMetadata(Ref ref, String id) async {
+  final community =
       await ref.watch(ionConnectNotifierProvider.notifier).requestEntity<CommunityDefinitionEntity>(
             RequestMessage()
               ..addFilter(
@@ -22,9 +22,9 @@ Future<CommunityDefinitionEntity> channelMetadata(Ref ref, String id) async {
               ),
           );
 
-  if (channel == null) {
-    throw FailedToFetchChannelException(id);
+  if (community == null) {
+    throw FailedToFetchCommunityException(id);
   }
 
-  return channel;
+  return community;
 }

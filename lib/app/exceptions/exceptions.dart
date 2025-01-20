@@ -251,8 +251,8 @@ class FailedToCreateChannelException extends IONException {
   FailedToCreateChannelException() : super(10053, 'Failed to create channel');
 }
 
-class FailedToFetchChannelException extends IONException {
-  FailedToFetchChannelException(String uuid) : super(10050, 'Failed to fetch channel $uuid');
+class FailedToFetchCommunityException extends IONException {
+  FailedToFetchCommunityException(String uuid) : super(10050, 'Failed to fetch community $uuid');
 }
 
 class FailedToEditChannelException extends IONException {

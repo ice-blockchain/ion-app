@@ -5,8 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/channel/providers/channel_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_form.dart';
+import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/pages/channel_detail_page/components/channel_summary.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channel_page/components/edit_channel_header.dart';
 
@@ -20,7 +20,7 @@ class ChannelDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channel = ref.watch(channelMetadataProvider(uuid)).valueOrNull;
+    final channel = ref.watch(communityMetadataProvider(uuid)).valueOrNull;
 
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).requireValue;
 
@@ -48,7 +48,7 @@ class ChannelDetailPage extends HookConsumerWidget {
                     ChannelForm(
                       channel: channel.data,
                       onSuccess: (_) {
-                        ref.invalidate(channelMetadataProvider(uuid));
+                        ref.invalidate(communityMetadataProvider(uuid));
                         // context.pop();
                       },
                     ),
