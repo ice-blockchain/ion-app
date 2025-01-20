@@ -15,10 +15,10 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'create_channel_provider.c.g.dart';
+part 'channel_provider.c.g.dart';
 
 @riverpod
-class CreateChannelNotifier extends _$CreateChannelNotifier {
+class ChannelNotifier extends _$ChannelNotifier {
   @override
   FutureOr<String?> build() {
     return null;
@@ -29,13 +29,13 @@ class CreateChannelNotifier extends _$CreateChannelNotifier {
 
     state = await AsyncValue.guard(() async {
       final avatar = await _uploadAvatar();
-      final channelAdmins = ref.watch(channelAdminsProvider());
+      final channelAdmins = ref.read(channelAdminsProvider());
 
       final communityDefinitionData = CommunityDefinitionData.fromData(
         name: name,
         description: description,
         isPublic: channelType == ChannelType.public,
-        isOpen: true,
+        isOpen: channelType == ChannelType.public,
         commentsEnabled: true,
         avatar: avatar,
         roleRequiredForPosting: RoleRequiredForPosting.moderator,
@@ -58,6 +58,48 @@ class CreateChannelNotifier extends _$CreateChannelNotifier {
       }
 
       return result.id;
+    });
+  }
+
+  Future<void> editChannel(
+    CommunityDefinitionData channel,
+    String name,
+    String? description,
+    ChannelType channelType,
+  ) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final avatar = await _uploadAvatar();
+      final channelAdmins = ref.read(channelAdminsProvider());
+
+      final editedChannelEntity = channel.copyWith(
+        avatar: avatar,
+        name: name,
+        description: description,
+        isPublic: channelType == ChannelType.public,
+        moderators: channelAdmins.entries
+            .where((entry) => entry.value == ChannelAdminType.moderator)
+            .map((entry) => entry.key)
+            .toList(),
+        admins: channelAdmins.entries
+            .where((entry) => entry.value == ChannelAdminType.admin)
+            .map((entry) => entry.key)
+            .toList(),
+      );
+
+      final patchChannelEntity = CommunityDefinitionEditData(data: editedChannelEntity);
+
+      final patchChannelResult =
+          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchChannelEntity);
+
+      final editChannelResult =
+          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(editedChannelEntity);
+
+      if (patchChannelResult == null || editChannelResult == null) {
+        throw FailedToEditChannelException();
+      }
+      return null;
     });
   }
 

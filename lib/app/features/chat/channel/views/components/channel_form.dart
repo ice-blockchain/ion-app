@@ -9,7 +9,7 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/channel/providers/create_channel_provider.c.dart';
+import 'package:ion/app/features/chat/channel/providers/channel_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_type.dart';
 import 'package:ion/app/features/chat/model/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
@@ -18,18 +18,18 @@ import 'package:ion/app/features/chat/views/components/type_selection_modal.dart
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChannelForm extends HookConsumerWidget {
   const ChannelForm({
+    required this.onSuccess,
     this.channel,
     super.key,
   });
 
   final CommunityDefinitionData? channel;
-
+  final void Function(String? id) onSuccess;
   bool get isEdit => channel != null;
 
   @override
@@ -67,14 +67,10 @@ class ChannelForm extends HookConsumerWidget {
     });
 
     ref
-      ..listenSuccess(createChannelNotifierProvider, (id) {
-        if (id != null) {
-          ChannelDetailRoute(uuid: id).push<void>(context);
-        }
-      })
-      ..displayErrors(createChannelNotifierProvider);
+      ..listenSuccess<String?>(channelNotifierProvider, onSuccess)
+      ..displayErrors(channelNotifierProvider);
 
-    final createChannelState = ref.watch(createChannelNotifierProvider);
+    final channelState = ref.watch(channelNotifierProvider);
 
     return Form(
       key: formKey,
@@ -120,20 +116,29 @@ class ChannelForm extends HookConsumerWidget {
                 ),
               ],
             ),
-            SizedBox(height: 50.0.s),
+            SizedBox(height: 32.0.s),
             Button(
               mainAxisSize: MainAxisSize.max,
               label: Text(context.i18n.channel_create_action),
               leadingIcon: Assets.svg.iconPlusCreatechannel.icon(),
-              disabled: !isFormValid.value || createChannelState.isLoading,
-              trailingIcon: createChannelState.isLoading ? const IONLoadingIndicator() : null,
+              disabled: !isFormValid.value || channelState.isLoading,
+              trailingIcon: channelState.isLoading ? const IONLoadingIndicator() : null,
               type: isFormValid.value ? ButtonType.primary : ButtonType.disabled,
               onPressed: () {
-                ref.read(createChannelNotifierProvider.notifier).createChannel(
-                      titleController.text,
-                      descController.text,
-                      channelType.value!,
-                    );
+                if (isEdit) {
+                  ref.read(channelNotifierProvider.notifier).editChannel(
+                        channel!,
+                        titleController.text,
+                        descController.text,
+                        channelType.value!,
+                      );
+                } else {
+                  ref.read(channelNotifierProvider.notifier).createChannel(
+                        titleController.text,
+                        descController.text,
+                        channelType.value!,
+                      );
+                }
               },
             ),
             ScreenBottomOffset(),

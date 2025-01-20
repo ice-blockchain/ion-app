@@ -26,8 +26,8 @@ class ChannelDetailPage extends HookConsumerWidget {
 
     final hasAccessToEdit = useMemoized(
       () =>
-          (channel?.admins.contains(currentUserPubkey) ?? false) ||
-          (channel?.owner == currentUserPubkey),
+          (channel?.data.admins.contains(currentUserPubkey) ?? false) ||
+          (channel?.data.owner == currentUserPubkey),
       [channel, currentUserPubkey],
     );
 
@@ -40,17 +40,22 @@ class ChannelDetailPage extends HookConsumerWidget {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            ChannelDetailAppBar(channel: channel),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    ChannelSummary(channel: channel, hasAccessToEdit: hasAccessToEdit),
-                    if (hasAccessToEdit) ChannelForm(channel: channel),
-                  ],
-                ),
+            SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  ChannelSummary(channel: channel.data, hasAccessToEdit: hasAccessToEdit),
+                  if (hasAccessToEdit)
+                    ChannelForm(
+                      channel: channel.data,
+                      onSuccess: (_) {
+                        ref.invalidate(channelMetadataProvider(uuid));
+                        // context.pop();
+                      },
+                    ),
+                ],
               ),
             ),
+            ChannelDetailAppBar(channel: channel.data),
           ],
         ),
       ),

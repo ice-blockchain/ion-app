@@ -47,6 +47,8 @@ class EventParser {
       NotAuthoritativeEvent.kind => NotAuthoritativeEvent.fromEventMessage(eventMessage),
       ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(eventMessage),
       CommunityDefinitionEntity.kind => CommunityDefinitionEntity.fromEventMessage(eventMessage),
+      CommunityDefinitionEntity.editKind =>
+        CommunityDefinitionEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }

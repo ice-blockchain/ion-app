@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/channel/views/components/channel_form.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/channel_photo.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -32,8 +33,14 @@ class CreateChannelModal extends HookConsumerWidget {
                     padding: EdgeInsets.symmetric(vertical: 30.0.s),
                     child: const ChannelPhoto(),
                   ),
-                  const Flexible(
-                    child: ChannelForm(),
+                  Flexible(
+                    child: ChannelForm(
+                      onSuccess: (String? id) {
+                        if (id != null) {
+                          ChannelDetailRoute(uuid: id).pushReplacement(context);
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),

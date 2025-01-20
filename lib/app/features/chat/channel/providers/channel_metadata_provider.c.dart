@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'channel_metadata_provider.c.g.dart';
 
 @riverpod
-Future<CommunityDefinitionData> channelMetadata(Ref ref, String id) async {
+Future<CommunityDefinitionEntity> channelMetadata(Ref ref, String id) async {
   final channel =
       await ref.watch(ionConnectNotifierProvider.notifier).requestEntity<CommunityDefinitionEntity>(
             RequestMessage()
@@ -26,5 +26,5 @@ Future<CommunityDefinitionData> channelMetadata(Ref ref, String id) async {
     throw FailedToFetchChannelException(id);
   }
 
-  return channel.data;
+  return channel;
 }

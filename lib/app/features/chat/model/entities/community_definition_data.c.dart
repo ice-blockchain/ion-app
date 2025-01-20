@@ -7,6 +7,7 @@ import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_admin_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_moderator_tag.c.dart';
@@ -34,8 +35,8 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
   const CommunityDefinitionEntity._();
 
   factory CommunityDefinitionEntity.fromEventMessage(EventMessage eventMessage) {
-    if (eventMessage.kind != kind) {
-      throw Exception('Incorrect event kind ${eventMessage.kind}, expected $kind');
+    if (eventMessage.kind != kind && eventMessage.kind != editKind) {
+      throw Exception('Incorrect event kind ${eventMessage.kind}, expected $kind or $editKind');
     }
 
     return CommunityDefinitionEntity(
@@ -50,12 +51,21 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
 
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
   static const kind = 31750;
+  static const editKind = 1753;
+
+  ReplaceableEventReference toReplaceableEventReference() {
+    return ReplaceableEventReference(
+      kind: kind,
+      pubkey: masterPubkey,
+    );
+  }
 }
 
 @Freezed(equal: false)
 class CommunityDefinitionData with _$CommunityDefinitionData implements EventSerializable {
   const factory CommunityDefinitionData({
     required String uuid,
+    // required String id,
     required bool isPublic,
     required bool isOpen,
     required bool commentsEnabled,
@@ -79,8 +89,10 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required List<String> moderators,
     required List<String> admins,
   }) {
+    final uuid = generateV7UUID();
     return CommunityDefinitionData(
-      uuid: generateV7UUID(),
+      uuid: uuid,
+      // id: uuid,
       name: name,
       description: description,
       avatar: avatar,
@@ -99,6 +111,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
   factory CommunityDefinitionData.fromEventMessage(EventMessage eventMessage) {
     return CommunityDefinitionData(
       uuid: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
+      // id: IdentifierTag.fromTags(eventMessage.tags).value,
       name: NameTag.fromTags(eventMessage.tags).value,
       description: DescriptionTag.fromTags(eventMessage.tags).value,
       avatar: ImetaTag.fromTags(eventMessage.tags).value,
@@ -125,6 +138,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       tags: [
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),
+        // IdentifierTag(value: uuid).toTag(),
         NameTag(value: name).toTag(),
         if (description != null) DescriptionTag(value: description).toTag(),
         if (avatar != null) avatar!.toTag(),
@@ -134,6 +148,34 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
         RoleRequiredForPostingEventSetting(role: roleRequiredForPosting).toTag(),
         if (moderators.isNotEmpty) ...CommunityModeratorTag(values: moderators).toTag(),
         if (admins.isNotEmpty) ...CommunityAdminTag(values: admins).toTag(),
+      ],
+      content: '',
+    );
+  }
+}
+
+@Freezed(equal: false)
+class CommunityDefinitionEditData with _$CommunityDefinitionEditData implements EventSerializable {
+  const factory CommunityDefinitionEditData({
+    required CommunityDefinitionData data,
+  }) = _CommunityDefinitionEditData;
+
+  const CommunityDefinitionEditData._();
+
+  @override
+  FutureOr<EventMessage> toEventMessage(
+    EventSigner signer, {
+    List<List<String>> tags = const [],
+    DateTime? createdAt,
+  }) async {
+    final mainData = await data.toEventMessage(signer);
+
+    return EventMessage.fromData(
+      signer: signer,
+      kind: CommunityDefinitionEntity.editKind,
+      tags: [
+        ...mainData.tags,
+        ...tags,
       ],
       content: '',
     );
