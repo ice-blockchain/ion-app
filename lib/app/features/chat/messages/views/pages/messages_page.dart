@@ -22,7 +22,7 @@ class MessagesPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() => _initConversation(ref));
 
-    ref.displayErrors(e2EEGroupConversationManagementProvider);
+    ref.displayErrors(e2EEConversationManagementProvider);
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -84,7 +84,7 @@ class MessagesPage extends HookConsumerWidget {
 
   Future<void> _initConversation(WidgetRef ref) async {
     // TODO: Should be called if there is no conversation messages yet in DB
-    final ee2eGroupConversationService = ref.read(e2EEGroupConversationManagementProvider.notifier);
+    final ee2eGroupConversationService = ref.read(e2EEConversationManagementProvider.notifier);
 
     if (conversationData.type == ChatType.chat) {
       await ee2eGroupConversationService.createOneOnOneConversation(conversationData.participants);
