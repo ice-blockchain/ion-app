@@ -16,6 +16,8 @@ class CreateWalletViewNotifier extends _$CreateWalletViewNotifier {
   Future<void> createWalletView({
     required String name,
   }) async {
+    if (state.isLoading) return;
+
     state = const AsyncValue.loading();
 
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);

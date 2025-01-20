@@ -13,9 +13,12 @@ class DeleteWalletViewNotifier extends _$DeleteWalletViewNotifier {
   FutureOr<void> build() {}
 
   Future<void> delete({required String walletViewId}) async {
+    if (state.isLoading) return;
+
     state = const AsyncLoading();
 
-    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    final currentIdentityKeyName =
+        ref.read(currentIdentityKeyNameSelectorProvider);
     if (currentIdentityKeyName == null) {
       return;
     }
@@ -26,7 +29,7 @@ class DeleteWalletViewNotifier extends _$DeleteWalletViewNotifier {
 
       await identity.wallets.deleteWalletView(walletViewId);
 
-      ref.invalidate(currentUserWalletViewsProvider);
+      // ref.invalidate(currentUserWalletViewsProvider);
     });
   }
 }
