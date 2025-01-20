@@ -52,8 +52,7 @@ class CoinNetworksListView extends StatelessWidget {
         ListView.separated(
           shrinkWrap: true,
           itemCount: networkTypeValues.length,
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(height: 12.0.s),
+          separatorBuilder: (BuildContext context, int index) => SizedBox(height: 12.0.s),
           itemBuilder: (BuildContext context, int index) {
             return ScreenSideOffset.small(
               child: _CoinNetworkItem(

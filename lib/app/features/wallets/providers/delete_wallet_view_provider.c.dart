@@ -17,8 +17,7 @@ class DeleteWalletViewNotifier extends _$DeleteWalletViewNotifier {
 
     state = const AsyncLoading();
 
-    final currentIdentityKeyName =
-        ref.read(currentIdentityKeyNameSelectorProvider);
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
     if (currentIdentityKeyName == null) {
       return;
     }

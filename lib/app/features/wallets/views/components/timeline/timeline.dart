@@ -34,5 +34,3 @@ class Timeline extends StatelessWidget {
     );
   }
 }
-
-
