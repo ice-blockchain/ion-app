@@ -32,11 +32,13 @@ class FetchConversations extends _$FetchConversations {
 
     final requestFilter = RequestFilter(
       kinds: const [IonConnectGiftWrapServiceImpl.kind],
-      k: [
-        PrivateDirectMessageEntity.kind.toString(),
-        PrivateMessageReactionEntity.kind.toString(),
-      ],
-      p: [pubkey],
+      tags: {
+        '#k': [
+          PrivateDirectMessageEntity.kind.toString(),
+          PrivateMessageReactionEntity.kind.toString(),
+        ],
+        '#p': [pubkey],
+      },
       since: sinceDate,
     );
 

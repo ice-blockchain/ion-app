@@ -100,7 +100,9 @@ EntitiesDataSource _buildArticlesDataSource({
         kinds: const [GenericRepostEntity.kind],
         authors: authors,
         search: search,
-        k: [ArticleEntity.kind.toString()],
+        tags: {
+          '#k': [ArticleEntity.kind.toString()],
+        },
         limit: 20,
       ),
     ],

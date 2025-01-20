@@ -42,7 +42,9 @@ List<EntitiesDataSource>? repliesDataSource(
       requestFilters: [
         RequestFilter(
           kinds: const [PostEntity.kind],
-          e: [eventReference.eventId],
+          tags: {
+            '#e': [eventReference.eventId],
+          },
           search: SearchExtensions.withCounters(
             [
               ExpirationSearchExtension(expiration: false),
