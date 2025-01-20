@@ -648,7 +648,7 @@
   "notification_story_published": "Your story has been published",
   "notification_post_published": "Your post has been published",
   "notification_article_published": "Your article has been published",
-  "notification_reply_published": "Your reply has been published",
+  "notification_reply_published": "Your reply has been sent",
   "notification_repost_successful": "Successfully reposted",
   "chat_groups_joined": "Joined",
   "chat_groups_explore": "Explore",
