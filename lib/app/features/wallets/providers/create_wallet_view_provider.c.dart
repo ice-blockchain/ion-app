@@ -11,7 +11,9 @@ part 'create_wallet_view_provider.c.g.dart';
 @riverpod
 class CreateWalletViewNotifier extends _$CreateWalletViewNotifier {
   @override
-  FutureOr<void> build() {}
+  Future<void> build() async {
+    state = const AsyncData(null);
+  }
 
   Future<void> createWalletView({
     required String name,

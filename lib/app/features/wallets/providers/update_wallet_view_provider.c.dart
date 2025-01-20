@@ -12,7 +12,9 @@ part 'update_wallet_view_provider.c.g.dart';
 @riverpod
 class UpdateWalletViewNotifier extends _$UpdateWalletViewNotifier {
   @override
-  FutureOr<void> build() {}
+  Future<void> build() async {
+    state = const AsyncData(null);
+  }
 
   Future<void> updateWalletView({
     required WalletViewData walletView,
