@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
@@ -65,10 +66,11 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
   const BookmarksSetData._();
 
   factory BookmarksSetData.fromEventMessage(EventMessage eventMessage) {
-    final typeName = eventMessage.tags.firstWhereOrNull((tag) => tag[0] == 'd')?[1];
+    final typeName = eventMessage.tags
+        .firstWhereOrNull((tag) => tag[0] == ReplaceableEventIdentifier.tagName)?[1];
 
     if (typeName == null) {
-      throw Exception('BookmarksSet event should have `d` tag');
+      throw Exception('BookmarksSet event should have `${ReplaceableEventIdentifier.tagName}` tag');
     }
 
     return BookmarksSetData(
@@ -93,7 +95,7 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
       kind: BookmarksSetEntity.kind,
       tags: [
         ...tags,
-        ['d', type.toShortString()],
+        ReplaceableEventIdentifier(value: type.toShortString()).toTag(),
         ...postsIds.map((id) => ['e', id]),
         ...articlesRefs.map((ref) => ref.toTag()),
       ],

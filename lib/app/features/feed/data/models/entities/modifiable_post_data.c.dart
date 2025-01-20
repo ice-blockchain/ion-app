@@ -19,6 +19,7 @@ import 'package:ion/app/features/ion_connect/model/quoted_modifiable_event.c.dar
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
@@ -73,6 +74,7 @@ class ModifiablePostData
   const factory ModifiablePostData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
+    required ReplaceableEventIdentifier replaceableEventId,
     EntityExpiration? expiration,
     QuotedModifiableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
@@ -89,6 +91,8 @@ class ModifiablePostData
     return ModifiablePostData(
       content: parsedContent,
       media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      replaceableEventId:
+          ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
@@ -123,6 +127,7 @@ class ModifiablePostData
     return ModifiablePostData(
       content: parsedContent,
       relatedHashtags: hashtags,
+      replaceableEventId: ReplaceableEventIdentifier.generate(),
       media: {},
       settings: [setting].nonNulls.toList(),
     );
@@ -143,6 +148,7 @@ class ModifiablePostData
       content: content.map((match) => match.text).join(),
       tags: [
         ...tags,
+        replaceableEventId.toTag(),
         if (expiration != null) expiration!.toTag(),
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),

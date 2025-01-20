@@ -14,9 +14,9 @@ import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 
 part 'article_data.c.freezed.dart';
 
@@ -71,6 +71,7 @@ class ArticleData with _$ArticleData implements EventSerializable {
   const factory ArticleData({
     required String content,
     required Map<String, MediaAttachment> media,
+    required ReplaceableEventIdentifier replaceableEventId,
     String? title,
     String? image,
     String? summary,
@@ -105,6 +106,8 @@ class ArticleData with _$ArticleData implements EventSerializable {
       image: image,
       summary: summary,
       publishedAt: publishedAt,
+      replaceableEventId:
+          ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
     );
@@ -134,6 +137,7 @@ class ArticleData with _$ArticleData implements EventSerializable {
       image: image,
       summary: summary,
       publishedAt: publishedAt,
+      replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
       settings: setting != null ? [setting] : null,
     );
@@ -145,21 +149,19 @@ class ArticleData with _$ArticleData implements EventSerializable {
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
-    final uniqueIdForEditing = generateV4UUID(); // Required to be set in 'd' tag
-
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
       kind: ArticleEntity.kind,
       tags: [
         ...tags,
+        replaceableEventId.toTag(),
         if (title != null) ['title', title!],
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (publishedAt != null)
           ['published_at', (publishedAt!.millisecondsSinceEpoch ~/ 1000).toString()],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-        ['d', uniqueIdForEditing],
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,
