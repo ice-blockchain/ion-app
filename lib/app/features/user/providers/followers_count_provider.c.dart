@@ -44,8 +44,11 @@ class FollowersCount extends _$FollowersCount {
     final requestEvent = await _buildRequestEvent(relayUrl: relay.url);
     final subscriptionMessage = RequestMessage()
       ..addFilter(
-        const RequestFilter(
-          kinds: [EventCountResultEntity.kind, 7400],
+        RequestFilter(
+          kinds: const [EventCountResultEntity.kind, 7400],
+          tags: {
+            '#b': [pubkey],
+          },
         ),
       );
 
