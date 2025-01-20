@@ -55,7 +55,9 @@ class CreateNewWalletModal extends HookConsumerWidget {
               child: Button(
                 onPressed: () {
                   if (walletName.value.isNotEmpty) {
-                    ref.read(createWalletViewProvider(walletViewName: walletName.value));
+                    ref
+                        .read(createWalletViewNotifierProvider.notifier)
+                        .createWalletView(name: walletName.value);
                     context.pop();
                   }
                 },

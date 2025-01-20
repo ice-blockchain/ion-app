@@ -9,16 +9,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'delete_wallet_view_provider.c.g.dart';
 
 @riverpod
-Future<void> deleteWalletView(Ref ref, {required String walletViewId}) async {
-  final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-  if (currentIdentityKeyName == null) {
-    return;
+class DeleteWalletViewNotifier extends _$DeleteWalletViewNotifier {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> delete({required String walletViewId}) async {
+    state = const AsyncLoading();
+
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (currentIdentityKeyName == null) {
+      return;
+    }
+
+    state = await AsyncValue.guard(() async {
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
+      final identity = ionIdentity(username: currentIdentityKeyName);
+
+      await identity.wallets.deleteWalletView(walletViewId);
+
+      ref.invalidate(currentUserWalletViewsProvider);
+    });
   }
-
-  final ionIdentity = await ref.watch(ionIdentityProvider.future);
-  final identity = ionIdentity(username: currentIdentityKeyName);
-
-  await identity.wallets.deleteWalletView(walletViewId);
-
-  ref.invalidate(currentUserWalletViewsProvider);
 }

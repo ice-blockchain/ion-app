@@ -11,42 +11,50 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'update_wallet_view_provider.c.g.dart';
 
 @riverpod
-Future<void> updateWalletView(
-  Ref ref, {
-  required WalletViewData walletView,
-  required String walletViewName,
-}) async {
-  final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-  if (currentIdentityKeyName == null) {
-    return;
+class UpdateWalletViewNotifier extends _$UpdateWalletViewNotifier {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> updateWalletView({
+    required WalletViewData walletView,
+    required String walletViewName,
+  }) async {
+    state = const AsyncValue.loading();
+
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (currentIdentityKeyName == null) {
+      return;
+    }
+
+    state = await AsyncValue.guard(() async {
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
+      final identity = ionIdentity(username: currentIdentityKeyName);
+
+      final symbolGroups = <String>{};
+      final walletViewItems = <WalletViewItem>[];
+
+      for (final coinInWallet in walletView.coins) {
+        final coin = coinInWallet.coin;
+
+        symbolGroups.add(coin.symbolGroup);
+        walletViewItems.add(
+          WalletViewItem(
+            coinId: coin.id,
+            walletId: coinInWallet.walletId,
+          ),
+        );
+      }
+
+      await identity.wallets.updateWalletView(
+        walletView.id,
+        CreateUpdateWalletViewRequest(
+          items: walletViewItems,
+          symbolGroups: symbolGroups.toList(),
+          name: walletViewName,
+        ),
+      );
+
+      ref.invalidate(currentUserWalletViewsProvider);
+    });
   }
-
-  final ionIdentity = await ref.watch(ionIdentityProvider.future);
-  final identity = ionIdentity(username: currentIdentityKeyName);
-
-  final symbolGroups = <String>{};
-  final walletViewItems = <WalletViewItem>[];
-
-  for (final coinInWallet in walletView.coins) {
-    final coin = coinInWallet.coin;
-
-    symbolGroups.add(coin.symbolGroup);
-    walletViewItems.add(
-      WalletViewItem(
-        coinId: coin.id,
-        walletId: coinInWallet.walletId,
-      ),
-    );
-  }
-
-  await identity.wallets.updateWalletView(
-    walletView.id,
-    CreateUpdateWalletViewRequest(
-      items: walletViewItems,
-      symbolGroups: symbolGroups.toList(),
-      name: walletViewName,
-    ),
-  );
-
-  ref.invalidate(currentUserWalletViewsProvider);
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/tooltip/copied_tooltip.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
@@ -58,7 +59,10 @@ class CoinAddressTile extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  coinData.iconUrl.coinIcon(size: 16.0.s),
+                  CoinIconWidget(
+                    imageUrl: coinData.iconUrl,
+                    size: 16.0.s,
+                  ),
                   SizedBox(
                     width: 6.0.s,
                   ),

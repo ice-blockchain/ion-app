@@ -62,18 +62,7 @@ Future<List<WalletViewData>> currentUserWalletViews(Ref ref) async {
           amount: coinAmount,
           balanceUSD: coinBalanceUSD,
           walletId: coinInWalletDTO.walletId,
-          coin: CoinData(
-            id: coinDTO.id,
-            name: coinDTO.name,
-            iconUrl: coinDTO.iconURL,
-            network: coinDTO.network,
-            decimals: coinDTO.decimals,
-            priceUSD: coinDTO.priceUSD,
-            abbreviation: coinDTO.symbol,
-            symbolGroup: coinDTO.symbolGroup,
-            syncFrequency: coinDTO.syncFrequency,
-            contractAddress: coinDTO.contractAddress,
-          ),
+          coin: CoinData.fromDTO(coinDTO),
         ),
       );
     }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
@@ -64,7 +65,10 @@ class CoinNetworkItem extends ConsumerWidget {
           leading: Stack(
             clipBehavior: Clip.none,
             children: [
-              coinData.iconUrl.coinIcon(size: 36.0.s),
+              CoinIconWidget(
+                imageUrl: coinData.iconUrl,
+                size: 36.0.s,
+              ),
               Positioned(
                 bottom: -3.0.s,
                 right: -3.0.s,

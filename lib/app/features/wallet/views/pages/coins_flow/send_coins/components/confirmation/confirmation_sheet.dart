@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -50,12 +51,16 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  if (formData.selectedCoin case final CoinInWalletData coinInWallet)
+                  if (formData.selectedCoin
+                      case final CoinInWalletData coinInWallet)
                     TransactionAmountSummary(
                       amount: coinInWallet.amount,
                       currency: coinInWallet.coin.abbreviation,
                       usdAmount: coinInWallet.balanceUSD,
-                      icon: coinInWallet.coin.iconUrl.coinIcon(),
+                      icon: CoinIconWidget(
+                        imageUrl: coinInWallet.coin.iconUrl,
+                        size: 36.0.s,
+                      ),
                     ),
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
@@ -67,9 +72,9 @@ class ConfirmationSheet extends ConsumerWidget {
                     ListItem.textWithIcon(
                       title: Text(locale.wallet_asset),
                       value: coin.name,
-                      icon: coin.iconUrl.coinIcon(
-                        size: ScreenSideOffset.defaultSmallMargin,
-                      ),
+                      icon: CoinIconWidget(
+                          imageUrl: coin.iconUrl,
+                          size: ScreenSideOffset.defaultSmallMargin,),
                     ),
                   ],
                   SizedBox(height: 16.0.s),
@@ -106,8 +111,8 @@ class ConfirmationSheet extends ConsumerWidget {
                   SizedBox(height: 22.0.s),
                   if (formData.price != null)
                     Button(
-                      label:
-                          Text('${locale.button_confirm} - ${formatToCurrency(formData.price!)}'),
+                      label: Text(
+                          '${locale.button_confirm} - ${formatToCurrency(formData.price!)}'),
                       mainAxisSize: MainAxisSize.max,
                       onPressed: () => CoinTransactionResultRoute().go(context),
                     ),

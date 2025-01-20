@@ -35,7 +35,7 @@ class CoinInWalletListConverter implements JsonConverter<List<CoinInWallet>, Lis
     return json.map((e) {
       final json = e as Map<String, dynamic>;
       return CoinInWallet(
-        walletId: json['wallet_id'] as String,
+        walletId: json['walletId'] as String,
         coin: Coin.fromJson(json),
       );
     }).toList();
@@ -45,7 +45,7 @@ class CoinInWalletListConverter implements JsonConverter<List<CoinInWallet>, Lis
   List<dynamic> toJson(List<CoinInWallet> object) {
     return object.map((coinWithWallet) {
       return {
-        'wallet_id': coinWithWallet.walletId,
+        'walletId': coinWithWallet.walletId,
         ...coinWithWallet.toJson(),
       };
     }).toList();

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -28,7 +29,8 @@ class CoinDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
+    final coinInWallet =
+        ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
     final walletId = ref.watch(currentWalletViewIdProvider).valueOrNull;
     final scrollController = useScrollController();
     final coinTransactionsMap = useTransactionsByDate(context, ref);
@@ -67,7 +69,7 @@ class CoinDetailsPage extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            coinData.iconUrl.coinIcon(),
+            CoinIconWidget(imageUrl: coinData.iconUrl),
             SizedBox(width: 6.0.s),
             Text(coinData.name),
           ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -73,7 +74,9 @@ class TransactionResultSheet extends ConsumerWidget {
                     amount: coinInWallet.amount,
                     currency: coinInWallet.coin.abbreviation,
                     usdAmount: coinInWallet.balanceUSD,
-                    icon: coinInWallet.coin.iconUrl.coinIcon(),
+                    icon: CoinIconWidget(
+                      imageUrl: coinInWallet.coin.iconUrl,
+                    ),
                   ),
                 SizedBox(height: 24.0.s),
                 Row(

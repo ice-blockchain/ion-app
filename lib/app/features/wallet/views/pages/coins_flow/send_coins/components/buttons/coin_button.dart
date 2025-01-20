@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -44,7 +45,10 @@ class CoinButton extends StatelessWidget {
           style: textTheme.caption3,
         ),
         backgroundColor: Colors.transparent,
-        leading: coinData.iconUrl.coinIcon(size: 36.0.s),
+        leading: CoinIconWidget(
+          imageUrl: coinData.iconUrl,
+          size: 36.0.s,
+        ),
         onTap: onTap,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

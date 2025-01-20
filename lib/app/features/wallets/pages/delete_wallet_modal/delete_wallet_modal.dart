@@ -79,7 +79,9 @@ class DeleteWalletModal extends ConsumerWidget {
                       context.i18n.button_delete,
                     ),
                     onPressed: () {
-                      ref.read(deleteWalletViewProvider(walletViewId: walletId));
+                      ref
+                          .read(deleteWalletViewNotifierProvider.notifier)
+                          .delete(walletViewId: walletId);
                       context.pop();
                     },
                     minimumSize: buttonMinimalSize,

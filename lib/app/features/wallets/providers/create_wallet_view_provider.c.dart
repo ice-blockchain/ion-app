@@ -10,18 +10,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'create_wallet_view_provider.c.g.dart';
 
 @riverpod
-Future<void> createWalletView(Ref ref, {required String walletViewName}) async {
-  final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
-  if (currentIdentityKeyName == null) {
-    return;
+class CreateWalletViewNotifier extends _$CreateWalletViewNotifier {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> createWalletView({
+    required String name,
+  }) async {
+    state = const AsyncValue.loading();
+
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+    if (currentIdentityKeyName == null) {
+      return;
+    }
+
+    state = await AsyncValue.guard(() async {
+      final ionIdentity = await ref.read(ionIdentityProvider.future);
+      final identity = ionIdentity(username: currentIdentityKeyName);
+
+      await identity.wallets.createWalletView(
+        CreateUpdateWalletViewRequest(items: [], symbolGroups: [], name: name),
+      );
+
+      ref.invalidate(currentUserWalletViewsProvider);
+    });
   }
-
-  final ionIdentity = await ref.read(ionIdentityProvider.future);
-  final identity = ionIdentity(username: currentIdentityKeyName);
-
-  await identity.wallets.createWalletView(
-    CreateUpdateWalletViewRequest(items: [], symbolGroups: [], name: walletViewName),
-  );
-
-  ref.invalidate(currentUserWalletViewsProvider);
 }

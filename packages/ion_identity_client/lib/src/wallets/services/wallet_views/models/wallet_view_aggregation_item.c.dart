@@ -9,6 +9,7 @@ part 'wallet_view_aggregation_item.c.g.dart';
 @freezed
 class WalletViewAggregationItem with _$WalletViewAggregationItem {
   const factory WalletViewAggregationItem({
+    @JsonKey(defaultValue: [])
     required List<WalletViewAggregationWallet> wallets,
     required double totalBalance,
   }) = _WalletViewAggregationItem;

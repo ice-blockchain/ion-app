@@ -35,28 +35,6 @@ extension IconExtension on AssetGenImage {
 }
 
 extension IconStringExtension on String {
-  Widget coinIcon({double? size}) {
-    final iconSize = size ?? 24.0.s;
-
-    return CachedNetworkImage(
-      imageUrl: this,
-      width: iconSize,
-      height: iconSize,
-      // TODO: Not implemented
-      errorWidget: (_, __, ___) => const SizedBox.shrink(),
-      imageBuilder: (context, imageProvider) => Container(
-        width: iconSize,
-        height: iconSize,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: imageProvider,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget icon({Color? color, double? size, BoxFit? fit}) {
     final iconSize = size ?? 24.0.s;
     final colorFilter = color == null ? null : ColorFilter.mode(color, BlendMode.srcIn);

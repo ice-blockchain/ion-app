@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
@@ -30,7 +30,11 @@ class CoinItem extends ConsumerWidget {
       title: Text(coinData.name),
       subtitle: Text(coinData.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: coinData.iconUrl.coinIcon(size: 36.0.s),
+      leading: CoinIconWidget(
+        imageUrl: coinData.iconUrl,
+        size: 36.0.s,
+      ),
+
       onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallet/model/coin_data.c.dart';
 import 'package:ion/app/features/wallet/model/network_type.dart';
@@ -54,7 +55,10 @@ class CoinIconWithNetwork extends StatelessWidget {
           Positioned(
             top: 0,
             left: 0,
-            child: coin.iconUrl.coinIcon(size: coinSize),
+            child: CoinIconWidget(
+              imageUrl: coin.iconUrl,
+              size: coinSize,
+            ),
           ),
           Positioned(
             bottom: 0,
