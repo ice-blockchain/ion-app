@@ -33,8 +33,15 @@ Future<FollowListEntity?> followList(
   }
 
   final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(kinds: const [FollowListEntity.kind], authors: [pubkey], limit: 1));
-  return ref.read(ionConnectNotifierProvider.notifier).requestEntity<FollowListEntity>(
+    ..addFilter(
+      RequestFilter(
+        kinds: const [FollowListEntity.kind],
+        authors: [pubkey],
+        limit: 1,
+      ),
+    );
+
+  return ref.watch(ionConnectNotifierProvider.notifier).requestEntity<FollowListEntity>(
         requestMessage,
         actionSource: ActionSourceUser(pubkey),
       );
@@ -81,16 +88,37 @@ class FollowListManager extends _$FollowListManager {
       if (followList == null) {
         throw FollowListNotFoundException();
       }
-      final followees = List<Followee>.from(followList.data.list);
-      final followee = followees.firstWhereOrNull((followee) => followee.pubkey == pubkey);
-      if (followee != null) {
-        followees.remove(followee);
-      } else {
-        followees.add(Followee(pubkey: pubkey));
-      }
-      await ref
-          .read(ionConnectNotifierProvider.notifier)
-          .sendEntityData(followList.data.copyWith(list: followees));
+      await _toggleFollow(pubkey, followList);
     });
+  }
+
+  Future<void> unfollow(String pubkey) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final followList = await ref.read(currentUserFollowListProvider.future);
+      if (followList == null) {
+        throw FollowListNotFoundException();
+      }
+      await _toggleFollow(pubkey, followList, removeOnly: true);
+    });
+  }
+
+  Future<void> _toggleFollow(
+    String pubkey,
+    FollowListEntity followListEntity, {
+    bool removeOnly = false,
+  }) async {
+    final followees = List<Followee>.from(followListEntity.data.list);
+    final followee = followees.firstWhereOrNull((followee) => followee.pubkey == pubkey);
+    if (followee == null && removeOnly) {
+      return;
+    } else if (followee != null) {
+      followees.remove(followee);
+    } else {
+      followees.add(Followee(pubkey: pubkey));
+    }
+    await ref
+        .read(ionConnectNotifierProvider.notifier)
+        .sendEntityData(followListEntity.data.copyWith(list: followees));
   }
 }

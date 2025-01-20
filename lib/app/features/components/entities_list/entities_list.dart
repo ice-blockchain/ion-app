@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class EntitiesList extends StatelessWidget {
@@ -19,12 +20,14 @@ class EntitiesList extends StatelessWidget {
     required this.entities,
     this.showParent = false,
     this.separatorHeight,
+    this.hideBlocked = true,
     super.key,
   });
 
   final List<IonConnectEntity> entities;
   final double? separatorHeight;
   final bool showParent;
+  final bool hideBlocked;
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +60,11 @@ class _EntityListItem extends ConsumerWidget {
     final userMetadata =
         ref.watch(userMetadataProvider(entity.masterPubkey, cacheOnly: true)).valueOrNull;
 
-    // TODO: Uncomment when there is a way to unblock users
-    // final isBlockedOrBlocking =
-    //     ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: true)).value ?? true;
+    final isBlockedOrBlocking =
+        ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: true)).valueOrNull ??
+            true;
 
-    if (userMetadata == null /*|| isBlockedOrBlocking*/) {
+    if (userMetadata == null || isBlockedOrBlocking) {
       /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
       /// we don't need to fetch the user metadata or block list explicitly - it is returned as a side effect to the
       /// main request.

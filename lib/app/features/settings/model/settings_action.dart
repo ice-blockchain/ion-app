@@ -5,7 +5,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum SettingsAction {
-  profile,
+  account,
   security,
   privacy,
   pushNotifications,
@@ -14,7 +14,7 @@ enum SettingsAction {
   logout;
 
   String getLabel(BuildContext context) => switch (this) {
-        SettingsAction.profile => context.i18n.common_profile,
+        SettingsAction.account => context.i18n.common_account,
         SettingsAction.security => context.i18n.settings_security,
         SettingsAction.privacy => context.i18n.settings_privacy,
         SettingsAction.pushNotifications => context.i18n.settings_push_notifications,
@@ -30,7 +30,7 @@ enum SettingsAction {
 
   Widget getIcon(BuildContext context) {
     final icon = switch (this) {
-      SettingsAction.profile => Assets.svg.iconProfileUser,
+      SettingsAction.account => Assets.svg.iconProfileUser,
       SettingsAction.security => Assets.svg.linearSecurityShielduser,
       SettingsAction.privacy => Assets.svg.iconProfilePrivacy,
       SettingsAction.pushNotifications => Assets.svg.iconHomeNotification,

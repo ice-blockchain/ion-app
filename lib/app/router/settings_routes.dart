@@ -5,11 +5,12 @@ part of 'app_routes.c.dart';
 class SettingsRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<SettingsRoute>(path: 'settings'),
-    TypedGoRoute<ProfileSettingsRoute>(path: 'profile-settings'),
+    TypedGoRoute<AccountSettingsRoute>(path: 'account-settings'),
     TypedGoRoute<PrivacySettingsRoute>(path: 'privacy-settings'),
     TypedGoRoute<PushNotificationsSettingsRoute>(path: 'push-notifications-settings'),
     TypedGoRoute<AppLanguagesRoute>(path: 'app-language'),
     TypedGoRoute<ContentLanguagesRoute>(path: 'content-language'),
+    TypedGoRoute<BlockedUsersRoute>(path: 'blocked-users'),
     TypedGoRoute<ConfirmLogoutRoute>(path: 'confirm-logout'),
     ...ProtectAccountRoutes.routes,
   ];
@@ -39,10 +40,18 @@ class ContentLanguagesRoute extends BaseRouteData {
         );
 }
 
-class ProfileSettingsRoute extends BaseRouteData {
-  ProfileSettingsRoute()
+class AccountSettingsRoute extends BaseRouteData {
+  AccountSettingsRoute()
       : super(
-          child: const ProfileSettingsModal(),
+          child: const AccountSettingsModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class BlockedUsersRoute extends BaseRouteData {
+  BlockedUsersRoute()
+      : super(
+          child: const BlockedUsersModal(),
           type: IceRouteType.bottomSheet,
         );
 }
