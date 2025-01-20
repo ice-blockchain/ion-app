@@ -61,8 +61,10 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       const Duration(days: 2),
     );
 
+    final oneTimeSigner = await Ed25519KeyStore.generate();
+
     return EventMessage.fromData(
-      signer: signer,
+      signer: oneTimeSigner,
       kind: kind,
       createdAt: createdAt,
       content: encryptedEvent,

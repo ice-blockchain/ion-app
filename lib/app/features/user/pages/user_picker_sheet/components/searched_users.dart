@@ -48,7 +48,6 @@ class SearchedUsers extends ConsumerWidget {
     return LoadMoreBuilder(
       slivers: slivers,
       builder: (context, slivers) => CustomScrollView(
-        key: const ValueKey('paged_users_scroll_view'),
         slivers: slivers,
       ),
       onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,

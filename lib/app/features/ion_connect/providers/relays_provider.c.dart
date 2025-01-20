@@ -12,11 +12,13 @@ typedef RelaysState = Map<String, IonConnectRelay>;
 @Riverpod(keepAlive: true)
 class Relay extends _$Relay with RelayTimerMixin, RelayAuthMixin {
   @override
-  Future<IonConnectRelay> build(String url) async {
+  Future<IonConnectRelay> build(String url, {bool anonymous = false}) async {
     final relay = await IonConnectRelay.connect(url);
 
     initializeRelayTimer(relay, ref);
-    initializeAuthMessageListener(relay, ref);
+    if (!anonymous) {
+      initializeAuthMessageListener(relay, ref);
+    }
 
     return relay;
   }

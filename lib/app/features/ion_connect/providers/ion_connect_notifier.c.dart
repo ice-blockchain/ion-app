@@ -254,13 +254,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
           final userRelays = await _getUserRelays(pubkey);
           final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-          return await ref.read(relayProvider(relays.random.url).future);
+          return await ref
+              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
         }
       case ActionSourceUser():
         {
           final userRelays = await _getUserRelays(actionSource.pubkey);
           final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-          return await ref.read(relayProvider(relays.random.url).future);
+          return await ref
+              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
         }
       case ActionSourceIndexers():
         {
@@ -269,12 +271,14 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             throw UserIndexersNotFoundException();
           }
           final urls = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
-          return await ref.read(relayProvider(urls.random).future);
+          return await ref
+              .read(relayProvider(urls.random, anonymous: actionSource.anonymous).future);
         }
       case ActionSourceRelayUrl():
         {
           // TODO: support multiple urls to allow retrying on different relays
-          return await ref.read(relayProvider(actionSource.url).future);
+          return await ref
+              .read(relayProvider(actionSource.url, anonymous: actionSource.anonymous).future);
         }
       case ActionSourceCurrentUserChat():
         {
@@ -284,13 +288,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
           final userChatRelays = await _getUserChatRelays(pubkey);
           final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
-          return await ref.read(relayProvider(relays.random.url).future);
+          return await ref
+              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
         }
       case ActionSourceUserChat():
         {
           final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
           final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
-          return await ref.read(relayProvider(relays.random.url).future);
+          return await ref
+              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
         }
     }
   }

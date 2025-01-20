@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/model/entities/private_direct_message_data
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -116,12 +117,14 @@ class ConversationMessageManagementService {
 
           final tags = conversationTags..addAll(imetaTags);
 
-          return _createSealWrapSendMessage(
+          final giftWrap = await _createGiftWrap(
             tags: tags,
             content: content,
             signer: eventSigner!,
             receiverPubkey: participantPubkey,
           );
+
+          return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
         }),
       );
 
@@ -135,12 +138,14 @@ class ConversationMessageManagementService {
       // Send copy of the message to each participant
       final results = await Future.wait(
         participantsPubkeys.map((participantPubkey) async {
-          return _createSealWrapSendMessage(
+          final giftWrap = await _createGiftWrap(
             content: content,
             signer: eventSigner!,
             tags: conversationTags,
             receiverPubkey: participantPubkey,
           );
+
+          return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
         }).toList(),
       );
 
@@ -208,7 +213,7 @@ class ConversationMessageManagementService {
     return tags;
   }
 
-  Future<IonConnectEntity?> _createSealWrapSendMessage({
+  Future<EventMessage> _createGiftWrap({
     required String content,
     required String receiverPubkey,
     required EventSigner signer,
@@ -260,11 +265,15 @@ class ConversationMessageManagementService {
 
     Logger.log('Wrap message $wrap');
 
-    final result = await ionConnectNotifier.sendEvent(wrap, cache: false);
+    return wrap;
+  }
 
-    Logger.log('Sent message $result');
-
-    return result;
+  Future<IonConnectEntity?> _sendGiftWrap(EventMessage giftWrap, {required String pubkey}) async {
+    return ionConnectNotifier.sendEvent(
+      giftWrap,
+      actionSource: ActionSourceUserChat(pubkey, anonymous: true),
+      cache: false,
+    );
   }
 
   Future<List<MediaFile>> _compressMediaFiles(

@@ -348,7 +348,7 @@ class MessagesRoute extends BaseRouteData {
               type: chatType,
               nickname: nickname,
               imageUrl: imageUrl,
-              imageWidgth: imageWidth,
+              imageWidth: imageWidth,
               imageHeight: imageHeight,
               participants: participants,
             ),

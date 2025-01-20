@@ -11,7 +11,6 @@ import 'package:ion/app/features/chat/providers/channels_provider.c.dart';
 import 'package:ion/app/features/chat/views/pages/channel_page/components/empty_state_copy_link.dart';
 import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/keyboard/keyboard.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChannelPage extends ConsumerWidget {
@@ -29,45 +28,42 @@ class ChannelPage extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return GestureDetector(
-      onTap: () => hideKeyboard(context),
-      child: Scaffold(
-        backgroundColor: context.theme.appColors.secondaryBackground,
-        body: SafeArea(
-          minimum: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
-          ),
-          bottom: false,
-          child: Column(
-            children: [
-              MessagingHeader(
-                onTap: () => EditChannelRoute(pubkey: pubkey).push<void>(context),
-                imageWidget:
-                    channelData.image != null ? Image.file(File(channelData.image!.path)) : null,
-                name: channelData.name,
-                subtitle: JoinedUsersAmountTile(
-                  amount: channelData.users.length,
-                ),
+    return Scaffold(
+      backgroundColor: context.theme.appColors.secondaryBackground,
+      body: SafeArea(
+        minimum: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
+        ),
+        bottom: false,
+        child: Column(
+          children: [
+            MessagingHeader(
+              onTap: () => EditChannelRoute(pubkey: pubkey).push<void>(context),
+              imageWidget:
+                  channelData.image != null ? Image.file(File(channelData.image!.path)) : null,
+              name: channelData.name,
+              subtitle: JoinedUsersAmountTile(
+                amount: channelData.users.length,
               ),
-              MessagingEmptyView(
-                title: context.i18n.common_invitation_link,
-                asset: Assets.svg.iconChatEmptystate,
-                trailing: EmptyStateCopyLink(link: channelData.link),
-                leading: Column(
-                  children: [
-                    const ChatDateHeaderText(),
-                    Text(
-                      context.i18n.channel_created_message,
-                      style: context.theme.appTextThemes.caption2.copyWith(
-                        color: context.theme.appColors.tertararyText,
-                      ),
+            ),
+            MessagingEmptyView(
+              title: context.i18n.common_invitation_link,
+              asset: Assets.svg.iconChatEmptystate,
+              trailing: EmptyStateCopyLink(link: channelData.link),
+              leading: Column(
+                children: [
+                  const ChatDateHeaderText(),
+                  Text(
+                    context.i18n.channel_created_message,
+                    style: context.theme.appTextThemes.caption2.copyWith(
+                      color: context.theme.appColors.tertararyText,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const MessagingBottomBar(),
-            ],
-          ),
+            ),
+            const MessagingBottomBar(),
+          ],
         ),
       ),
     );

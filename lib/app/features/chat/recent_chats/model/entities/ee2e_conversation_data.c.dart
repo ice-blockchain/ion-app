@@ -11,7 +11,7 @@ class Ee2eConversationEntity with _$Ee2eConversationEntity {
     required String name,
     required ChatType type,
     required List<String> participants,
-    int? imageWidgth,
+    int? imageWidth,
     int? imageHeight,
     String? nickname,
     String? imageUrl,
