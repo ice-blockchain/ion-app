@@ -93,7 +93,7 @@ class PostSubmitButton extends HookConsumerWidget {
         if (onSubmitted != null) {
           onSubmitted!();
         } else if (context.mounted) {
-          ref.context.pop();
+          ref.context.pop(true);
         }
       },
     );
