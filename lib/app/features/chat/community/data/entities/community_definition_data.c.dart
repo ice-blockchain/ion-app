@@ -159,31 +159,3 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     );
   }
 }
-
-// @Freezed(equal: false)
-// class CommunityDefinitionEditData with _$CommunityDefinitionEditData implements EventSerializable {
-//   const factory CommunityDefinitionEditData({
-//     required CommunityDefinitionData data,
-//   }) = _CommunityDefinitionEditData;
-
-//   const CommunityDefinitionEditData._();
-
-//   @override
-//   FutureOr<EventMessage> toEventMessage(
-//     EventSigner signer, {
-//     List<List<String>> tags = const [],
-//     DateTime? createdAt,
-//   }) async {
-//     final mainData = await data.toEventMessage(signer);
-
-//     return EventMessage.fromData(
-//       signer: signer,
-//       kind: CommunityDefinitionEntity.editKind,
-//       tags: [
-//         ...mainData.tags.where((tag) => tag[0] != 'd' && tag[0] != 'a'),
-//         ...tags,
-//       ],
-//       content: '',
-//     );
-//   }
-// }
