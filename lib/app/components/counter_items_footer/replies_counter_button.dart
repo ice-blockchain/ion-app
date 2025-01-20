@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -15,7 +16,7 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class RepliesCounterButton extends ConsumerWidget {
+class RepliesCounterButton extends HookConsumerWidget {
   const RepliesCounterButton({
     required this.eventReference,
     this.color,
@@ -30,9 +31,19 @@ class RepliesCounterButton extends ConsumerWidget {
     final repliesCount = ref.watch(repliesCountProvider(eventReference));
     final isReplied = ref.watch(isRepliedProvider(eventReference));
     final canReply = ref.watch(canReplyProvider(eventReference)).value ?? false;
+    final isLoading = useRef(false);
 
     return GestureDetector(
-      onTap: () => _onTap(context, ref),
+      onTap: isLoading.value
+          ? null
+          : () async {
+              try {
+                isLoading.value = true;
+                await _onTap(context, ref);
+              } finally {
+                isLoading.value = false;
+              }
+            },
       child: TextActionButton(
         icon: Assets.svg.iconBlockComment.icon(
           size: 16.0.s,
@@ -63,6 +74,7 @@ class RepliesCounterButton extends ConsumerWidget {
     ref.read(canReplyProvider(eventReference).notifier).refreshIfNeeded(eventReference);
     final canReply = await ref.read(canReplyProvider(eventReference).future);
     if (!context.mounted) return;
+
     if (canReply) {
       await CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
       await HapticFeedback.lightImpact();

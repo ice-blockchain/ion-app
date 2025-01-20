@@ -21,6 +21,14 @@ class CanReply extends _$CanReply {
 
   @override
   Future<bool> build(EventReference eventReference) async {
+    ref.onDispose(() {
+      ref
+        ..invalidate(followListProvider(eventReference.pubkey, skipCache: true))
+        ..invalidate(
+          ionConnectEntityProvider(eventReference: eventReference, skipCache: true),
+        );
+    });
+
     final currentPubkey = ref.watch(currentPubkeySelectorProvider).value;
     if (currentPubkey == null) {
       return true;
@@ -73,13 +81,6 @@ class CanReply extends _$CanReply {
     final now = DateTime.now();
     if (now.difference(_lastFetchDate) > _maxCacheAge) {
       _lastFetchDate = now;
-      if (_skipCache) {
-        ref
-          ..invalidate(followListProvider(eventReference.pubkey, skipCache: true))
-          ..invalidate(
-            ionConnectEntityProvider(eventReference: eventReference, skipCache: true),
-          );
-      }
       _skipCache = true;
       ref.invalidateSelf();
     }
