@@ -11,7 +11,7 @@ class CommunityModeratorTag with _$CommunityModeratorTag {
   const CommunityModeratorTag._();
 
   factory CommunityModeratorTag.fromTags(List<List<String>> tags) {
-    final tag = tags.where((tag) => tag[0] == tagName && tag[2] == 'moderator');
+    final tag = tags.where((tag) => tag[0] == tagName && tag[3] == 'moderator');
 
     if (tag.isEmpty) {
       return const CommunityModeratorTag(values: []);
@@ -24,6 +24,6 @@ class CommunityModeratorTag with _$CommunityModeratorTag {
   static const String roleValue = 'moderator';
 
   List<List<String>> toTag() {
-    return values.map((value) => [tagName, value, roleValue]).toList();
+    return values.map((value) => [tagName, value, '', roleValue]).toList();
   }
 }

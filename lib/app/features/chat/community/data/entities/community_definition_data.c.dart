@@ -14,6 +14,7 @@ import 'package:ion/app/features/ion_connect/model/tags/community_moderator_tag.
 import 'package:ion/app/features/ion_connect/model/tags/community_openness_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_visibility_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/description_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/identifier_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/imeta_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/name_tag.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
@@ -65,7 +66,7 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
 class CommunityDefinitionData with _$CommunityDefinitionData implements EventSerializable {
   const factory CommunityDefinitionData({
     required String uuid,
-    // required String id,
+    required String id,
     required bool isPublic,
     required bool isOpen,
     required bool commentsEnabled,
@@ -92,7 +93,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     final uuid = generateV7UUID();
     return CommunityDefinitionData(
       uuid: uuid,
-      // id: uuid,
+      id: uuid,
       name: name,
       description: description,
       avatar: avatar,
@@ -111,7 +112,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
   factory CommunityDefinitionData.fromEventMessage(EventMessage eventMessage) {
     return CommunityDefinitionData(
       uuid: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
-      // id: IdentifierTag.fromTags(eventMessage.tags).value,
+      id: IdentifierTag.fromTags(eventMessage.tags).value,
       name: NameTag.fromTags(eventMessage.tags).value,
       description: DescriptionTag.fromTags(eventMessage.tags).value,
       avatar: ImetaTag.fromTags(eventMessage.tags).value,
@@ -138,7 +139,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       tags: [
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),
-        // IdentifierTag(value: uuid).toTag(),
+        IdentifierTag(value: uuid).toTag(),
         NameTag(value: name).toTag(),
         if (description != null) DescriptionTag(value: description).toTag(),
         if (avatar != null) avatar!.toTag(),

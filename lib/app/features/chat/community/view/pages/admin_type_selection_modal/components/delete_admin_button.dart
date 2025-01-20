@@ -7,7 +7,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/delete_admin_modal/delete_admin_modal.dart';
+import 'package:ion/app/features/chat/community/view/pages/delete_admin_modal/delete_admin_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 

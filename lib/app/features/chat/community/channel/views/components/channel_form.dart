@@ -9,16 +9,16 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/community/channel/providers/channel_provider.c.dart';
+import 'package:ion/app/features/chat/community/data/channel_type.dart';
 import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
-import 'package:ion/app/features/chat/model/channel_type.dart';
+import 'package:ion/app/features/chat/community/view/pages/admins_management_modal/admins_management_modal.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/desc_input.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/components/inputs/title_input.dart';
-import 'package:ion/app/features/chat/views/pages/new_channel_modal/pages/admins_management_modal/admins_management_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChannelForm extends HookConsumerWidget {
@@ -55,13 +55,10 @@ class ChannelForm extends HookConsumerWidget {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         titleController.addListener(validateFormAndUpdateState);
-        descController.addListener(validateFormAndUpdateState);
-
         channelType.addListener(validateFormAndUpdateState);
       });
       return () {
         titleController.removeListener(validateFormAndUpdateState);
-        descController.removeListener(validateFormAndUpdateState);
         channelType.removeListener(validateFormAndUpdateState);
       };
     });
@@ -83,9 +80,21 @@ class ChannelForm extends HookConsumerWidget {
             Column(
               spacing: 16.0.s,
               children: <Widget>[
-                TitleInput(controller: titleController),
-                DescInput(
+                GeneralUserDataInput(
+                  controller: titleController,
+                  prefixIconAssetName: Assets.svg.iconChannelTitle,
+                  labelText: context.i18n.common_title,
+                  validator: (String? value) {
+                    if (Validators.isEmpty(value)) return '';
+                    return null;
+                  },
+                ),
+                GeneralUserDataInput(
                   controller: descController,
+                  prefixIconAssetName: Assets.svg.iconChannelDescription,
+                  labelText: context.i18n.common_desc,
+                  minLines: 1,
+                  maxLines: 5,
                 ),
                 GeneralSelectionButton(
                   iconAsset: Assets.svg.iconChannelType,
@@ -119,8 +128,12 @@ class ChannelForm extends HookConsumerWidget {
             SizedBox(height: 32.0.s),
             Button(
               mainAxisSize: MainAxisSize.max,
-              label: Text(context.i18n.channel_create_action),
-              leadingIcon: Assets.svg.iconPlusCreatechannel.icon(),
+              label: Text(
+                isEdit ? context.i18n.button_save_changes : context.i18n.channel_create_action,
+              ),
+              leadingIcon: isEdit
+                  ? Assets.svg.iconProfileSave.icon()
+                  : Assets.svg.iconPlusCreatechannel.icon(),
               disabled: !isFormValid.value || channelState.isLoading,
               trailingIcon: channelState.isLoading ? const IONLoadingIndicator() : null,
               type: isFormValid.value ? ButtonType.primary : ButtonType.disabled,
