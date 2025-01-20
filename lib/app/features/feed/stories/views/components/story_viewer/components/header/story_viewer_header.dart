@@ -46,7 +46,7 @@ class StoryViewerHeader extends ConsumerWidget {
             child: ListItem.user(
               profilePicture: userMetadata.data.picture,
               title: Text(
-                userMetadata.data.name,
+                userMetadata.data.displayName,
                 style: context.theme.appTextThemes.subtitle3.copyWith(
                   color: context.theme.appColors.onPrimaryAccent,
                   shadows: shadow,
@@ -54,7 +54,7 @@ class StoryViewerHeader extends ConsumerWidget {
               ),
               subtitle: Text(
                 prefixUsername(
-                  username: userMetadata.data.displayName,
+                  username: userMetadata.data.name,
                   context: context,
                 ),
                 style: context.theme.appTextThemes.caption.copyWith(
