@@ -81,7 +81,6 @@ class CoinNetworkItem extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                // TODO: Probably, need to create formatting for the amount
                 isBalanceVisible ? formatDouble(coinInWallet.amount) : '****',
                 style: context.theme.appTextThemes.body
                     .copyWith(color: context.theme.appColors.primaryText),
