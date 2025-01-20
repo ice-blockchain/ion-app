@@ -32,10 +32,8 @@ class ManageCoinItemWidget extends ConsumerWidget {
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: CoinIconWidget(
         imageUrl: coin.iconUrl,
-          size: 36.0.s,
+        size: 36.0.s,
       ),
-
-
       trailing: isSelected
           ? Assets.svg.iconBlockCheckboxOn.icon()
           : Assets.svg.iconBlockCheckboxOff.icon(),

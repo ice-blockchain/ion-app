@@ -51,8 +51,7 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  if (formData.selectedCoin
-                      case final CoinInWalletData coinInWallet)
+                  if (formData.selectedCoin case final CoinInWalletData coinInWallet)
                     TransactionAmountSummary(
                       amount: coinInWallet.amount,
                       currency: coinInWallet.coin.abbreviation,
@@ -73,8 +72,9 @@ class ConfirmationSheet extends ConsumerWidget {
                       title: Text(locale.wallet_asset),
                       value: coin.name,
                       icon: CoinIconWidget(
-                          imageUrl: coin.iconUrl,
-                          size: ScreenSideOffset.defaultSmallMargin,),
+                        imageUrl: coin.iconUrl,
+                        size: ScreenSideOffset.defaultSmallMargin,
+                      ),
                     ),
                   ],
                   SizedBox(height: 16.0.s),
@@ -111,8 +111,8 @@ class ConfirmationSheet extends ConsumerWidget {
                   SizedBox(height: 22.0.s),
                   if (formData.price != null)
                     Button(
-                      label: Text(
-                          '${locale.button_confirm} - ${formatToCurrency(formData.price!)}'),
+                      label:
+                          Text('${locale.button_confirm} - ${formatToCurrency(formData.price!)}'),
                       mainAxisSize: MainAxisSize.max,
                       onPressed: () => CoinTransactionResultRoute().go(context),
                     ),

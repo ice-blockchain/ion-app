@@ -59,8 +59,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                           backgroundColor: Colors.transparent,
                         ),
                       ),
-                    if (formData.selectedCoin
-                        case final CoinInWalletData coinInWallet)
+                    if (formData.selectedCoin case final CoinInWalletData coinInWallet)
                       TransactionAmountSummary(
                         amount: coinInWallet.amount,
                         currency: coinInWallet.coin.abbreviation,
@@ -72,12 +71,8 @@ class TransactionDetailsPage extends ConsumerWidget {
                     SizedBox(height: 12.0.s),
                     Timeline(
                       items: [
-                        TimelineItemData(
-                            title: 'Pending',
-                            isDone: true,
-                            date: DateTime.now()),
-                        TimelineItemData(
-                            title: 'In the process of execution', isDone: true),
+                        TimelineItemData(title: 'Pending', isDone: true, date: DateTime.now()),
+                        TimelineItemData(title: 'In the process of execution', isDone: true),
                         TimelineItemData(title: 'Transaction successful'),
                       ],
                     ),
@@ -98,8 +93,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                         child: Text(
                           '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
                           textAlign: TextAlign.right,
-                          style:
-                              context.theme.appTextThemes.caption3.copyWith(),
+                          style: context.theme.appTextThemes.caption3.copyWith(),
                         ),
                       ),
                     ),
@@ -118,13 +112,11 @@ class TransactionDetailsPage extends ConsumerWidget {
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
                       value: formData.networkName,
-                      icon:
-                          formData.selectedNetwork.iconAsset.icon(size: 16.0.s),
+                      icon: formData.selectedNetwork.iconAsset.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItemArrivalTime(
-                      arrivalTime: DateFormat(locale
-                              .wallet_transaction_details_arrival_time_format)
+                      arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
                           .format(formData.arrivalDateTime),
                     ),
                     SizedBox(height: 12.0.s),
@@ -135,12 +127,10 @@ class TransactionDetailsPage extends ConsumerWidget {
                         const url =
                             'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326';
                         final location = switch (type) {
-                          CryptoAssetType.coin =>
-                            ExploreCoinTransactionDetailsRoute(
+                          CryptoAssetType.coin => ExploreCoinTransactionDetailsRoute(
                               url: url,
                             ).location,
-                          CryptoAssetType.nft =>
-                            ExploreNftTransactionDetailsRoute(
+                          CryptoAssetType.nft => ExploreNftTransactionDetailsRoute(
                               url: url,
                             ).location,
                         };

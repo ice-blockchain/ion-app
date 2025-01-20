@@ -34,7 +34,6 @@ class CoinItem extends ConsumerWidget {
         imageUrl: coinData.iconUrl,
         size: 36.0.s,
       ),
-
       onTap: onTap,
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
