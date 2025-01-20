@@ -15,7 +15,7 @@ import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_modifiable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -24,34 +24,37 @@ import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
-part 'post_data.c.freezed.dart';
+part 'modifiable_post_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class PostEntity with _$PostEntity, IonConnectEntity implements CacheableEntity {
-  const factory PostEntity({
+class ModifiablePostEntity
+    with _$ModifiablePostEntity, IonConnectEntity
+    implements CacheableEntity {
+  const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
     required String masterPubkey,
     required String signature,
     required DateTime createdAt,
-    required PostData data,
-  }) = _PostEntity;
+    required ModifiablePostData data,
+  }) = _ModifiablePostEntity;
 
-  const PostEntity._();
+  const ModifiablePostEntity._();
 
+  /// Kind 30175 is a addressable version of kind 1
   /// https://github.com/nostr-protocol/nips/blob/master/01.md
-  factory PostEntity.fromEventMessage(EventMessage eventMessage) {
+  factory ModifiablePostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
-    return PostEntity(
+    return ModifiablePostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
-      data: PostData.fromEventMessage(eventMessage),
+      data: ModifiablePostData.fromEventMessage(eventMessage),
     );
   }
 
@@ -60,35 +63,37 @@ class PostEntity with _$PostEntity, IonConnectEntity implements CacheableEntity 
 
   static String cacheKeyBuilder({required String id}) => id;
 
-  static const kind = 1;
+  static const kind = 30175;
 }
 
 @freezed
-class PostData with _$PostData, EntityMediaDataMixin implements EventSerializable {
-  const factory PostData({
+class ModifiablePostData
+    with _$ModifiablePostData, EntityMediaDataMixin
+    implements EventSerializable {
+  const factory ModifiablePostData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
     EntityExpiration? expiration,
-    QuotedEvent? quotedEvent,
+    QuotedModifiableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
-  }) = _PostData;
+  }) = _ModifiablePostData;
 
-  factory PostData.fromEventMessage(EventMessage eventMessage) {
+  factory ModifiablePostData.fromEventMessage(EventMessage eventMessage) {
     final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
 
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    return PostData(
+    return ModifiablePostData(
       content: parsedContent,
       media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedEvent.tagName] != null
-          ? QuotedEvent.fromTag(tags[QuotedEvent.tagName]!.first)
+      quotedEvent: tags[QuotedModifiableEvent.tagName] != null
+          ? QuotedModifiableEvent.fromTag(tags[QuotedModifiableEvent.tagName]!.first)
           : null,
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
@@ -97,7 +102,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     );
   }
 
-  factory PostData.fromRawContent(
+  factory ModifiablePostData.fromRawContent(
     String content, {
     Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
   }) {
@@ -115,7 +120,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         ? null
         : WhoCanReplyEventSetting(values: whoCanReplySettings);
 
-    return PostData(
+    return ModifiablePostData(
       content: parsedContent,
       relatedHashtags: hashtags,
       media: {},
@@ -123,7 +128,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     );
   }
 
-  const PostData._();
+  const ModifiablePostData._();
 
   @override
   FutureOr<EventMessage> toEventMessage(
@@ -134,7 +139,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
-      kind: PostEntity.kind,
+      kind: ModifiablePostEntity.kind,
       content: content.map((match) => match.text).join(),
       tags: [
         ...tags,
@@ -147,11 +152,6 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
     );
-  }
-
-  @override
-  String toString() {
-    return 'PostData(${content.map((match) => match.text).join()})';
   }
 
   RelatedEvent? get parentEvent {
@@ -177,5 +177,10 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
             as WhoCanReplyEventSetting?;
     return whoCanReplySetting?.values.firstOrNull;
+  }
+
+  @override
+  String toString() {
+    return 'ModifiablePostData(${content.map((match) => match.text).join()})';
   }
 }

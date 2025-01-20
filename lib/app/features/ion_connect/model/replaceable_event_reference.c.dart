@@ -21,7 +21,11 @@ class ReplaceableEventReference with _$ReplaceableEventReference {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
 
-    final parts = tag[1].split(':');
+    return ReplaceableEventReference.fromString(tag[1]);
+  }
+
+  factory ReplaceableEventReference.fromString(String input) {
+    final parts = input[1].split(separator);
 
     return ReplaceableEventReference(
       kind: int.parse(parts[0]),
@@ -31,11 +35,15 @@ class ReplaceableEventReference with _$ReplaceableEventReference {
   }
 
   List<String> toTag() {
-    return [
-      tagName,
-      [kind, pubkey, dTag].nonNulls.join(':'),
-    ];
+    return [tagName, toString()];
   }
+
+  @override
+  String toString() {
+    return [kind, pubkey, dTag].nonNulls.join(separator);
+  }
+
+  static const String separator = ':';
 
   static const String tagName = 'a';
 }
