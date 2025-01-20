@@ -3,14 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:ion/app/extensions/riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
-import 'package:ion/app/features/feed/create_article/providers/article_cover_processor_notifier.c.dart';
 import 'package:ion/app/features/feed/create_article/views/components/article_image_container.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class CreateArticleAddImage extends HookConsumerWidget {
@@ -24,7 +26,12 @@ class CreateArticleAddImage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaService = ref.watch(mediaServiceProvider);
-    final processorState = ref.watch(articleCoverProcessorNotifierProvider);
+    final processorState =
+        ref.watch(imageProcessorNotifierProvider(ImageProcessingType.articleCover));
+
+    ref.displayErrorsForState<ImageProcessorStateError>(
+      imageProcessorNotifierProvider(ImageProcessingType.articleCover),
+    );
 
     useOnInit(
       () => processorState.whenOrNull(
@@ -51,7 +58,9 @@ class CreateArticleAddImage extends HookConsumerWidget {
               aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
             );
 
-            await ref.read(articleCoverProcessorNotifierProvider.notifier).process(
+            await ref
+                .read(imageProcessorNotifierProvider(ImageProcessingType.articleCover).notifier)
+                .process(
                   assetId: mediaFiles.first.path,
                   cropUiSettings: cropUiSettings,
                 );

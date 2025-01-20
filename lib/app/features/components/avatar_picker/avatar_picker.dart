@@ -12,8 +12,9 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -37,14 +38,17 @@ class AvatarPicker extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final avatarProcessorState = ref.watch(avatarProcessorNotifierProvider);
+    final avatarProcessorState =
+        ref.watch(imageProcessorNotifierProvider(ImageProcessingType.avatar));
 
     final avatarFile = avatarProcessorState.whenOrNull(
       cropped: (file) => file,
       processed: (file) => file,
     );
 
-    ref.displayErrorsForState<AvatarProcessorStateError>(avatarProcessorNotifierProvider);
+    ref.displayErrorsForState<ImageProcessorStateError>(
+      imageProcessorNotifierProvider(ImageProcessingType.avatar),
+    );
 
     return Stack(
       clipBehavior: Clip.none,
@@ -64,9 +68,9 @@ class AvatarPicker extends HookConsumerWidget {
           child: PermissionAwareWidget(
             permissionType: Permission.photos,
             onGranted: () async {
-              if (avatarProcessorState is AvatarProcessorStateInitial ||
-                  avatarProcessorState is AvatarProcessorStateProcessed ||
-                  avatarProcessorState is AvatarProcessorStateError) {
+              if (avatarProcessorState is ImageProcessorStateInitial ||
+                  avatarProcessorState is ImageProcessorStateProcessed ||
+                  avatarProcessorState is ImageProcessorStateError) {
                 final mediaFiles = await showSimpleBottomSheet<List<MediaFile>>(
                   context: context,
                   child: MediaPickerPage(
@@ -77,7 +81,9 @@ class AvatarPicker extends HookConsumerWidget {
                   ),
                 );
                 if (mediaFiles != null && context.mounted) {
-                  await ref.read(avatarProcessorNotifierProvider.notifier).process(
+                  await ref
+                      .read(imageProcessorNotifierProvider(ImageProcessingType.avatar).notifier)
+                      .process(
                         assetId: mediaFiles.first.path,
                         cropUiSettings:
                             ref.read(mediaServiceProvider).buildCropImageUiSettings(context),
@@ -100,7 +106,7 @@ class AvatarPicker extends HookConsumerWidget {
                     shape: BoxShape.circle,
                     color: context.theme.appColors.primaryAccent,
                   ),
-                  child: avatarProcessorState is AvatarProcessorStateCropped
+                  child: avatarProcessorState is ImageProcessorStateCropped
                       ? const IONLoadingIndicator()
                       : Assets.svg.iconLoginCamera.icon(size: iconSize),
                 ),

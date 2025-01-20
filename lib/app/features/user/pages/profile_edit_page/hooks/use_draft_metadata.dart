@@ -3,8 +3,8 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
-import 'package:ion/app/features/user/providers/banner_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 
 ({
   bool hasChanges,
@@ -15,10 +15,12 @@ import 'package:ion/app/features/user/providers/banner_processor_notifier.c.dart
   final hasChanges = useState(false);
 
   final avatarFile = ref.watch(
-    avatarProcessorNotifierProvider.select((state) => state.whenOrNull(processed: (file) => file)),
+    imageProcessorNotifierProvider(ImageProcessingType.avatar)
+        .select((state) => state.whenOrNull(processed: (file) => file)),
   );
   final bannerFile = ref.watch(
-    bannerProcessorNotifierProvider.select((state) => state.whenOrNull(processed: (file) => file)),
+    imageProcessorNotifierProvider(ImageProcessingType.banner)
+        .select((state) => state.whenOrNull(processed: (file) => file)),
   );
 
   void update(UserMetadata userMetadataUpdated) {

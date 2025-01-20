@@ -19,12 +19,13 @@ import 'package:ion/app/features/chat/views/components/general_selection_button.
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/user/providers/avatar_processor_notifier.c.dart';
+import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -180,7 +181,8 @@ class CreateGroupModal extends HookConsumerWidget {
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
-                      final avatarProcessorState = ref.read(avatarProcessorNotifierProvider);
+                      final avatarProcessorState =
+                          ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar));
 
                       final groupPicture = avatarProcessorState.whenOrNull(
                         cropped: (file) => file,
