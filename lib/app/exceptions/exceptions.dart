@@ -258,3 +258,7 @@ class FailedToFetchCommunityException extends IONException {
 class FailedToEditChannelException extends IONException {
   FailedToEditChannelException() : super(10051, 'Failed to edit channel');
 }
+
+class FailedToJoinCommunityException extends IONException {
+  FailedToJoinCommunityException() : super(10052, 'Failed to join community');
+}
