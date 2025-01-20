@@ -26,6 +26,24 @@ class StoryGalleryButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final processorState = ref.watch(imageProcessorNotifierProvider(ImageProcessingType.story));
 
+    final openMediaPicker = useCallback(
+      () async {
+        final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
+        if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+          await ref
+              .read(imageProcessorNotifierProvider(ImageProcessingType.story).notifier)
+              .process(
+                assetId: mediaFiles.first.path,
+                cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
+                  context,
+                  aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+                ),
+              );
+        }
+      },
+      [],
+    );
+
     useEffect(
       () {
         processorState.whenOrNull(
@@ -33,17 +51,26 @@ class StoryGalleryButton extends HookConsumerWidget {
             if (context.mounted) {
               final editedPath = await ref.read(banubaServiceProvider).editPhoto(file.path);
               if (context.mounted) {
-                await StoryPreviewRoute(
+                await openMediaPicker();
+                return;
+              }
+
+              if (context.mounted) {
+                final previewResult = await StoryPreviewRoute(
                   path: editedPath,
                   mimeType: file.mimeType,
-                ).push<void>(context);
+                ).push<bool>(context);
+
+                if (previewResult == false && context.mounted) {
+                  await openMediaPicker();
+                }
               }
             }
           },
         );
         return null;
       },
-      [processorState],
+      [processorState, openMediaPicker],
     );
 
     return PermissionAwareWidget(
