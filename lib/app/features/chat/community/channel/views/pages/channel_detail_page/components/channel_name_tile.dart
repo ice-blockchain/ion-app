@@ -28,11 +28,6 @@ class ChannelNameTile extends ConsumerWidget {
             ),
           ),
         ),
-        //TODO: add verified icon
-        // if ((channelData.isVerified ?? false) == true) ...[
-        //   SizedBox(width: 6.0.s),
-        //   Assets.svg.iconBadgeVerify.icon(size: verifiedIconSize),
-        // ],
       ],
     );
   }

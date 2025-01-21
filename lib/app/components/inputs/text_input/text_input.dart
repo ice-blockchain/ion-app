@@ -35,6 +35,7 @@ class TextInput extends HookWidget {
     this.isLive = false,
     this.alwaysShowPrefixIcon = false,
     this.obscureText = false,
+    this.onTapOutside,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
@@ -73,6 +74,8 @@ class TextInput extends HookWidget {
   final int? maxLength;
   final bool isLive;
   final bool obscureText;
+
+  final TapRegionCallback? onTapOutside;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +121,7 @@ class TextInput extends HookWidget {
       controller: controller,
       focusNode: focusNode,
       onChanged: controller == null ? onChangedHandler : null,
-      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
+      onTapOutside: onTapOutside,
       initialValue: initialValue,
       maxLines: maxLines,
       minLines: minLines,

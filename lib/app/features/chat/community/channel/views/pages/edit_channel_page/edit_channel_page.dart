@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_form.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_detail_app_bar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_summary.dart';
-import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/edit_channel_header.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 
 class EditChannelPage extends HookConsumerWidget {
