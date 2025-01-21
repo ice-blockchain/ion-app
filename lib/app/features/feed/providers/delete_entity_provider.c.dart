@@ -5,6 +5,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
@@ -61,6 +62,17 @@ class DeleteEntity extends _$DeleteEntity {
 
   Future<void> _deleteReply(PostEntity post) async {
     final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
+
+    ref
+        .read(
+          repliesCountProvider(
+            EventReference(
+              eventId: post.data.parentEvent!.eventId,
+              pubkey: post.data.parentEvent!.pubkey,
+            ),
+          ).notifier,
+        )
+        .removeOne();
 
     await ref
         .read(

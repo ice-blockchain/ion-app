@@ -19,7 +19,7 @@ class Replies extends _$Replies {
 
     final subscription = ref
         .watch(ionConnectCacheStreamProvider)
-        .where((entity) => isReply(entity, eventReference))
+        .where((entity) => _isReply(entity, eventReference))
         .distinct()
         .listen((entity) {
       if (state?.data.items?.any((e) => e.id == entity.id) ?? false) {
@@ -33,7 +33,7 @@ class Replies extends _$Replies {
     return entitiesPagedData;
   }
 
-  bool isReply(IonConnectEntity entity, EventReference parentEventReference) {
+  bool _isReply(IonConnectEntity entity, EventReference parentEventReference) {
     return entity is PostEntity && entity.data.parentEvent?.eventId == parentEventReference.eventId;
   }
 

@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -121,6 +122,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
+      }
+      if (parentEvent != null) {
+        ref.read(repliesCountProvider(parentEvent).notifier).addOne();
       }
     });
   }
