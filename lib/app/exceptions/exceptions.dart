@@ -230,5 +230,5 @@ class ForceUpdateFetchConfigException extends IONException {
 
 class DeleteEntityUnsupportedTypeException extends IONException {
   DeleteEntityUnsupportedTypeException()
-      : super(10046, 'Failed to delete entity, unsupported type');
+      : super(10048, 'Failed to delete entity, unsupported type');
 }
