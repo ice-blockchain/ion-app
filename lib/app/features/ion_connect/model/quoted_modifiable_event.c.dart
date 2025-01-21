@@ -15,8 +15,7 @@ class QuotedModifiableEvent with _$QuotedModifiableEvent {
 
   const QuotedModifiableEvent._();
 
-  /// Like a `q` tag, but designed for addressable events
-  /// https://github.com/nostr-protocol/nips/blob/master/18.md
+  /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-01.md#quotes
   factory QuotedModifiableEvent.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);

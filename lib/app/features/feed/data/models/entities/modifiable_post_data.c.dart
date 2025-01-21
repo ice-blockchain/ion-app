@@ -17,9 +17,9 @@ import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_modifiable_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
@@ -43,7 +43,6 @@ class ModifiablePostEntity
 
   const ModifiablePostEntity._();
 
-  /// Kind 30175 is a addressable version of kind 1
   /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-01.md
   factory ModifiablePostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
@@ -80,7 +79,7 @@ class ModifiablePostData
     EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
     QuotedModifiableEvent? quotedEvent,
-    List<RelatedEvent>? relatedEvents,
+    List<RelatedReplaceableEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
@@ -106,7 +105,8 @@ class ModifiablePostData
       quotedEvent: tags[QuotedModifiableEvent.tagName] != null
           ? QuotedModifiableEvent.fromTag(tags[QuotedModifiableEvent.tagName]!.first)
           : null,
-      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedEvents:
+          tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
@@ -159,11 +159,11 @@ class ModifiablePostData
     );
   }
 
-  RelatedEvent? get parentEvent {
+  RelatedReplaceableEvent? get parentEvent {
     if (relatedEvents == null) return null;
 
-    RelatedEvent? rootReplyId;
-    RelatedEvent? replyId;
+    RelatedReplaceableEvent? rootReplyId;
+    RelatedReplaceableEvent? replyId;
     for (final relatedEvent in relatedEvents!) {
       if (relatedEvent.marker == RelatedEventMarker.reply) {
         replyId = relatedEvent;
