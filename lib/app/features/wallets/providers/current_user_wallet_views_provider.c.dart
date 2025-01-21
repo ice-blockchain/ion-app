@@ -4,24 +4,18 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_user_wallet_views_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<List<WalletViewData>> currentUserWalletViews(Ref ref) async {
-  final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
-  if (currentIdentityKeyName == null) {
-    return [];
-  }
-
-  final ionIdentity = await ref.watch(ionIdentityProvider.future);
-  final identity = ionIdentity(username: currentIdentityKeyName);
+  final identity = await ref.watch(ionIdentityClientProvider.future);
 
   final shortViews = await identity.wallets.getWalletViews();
   final viewsDetailsDTO = await Future.wait(

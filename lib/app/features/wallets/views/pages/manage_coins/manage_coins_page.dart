@@ -24,13 +24,11 @@ class ManageCoinsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = useState('');
-    final searchCoinsNotifier = ref.read(searchCoinsNotifierProvider.notifier);
+    final searchCoinsNotifier = ref.watch(searchCoinsNotifierProvider.notifier);
     final searchResult = ref.watch(searchCoinsNotifierProvider);
 
     useOnInit(
-      () {
-        searchCoinsNotifier.search(query: searchText.value);
-      },
+      () => searchCoinsNotifier.search(query: searchText.value),
       [searchText.value],
     );
 

@@ -13,24 +13,18 @@ part 'manage_coins_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   @override
-  AsyncValue<Map<String, ManageCoinData>> build() {
-    final walletView = ref.watch(currentUserWalletViewsProvider);
+  Future<Map<String, ManageCoinData>> build() async {
+    final walletView = await ref.watch(currentUserWalletViewsProvider.future);
 
-    return walletView.when(
-      data: (walletView) {
-        final coinsFromWallet = <String, ManageCoinData>{
-          for (final coinInWallet in walletView.expand((wallet) => wallet.coins))
-            coinInWallet.coin.id: ManageCoinData(
-              coin: coinInWallet.coin,
-              isSelected: state.value?[coinInWallet.coin.id]?.isSelected ?? false,
-            ),
-        };
+    final coinsFromWallet = <String, ManageCoinData>{
+      for (final coinInWallet in walletView.expand((wallet) => wallet.coins))
+        coinInWallet.coin.id: ManageCoinData(
+          coin: coinInWallet.coin,
+          isSelected: state.value?[coinInWallet.coin.id]?.isSelected ?? false,
+        ),
+    };
 
-        return AsyncData(coinsFromWallet);
-      },
-      loading: () => const AsyncLoading(),
-      error: AsyncError.new,
-    );
+    return coinsFromWallet;
   }
 
   void switchCoin({required CoinData coin}) {
@@ -53,7 +47,7 @@ AsyncValue<List<ManageCoinData>> selectedCoins(Ref ref) {
 @riverpod
 class SearchCoinsNotifier extends _$SearchCoinsNotifier {
   @override
-  AsyncValue<Set<CoinData>> build() => const AsyncLoading();
+  Future<Set<CoinData>> build() async => {};
 
   Future<void> search({required String query}) async {
     if (query.isEmpty) {
