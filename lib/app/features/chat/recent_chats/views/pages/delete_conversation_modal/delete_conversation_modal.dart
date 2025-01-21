@@ -76,7 +76,7 @@ class DeleteConversationModal extends ConsumerWidget {
                     ),
                     onPressed: () async {
                       await ref
-                          .read(e2EEConversationManagementProvider.notifier)
+                          .read(e2eeConversationManagementProvider.notifier)
                           .deleteConversations(conversationIds);
                       if (context.mounted) {
                         context.pop();

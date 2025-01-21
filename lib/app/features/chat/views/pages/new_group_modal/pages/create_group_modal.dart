@@ -42,7 +42,7 @@ class CreateGroupModal extends HookConsumerWidget {
 
     final members = createGroupForm.members.toList();
 
-    final e2EEConversationManagement = ref.watch(e2EEConversationManagementProvider);
+    final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
 
     useEffect(
       () {

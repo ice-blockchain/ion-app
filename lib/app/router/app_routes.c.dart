@@ -346,7 +346,7 @@ class MessagesRoute extends BaseRouteData {
     this.participants = const [],
   }) : super(
           child: MessagesPage(
-            EE2EConversationEntity(
+            E2eeConversationEntity(
               name: name,
               type: chatType,
               nickname: nickname,

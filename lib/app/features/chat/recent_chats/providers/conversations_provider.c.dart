@@ -22,17 +22,14 @@ part 'conversations_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class Conversations extends _$Conversations {
   @override
-  FutureOr<List<EE2EConversationEntity>> build() async {
-    final conversationSubscription = ref
-        .read(conversationsDBServiceProvider)
-        .watchConversations()
-        .listen((conversationsEventMessages) async {
+  FutureOr<List<E2eeConversationEntity>> build() async {
+    final conversationSubscription =
+        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
       state = await AsyncValue.guard(() async {
         final lastPrivateDirectMesssages =
             conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-        final conversations =
-            await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+        final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
         return conversations;
       });
@@ -42,22 +39,20 @@ class Conversations extends _$Conversations {
 
     state = const AsyncValue.loading();
 
-    state = await AsyncValue.guard(() async {
-      final database = ref.read(conversationsDBServiceProvider);
-      final conversationsEventMessages = await database.getAllConversations();
+    final database = ref.read(conversationsDBServiceProvider);
+    final conversationsEventMessages = await database.getAllConversations();
 
-      final lastPrivateDirectMesssages =
-          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+    final lastPrivateDirectMesssages =
+        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-      final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+    final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
-      return conversations;
-    });
+    state = AsyncValue.data(conversations);
 
-    return state.requireValue;
+    return conversations;
   }
 
-  Future<EE2EConversationEntity> getConversationData(PrivateDirectMessageEntity message) async {
+  Future<E2eeConversationEntity> getConversationData(PrivateDirectMessageEntity message) async {
     var name = 'Unknown';
     String? nickname;
     String? imageUrl;
@@ -65,8 +60,7 @@ class Conversations extends _$Conversations {
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
 
     if (type == ChatType.chat) {
-      final userMetadata =
-          await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
+      final userMetadata = await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
 
       if (userMetadata != null) {
         nickname = userMetadata.data.name;
@@ -76,24 +70,21 @@ class Conversations extends _$Conversations {
     } else {
       name = message.data.relatedSubject?.value ?? '';
 
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
-      final imageUrls = await conversationMessageManagementService
-          .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
+      final imageUrls =
+          await conversationMessageManagementService.downloadDecryptDecompressMedia([message.data.primaryMedia!]);
       imageUrl = imageUrls.first.path;
     }
 
     final lastMessageAt = message.createdAt;
-    final participants =
-        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.toString();
 
     final database = ref.read(conversationsDBServiceProvider);
 
     final conversationId = await database.lookupConversationByEventMessageId(message.id);
 
-    final unreadMessagesCount =
-        conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
+    final unreadMessagesCount = conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
 
     final isArchived = await _checkConversationIsArchived(
       type: type,
@@ -101,7 +92,7 @@ class Conversations extends _$Conversations {
       subject: message.data.relatedSubject?.value,
     );
 
-    return EE2EConversationEntity(
+    return E2eeConversationEntity(
       name: name,
       type: type,
       id: conversationId,
@@ -130,14 +121,14 @@ class Conversations extends _$Conversations {
       throw EventSignerNotFoundException();
     }
 
+    final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
+
+    final archivedChatsBookmarksSet = bookmarksMap[BookmarksSetType.chats];
+
     final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
     if (currentUserPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
-
-    final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
-
-    final archivedChatsBookmarksSet = bookmarksMap[BookmarksSetType.chats];
 
     final conversationKey = Nip44.deriveConversationKey(
       await Ed25519KeyStore.getSharedSecret(
@@ -158,17 +149,15 @@ class Conversations extends _$Conversations {
         .toList();
 
     for (final archivedConversation in archivedConversations) {
-      if (type == ChatType.chat &&
-          archivedConversation.contains('p') &&
-          archivedConversation.length == 2 &&
-          archivedConversation[1] == participants[0]) {
+      final participant = List<String>.from(participants).singleWhere((e) => e != currentPubkey);
+
+      if (type == ChatType.chat && archivedConversation.contains('p') && archivedConversation[1] == participant) {
         return true;
       } else if (type == ChatType.group && archivedConversation.contains('subject')) {
         final archivedSubject = archivedConversation[1];
         final archivedParticipants = archivedConversation.sublist(2);
 
-        if (archivedSubject == subject &&
-            archivedParticipants.toSet().containsAll(participants.toSet())) {
+        if (archivedSubject == subject && archivedParticipants.toSet().containsAll(participants.toSet())) {
           return true;
         }
       }

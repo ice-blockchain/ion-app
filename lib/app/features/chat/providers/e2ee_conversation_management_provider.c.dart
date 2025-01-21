@@ -23,7 +23,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'e2ee_conversation_management_provider.c.g.dart';
 
 @riverpod
-class E2EEConversationManagement extends _$E2EEConversationManagement {
+class E2eeConversationManagement extends _$E2eeConversationManagement {
   @override
   Future<void> build() async {}
 
@@ -33,8 +33,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       await conversationMessageManagementService.sentMessage(
         content: '',
@@ -51,8 +50,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       await conversationMessageManagementService.sentMessage(
         content: '',
@@ -74,8 +72,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -112,8 +109,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -154,8 +150,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -189,7 +184,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
     }
   }
 
-  Future<void> toggleArchiveConversations(List<EE2EConversationEntity> conversations) async {
+  Future<void> toggleArchiveConversations(List<E2eeConversationEntity> conversations) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
@@ -219,28 +214,32 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
         ),
       );
 
-      final decryptedBookmarkSetContent = await Nip44.decryptMessage(
-        archivedConversationBookmarksSet?.data.content ?? '',
-        eventSigner.privateKey,
-        currentUserPubkey,
-        customConversationKey: conversationKey,
-      );
+      var existingArchiveBookmarks = <List<String>>[];
 
-      final existingArchiveBookmarks = (jsonDecode(decryptedBookmarkSetContent) as List<dynamic>)
-          .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
-          .toList();
+      if (archivedConversationBookmarksSet != null) {
+        final decryptedBookmarkSetContent = await Nip44.decryptMessage(
+          archivedConversationBookmarksSet.data.content,
+          eventSigner.privateKey,
+          currentUserPubkey,
+          customConversationKey: conversationKey,
+        );
+
+        existingArchiveBookmarks = (jsonDecode(decryptedBookmarkSetContent) as List<dynamic>)
+            .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
+            .toList();
+      }
 
       final newArchiveBookmarks = List<List<String>>.from(existingArchiveBookmarks);
 
       for (final conversation in conversations) {
-        if (conversation.type == ChatType.chat && conversation.participants.length == 2) {
+        if (conversation.type == ChatType.chat) {
           final conversationBookmark = ['p', conversation.participants[0]];
           if (!existingArchiveBookmarks.any((e) => e.equals(conversationBookmark))) {
             newArchiveBookmarks.add(conversationBookmark);
           } else {
             newArchiveBookmarks.removeWhere((e) => e.equals(conversationBookmark));
           }
-        } else if (conversation.type == ChatType.group && conversation.participants.length >= 2) {
+        } else if (conversation.type == ChatType.group) {
           final participantsSorted = List<String>.from(conversation.participants)..sort();
           final conversationBookmark = [
             'subject',
@@ -281,9 +280,7 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
             .toList(),
       );
 
-      await ref
-          .read(ionConnectNotifierProvider.notifier)
-          .sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
     });
   }
 

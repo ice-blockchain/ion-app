@@ -22,9 +22,9 @@ class ConversationReadAllButton extends ConsumerWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         selectedConversations.isEmpty
-            ? await ref.read(e2EEConversationManagementProvider.notifier).readAllConversations()
+            ? await ref.read(e2eeConversationManagementProvider.notifier).readAllConversations()
             : await ref
-                .read(e2EEConversationManagementProvider.notifier)
+                .read(e2eeConversationManagementProvider.notifier)
                 .readConversations(selectedConversations);
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
         ref.read(selectedConversationsIdsProvider.notifier).clear();

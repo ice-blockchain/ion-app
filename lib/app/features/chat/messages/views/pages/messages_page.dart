@@ -16,13 +16,13 @@ import 'package:ion/generated/assets.gen.dart';
 class MessagesPage extends HookConsumerWidget {
   const MessagesPage(this.conversationData, {super.key});
 
-  final EE2EConversationEntity conversationData;
+  final E2eeConversationEntity conversationData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() => _initConversation(ref));
 
-    ref.displayErrors(e2EEConversationManagementProvider);
+    ref.displayErrors(e2eeConversationManagementProvider);
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -84,7 +84,7 @@ class MessagesPage extends HookConsumerWidget {
 
   Future<void> _initConversation(WidgetRef ref) async {
     // TODO: Should be called if there is no conversation messages yet in DB
-    final ee2eGroupConversationService = ref.read(e2EEConversationManagementProvider.notifier);
+    final ee2eGroupConversationService = ref.read(e2eeConversationManagementProvider.notifier);
 
     if (conversationData.type == ChatType.chat) {
       await ee2eGroupConversationService.createOneOnOneConversation(conversationData.participants);

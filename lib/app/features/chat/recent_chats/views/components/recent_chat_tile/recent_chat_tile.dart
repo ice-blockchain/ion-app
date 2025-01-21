@@ -12,12 +12,13 @@ import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
   const RecentChatTile(this.conversationData, {super.key});
 
-  final EE2EConversationEntity conversationData;
+  final E2eeConversationEntity conversationData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +37,7 @@ class RecentChatTile extends ConsumerWidget {
             chatType: conversationData.type,
             imageUrl: conversationData.imageUrl ?? '',
             participants: conversationData.participants,
-            nickname: '@${conversationData.nickname}',
+            nickname: prefixUsername(username: conversationData.nickname, context: context),
           ).push<void>(context);
         }
       },
@@ -58,11 +59,9 @@ class RecentChatTile extends ConsumerWidget {
               children: [
                 if (conversationData.imageUrl != null)
                   Avatar(
-                    imageUrl:
-                        conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
-                    imageWidget: conversationData.type == ChatType.group
-                        ? Image.asset(conversationData.imageUrl!)
-                        : null,
+                    imageUrl: conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
+                    imageWidget:
+                        conversationData.type == ChatType.group ? Image.asset(conversationData.imageUrl!) : null,
                     size: 40.0.s,
                   ),
                 SizedBox(width: 12.0.s),
