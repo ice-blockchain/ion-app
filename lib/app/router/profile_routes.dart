@@ -15,6 +15,7 @@ class ProfileRoutes {
         TypedGoRoute<PaymentSelectionRoute>(path: 'payment-selector'),
         TypedGoRoute<SendCoinsFormRoute>(path: 'send-coins-form'),
         TypedGoRoute<RequestCoinsFormRoute>(path: 'request-coins-form'),
+        ...SettingsRoutes.routes,
       ],
     ),
   ];

@@ -68,6 +68,13 @@ Future<VerifyIdentityType> verifyIdentityType(
 }
 
 @riverpod
+Future<bool> isPasswordFlowUser(Ref ref) async {
+  final username = ref.watch(currentIdentityKeyNameSelectorProvider);
+  final ionIdentity = await ref.read(ionIdentityProvider.future);
+  return ionIdentity(username: username ?? '').auth.isPasswordFlowUser();
+}
+
+@riverpod
 Future<bool> isPasskeyAvailable(Ref ref) async {
   final ionIdentity = await ref.read(ionIdentityProvider.future);
   return ionIdentity(username: '').auth.isPasskeyAvailable();

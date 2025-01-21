@@ -43,7 +43,16 @@ class ContactsList extends ConsumerWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final contactData = contactsDataArray[index];
                   return ContactsListItem(
-                    onTap: () => ContactRoute(contactId: contactData.id).push<void>(context),
+                    onTap: () async {
+                      final result =
+                          await ContactRoute(contactId: contactData.id).push<bool>(context);
+                      if (result != null && result == true) {
+                        await Future<void>.delayed(const Duration(seconds: 1));
+                        if (context.mounted) {
+                          await SecureAccountModalRoute().push<void>(context);
+                        }
+                      }
+                    },
                     imageUrl: contactData.icon,
                     label: contactData.nickname != null
                         ? prefixUsername(

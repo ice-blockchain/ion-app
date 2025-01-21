@@ -7,12 +7,14 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/hooks/use_on_receive_funds_flow.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class BalanceActions extends ConsumerWidget {
+class BalanceActions extends HookConsumerWidget {
   const BalanceActions({
     required this.onReceive,
     required this.onSend,
+    required this.onNeedToEnable2FA,
     this.isLoading = false,
     super.key,
   });
@@ -20,9 +22,16 @@ class BalanceActions extends ConsumerWidget {
   final VoidCallback onReceive;
   final VoidCallback onSend;
   final bool isLoading;
+  final void Function() onNeedToEnable2FA;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final onReceiveFlow = useOnReceiveFundsFlow(
+      onReceive: onReceive,
+      onNeedToEnable2FA: onNeedToEnable2FA,
+      ref: ref,
+    );
+
     final child = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -45,7 +54,7 @@ class BalanceActions extends ConsumerWidget {
             label: Text(
               context.i18n.wallet_receive,
             ),
-            onPressed: isLoading ? () {} : onReceive,
+            onPressed: isLoading ? () {} : onReceiveFlow,
           ),
         ),
       ],

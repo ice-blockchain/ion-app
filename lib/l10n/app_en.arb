@@ -480,7 +480,7 @@
   "post_menu_delete": "Delete",
   "protect_account_header_security": "Security",
   "protect_account_title_secure_account": "Secure your account",
-  "protect_account_description_secure_account": "Securing your account ensures you never lose access to your data and funds",
+  "protect_account_description_secure_account": "Enable at least one two-factor authentication (2FA) option to continue",
   "protect_account_button": "Protect account",
   "protect_account_description_secure_account_2fa": "To secure your account, back it up and enable at least one 2FA option",
   "protect_account_create_recovery_error": "An error occurred while fetching the data.",

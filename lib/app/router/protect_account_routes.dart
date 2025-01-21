@@ -28,18 +28,18 @@ class ProtectAccountRoutes {
   ];
 }
 
-class SecureAccountModalRoute extends BaseRouteData {
-  SecureAccountModalRoute()
-      : super(
-          child: const SecureAccountModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
 class SecureAccountOptionsRoute extends BaseRouteData {
   SecureAccountOptionsRoute()
       : super(
           child: const SecureAccountOptionsPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SecureAccountModalRoute extends BaseRouteData {
+  SecureAccountModalRoute()
+      : super(
+          child: const SecureAccountModal(),
           type: IceRouteType.bottomSheet,
         );
 }
