@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart'
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
+import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_route_presence.dart';
 
@@ -24,6 +25,8 @@ class StoryViewerPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useStatusBarColor();
+
     final storyState = ref.watch(storyViewingControllerProvider);
     final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
 
