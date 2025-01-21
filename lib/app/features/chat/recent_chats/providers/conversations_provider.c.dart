@@ -23,34 +23,38 @@ class Conversations extends _$Conversations {
   FutureOr<List<E2eeConversationEntity>> build() async {
     final conversationSubscription =
         ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
-      state = await AsyncValue.guard(() async {
-        final lastPrivateDirectMesssages =
-            conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+      final lastPrivateDirectMesssages =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-        final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+      final conversations = await Future.wait(lastPrivateDirectMesssages.map(_getConversationData));
 
-        return conversations;
-      });
+      state = AsyncValue.data(conversations);
     });
 
     ref.onDispose(conversationSubscription.cancel);
 
-    state = const AsyncValue.loading();
-
-    final database = ref.read(conversationsDBServiceProvider);
-    final conversationsEventMessages = await database.getAllConversations();
-
-    final lastPrivateDirectMesssages =
-        conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
-
-    final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
-
-    state = AsyncValue.data(conversations);
-
-    return conversations;
+    return await getConversations();
   }
 
-  Future<E2eeConversationEntity> getConversationData(PrivateDirectMessageEntity message) async {
+  Future<List<E2eeConversationEntity>> getConversations() async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final database = ref.read(conversationsDBServiceProvider);
+      final conversationsEventMessages = await database.getAllConversations();
+
+      final lastPrivateDirectMesssages =
+          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+
+      final conversations = await Future.wait(lastPrivateDirectMesssages.map(_getConversationData));
+
+      return conversations;
+    });
+
+    return state.requireValue;
+  }
+
+  Future<E2eeConversationEntity> _getConversationData(PrivateDirectMessageEntity message) async {
     var name = 'Unknown';
     String? nickname;
     String? imageUrl;

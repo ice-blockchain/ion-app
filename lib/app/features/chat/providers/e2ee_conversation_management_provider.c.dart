@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
@@ -182,7 +183,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     }
   }
 
-  Future<void> toggleArchiveConversations(List<E2eeConversationEntity> conversations) async {
+  Future<void> toggleArchivedConversations(List<E2eeConversationEntity> conversations) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
@@ -256,6 +257,8 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
       );
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
+
+      await ref.read(conversationsProvider.notifier).getConversations();
     });
   }
 

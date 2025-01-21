@@ -24,7 +24,7 @@ class ConversationArchiveButton extends ConsumerWidget {
         if (selectedConversations.isNotEmpty && isNotArchived) {
           await ref
               .read(e2eeConversationManagementProvider.notifier)
-              .toggleArchiveConversations(selectedConversations);
+              .toggleArchivedConversations(selectedConversations);
           ref.read(conversationsEditModeProvider.notifier).editMode = false;
           ref.read(selectedConversationsIdsProvider.notifier).clear();
         } else {}
