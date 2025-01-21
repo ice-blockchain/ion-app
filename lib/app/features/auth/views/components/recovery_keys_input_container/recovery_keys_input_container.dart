@@ -20,12 +20,16 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
     required this.validator,
     required this.onContinuePressed,
     this.isLoading = false,
+    this.title,
+    this.buttonName,
     super.key,
   });
 
   final bool isLoading;
   final String? Function(String?, RecoveryKeyProperty) validator;
   final void Function(String name, String id, String code) onContinuePressed;
+  final String? title;
+  final String? buttonName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +41,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
     return SheetContent(
       topPadding: 0,
       body: AuthScrollContainer(
-        title: context.i18n.backup_option_with_recovery_keys_title,
+        title: title ?? context.i18n.backup_option_with_recovery_keys_title,
         description: context.i18n.restore_identity_creds_description,
         icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
         titleStyle: context.theme.appTextThemes.headline2,
@@ -82,7 +86,7 @@ class RecoveryKeysInputContainer extends HookConsumerWidget {
             margin: 36.0.s,
             child: ScreenSideOffset.large(
               child: Button(
-                label: Text(context.i18n.button_continue),
+                label: Text(buttonName ?? context.i18n.button_continue),
                 mainAxisSize: MainAxisSize.max,
                 disabled: isLoading,
                 onPressed: () {
