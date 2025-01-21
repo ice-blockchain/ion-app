@@ -50,7 +50,6 @@ class ContactsList extends ConsumerWidget {
                             context: context,
                           )
                         : contactData.phoneNumber ?? '',
-                    hasIceAccount: contactData.hasIceAccount,
                   );
                 },
               ),
