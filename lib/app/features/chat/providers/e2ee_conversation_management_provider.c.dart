@@ -1,10 +1,23 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
+import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'e2ee_conversation_management_provider.c.g.dart';
@@ -12,7 +25,7 @@ part 'e2ee_conversation_management_provider.c.g.dart';
 @riverpod
 class E2EEConversationManagement extends _$E2EEConversationManagement {
   @override
-  FutureOr<void> build() {}
+  Future<void> build() async {}
 
   Future<void> createOneOnOneConversation(
     List<String> participantsPubkeys,
@@ -174,6 +187,104 @@ class E2EEConversationManagement extends _$E2EEConversationManagement {
     for (final id in ids) {
       await databaseService.deleteConversation(id);
     }
+  }
+
+  Future<void> toggleArchiveConversations(List<EE2EConversationEntity> conversations) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+      if (currentPubkey == null) {
+        throw UserMasterPubkeyNotFoundException();
+      }
+
+      final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+      if (eventSigner == null) {
+        throw EventSignerNotFoundException();
+      }
+
+      final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
+      if (currentUserPubkey == null) {
+        throw UserMasterPubkeyNotFoundException();
+      }
+
+      final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
+      final archivedConversationBookmarksSet = bookmarksMap[BookmarksSetType.chats];
+      final allBookmarksSetsData = bookmarksMap.map((key, value) => MapEntry(key, value?.data));
+
+      final conversationKey = Nip44.deriveConversationKey(
+        await Ed25519KeyStore.getSharedSecret(
+          privateKey: eventSigner.privateKey,
+          publicKey: currentUserPubkey,
+        ),
+      );
+
+      final decryptedBookmarkSetContent = await Nip44.decryptMessage(
+        archivedConversationBookmarksSet?.data.content ?? '',
+        eventSigner.privateKey,
+        currentUserPubkey,
+        customConversationKey: conversationKey,
+      );
+
+      final existingArchiveBookmarks = (jsonDecode(decryptedBookmarkSetContent) as List<dynamic>)
+          .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
+          .toList();
+
+      final newArchiveBookmarks = List<List<String>>.from(existingArchiveBookmarks);
+
+      for (final conversation in conversations) {
+        if (conversation.type == ChatType.chat && conversation.participants.length == 2) {
+          final conversationBookmark = ['p', conversation.participants[0]];
+          if (!existingArchiveBookmarks.any((e) => e.equals(conversationBookmark))) {
+            newArchiveBookmarks.add(conversationBookmark);
+          } else {
+            newArchiveBookmarks.removeWhere((e) => e.equals(conversationBookmark));
+          }
+        } else if (conversation.type == ChatType.group && conversation.participants.length >= 2) {
+          final participantsSorted = List<String>.from(conversation.participants)..sort();
+          final conversationBookmark = [
+            'subject',
+            conversation.name,
+            ...participantsSorted,
+          ];
+
+          if (!existingArchiveBookmarks.any((e) => e.equals(conversationBookmark))) {
+            newArchiveBookmarks.add(conversationBookmark);
+          } else {
+            newArchiveBookmarks.removeWhere((e) => e.equals(conversationBookmark));
+          }
+        }
+      }
+
+      final encodedContent = jsonEncode(newArchiveBookmarks);
+
+      final encryptedContent = await Nip44.encryptMessage(
+        encodedContent,
+        eventSigner.privateKey,
+        currentUserPubkey,
+        customConversationKey: conversationKey,
+      );
+
+      final newSingleBookmarksSetData = BookmarksSetData(
+        postsIds: [],
+        articlesRefs: [],
+        content: encryptedContent,
+        type: BookmarksSetType.chats,
+        communitiesIds: archivedConversationBookmarksSet?.data.communitiesIds ?? [],
+      );
+
+      final bookmarksData = BookmarksData(
+        ids: [],
+        bookmarksSetRefs: allBookmarksSetsData.values
+            .map((data) => data?.toReplaceableEventReference(currentPubkey))
+            .nonNulls
+            .toList(),
+      );
+
+      await ref
+          .read(ionConnectNotifierProvider.notifier)
+          .sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
+    });
   }
 
   Future<void> readConversations(List<String> conversationIds) async {

@@ -28,7 +28,7 @@ class RecentChatTile extends ConsumerWidget {
       onTap: () {
         if (isEditMode) {
           if (conversationData.id != null) {
-            ref.read(selectedConversationsIdsProvider.notifier).toggle(conversationData.id!);
+            ref.read(selectedConversationsIdsProvider.notifier).toggle([conversationData]);
           }
         } else {
           MessagesRoute(
@@ -48,7 +48,7 @@ class RecentChatTile extends ConsumerWidget {
             width: isEditMode ? 40.0.s : 0,
             child: Padding(
               padding: EdgeInsets.only(right: 10.0.s),
-              child: selectedConversationsIds.contains(conversationData.id)
+              child: selectedConversationsIds.contains(conversationData)
                   ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                   : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
             ),
@@ -80,7 +80,7 @@ class RecentChatTile extends ConsumerWidget {
                               imageUrl: conversationData.imageUrl ?? '',
                             ),
                           ),
-                          _ChatTimestamp(conversationData.lastMessageAt!),
+                          ChatTimestamp(conversationData.lastMessageAt!),
                         ],
                       ),
                       SizedBox(height: 2.0.s),
@@ -131,8 +131,8 @@ class SenderSummary extends StatelessWidget {
   }
 }
 
-class _ChatTimestamp extends StatelessWidget {
-  const _ChatTimestamp(this.time);
+class ChatTimestamp extends StatelessWidget {
+  const ChatTimestamp(this.time, {super.key});
 
   final DateTime time;
 

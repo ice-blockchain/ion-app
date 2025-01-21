@@ -15,7 +15,8 @@ class ConversationReadAllButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedConversations = ref.watch(selectedConversationsIdsProvider);
+    final selectedConversations =
+        ref.watch(selectedConversationsIdsProvider).map((e) => e.id!).toList();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -26,6 +27,7 @@ class ConversationReadAllButton extends ConsumerWidget {
                 .read(e2EEConversationManagementProvider.notifier)
                 .readConversations(selectedConversations);
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
+        ref.read(selectedConversationsIdsProvider.notifier).clear();
       },
       child: Row(
         children: [

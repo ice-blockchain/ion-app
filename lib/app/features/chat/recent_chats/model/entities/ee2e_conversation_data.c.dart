@@ -11,6 +11,7 @@ class EE2EConversationEntity with _$EE2EConversationEntity {
     required String name,
     required ChatType type,
     required List<String> participants,
+    @Default(false) bool isArchived,
     int? imageWidth,
     int? imageHeight,
     String? id,

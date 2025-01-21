@@ -6,6 +6,7 @@ class ChatRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<AppTestRoute>(path: 'app-test'),
     TypedGoRoute<ChatSimpleSearchRoute>(path: 'simple-search'),
+    TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
     TypedGoRoute<ChatAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
@@ -25,6 +26,14 @@ class ChatRoutes {
 
 class AppTestRoute extends BaseRouteData {
   AppTestRoute() : super(child: const AppTestPage());
+}
+
+class ArchivedChatsMainRoute extends BaseRouteData {
+  ArchivedChatsMainRoute()
+      : super(
+          child: const ArchivedChatsMainPage(),
+          type: IceRouteType.slideFromLeft,
+        );
 }
 
 class DeleteConversationRoute extends BaseRouteData {

@@ -1,11 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
+import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversations_provider.c.g.dart';
@@ -86,16 +95,85 @@ class Conversations extends _$Conversations {
     final unreadMessagesCount =
         conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
 
+    final isArchived = await _checkConversationIsArchived(
+      type: type,
+      participants: participants,
+      subject: message.data.relatedSubject?.value,
+    );
+
     return EE2EConversationEntity(
       name: name,
       type: type,
       id: conversationId,
       nickname: nickname,
       imageUrl: imageUrl,
+      isArchived: isArchived,
       participants: participants,
       lastMessageAt: lastMessageAt,
       lastMessageContent: lastMessageContent,
       unreadMessagesCount: unreadMessagesCount,
     );
+  }
+
+  Future<bool> _checkConversationIsArchived({
+    required ChatType type,
+    required List<String> participants,
+    required String? subject,
+  }) async {
+    final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
+    }
+
+    final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
+    if (currentUserPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
+
+    final archivedChatsBookmarksSet = bookmarksMap[BookmarksSetType.chats];
+
+    final conversationKey = Nip44.deriveConversationKey(
+      await Ed25519KeyStore.getSharedSecret(
+        publicKey: currentUserPubkey,
+        privateKey: eventSigner.privateKey,
+      ),
+    );
+
+    final decryptedContent = await Nip44.decryptMessage(
+      archivedChatsBookmarksSet?.data.content ?? '',
+      eventSigner.privateKey,
+      currentUserPubkey,
+      customConversationKey: conversationKey,
+    );
+
+    final archivedConversations = (jsonDecode(decryptedContent) as List<dynamic>)
+        .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
+        .toList();
+
+    for (final archivedConversation in archivedConversations) {
+      if (type == ChatType.chat &&
+          archivedConversation.contains('p') &&
+          archivedConversation.length == 2 &&
+          archivedConversation[1] == participants[0]) {
+        return true;
+      } else if (type == ChatType.group && archivedConversation.contains('subject')) {
+        final archivedSubject = archivedConversation[1];
+        final archivedParticipants = archivedConversation.sublist(2);
+
+        if (archivedSubject == subject &&
+            archivedParticipants.toSet().containsAll(participants.toSet())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }

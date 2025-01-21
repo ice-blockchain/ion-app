@@ -24,6 +24,7 @@ import 'package:ion/app/features/chat/views/pages/channel_page/pages/edit_channe
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
+import 'package:ion/app/features/chat/views/pages/chat_main_page/arhived_chats_main_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
 import 'package:ion/app/features/chat/views/pages/group_page/group_page.dart';
 import 'package:ion/app/features/chat/views/pages/new_channel_modal/new_channel_modal.dart';
