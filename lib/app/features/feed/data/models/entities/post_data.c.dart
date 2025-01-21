@@ -96,10 +96,7 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     );
   }
 
-  factory PostData.fromRawContent(
-    String content, {
-    Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
-  }) {
+  factory PostData.fromRawContent(String content) {
     final parsedContent = TextParser.allMatchers().parse(content);
 
     final hashtags = parsedContent
@@ -107,18 +104,10 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         .map((match) => RelatedHashtag(value: match.text))
         .toList();
 
-    final setting = whoCanReplySettings.isEmpty ||
-            whoCanReplySettings.every(
-              (option) => option.tagValue == null,
-            )
-        ? null
-        : WhoCanReplyEventSetting(values: whoCanReplySettings);
-
     return PostData(
       content: parsedContent,
       relatedHashtags: hashtags,
       media: {},
-      settings: [setting].nonNulls.toList(),
     );
   }
 

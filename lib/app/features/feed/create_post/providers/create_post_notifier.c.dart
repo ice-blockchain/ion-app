@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/providers/counters/replies_count_provider.
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -46,9 +47,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      var data = PostData.fromRawContent(content.trim(), whoCanReplySettings: {whoCanReply});
-      final files = <FileMetadata>[];
+      var data = PostData.fromRawContent(content.trim());
 
+      if (whoCanReply != WhoCanReplySettingsOption.everyone) {
+        data = data.copyWith(
+          settings: [
+            WhoCanReplyEventSetting(values: {whoCanReply}),
+          ],
+        );
+      }
+
+      final files = <FileMetadata>[];
       if (mediaFiles != null) {
         final attachments = <MediaAttachment>[];
         await Future.wait(

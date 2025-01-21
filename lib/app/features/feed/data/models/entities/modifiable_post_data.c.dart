@@ -44,7 +44,7 @@ class ModifiablePostEntity
   const ModifiablePostEntity._();
 
   /// Kind 30175 is a addressable version of kind 1
-  /// https://github.com/nostr-protocol/nips/blob/master/01.md
+  /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-01.md
   factory ModifiablePostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
@@ -61,9 +61,9 @@ class ModifiablePostEntity
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(id: id);
+  String get cacheKey => cacheKeyBuilder(replaceableEventId: data.replaceableEventId.value);
 
-  static String cacheKeyBuilder({required String id}) => id;
+  static String cacheKeyBuilder({required String replaceableEventId}) => replaceableEventId;
 
   static const kind = 30175;
 }
@@ -77,7 +77,7 @@ class ModifiablePostData
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
-    required EntityEditingEndedAt editingEndedAt,
+    EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
     QuotedModifiableEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,
@@ -97,7 +97,9 @@ class ModifiablePostData
       replaceableEventId:
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       publishedAt: EntityPublishedAt.fromTag(tags[EntityPublishedAt.tagName]!.first),
-      editingEndedAt: EntityEditingEndedAt.fromTag(tags[EntityEditingEndedAt.tagName]!.first),
+      editingEndedAt: tags[EntityEditingEndedAt.tagName] != null
+          ? EntityEditingEndedAt.fromTag(tags[EntityEditingEndedAt.tagName]!.first)
+          : null,
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
@@ -111,10 +113,7 @@ class ModifiablePostData
     );
   }
 
-  factory ModifiablePostData.fromRawContent(
-    String content, {
-    Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
-  }) {
+  factory ModifiablePostData.fromRawContent(String content) {
     final parsedContent = TextParser.allMatchers().parse(content);
 
     final hashtags = parsedContent
@@ -122,22 +121,12 @@ class ModifiablePostData
         .map((match) => RelatedHashtag(value: match.text))
         .toList();
 
-    final setting = whoCanReplySettings.isEmpty ||
-            whoCanReplySettings.every(
-              (option) => option.tagValue == null,
-            )
-        ? null
-        : WhoCanReplyEventSetting(values: whoCanReplySettings);
-
     return ModifiablePostData(
       content: parsedContent,
       relatedHashtags: hashtags,
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       publishedAt: EntityPublishedAt(value: DateTime.now()),
-      //TODO:!
-      editingEndedAt: EntityEditingEndedAt(value: DateTime.now().add(const Duration(seconds: 10))),
       media: {},
-      settings: [setting].nonNulls.toList(),
     );
   }
 
@@ -158,7 +147,7 @@ class ModifiablePostData
         ...tags,
         replaceableEventId.toTag(),
         publishedAt.toTag(),
-        editingEndedAt.toTag(),
+        if (editingEndedAt != null) editingEndedAt!.toTag(),
         if (expiration != null) expiration!.toTag(),
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),

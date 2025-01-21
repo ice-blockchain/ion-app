@@ -25,7 +25,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference {
   }
 
   factory ReplaceableEventReference.fromString(String input) {
-    final parts = input[1].split(separator);
+    final parts = input.split(separator);
 
     return ReplaceableEventReference(
       kind: int.parse(parts[0]),
