@@ -59,7 +59,8 @@ class BookmarksSetEntity with _$BookmarksSetEntity, IonConnectEntity implements 
   @override
   String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey, type: data.type);
 
-  static String cacheKeyBuilder({required String pubkey, required BookmarksSetType type}) => '$kind:$type:$pubkey';
+  static String cacheKeyBuilder({required String pubkey, required BookmarksSetType type}) =>
+      '$kind:$type:$pubkey';
 
   static const int kind = 30003;
 }
@@ -77,7 +78,8 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
   const BookmarksSetData._();
 
   factory BookmarksSetData.fromEventMessage(EventMessage eventMessage) {
-    final typeName = eventMessage.tags.firstWhereOrNull((tag) => tag[0] == ReplaceableEventIdentifier.tagName)?[1];
+    final typeName = eventMessage.tags
+        .firstWhereOrNull((tag) => tag[0] == ReplaceableEventIdentifier.tagName)?[1];
 
     if (typeName == null) {
       throw Exception('BookmarksSet event should have `${ReplaceableEventIdentifier.tagName}` tag');
@@ -87,8 +89,12 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
       content: eventMessage.content,
       postsIds: eventMessage.tags.where((tag) => tag[0] == 'e').map((tag) => tag[1]).toList(),
       communitiesIds: eventMessage.tags.where((tag) => tag[0] == 'h').map((tag) => tag[1]).toList(),
-      articlesRefs: eventMessage.tags.where((tag) => tag[0] == 'a').map(ReplaceableEventReference.fromTag).toList(),
-      type: BookmarksSetType.values.singleWhereOrNull((set) => set.dTagName == typeName) ?? BookmarksSetType.unknown,
+      articlesRefs: eventMessage.tags
+          .where((tag) => tag[0] == 'a')
+          .map(ReplaceableEventReference.fromTag)
+          .toList(),
+      type: BookmarksSetType.values.singleWhereOrNull((set) => set.dTagName == typeName) ??
+          BookmarksSetType.unknown,
     );
   }
 
