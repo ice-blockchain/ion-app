@@ -2,9 +2,9 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/data/channel_type.dart';
-import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
-import 'package:ion/app/features/chat/community/data/entities/community_update_data.c.dart';
+import 'package:ion/app/features/chat/community/models/channel_type.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/communities_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';

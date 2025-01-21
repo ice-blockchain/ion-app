@@ -40,7 +40,7 @@ class ChannelPage extends ConsumerWidget {
               imageWidget: channel.avatar?.url != null ? Image.network(channel.avatar!.url) : null,
               name: channel.name,
               subtitle: JoinedUsersAmountTile(
-                channelUuid: channel.uuid,
+                channelUUID: channel.uuid,
               ),
             ),
             MessagingEmptyView(

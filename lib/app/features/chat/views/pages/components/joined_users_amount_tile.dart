@@ -8,15 +8,15 @@ import 'package:ion/generated/assets.gen.dart';
 
 class JoinedUsersAmountTile extends HookConsumerWidget {
   const JoinedUsersAmountTile({
-    required this.channelUuid,
+    required this.channelUUID,
     super.key,
   });
 
-  final String channelUuid;
+  final String channelUUID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final amount = ref.watch(communityMembersCountProvider(channelUuid)).valueOrNull ?? 0;
+    final amount = ref.watch(communityMembersCountProvider(channelUUID)).valueOrNull ?? 0;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

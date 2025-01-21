@@ -7,7 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_name_tile.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/channel_avatar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/share_link_tile.dart';
-import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
@@ -49,7 +49,7 @@ class ChannelSummary extends HookConsumerWidget {
         ),
         SizedBox(height: 2.0.s),
         JoinedUsersAmountTile(
-          channelUuid: channel.uuid,
+          channelUUID: channel.uuid,
         ),
         if (!basicMode)
           if (hasAccessToEdit) ...[
@@ -65,7 +65,7 @@ class ChannelSummary extends HookConsumerWidget {
                 ),
                 tintColor: context.theme.appColors.primaryAccent,
                 label: Text(
-                  context.i18n.profile_edit,
+                  context.i18n.channel_edit,
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: context.theme.appColors.secondaryBackground,
                   ),

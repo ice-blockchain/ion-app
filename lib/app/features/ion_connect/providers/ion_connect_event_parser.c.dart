@@ -2,9 +2,9 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
-import 'package:ion/app/features/chat/community/data/entities/community_update_data.c.dart';
-import 'package:ion/app/features/chat/community/data/entities/join_community_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/join_community_data.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
