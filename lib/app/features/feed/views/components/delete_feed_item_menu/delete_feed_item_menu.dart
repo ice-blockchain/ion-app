@@ -42,7 +42,7 @@ class DeleteFeedItemMenu extends ConsumerWidget {
               ),
               onPressed: () async {
                 closeMenu();
-                await ref.read(deleteEntityProvider(entity).notifier).delete();
+                await ref.read(deleteEntityProvider(entity).future);
                 onDelete?.call();
               },
             ),

@@ -93,9 +93,7 @@ class RepostOptionsModal extends HookConsumerWidget {
                               );
 
                               if (entity case final CacheableEntity cacheableEntity) {
-                                await ref
-                                    .read(deleteEntityProvider(cacheableEntity).notifier)
-                                    .delete();
+                                await ref.read(deleteEntityProvider(cacheableEntity).future);
                                 if (context.mounted) {
                                   context.pop();
                                 }
