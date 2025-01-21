@@ -3,8 +3,14 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
@@ -75,6 +81,74 @@ Future<bool> isBlockedOrBlocking(Ref ref, String pubkey, {bool cacheOnly = false
     ref.watch(isBlockingProvider(pubkey, cacheOnly: cacheOnly).future),
   ]);
   return results[0] || results[1];
+}
+
+@riverpod
+Future<bool> isEntityBlockedOrBlocking(
+  Ref ref,
+  IonConnectEntity entity, {
+  bool cacheOnly = false,
+}) async {
+  final isMainAuthorBlockedOrBlocking = ref
+          .watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: cacheOnly))
+          .valueOrNull ??
+      true;
+  if (isMainAuthorBlockedOrBlocking) return true;
+  return switch (entity) {
+    PostEntity() => isPostChildBlockedOrBlocking(ref, entity, cacheOnly: cacheOnly),
+    RepostEntity() => isRepostChildBlockedOrBlocking(ref, entity, cacheOnly: cacheOnly),
+    GenericRepostEntity() =>
+      isGenericRepostChildBlockedOrBlocking(ref, entity, cacheOnly: cacheOnly),
+    _ => false,
+  };
+}
+
+@riverpod
+Future<bool> isPostChildBlockedOrBlocking(
+  Ref ref,
+  PostEntity entity, {
+  bool cacheOnly = false,
+}) async {
+  final quotedEvent = entity.data.quotedEvent;
+  if (quotedEvent == null) return false;
+  final quotedPostReference = EventReference(
+    eventId: quotedEvent.eventId,
+    pubkey: quotedEvent.pubkey,
+  );
+  final quotedPost = await ref.watch(
+    ionConnectEntityProvider(eventReference: quotedPostReference).future,
+  );
+  if (quotedPost == null) return true;
+  return ref
+          .watch(isEntityBlockedOrBlockingProvider(quotedPost, cacheOnly: cacheOnly))
+          .valueOrNull ??
+      true;
+}
+
+@riverpod
+Future<bool> isRepostChildBlockedOrBlocking(
+  Ref ref,
+  RepostEntity repost, {
+  bool cacheOnly = false,
+}) async {
+  final eventReference = EventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
+  final entity = await ref.watch(ionConnectEntityProvider(eventReference: eventReference).future);
+  if (entity == null) return true;
+  return ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly)).valueOrNull ??
+      true;
+}
+
+@riverpod
+Future<bool> isGenericRepostChildBlockedOrBlocking(
+  Ref ref,
+  GenericRepostEntity repost, {
+  bool cacheOnly = false,
+}) async {
+  final eventReference = EventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
+  final entity = await ref.watch(ionConnectEntityProvider(eventReference: eventReference).future);
+  if (entity == null) return true;
+  return ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly)).valueOrNull ??
+      true;
 }
 
 @riverpod
