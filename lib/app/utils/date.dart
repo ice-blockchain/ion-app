@@ -141,3 +141,34 @@ DateTime randomDateBefore(Duration maxDuration) {
   final randomMilliseconds = Random().nextInt(differenceInMilliseconds);
   return now.subtract(Duration(milliseconds: randomMilliseconds));
 }
+
+String formatFeedTimestamp(DateTime dateTime) {
+  final now = DateTime.now();
+  final difference = now.difference(dateTime);
+
+  // Minutes (1m - 59m)
+  if (difference.inMinutes < 60) {
+    return '${difference.inMinutes}m';
+  }
+
+  // Hours (1h - 23h)
+  if (difference.inHours < 24) {
+    return '${difference.inHours}h';
+  }
+
+  // Days (1d - 7d)
+  if (difference.inDays < 7) {
+    return '${difference.inDays}d';
+  }
+
+  // Weeks and beyond
+  if (dateTime.year == now.year) {
+    return DateFormat('MMM d').format(dateTime);
+  }
+
+  return DateFormat('MMM d, yyyy').format(dateTime);
+}
+
+String formatDetailedPostTime(DateTime dateTime) {
+  return DateFormat('MMM d, yyyy, hh:mm a').format(dateTime);
+}

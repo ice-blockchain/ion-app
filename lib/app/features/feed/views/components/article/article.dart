@@ -16,6 +16,7 @@ import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
+import 'package:ion/app/utils/date.dart';
 
 class Article extends ConsumerWidget {
   const Article({
@@ -69,8 +70,10 @@ class Article extends ConsumerWidget {
                 children: [
                   UserInfo(
                     pubkey: eventReference.pubkey,
+                    timestamp: formatFeedTimestamp(articleEntity.data.publishedAt.value),
                     trailing: showActionButtons
                         ? Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               BookmarkButton(eventReference: eventReference),
                               if (isOwnedByCurrentUser)
