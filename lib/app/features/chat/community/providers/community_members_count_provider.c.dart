@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // {
 //     "kind": 5400,
 //     "content": "[{\"kinds\":[1750], \"#h\":[\"<community UUIDv7>\"]}]",
