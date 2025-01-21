@@ -3,7 +3,6 @@
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/user_details_provider.c.dart';
-import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/app/utils/predicates.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,5 +28,5 @@ Future<String> linkedEmail(Ref ref) async {
       0;
 
   final email = emails[emailIndex];
-  return shortenEmail(email);
+  return email;
 }

@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/components/delete_twofa_initial_scaffold.dart';
 import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.c.dart';
+import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeletePhoneInitialStep extends StatelessWidget {
@@ -43,7 +44,8 @@ class _LinkedPhone extends ConsumerWidget {
     final locale = context.i18n;
     final colors = context.theme.appColors;
 
-    final linkedPhone = ref.watch(linkedPhoneProvider).valueOrNull ?? '';
+    final linkedPhone = ref.watch(linkedPhoneProvider).valueOrNull;
+    final shortenedPhone = linkedPhone != null ? shortenPhoneNumber(linkedPhone) : '';
 
     return Column(
       children: [
@@ -58,7 +60,7 @@ class _LinkedPhone extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              linkedPhone,
+              shortenedPhone,
               style: context.theme.appTextThemes.subtitle.copyWith(
                 color: colors.primaryText,
               ),

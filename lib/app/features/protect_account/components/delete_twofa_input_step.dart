@@ -12,6 +12,8 @@ import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/compon
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
+import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
+import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -127,9 +129,12 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
       ref.context,
       (child) => RiverpodVerifyIdentityRequestBuilder(
         provider: deleteTwoFANotifierProvider,
-        requestWithVerifyIdentity: (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) {
-          ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
-            TwoFaTypeAdapter(twoFaToDelete).twoFAType,
+        requestWithVerifyIdentity: (
+          OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+        ) async {
+          final twoFaValue = await _getTwoFaValue(ref, twoFaToDelete);
+          await ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
+            TwoFaTypeAdapter(twoFaToDelete, twoFaValue).twoFAType,
             onVerifyIdentity,
             [
               for (final controller in controllers.entries)
@@ -162,5 +167,13 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
         onDeleteSuccess();
       }
     });
+  }
+
+  Future<String?> _getTwoFaValue(WidgetRef ref, TwoFaType type) async {
+    return switch (type) {
+      TwoFaType.email => ref.read(linkedEmailProvider.future),
+      TwoFaType.sms => ref.read(linkedPhoneProvider.future),
+      TwoFaType.auth => null,
+    };
   }
 }
