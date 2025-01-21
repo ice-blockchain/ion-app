@@ -26,7 +26,7 @@ class ContactListHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            context.i18n.contacts_title,
+            context.i18n.friends_title,
             style: context.theme.appTextThemes.caption.copyWith(
               color: context.theme.appColors.primaryText,
             ),
