@@ -38,7 +38,7 @@ Future<WalletViewData> walletViewById(Ref ref, {required String id}) async {
 class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
   @override
   Future<List<WalletViewData>> build() async {
-    final walletViews = await ref.watch(currentUserWalletViewsProvider.future);
+    final walletViews = await ref.watch(userWalletViewsNotifierProvider.future);
 
     // TODO: Need to watch here coins price from the repo
     return walletViews;

@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallet/model/coin_data.c.dart';
-import 'package:ion/app/features/wallet/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -23,11 +21,9 @@ class UpdateWalletViewNotifier extends _$UpdateWalletViewNotifier {
     String? updatedName,
     List<CoinData>? updatedCoinsList,
   }) async {
-    if (updatedName == null && updatedCoinsList == null) {
+    if ((updatedName == null && updatedCoinsList == null) || state.isLoading) {
       return;
     }
-
-    if (state.isLoading) return;
 
     state = const AsyncValue.loading();
 
@@ -42,9 +38,11 @@ class UpdateWalletViewNotifier extends _$UpdateWalletViewNotifier {
               name: updatedName ?? walletView.name,
             ));
 
-      final updatedWallet = await identity.wallets.updateWalletView(walletView.id, request);
-      // TODO: Implement specific wallet view update
-      // ref.read(currentUserWalletViewsProvider.notifier).update(updatedWallet);
+      final updatedWallet =
+          await identity.wallets.updateWalletView(walletView.id, request);
+      await ref
+          .read(userWalletViewsNotifierProvider.notifier)
+          .refreshWalletView(updatedWallet);
     });
   }
 

@@ -22,7 +22,7 @@ class DeleteWalletViewNotifier extends _$DeleteWalletViewNotifier {
       final identity = await ref.read(ionIdentityClientProvider.future);
       await identity.wallets.deleteWalletView(walletViewId);
 
-      ref.invalidate(currentUserWalletViewsProvider);
+      ref.read(userWalletViewsNotifierProvider.notifier).delete(walletViewId);
     });
   }
 }

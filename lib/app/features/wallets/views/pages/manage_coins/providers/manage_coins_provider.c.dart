@@ -3,31 +3,27 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/manage_coin_data.c.dart';
-import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/update_wallet_view_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'manage_coins_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   @override
   Future<Map<String, ManageCoinData>> build() async {
-    final walletView = await ref.watch(currentUserWalletViewsProvider.future);
+    final walletView = await ref.watch(currentWalletViewDataProvider.future);
 
     final coinsFromWallet = <String, ManageCoinData>{
-      for (final coinInWallet in walletView.expand((wallet) => wallet.coins))
+      for (final coinInWallet in walletView.coins)
         coinInWallet.coin.id: ManageCoinData(
           coin: coinInWallet.coin,
-          isSelected: state.value?[coinInWallet.coin.id]?.isSelected ?? false,
+          isSelected: state.value?[coinInWallet.coin.id]?.isSelected ?? true,
         ),
     };
 
@@ -42,7 +38,10 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
     );
     state = AsyncData<Map<String, ManageCoinData>>(currentMap);
   }
-}
+
+  Future<void> save() async {
+    final updatedCoins = state.value?.values.map((manageCoin) => manageCoin.coin) ?? [];
+    final currentWalletView = await ref.read(currentWalletViewDataProvider.future);
 
     final updateRequired = !(const ListEquality<CoinData>().equals(
       updatedCoins.toList(),
@@ -66,8 +65,9 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
   Future<void> search({required String query}) async {
     if (query.isEmpty) {
       state = ref.read(manageCoinsNotifierProvider).map(
-            data: (data) =>
-                AsyncData(data.value.values.map((manageCoin) => manageCoin.coin).toSet()),
+            data: (data) => AsyncData(
+                data.value.values.map((manageCoin) => manageCoin.coin).toSet(),
+            ),
             error: (error) => AsyncError(error.error, error.stackTrace),
             loading: (loading) => const AsyncLoading(),
           );
@@ -77,14 +77,14 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
     await ref.debounce();
 
     final repository = ref.read(coinsRepositoryProvider);
-    final searchResult = await repository
-        .searchCoins(query)
-        .then((result) => result.map(CoinData.fromDB)); // TODO: (1) Move converting to the repo?
+    final searchResult = await repository.searchCoins(query).then((result) =>
+        result.map(CoinData.fromDB)); // TODO: (1) Move converting to the repo?
 
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
           data: (coinsInWalletView) {
-            final coinsInWallet =
-                coinsInWalletView.values.map((coinInWallet) => coinInWallet.coin).toList();
+            final coinsInWallet = coinsInWalletView.values
+                .map((coinInWallet) => coinInWallet.coin)
+                .toList();
 
             // Coins from wallet should be first in the search results list
             final result = <CoinData>{};

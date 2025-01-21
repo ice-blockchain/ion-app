@@ -23,11 +23,10 @@ class CreateWalletViewNotifier extends _$CreateWalletViewNotifier {
 
     state = await AsyncValue.guard(() async {
       final identity = await ref.read(ionIdentityClientProvider.future);
-      await identity.wallets.createWalletView(
+      final result = await identity.wallets.createWalletView(
         CreateUpdateWalletViewRequest(items: [], symbolGroups: [], name: name),
       );
-
-      ref.invalidate(currentUserWalletViewsProvider);
+      await ref.read(userWalletViewsNotifierProvider.notifier).refreshWalletView(result);
     });
   }
 }
