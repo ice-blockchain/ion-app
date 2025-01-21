@@ -41,7 +41,10 @@ class EventCountResultEntity
   const EventCountResultEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/vending-machine/90.md
-  factory EventCountResultEntity.fromEventMessage(EventMessage eventMessage) {
+  factory EventCountResultEntity.fromEventMessage(
+    EventMessage eventMessage, {
+    String? key,
+  }) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
@@ -49,7 +52,7 @@ class EventCountResultEntity
     final data = EventCountResultData.fromEventMessage(eventMessage);
     final type = data.getType();
     final summary = EventCountResultSummary(
-      key: data.getKey(type),
+      key: key ?? data.getKey(type),
       type: type,
       content: data.content,
       requestEventId: data.request.id,
@@ -125,14 +128,14 @@ class EventCountResultData with _$EventCountResultData {
   EventCountResultType getType() {
     final EventCountRequestData(:filters, :params) = request.data;
     final filter = filters.first;
-    if (params.group == RelatedEventMarker.reply.toShortString() ||
-        params.group == RelatedEventMarker.root.toShortString()) {
+    if (params?.group == RelatedEventMarker.reply.toShortString() ||
+        params?.group == RelatedEventMarker.root.toShortString()) {
       return EventCountResultType.replies;
     } else if (filter.kinds != null &&
         filter.kinds!.contains(RepostEntity.kind) &&
-        params.group == RelatedEvent.tagName) {
+        params?.group == RelatedEvent.tagName) {
       return EventCountResultType.reposts;
-    } else if (params.group == QuotedEvent.tagName) {
+    } else if (params?.group == QuotedEvent.tagName) {
       return EventCountResultType.quotes;
     } else if (filter.kinds != null && filter.kinds!.contains(ReactionEntity.kind)) {
       return EventCountResultType.reactions;
