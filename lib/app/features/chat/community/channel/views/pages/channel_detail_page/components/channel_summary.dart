@@ -39,7 +39,7 @@ class ChannelSummary extends HookConsumerWidget {
         ),
         ChannelAvatar(
           channel: channel,
-          editMode: false,
+          editMode: basicMode,
         ),
         SizedBox(
           height: 10.0.s,

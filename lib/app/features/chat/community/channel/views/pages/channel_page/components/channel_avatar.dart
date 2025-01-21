@@ -54,8 +54,8 @@ class ChannelAvatar extends HookConsumerWidget {
                     avatarUrl: channel.avatar?.url,
                   )
                 : Avatar(
-                    size: pictureSize - pictureBorderWidth * 2,
-                    fit: BoxFit.cover,
+                    size: pictureSize - (channel.avatar?.url == null ? pictureBorderWidth * 2 : 0),
+                    fit: BoxFit.fill,
                     imageUrl: channel.avatar?.url,
                     borderRadius: BorderRadius.circular(20.0.s),
                     defaultAvatar: Assets.svg.userPhotoArea.icon(

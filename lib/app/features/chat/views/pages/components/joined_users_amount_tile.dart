@@ -21,9 +21,12 @@ class JoinedUsersAmountTile extends HookConsumerWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Assets.svg.iconChannelMembers.icon(
-          size: 10.0.s,
-          color: context.theme.appColors.quaternaryText,
+        Padding(
+          padding: EdgeInsets.only(top: 2.0.s),
+          child: Assets.svg.iconChannelMembers.icon(
+            size: 10.0.s,
+            color: context.theme.appColors.quaternaryText,
+          ),
         ),
         SizedBox(
           width: 3.0.s,
