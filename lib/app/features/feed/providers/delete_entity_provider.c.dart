@@ -5,6 +5,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/counters/replied_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
@@ -63,11 +64,13 @@ class DeleteEntity extends _$DeleteEntity {
   Future<void> _deleteReply(PostEntity post) async {
     final dataSource = ref.watch(userRepliesDataSourceProvider(entity.masterPubkey)) ?? [];
 
+    final parentId = post.data.parentEvent!.eventId;
+
     ref
         .read(
           repliesCountProvider(
             EventReference(
-              eventId: post.data.parentEvent!.eventId,
+              eventId: parentId,
               pubkey: post.data.parentEvent!.pubkey,
             ),
           ).notifier,
@@ -78,15 +81,16 @@ class DeleteEntity extends _$DeleteEntity {
         .read(
           repliesProvider(
             EventReference(
-              eventId: post.data.parentEvent!.eventId,
+              eventId: parentId,
               pubkey: post.data.parentEvent!.pubkey,
             ),
           ).notifier,
         )
         .deleteReply(entity: entity);
 
-    await _deleteFromDataSource(dataSource);
+    ref.read(repliedEventsProvider.notifier).removeReply(parentId, post.id);
 
+    await _deleteFromDataSource(dataSource);
     ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
   }
 
