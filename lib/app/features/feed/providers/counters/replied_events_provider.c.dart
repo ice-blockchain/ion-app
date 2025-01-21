@@ -32,31 +32,12 @@ Stream<Map<String, List<String>>?> repliedEvents(Ref ref) async* {
           continue;
         }
 
-        final currentCache = ref.read(ionConnectCacheProvider);
-        final isInCache = currentCache.containsKey(post.id);
+        final currentUserRepliedIds = _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
 
-        if (!isInCache) {
-          if (repliedMap.containsKey(post.id)) {
-            repliedMap.remove(post.id);
-          }
-
-          if (repliedMap.containsKey(parentId)) {
-            repliedMap[parentId] = repliedMap[parentId]!.where((id) => id != post.id).toList();
-            if (repliedMap[parentId]!.isEmpty) {
-              repliedMap.remove(parentId);
-            }
-          }
+        if (currentUserRepliedIds != null) {
+          repliedMap[parentId] = currentUserRepliedIds;
 
           yield repliedMap;
-        } else {
-          final currentUserRepliedIds =
-              _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
-
-          if (currentUserRepliedIds != null) {
-            repliedMap[parentId] = currentUserRepliedIds;
-
-            yield repliedMap;
-          }
         }
       }
     }
