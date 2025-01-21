@@ -30,8 +30,7 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
-  final conversationMessageManagementService =
-      await ref.watch(conversationMessageManagementServiceProvider);
+  final conversationMessageManagementService = await ref.watch(conversationMessageManagementServiceProvider);
 
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
@@ -88,15 +87,11 @@ class ConversationMessageActionsService {
       ['encrypted'],
     ];
 
-    Logger.log('Encoded rumor $encodedRumor');
-
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
       eventSigner!.privateKey,
       receiverPubkey,
     );
-
-    Logger.log('Encrypted rumor $encryptedRumor');
 
     final id = EventMessage.calculateEventId(
       tags: tags,
@@ -115,8 +110,6 @@ class ConversationMessageActionsService {
       kind: BookmarksEntity.kind,
       sig: null,
     );
-
-    Logger.log('Bookmark message $bookmarkMessage');
 
     await ionConnectNotifier.sendEvent(bookmarkMessage, cache: false);
   }

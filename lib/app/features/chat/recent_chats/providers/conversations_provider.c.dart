@@ -10,11 +10,9 @@ import 'package:ion/app/features/chat/providers/conversation_message_management_
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
-import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:nip44/nip44.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_nip44_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversations_provider.c.g.dart';
@@ -23,16 +21,13 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   FutureOr<List<E2eeConversationEntity>> build() async {
-    final conversationSubscription = ref
-        .read(conversationsDBServiceProvider)
-        .watchConversations()
-        .listen((conversationsEventMessages) async {
+    final conversationSubscription =
+        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
       state = await AsyncValue.guard(() async {
         final lastPrivateDirectMesssages =
             conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-        final conversations =
-            await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+        final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
         return conversations;
       });
@@ -63,8 +58,7 @@ class Conversations extends _$Conversations {
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
 
     if (type == ChatType.chat) {
-      final userMetadata =
-          await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
+      final userMetadata = await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
 
       if (userMetadata != null) {
         nickname = userMetadata.data.name;
@@ -74,24 +68,21 @@ class Conversations extends _$Conversations {
     } else {
       name = message.data.relatedSubject?.value ?? '';
 
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
-      final imageUrls = await conversationMessageManagementService
-          .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
+      final imageUrls =
+          await conversationMessageManagementService.downloadDecryptDecompressMedia([message.data.primaryMedia!]);
       imageUrl = imageUrls.first.path;
     }
 
     final lastMessageAt = message.createdAt;
-    final participants =
-        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.toString();
 
     final database = ref.read(conversationsDBServiceProvider);
 
     final conversationId = await database.lookupConversationByEventMessageId(message.id);
 
-    final unreadMessagesCount =
-        conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
+    final unreadMessagesCount = conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
 
     final isArchived = await _checkConversationIsArchived(
       type: type,
@@ -119,14 +110,7 @@ class Conversations extends _$Conversations {
     required String? subject,
   }) async {
     final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
-    if (currentPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
+    final nip44Service = await ref.read(ionConnectNip44ServiceProvider.future);
 
     final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
 
@@ -137,37 +121,26 @@ class Conversations extends _$Conversations {
       throw UserMasterPubkeyNotFoundException();
     }
 
-    final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(
-        publicKey: currentUserPubkey,
-        privateKey: eventSigner.privateKey,
-      ),
-    );
+    var archivedConversations = <List<String>>[];
 
-    final decryptedContent = await Nip44.decryptMessage(
-      archivedChatsBookmarksSet?.data.content ?? '',
-      eventSigner.privateKey,
-      currentUserPubkey,
-      customConversationKey: conversationKey,
-    );
+    if (archivedChatsBookmarksSet != null) {
+      final decryptedContent = await nip44Service.decryptMessage(archivedChatsBookmarksSet.data.content);
 
-    final archivedConversations = (jsonDecode(decryptedContent) as List<dynamic>)
-        .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
-        .toList();
+      archivedConversations = (jsonDecode(decryptedContent) as List<dynamic>)
+          .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
+          .toList();
+    }
 
     for (final archivedConversation in archivedConversations) {
       final participant = List<String>.from(participants).singleWhere((e) => e != currentPubkey);
 
-      if (type == ChatType.chat &&
-          archivedConversation.contains('p') &&
-          archivedConversation[1] == participant) {
+      if (type == ChatType.chat && archivedConversation.contains('p') && archivedConversation[1] == participant) {
         return true;
       } else if (type == ChatType.group && archivedConversation.contains('subject')) {
         final archivedSubject = archivedConversation[1];
         final archivedParticipants = archivedConversation.sublist(2);
 
-        if (archivedSubject == subject &&
-            archivedParticipants.toSet().containsAll(participants.toSet())) {
+        if (archivedSubject == subject && archivedParticipants.toSet().containsAll(participants.toSet())) {
           return true;
         }
       }

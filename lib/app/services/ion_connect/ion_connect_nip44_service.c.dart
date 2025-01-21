@@ -37,36 +37,36 @@ class IonConnectNip44Service {
   final EventSigner eventSigner;
   final String currentUserPubkey;
 
-  Future<String> decryptMessage(String message) async {
+  Future<String> decryptMessage(String message, {String? publicKey}) async {
     final conversationKey = Nip44.deriveConversationKey(
       await Ed25519KeyStore.getSharedSecret(
         privateKey: eventSigner.privateKey,
-        publicKey: currentUserPubkey,
+        publicKey: publicKey ?? currentUserPubkey,
       ),
     );
 
     final decryptedMessage = await Nip44.decryptMessage(
       message,
       eventSigner.privateKey,
-      currentUserPubkey,
+      publicKey ?? currentUserPubkey,
       customConversationKey: conversationKey,
     );
 
     return decryptedMessage;
   }
 
-  Future<String> encryptMessage(String message) async {
+  Future<String> encryptMessage(String message, {String? publicKey}) async {
     final conversationKey = Nip44.deriveConversationKey(
       await Ed25519KeyStore.getSharedSecret(
         privateKey: eventSigner.privateKey,
-        publicKey: currentUserPubkey,
+        publicKey: publicKey ?? currentUserPubkey,
       ),
     );
 
     final decryptedMessage = await Nip44.encryptMessage(
       message,
       eventSigner.privateKey,
-      currentUserPubkey,
+      publicKey ?? currentUserPubkey,
       customConversationKey: conversationKey,
     );
 
