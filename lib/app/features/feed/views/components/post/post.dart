@@ -72,7 +72,6 @@ class Post extends ConsumerWidget {
         footer ??
             CounterItemsFooter(
               eventReference: eventReference,
-              repostEventReference: repostEventReference,
             ),
       ],
     );

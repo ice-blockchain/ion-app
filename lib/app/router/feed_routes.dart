@@ -73,9 +73,6 @@ class RepostOptionsModalRoute extends BaseRouteData {
   }) : super(
           child: RepostOptionsModal(
             eventReference: EventReference.fromString(eventReference),
-            repostEventReference: repostEventReference != null
-                ? EventReference.fromString(repostEventReference)
-                : null,
           ),
           type: IceRouteType.bottomSheet,
         );

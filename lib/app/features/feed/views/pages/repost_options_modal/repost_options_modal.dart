@@ -12,11 +12,11 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
+import 'package:ion/app/features/feed/providers/repost_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -25,12 +25,10 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class RepostOptionsModal extends HookConsumerWidget {
   const RepostOptionsModal({
     required this.eventReference,
-    this.repostEventReference,
     super.key,
   });
 
   final EventReference eventReference;
-  final EventReference? repostEventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,18 +83,12 @@ class RepostOptionsModal extends HookConsumerWidget {
                             CreatePostRoute(quotedEvent: eventReference.toString()).go(context);
                           case RepostOptionAction.undoRepost:
                             selectedAction.value = option;
+                            final repostEntity = ref.read(repostEntityProvider(eventReference));
 
-                            if (repostEventReference != null) {
-                              final entity = await ref.read(
-                                ionConnectEntityProvider(eventReference: repostEventReference!)
-                                    .future,
-                              );
-
-                              if (entity case final CacheableEntity cacheableEntity) {
-                                await ref.read(deleteEntityProvider(cacheableEntity).future);
-                                if (context.mounted) {
-                                  context.pop();
-                                }
+                            if (repostEntity case final CacheableEntity entity) {
+                              await ref.read(deleteEntityProvider(entity).future);
+                              if (context.mounted) {
+                                context.pop();
                               }
                             }
                             selectedAction.value = null;

@@ -13,7 +13,6 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 class CounterItemsFooter extends HookConsumerWidget {
   CounterItemsFooter({
     required this.eventReference,
-    this.repostEventReference,
     double? bottomPadding,
     double? topPadding,
     this.color,
@@ -22,7 +21,6 @@ class CounterItemsFooter extends HookConsumerWidget {
         topPadding = topPadding ?? 10.0.s;
 
   final EventReference eventReference;
-  final EventReference? repostEventReference;
   final double bottomPadding;
   final double topPadding;
   final Color? color;
@@ -43,7 +41,6 @@ class CounterItemsFooter extends HookConsumerWidget {
           Flexible(
             child: RepostsCounterButton(
               eventReference: eventReference,
-              repostEventReference: repostEventReference,
               color: color,
             ),
           ),
