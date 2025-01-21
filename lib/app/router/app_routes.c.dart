@@ -15,9 +15,10 @@ import 'package:ion/app/features/auth/views/pages/select_languages/select_langua
 import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
-import 'package:ion/app/features/chat/community/channel/views/channel_page/channel_page.dart';
-import 'package:ion/app/features/chat/community/channel/views/channel_page/pages/channel_detail_page/channel_detail_page.dart';
-import 'package:ion/app/features/chat/community/channel/views/create_channel_modal/create_channel_modal.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/channel_detail_page.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/channel_page.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/create_channel_modal/create_channel_modal.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/edit_channel_page/edit_channel_page.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';

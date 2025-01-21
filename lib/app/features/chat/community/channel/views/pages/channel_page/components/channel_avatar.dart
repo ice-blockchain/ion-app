@@ -12,7 +12,7 @@ import 'package:ion/generated/assets.gen.dart';
 class ChannelAvatar extends HookConsumerWidget {
   const ChannelAvatar({
     required this.channel,
-    required this.hasAccessToEdit,
+    required this.editMode,
     super.key,
   });
 
@@ -21,7 +21,7 @@ class ChannelAvatar extends HookConsumerWidget {
   double get pictureBorderWidth => 5.0.s;
 
   final CommunityDefinitionData channel;
-  final bool hasAccessToEdit;
+  final bool editMode;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
@@ -49,7 +49,7 @@ class ChannelAvatar extends HookConsumerWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(25.0.s),
             ),
-            child: hasAccessToEdit
+            child: editMode
                 ? AvatarPicker(
                     avatarUrl: channel.avatar?.url,
                   )

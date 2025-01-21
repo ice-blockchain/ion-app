@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/channel/views/channel_page/components/channel_avatar.dart';
-import 'package:ion/app/features/chat/community/channel/views/channel_page/components/share_link_tile.dart';
-import 'package:ion/app/features/chat/community/channel/views/channel_page/pages/edit_channel_page/components/channel_name_tile.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_name_tile.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/channel_avatar.dart';
+import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/share_link_tile.dart';
 import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
@@ -28,7 +28,7 @@ class ChannelSummary extends StatelessWidget {
         ),
         ChannelAvatar(
           channel: channel,
-          hasAccessToEdit: hasAccessToEdit,
+          editMode: hasAccessToEdit,
         ),
         ScreenSideOffset.large(
           child: Column(

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/chat/community/data/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
@@ -23,7 +24,7 @@ class ChannelDetailAppBar extends StatelessWidget {
         children: [
           HeaderAction(
             onPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
             },
             assetName: Assets.svg.iconProfileBack,
             opacity: 1,

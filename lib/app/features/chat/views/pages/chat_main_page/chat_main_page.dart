@@ -16,10 +16,11 @@ class ChatMainPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(fetchConversationsProvider);
+    ref
+      ..watch(fetchConversationsProvider)
+      ..watch(communitiesNotifierProvider);
 
     final conversations = ref.watch(conversationsProvider);
-    final communities = ref.watch(communitiesNotifierProvider);
 
     return Scaffold(
       appBar: const ChatMainAppBar(),
