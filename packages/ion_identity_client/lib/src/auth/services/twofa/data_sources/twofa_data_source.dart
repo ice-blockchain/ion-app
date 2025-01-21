@@ -104,10 +104,11 @@ class TwoFADataSource {
           (e) => '$queryOption=${e.option}&$queryValue=${e.value!}',
         )
         .join('&');
+    final twoFaValue = twoFAType.value ?? 0;
     final uri = Uri.parse(networkClient.dio.options.baseUrl)
         .resolveUri(
           Uri(
-            path: sprintf(deleteTwoFaPath, [userId, twoFAType.option, 0]),
+            path: sprintf(deleteTwoFaPath, [userId, twoFAType.option, twoFaValue]),
             query: query,
           ),
         )

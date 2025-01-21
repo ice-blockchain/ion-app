@@ -24,11 +24,11 @@ class StoryContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postReference = useRef(EventReference.fromIonConnectEntity(post));
     final emojiState = ref.watch(emojiReactionsControllerProvider);
     final textController = useTextEditingController();
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
-    final canReply = ref.watch(canReplyProvider(postReference.value)).valueOrNull ?? false;
+    final postReference = EventReference.fromIonConnectEntity(post);
+    final canReply = ref.watch(canReplyProvider(postReference)).valueOrNull ?? false;
 
     useOnInit(
       () => ref.read(storyPauseControllerProvider.notifier).paused = isKeyboardVisible,

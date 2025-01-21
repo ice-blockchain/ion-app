@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/components/delete_twofa_initial_scaffold.dart';
 import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
+import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteEmailInitialStep extends StatelessWidget {
@@ -46,7 +47,8 @@ class _LinkedEmail extends ConsumerWidget {
     final locale = context.i18n;
     final colors = context.theme.appColors;
 
-    final linkedEmail = ref.watch(linkedEmailProvider).valueOrNull ?? '';
+    final linkedEmail = ref.watch(linkedEmailProvider).valueOrNull;
+    final shortenedEmail = linkedEmail != null ? shortenEmail(linkedEmail) : '';
 
     return Column(
       children: [
@@ -58,7 +60,7 @@ class _LinkedEmail extends ConsumerWidget {
         ),
         SizedBox(height: 8.0.s),
         Text(
-          linkedEmail,
+          shortenedEmail,
           style: context.theme.appTextThemes.subtitle.copyWith(
             color: colors.primaryText,
           ),
