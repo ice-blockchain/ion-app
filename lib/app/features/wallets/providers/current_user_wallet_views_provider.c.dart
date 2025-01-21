@@ -8,7 +8,6 @@ import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_user_wallet_views_provider.c.g.dart';
