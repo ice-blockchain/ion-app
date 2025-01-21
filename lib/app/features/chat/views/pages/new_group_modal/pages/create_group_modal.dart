@@ -178,18 +178,17 @@ class CreateGroupModal extends HookConsumerWidget {
                   ),
                 ),
                 label: Text(context.i18n.group_create_create_button),
-                onPressed: () async {
+                onPressed: () {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
-                      final avatarProcessorState =
-                          ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar));
+                      final avatarProcessorState = ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar));
 
                       final groupPicture = avatarProcessorState.whenOrNull(
                         cropped: (file) => file,
                         processed: (file) => file,
                       );
 
-                      await MessagesRoute(
+                      MessagesRoute(
                         chatType: ChatType.group,
                         name: createGroupForm.name!,
                         imageUrl: groupPicture!.path,
@@ -197,6 +196,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         imageHeight: groupPicture.height,
                         participants: createGroupForm.members.toList(),
                       ).push<void>(context);
+
                     } else {
                       throw UnimplementedError();
                     }

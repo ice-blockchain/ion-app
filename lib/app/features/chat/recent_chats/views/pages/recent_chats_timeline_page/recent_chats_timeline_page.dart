@@ -20,6 +20,8 @@ class RecentChatsTimelinePage extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final showArchive = conversations.any((c) => c.isArchived);
+
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -35,10 +37,9 @@ class RecentChatsTimelinePage extends ConsumerWidget {
           ),
           toolbarHeight: SearchInput.height,
         ),
-        if (conversations.any((c) => c.isArchived))
-          const SliverToBoxAdapter(child: RecentChatSeparator(isAtTop: true)),
-        if (conversations.any((c) => c.isArchived))
-          const SliverToBoxAdapter(child: ArchiveChatTile()),
+        if (showArchive) const SliverToBoxAdapter(child: RecentChatSeparator(isAtTop: true)),
+        if (showArchive) const SliverToBoxAdapter(child: ArchiveChatTile()),
+        if (showArchive) const SliverToBoxAdapter(child: RecentChatSeparator()),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
@@ -48,7 +49,7 @@ class RecentChatsTimelinePage extends ConsumerWidget {
               }
               return Column(
                 children: [
-                  if (index == 0) const RecentChatSeparator(),
+                  if (index == 0 && !showArchive) const RecentChatSeparator(isAtTop: true),
                   RecentChatTile(conversation),
                   const RecentChatSeparator(),
                 ],

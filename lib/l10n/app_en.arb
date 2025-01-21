@@ -70,6 +70,7 @@
   "common_voice_message": "Voice message",
   "common_poll": "Poll",
   "common_archive": "Archive",
+  "common_unarchive": "Unarchive",
   "common_select_option": "Select option",
   "common_select_coin": "Select coin",
   "common_email_address": "Email address",

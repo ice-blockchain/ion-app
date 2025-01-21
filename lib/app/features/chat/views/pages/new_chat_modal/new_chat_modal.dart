@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -28,6 +29,8 @@ class NewChatModal extends HookConsumerWidget {
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }
+
+        context.pop();
 
         return MessagesRoute(
           chatType: ChatType.chat,
