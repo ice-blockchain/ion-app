@@ -26,7 +26,7 @@ class StoryGalleryButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final processorState = ref.watch(imageProcessorNotifierProvider(ImageProcessingType.story));
 
-    final openMediaPicker = useCallback(
+    final processedImage = useCallback(
       () async {
         final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
         if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
@@ -48,29 +48,28 @@ class StoryGalleryButton extends HookConsumerWidget {
       () {
         processorState.whenOrNull(
           processed: (file) async {
+            final editedPath = await ref.read(banubaServiceProvider).editPhoto(file.path);
+
+            if (editedPath == file.path) {
+              await processedImage();
+              return;
+            }
+
             if (context.mounted) {
-              final editedPath = await ref.read(banubaServiceProvider).editPhoto(file.path);
-              if (context.mounted) {
-                await openMediaPicker();
-                return;
-              }
+              final previewResult = await StoryPreviewRoute(
+                path: editedPath,
+                mimeType: file.mimeType,
+              ).push<bool>(context);
 
-              if (context.mounted) {
-                final previewResult = await StoryPreviewRoute(
-                  path: editedPath,
-                  mimeType: file.mimeType,
-                ).push<bool>(context);
-
-                if (previewResult == false && context.mounted) {
-                  await openMediaPicker();
-                }
+              if (previewResult == false) {
+                await processedImage();
               }
             }
           },
         );
         return null;
       },
-      [processorState, openMediaPicker],
+      [processorState, processedImage],
     );
 
     return PermissionAwareWidget(
