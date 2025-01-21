@@ -19,9 +19,7 @@ class TonTransactionCreator implements TransactionCreator {
 
   @override
   Future<Map<String, dynamic>> createTransaction(TransactionRequest request) async {
-    final from = request.wallet;
-    final to = request.destinationAddress;
-    final value = request.amount;
+    final TransactionRequest(wallet: from, destinationAddress: to, amount: value) = request;
 
     final wallet = WalletContractV4R2(Uint8List.fromList(hex.decode(from.signingKey.publicKey)));
 
