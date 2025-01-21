@@ -64,6 +64,30 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
     String? alt,
   }) = _FileMetadata;
 
+  factory FileMetadata.fromUploadResponseTags(List<List<String>> tags, {String? mimeType}) {
+    final values = tags.fold(<String, String>{}, (res, tags) {
+      return {...res, tags[0]: tags[1]};
+    });
+
+    // Only "url" and "ox" are required
+    // https://github.com/nostr-protocol/nips/blob/master/96.md#response-codes
+    return FileMetadata(
+      url: values['url']!,
+      mimeType: values['m'] ?? mimeType ?? '',
+      fileHash: values['x'] ?? values['ox']!,
+      originalFileHash: values['ox']!,
+      size: values['size'] != null ? int.parse(values['size']!) : null,
+      dimension: values['dim'],
+      magnet: values['magnet'],
+      torrentInfoHash: values['i']!,
+      blurhash: values['blurhash'],
+      thumb: values['thumb'],
+      image: values['image'],
+      summary: values['summary'],
+      alt: values['alt'],
+    );
+  }
+
   factory FileMetadata.fromEventMessage(EventMessage eventMessage) {
     String? url;
     String? mimeType;
@@ -136,48 +160,6 @@ class FileMetadata with _$FileMetadata implements EventSerializable {
   }
 
   const FileMetadata._();
-
-  factory FileMetadata.fromUploadResponseTags(List<List<String>> tags, {String? mimeType}) {
-    final values = tags.fold(<String, String>{}, (res, tags) {
-      return {...res, tags[0]: tags[1]};
-    });
-
-    // Only "url" and "ox" are required
-    // https://github.com/nostr-protocol/nips/blob/master/96.md#response-codes
-    return FileMetadata(
-      url: values['url']!,
-      mimeType: values['m'] ?? mimeType ?? '',
-      fileHash: values['x'] ?? values['ox']!,
-      originalFileHash: values['ox']!,
-      size: values['size'] != null ? int.parse(values['size']!) : null,
-      dimension: values['dim'],
-      magnet: values['magnet'],
-      torrentInfoHash: values['i']!,
-      blurhash: values['blurhash'],
-      thumb: values['thumb'],
-      image: values['image'],
-      summary: values['summary'],
-      alt: values['alt'],
-    );
-  }
-
-  List<List<String>> get imetaTags => [
-        [
-          'imeta',
-          'url $url',
-          'm $mimeType',
-          'ox $originalFileHash',
-          if (size != null) 'size $size',
-          if (dimension != null) 'dim $dimension',
-          if (magnet != null) 'magnet $magnet',
-          'i $torrentInfoHash',
-          if (blurhash != null) 'blurhash $blurhash',
-          if (thumb != null) 'thumb $thumb',
-          if (image != null) 'image $image',
-          if (summary != null) 'summary $summary',
-          if (alt != null) 'alt $alt',
-        ],
-      ];
 
   @override
   FutureOr<EventMessage> toEventMessage(

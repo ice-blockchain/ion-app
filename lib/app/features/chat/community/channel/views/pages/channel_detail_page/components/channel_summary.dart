@@ -10,7 +10,7 @@ import 'package:ion/app/features/chat/community/channel/views/pages/channel_deta
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/channel_avatar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/share_link_tile.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
-import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
+import 'package:ion/app/features/chat/community/view/components/joined_users_amount_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -50,8 +50,8 @@ class ChannelSummary extends HookConsumerWidget {
           name: channel.name,
         ),
         SizedBox(height: 2.0.s),
-        JoinedUsersAmountTile(
-          channelUUID: channel.uuid,
+        CommunityMemberCountTile(
+          communityUUID: channel.uuid,
         ),
         if (!basicMode)
           if (hasAccessToEdit) ...[

@@ -5,9 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/empty_state_copy_link.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
+import 'package:ion/app/features/chat/community/view/components/joined_users_amount_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
-import 'package:ion/app/features/chat/views/pages/components/joined_users_amount_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -39,8 +39,8 @@ class ChannelPage extends ConsumerWidget {
               onTap: () => ChannelDetailRoute(uuid: uuid).push<void>(context),
               imageWidget: channel.avatar?.url != null ? Image.network(channel.avatar!.url) : null,
               name: channel.name,
-              subtitle: JoinedUsersAmountTile(
-                channelUUID: channel.uuid,
+              subtitle: CommunityMemberCountTile(
+                communityUUID: channel.uuid,
               ),
             ),
             MessagingEmptyView(

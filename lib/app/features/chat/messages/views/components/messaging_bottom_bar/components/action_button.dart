@@ -23,13 +23,6 @@ class ActionButton extends HookConsumerWidget {
         case MessagingBottomBarState.voicePaused:
           return SendButton(
             onSend: () async {
-              // final conversationMessageManagementService =
-              //     await ref.read(conversationMessageManagementServiceProvider);
-
-              // await conversationMessageManagementService.sentMessage(
-              //   content: '',
-              //   // participantsPubkeys: participantsPubkeys,
-              // );
               ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
             },
           );

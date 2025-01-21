@@ -6,17 +6,17 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/providers/community_members_count_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class JoinedUsersAmountTile extends HookConsumerWidget {
-  const JoinedUsersAmountTile({
-    required this.channelUUID,
+class CommunityMemberCountTile extends HookConsumerWidget {
+  const CommunityMemberCountTile({
+    required this.communityUUID,
     super.key,
   });
 
-  final String channelUUID;
+  final String communityUUID;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final amount = ref.watch(communityMembersCountProvider(channelUUID)).valueOrNull ?? 0;
+    final amount = ref.watch(communityMembersCountProvider(communityUUID)).valueOrNull ?? 0;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

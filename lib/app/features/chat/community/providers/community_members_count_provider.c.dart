@@ -1,15 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
-// {
-//     "kind": 5400,
-//     "content": "[{\"kinds\":[1750], \"#h\":[\"<community UUIDv7>\"]}]",
-//     "tags": [
-//       ["param", "group", "p"],
-//       ["param", "relay", "ws://foo.com -- this is the url of the relay that you send this event to"]
-//     ],
-//     ... + the rest of the event fields defined in NIP-01
-// }
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';

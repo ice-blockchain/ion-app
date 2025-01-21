@@ -33,19 +33,22 @@ class FollowerUsers extends ConsumerWidget {
     if (users == null || users.isEmpty) return const NoUserView();
 
     final slivers = [
-      SliverList.separated(
-        separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-        itemCount: users.length,
-        itemBuilder: (BuildContext context, int index) {
-          final user = users.elementAt(index);
-          return SelectableUserListItem(
-            pubkey: user.masterPubkey,
-            onUserSelected: onUserSelected,
-            selectedPubkeys: selectedPubkeys,
-            selectable: selectable,
-          );
-        },
-      ),
+      if (users.isEmpty)
+        const SliverToBoxAdapter(child: SizedBox.shrink())
+      else
+        SliverList.separated(
+          separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
+          itemCount: users.length,
+          itemBuilder: (BuildContext context, int index) {
+            final user = users.elementAt(index);
+            return SelectableUserListItem(
+              pubkey: user.masterPubkey,
+              onUserSelected: onUserSelected,
+              selectedPubkeys: selectedPubkeys,
+              selectable: selectable,
+            );
+          },
+        ),
     ];
 
     return LoadMoreBuilder(
