@@ -8,95 +8,112 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
+import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_modifiable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
-part 'post_data.c.freezed.dart';
+part 'modifiable_post_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class PostEntity with _$PostEntity, IonConnectEntity implements CacheableEntity {
-  const factory PostEntity({
+class ModifiablePostEntity
+    with _$ModifiablePostEntity, IonConnectEntity
+    implements CacheableEntity {
+  const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
     required String masterPubkey,
     required String signature,
     required DateTime createdAt,
-    required PostData data,
-  }) = _PostEntity;
+    required ModifiablePostData data,
+  }) = _ModifiablePostEntity;
 
-  const PostEntity._();
+  const ModifiablePostEntity._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/01.md
-  factory PostEntity.fromEventMessage(EventMessage eventMessage) {
+  /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-01.md
+  factory ModifiablePostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
     }
 
-    return PostEntity(
+    return ModifiablePostEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
-      data: PostData.fromEventMessage(eventMessage),
+      data: ModifiablePostData.fromEventMessage(eventMessage),
     );
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(id: id);
+  String get cacheKey => cacheKeyBuilder(replaceableEventId: data.replaceableEventId.value);
 
-  static String cacheKeyBuilder({required String id}) => id;
+  static String cacheKeyBuilder({required String replaceableEventId}) => replaceableEventId;
 
-  static const kind = 1;
+  static const kind = 30175;
 }
 
 @freezed
-class PostData with _$PostData, EntityMediaDataMixin implements EventSerializable {
-  const factory PostData({
+class ModifiablePostData
+    with _$ModifiablePostData, EntityMediaDataMixin
+    implements EventSerializable {
+  const factory ModifiablePostData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
+    required ReplaceableEventIdentifier replaceableEventId,
+    required EntityPublishedAt publishedAt,
+    EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
-    QuotedEvent? quotedEvent,
-    List<RelatedEvent>? relatedEvents,
+    QuotedModifiableEvent? quotedEvent,
+    List<RelatedReplaceableEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
-  }) = _PostData;
+  }) = _ModifiablePostData;
 
-  factory PostData.fromEventMessage(EventMessage eventMessage) {
+  factory ModifiablePostData.fromEventMessage(EventMessage eventMessage) {
     final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
 
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    return PostData(
+    return ModifiablePostData(
       content: parsedContent,
       media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      replaceableEventId:
+          ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
+      publishedAt: EntityPublishedAt.fromTag(tags[EntityPublishedAt.tagName]!.first),
+      editingEndedAt: tags[EntityEditingEndedAt.tagName] != null
+          ? EntityEditingEndedAt.fromTag(tags[EntityEditingEndedAt.tagName]!.first)
+          : null,
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedEvent.tagName] != null
-          ? QuotedEvent.fromTag(tags[QuotedEvent.tagName]!.first)
+      quotedEvent: tags[QuotedModifiableEvent.tagName] != null
+          ? QuotedModifiableEvent.fromTag(tags[QuotedModifiableEvent.tagName]!.first)
           : null,
-      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedEvents:
+          tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
     );
   }
 
-  factory PostData.fromRawContent(String content) {
+  factory ModifiablePostData.fromRawContent(String content) {
     final parsedContent = TextParser.allMatchers().parse(content);
 
     final hashtags = parsedContent
@@ -104,14 +121,16 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         .map((match) => RelatedHashtag(value: match.text))
         .toList();
 
-    return PostData(
+    return ModifiablePostData(
       content: parsedContent,
       relatedHashtags: hashtags,
+      replaceableEventId: ReplaceableEventIdentifier.generate(),
+      publishedAt: EntityPublishedAt(value: DateTime.now()),
       media: {},
     );
   }
 
-  const PostData._();
+  const ModifiablePostData._();
 
   @override
   FutureOr<EventMessage> toEventMessage(
@@ -122,10 +141,13 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
-      kind: PostEntity.kind,
+      kind: ModifiablePostEntity.kind,
       content: content.map((match) => match.text).join(),
       tags: [
         ...tags,
+        replaceableEventId.toTag(),
+        publishedAt.toTag(),
+        if (editingEndedAt != null) editingEndedAt!.toTag(),
         if (expiration != null) expiration!.toTag(),
         if (quotedEvent != null) quotedEvent!.toTag(),
         if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
@@ -137,16 +159,11 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
     );
   }
 
-  @override
-  String toString() {
-    return 'PostData(${content.map((match) => match.text).join()})';
-  }
-
-  RelatedEvent? get parentEvent {
+  RelatedReplaceableEvent? get parentEvent {
     if (relatedEvents == null) return null;
 
-    RelatedEvent? rootReplyId;
-    RelatedEvent? replyId;
+    RelatedReplaceableEvent? rootReplyId;
+    RelatedReplaceableEvent? replyId;
     for (final relatedEvent in relatedEvents!) {
       if (relatedEvent.marker == RelatedEventMarker.reply) {
         replyId = relatedEvent;
@@ -163,5 +180,10 @@ class PostData with _$PostData, EntityMediaDataMixin implements EventSerializabl
         settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
             as WhoCanReplyEventSetting?;
     return whoCanReplySetting?.values.firstOrNull;
+  }
+
+  @override
+  String toString() {
+    return 'ModifiablePostData(${content.map((match) => match.text).join()})';
   }
 }

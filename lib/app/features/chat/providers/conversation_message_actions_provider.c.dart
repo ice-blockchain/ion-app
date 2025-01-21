@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
@@ -83,7 +84,7 @@ class ConversationMessageActionsService {
     ]);
 
     final tags = [
-      ['d', 'chat_messages'],
+      const ReplaceableEventIdentifier(value: 'chat_messages').toTag(),
       ['encrypted'],
     ];
 

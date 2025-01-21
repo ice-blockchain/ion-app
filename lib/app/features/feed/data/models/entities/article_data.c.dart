@@ -9,14 +9,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 
 part 'article_data.c.freezed.dart';
 
@@ -71,10 +72,11 @@ class ArticleData with _$ArticleData implements EventSerializable {
   const factory ArticleData({
     required String content,
     required Map<String, MediaAttachment> media,
+    required ReplaceableEventIdentifier replaceableEventId,
+    required EntityPublishedAt publishedAt,
     String? title,
     String? image,
     String? summary,
-    DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
   }) = _ArticleData;
@@ -88,14 +90,6 @@ class ArticleData with _$ArticleData implements EventSerializable {
     final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
 
-    DateTime? publishedAt;
-    if (tags['published_at']?.firstOrNull?.elementAtOrNull(1) != null) {
-      final timestamp = int.tryParse(tags['published_at']!.first.elementAt(1));
-      if (timestamp != null) {
-        publishedAt = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-      }
-    }
-
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
@@ -104,7 +98,9 @@ class ArticleData with _$ArticleData implements EventSerializable {
       title: title,
       image: image,
       summary: summary,
-      publishedAt: publishedAt,
+      publishedAt: EntityPublishedAt.fromTag(tags[EntityPublishedAt.tagName]!.first),
+      replaceableEventId:
+          ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
     );
@@ -133,7 +129,8 @@ class ArticleData with _$ArticleData implements EventSerializable {
       title: title,
       image: image,
       summary: summary,
-      publishedAt: publishedAt,
+      publishedAt: EntityPublishedAt(value: publishedAt ?? DateTime.now()),
+      replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
       settings: setting != null ? [setting] : null,
     );
@@ -145,21 +142,18 @@ class ArticleData with _$ArticleData implements EventSerializable {
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
-    final uniqueIdForEditing = generateV4UUID(); // Required to be set in 'd' tag
-
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
       kind: ArticleEntity.kind,
       tags: [
         ...tags,
+        replaceableEventId.toTag(),
+        publishedAt.toTag(),
         if (title != null) ['title', title!],
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
-        if (publishedAt != null)
-          ['published_at', (publishedAt!.millisecondsSinceEpoch ~/ 1000).toString()],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-        ['d', uniqueIdForEditing],
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,

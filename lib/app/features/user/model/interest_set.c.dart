@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
@@ -64,10 +65,11 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
   const InterestSetData._();
 
   factory InterestSetData.fromEventMessage(EventMessage eventMessage) {
-    final typeName = eventMessage.tags.firstWhereOrNull((tag) => tag[0] == 'd')?[1];
+    final typeName = eventMessage.tags
+        .firstWhereOrNull((tag) => tag[0] == ReplaceableEventIdentifier.tagName)?[1];
 
     if (typeName == null) {
-      throw Exception('InterestSet event should have `d` tag');
+      throw Exception('InterestSet event should have `${ReplaceableEventIdentifier.tagName}` tag');
     }
 
     return InterestSetData(
@@ -88,7 +90,7 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
       kind: InterestSetEntity.kind,
       tags: [
         ...tags,
-        ['d', type.toShortString()],
+        ReplaceableEventIdentifier(value: type.toShortString()).toTag(),
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],
       content: '',

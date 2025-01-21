@@ -7,8 +7,8 @@ import 'package:ion/app/features/chat/model/entities/private_direct_message_data
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/database/ion_database.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 part 'conversation_db_service.c.g.dart';
 
@@ -106,7 +106,7 @@ class ConversationsDBService {
         );
       } else if (eventMessage.content.isEmpty) {
         // New conversation
-        final uuid = const Uuid().v1();
+        final uuid = generateUuid();
         await _insertConversationData(
           eventMessage: eventMessage,
           conversationId: uuid,
