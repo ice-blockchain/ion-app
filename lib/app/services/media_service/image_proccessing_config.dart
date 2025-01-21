@@ -36,16 +36,24 @@ class ImageProcessingConstants {
     targetWidth: 1024,
     targetHeight: 627,
   );
+
+  static const story = CropImageConfig(
+    aspectRatio: CropAspectRatio(ratioX: 9, ratioY: 16),
+    targetWidth: 1080,
+    targetHeight: 1920,
+  );
 }
 
 enum ImageProcessingType {
   avatar,
   banner,
-  articleCover;
+  articleCover,
+  story;
 
   CropImageConfig get config => switch (this) {
         ImageProcessingType.avatar => ImageProcessingConstants.avatar,
         ImageProcessingType.banner => ImageProcessingConstants.banner,
         ImageProcessingType.articleCover => ImageProcessingConstants.articleCover,
+        ImageProcessingType.story => ImageProcessingConstants.story,
       };
 }
