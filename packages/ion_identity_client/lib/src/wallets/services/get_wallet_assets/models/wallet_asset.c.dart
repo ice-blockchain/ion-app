@@ -8,12 +8,12 @@ part 'wallet_asset.c.g.dart';
 
 @freezed
 class WalletAsset with _$WalletAsset {
-  factory WalletAsset({
+  const factory WalletAsset({
     required String? name,
     required String? contract,
     required String symbol,
     required int decimals,
-    required String balance,
+    required double balance,
     required bool? verified,
   }) = _WalletAsset;
 

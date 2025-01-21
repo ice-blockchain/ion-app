@@ -9,7 +9,7 @@ import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/app/features/core/views/components/app_lifecycle_observer.dart';
 import 'package:ion/app/features/core/views/components/content_scaler.dart';
-import 'package:ion/app/features/wallet/components/coin_sync/coins_sync_wrapper.dart';
+import 'package:ion/app/features/wallets/views/components/coin_sync/coins_sync_wrapper.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';

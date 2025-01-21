@@ -57,14 +57,14 @@ class GetCoinsDataSource {
 
   Future<List<Coin>> syncCoins({
     required String username,
-    required List<Coin> coins,
+    required Set<String> symbolGroups,
   }) async {
     final token = _getToken(username);
 
     return _networkClient.patch(
       '/v1/sync-coins',
       queryParams: {
-        'symbolGroup': coins.map((coin) => coin.symbolGroup).toSet().toList(),
+        'symbolGroup': symbolGroups.toList(),
       },
       headers: RequestHeaders.getTokenHeader(token: token),
       decoder: (result) => parseList(result, fromJson: Coin.fromJson),

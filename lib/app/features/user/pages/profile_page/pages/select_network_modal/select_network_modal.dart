@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
-import 'package:ion/app/features/wallet/components/coin_networks_list/coin_networks_list_view.dart';
-import 'package:ion/app/features/wallet/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/views/components/coin_networks_list/coin_networks_list_view.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 

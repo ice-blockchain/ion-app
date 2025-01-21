@@ -28,10 +28,10 @@ class IONIdentityCoins {
     );
   }
 
-  Future<List<Coin>> syncCoins(List<Coin> coins) {
+  Future<List<Coin>> syncCoins(Set<String> symbolGroups) {
     return _getCoinsService.syncCoins(
       username: username,
-      coins: coins,
+      symbolGroups: symbolGroups,
     );
   }
 

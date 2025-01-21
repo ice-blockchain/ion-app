@@ -1,0 +1,197 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'create_wallet_view_request.c.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+
+CreateWalletViewRequest _$CreateWalletViewRequestFromJson(
+    Map<String, dynamic> json) {
+  return _CreateWalletViewRequest.fromJson(json);
+}
+
+/// @nodoc
+mixin _$CreateWalletViewRequest {
+  List<WalletViewItem> get items => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+
+  /// Serializes this CreateWalletViewRequest to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of CreateWalletViewRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $CreateWalletViewRequestCopyWith<CreateWalletViewRequest> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CreateWalletViewRequestCopyWith<$Res> {
+  factory $CreateWalletViewRequestCopyWith(CreateWalletViewRequest value,
+          $Res Function(CreateWalletViewRequest) then) =
+      _$CreateWalletViewRequestCopyWithImpl<$Res, CreateWalletViewRequest>;
+  @useResult
+  $Res call({List<WalletViewItem> items, String name});
+}
+
+/// @nodoc
+class _$CreateWalletViewRequestCopyWithImpl<$Res,
+        $Val extends CreateWalletViewRequest>
+    implements $CreateWalletViewRequestCopyWith<$Res> {
+  _$CreateWalletViewRequestCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of CreateWalletViewRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? items = null,
+    Object? name = null,
+  }) {
+    return _then(_value.copyWith(
+      items: null == items
+          ? _value.items
+          : items // ignore: cast_nullable_to_non_nullable
+              as List<WalletViewItem>,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$CreateWalletViewRequestImplCopyWith<$Res>
+    implements $CreateWalletViewRequestCopyWith<$Res> {
+  factory _$$CreateWalletViewRequestImplCopyWith(
+          _$CreateWalletViewRequestImpl value,
+          $Res Function(_$CreateWalletViewRequestImpl) then) =
+      __$$CreateWalletViewRequestImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({List<WalletViewItem> items, String name});
+}
+
+/// @nodoc
+class __$$CreateWalletViewRequestImplCopyWithImpl<$Res>
+    extends _$CreateWalletViewRequestCopyWithImpl<$Res,
+        _$CreateWalletViewRequestImpl>
+    implements _$$CreateWalletViewRequestImplCopyWith<$Res> {
+  __$$CreateWalletViewRequestImplCopyWithImpl(
+      _$CreateWalletViewRequestImpl _value,
+      $Res Function(_$CreateWalletViewRequestImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of CreateWalletViewRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? items = null,
+    Object? name = null,
+  }) {
+    return _then(_$CreateWalletViewRequestImpl(
+      items: null == items
+          ? _value._items
+          : items // ignore: cast_nullable_to_non_nullable
+              as List<WalletViewItem>,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$CreateWalletViewRequestImpl implements _CreateWalletViewRequest {
+  const _$CreateWalletViewRequestImpl(
+      {required final List<WalletViewItem> items, required this.name})
+      : _items = items;
+
+  factory _$CreateWalletViewRequestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CreateWalletViewRequestImplFromJson(json);
+
+  final List<WalletViewItem> _items;
+  @override
+  List<WalletViewItem> get items {
+    if (_items is EqualUnmodifiableListView) return _items;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_items);
+  }
+
+  @override
+  final String name;
+
+  @override
+  String toString() {
+    return 'CreateWalletViewRequest(items: $items, name: $name)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateWalletViewRequestImpl &&
+            const DeepCollectionEquality().equals(other._items, _items) &&
+            (identical(other.name, name) || other.name == name));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_items), name);
+
+  /// Create a copy of CreateWalletViewRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateWalletViewRequestImplCopyWith<_$CreateWalletViewRequestImpl>
+      get copyWith => __$$CreateWalletViewRequestImplCopyWithImpl<
+          _$CreateWalletViewRequestImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CreateWalletViewRequestImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _CreateWalletViewRequest implements CreateWalletViewRequest {
+  const factory _CreateWalletViewRequest(
+      {required final List<WalletViewItem> items,
+      required final String name}) = _$CreateWalletViewRequestImpl;
+
+  factory _CreateWalletViewRequest.fromJson(Map<String, dynamic> json) =
+      _$CreateWalletViewRequestImpl.fromJson;
+
+  @override
+  List<WalletViewItem> get items;
+  @override
+  String get name;
+
+  /// Create a copy of CreateWalletViewRequest
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CreateWalletViewRequestImplCopyWith<_$CreateWalletViewRequestImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}

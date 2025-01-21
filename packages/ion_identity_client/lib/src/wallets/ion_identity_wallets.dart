@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
 import 'package:ion_identity_client/src/wallets/services/create_wallet/create_wallet_service.dart';
 import 'package:ion_identity_client/src/wallets/services/generate_signature/generate_signature_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_assets/get_wallet_assets_service.dart';
@@ -8,6 +9,7 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/wallet_views/wallet_views_service.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
 /// associated with a specific user.
@@ -28,13 +30,17 @@ class IONIdentityWallets {
     required GetWalletHistoryService getWalletHistoryService,
     required GetWalletTransferRequestsService getWalletTransferRequestsService,
     required GenerateSignatureService generateSignatureService,
+    required WalletViewsService walletViewsService,
+    required ExtractUserIdService extractUserIdService,
   })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
         _getWalletNftsService = getWalletNftsService,
         _getWalletHistoryService = getWalletHistoryService,
         _getWalletTransferRequestsService = getWalletTransferRequestsService,
-        _generateSignatureService = generateSignatureService;
+        _generateSignatureService = generateSignatureService,
+        _walletViewsService = walletViewsService,
+        _extractUserIdService = extractUserIdService;
 
   final String username;
 
@@ -45,6 +51,8 @@ class IONIdentityWallets {
   final GetWalletHistoryService _getWalletHistoryService;
   final GetWalletTransferRequestsService _getWalletTransferRequestsService;
   final GenerateSignatureService _generateSignatureService;
+  final WalletViewsService _walletViewsService;
+  final ExtractUserIdService _extractUserIdService;
 
   Future<Wallet> createWallet({
     required String network,
@@ -135,4 +143,32 @@ class IONIdentityWallets {
         hash: hash,
         localisedReason: localisedReason,
       );
+
+  Future<List<ShortWalletView>> getWalletViews() {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.getWalletViews(userId);
+  }
+
+  Future<ShortWalletView> createWalletView(CreateUpdateWalletViewRequest request) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.createWalletView(request, userId);
+  }
+
+  Future<WalletView> getWalletView(String walletViewId) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.getWalletView(userId: userId, walletViewId: walletViewId);
+  }
+
+  Future<ShortWalletView> updateWalletView(
+    String walletViewId,
+    CreateUpdateWalletViewRequest request,
+  ) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.updateWalletView(userId, walletViewId, request);
+  }
+
+  Future<void> deleteWalletView(String walletViewId) {
+    final userId = _extractUserIdService.extractUserId(username: username);
+    return _walletViewsService.deleteWalletView(walletViewId, userId);
+  }
 }
