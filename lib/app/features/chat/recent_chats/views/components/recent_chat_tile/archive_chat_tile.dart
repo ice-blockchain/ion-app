@@ -19,7 +19,8 @@ class ArchiveChatTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
     final selectedConversationsIds = ref.watch(selectedConversationsIdsProvider);
-    final conversations = ref.watch(conversationsProvider).valueOrNull?.where((c) => c.isArchived).toList() ?? [];
+    final conversations =
+        ref.watch(conversationsProvider).valueOrNull?.where((c) => c.isArchived).toList() ?? [];
 
     return GestureDetector(
       onTap: () {
@@ -78,7 +79,9 @@ class ArchiveChatTile extends ConsumerWidget {
                             ),
                           ),
                           UnreadCountBadge(
-                            unreadCount: conversations.map((c) => c.unreadMessagesCount!).reduce((a, b) => a + b),
+                            unreadCount: conversations
+                                .map((c) => c.unreadMessagesCount!)
+                                .reduce((a, b) => a + b),
                           ),
                         ],
                       ),

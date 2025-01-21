@@ -13,7 +13,8 @@ class RecentChatsArchiveTimelinePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final conversations = ref.watch(conversationsProvider).valueOrNull?.where((c) => c.isArchived).toList() ?? [];
+    final conversations =
+        ref.watch(conversationsProvider).valueOrNull?.where((c) => c.isArchived).toList() ?? [];
 
     if (conversations.isEmpty) {
       return const SizedBox.shrink();

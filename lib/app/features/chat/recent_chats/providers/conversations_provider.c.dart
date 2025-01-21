@@ -23,13 +23,16 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   FutureOr<List<E2eeConversationEntity>> build() async {
-    final conversationSubscription =
-        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
+    final conversationSubscription = ref
+        .read(conversationsDBServiceProvider)
+        .watchConversations()
+        .listen((conversationsEventMessages) async {
       state = await AsyncValue.guard(() async {
         final lastPrivateDirectMesssages =
             conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
-        final conversations = await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
+        final conversations =
+            await Future.wait(lastPrivateDirectMesssages.map(getConversationData));
 
         return conversations;
       });
@@ -60,7 +63,8 @@ class Conversations extends _$Conversations {
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
 
     if (type == ChatType.chat) {
-      final userMetadata = await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
+      final userMetadata =
+          await ref.read(userMetadataProvider(message.data.relatedPubkeys!.first.value).future);
 
       if (userMetadata != null) {
         nickname = userMetadata.data.name;
@@ -70,21 +74,24 @@ class Conversations extends _$Conversations {
     } else {
       name = message.data.relatedSubject?.value ?? '';
 
-      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
-      final imageUrls =
-          await conversationMessageManagementService.downloadDecryptDecompressMedia([message.data.primaryMedia!]);
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider);
+      final imageUrls = await conversationMessageManagementService
+          .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
       imageUrl = imageUrls.first.path;
     }
 
     final lastMessageAt = message.createdAt;
-    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants =
+        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.toString();
 
     final database = ref.read(conversationsDBServiceProvider);
 
     final conversationId = await database.lookupConversationByEventMessageId(message.id);
 
-    final unreadMessagesCount = conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
+    final unreadMessagesCount =
+        conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
 
     final isArchived = await _checkConversationIsArchived(
       type: type,
@@ -151,13 +158,16 @@ class Conversations extends _$Conversations {
     for (final archivedConversation in archivedConversations) {
       final participant = List<String>.from(participants).singleWhere((e) => e != currentPubkey);
 
-      if (type == ChatType.chat && archivedConversation.contains('p') && archivedConversation[1] == participant) {
+      if (type == ChatType.chat &&
+          archivedConversation.contains('p') &&
+          archivedConversation[1] == participant) {
         return true;
       } else if (type == ChatType.group && archivedConversation.contains('subject')) {
         final archivedSubject = archivedConversation[1];
         final archivedParticipants = archivedConversation.sublist(2);
 
-        if (archivedSubject == subject && archivedParticipants.toSet().containsAll(participants.toSet())) {
+        if (archivedSubject == subject &&
+            archivedParticipants.toSet().containsAll(participants.toSet())) {
           return true;
         }
       }
