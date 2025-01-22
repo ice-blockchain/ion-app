@@ -79,7 +79,7 @@ class RecoveryCredentialsService {
     );
   }
 
-  Future<List<Credential>> getRecoveryCredentialsList() =>
+  Future<List<Credential>> getCredentialsList() =>
       dataSource.getCredentialsList(username: username);
 
   String generateCredentialName() => const Uuid().v4().toUpperCase();

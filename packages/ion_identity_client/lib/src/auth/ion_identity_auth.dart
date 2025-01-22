@@ -145,6 +145,5 @@ class IONIdentityAuth {
   ]) =>
       twoFAService.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
 
-  Future<List<Credential>> getRecoveryCredentialsList() =>
-      recoveryCredentialsService.getRecoveryCredentialsList();
+  Future<List<Credential>> getCredentialsList() => recoveryCredentialsService.getCredentialsList();
 }

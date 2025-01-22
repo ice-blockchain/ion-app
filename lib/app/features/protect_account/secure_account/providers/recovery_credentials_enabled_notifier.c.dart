@@ -20,7 +20,7 @@ class RecoveryCredentialsEnabled extends _$RecoveryCredentialsEnabled {
     if (ionIdentity == null) {
       return false;
     }
-    final credentials = await ionIdentity(username: selectedUser).auth.getRecoveryCredentialsList();
+    final credentials = await ionIdentity(username: selectedUser).auth.getCredentialsList();
     return credentials.any((credential) => credential.kind == CredentialKind.RecoveryKey.name);
   }
 
