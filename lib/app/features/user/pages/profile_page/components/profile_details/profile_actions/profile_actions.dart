@@ -36,8 +36,11 @@ class ProfileActions extends ConsumerWidget {
         ),
         SizedBox(width: 8.0.s),
         ProfileAction(
-          onPressed: () {
-            PaymentSelectionRoute(pubkey: pubkey).push<void>(context);
+          onPressed: () async {
+            final needToEnable2FA = await PaymentSelectionRoute(pubkey: pubkey).push<bool>(context);
+            if (needToEnable2FA != null && needToEnable2FA == true && context.mounted) {
+              await SecureAccountModalRoute().push<void>(context);
+            }
           },
           assetName: Assets.svg.iconProfileTips,
         ),

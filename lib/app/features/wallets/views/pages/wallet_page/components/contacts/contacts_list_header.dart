@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/ui.dart';
@@ -34,8 +32,16 @@ class ContactListHeader extends StatelessWidget {
           TextButton(
             onPressed: () async {
               final pubkey = await NftSelectFriendRoute().push<String>(context);
-              if (pubkey != null && context.mounted) {
-                unawaited(ContactRoute(contactId: pubkey).push<void>(context));
+              if (pubkey != null) {
+                if (context.mounted) {
+                  final needToEnable2FA = await ContactRoute(contactId: pubkey).push<bool>(context);
+                  if (needToEnable2FA != null && needToEnable2FA == true) {
+                    await Future<void>.delayed(const Duration(seconds: 1));
+                    if (context.mounted) {
+                      await SecureAccountModalRoute().push<void>(context);
+                    }
+                  }
+                }
               }
             },
             child: Padding(

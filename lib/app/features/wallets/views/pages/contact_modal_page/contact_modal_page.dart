@@ -45,6 +45,7 @@ class ContactPage extends ConsumerWidget {
               child: BalanceActions(
                 onReceive: () => ReceiveCoinRoute().push<void>(context),
                 onSend: () => CoinSendRoute().push<void>(context),
+                onNeedToEnable2FA: () => Navigator.of(context).pop(true),
               ),
             )
           else
