@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
@@ -59,12 +58,9 @@ class WalletPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Balance(),
+                const Delimiter(),
                 const ContactsList(),
-                Delimiter(
-                  padding: EdgeInsets.only(
-                    top: 16.0.s,
-                  ),
-                ),
+                const Delimiter(),
                 WalletTabsHeader(
                   activeTab: activeTab.value,
                   onTabSwitch: (WalletTabType newTab) {

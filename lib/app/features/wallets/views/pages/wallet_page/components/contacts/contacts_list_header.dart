@@ -34,10 +34,8 @@ class ContactListHeader extends StatelessWidget {
           TextButton(
             onPressed: () async {
               final pubkey = await NftSelectFriendRoute().push<String>(context);
-              if (pubkey != null) {
-                if (context.mounted) {
-                  unawaited(ContactRoute(contactId: pubkey).push<void>(context));
-                }
+              if (pubkey != null && context.mounted) {
+                unawaited(ContactRoute(contactId: pubkey).push<void>(context));
               }
             },
             child: Padding(

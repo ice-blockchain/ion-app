@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/views/pages/wallet_page/components/cont
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
 
+// TODO: rename to FriendsList along with `contacts_list_{header,item,loader}` and others
 class ContactsList extends ConsumerWidget {
   const ContactsList({super.key});
 

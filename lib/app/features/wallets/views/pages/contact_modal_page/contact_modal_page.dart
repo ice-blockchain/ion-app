@@ -35,17 +35,6 @@ class ContactPage extends ConsumerWidget {
                   contactData: contactData,
                 ),
               ),
-              if (contactData.hasIceAccount)
-                Positioned(
-                  top: 16.0.s,
-                  right: 16.0.s,
-                  child: Button.icon(
-                    size: 32.0.s,
-                    type: ButtonType.dropdown,
-                    onPressed: () {},
-                    icon: Assets.svg.iconButtonHistory.icon(),
-                  ),
-                ),
             ],
           ),
           SizedBox(
