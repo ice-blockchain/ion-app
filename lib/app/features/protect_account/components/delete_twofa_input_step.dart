@@ -53,38 +53,35 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
         key: formKey.value,
         child: CustomScrollView(
           slivers: [
-            SliverPadding(
-              padding: EdgeInsets.only(top: 56.0.s),
-              sliver: SliverList.builder(
-                itemCount: twoFaTypes.length,
-                itemBuilder: (context, index) {
-                  final twoFaType = twoFaTypes[index];
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 22.0.s),
-                    child: TwoFaCodeInput(
-                      controller: controllers[twoFaType]!,
-                      twoFaType: twoFaType,
-                      onRequestCode: () async {
-                        await guardPasskeyDialog(
-                          ref.context,
-                          (child) => RiverpodVerifyIdentityRequestBuilder(
-                            provider: requestTwoFaCodeNotifierProvider,
-                            requestWithVerifyIdentity:
-                                (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) {
-                              ref.read(requestTwoFaCodeNotifierProvider.notifier).requestTwoFaCode(
-                                    twoFaType,
-                                    onVerifyIdentity,
-                                  );
-                            },
-                            child: child,
-                          ),
-                        );
-                      },
-                      isSending: isRequesting,
-                    ),
-                  );
-                },
-              ),
+            SliverList.builder(
+              itemCount: twoFaTypes.length,
+              itemBuilder: (context, index) {
+                final twoFaType = twoFaTypes[index];
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 22.0.s),
+                  child: TwoFaCodeInput(
+                    controller: controllers[twoFaType]!,
+                    twoFaType: twoFaType,
+                    onRequestCode: () async {
+                      await guardPasskeyDialog(
+                        ref.context,
+                        (child) => RiverpodVerifyIdentityRequestBuilder(
+                          provider: requestTwoFaCodeNotifierProvider,
+                          requestWithVerifyIdentity:
+                              (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) {
+                            ref.read(requestTwoFaCodeNotifierProvider.notifier).requestTwoFaCode(
+                                  twoFaType,
+                                  onVerifyIdentity,
+                                );
+                          },
+                          child: child,
+                        ),
+                      );
+                    },
+                    isSending: isRequesting,
+                  ),
+                );
+              },
             ),
             SliverFillRemaining(
               hasScrollBody: false,
