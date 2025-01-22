@@ -6,10 +6,11 @@ class ChatRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<AppTestRoute>(path: 'app-test'),
     TypedGoRoute<ChatSimpleSearchRoute>(path: 'simple-search'),
+    TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
     TypedGoRoute<ChatAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<DeleteConversationRoute>(path: 'delete/:conversationId'),
+        TypedGoRoute<DeleteConversationRoute>(path: 'delete'),
         TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
         TypedGoRoute<NewChannelModalRoute>(path: 'new-channel'),
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
@@ -27,14 +28,22 @@ class AppTestRoute extends BaseRouteData {
   AppTestRoute() : super(child: const AppTestPage());
 }
 
-class DeleteConversationRoute extends BaseRouteData {
-  DeleteConversationRoute({required this.conversationId})
+class ArchivedChatsMainRoute extends BaseRouteData {
+  ArchivedChatsMainRoute()
       : super(
-          child: DeleteConversationModal(conversationId: conversationId),
+          child: const ArchivedChatsMainPage(),
+          type: IceRouteType.slideFromLeft,
+        );
+}
+
+class DeleteConversationRoute extends BaseRouteData {
+  DeleteConversationRoute({required this.conversationIds})
+      : super(
+          child: DeleteConversationModal(conversationIds: conversationIds),
           type: IceRouteType.bottomSheet,
         );
 
-  final String conversationId;
+  final List<String> conversationIds;
 }
 
 class ChatSimpleSearchRoute extends BaseRouteData {

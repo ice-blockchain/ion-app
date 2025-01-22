@@ -6,7 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/providers/e2ee_group_conversation_management_provider.c.dart';
+import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -16,13 +16,13 @@ import 'package:ion/generated/assets.gen.dart';
 class MessagesPage extends HookConsumerWidget {
   const MessagesPage(this.conversationData, {super.key});
 
-  final Ee2eConversationEntity conversationData;
+  final E2eeConversationEntity conversationData;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() => _initConversation(ref));
 
-    ref.displayErrors(e2EEGroupConversationManagementProvider);
+    ref.displayErrors(e2eeConversationManagementProvider);
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -84,7 +84,7 @@ class MessagesPage extends HookConsumerWidget {
 
   Future<void> _initConversation(WidgetRef ref) async {
     // TODO: Should be called if there is no conversation messages yet in DB
-    final ee2eGroupConversationService = ref.read(e2EEGroupConversationManagementProvider.notifier);
+    final ee2eGroupConversationService = ref.read(e2eeConversationManagementProvider.notifier);
 
     if (conversationData.type == ChatType.chat) {
       await ee2eGroupConversationService.createOneOnOneConversation(conversationData.participants);

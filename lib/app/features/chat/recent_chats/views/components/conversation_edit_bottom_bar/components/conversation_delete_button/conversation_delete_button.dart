@@ -15,16 +15,20 @@ class ConversationDeleteButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedConversationsIds = ref.watch(selectedConversationsIdsProvider);
+    final selectedConversationsIds =
+        ref.watch(selectedConversationsIdsProvider).map((e) => e.id!).toList();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         if (selectedConversationsIds.isNotEmpty) {
-          DeleteConversationRoute(conversationId: '2').push<void>(context).then((_) {
+          DeleteConversationRoute(conversationIds: selectedConversationsIds)
+              .push<void>(context)
+              .then((_) {
             ref.read(conversationsEditModeProvider.notifier).editMode = false;
+            ref.read(selectedConversationsIdsProvider.notifier).clear();
           });
-        } else {}
+        }
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,

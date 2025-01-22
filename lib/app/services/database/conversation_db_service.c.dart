@@ -119,6 +119,18 @@ class ConversationsDBService {
   }
 
   // Check if there are conversations with the same pubkeys
+  Future<String?> lookupConversationByEventMessageId(String eventMessageId) async {
+    final conversationMessage = await (_db.select(_db.conversationMessagesTable)
+          ..where(
+            (table) => table.eventMessageId.equals(eventMessageId),
+          )
+          ..limit(1))
+        .getSingle();
+
+    return conversationMessage.conversationId;
+  }
+
+  // Check if there are conversations with the same pubkeys
   Future<String?> _lookupConversationByPubkeys(
     PrivateDirectMessageEntity conversationMessage,
   ) async {
@@ -239,8 +251,42 @@ class ConversationsDBService {
     );
   }
 
+  Future<int> getUnreadMessagesCount(String conversationId) {
+    return (_db.select(_db.conversationMessagesTable)
+          ..where((table) => table.conversationId.equals(conversationId))
+          ..where((table) => table.status.equals(DeliveryStatus.isReceived.index)))
+        .get()
+        .then((value) => value.length);
+  }
+
+  Future<void> markConversationsAsRead(List<String> conversationIds) async {
+    return _db.batch(
+      (b) {
+        b.update(
+          _db.conversationMessagesTable,
+          const ConversationMessagesTableCompanion(status: Value(DeliveryStatus.isRead)),
+          where: (table) =>
+              table.conversationId.isIn(conversationIds) &
+              table.status.equals(DeliveryStatus.isReceived.index),
+        );
+      },
+    );
+  }
+
+  Future<void> markAllConversationsAsRead() async {
+    return _db.batch(
+      (b) {
+        b.update(
+          _db.conversationMessagesTable,
+          const ConversationMessagesTableCompanion(status: Value(DeliveryStatus.isRead)),
+          where: (table) => table.status.equals(DeliveryStatus.isReceived.index),
+        );
+      },
+    );
+  }
+
   final _allConversationsLatestMessageQuery =
-      'SELECT * FROM (SELECT * FROM conversation_messages_table ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
+      'SELECT * FROM (SELECT * FROM conversation_messages_table WHERE is_deleted = 0 ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
 
   Future<List<EventMessage>> getAllConversations() async {
     // Select last message of each conversation
@@ -312,7 +358,7 @@ class ConversationsDBService {
     return reactions;
   }
 
-  //get last createdAt date from conversation_messages_table
+  // Get last createdAt date from conversation_messages_table
   Future<DateTime?> getLastConversationMessageCreatedAt() async {
     final lastConversationMessage = await (_db.select(_db.conversationMessagesTable)
           ..orderBy([(table) => OrderingTerm.desc(table.createdAt)])
@@ -325,14 +371,6 @@ class ConversationsDBService {
   // Mark conversation as removed and all its messages prior to last message as
   // deleted
   Future<void> deleteConversation(String conversationId) async {
-    await _db.into(_db.deletedConversationTable).insert(
-          DeletedConversationTableCompanion(
-            conversationId: Value(conversationId),
-            deletedAt: Value(DateTime.now().toUtc()),
-          ),
-          mode: InsertMode.insertOrReplace,
-        );
-
     final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
           ..where((table) => table.conversationId.equals(conversationId)))
         .get();
@@ -342,10 +380,7 @@ class ConversationsDBService {
 
     await _db.batch(
       (b) {
-        b.replaceAll(
-          _db.conversationMessagesTable,
-          deleteConversationMessagesTableData,
-        );
+        b.replaceAll(_db.conversationMessagesTable, deleteConversationMessagesTableData);
       },
     );
   }

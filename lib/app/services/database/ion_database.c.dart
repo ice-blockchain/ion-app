@@ -20,7 +20,6 @@ IONDatabase ionDatabase(Ref ref) => IONDatabase();
     EventMessagesTable,
     ConversationMessagesTable,
     ConversationReactionsTable,
-    DeletedConversationTable,
   ],
 )
 class IONDatabase extends _$IONDatabase {
@@ -79,15 +78,6 @@ class ConversationReactionsTable extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {reactionEventId};
-}
-
-// Table for deleted conversations and time of deletion
-class DeletedConversationTable extends Table {
-  TextColumn get conversationId => text()();
-  DateTimeColumn get deletedAt => dateTime()();
-
-  @override
-  Set<Column<Object>> get primaryKey => {conversationId};
 }
 
 // As it is the only custom model needed better to keep it in the same file

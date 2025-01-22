@@ -88,15 +88,11 @@ class ConversationMessageActionsService {
       ['encrypted'],
     ];
 
-    Logger.log('Encoded rumor $encodedRumor');
-
     final encryptedRumor = await Nip44.encryptMessage(
       encodedRumor,
       eventSigner!.privateKey,
       receiverPubkey,
     );
-
-    Logger.log('Encrypted rumor $encryptedRumor');
 
     final id = EventMessage.calculateEventId(
       tags: tags,
@@ -115,8 +111,6 @@ class ConversationMessageActionsService {
       kind: BookmarksEntity.kind,
       sig: null,
     );
-
-    Logger.log('Bookmark message $bookmarkMessage');
 
     await ionConnectNotifier.sendEvent(bookmarkMessage, cache: false);
   }
