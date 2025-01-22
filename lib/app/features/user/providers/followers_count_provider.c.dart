@@ -2,6 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -38,15 +39,20 @@ class FollowersCount extends _$FollowersCount {
   }
 
   Future<int> _fetchFollowersCount(String pubkey) async {
-    final relay = await _getRandomUserRelay();
+    final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
 
+    final relay = await _getRandomUserRelay();
     final requestEvent = await _buildRequestEvent(relayUrl: relay.url);
+
     final subscriptionMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
           kinds: const [EventCountResultEntity.kind, 7400],
           tags: {
-            '#p': [pubkey],
+            '#p': [currentPubkey],
           },
         ),
       );
@@ -91,7 +97,9 @@ class FollowersCount extends _$FollowersCount {
       filters: [
         RequestFilter(
           kinds: const [FollowListEntity.kind],
-          authors: [pubkey],
+          tags: {
+            '#p': [pubkey],
+          },
         ),
       ],
     );
