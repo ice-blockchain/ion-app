@@ -15,12 +15,12 @@ part 'current_user_wallet_views_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
-  String mainWalletId = '';
+  String _mainWalletId = '';
 
   @override
   Future<List<WalletViewData>> build() async {
     final identity = await ref.watch(ionIdentityClientProvider.future);
-    mainWalletId = ref.watch(mainWalletProvider).value?.id ?? mainWalletId;
+    _mainWalletId = ref.watch(mainWalletProvider).value?.id ?? _mainWalletId;
 
     final shortViews = await identity.wallets.getWalletViews();
     final viewsDetailsDTO = await Future.wait(
@@ -45,7 +45,7 @@ class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
       var coinBalanceUSD = 0.0;
       String? network;
 
-      if (coinInWalletDTO.walletId == mainWalletId) {
+      if (coinInWalletDTO.walletId == _mainWalletId) {
         isMainWalletView = true;
       }
 
