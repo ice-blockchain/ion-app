@@ -108,8 +108,6 @@ class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
         return (state.value?.toList() ?? [])..add(updatedWalletView);
       }
 
-      print('Denis: wallet view was updated');
-
       // Update existed wallet
       final updatedState = state.value!.toList();
       updatedState[index] = updatedWalletView;

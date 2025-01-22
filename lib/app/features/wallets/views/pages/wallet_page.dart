@@ -33,7 +33,6 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
-    final coinsState = ref.watch(filteredCoinsProvider);
     final filteredCoinsState = ref.watch(filteredCoinsNotifierProvider);
     final nftsState = ref.watch(filteredNftsProvider);
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);

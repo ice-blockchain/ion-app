@@ -130,7 +130,7 @@ class CoinsService {
         coinsDTO.where((coin) {
           final result = allowedNetworks.contains(coin.network.toLowerCase());
           if (!result) {
-            print('Hello');
+            Logger.info('Skip coin ${coin.symbol}');
           }
           return result;
         }),
