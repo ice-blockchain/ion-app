@@ -25,23 +25,19 @@ class RecoverUserSuccessPage extends StatelessWidget {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            children: [
-              SizedBox(height: 24.0.s),
-              ScreenSideOffset.medium(
-                child: InfoCard(
-                  iconAsset: Assets.svg.actionWalletSuccess2Fa,
-                  title: context.i18n.common_congratulations,
-                  description: context.i18n.two_fa_success_desc,
-                ),
-              ),
-              SizedBox(height: 16.0.s),
-              ScreenSideOffset.small(
-                child: WarningCard(text: context.i18n.two_fa_success_warning_desc),
-              ),
-              SizedBox(height: 16.0.s),
-            ],
+          SizedBox(height: 24.0.s),
+          ScreenSideOffset.medium(
+            child: InfoCard(
+              iconAsset: Assets.svg.actionWalletSuccess2Fa,
+              title: context.i18n.common_congratulations,
+              description: context.i18n.two_fa_success_desc,
+            ),
           ),
+          SizedBox(height: 16.0.s),
+          ScreenSideOffset.small(
+            child: WarningCard(text: context.i18n.two_fa_success_warning_desc),
+          ),
+          SizedBox(height: 20.0.s),
           ScreenBottomOffset(
             margin: 36.0.s,
             child: ScreenSideOffset.small(
