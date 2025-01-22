@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/generated/assets.gen.dart';
 
 enum Network {
