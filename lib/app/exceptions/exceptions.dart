@@ -252,13 +252,25 @@ class FailedToCreateChannelException extends IONException {
 }
 
 class FailedToFetchCommunityException extends IONException {
-  FailedToFetchCommunityException(String uuid) : super(10050, 'Failed to fetch community $uuid');
+  FailedToFetchCommunityException(String uuid) : super(10054, 'Failed to fetch community $uuid');
 }
 
 class FailedToEditChannelException extends IONException {
-  FailedToEditChannelException() : super(10051, 'Failed to edit channel');
+  FailedToEditChannelException() : super(10055, 'Failed to edit channel');
 }
 
 class FailedToJoinCommunityException extends IONException {
-  FailedToJoinCommunityException() : super(10052, 'Failed to join community');
+  FailedToJoinCommunityException() : super(10056, 'Failed to join community');
+}
+
+class FailedToSendInvitationException extends IONException {
+  FailedToSendInvitationException() : super(10057, 'Failed to send invitation');
+}
+
+class CommunityInvitationExpiredException extends IONException {
+  CommunityInvitationExpiredException() : super(10058, 'Community invitation expired');
+}
+
+class CommunityInvitationNotFoundException extends IONException {
+  CommunityInvitationNotFoundException() : super(10059, 'Community invitation not found');
 }

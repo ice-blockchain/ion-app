@@ -638,6 +638,7 @@
   "channel_create_admin_type_remove_desc": "Are you sure you want to remove the role?",
   "channel_created_message": "The channel has been created",
   "channel_edit": "Edit channel",
+  "channel_join": "Join channel",
   "group_create_title": "New Group",
   "group_create_name_label": "Group Name",
   "group_create_type": "Group type",

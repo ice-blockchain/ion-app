@@ -35,7 +35,7 @@ class DescriptionTag with _$DescriptionTag {
 
   List<String> toTag() {
     if (value == null) {
-      throw IncorrectEventTagValueException(tag: tagName, value: value.toString());
+      throw IncorrectEventTagValueException(tag: tagName, value: value);
     }
     return [tagName, value!];
   }

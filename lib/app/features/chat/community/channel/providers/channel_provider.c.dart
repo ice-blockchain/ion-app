@@ -5,7 +5,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/channel_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
-import 'package:ion/app/features/chat/community/providers/communities_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/invite_user_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
@@ -51,22 +52,24 @@ class ChannelNotifier extends _$ChannelNotifier {
             .toList(),
       );
 
-      final result = await ref
+      final channelEntity = await ref
           .read(ionConnectNotifierProvider.notifier)
-          .sendEntityData(communityDefinitionData);
+          .sendEntityData<CommunityDefinitionEntity>(communityDefinitionData);
 
-      if (result == null) {
+      if (channelEntity == null) {
         throw FailedToCreateChannelException();
       }
 
-      final channel = result as CommunityDefinitionEntity;
+      // join community as owner and invite moderators/admins
+      await Future.wait([
+        ref.read(joinCommunityProvider(channelEntity.data.uuid).future),
+        ...channelAdmins.entries.map(
+          (admin) =>
+              ref.read(inviteUserToCommunityProvider(channelEntity.data.uuid, admin.key).future),
+        ),
+      ]);
 
-      await ref.read(communitiesNotifierProvider.notifier).joinCommunity(
-            channel.data.uuid,
-            ref.read(currentPubkeySelectorProvider).valueOrNull!,
-          );
-
-      return channel.data.uuid;
+      return channelEntity.data.uuid;
     });
   }
 

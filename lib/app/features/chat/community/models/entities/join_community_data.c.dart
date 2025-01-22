@@ -4,10 +4,12 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
+import 'package:ion/app/features/ion_connect/model/tags/entity_autherization_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/pubkey_tag.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -29,8 +31,8 @@ class JoinCommunityEntity with _$JoinCommunityEntity, IonConnectEntity {
   factory JoinCommunityEntity.fromEventMessage(EventMessage eventMessage) {
     return JoinCommunityEntity(
       id: eventMessage.id,
-      pubkey: PubkeyTag.fromTags(eventMessage.tags).value,
-      masterPubkey: eventMessage.pubkey,
+      pubkey: eventMessage.pubkey,
+      masterPubkey: eventMessage.masterPubkey,
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: JoinCommunityData.fromEventMessage(eventMessage),
@@ -45,15 +47,19 @@ class JoinCommunityEntity with _$JoinCommunityEntity, IonConnectEntity {
 class JoinCommunityData with _$JoinCommunityData implements EventSerializable {
   const factory JoinCommunityData({
     required String uuid,
-    required String pubkey,
+    String? pubkey,
     String? auth,
+    DateTime? expiration,
   }) = _JoinCommunityData;
 
   factory JoinCommunityData.fromEventMessage(EventMessage eventMessage) {
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+
     return JoinCommunityData(
       uuid: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
       pubkey: PubkeyTag.fromTags(eventMessage.tags).value,
-      auth: eventMessage.tags.firstWhereOrNull((tag) => tag[0] == 'authorization')?.last,
+      auth: tags[EntityAutherization.tagName]?.map(EntityAutherization.fromTag).firstOrNull?.value,
+      expiration: tags[EntityExpiration.tagName]?.map(EntityExpiration.fromTag).firstOrNull?.value,
     );
   }
 
@@ -72,11 +78,9 @@ class JoinCommunityData with _$JoinCommunityData implements EventSerializable {
       tags: [
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),
-        PubkeyTag(value: pubkey).toTag(),
+        if (pubkey != null) PubkeyTag(value: pubkey).toTag(),
         if (auth != null) ['authorization', auth!],
-        if (auth != null)
-          //TODO: ask about expiration
-          EntityExpiration(value: DateTime.now().add(const Duration(days: 1))).toTag(),
+        if (expiration != null) EntityExpiration(value: expiration!).toTag(),
       ],
       content: '',
     );
