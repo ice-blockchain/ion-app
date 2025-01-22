@@ -52,6 +52,7 @@ class RestoreMenuPage extends StatelessWidget {
             ),
           ),
           ScreenBottomOffset(
+            margin: 28.0.s,
             child: const AuthFooter(),
           ),
         ],
