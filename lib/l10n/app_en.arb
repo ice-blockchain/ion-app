@@ -584,7 +584,7 @@
   "chat_title": "Chats",
   "chat_empty_description": "You have no conversations yet",
   "chat_new_message_button": "New message",
-  "poll_length_modal_title": "Pool length time",
+  "poll_length_modal_title": "Poll length time",
   "poll_length_button_title": "Poll length",
   "poll_add_answer_button_title": "Add answer",
   "poll_choice_placeholder": "Choice {number}",
