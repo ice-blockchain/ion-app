@@ -9,10 +9,11 @@ part of 'wallet_view_aggregation_item.c.dart';
 _$WalletViewAggregationItemImpl _$$WalletViewAggregationItemImplFromJson(
         Map<String, dynamic> json) =>
     _$WalletViewAggregationItemImpl(
-      wallets: (json['wallets'] as List<dynamic>)
-          .map((e) =>
-              WalletViewAggregationWallet.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      wallets: (json['wallets'] as List<dynamic>?)
+              ?.map((e) => WalletViewAggregationWallet.fromJson(
+                  e as Map<String, dynamic>))
+              .toList() ??
+          [],
       totalBalance: (json['totalBalance'] as num).toDouble(),
     );
 

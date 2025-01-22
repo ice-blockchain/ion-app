@@ -9,7 +9,7 @@ part of 'wallet_view_item.c.dart';
 _$WalletViewItemImpl _$$WalletViewItemImplFromJson(Map<String, dynamic> json) =>
     _$WalletViewItemImpl(
       coinId: json['coinId'] as String,
-      walletId: json['walletId'] as String,
+      walletId: json['walletId'] as String?,
     );
 
 Map<String, dynamic> _$$WalletViewItemImplToJson(

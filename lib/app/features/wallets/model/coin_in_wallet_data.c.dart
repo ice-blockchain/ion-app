@@ -11,7 +11,7 @@ class CoinInWalletData with _$CoinInWalletData {
     required CoinData coin,
     required double amount,
     required double balanceUSD,
-    required String walletId, // real wallet, not wallet view
+    String? walletId, // real wallet, not wallet view
   }) = _CoinInWalletData;
 
   const CoinInWalletData._();

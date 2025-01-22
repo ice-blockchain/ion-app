@@ -10,7 +10,7 @@ part 'coin_in_wallet.c.g.dart';
 class CoinInWallet with _$CoinInWallet {
   factory CoinInWallet({
     required Coin coin,
-    required String walletId,
+    String? walletId,
   }) = _CoinInWallet;
 
   factory CoinInWallet.fromJson(Map<String, dynamic> json) =>

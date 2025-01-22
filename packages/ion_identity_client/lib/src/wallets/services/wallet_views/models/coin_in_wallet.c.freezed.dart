@@ -21,7 +21,7 @@ CoinInWallet _$CoinInWalletFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$CoinInWallet {
   Coin get coin => throw _privateConstructorUsedError;
-  String get walletId => throw _privateConstructorUsedError;
+  String? get walletId => throw _privateConstructorUsedError;
 
   /// Serializes this CoinInWallet to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $CoinInWalletCopyWith<$Res> {
           CoinInWallet value, $Res Function(CoinInWallet) then) =
       _$CoinInWalletCopyWithImpl<$Res, CoinInWallet>;
   @useResult
-  $Res call({Coin coin, String walletId});
+  $Res call({Coin coin, String? walletId});
 
   $CoinCopyWith<$Res> get coin;
 }
@@ -60,17 +60,17 @@ class _$CoinInWalletCopyWithImpl<$Res, $Val extends CoinInWallet>
   @override
   $Res call({
     Object? coin = null,
-    Object? walletId = null,
+    Object? walletId = freezed,
   }) {
     return _then(_value.copyWith(
       coin: null == coin
           ? _value.coin
           : coin // ignore: cast_nullable_to_non_nullable
               as Coin,
-      walletId: null == walletId
+      walletId: freezed == walletId
           ? _value.walletId
           : walletId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 
@@ -93,7 +93,7 @@ abstract class _$$CoinInWalletImplCopyWith<$Res>
       __$$CoinInWalletImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Coin coin, String walletId});
+  $Res call({Coin coin, String? walletId});
 
   @override
   $CoinCopyWith<$Res> get coin;
@@ -113,17 +113,17 @@ class __$$CoinInWalletImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? coin = null,
-    Object? walletId = null,
+    Object? walletId = freezed,
   }) {
     return _then(_$CoinInWalletImpl(
       coin: null == coin
           ? _value.coin
           : coin // ignore: cast_nullable_to_non_nullable
               as Coin,
-      walletId: null == walletId
+      walletId: freezed == walletId
           ? _value.walletId
           : walletId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -131,7 +131,7 @@ class __$$CoinInWalletImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$CoinInWalletImpl implements _CoinInWallet {
-  _$CoinInWalletImpl({required this.coin, required this.walletId});
+  _$CoinInWalletImpl({required this.coin, this.walletId});
 
   factory _$CoinInWalletImpl.fromJson(Map<String, dynamic> json) =>
       _$$CoinInWalletImplFromJson(json);
@@ -139,7 +139,7 @@ class _$CoinInWalletImpl implements _CoinInWallet {
   @override
   final Coin coin;
   @override
-  final String walletId;
+  final String? walletId;
 
   @override
   String toString() {
@@ -177,9 +177,8 @@ class _$CoinInWalletImpl implements _CoinInWallet {
 }
 
 abstract class _CoinInWallet implements CoinInWallet {
-  factory _CoinInWallet(
-      {required final Coin coin,
-      required final String walletId}) = _$CoinInWalletImpl;
+  factory _CoinInWallet({required final Coin coin, final String? walletId}) =
+      _$CoinInWalletImpl;
 
   factory _CoinInWallet.fromJson(Map<String, dynamic> json) =
       _$CoinInWalletImpl.fromJson;
@@ -187,7 +186,7 @@ abstract class _CoinInWallet implements CoinInWallet {
   @override
   Coin get coin;
   @override
-  String get walletId;
+  String? get walletId;
 
   /// Create a copy of CoinInWallet
   /// with the given fields replaced by the non-null parameter values.
