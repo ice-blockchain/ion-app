@@ -3,14 +3,14 @@
 import 'dart:math';
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/services/create_credentials/data_sources/create_recovery_credentials_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/data_sources/recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:uuid/uuid.dart';
 
-class CreateRecoveryCredentialsService {
-  CreateRecoveryCredentialsService({
+class RecoveryCredentialsService {
+  RecoveryCredentialsService({
     required this.username,
     required this.config,
     required this.dataSource,
@@ -21,7 +21,7 @@ class CreateRecoveryCredentialsService {
 
   final String username;
   final IONIdentityConfig config;
-  final CreateRecoveryCredentialsDataSource dataSource;
+  final RecoveryCredentialsDataSource dataSource;
   final UserActionSigner userActionSigner;
   final IdentitySigner identitySigner;
   final KeyService keyService;
@@ -78,6 +78,9 @@ class CreateRecoveryCredentialsService {
       recoveryKeyId: credentialResponse.credentialId,
     );
   }
+
+  Future<List<Credential>> getRecoveryCredentialsList() =>
+      dataSource.getCredentialsList(username: username);
 
   String generateCredentialName() => const Uuid().v4().toUpperCase();
 

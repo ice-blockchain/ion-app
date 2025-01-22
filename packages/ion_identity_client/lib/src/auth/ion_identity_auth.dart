@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/services/create_credentials/create_new_credentials_service.dart';
-import 'package:ion_identity_client/src/auth/services/create_credentials/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/create_new_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/recovery_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart';
@@ -22,7 +22,7 @@ class IONIdentityAuth {
   /// The [registerService] handles user registration.
   /// The [loginService] handles user login.
   /// The [privateKeyStorage] manages the storage of authentication tokens.
-  /// The [createRecoveryCredentialsService] handles the creation of recovery credentials.
+  /// The [recoveryCredentialsService] handles the creation of recovery credentials.
   IONIdentityAuth({
     required this.username,
     required this.identitySigner,
@@ -31,7 +31,7 @@ class IONIdentityAuth {
     required this.logoutService,
     required this.privateKeyStorage,
     required this.biometricsStateStorage,
-    required this.createRecoveryCredentialsService,
+    required this.recoveryCredentialsService,
     required this.createNewCredentialsService,
     required this.recoverUserService,
     required this.delegatedLoginService,
@@ -42,7 +42,7 @@ class IONIdentityAuth {
   final IdentitySigner identitySigner;
   final LoginService loginService;
   final LogoutService logoutService;
-  final CreateRecoveryCredentialsService createRecoveryCredentialsService;
+  final RecoveryCredentialsService recoveryCredentialsService;
   final CreateNewCredentialsService createNewCredentialsService;
   final RecoverUserService recoverUserService;
   final DelegatedLoginService delegatedLoginService;
@@ -93,7 +93,7 @@ class IONIdentityAuth {
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials(
     OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
   ) =>
-      createRecoveryCredentialsService.createRecoveryCredentials(onVerifyIdentity);
+      recoveryCredentialsService.createRecoveryCredentials(onVerifyIdentity);
 
   Future<void> createNewCredentials(
     OnVerifyIdentity<CredentialRequestData> onVerifyIdentity,
@@ -144,4 +144,7 @@ class IONIdentityAuth {
     List<TwoFAType> verificationCodes = const [],
   ]) =>
       twoFAService.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
+
+  Future<List<Credential>> getRecoveryCredentialsList() =>
+      recoveryCredentialsService.getRecoveryCredentialsList();
 }

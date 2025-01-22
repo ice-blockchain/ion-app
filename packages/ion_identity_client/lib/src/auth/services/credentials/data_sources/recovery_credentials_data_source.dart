@@ -10,8 +10,8 @@ import 'package:ion_identity_client/src/signer/types/user_action_signing_request
 
 const recoveryKeyBody = {'kind': 'RecoveryKey'};
 
-class CreateRecoveryCredentialsDataSource {
-  CreateRecoveryCredentialsDataSource({
+class RecoveryCredentialsDataSource {
+  RecoveryCredentialsDataSource({
     required this.networkClient,
     required this.tokenStorage,
   });
@@ -34,6 +34,29 @@ class CreateRecoveryCredentialsDataSource {
       createCredentialInitPath,
       data: recoveryKeyBody,
       decoder: (result) => parseJsonObject(result, fromJson: CreateCredentialsResponse.fromJson),
+      headers: RequestHeaders.getAuthorizationHeaders(
+        token: token.token,
+        username: username,
+      ),
+    );
+  }
+
+  Future<List<Credential>> getCredentialsList({
+    required String username,
+  }) {
+    final token = tokenStorage.getToken(username: username);
+    if (token == null) {
+      throw const UnauthenticatedException();
+    }
+
+    return networkClient.get(
+      createCredentialPath,
+      decoder: (result) {
+        if (result case {'items': final List<dynamic> items}) {
+          return parseList(items, fromJson: Credential.fromJson);
+        }
+        return [];
+      },
       headers: RequestHeaders.getAuthorizationHeaders(
         token: token.token,
         username: username,
