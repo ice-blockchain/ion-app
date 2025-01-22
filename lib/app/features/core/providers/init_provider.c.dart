@@ -38,6 +38,7 @@ Future<void> initApp(Ref ref) async {
   ]);
 
   await [
+    ref.read(coinInitializerProvider.future).then((initializer) => initializer.initialize()),
     ref.read(coinInitializerProvider).initialize(),
   ].wait;
 
