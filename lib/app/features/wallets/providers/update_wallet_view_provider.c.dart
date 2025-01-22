@@ -4,6 +4,7 @@ import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -38,11 +39,9 @@ class UpdateWalletViewNotifier extends _$UpdateWalletViewNotifier {
               name: updatedName ?? walletView.name,
             ));
 
-      final updatedWallet =
-          await identity.wallets.updateWalletView(walletView.id, request);
-      await ref
-          .read(userWalletViewsNotifierProvider.notifier)
-          .refreshWalletView(updatedWallet);
+      final updatedWallet = await identity.wallets.updateWalletView(walletView.id, request);
+
+      await ref.read(userWalletViewsNotifierProvider.notifier).refreshWalletView(updatedWallet);
     });
   }
 
@@ -51,14 +50,14 @@ class UpdateWalletViewNotifier extends _$UpdateWalletViewNotifier {
     String? updatedName,
   }) {
     final symbolGroups = <String>{};
-    final walletViewItems = <CreateUpdateWalletViewItem>[];
+    final walletViewItems = <WalletViewCoinData>[];
 
     for (final coinInWallet in walletView.coins) {
       final coin = coinInWallet.coin;
 
       symbolGroups.add(coin.symbolGroup);
       walletViewItems.add(
-        CreateUpdateWalletViewItem(
+        WalletViewCoinData(
           coinId: coin.id,
           walletId: coinInWallet.walletId,
         ),
@@ -78,18 +77,18 @@ class UpdateWalletViewNotifier extends _$UpdateWalletViewNotifier {
     required String name,
   }) async {
     final symbolGroups = <String>{};
-    final walletViewItems = <CreateUpdateWalletViewItem>[];
+    final walletViewItems = <WalletViewCoinData>[];
 
     final userWallets = await identity.wallets.getWallets().then((result) {
-      return {for (final wallet in result) wallet.network: wallet};
+      return {for (final wallet in result) wallet.network.toLowerCase(): wallet};
     });
 
     for (final coin in updatedCoinsList) {
       symbolGroups.add(coin.symbolGroup);
       walletViewItems.add(
-        CreateUpdateWalletViewItem(
+        WalletViewCoinData(
           coinId: coin.id,
-          walletId: userWallets[coin.network]?.id,
+          walletId: userWallets[coin.network.toLowerCase()]?.id,
         ),
       );
     }

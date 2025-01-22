@@ -24,6 +24,7 @@ mixin _$WalletViewAggregationItem {
   @JsonKey(defaultValue: [])
   List<WalletViewAggregationWallet> get wallets =>
       throw _privateConstructorUsedError;
+  @JsonKey(defaultValue: 0)
   double get totalBalance => throw _privateConstructorUsedError;
 
   /// Serializes this WalletViewAggregationItem to a JSON map.
@@ -44,7 +45,7 @@ abstract class $WalletViewAggregationItemCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(defaultValue: []) List<WalletViewAggregationWallet> wallets,
-      double totalBalance});
+      @JsonKey(defaultValue: 0) double totalBalance});
 }
 
 /// @nodoc
@@ -90,7 +91,7 @@ abstract class _$$WalletViewAggregationItemImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(defaultValue: []) List<WalletViewAggregationWallet> wallets,
-      double totalBalance});
+      @JsonKey(defaultValue: 0) double totalBalance});
 }
 
 /// @nodoc
@@ -130,7 +131,7 @@ class _$WalletViewAggregationItemImpl implements _WalletViewAggregationItem {
   const _$WalletViewAggregationItemImpl(
       {@JsonKey(defaultValue: [])
       required final List<WalletViewAggregationWallet> wallets,
-      required this.totalBalance})
+      @JsonKey(defaultValue: 0) required this.totalBalance})
       : _wallets = wallets;
 
   factory _$WalletViewAggregationItemImpl.fromJson(Map<String, dynamic> json) =>
@@ -146,6 +147,7 @@ class _$WalletViewAggregationItemImpl implements _WalletViewAggregationItem {
   }
 
   @override
+  @JsonKey(defaultValue: 0)
   final double totalBalance;
 
   @override
@@ -187,9 +189,10 @@ class _$WalletViewAggregationItemImpl implements _WalletViewAggregationItem {
 
 abstract class _WalletViewAggregationItem implements WalletViewAggregationItem {
   const factory _WalletViewAggregationItem(
-      {@JsonKey(defaultValue: [])
-      required final List<WalletViewAggregationWallet> wallets,
-      required final double totalBalance}) = _$WalletViewAggregationItemImpl;
+          {@JsonKey(defaultValue: [])
+          required final List<WalletViewAggregationWallet> wallets,
+          @JsonKey(defaultValue: 0) required final double totalBalance}) =
+      _$WalletViewAggregationItemImpl;
 
   factory _WalletViewAggregationItem.fromJson(Map<String, dynamic> json) =
       _$WalletViewAggregationItemImpl.fromJson;
@@ -198,6 +201,7 @@ abstract class _WalletViewAggregationItem implements WalletViewAggregationItem {
   @JsonKey(defaultValue: [])
   List<WalletViewAggregationWallet> get wallets;
   @override
+  @JsonKey(defaultValue: 0)
   double get totalBalance;
 
   /// Create a copy of WalletViewAggregationItem

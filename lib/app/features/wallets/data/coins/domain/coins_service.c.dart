@@ -6,26 +6,27 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart' as db;
 import 'package:ion/app/features/wallets/data/coins/domain/coins_mapper.dart';
 import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'coin_sync_service.c.g.dart';
+part 'coins_service.c.g.dart';
 
 @riverpod
-Future<CoinSyncService> coinSyncService(Ref ref) async {
+Future<CoinsService> coinsService(Ref ref) async {
   await ref.watch(sharedPreferencesProvider.future);
 
-  return CoinSyncService(
+  return CoinsService(
     ref.watch(coinsRepositoryProvider),
     await ref.watch(ionIdentityClientProvider.future),
   );
 }
 
-class CoinSyncService {
-  CoinSyncService(
+class CoinsService {
+  CoinsService(
     this._coinsRepository,
     this._ionIdentityClient,
   );
@@ -71,7 +72,7 @@ class CoinSyncService {
       return;
     }
 
-    await _coinsRepository.updateCoins(CoinsMapper().fromDtoToDb(response.coins));
+    await saveCoins(response.coins);
     await _updateCoinsSyncQueue(
       response.coins.map(
         (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
@@ -121,6 +122,22 @@ class CoinSyncService {
     _syncQueueInitialized = false;
   }
 
+  Future<void> saveCoins(Iterable<Coin> coinsDTO) async {
+    final allowedNetworks = Network.values.map((e) => e.serverName.toLowerCase());
+
+    await _coinsRepository.updateCoins(
+      CoinsMapper().fromDtoToDb(
+        coinsDTO.where((coin) {
+          final result = allowedNetworks.contains(coin.network.toLowerCase());
+          if (!result) {
+            print('Hello');
+          }
+          return result;
+        }),
+      ),
+    );
+  }
+
   Future<void> syncActiveCoins() async {
     final nextUpdate = await _coinsRepository.getNextSyncTime();
 
@@ -151,16 +168,29 @@ class CoinSyncService {
       final syncedCoinsData =
           await _ionIdentityClient.coins.syncCoins(coins.map((e) => e.symbolGroup).toSet());
 
-      final syncedCoins = coins.map((coin) {
-        final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coin.symbolGroup);
-
-        return coin.copyWith(
-          priceUSD: syncedData.priceUSD,
-          syncFrequency: syncedData.syncFrequency,
+      final syncedCoins = syncedCoinsData.map((coinDTO) {
+        final coinDB = coins.firstWhere((coin) => coin.id == coinDTO.id);
+        return coinDTO.copyWith(
+          name: coinDB.name,
+          symbol: coinDB.symbol,
+          iconURL: coinDB.iconURL,
+          network: coinDB.network,
+          decimals: coinDB.decimals,
+          symbolGroup: coinDB.symbolGroup,
+          syncFrequency: coinDB.syncFrequency,
+          contractAddress: coinDB.contractAddress,
         );
-      }).toList();
+      });
+      await saveCoins(syncedCoins);
+      // final syncedCoins = coins.map((coin) {
+      //   final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coin.symbolGroup);
+      //
+      //   return coin.copyWith(
 
-      await _coinsRepository.updateCoins(syncedCoins);
+      //   );
+      // }).toList();
+      // await _coinsRepository.updateCoins(syncedCoins);
+
       await _updateCoinsSyncQueue(
         syncedCoins.map(
           (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
@@ -177,6 +207,7 @@ class CoinSyncService {
     Iterable<({String coinId, Duration syncFrequency})> coins,
   ) async {
     final currentDate = DateTime.now();
+
     await _coinsRepository.updateCoinSyncQueue(
       coins.map(
         (coin) {
@@ -188,4 +219,10 @@ class CoinSyncService {
       ).toList(),
     );
   }
+
+  Future<void> saveCoinsVersion(int coinsVersion) async {
+    await _coinsRepository.setCoinsVersion(coinsVersion);
+  }
+
+  Future<bool> hasSavedCoins() => _coinsRepository.hasSavedCoins();
 }

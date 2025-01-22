@@ -10,8 +10,7 @@ _$CreateWalletViewRequestImpl _$$CreateWalletViewRequestImplFromJson(
         Map<String, dynamic> json) =>
     _$CreateWalletViewRequestImpl(
       items: (json['items'] as List<dynamic>)
-          .map((e) =>
-              CreateUpdateWalletViewItem.fromJson(e as Map<String, dynamic>))
+          .map((e) => WalletViewCoinData.fromJson(e as Map<String, dynamic>))
           .toList(),
       symbolGroups: (json['symbolGroups'] as List<dynamic>)
           .map((e) => e as String)

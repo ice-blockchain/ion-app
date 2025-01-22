@@ -61,12 +61,12 @@ class IONIdentityWallets {
 
   Future<Wallet> createWallet({
     required String network,
-    required String name,
+    required String walletViewId,
     required OnVerifyIdentity<Wallet> onVerifyIdentity,
   }) =>
       _createWalletService.createWallet(
         network: network,
-        name: name,
+        walletViewId: walletViewId,
         onVerifyIdentity: onVerifyIdentity,
       );
 

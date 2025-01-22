@@ -22,6 +22,15 @@ class WalletSearchQueryController extends _$WalletSearchQueryController {
 }
 
 @Riverpod(keepAlive: true)
+Future<List<NftData>> filteredNfts(Ref ref) async {
+  final searchQuery =
+      ref.watch(walletSearchQueryControllerProvider(WalletAssetType.nft)).toLowerCase();
+  await ref.debounce();
+  final nfts = await ref.watch(nftsDataProvider.future);
+  return _filterNfts(nfts, searchQuery);
+}
+
+@Riverpod(keepAlive: true)
 Future<List<CoinInWalletData>> filteredCoins(Ref ref) async {
   final searchQuery =
       ref.watch(walletSearchQueryControllerProvider(WalletAssetType.coin)).toLowerCase();
@@ -31,12 +40,18 @@ Future<List<CoinInWalletData>> filteredCoins(Ref ref) async {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<NftData>> filteredNfts(Ref ref) async {
-  final searchQuery =
-      ref.watch(walletSearchQueryControllerProvider(WalletAssetType.nft)).toLowerCase();
-  await ref.debounce();
-  final nfts = await ref.watch(nftsDataProvider.future);
-  return _filterNfts(nfts, searchQuery);
+class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
+  @override
+  Future<List<CoinInWalletData>> build() async {
+    final searchQuery =
+        ref.watch(walletSearchQueryControllerProvider(WalletAssetType.coin)).toLowerCase();
+    await ref.debounce();
+
+    final coins = await ref.watch(coinsInWalletProvider.future);
+    final filteredCoins = _filterCoins(coins, searchQuery);
+
+    return filteredCoins;
+  }
 }
 
 List<CoinInWalletData> _filterCoins(List<CoinInWalletData> coins, String query) {

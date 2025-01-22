@@ -38,6 +38,7 @@ class EditWalletModal extends HookConsumerWidget {
     final walletName = useState(walletView.name);
     final controller = useTextEditingController(text: walletName.value);
     final isNameChanged = walletName.value != (walletView.name) && walletName.value.isNotEmpty;
+    final walletCanBeRemoved = !walletView.isMainWalletView;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -68,8 +69,9 @@ class EditWalletModal extends HookConsumerWidget {
               ),
             ),
             ScreenSideOffset.small(
-              child: isNameChanged
+              child: isNameChanged || !walletCanBeRemoved
                   ? Button(
+                      disabled: !isNameChanged,
                       onPressed: () {
                         ref.read(updateWalletViewNotifierProvider.notifier).updateWalletView(
                               walletView: walletView,

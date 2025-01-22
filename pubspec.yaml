@@ -158,6 +158,7 @@ flutter:
     - assets/videos/
     - assets/lottie/
     - assets/svg/
+    - assets/svg/networks/
     - assets/svg/logo/
     - assets/images/
     - assets/images/wallet/

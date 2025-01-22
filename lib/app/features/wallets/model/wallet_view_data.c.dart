@@ -16,6 +16,7 @@ class WalletViewData with _$WalletViewData {
     required double usdBalance,
     required String createdAt,
     required String updatedAt,
+    required bool isMainWalletView,
   }) = _WalletViewData;
 
   const WalletViewData._();

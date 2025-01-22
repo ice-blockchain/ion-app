@@ -9,9 +9,9 @@ part 'coin_in_wallet_data.c.freezed.dart';
 class CoinInWalletData with _$CoinInWalletData {
   const factory CoinInWalletData({
     required CoinData coin,
-    required double amount,
-    required double balanceUSD,
-    String? walletId, // real wallet, not wallet view
+    @Default(0) double amount,
+    @Default(0) double balanceUSD,
+    String? walletId, // real wallet, not wallet view. Can be null if wallet wasn't created.
     String? network,
   }) = _CoinInWalletData;
 

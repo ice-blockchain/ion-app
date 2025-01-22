@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
+import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,17 +15,19 @@ part 'current_user_wallet_views_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
+  String mainWalletId = '';
+
   @override
   Future<List<WalletViewData>> build() async {
     final identity = await ref.watch(ionIdentityClientProvider.future);
+    mainWalletId = ref.watch(mainWalletProvider).value?.id ?? mainWalletId;
 
     final shortViews = await identity.wallets.getWalletViews();
     final viewsDetailsDTO = await Future.wait(
       shortViews.map((e) => identity.wallets.getWalletView(e.id)),
     );
 
-    final result = viewsDetailsDTO.map(_parseWalletView).toList();
-    return result;
+    return viewsDetailsDTO.map(_parseWalletView).toList();
   }
 
   WalletViewData _parseWalletView(WalletView viewDTO) {
@@ -32,6 +35,7 @@ class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
     final symbolGroups = <String>{};
 
     var totalViewBalanceUSD = 0.0;
+    var isMainWalletView = false;
 
     for (final coinInWalletDTO in viewDTO.coins) {
       final coinDTO = coinInWalletDTO.coin;
@@ -40,6 +44,10 @@ class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
       var coinAmount = 0.0;
       var coinBalanceUSD = 0.0;
       String? network;
+
+      if (coinInWalletDTO.walletId == mainWalletId) {
+        isMainWalletView = true;
+      }
 
       if (aggregationItem != null) {
         final wallet = aggregationItem.wallets
@@ -74,6 +82,7 @@ class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
       createdAt: viewDTO.createdAt,
       updatedAt: viewDTO.updatedAt,
       usdBalance: totalViewBalanceUSD,
+      isMainWalletView: isMainWalletView,
     );
   }
 
@@ -87,8 +96,7 @@ class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
 
       final viewDTO = await identity.wallets.getWalletView(walletView.id);
       final updatedWalletView = _parseWalletView(viewDTO);
-      final index = state.value
-          ?.indexWhere((walletView) => walletView.id == updatedWalletView.id);
+      final index = state.value?.indexWhere((walletView) => walletView.id == updatedWalletView.id);
 
       if (index == null) {
         // Wallet views are not initialized
@@ -99,6 +107,8 @@ class UserWalletViewsNotifier extends _$UserWalletViewsNotifier {
         // New wallet, add to list
         return (state.value?.toList() ?? [])..add(updatedWalletView);
       }
+
+      print('Denis: wallet view was updated');
 
       // Update existed wallet
       final updatedState = state.value!.toList();

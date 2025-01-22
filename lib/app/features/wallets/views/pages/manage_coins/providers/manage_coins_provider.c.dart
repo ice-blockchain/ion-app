@@ -40,18 +40,23 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   }
 
   Future<void> save() async {
-    final updatedCoins = state.value?.values.map((manageCoin) => manageCoin.coin) ?? [];
+    final updatedCoins = state.value?.values
+            .where((manageCoin) => manageCoin.isSelected)
+            .map((manageCoin) => manageCoin.coin)
+            .toList() ??
+        [];
     final currentWalletView = await ref.read(currentWalletViewDataProvider.future);
 
     final updateRequired = !(const ListEquality<CoinData>().equals(
-      updatedCoins.toList(),
+      updatedCoins,
       currentWalletView.coins.map((e) => e.coin).toList(),
     ));
     if (updateRequired) {
       unawaited(
-        ref
-            .read(updateWalletViewNotifierProvider.notifier)
-            .updateWalletView(walletView: currentWalletView),
+        ref.read(updateWalletViewNotifierProvider.notifier).updateWalletView(
+              walletView: currentWalletView,
+              updatedCoinsList: updatedCoins,
+            ),
       );
     }
   }
@@ -66,7 +71,7 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
     if (query.isEmpty) {
       state = ref.read(manageCoinsNotifierProvider).map(
             data: (data) => AsyncData(
-                data.value.values.map((manageCoin) => manageCoin.coin).toSet(),
+              data.value.values.map((manageCoin) => manageCoin.coin).toSet(),
             ),
             error: (error) => AsyncError(error.error, error.stackTrace),
             loading: (loading) => const AsyncLoading(),
@@ -77,14 +82,14 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
     await ref.debounce();
 
     final repository = ref.read(coinsRepositoryProvider);
-    final searchResult = await repository.searchCoins(query).then((result) =>
-        result.map(CoinData.fromDB)); // TODO: (1) Move converting to the repo?
+    final searchResult = await repository
+        .searchCoins(query)
+        .then((result) => result.map(CoinData.fromDB)); // TODO: (1) Move converting to the repo?
 
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
           data: (coinsInWalletView) {
-            final coinsInWallet = coinsInWalletView.values
-                .map((coinInWallet) => coinInWallet.coin)
-                .toList();
+            final coinsInWallet =
+                coinsInWalletView.values.map((coinInWallet) => coinInWallet.coin).toList();
 
             // Coins from wallet should be first in the search results list
             final result = <CoinData>{};

@@ -14,7 +14,7 @@ _$WalletViewAggregationItemImpl _$$WalletViewAggregationItemImplFromJson(
                   e as Map<String, dynamic>))
               .toList() ??
           [],
-      totalBalance: (json['totalBalance'] as num).toDouble(),
+      totalBalance: (json['totalBalance'] as num?)?.toDouble() ?? 0,
     );
 
 Map<String, dynamic> _$$WalletViewAggregationItemImplToJson(

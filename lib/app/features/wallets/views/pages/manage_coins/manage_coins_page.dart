@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
@@ -26,6 +27,7 @@ class ManageCoinsPage extends HookConsumerWidget {
     final searchText = useState('');
     final searchCoinsNotifier = ref.watch(searchCoinsNotifierProvider.notifier);
     final searchResult = ref.watch(searchCoinsNotifierProvider);
+    final manageCoins = ref.watch(manageCoinsNotifierProvider);
 
     useOnInit(
       () => searchCoinsNotifier.search(query: searchText.value),
@@ -42,6 +44,7 @@ class ManageCoinsPage extends HookConsumerWidget {
                 label: context.i18n.core_done,
                 onPressed: () {
                   ref.read(manageCoinsNotifierProvider.notifier).save();
+                  context.pop();
                 },
               ),
             ],
@@ -58,41 +61,81 @@ class ManageCoinsPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                searchResult.maybeWhen(
-                  data: (coins) {
-                    if (coins.isEmpty) {
-                      return const EmptyState();
-                    }
+                // TODO: Refactor copy/paste
+                if (searchText.value.isEmpty)
+                  manageCoins.maybeWhen(
+                    data: (manageCoins) {
+                      if (manageCoins.isEmpty) {
+                        return const EmptyState();
+                      }
 
-                    return SliverPadding(
-                      padding: EdgeInsets.only(
-                        bottom: ScreenBottomOffset.defaultMargin,
-                      ),
-                      sliver: SliverList.separated(
-                        itemCount: coins.length,
-                        separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
-                        itemBuilder: (BuildContext context, int index) {
-                          return ScreenSideOffset.small(
-                            child: ManageCoinItemWidget(
-                              coin: coins.elementAt(index),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  loading: () => ListItemsLoadingState(
-                    itemsCount: 7,
-                    separatorHeight: 12.0.s,
-                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
+                      final coins = manageCoins.values;
+
+                      return SliverPadding(
+                        padding: EdgeInsets.only(
+                          bottom: ScreenBottomOffset.defaultMargin,
+                        ),
+                        sliver: SliverList.separated(
+                          itemCount: coins.length,
+                          separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
+                          itemBuilder: (BuildContext context, int index) {
+                            return ScreenSideOffset.small(
+                              child: ManageCoinItemWidget(
+                                coin: coins.elementAt(index).coin,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    loading: () => const _ProgressIndicator(),
+                    orElse: () => const EmptyState(),
+                  )
+                else
+                  searchResult.maybeWhen(
+                    data: (coins) {
+                      if (coins.isEmpty) {
+                        return const EmptyState();
+                      }
+
+                      return SliverPadding(
+                        padding: EdgeInsets.only(
+                          bottom: ScreenBottomOffset.defaultMargin,
+                        ),
+                        sliver: SliverList.separated(
+                          itemCount: coins.length,
+                          separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
+                          itemBuilder: (BuildContext context, int index) {
+                            return ScreenSideOffset.small(
+                              child: ManageCoinItemWidget(
+                                coin: coins.elementAt(index),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    loading: () => const _ProgressIndicator(),
+                    orElse: () => const EmptyState(),
                   ),
-                  orElse: () => const EmptyState(),
-                ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ProgressIndicator extends StatelessWidget {
+  const _ProgressIndicator();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListItemsLoadingState(
+      itemsCount: 7,
+      separatorHeight: 12.0.s,
+      listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
     );
   }
 }

@@ -11,6 +11,7 @@ class WalletViewAggregationItem with _$WalletViewAggregationItem {
   const factory WalletViewAggregationItem({
     @JsonKey(defaultValue: [])
     required List<WalletViewAggregationWallet> wallets,
+    @JsonKey(defaultValue: 0)
     required double totalBalance,
   }) = _WalletViewAggregationItem;
 

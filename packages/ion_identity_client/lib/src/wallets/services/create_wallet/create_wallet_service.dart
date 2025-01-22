@@ -18,13 +18,13 @@ class CreateWalletService {
 
   Future<Wallet> createWallet({
     required String network,
-    required String name,
+    required String walletViewId,
     required OnVerifyIdentity<Wallet> onVerifyIdentity,
   }) async {
     final request = _dataSource.buildCreateWalletSigningRequest(
       username: username,
       network: network,
-      name: name,
+      walletViewId: walletViewId,
     );
 
     return onVerifyIdentity(

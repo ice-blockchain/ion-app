@@ -14,6 +14,7 @@ const mockedWalletDataArray = <WalletViewData>[
     createdAt: '',
     updatedAt: '',
     symbolGroups: {},
+    isMainWalletView: false,
   ),
   WalletViewData(
     id: '2',
@@ -23,6 +24,7 @@ const mockedWalletDataArray = <WalletViewData>[
     createdAt: '',
     updatedAt: '',
     symbolGroups: {},
+    isMainWalletView: false,
   ),
   WalletViewData(
     id: '3',
@@ -32,5 +34,6 @@ const mockedWalletDataArray = <WalletViewData>[
     createdAt: '',
     updatedAt: '',
     symbolGroups: {},
+    isMainWalletView: false,
   ),
 ];
