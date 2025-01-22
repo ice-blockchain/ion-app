@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/user/model/verify_identity_type.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
@@ -13,7 +12,7 @@ part 'user_verify_identity_provider.c.g.dart';
 
 // It is without code generation here cause code generation for providers can't handle generics
 AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
-  required Future<String?> Function() onGetPassword,
+  required Future<T> Function<T>(OnPasswordFlow<T> onPasswordFlow) onGetPassword,
   required OnPasswordFlow<T> onPasswordFlow,
   required OnPasskeyFlow<T> onPasskeyFlow,
   required OnBiometricsFlow<T> onBiometricsFlow,
@@ -33,11 +32,7 @@ AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
           // If biometrics flow fails then fallback to password flow
         } catch (_) {}
       }
-      final password = await onGetPassword();
-      if (password != null) {
-        return onPasswordFlow(password: password);
-      }
-      throw VerifyIdentityException();
+      return onGetPassword(onPasswordFlow);
     } else {
       return onPasskeyFlow();
     }

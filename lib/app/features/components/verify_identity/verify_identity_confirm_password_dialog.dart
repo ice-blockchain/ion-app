@@ -4,15 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/components/password_input.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
-class VerifyIdentityConfirmPasswordDialog extends HookConsumerWidget {
+class VerifyIdentityConfirmPasswordDialog<T> extends HookConsumerWidget {
   const VerifyIdentityConfirmPasswordDialog({
+    required this.onPasswordFlow,
     super.key,
   });
+
+  final OnPasswordFlow<T> onPasswordFlow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,6 +27,9 @@ class VerifyIdentityConfirmPasswordDialog extends HookConsumerWidget {
 
     final passwordController = useTextEditingController();
     final formKey = useRef(GlobalKey<FormState>());
+
+    final validationErrorMessage = useState<String?>(null);
+    final processing = useState<bool>(false);
 
     return SingleChildScrollView(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -49,12 +57,26 @@ class VerifyIdentityConfirmPasswordDialog extends HookConsumerWidget {
               SizedBox(height: 20.0.s),
               PasswordInput(
                 controller: passwordController,
+                errorText: validationErrorMessage.value,
               ),
               SizedBox(height: 25.0.s),
               Button(
-                onPressed: () {
+                disabled: processing.value,
+                trailingIcon: processing.value ? const IONLoadingIndicator() : null,
+                onPressed: () async {
                   if (formKey.value.currentState!.validate()) {
-                    Navigator.of(context).pop(passwordController.text);
+                    processing.value = true;
+                    validationErrorMessage.value = null;
+                    try {
+                      Navigator.of(context)
+                          .pop(await onPasswordFlow(password: passwordController.text));
+                    } on InvalidPasswordException {
+                      if (context.mounted) {
+                        validationErrorMessage.value = context.i18n.error_invalid_password;
+                      }
+                    } finally {
+                      processing.value = false;
+                    }
                   }
                 },
                 label: Text(context.i18n.button_confirm),

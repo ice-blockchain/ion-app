@@ -100,14 +100,18 @@ class PasswordSigner {
     required String credentialId,
     required CredentialKind credentialKind,
   }) async {
-    final keyPair =
-        await keyService.reconstructKeyPairFromEncryptedPrivateKey(encryptedPrivateKey, password);
-    return _createCredentialAssertion(
-      keyPair: keyPair,
-      challenge: challenge,
-      credentialId: credentialId,
-      credentialKind: credentialKind,
-    );
+    try {
+      final keyPair =
+          await keyService.reconstructKeyPairFromEncryptedPrivateKey(encryptedPrivateKey, password);
+      return _createCredentialAssertion(
+        keyPair: keyPair,
+        challenge: challenge,
+        credentialId: credentialId,
+        credentialKind: credentialKind,
+      );
+    } on crypto.SecretBoxAuthenticationError {
+      throw const InvalidPasswordException();
+    }
   }
 
   Future<AssertionRequestData> signWithBiometrics({
