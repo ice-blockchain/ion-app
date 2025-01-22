@@ -44,9 +44,9 @@ class ContactsList extends ConsumerWidget {
                   final contactData = contactsDataArray[index];
                   return ContactsListItem(
                     onTap: () async {
-                      final result =
+                      final needToEnable2FA =
                           await ContactRoute(contactId: contactData.id).push<bool>(context);
-                      if (result != null && result == true) {
+                      if (needToEnable2FA != null && needToEnable2FA == true) {
                         await Future<void>.delayed(const Duration(seconds: 1));
                         if (context.mounted) {
                           await SecureAccountModalRoute().push<void>(context);
