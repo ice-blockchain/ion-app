@@ -10,10 +10,10 @@ import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_connect_nip44_service.c.g.dart';
+part 'ion_connect_e2ee_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<IonConnectNip44Service> ionConnectNip44Service(Ref ref) async {
+Future<IonConnectE2eeService> ionConnectE2eeService(Ref ref) async {
   final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
   final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
@@ -25,14 +25,14 @@ Future<IonConnectNip44Service> ionConnectNip44Service(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return IonConnectNip44Service(
+  return IonConnectE2eeService(
     eventSigner: eventSigner,
     currentUserPubkey: currentUserPubkey,
   );
 }
 
-class IonConnectNip44Service {
-  IonConnectNip44Service({required this.eventSigner, required this.currentUserPubkey});
+class IonConnectE2eeService {
+  IonConnectE2eeService({required this.eventSigner, required this.currentUserPubkey});
 
   final EventSigner eventSigner;
   final String currentUserPubkey;

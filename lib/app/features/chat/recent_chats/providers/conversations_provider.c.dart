@@ -12,7 +12,7 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_nip44_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversations_provider.c.g.dart';
@@ -120,7 +120,7 @@ class Conversations extends _$Conversations {
     required String? subject,
   }) async {
     final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
-    final nip44Service = await ref.read(ionConnectNip44ServiceProvider.future);
+    final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
 
     final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
 
@@ -135,7 +135,7 @@ class Conversations extends _$Conversations {
 
     if (archivedChatsBookmarksSet != null) {
       final decryptedContent =
-          await nip44Service.decryptMessage(archivedChatsBookmarksSet.data.content);
+          await e2eeService.decryptMessage(archivedChatsBookmarksSet.data.content);
 
       archivedConversations = (jsonDecode(decryptedContent) as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as String).toList())

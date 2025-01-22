@@ -15,7 +15,7 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_nip44_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -193,7 +193,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
-      final nip44Service = await ref.read(ionConnectNip44ServiceProvider.future);
+      final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
       final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
 
       if (currentUserPubkey == null) {
@@ -206,7 +206,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
       var existingArchiveBookmarks = <List<String>>[];
 
       if (archivedConversationBookmarksSet != null) {
-        final decryptedBookmarkSetContent = await nip44Service.decryptMessage(
+        final decryptedBookmarkSetContent = await e2eeService.decryptMessage(
           archivedConversationBookmarksSet.data.content,
         );
 
@@ -243,7 +243,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
 
       final encodedContent = jsonEncode(newArchiveBookmarks);
 
-      final encryptedContent = await nip44Service.encryptMessage(encodedContent);
+      final encryptedContent = await e2eeService.encryptMessage(encodedContent);
 
       final newSingleBookmarksSetData = BookmarksSetData(
         postsIds: [],
