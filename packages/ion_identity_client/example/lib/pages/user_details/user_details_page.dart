@@ -8,7 +8,7 @@ import 'package:ion_identity_client_example/pages/set_ion_connect_relays/set_ion
 import 'package:ion_identity_client_example/pages/twofa/twofa_page.dart';
 import 'package:ion_identity_client_example/pages/user_wallet_views/user_wallet_views_page.dart';
 import 'package:ion_identity_client_example/pages/user_wallets/user_wallets_page.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
 
 class UserDetailsPage extends HookConsumerWidget {
   const UserDetailsPage({

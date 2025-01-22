@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
-import 'package:ion_identity_client_example/providers/ion_identity_provider.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
+import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
 
 class TwoFAPage extends HookConsumerWidget {
   const TwoFAPage({super.key});
@@ -35,10 +35,11 @@ class TwoFAPage extends HookConsumerWidget {
 
               ionIdentity(username: currentUser!).auth.requestTwoFACode(
                     twoFAType: TwoFAType.email(emailController.text),
-                    onVerifyIdentity: (
-                            {required onBiometricsFlow,
-                            required onPasskeyFlow,
-                            required onPasswordFlow}) =>
+                    onVerifyIdentity: ({
+                      required onBiometricsFlow,
+                      required onPasskeyFlow,
+                      required onPasswordFlow,
+                    }) =>
                         onPasskeyFlow(),
                   );
             },

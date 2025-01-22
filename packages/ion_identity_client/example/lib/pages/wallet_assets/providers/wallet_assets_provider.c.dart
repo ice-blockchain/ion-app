@@ -2,13 +2,16 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
 import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_wallets_provider.c.g.dart';
+part 'wallet_assets_provider.c.g.dart';
 
 @riverpod
-Future<List<Wallet>> userWallets(Ref ref, String username) async {
+Future<WalletAssets> walletAssets(Ref ref, String walletId) async {
+  final username = ref.watch(currentUsernameNotifierProvider) ?? 'ERROR';
+
   final ionIdentity = await ref.watch(ionIdentityProvider.future);
-  return ionIdentity(username: username).wallets.getWallets();
+  return ionIdentity(username: username).wallets.getWalletAssets(walletId);
 }

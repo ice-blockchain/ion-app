@@ -11,7 +11,7 @@ import 'package:ion_identity_client_example/pages/wallet_generate_signature/wall
 import 'package:ion_identity_client_example/pages/wallet_history/wallet_history_page.dart';
 import 'package:ion_identity_client_example/pages/wallet_nfts/wallet_nfts_page.dart';
 import 'package:ion_identity_client_example/pages/wallet_transfer_requests/wallet_transfer_requests_page.dart';
-import 'package:ion_identity_client_example/providers/current_username_notifier.dart';
+import 'package:ion_identity_client_example/providers/current_username_notifier.c.dart';
 
 class UserWalletsPage extends HookConsumerWidget {
   const UserWalletsPage({
@@ -52,7 +52,7 @@ class _CreateWalletAction extends ConsumerWidget {
 
     return IconButton(
       onPressed: () {
-        ref.read(createWalletNotifierProvider.notifier).createWallet();
+        ref.read(createWalletNotifierProvider.notifier).createWallet('TonTestnet');
       },
       icon: isLoading ? const CircularProgressIndicator() : const Icon(Icons.add),
     );

@@ -1,6 +1,8 @@
 name: ion_identity_client
 version: 0.0.1
 
+publish_to: none
+
 environment:
   sdk: '>=3.3.4 <4.0.0'
   flutter: ">=1.17.0"
@@ -24,6 +26,7 @@ dependencies:
   pointycastle: ^3.9.1
   rxdart: ^0.28.0
   sprintf: ^7.0.0
+  tonutils: ^0.5.7
   uuid: ^4.5.1
 
 dev_dependencies:

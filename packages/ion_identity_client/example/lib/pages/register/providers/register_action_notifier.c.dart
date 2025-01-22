@@ -3,19 +3,23 @@
 import 'package:ion_identity_client_example/providers/ion_identity_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'logout_action_notifier.c.g.dart';
+part 'register_action_notifier.c.g.dart';
 
 @riverpod
-class LogoutActionNotifier extends _$LogoutActionNotifier {
+class RegisterActionNotifier extends _$RegisterActionNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<void> logOut({required String keyName}) async {
+  Future<void> signUp({required String keyName, String? password}) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
-      await ionIdentity(username: keyName).auth.logOut();
+      if (password != null && password.isNotEmpty) {
+        await ionIdentity(username: keyName).auth.registerUserWithPassword(password);
+      } else {
+        await ionIdentity(username: keyName).auth.registerUser();
+      }
     });
   }
 }
