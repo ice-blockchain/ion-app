@@ -3,10 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_tap_gesture_recognizer.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -23,16 +21,8 @@ class FollowedByText extends HookConsumerWidget {
     final firstUserPubkey = pubkeys.first;
 
     // User metadata is fetched alongside the `followersYouKnowDataSourceProvider`, so don't fetch it manually
-    final firstUserMetadata = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<UserMetadataEntity>(
-          CacheableEntity.cacheKeyBuilder(
-            eventReference:
-                ReplaceableEventReference(pubkey: firstUserPubkey, kind: UserMetadataEntity.kind),
-          ),
-        ),
-      ),
-    );
+    final firstUserMetadata =
+        ref.watch(userMetadataProvider(firstUserPubkey, cacheOnly: true)).valueOrNull;
 
     final userTapRecognizer = useTapGestureRecognizer(
       onTap: () => ProfileRoute(pubkey: firstUserPubkey).push<void>(context),

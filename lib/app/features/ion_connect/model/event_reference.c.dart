@@ -70,7 +70,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
 
-    return ReplaceableEventReference.fromEncoded(tag[1]);
+    return ReplaceableEventReference.fromString(tag[1]);
   }
 
   factory ReplaceableEventReference.fromEncoded(String input) {
