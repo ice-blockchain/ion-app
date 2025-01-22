@@ -27,8 +27,7 @@ enum EventCountResultType {
 
 @Freezed(equal: false)
 class EventCountResultEntity
-    with _$EventCountResultEntity, IonConnectEntity, ImmutableEntity
-    implements CacheableEntity {
+    with _$EventCountResultEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory EventCountResultEntity({
     required String id,
     required String pubkey,

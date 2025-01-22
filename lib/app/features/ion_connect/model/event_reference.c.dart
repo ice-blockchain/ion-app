@@ -5,7 +5,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 
 part 'event_reference.c.freezed.dart';
 
-sealed class EventReference {
+abstract class EventReference {
   factory EventReference.fromEncoded(String input) {
     final parts = input.split(separator);
     return switch (parts[0]) {
@@ -22,7 +22,7 @@ sealed class EventReference {
   static String separator = ':';
 }
 
-@freezed
+@Freezed(toStringOverride: false)
 class ImmutableEventReference with _$ImmutableEventReference implements EventReference {
   const factory ImmutableEventReference({
     required String pubkey,
@@ -45,6 +45,11 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
   @override
   String encode() {
     return [tagName, eventId, pubkey].join(EventReference.separator);
+  }
+
+  @override
+  String toString() {
+    return [eventId, pubkey].nonNulls.join(EventReference.separator);
   }
 
   static const String tagName = 'e';

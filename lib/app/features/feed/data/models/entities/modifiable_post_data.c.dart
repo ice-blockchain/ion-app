@@ -31,8 +31,8 @@ part 'modifiable_post_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class ModifiablePostEntity
-    with _$ModifiablePostEntity, IonConnectEntity
-    implements CacheableEntity, ReplaceableEntity {
+    with _$ModifiablePostEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
@@ -64,11 +64,6 @@ class ModifiablePostEntity
   ReplaceableEventReference toEventReference() {
     return data.toReplaceableEventReference(masterPubkey);
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(replaceableEventId: data.replaceableEventId.value);
-
-  static String cacheKeyBuilder({required String replaceableEventId}) => replaceableEventId;
 
   static const kind = 30175;
 }

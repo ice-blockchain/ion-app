@@ -25,8 +25,8 @@ const textEditorSingleImageKey = 'text-editor-single-image';
 
 @Freezed(equal: false)
 class ArticleEntity
-    with _$ArticleEntity, IonConnectEntity
-    implements CacheableEntity, ReplaceableEntity {
+    with _$ArticleEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory ArticleEntity({
     required String id,
     required String pubkey,
@@ -57,11 +57,6 @@ class ArticleEntity
   ReplaceableEventReference toEventReference() {
     return data.toReplaceableEventReference(masterPubkey);
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(replaceableEventId: data.replaceableEventId.value);
-
-  static String cacheKeyBuilder({required String replaceableEventId}) => replaceableEventId;
 
   static const kind = 30023;
 }

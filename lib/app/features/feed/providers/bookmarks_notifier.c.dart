@@ -26,7 +26,13 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
 ) async {
   final bookmarksMap = Map.fromEntries(
     BookmarksSetType.values.map((type) {
-      final cacheKey = BookmarksSetEntity.cacheKeyBuilder(pubkey: pubkey, type: type);
+      final cacheKey = CacheableEntity.cacheKeyBuilder(
+        eventReference: ReplaceableEventReference(
+          pubkey: pubkey,
+          kind: BookmarksSetEntity.kind,
+          dTag: type.dTagName,
+        ),
+      );
       final bookmarkSet = ref.watch(
         ionConnectCacheProvider.select(cacheSelector<BookmarksSetEntity>(cacheKey)),
       );

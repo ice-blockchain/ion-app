@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -14,8 +15,8 @@ part 'follow_list.c.freezed.dart';
 
 @Freezed(equal: false)
 class FollowListEntity
-    with _$FollowListEntity, IonConnectEntity, ImmutableEntity
-    implements CacheableEntity {
+    with _$FollowListEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory FollowListEntity({
     required String id,
     required String pubkey,
@@ -46,15 +47,15 @@ class FollowListEntity
   List<String> get pubkeys => data.list.map((followee) => followee.pubkey).toList();
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 3;
 }
 
 @freezed
-class FollowListData with _$FollowListData implements EventSerializable {
+class FollowListData with _$FollowListData implements EventSerializable, ReplaceableEntityData {
   const factory FollowListData({
     required List<Followee> list,
   }) = _FollowListData;
@@ -85,6 +86,14 @@ class FollowListData with _$FollowListData implements EventSerializable {
         ...list.map((followee) => followee.toTag()),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: FollowListEntity.kind,
+      pubkey: pubkey,
     );
   }
 }

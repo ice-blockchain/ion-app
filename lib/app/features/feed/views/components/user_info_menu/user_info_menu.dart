@@ -10,11 +10,10 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu_item.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -32,11 +31,7 @@ class UserInfoMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<UserMetadataEntity>(UserMetadataEntity.cacheKeyBuilder(pubkey: pubkey)),
-      ),
-    );
+    final userMetadata = ref.watch(userMetadataProvider(pubkey, cacheOnly: true)).valueOrNull;
 
     if (userMetadata == null) {
       return const SizedBox.shrink();

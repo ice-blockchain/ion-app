@@ -16,8 +16,8 @@ part 'user_chat_relays.c.freezed.dart';
 
 @Freezed(equal: false)
 class UserChatRelaysEntity
-    with _$UserChatRelaysEntity, IonConnectEntity
-    implements CacheableEntity, ReplaceableEntity {
+    with _$UserChatRelaysEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory UserChatRelaysEntity({
     required String id,
     required String pubkey,
@@ -50,12 +50,7 @@ class UserChatRelaysEntity
     return data.toReplaceableEventReference(masterPubkey);
   }
 
-  @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
   List<String> get urls => data.list.map((relay) => relay.url).toList();
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 10050;
 }

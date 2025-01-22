@@ -18,8 +18,8 @@ part 'user_metadata.c.g.dart';
 
 @Freezed(equal: false)
 class UserMetadataEntity
-    with _$UserMetadataEntity, IonConnectEntity
-    implements CacheableEntity, ReplaceableEntity {
+    with _$UserMetadataEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
@@ -51,11 +51,6 @@ class UserMetadataEntity
   ReplaceableEventReference toEventReference() {
     return data.toReplaceableEventReference(masterPubkey);
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 0;
 }

@@ -14,8 +14,7 @@ part 'file_metadata.c.freezed.dart';
 
 @Freezed(equal: false)
 class FileMetadataEntity
-    with _$FileMetadataEntity, IonConnectEntity, ImmutableEntity
-    implements CacheableEntity {
+    with _$FileMetadataEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory FileMetadataEntity({
     required String id,
     required String pubkey,
@@ -42,11 +41,6 @@ class FileMetadataEntity
       data: FileMetadata.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(id: id);
-
-  static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 1063;
 }

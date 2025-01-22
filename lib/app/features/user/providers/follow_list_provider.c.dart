@@ -6,6 +6,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
@@ -23,7 +24,9 @@ Future<FollowListEntity?> followList(
     final followList = ref.watch(
       ionConnectCacheProvider.select(
         cacheSelector<FollowListEntity>(
-          FollowListEntity.cacheKeyBuilder(pubkey: pubkey),
+          CacheableEntity.cacheKeyBuilder(
+            eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
+          ),
         ),
       ),
     );

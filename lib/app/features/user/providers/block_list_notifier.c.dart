@@ -25,7 +25,9 @@ Future<BlockListEntity?> blockList(
   String pubkey, {
   bool cacheOnly = false,
 }) async {
-  final cacheKey = BlockListEntity.cacheKeyBuilder(pubkey: pubkey);
+  final cacheKey = CacheableEntity.cacheKeyBuilder(
+    eventReference: ReplaceableEventReference(pubkey: pubkey, kind: BlockListEntity.kind),
+  );
   final blockList = ref.watch(
     ionConnectCacheProvider.select(cacheSelector<BlockListEntity>(cacheKey)),
   );

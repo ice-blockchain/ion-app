@@ -14,9 +14,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'repost_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class RepostEntity
-    with _$RepostEntity, IonConnectEntity, ImmutableEntity
-    implements CacheableEntity {
+class RepostEntity with _$RepostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory RepostEntity({
     required String id,
     required String pubkey,
@@ -43,11 +41,6 @@ class RepostEntity
       data: RepostData.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(id: id);
-
-  static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 6;
 }

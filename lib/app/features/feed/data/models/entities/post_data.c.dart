@@ -26,7 +26,7 @@ import 'package:ion/app/services/text_parser/text_parser.dart';
 part 'post_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity implements CacheableEntity {
+class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory PostEntity({
     required String id,
     required String pubkey,
@@ -53,11 +53,6 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity implements
       data: PostData.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(id: id);
-
-  static String cacheKeyBuilder({required String id}) => id;
 
   static const kind = 1;
 }

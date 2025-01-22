@@ -17,15 +17,10 @@ Future<IonConnectEntity?> ionConnectEntity(
   required EventReference eventReference,
   bool skipCache = false,
 }) async {
-  if (eventReference is! ImmutableEventReference) {
-    //TODO:replaceable handle replaceable references
-    throw UnimplementedError();
-  }
-
   if (!skipCache) {
     final entity = ref.watch(
       ionConnectCacheProvider.select(
-        cacheSelector(eventReference.eventId),
+        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
       ),
     );
     if (entity != null) {
@@ -33,10 +28,30 @@ Future<IonConnectEntity?> ionConnectEntity(
     }
   }
 
-  final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
-  return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
-        requestMessage,
-        actionSource: ActionSourceUser(eventReference.pubkey),
+  if (eventReference is ImmutableEventReference) {
+    final requestMessage = RequestMessage()
+      ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
+    return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
+          requestMessage,
+          actionSource: ActionSourceUser(eventReference.pubkey),
+        );
+  } else if (eventReference is ReplaceableEventReference) {
+    final requestMessage = RequestMessage()
+      ..addFilter(
+        RequestFilter(
+          kinds: [eventReference.kind],
+          authors: [eventReference.pubkey],
+          tags: {
+            if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
+          },
+          limit: 1,
+        ),
       );
+    return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
+          requestMessage,
+          actionSource: ActionSourceUser(eventReference.pubkey),
+        );
+  } else {
+    throw UnsupportedError(eventReference.toString());
+  }
 }

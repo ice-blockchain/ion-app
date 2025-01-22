@@ -16,8 +16,8 @@ part 'bookmarks.c.freezed.dart';
 
 @Freezed(equal: false)
 class BookmarksEntity
-    with _$BookmarksEntity, IonConnectEntity, ImmutableEntity
-    implements CacheableEntity {
+    with _$BookmarksEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory BookmarksEntity({
     required String id,
     required String pubkey,
@@ -46,15 +46,15 @@ class BookmarksEntity
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 10003;
 }
 
 @freezed
-class BookmarksData with _$BookmarksData implements EventSerializable {
+class BookmarksData with _$BookmarksData implements EventSerializable, ReplaceableEntityData {
   const factory BookmarksData({
     required List<String> ids,
     required List<ReplaceableEventReference> bookmarksSetRefs,
@@ -89,6 +89,14 @@ class BookmarksData with _$BookmarksData implements EventSerializable {
         ...ids.map((id) => ['e', id]),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: BookmarksEntity.kind,
+      pubkey: pubkey,
     );
   }
 }

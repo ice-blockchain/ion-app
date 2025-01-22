@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,7 +12,10 @@ part 'ion_connect_cache.c.g.dart';
 final _ionConnectCacheStreamController = StreamController<IonConnectEntity>.broadcast();
 
 mixin CacheableEntity on IonConnectEntity {
-  String get cacheKey;
+  String get cacheKey => cacheKeyBuilder(eventReference: toEventReference());
+
+  static String cacheKeyBuilder({required EventReference eventReference}) =>
+      eventReference.toString();
 }
 
 @Riverpod(keepAlive: true)

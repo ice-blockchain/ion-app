@@ -15,8 +15,7 @@ part 'generic_repost.c.freezed.dart';
 
 @Freezed(equal: false)
 class GenericRepostEntity
-    with _$GenericRepostEntity, IonConnectEntity, ImmutableEntity
-    implements CacheableEntity {
+    with _$GenericRepostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory GenericRepostEntity({
     required String id,
     required String pubkey,
@@ -43,11 +42,6 @@ class GenericRepostEntity
       data: GenericRepostData.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(id: id);
-
-  static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 16;
 }

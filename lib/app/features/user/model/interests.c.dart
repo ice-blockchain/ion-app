@@ -16,8 +16,8 @@ part 'interests.c.freezed.dart';
 
 @Freezed(equal: false)
 class InterestsEntity
-    with _$InterestsEntity, IonConnectEntity
-    implements CacheableEntity, ReplaceableEntity {
+    with _$InterestsEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory InterestsEntity({
     required String id,
     required String pubkey,
@@ -49,11 +49,6 @@ class InterestsEntity
   ReplaceableEventReference toEventReference() {
     return data.toReplaceableEventReference(masterPubkey);
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
 
   static const int kind = 10015;
 }

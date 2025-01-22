@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
@@ -25,7 +26,10 @@ class FollowedByText extends HookConsumerWidget {
     final firstUserMetadata = ref.watch(
       ionConnectCacheProvider.select(
         cacheSelector<UserMetadataEntity>(
-          UserMetadataEntity.cacheKeyBuilder(pubkey: firstUserPubkey),
+          CacheableEntity.cacheKeyBuilder(
+            eventReference:
+                ReplaceableEventReference(pubkey: firstUserPubkey, kind: UserMetadataEntity.kind),
+          ),
         ),
       ),
     );
