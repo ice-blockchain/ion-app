@@ -5,11 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/share_modal_base/share_modal_base.dart';
 import 'package:ion/app/features/feed/views/pages/share_post_modal/components/share_options.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class SharePostModal extends StatelessWidget {
-  const SharePostModal({required this.postId, super.key});
+  const SharePostModal({required this.eventReference, super.key});
 
-  final String postId;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context) {

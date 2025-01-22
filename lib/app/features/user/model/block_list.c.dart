@@ -13,7 +13,9 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'block_list.c.freezed.dart';
 
 @Freezed(equal: false)
-class BlockListEntity with _$BlockListEntity, IonConnectEntity implements CacheableEntity {
+class BlockListEntity
+    with _$BlockListEntity, IonConnectEntity, ImmutableEntity
+    implements CacheableEntity {
   const factory BlockListEntity({
     required String id,
     required String pubkey,

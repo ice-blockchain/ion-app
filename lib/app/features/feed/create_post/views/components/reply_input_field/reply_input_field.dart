@@ -101,7 +101,7 @@ class ReplyInputField extends HookConsumerWidget {
                               GestureDetector(
                                 onTap: () async {
                                   final content = await CreatePostRoute(
-                                    parentEvent: eventReference.toString(),
+                                    parentEvent: eventReference.encode(),
                                     showCollapseButton: true,
                                     content: textEditorController.document.toPlainText().trim(),
                                   ).push<String>(context);

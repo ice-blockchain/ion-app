@@ -12,6 +12,7 @@ import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dar
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -31,7 +32,7 @@ part 'modifiable_post_data.c.freezed.dart';
 @Freezed(equal: false)
 class ModifiablePostEntity
     with _$ModifiablePostEntity, IonConnectEntity
-    implements CacheableEntity {
+    implements CacheableEntity, ReplaceableEntity {
   const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
@@ -60,6 +61,11 @@ class ModifiablePostEntity
   }
 
   @override
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
+
+  @override
   String get cacheKey => cacheKeyBuilder(replaceableEventId: data.replaceableEventId.value);
 
   static String cacheKeyBuilder({required String replaceableEventId}) => replaceableEventId;
@@ -70,7 +76,7 @@ class ModifiablePostEntity
 @freezed
 class ModifiablePostData
     with _$ModifiablePostData, EntityMediaDataMixin
-    implements EventSerializable {
+    implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
@@ -156,6 +162,15 @@ class ModifiablePostData
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: ModifiablePostEntity.kind,
+      pubkey: pubkey,
+      dTag: replaceableEventId.value,
     );
   }
 

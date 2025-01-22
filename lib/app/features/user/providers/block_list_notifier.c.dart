@@ -111,7 +111,7 @@ Future<bool> isPostChildBlockedOrBlocking(
 }) async {
   final quotedEvent = entity.data.quotedEvent;
   if (quotedEvent == null) return false;
-  final quotedPostReference = EventReference(
+  final quotedPostReference = ImmutableEventReference(
     eventId: quotedEvent.eventId,
     pubkey: quotedEvent.pubkey,
   );
@@ -131,7 +131,8 @@ Future<bool> isRepostChildBlockedOrBlocking(
   RepostEntity repost, {
   bool cacheOnly = false,
 }) async {
-  final eventReference = EventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
+  final eventReference =
+      ImmutableEventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
   final entity = await ref.watch(ionConnectEntityProvider(eventReference: eventReference).future);
   if (entity == null) return true;
   return ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly)).valueOrNull ??
@@ -144,7 +145,8 @@ Future<bool> isGenericRepostChildBlockedOrBlocking(
   GenericRepostEntity repost, {
   bool cacheOnly = false,
 }) async {
-  final eventReference = EventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
+  final eventReference =
+      ImmutableEventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
   final entity = await ref.watch(ionConnectEntityProvider(eventReference: eventReference).future);
   if (entity == null) return true;
   return ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly)).valueOrNull ??

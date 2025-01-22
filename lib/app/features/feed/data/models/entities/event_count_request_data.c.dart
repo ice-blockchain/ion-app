@@ -16,7 +16,7 @@ part 'event_count_request_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class EventCountRequestEntity
-    with _$EventCountRequestEntity, IonConnectEntity
+    with _$EventCountRequestEntity, IonConnectEntity, ImmutableEntity
     implements CacheableEntity {
   const factory EventCountRequestEntity({
     required String id,

@@ -17,6 +17,11 @@ ReactionEntity? likeReaction(Ref ref, EventReference eventReference) {
     return null;
   }
 
+  if (eventReference is! ImmutableEventReference) {
+    //TODO:replaceable handle replaceable references
+    throw UnimplementedError();
+  }
+
   final reactionEntity = ref.watch(
     ionConnectCacheProvider.select(
       cacheSelector<ReactionEntity>(

@@ -30,6 +30,11 @@ List<EntitiesDataSource>? repliesDataSource(
     return null;
   }
 
+  if (eventReference is! ImmutableEventReference) {
+    //TODO:replaceable handle replaceable references
+    throw UnimplementedError();
+  }
+
   if (entity is! PostEntity) {
     throw IncorrectEventKindException(eventId: eventReference.eventId, kind: PostEntity.kind);
   }

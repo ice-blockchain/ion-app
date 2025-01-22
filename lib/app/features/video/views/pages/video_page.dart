@@ -7,7 +7,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/video/views/components/video_actions.dart';
 import 'package:ion/app/features/video/views/components/video_controls.dart';
 import 'package:ion/app/features/video/views/components/video_header.dart';
@@ -100,7 +99,7 @@ class VideoPage extends HookConsumerWidget {
                   ),
                 ),
                 VideoActions(
-                  eventReference: EventReference.fromIonConnectEntity(video),
+                  eventReference: video.toEventReference(),
                 ),
               ],
             ),

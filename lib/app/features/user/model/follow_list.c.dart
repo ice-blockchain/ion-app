@@ -13,7 +13,9 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'follow_list.c.freezed.dart';
 
 @Freezed(equal: false)
-class FollowListEntity with _$FollowListEntity, IonConnectEntity implements CacheableEntity {
+class FollowListEntity
+    with _$FollowListEntity, IonConnectEntity, ImmutableEntity
+    implements CacheableEntity {
   const factory FollowListEntity({
     required String id,
     required String pubkey,

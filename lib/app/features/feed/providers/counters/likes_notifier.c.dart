@@ -24,6 +24,12 @@ class LikesNotifier extends _$LikesNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      final reference = eventReference;
+      if (reference is! ImmutableEventReference) {
+        //TODO:replaceable handle replaceable references
+        throw UnimplementedError();
+      }
+
       final likeEntity = ref.read(likeReactionProvider(eventReference));
 
       if (likeEntity != null) {
@@ -36,7 +42,7 @@ class LikesNotifier extends _$LikesNotifier {
       } else {
         final data = ReactionData(
           content: ReactionEntity.likeSymbol,
-          eventId: eventReference.eventId,
+          eventId: reference.eventId,
           pubkey: eventReference.pubkey,
         );
         await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);

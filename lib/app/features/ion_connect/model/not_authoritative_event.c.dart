@@ -12,7 +12,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'not_authoritative_event.c.freezed.dart';
 
 @Freezed(equal: false)
-class NotAuthoritativeEvent with _$NotAuthoritativeEvent, IonConnectEntity {
+class NotAuthoritativeEvent with _$NotAuthoritativeEvent, IonConnectEntity, ImmutableEntity {
   const factory NotAuthoritativeEvent({
     required String id,
     required String pubkey,

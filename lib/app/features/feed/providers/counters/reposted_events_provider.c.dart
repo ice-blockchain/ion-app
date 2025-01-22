@@ -57,5 +57,9 @@ String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String curr
 
 @riverpod
 bool isReposted(Ref ref, EventReference eventReference) {
+  if (eventReference is! ImmutableEventReference) {
+    //TODO:replaceable handle replaceable references
+    throw UnimplementedError();
+  }
   return ref.watch(repostedEventsProvider).valueOrNull?.contains(eventReference.eventId) ?? false;
 }

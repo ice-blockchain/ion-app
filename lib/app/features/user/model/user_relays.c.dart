@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -13,7 +14,9 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'user_relays.c.freezed.dart';
 
 @Freezed(equal: false)
-class UserRelaysEntity with _$UserRelaysEntity, IonConnectEntity implements CacheableEntity {
+class UserRelaysEntity
+    with _$UserRelaysEntity, IonConnectEntity
+    implements CacheableEntity, ReplaceableEntity {
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
@@ -44,6 +47,11 @@ class UserRelaysEntity with _$UserRelaysEntity, IonConnectEntity implements Cach
   List<String> get urls => data.list.map((relay) => relay.url).toList();
 
   @override
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
+
+  @override
   String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
@@ -52,7 +60,7 @@ class UserRelaysEntity with _$UserRelaysEntity, IonConnectEntity implements Cach
 }
 
 @freezed
-class UserRelaysData with _$UserRelaysData implements EventSerializable {
+class UserRelaysData with _$UserRelaysData implements EventSerializable, ReplaceableEntityData {
   const factory UserRelaysData({
     required List<UserRelay> list,
   }) = _UserRelaysData;
@@ -83,6 +91,14 @@ class UserRelaysData with _$UserRelaysData implements EventSerializable {
         ...list.map((relay) => relay.toTag()),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: UserRelaysEntity.kind,
+      pubkey: pubkey,
     );
   }
 }

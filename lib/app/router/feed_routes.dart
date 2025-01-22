@@ -19,7 +19,7 @@ class FeedRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
-        TypedGoRoute<SharePostModalRoute>(path: 'share-post/:postId'),
+        TypedGoRoute<SharePostModalRoute>(path: 'share-post/:eventReference'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
         TypedGoRoute<MediaPickerRoute>(
@@ -42,7 +42,7 @@ class ArticleDetailsRoute extends BaseRouteData {
   ArticleDetailsRoute({required this.eventReference})
       : super(
           child: ArticleDetailsPage(
-            eventReference: EventReference.fromString(eventReference),
+            eventReference: EventReference.fromEncoded(eventReference),
           ),
         );
 
@@ -52,7 +52,7 @@ class ArticleDetailsRoute extends BaseRouteData {
 class PostDetailsRoute extends BaseRouteData {
   PostDetailsRoute({required this.eventReference})
       : super(
-          child: PostDetailsPage(eventReference: EventReference.fromString(eventReference)),
+          child: PostDetailsPage(eventReference: EventReference.fromEncoded(eventReference)),
         );
 
   final String eventReference;
@@ -70,7 +70,7 @@ class RepostOptionsModalRoute extends BaseRouteData {
     required this.eventReference,
   }) : super(
           child: RepostOptionsModal(
-            eventReference: EventReference.fromString(eventReference),
+            eventReference: EventReference.fromEncoded(eventReference),
           ),
           type: IceRouteType.bottomSheet,
         );
@@ -80,13 +80,13 @@ class RepostOptionsModalRoute extends BaseRouteData {
 
 class SharePostModalRoute extends BaseRouteData {
   SharePostModalRoute({
-    required this.postId,
+    required this.eventReference,
   }) : super(
-          child: SharePostModal(postId: postId),
+          child: SharePostModal(eventReference: EventReference.fromEncoded(eventReference)),
           type: IceRouteType.bottomSheet,
         );
 
-  final String postId;
+  final String eventReference;
 }
 
 class FeedSimpleSearchRoute extends BaseRouteData {
@@ -134,8 +134,8 @@ class CreatePostRoute extends BaseRouteData {
     this.videoPath,
   }) : super(
           child: CreatePostModal(
-            parentEvent: parentEvent != null ? EventReference.fromString(parentEvent) : null,
-            quotedEvent: quotedEvent != null ? EventReference.fromString(quotedEvent) : null,
+            parentEvent: parentEvent != null ? EventReference.fromEncoded(parentEvent) : null,
+            quotedEvent: quotedEvent != null ? EventReference.fromEncoded(quotedEvent) : null,
             content: content,
             showCollapseButton: showCollapseButton,
             videoPath: videoPath,
@@ -276,7 +276,7 @@ class VideosRoute extends BaseRouteData {
   VideosRoute({required this.eventReference})
       : super(
           child: VideosPage(
-            EventReference.fromString(eventReference),
+            EventReference.fromEncoded(eventReference),
           ),
         );
 

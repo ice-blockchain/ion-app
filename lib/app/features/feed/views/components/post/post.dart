@@ -79,12 +79,12 @@ class Post extends ConsumerWidget {
     if (showParent) {
       final parentEvent = postEntity.data.parentEvent;
       if (parentEvent != null) {
-        return EventReference(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
+        return ImmutableEventReference(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
       }
     } else {
       final quotedEvent = postEntity.data.quotedEvent;
       if (quotedEvent != null) {
-        return EventReference(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey);
+        return ImmutableEventReference(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey);
       }
     }
     return null;
@@ -132,7 +132,7 @@ final class _QuotedPost extends ConsumerWidget {
     return QuotedEntityFrame.post(
       child: GestureDetector(
         onTap: () {
-          PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context);
+          PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
         },
         child: AbsorbPointer(
           child: Post(
@@ -156,7 +156,7 @@ final class _QuotedArticle extends ConsumerWidget {
     return QuotedEntityFrame.article(
       child: GestureDetector(
         onTap: () {
-          ArticleDetailsRoute(eventReference: eventReference.toString()).push<void>(context);
+          ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
         },
         child: AbsorbPointer(child: Article.quoted(eventReference: eventReference)),
       ),

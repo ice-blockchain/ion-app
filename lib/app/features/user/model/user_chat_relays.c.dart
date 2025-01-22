@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -16,7 +17,7 @@ part 'user_chat_relays.c.freezed.dart';
 @Freezed(equal: false)
 class UserChatRelaysEntity
     with _$UserChatRelaysEntity, IonConnectEntity
-    implements CacheableEntity {
+    implements CacheableEntity, ReplaceableEntity {
   const factory UserChatRelaysEntity({
     required String id,
     required String pubkey,
@@ -45,6 +46,11 @@ class UserChatRelaysEntity
   }
 
   @override
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
+
+  @override
   String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
 
   List<String> get urls => data.list.map((relay) => relay.url).toList();
@@ -55,7 +61,9 @@ class UserChatRelaysEntity
 }
 
 @freezed
-class UserChatRelaysData with _$UserChatRelaysData implements EventSerializable {
+class UserChatRelaysData
+    with _$UserChatRelaysData
+    implements EventSerializable, ReplaceableEntityData {
   const factory UserChatRelaysData({
     required List<UserRelay> list,
   }) = _UserChatRelaysData;
@@ -86,6 +94,14 @@ class UserChatRelaysData with _$UserChatRelaysData implements EventSerializable 
         ...list.map(toRelayTag),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: UserChatRelaysEntity.kind,
+      pubkey: pubkey,
     );
   }
 

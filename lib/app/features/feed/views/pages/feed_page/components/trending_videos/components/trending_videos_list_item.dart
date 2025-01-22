@@ -23,7 +23,7 @@ class TrendingVideoListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventReference = EventReference.fromIonConnectEntity(video);
+    final eventReference = video.toEventReference();
 
     final thumbnailUrl = video.data.primaryVideo?.thumb;
     if (thumbnailUrl == null || thumbnailUrl.isEmpty) {
@@ -32,7 +32,7 @@ class TrendingVideoListItem extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        VideosRoute(eventReference: eventReference.toString()).push<void>(context);
+        VideosRoute(eventReference: eventReference.encode()).push<void>(context);
       },
       child: _VideoContainer(
         thumbnailUrl: thumbnailUrl,

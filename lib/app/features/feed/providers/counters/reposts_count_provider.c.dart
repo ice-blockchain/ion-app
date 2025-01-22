@@ -11,6 +11,11 @@ part 'reposts_count_provider.c.g.dart';
 class RepostsCount extends _$RepostsCount {
   @override
   int? build(EventReference eventReference) {
+    if (eventReference is! ImmutableEventReference) {
+      //TODO:replaceable handle replaceable references
+      throw UnimplementedError();
+    }
+
     final repostsCountEntity = ref.watch(
       ionConnectCacheProvider.select(
         cacheSelector<EventCountResultEntity>(

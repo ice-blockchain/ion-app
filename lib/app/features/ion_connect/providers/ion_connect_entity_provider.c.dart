@@ -17,6 +17,11 @@ Future<IonConnectEntity?> ionConnectEntity(
   required EventReference eventReference,
   bool skipCache = false,
 }) async {
+  if (eventReference is! ImmutableEventReference) {
+    //TODO:replaceable handle replaceable references
+    throw UnimplementedError();
+  }
+
   if (!skipCache) {
     final entity = ref.watch(
       ionConnectCacheProvider.select(

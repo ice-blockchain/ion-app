@@ -26,7 +26,7 @@ import 'package:ion/app/services/text_parser/text_parser.dart';
 part 'post_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class PostEntity with _$PostEntity, IonConnectEntity implements CacheableEntity {
+class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity implements CacheableEntity {
   const factory PostEntity({
     required String id,
     required String pubkey,

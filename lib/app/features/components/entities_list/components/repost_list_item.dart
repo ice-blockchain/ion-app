@@ -15,10 +15,11 @@ class RepostListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventReference = EventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
+    final eventReference =
+        ImmutableEventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
 
     return GestureDetector(
-      onTap: () => PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
+      onTap: () => PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
       behavior: HitTestBehavior.opaque,
       child: ScreenSideOffset.small(
         child: Column(

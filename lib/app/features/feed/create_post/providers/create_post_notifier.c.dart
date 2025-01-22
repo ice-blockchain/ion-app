@@ -82,13 +82,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         );
       }
 
-      if (quotedEvent != null) {
+      if (quotedEvent != null && quotedEvent is ImmutableEventReference) {
         data = data.copyWith(
           quotedEvent: QuotedEvent(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
         );
       }
 
-      if (parentEvent != null) {
+      if (parentEvent != null && parentEvent is ImmutableEventReference) {
         final parentEntity =
             await ref.read(ionConnectEntityProvider(eventReference: parentEvent).future);
         if (parentEntity == null) {

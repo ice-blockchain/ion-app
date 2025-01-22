@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 part 'related_replaceable_event.c.freezed.dart';
 

@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class ArticleListItem extends ConsumerWidget {
@@ -15,14 +14,14 @@ class ArticleListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventReference = EventReference.fromIonConnectEntity(article);
+    final eventReference = article.toEventReference();
 
     return Padding(
       padding: EdgeInsets.only(top: 12.0.s, bottom: 24.0.s, right: 16.0.s),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () =>
-            ArticleDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
+            ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
         child: Article(
           eventReference: eventReference,
         ),

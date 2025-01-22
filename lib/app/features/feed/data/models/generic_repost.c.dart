@@ -14,7 +14,9 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'generic_repost.c.freezed.dart';
 
 @Freezed(equal: false)
-class GenericRepostEntity with _$GenericRepostEntity, IonConnectEntity implements CacheableEntity {
+class GenericRepostEntity
+    with _$GenericRepostEntity, IonConnectEntity, ImmutableEntity
+    implements CacheableEntity {
   const factory GenericRepostEntity({
     required String id,
     required String pubkey,
