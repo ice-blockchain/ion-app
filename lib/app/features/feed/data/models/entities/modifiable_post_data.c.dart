@@ -16,7 +16,7 @@ import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_modifiable_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
@@ -78,7 +78,7 @@ class ModifiablePostData
     required EntityPublishedAt publishedAt,
     EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
-    QuotedModifiableEvent? quotedEvent,
+    QuotedReplaceableEvent? quotedEvent,
     List<RelatedReplaceableEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
@@ -102,8 +102,8 @@ class ModifiablePostData
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedModifiableEvent.tagName] != null
-          ? QuotedModifiableEvent.fromTag(tags[QuotedModifiableEvent.tagName]!.first)
+      quotedEvent: tags[QuotedReplaceableEvent.tagName] != null
+          ? QuotedReplaceableEvent.fromTag(tags[QuotedReplaceableEvent.tagName]!.first)
           : null,
       relatedEvents:
           tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),

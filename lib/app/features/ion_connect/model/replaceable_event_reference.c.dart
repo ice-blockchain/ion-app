@@ -6,7 +6,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 
 part 'replaceable_event_reference.c.freezed.dart';
 
-@freezed
+@Freezed(toStringOverride: false)
 class ReplaceableEventReference with _$ReplaceableEventReference {
   const factory ReplaceableEventReference({
     required int kind,
