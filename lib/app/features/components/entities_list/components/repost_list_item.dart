@@ -16,7 +16,6 @@ class RepostListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final eventReference = EventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
-    final repostEventReference = EventReference(eventId: repost.id, pubkey: repost.pubkey);
 
     return GestureDetector(
       onTap: () => PostDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
@@ -25,7 +24,7 @@ class RepostListItem extends StatelessWidget {
         child: Column(
           children: [
             RepostAuthorHeader(pubkey: repost.masterPubkey),
-            Post(eventReference: eventReference, repostEventReference: repostEventReference),
+            Post(eventReference: eventReference),
           ],
         ),
       ),

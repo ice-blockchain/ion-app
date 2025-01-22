@@ -69,7 +69,6 @@ class NotificationsHistoryRoute extends BaseRouteData {
 class RepostOptionsModalRoute extends BaseRouteData {
   RepostOptionsModalRoute({
     required this.eventReference,
-    this.repostEventReference,
   }) : super(
           child: RepostOptionsModal(
             eventReference: EventReference.fromString(eventReference),
@@ -78,7 +77,6 @@ class RepostOptionsModalRoute extends BaseRouteData {
         );
 
   final String eventReference;
-  final String? repostEventReference;
 }
 
 class SharePostModalRoute extends BaseRouteData {

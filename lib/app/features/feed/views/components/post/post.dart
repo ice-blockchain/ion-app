@@ -23,7 +23,6 @@ import 'package:ion/app/router/app_routes.c.dart';
 class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
-    this.repostEventReference,
     this.header,
     this.footer,
     this.showParent = false,
@@ -32,7 +31,6 @@ class Post extends ConsumerWidget {
   });
 
   final EventReference eventReference;
-  final EventReference? repostEventReference;
   final bool showParent;
   final Widget? header;
   final Widget? footer;
