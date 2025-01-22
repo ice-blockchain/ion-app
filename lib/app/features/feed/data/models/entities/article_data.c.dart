@@ -59,9 +59,9 @@ class ArticleEntity
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(id: id);
+  String get cacheKey => cacheKeyBuilder(replaceableEventId: data.replaceableEventId.value);
 
-  static String cacheKeyBuilder({required String id}) => id;
+  static String cacheKeyBuilder({required String replaceableEventId}) => replaceableEventId;
 
   static const kind = 30023;
 }

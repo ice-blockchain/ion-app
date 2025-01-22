@@ -65,7 +65,7 @@ Future<void> _deleteReply(Ref ref, PostEntity post) async {
   ref
       .read(
         repliesCountProvider(
-          EventReference(
+          ImmutableEventReference(
             eventId: parentId,
             pubkey: post.data.parentEvent!.pubkey,
           ),
@@ -76,7 +76,7 @@ Future<void> _deleteReply(Ref ref, PostEntity post) async {
   await ref
       .read(
         repliesProvider(
-          EventReference(
+          ImmutableEventReference(
             eventId: parentId,
             pubkey: post.data.parentEvent!.pubkey,
           ),
