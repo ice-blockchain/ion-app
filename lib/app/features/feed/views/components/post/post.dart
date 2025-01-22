@@ -6,9 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
+import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/delete_feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
@@ -24,6 +26,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.showParent = false,
+    this.onDelete,
     super.key,
   });
 
@@ -31,6 +34,7 @@ class Post extends ConsumerWidget {
   final bool showParent;
   final Widget? header;
   final Widget? footer;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,6 +46,8 @@ class Post extends ConsumerWidget {
       return const Skeleton(child: PostSkeleton());
     }
 
+    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(postEntity.masterPubkey));
+
     final framedEvent = _getFramedEventReference(postEntity);
 
     return Column(
@@ -51,12 +57,20 @@ class Post extends ConsumerWidget {
         header ??
             UserInfo(
               pubkey: eventReference.pubkey,
-              trailing: UserInfoMenu(pubkey: eventReference.pubkey),
+              trailing: isOwnedByCurrentUser
+                  ? DeleteFeedItemMenu(
+                      entity: postEntity,
+                      onDelete: onDelete,
+                    )
+                  : UserInfoMenu(pubkey: eventReference.pubkey),
             ),
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
         if (framedEvent != null) _FramedEvent(eventReference: framedEvent),
-        footer ?? CounterItemsFooter(eventReference: eventReference),
+        footer ??
+            CounterItemsFooter(
+              eventReference: eventReference,
+            ),
       ],
     );
   }

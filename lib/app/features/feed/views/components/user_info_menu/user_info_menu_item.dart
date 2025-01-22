@@ -8,12 +8,14 @@ class UserInfoMenuItem extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.labelColor,
     super.key,
   });
 
   final String label;
   final Widget icon;
   final VoidCallback onPressed;
+  final Color? labelColor;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,9 @@ class UserInfoMenuItem extends StatelessWidget {
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: textStyles.subtitle3.copyWith(color: colors.primaryText),
+                  style: textStyles.subtitle3.copyWith(
+                    color: labelColor ?? colors.primaryText,
+                  ),
                 ),
               ),
               icon,

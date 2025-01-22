@@ -30,7 +30,9 @@ class RepostsCounterButton extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        RepostOptionsModalRoute(eventReference: eventReference.toString()).push<void>(context);
+        RepostOptionsModalRoute(
+          eventReference: eventReference.toString(),
+        ).push<void>(context);
       },
       child: TextActionButton(
         icon: Assets.svg.iconBlockRepost.icon(

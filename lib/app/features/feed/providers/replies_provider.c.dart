@@ -22,6 +22,10 @@ class Replies extends _$Replies {
         .where((entity) => _isReply(entity, eventReference))
         .distinct()
         .listen((entity) {
+      if (state?.data.items?.any((e) => e.id == entity.id) ?? false) {
+        return;
+      }
+
       state = state?.copyWith.data(items: {entity, ...state?.data.items ?? {}});
     });
     ref.onDispose(subscription.cancel);
@@ -31,5 +35,22 @@ class Replies extends _$Replies {
 
   bool _isReply(IonConnectEntity entity, EventReference parentEventReference) {
     return entity is PostEntity && entity.data.parentEvent?.eventId == parentEventReference.eventId;
+  }
+
+  Future<void> deleteReply({
+    required CacheableEntity entity,
+  }) async {
+    final currentState = state;
+    if (currentState != null) {
+      final updatedItems =
+          currentState.data.items?.where((item) => item.id != entity.id).toSet() ?? {};
+
+      state = currentState.copyWith(
+        data: currentState.data.copyWith(
+          items: updatedItems,
+          pagination: currentState.data.pagination,
+        ),
+      );
+    }
   }
 }

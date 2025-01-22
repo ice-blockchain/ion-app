@@ -227,3 +227,8 @@ class ForceUpdateCouldntLaunchUrlException extends IONException {
 class ForceUpdateFetchConfigException extends IONException {
   ForceUpdateFetchConfigException() : super(10047, 'Failed to get version config');
 }
+
+class DeleteEntityUnsupportedTypeException extends IONException {
+  DeleteEntityUnsupportedTypeException()
+      : super(10048, 'Failed to delete entity, unsupported type');
+}

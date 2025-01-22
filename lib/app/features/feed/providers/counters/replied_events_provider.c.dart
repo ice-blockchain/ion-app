@@ -5,58 +5,110 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replied_events_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Stream<Set<String>?> repliedEvents(Ref ref) async* {
-  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+class RepliedEvents extends _$RepliedEvents {
+  final _deletedIds = <String>{};
 
-  if (currentPubkey == null) {
-    yield {};
-  } else {
-    final cache = ref.read(ionConnectCacheProvider);
-    var repliedIds = cache.values.fold<Set<String>>({}, (result, entry) {
-      final currentUserRepliedIds = _getCurrentUserRepliedIds(entry, currentPubkey: currentPubkey);
-      if (currentUserRepliedIds != null) {
-        result.addAll(currentUserRepliedIds);
+  @override
+  Stream<Map<String, List<String>>?> build() async* {
+    final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+
+    if (currentPubkey == null) {
+      yield {};
+    } else {
+      var repliedMap = <String, List<String>>{};
+
+      final cache = ref.read(ionConnectCacheProvider);
+      repliedMap = _buildInitialMap(cache, currentPubkey);
+      yield repliedMap;
+
+      await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
+        if (entity case final PostEntity post) {
+          final parentId = post.data.parentEvent?.eventId;
+          if (parentId == null) continue;
+
+          final currentUserRepliedIds =
+              _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
+
+          if (currentUserRepliedIds != null) {
+            final validIds =
+                currentUserRepliedIds.where((id) => !_deletedIds.contains(id)).toList();
+
+            final updatedMap = Map<String, List<String>>.from(repliedMap);
+
+            if (validIds.isEmpty) {
+              updatedMap.remove(parentId);
+            } else {
+              updatedMap[parentId] = validIds;
+            }
+
+            repliedMap = updatedMap;
+            yield repliedMap;
+          }
+        }
       }
-      return result;
-    });
+    }
+  }
 
-    yield repliedIds;
+  void removeReply(String parentId, String replyId) {
+    _deletedIds.add(replyId);
 
-    await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
-      final currentUserRepliedIds = _getCurrentUserRepliedIds(entity, currentPubkey: currentPubkey);
-      if (currentUserRepliedIds != null) {
-        yield repliedIds = {...repliedIds, ...currentUserRepliedIds};
+    final currentMap = state.valueOrNull;
+    if (currentMap != null && currentMap.containsKey(parentId)) {
+      final updatedReplies = Map<String, List<String>>.from(currentMap);
+      updatedReplies[parentId] = updatedReplies[parentId]!.where((id) => id != replyId).toList();
+
+      if (updatedReplies[parentId]!.isEmpty) {
+        updatedReplies.remove(parentId);
       }
+
+      state = AsyncData(updatedReplies);
     }
   }
 }
 
+Map<String, List<String>> _buildInitialMap(
+  Map<String, CacheableEntity> cache,
+  String currentPubkey,
+) {
+  return cache.values.fold<Map<String, List<String>>>({}, (result, entry) {
+    if (entry case final PostEntity post) {
+      final currentUserRepliedIds = _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
+      final parentId = post.data.parentEvent?.eventId;
+      if (currentUserRepliedIds != null && parentId != null) {
+        if (!result.containsKey(parentId)) {
+          result[parentId] = [];
+        }
+        final newIds = currentUserRepliedIds.where((id) => !result[parentId]!.contains(id));
+        result[parentId] = [...result[parentId]!, ...newIds];
+      }
+    }
+    return result;
+  });
+}
+
 List<String>? _getCurrentUserRepliedIds(IonConnectEntity entity, {required String currentPubkey}) {
-  if (entity.masterPubkey != currentPubkey || entity is! PostEntity) {
-    return null;
+  if (entity case final PostEntity post when post.masterPubkey == currentPubkey) {
+    if (post.data.parentEvent != null) {
+      return [post.id];
+    }
   }
-
-  final relatedEvents = entity.data.relatedEvents;
-
-  if (relatedEvents == null) {
-    return null;
-  }
-
-  return [
-    for (final event in relatedEvents)
-      if (event.marker == RelatedEventMarker.reply || event.marker == RelatedEventMarker.root)
-        event.eventId,
-  ];
+  return null;
 }
 
 @riverpod
 bool isReplied(Ref ref, EventReference eventReference) {
-  return ref.watch(repliedEventsProvider).valueOrNull?.contains(eventReference.eventId) ?? false;
+  final repliedMap = ref.watch(repliedEventsProvider).valueOrNull;
+  final replyIds = repliedMap?[eventReference.eventId];
+
+  final deletedIds = ref.read(repliedEventsProvider.notifier)._deletedIds;
+  final validReplyIds = replyIds?.where((id) => !deletedIds.contains(id)).toList();
+  final hasReply = validReplyIds?.isNotEmpty ?? false;
+
+  return hasReply;
 }

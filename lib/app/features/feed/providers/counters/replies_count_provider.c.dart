@@ -11,22 +11,22 @@ part 'replies_count_provider.c.g.dart';
 class RepliesCount extends _$RepliesCount {
   @override
   int build(EventReference eventReference) {
-    final entity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: eventReference.eventId,
-            type: EventCountResultType.replies,
-          ),
-        ),
-      ),
-    );
+    final cacheCount = ref
+            .watch(
+              ionConnectCacheProvider.select(
+                cacheSelector<EventCountResultEntity>(
+                  EventCountResultEntity.cacheKeyBuilder(
+                    key: eventReference.eventId,
+                    type: EventCountResultType.replies,
+                  ),
+                ),
+              ),
+            )
+            ?.data
+            .content as int? ??
+        0;
 
-    if (entity == null) {
-      return 0;
-    }
-
-    return entity.data.content as int;
+    return cacheCount;
   }
 
   void addOne() {
