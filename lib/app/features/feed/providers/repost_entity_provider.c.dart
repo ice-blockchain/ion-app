@@ -13,7 +13,7 @@ part 'repost_entity_provider.c.g.dart';
 CacheableEntity? repostEntity(Ref ref, EventReference eventReference) {
   if (eventReference is! ImmutableEventReference) {
     //TODO:replaceable handle replaceable references
-    throw UnimplementedError();
+    return null;
   }
 
   final cache = ref.read(ionConnectCacheProvider);

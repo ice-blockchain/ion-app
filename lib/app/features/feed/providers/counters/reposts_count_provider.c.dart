@@ -13,7 +13,7 @@ class RepostsCount extends _$RepostsCount {
   int? build(EventReference eventReference) {
     if (eventReference is! ImmutableEventReference) {
       //TODO:replaceable handle replaceable references
-      throw UnimplementedError();
+      return 0;
     }
 
     final repostsCountEntity = ref.watch(

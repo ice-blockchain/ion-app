@@ -13,7 +13,7 @@ class RepliesCount extends _$RepliesCount {
   int build(EventReference eventReference) {
     if (eventReference is! ImmutableEventReference) {
       //TODO:replaceable handle replaceable references
-      throw UnimplementedError();
+      return 0;
     }
 
     final cacheCount = ref

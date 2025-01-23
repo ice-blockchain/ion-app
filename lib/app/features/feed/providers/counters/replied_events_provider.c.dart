@@ -105,7 +105,7 @@ List<String>? _getCurrentUserRepliedIds(IonConnectEntity entity, {required Strin
 bool isReplied(Ref ref, EventReference eventReference) {
   if (eventReference is! ImmutableEventReference) {
     //TODO:replaceable handle replaceable references
-    throw UnimplementedError();
+    return false;
   }
 
   final repliedMap = ref.watch(repliedEventsProvider).valueOrNull;

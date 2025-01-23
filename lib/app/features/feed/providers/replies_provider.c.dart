@@ -36,7 +36,7 @@ class Replies extends _$Replies {
   bool _isReply(IonConnectEntity entity, EventReference parentEventReference) {
     if (parentEventReference is! ImmutableEventReference) {
       //TODO:replaceable handle replaceable references
-      throw UnimplementedError();
+      return false;
     }
     return entity is PostEntity && entity.data.parentEvent?.eventId == parentEventReference.eventId;
   }

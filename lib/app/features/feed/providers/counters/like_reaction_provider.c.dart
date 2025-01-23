@@ -19,7 +19,7 @@ ReactionEntity? likeReaction(Ref ref, EventReference eventReference) {
 
   if (eventReference is! ImmutableEventReference) {
     //TODO:replaceable handle replaceable references
-    throw UnimplementedError();
+    return null;
   }
 
   final reactionEntity = ref.watch(

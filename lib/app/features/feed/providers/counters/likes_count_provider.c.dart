@@ -14,7 +14,7 @@ class LikesCount extends _$LikesCount {
   int build(EventReference eventReference) {
     if (eventReference is! ImmutableEventReference) {
       //TODO:replaceable handle replaceable references
-      throw UnimplementedError();
+      return 0;
     }
 
     final reactionsCountEntity = ref.watch(

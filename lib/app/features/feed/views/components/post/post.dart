@@ -8,7 +8,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/delete_feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
@@ -43,7 +43,7 @@ class Post extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final postEntity = ref
         .watch(ionConnectEntityProvider(eventReference: eventReference))
-        .valueOrNull as PostEntity?;
+        .valueOrNull as ModifiablePostEntity?;
 
     if (postEntity == null) {
       return const Skeleton(child: PostSkeleton());
@@ -80,16 +80,16 @@ class Post extends ConsumerWidget {
     );
   }
 
-  EventReference? _getFramedEventReference(PostEntity postEntity) {
+  EventReference? _getFramedEventReference(ModifiablePostEntity postEntity) {
     if (showParent) {
       final parentEvent = postEntity.data.parentEvent;
       if (parentEvent != null) {
-        return ImmutableEventReference(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
+        return parentEvent.eventReference;
       }
     } else {
       final quotedEvent = postEntity.data.quotedEvent;
       if (quotedEvent != null) {
-        return ImmutableEventReference(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey);
+        return quotedEvent.eventReference;
       }
     }
     return null;
@@ -109,7 +109,7 @@ class _FramedEvent extends HookConsumerWidget {
     final quotedEntity = useMemoized(
       () {
         switch (ionConnectEntity) {
-          case PostEntity():
+          case ModifiablePostEntity():
             return _QuotedPost(eventReference: eventReference);
           case ArticleEntity():
             return _QuotedArticle(eventReference: eventReference);
