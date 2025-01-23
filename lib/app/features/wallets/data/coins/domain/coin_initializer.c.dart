@@ -4,7 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/coins/domain/coins_service.c.dart';
+import 'package:ion/app/features/wallets/data/coins/domain/coins_mapper.dart';
+import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,17 +13,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'coin_initializer.c.g.dart';
 
 @riverpod
-Future<CoinInitializer> coinInitializer(Ref ref) async {
-  return CoinInitializer(await ref.watch(coinsServiceProvider.future));
+CoinInitializer coinInitializer(Ref ref) {
+  return CoinInitializer(ref.watch(coinsRepositoryProvider));
 }
 
 class CoinInitializer {
-  CoinInitializer(this._coinsService);
+  CoinInitializer(this._coinsRepository);
 
-  final CoinsService _coinsService;
+  final CoinsRepository _coinsRepository;
 
   Future<void> initialize() async {
-    final hasCoins = await _coinsService.hasSavedCoins();
+    final hasCoins = await _coinsRepository.hasSavedCoins();
     if (hasCoins) return;
 
     await _loadCoins();
@@ -42,12 +43,12 @@ class CoinInitializer {
         )
         .toList();
 
-    await _coinsService.saveCoins(coinEntities);
+    await _coinsRepository.updateCoins(CoinsMapper().fromDtoToDb(coinEntities));
   }
 
   Future<void> _loadCoinsVersion() async {
     final coinsVersion =
         await rootBundle.loadString(Assets.ionIdentity.coinsVersion).then(int.parse);
-    await _coinsService.saveCoinsVersion(coinsVersion);
+    await _coinsRepository.setCoinsVersion(coinsVersion);
   }
 }
