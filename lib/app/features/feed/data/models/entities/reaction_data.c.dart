@@ -29,7 +29,7 @@ class ReactionEntity with _$ReactionEntity, IonConnectEntity, ImmutableEntity, C
   /// https://github.com/nostr-protocol/nips/blob/master/25.md
   factory ReactionEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return ReactionEntity(

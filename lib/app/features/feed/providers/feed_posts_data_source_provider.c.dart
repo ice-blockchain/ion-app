@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
@@ -122,14 +122,14 @@ EntitiesDataSource _buildVideosDataSource({
         return false;
       }
 
-      return (entity is PostEntity &&
+      return (entity is ModifiablePostEntity &&
               entity.data.parentEvent == null &&
               entity.data.quotedEvent == null) ||
           entity is RepostEntity;
     },
     requestFilters: [
       RequestFilter(
-        kinds: const [PostEntity.kind, RepostEntity.kind],
+        kinds: const [ModifiablePostEntity.kind, RepostEntity.kind],
         search: SearchExtensions.withCounters(
           [
             ReferencesSearchExtension(contain: false),
@@ -141,11 +141,11 @@ EntitiesDataSource _buildVideosDataSource({
               negative: true,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: UserMetadataEntity.kind,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: BlockListEntity.kind,
             ),
           ],
@@ -170,11 +170,12 @@ EntitiesDataSource _buildPostsDataSource({
         return false;
       }
 
-      return (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity;
+      return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
+          entity is RepostEntity;
     },
     requestFilters: [
       RequestFilter(
-        kinds: const [PostEntity.kind, RepostEntity.kind],
+        kinds: const [ModifiablePostEntity.kind, RepostEntity.kind],
         search: SearchExtensions.withCounters(
           [
             ReferencesSearchExtension(contain: false),
@@ -185,11 +186,11 @@ EntitiesDataSource _buildPostsDataSource({
               negative: true,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: UserMetadataEntity.kind,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: BlockListEntity.kind,
             ),
           ],

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -31,25 +31,21 @@ List<EntitiesDataSource>? repliesDataSource(
     return null;
   }
 
-  if (eventReference is! ImmutableEventReference) {
-    //TODO:replaceable handle replaceable references
-    throw UnimplementedError();
-  }
-
-  if (entity is! PostEntity) {
-    throw IncorrectEventKindException(eventId: eventReference.eventId, kind: PostEntity.kind);
+  if (entity is! ModifiablePostEntity) {
+    throw IncorrectEventKindException(eventReference, kind: ModifiablePostEntity.kind);
   }
 
   final dataSources = [
     EntitiesDataSource(
       actionSource: ActionSourceUser(eventReference.pubkey),
       entityFilter: (entity) =>
-          entity is PostEntity && entity.data.parentEvent?.eventId == eventReference.eventId,
+          entity is ModifiablePostEntity &&
+          entity.data.parentEvent?.eventReference == eventReference,
       requestFilters: [
         RequestFilter(
-          kinds: const [PostEntity.kind],
+          kinds: const [ModifiablePostEntity.kind],
           tags: {
-            '#e': [eventReference.eventId],
+            '#a': [eventReference.toString()],
           },
           search: SearchExtensions.withCounters(
             [
@@ -60,11 +56,11 @@ List<EntitiesDataSource>? repliesDataSource(
                 negative: entity.data.parentEvent == null,
               ),
               GenericIncludeSearchExtension(
-                forKind: PostEntity.kind,
+                forKind: ModifiablePostEntity.kind,
                 includeKind: UserMetadataEntity.kind,
               ),
               GenericIncludeSearchExtension(
-                forKind: PostEntity.kind,
+                forKind: ModifiablePostEntity.kind,
                 includeKind: BlockListEntity.kind,
               ),
             ],

@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
@@ -29,10 +29,10 @@ List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
     for (final entry in filterRelays.entries)
       EntitiesDataSource(
         actionSource: ActionSourceRelayUrl(entry.key),
-        entityFilter: (entity) => entity is PostEntity || entity is RepostEntity,
+        entityFilter: (entity) => entity is ModifiablePostEntity || entity is RepostEntity,
         requestFilters: [
           RequestFilter(
-            kinds: const [PostEntity.kind, RepostEntity.kind],
+            kinds: const [ModifiablePostEntity.kind, RepostEntity.kind],
             authors: filters == FeedFilter.following ? entry.value : null,
             search: SearchExtensions(
               [
@@ -42,11 +42,11 @@ List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
                 ExpirationSearchExtension(expiration: false),
                 VideosSearchExtension(contain: true),
                 GenericIncludeSearchExtension(
-                  forKind: PostEntity.kind,
+                  forKind: ModifiablePostEntity.kind,
                   includeKind: UserMetadataEntity.kind,
                 ),
                 GenericIncludeSearchExtension(
-                  forKind: PostEntity.kind,
+                  forKind: ModifiablePostEntity.kind,
                   includeKind: BlockListEntity.kind,
                 ),
               ],

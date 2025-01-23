@@ -6,6 +6,7 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
@@ -47,6 +48,7 @@ class EventParser {
       BookmarksEntity.kind => BookmarksEntity.fromEventMessage(eventMessage),
       BlockListEntity.kind => BlockListEntity.fromEventMessage(eventMessage),
       NotAuthoritativeEvent.kind => NotAuthoritativeEvent.fromEventMessage(eventMessage),
+      ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }

@@ -46,7 +46,7 @@ class EventCountResultEntity
     String? key,
   }) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     final data = EventCountResultData.fromEventMessage(eventMessage);

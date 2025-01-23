@@ -29,10 +29,10 @@ class UserIndexersNotFoundException extends IONException {
 }
 
 class IncorrectEventKindException extends IONException {
-  IncorrectEventKindException({
-    required String eventId,
+  IncorrectEventKindException(
+    dynamic eventInfo, {
     required int kind,
-  }) : super(10006, 'Incorrect event $eventId, expected kind $kind');
+  }) : super(10006, 'Incorrect event $eventInfo, expected kind $kind');
 }
 
 class IncorrectEventTagNameException extends IONException {

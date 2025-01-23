@@ -42,7 +42,7 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
   /// https://github.com/nostr-protocol/nips/blob/master/01.md
   factory PostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return PostEntity(

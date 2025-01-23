@@ -29,7 +29,7 @@ class FileMetadataEntity
   /// https://github.com/nostr-protocol/nips/blob/master/94.md
   factory FileMetadataEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return FileMetadataEntity(

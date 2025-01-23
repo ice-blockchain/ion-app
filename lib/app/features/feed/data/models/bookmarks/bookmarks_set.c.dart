@@ -45,7 +45,7 @@ class BookmarksSetEntity
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#sets
   factory BookmarksSetEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return BookmarksSetEntity(
