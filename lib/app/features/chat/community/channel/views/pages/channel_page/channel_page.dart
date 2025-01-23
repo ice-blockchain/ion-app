@@ -55,10 +55,11 @@ class ChannelPage extends HookConsumerWidget {
           children: [
             MessagingHeader(
               onTap: () => ChannelDetailRoute(uuid: uuid).push<void>(context),
-              imageWidget: channel.avatar?.url != null ? Image.network(channel.avatar!.url) : null,
-              name: channel.name,
+              imageWidget:
+                  channel.data.avatar?.url != null ? Image.network(channel.data.avatar!.url) : null,
+              name: channel.data.name,
               subtitle: CommunityMemberCountTile(
-                communityUUID: channel.uuid,
+                communityUUID: channel.data.uuid,
               ),
             ),
             MessagingEmptyView(

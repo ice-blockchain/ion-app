@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'community_metadata_provider.c.g.dart';
 
 @riverpod
-Future<CommunityDefinitionData> communityMetadata(Ref ref, String communityUUID) async {
+Future<CommunityDefinitionEntity> communityMetadata(Ref ref, String communityUUID) async {
   final communityEntity =
       await ref.watch(ionConnectNotifierProvider.notifier).requestEntity<CommunityDefinitionEntity>(
             RequestMessage()
@@ -28,5 +28,5 @@ Future<CommunityDefinitionData> communityMetadata(Ref ref, String communityUUID)
     throw FailedToFetchCommunityException(communityUUID);
   }
 
-  return communityEntity.data;
+  return communityEntity;
 }

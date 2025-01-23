@@ -56,13 +56,13 @@ class Conversations extends _$Conversations {
       for (final community in joinedCommunities) {
         conversations.add(
           Ee2eConversationEntity(
-            name: community.name,
+            name: community.data.name,
             type: ChatType.channel,
             participants: [],
             lastMessageAt: DateTime.now(),
             lastMessageContent: 'channel created',
-            imageUrl: community.avatar?.url,
-            nickname: community.uuid,
+            imageUrl: community.data.avatar?.url,
+            nickname: community.data.uuid,
           ),
         );
       }

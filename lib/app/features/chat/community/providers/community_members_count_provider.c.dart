@@ -15,7 +15,8 @@ part 'community_members_count_provider.c.g.dart';
 Future<int> communityMembersCount(Ref ref, String communityUuid) async {
   //TODO: implement
 
-  final communityOwner = (await ref.watch(communityMetadataProvider(communityUuid).future)).owner;
+  final communityOwner =
+      (await ref.watch(communityMetadataProvider(communityUuid).future)).ownerPubkey;
 
   final request = EventCountRequestData(
     filters: [

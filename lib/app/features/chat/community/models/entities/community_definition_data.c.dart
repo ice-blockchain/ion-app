@@ -50,6 +50,8 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
     );
   }
 
+  String get ownerPubkey => masterPubkey;
+
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
   static const kind = 31750;
 }
@@ -68,7 +70,6 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required String name,
     required String? description,
     required MediaAttachment? avatar,
-    required String owner,
   }) = _CommunityDefinitionData;
 
   factory CommunityDefinitionData.fromData({
@@ -95,7 +96,6 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       roleRequiredForPosting: roleRequiredForPosting,
       moderators: moderators,
       admins: admins,
-      owner: '',
     );
   }
 
@@ -114,7 +114,6 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       roleRequiredForPosting: RoleRequiredForPostingEventSetting.fromTags(eventMessage.tags).role,
       moderators: CommunityModeratorTag.fromTags(eventMessage.tags).values,
       admins: CommunityAdminTag.fromTags(eventMessage.tags).values,
-      owner: eventMessage.masterPubkey,
     );
   }
 
@@ -144,7 +143,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
         if (admins.isNotEmpty) ...CommunityAdminTag(values: admins).toTag(),
         ReplaceableEventReference(
           kind: CommunityDefinitionEntity.kind,
-          pubkey: owner,
+          pubkey: tags.firstWhere((tag) => tag[0] == 'b').elementAt(1),
           dTag: uuid,
         ).toTag(),
       ],

@@ -42,7 +42,7 @@ FutureOr<void> joinCommunity(
     pubkey: pubkey,
   );
 
-  if (!community.isOpen) {
+  if (!community.data.isOpen) {
     if (invitation == null) {
       throw CommunityInvitationNotFoundException();
     }
@@ -51,7 +51,7 @@ FutureOr<void> joinCommunity(
 
   final result = await ref
       .read(ionConnectNotifierProvider.notifier)
-      .sendEntityData(joinData, actionSource: ActionSourceUser(community.owner));
+      .sendEntityData(joinData, actionSource: ActionSourceUser(community.ownerPubkey));
 
   if (result == null) {
     throw FailedToJoinCommunityException();

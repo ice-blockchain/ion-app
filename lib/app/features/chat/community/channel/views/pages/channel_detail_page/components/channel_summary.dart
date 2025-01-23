@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_name_tile.dart';
+import 'package:ion/app/features/chat/community/channel/hooks/can_edit_channel.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/channel_avatar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/share_link_tile.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
@@ -22,17 +21,14 @@ class ChannelSummary extends HookConsumerWidget {
     super.key,
   });
 
-  final CommunityDefinitionData channel;
+  final CommunityDefinitionEntity channel;
   final bool basicMode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).requireValue;
 
-    final hasAccessToEdit = useMemoized(
-      () => channel.admins.contains(currentUserPubkey) || (channel.owner == currentUserPubkey),
-      [channel, currentUserPubkey],
-    );
+    final canEdit = canEditChannel(channel: channel, currentPubkey: currentUserPubkey);
 
     return Column(
       children: [
@@ -40,26 +36,32 @@ class ChannelSummary extends HookConsumerWidget {
           height: 40.0.s,
         ),
         ChannelAvatar(
-          channel: channel,
+          channel: channel.data,
           editMode: basicMode,
         ),
         SizedBox(
           height: 10.0.s,
         ),
-        ChannelNameTile(
-          name: channel.name,
+        Flexible(
+          child: Text(
+            textAlign: TextAlign.center,
+            channel.data.name,
+            style: context.theme.appTextThemes.title.copyWith(
+              color: context.theme.appColors.primaryText,
+            ),
+          ),
         ),
         SizedBox(height: 2.0.s),
         CommunityMemberCountTile(
-          communityUUID: channel.uuid,
+          communityUUID: channel.data.uuid,
         ),
         if (!basicMode)
-          if (hasAccessToEdit) ...[
+          if (canEdit) ...[
             Padding(
               padding: EdgeInsets.only(top: 16.0.s, bottom: 20.0.s),
               child: Button(
                 onPressed: () {
-                  EditChannelRoute(uuid: channel.uuid).push<void>(context);
+                  EditChannelRoute(uuid: channel.data.uuid).push<void>(context);
                 },
                 leadingIcon: Assets.svg.iconEditLink.icon(
                   color: context.theme.appColors.onPrimaryAccent,
@@ -96,7 +98,7 @@ class ChannelSummary extends HookConsumerWidget {
           SizedBox(height: 12.0.s),
           ChannelDetailListTile(
             title: context.i18n.common_desc,
-            subtitle: channel.description ?? '',
+            subtitle: channel.data.description ?? '',
           ),
         ],
       ],
