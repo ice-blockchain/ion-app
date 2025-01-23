@@ -54,7 +54,7 @@ FutureOr<void> joinCommunity(
       .sendEntityData(joinData, actionSource: ActionSourceUser(community.owner));
 
   if (result == null) {
-    throw FailedToSendInvitationException();
+    throw FailedToJoinCommunityException();
   }
 
   ref.invalidate(communityJoinRequestsProvider);
