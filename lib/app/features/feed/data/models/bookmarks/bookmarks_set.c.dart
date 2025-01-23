@@ -70,7 +70,7 @@ class BookmarksSetEntity
 class BookmarksSetData with _$BookmarksSetData implements EventSerializable, ReplaceableEntityData {
   const factory BookmarksSetData({
     required BookmarksSetType type,
-    required List<String> postsIds,
+    required List<ReplaceableEventReference> postsRefs,
     required List<ReplaceableEventReference> articlesRefs,
     @Default('') String content,
     @Default([]) List<String> communitiesIds,
@@ -88,10 +88,13 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable, Rep
 
     return BookmarksSetData(
       content: eventMessage.content,
-      postsIds: eventMessage.tags.where((tag) => tag[0] == 'e').map((tag) => tag[1]).toList(),
+      postsRefs: eventMessage.tags
+          .where((tag) => tag[0] == ReplaceableEventReference.tagName)
+          .map(ReplaceableEventReference.fromTag)
+          .toList(),
       communitiesIds: eventMessage.tags.where((tag) => tag[0] == 'h').map((tag) => tag[1]).toList(),
       articlesRefs: eventMessage.tags
-          .where((tag) => tag[0] == 'a')
+          .where((tag) => tag[0] == ReplaceableEventReference.tagName)
           .map(ReplaceableEventReference.fromTag)
           .toList(),
       type: BookmarksSetType.values.singleWhereOrNull((set) => set.dTagName == typeName) ??
@@ -114,7 +117,7 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable, Rep
       tags: [
         ...tags,
         ReplaceableEventIdentifier(value: type.dTagName).toTag(),
-        ...postsIds.map((id) => ['e', id]),
+        ...postsRefs.map((ref) => ref.toTag()),
         ...articlesRefs.map((ref) => ref.toTag()),
         ...communitiesIds.map((id) => ['h', id]),
         if (type == BookmarksSetType.chats) ['encrypted'],

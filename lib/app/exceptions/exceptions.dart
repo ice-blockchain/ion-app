@@ -237,3 +237,7 @@ class UnsupportedEventReference extends IONException {
   UnsupportedEventReference(dynamic eventReference)
       : super(10050, 'Unsupported event reference $eventReference');
 }
+
+class UnsupportedEntityBookmarking extends IONException {
+  UnsupportedEntityBookmarking(dynamic entity) : super(10051, 'Unsupported bookmarking of $entity');
+}

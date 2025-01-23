@@ -246,7 +246,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
       final encryptedContent = await e2eeService.encryptMessage(encodedContent);
 
       final newSingleBookmarksSetData = BookmarksSetData(
-        postsIds: [],
+        postsRefs: [],
         articlesRefs: [],
         content: encryptedContent,
         type: BookmarksSetType.chats,
