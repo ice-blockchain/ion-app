@@ -79,7 +79,9 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     EventSigner signer,
   ) async {
     final conversationKey = await Ed25519KeyStore.getSharedSecret(
-        privateKey: signer.privateKey, publicKey: senderPubkey,);
+      privateKey: signer.privateKey,
+      publicKey: senderPubkey,
+    );
 
     final decryptedContent = await Nip44.decryptMessage(
       content,
