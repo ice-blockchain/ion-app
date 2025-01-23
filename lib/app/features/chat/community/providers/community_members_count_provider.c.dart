@@ -97,7 +97,6 @@ class CommunityMembersCount extends _$CommunityMembersCount {
     final communityMembersCountRequest = EventCountRequestData(
       params: EventCountRequestParams(
         relay: relayUrl,
-        group: 'p',
       ),
       relays: [relayUrl],
       filters: [

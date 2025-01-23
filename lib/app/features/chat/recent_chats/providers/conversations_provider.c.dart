@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/communites_provider.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
@@ -51,7 +55,7 @@ class Conversations extends _$Conversations {
       final joinedCommunities = await ref.read(communitesProvider.future);
       for (final community in joinedCommunities) {
         conversations.add(
-          Ee2eConversationEntity(
+          E2eeConversationEntity(
             name: community.data.name,
             type: ChatType.channel,
             participants: [],

@@ -16,7 +16,7 @@ class CommunityMemberCountTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final amount = ref.watch(communityMembersCountProvider(communityUUID)).valueOrNull ?? 0;
+    final count = ref.watch(communityMembersCountProvider(communityUUID)).valueOrNull ?? 0;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -32,7 +32,7 @@ class CommunityMemberCountTile extends HookConsumerWidget {
           width: 3.0.s,
         ),
         Text(
-          amount.toString(),
+          count.toString(),
           style: context.theme.appTextThemes.caption.copyWith(
             color: context.theme.appColors.quaternaryText,
           ),

@@ -84,7 +84,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     required List<String> moderators,
     required List<String> admins,
   }) {
-    final uuid = generateV7UUID();
+    final uuid = generateUuid();
     return CommunityDefinitionData(
       uuid: uuid,
       id: uuid,
