@@ -340,6 +340,7 @@ class MessagesRoute extends BaseRouteData {
     required this.name,
     required this.chatType,
     required this.imageUrl,
+    this.id,
     this.nickname,
     this.imageWidth,
     this.imageHeight,
@@ -348,6 +349,7 @@ class MessagesRoute extends BaseRouteData {
   }) : super(
           child: MessagesPage(
             E2eeConversationEntity(
+              id: id,
               name: name,
               type: chatType,
               nickname: nickname,
@@ -363,6 +365,7 @@ class MessagesRoute extends BaseRouteData {
   final String name;
   final String imageUrl;
   final ChatType chatType;
+  final String? id;
   final int? imageWidth;
   final int? imageHeight;
   final String? nickname;

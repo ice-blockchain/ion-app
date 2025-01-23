@@ -24,7 +24,6 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -158,9 +157,7 @@ class ConversationMessageManagementService {
     final decryptedDecompressedFiles = <File>[];
 
     for (final attachment in mediaAttachments) {
-      if (attachment.encryptionKey != null &&
-          attachment.encryptionNonce != null &&
-          attachment.encryptionMac != null) {
+      if (attachment.encryptionKey != null && attachment.encryptionNonce != null && attachment.encryptionMac != null) {
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
@@ -245,25 +242,20 @@ class ConversationMessageManagementService {
       ),
     ).toTag();
 
-    Logger.log('Event message $eventMessage');
-
     final seal = await sealService.createSeal(
       eventMessage,
       signer,
       receiverPubkey,
     );
 
-    Logger.log('Seal message $seal');
 
     final wrap = await wrapService.createWrap(
       seal,
       receiverPubkey,
-      signer,
       PrivateDirectMessageEntity.kind,
       expirationTag: expirationTag,
     );
 
-    Logger.log('Wrap message $wrap');
 
     return wrap;
   }
@@ -334,8 +326,7 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile =
-              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+          final compressedEncryptedFile = File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
 
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 

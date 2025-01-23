@@ -20,14 +20,13 @@ abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
     EventMessage event,
     String receiverPubkey,
-    EventSigner signer,
     int contentKind, {
     List<String>? expirationTag,
   });
 
   Future<EventMessage> decodeWrap(
     String content,
-    String pubkey,
+    String senderPubkey,
     EventSigner signer,
   );
 }
@@ -39,20 +38,19 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
     EventMessage event,
     String receiverPubkey,
-    EventSigner signer,
     int contentKind, {
     List<String>? expirationTag,
   }) async {
-    final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(
-        privateKey: signer.privateKey,
-        publicKey: receiverPubkey,
-      ),
+    final oneTimeSigner = await Ed25519KeyStore.generate();
+
+    final conversationKey = await Ed25519KeyStore.getSharedSecret(
+      privateKey: oneTimeSigner.privateKey,
+      publicKey: receiverPubkey,
     );
 
     final encryptedEvent = await Nip44.encryptMessage(
       jsonEncode(event.toJson().last),
-      signer.privateKey,
+      oneTimeSigner.privateKey,
       receiverPubkey,
       customConversationKey: conversationKey,
     );
@@ -61,12 +59,10 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       const Duration(days: 2),
     );
 
-    final oneTimeSigner = await Ed25519KeyStore.generate();
-
     return EventMessage.fromData(
-      signer: oneTimeSigner,
       kind: kind,
       createdAt: createdAt,
+      signer: oneTimeSigner,
       content: encryptedEvent,
       tags: [
         [RelatedPubkey.tagName, receiverPubkey],
@@ -79,17 +75,16 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   @override
   Future<EventMessage> decodeWrap(
     String content,
-    String pubkey,
+    String senderPubkey,
     EventSigner signer,
   ) async {
-    final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(privateKey: signer.privateKey, publicKey: pubkey),
-    );
+    final conversationKey =
+        await Ed25519KeyStore.getSharedSecret(privateKey: signer.privateKey, publicKey: senderPubkey);
 
     final decryptedContent = await Nip44.decryptMessage(
       content,
       signer.privateKey,
-      pubkey,
+      senderPubkey,
       customConversationKey: conversationKey,
     );
 

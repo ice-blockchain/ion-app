@@ -1,31 +1,58 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/model/money_message_type.dart';
-import 'package:ion/app/features/chat/model/replied_message.c.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_messages_provider.c.g.dart';
 
-/// Mocked provider that simulates receiving and mapping data messages
-/// from the server to a model, which describes to UI what should be displayed.
-@riverpod
-List<MessageListItem> chatMessages(Ref ref) {
-  final mockedDate = DateTime.now();
-  const mockedMessageAuthor = MessageAuthor(
-    name: 'Test',
-    imageUrl: 'https://picsum.photos/500/400',
-  );
-  const mockedCurrentAuthor = MessageAuthor(
-    name: 'Test',
-    imageUrl: 'https://picsum.photos/500/400',
-    isCurrentUser: true,
-  );
+@Riverpod()
+class ChatMessages extends _$ChatMessages {
+  @override
+  Future<List<MessageListItem>> build(E2eeConversationEntity conversationData) async {
+    final messagesSubscription = ref
+        .read(conversationsDBServiceProvider)
+        .watchConversationMessages(conversationData.id!)
+        .listen((messages) async {
+      final conversationMessageItems = messages.map(_mapMessage).toList();
 
-  return [
+      state = AsyncValue.data(conversationMessageItems);
+    });
+
+    ref.onDispose(messagesSubscription.cancel);
+
+    state = const AsyncValue.loading();
+
+    final messages = await ref.read(conversationsDBServiceProvider).getConversationMessages(conversationData.id!);
+
+    final conversationMessageItems = messages.map(_mapMessage).toList();
+
+    return conversationMessageItems;
+  }
+
+  MessageListItem _mapMessage(PrivateDirectMessageEntity message) {
+    return MessageListItem.text(
+      time: message.createdAt,
+      text: message.data.content.map((e) => e.text).join(),
+      author: MessageAuthor(name: conversationData.name, imageUrl: conversationData.imageUrl!),
+    );
+  }
+
+  //final mockedDate = DateTime.now();
+  //const mockedMessageAuthor = MessageAuthor(
+  //  name: 'Test',
+  //  imageUrl: 'https://picsum.photos/500/400',
+  //);
+  //const mockedCurrentAuthor = MessageAuthor(
+  //  name: 'Test',
+  //  imageUrl: 'https://picsum.photos/500/400',
+  //  isCurrentUser: true,
+  //);
+
+  /*
     MessageListItem.date(time: mockedDate),
     MessageListItem.text(
       text: 'Hello there!',
@@ -154,5 +181,5 @@ List<MessageListItem> chatMessages(Ref ref) {
       author: mockedCurrentAuthor,
       time: mockedDate,
     ),
-  ];
+    */
 }

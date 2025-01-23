@@ -32,8 +32,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       await conversationMessageManagementService.sentMessage(
         content: '',
@@ -50,8 +49,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       await conversationMessageManagementService.sentMessage(
         content: '',
@@ -69,12 +67,13 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
+    //TODO: Update archived bookmark
+
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -107,12 +106,13 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
+    //TODO: Update archived bookmark
+
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -149,12 +149,13 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     assert(currentSubject.isNotEmpty, 'Current conversation subject is empty');
     assert(newSubject.isNotEmpty, 'New conversation subject is empty');
 
+    //TODO: Update archived bookmark
+
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -261,9 +262,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
             .toList(),
       );
 
-      await ref
-          .read(ionConnectNotifierProvider.notifier)
-          .sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
 
       await ref.read(conversationsProvider.notifier).getConversations();
     });

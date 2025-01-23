@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/providers/group_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
 
@@ -34,7 +33,7 @@ class GroupPage extends ConsumerWidget {
                 displayAuthorsIncomingMessages: true,
               ),
             ),
-            const MessagingBottomBar(),
+            //const MessagingBottomBar(),
           ],
         ),
       ),

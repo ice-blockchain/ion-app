@@ -19,7 +19,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,8 +29,7 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
-  final conversationMessageManagementService =
-      await ref.watch(conversationMessageManagementServiceProvider);
+  final conversationMessageManagementService = await ref.watch(conversationMessageManagementServiceProvider);
 
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
@@ -206,15 +204,11 @@ class ConversationMessageActionsService {
       sig: await signer.sign(message: id),
     );
 
-    Logger.log('Event message $eventMessage');
-
     final seal = await sealService.createSeal(
       eventMessage,
       signer,
       receiverPubkey,
     );
-
-    Logger.log('Seal message $seal');
 
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
@@ -225,16 +219,12 @@ class ConversationMessageActionsService {
     final wrap = await wrapService.createWrap(
       seal,
       receiverPubkey,
-      signer,
+   
       PrivateMessageReactionEntity.kind,
       expirationTag: expirationTag,
     );
 
-    Logger.log('Wrap message $wrap');
-
     final result = await ionConnectNotifier.sendEvent(wrap, cache: false);
-
-    Logger.log('Sent message $result');
 
     return result;
   }

@@ -7,10 +7,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
+import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 
 class ActionButton extends HookConsumerWidget {
-  const ActionButton({super.key});
+  const ActionButton({required this.conversation, required this.controller, super.key});
+
+  final TextEditingController controller;
+  final E2eeConversationEntity conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,8 +27,14 @@ class ActionButton extends HookConsumerWidget {
         case MessagingBottomBarState.hasText:
         case MessagingBottomBarState.voicePaused:
           return SendButton(
-            onSend: () {
-              ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+            onSend: () async {
+              if (controller.text.isNotEmpty) {
+                ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                await (await ref.read(conversationMessageManagementServiceProvider)).sentMessage(
+                  content: controller.text,
+                  participantsPubkeys: conversation.participants,
+                );
+              }
             },
           );
         case MessagingBottomBarState.voice:

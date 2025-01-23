@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/messages/providers/chat_messages_provider.c.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/chat/views/components/messages_list.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -22,7 +24,11 @@ class MessagesPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() => _initConversation(ref));
 
-    ref.displayErrors(e2eeConversationManagementProvider);
+    final messages = ref.watch(chatMessagesProvider(conversationData)).value ?? [];
+
+    ref
+      ..displayErrors(e2eeConversationManagementProvider)
+      ..displayErrors(chatMessagesProvider(conversationData));
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -35,10 +41,9 @@ class MessagesPage extends HookConsumerWidget {
           children: [
             MessagingHeader(
               imageUrl: conversationData.imageUrl,
-              imageWidget:
-                  conversationData.imageUrl != null && conversationData.type == ChatType.group
-                      ? Image.asset(conversationData.imageUrl!)
-                      : null,
+              imageWidget: conversationData.imageUrl != null && conversationData.type == ChatType.group
+                  ? Image.asset(conversationData.imageUrl!)
+                  : null,
               name: conversationData.name,
               subtitle: conversationData.type == ChatType.chat
                   ? Text(
@@ -60,22 +65,27 @@ class MessagesPage extends HookConsumerWidget {
                       ],
                     ),
             ),
-            MessagingEmptyView(
-              title: context.i18n.messaging_empty_description,
-              asset: Assets.svg.walletChatEmptystate,
-              trailing: GestureDetector(
-                onTap: () {
-                  ChatLearnMoreModalRoute().push<void>(context);
-                },
-                child: Text(
-                  context.i18n.button_learn_more,
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.primaryAccent,
+            if (messages.isEmpty)
+              MessagingEmptyView(
+                title: context.i18n.messaging_empty_description,
+                asset: Assets.svg.walletChatEmptystate,
+                trailing: GestureDetector(
+                  onTap: () {
+                    ChatLearnMoreModalRoute().push<void>(context);
+                  },
+                  child: Text(
+                    context.i18n.button_learn_more,
+                    style: context.theme.appTextThemes.caption.copyWith(
+                      color: context.theme.appColors.primaryAccent,
+                    ),
                   ),
                 ),
+              )
+            else
+              Expanded(
+                child: ChatMessagesList(messages),
               ),
-            ),
-            const MessagingBottomBar(),
+            MessagingBottomBar(conversation: conversationData),
           ],
         ),
       ),

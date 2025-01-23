@@ -33,9 +33,10 @@ class RecentChatTile extends ConsumerWidget {
           }
         } else {
           MessagesRoute(
+            id: conversationData.id,
             name: conversationData.name,
             chatType: conversationData.type,
-            imageUrl: conversationData.imageUrl ?? '',
+            imageUrl: conversationData.imageUrl!,
             participants: conversationData.participants,
             nickname: prefixUsername(username: conversationData.nickname, context: context),
           ).push<void>(context);
@@ -59,11 +60,9 @@ class RecentChatTile extends ConsumerWidget {
               children: [
                 if (conversationData.imageUrl != null)
                   Avatar(
-                    imageUrl:
-                        conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
-                    imageWidget: conversationData.type == ChatType.group
-                        ? Image.asset(conversationData.imageUrl!)
-                        : null,
+                    imageUrl: conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
+                    imageWidget:
+                        conversationData.type == ChatType.group ? Image.asset(conversationData.imageUrl!) : null,
                     size: 40.0.s,
                   ),
                 SizedBox(width: 12.0.s),

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -20,13 +19,15 @@ part 'fetch_conversation_provider.c.g.dart';
 class FetchConversations extends _$FetchConversations {
   @override
   Future<void> build() async {
-    final pubkey = await ref.watch(currentPubkeySelectorProvider.future);
-    if (pubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate =
-        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final pubkey = eventSigner.publicKey;
+
+    final lastMessageDate = await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
@@ -63,30 +64,33 @@ class FetchConversations extends _$FetchConversations {
     final dbProvider = ref.watch(conversationsDBServiceProvider);
 
     await for (final event in events) {
-      final rumor = await _unwrapGift(event, pubkey: pubkey);
+      final rumor = await _unwrapGift(
+        event,
+        senderPubkey: event.pubkey,
+        currentUserSigner: eventSigner,
+      );
       if (rumor != null) {
         await dbProvider.insertEventMessage(rumor);
       }
     }
   }
 
-  Future<EventMessage?> _unwrapGift(EventMessage giftWrap, {required String pubkey}) async {
-    final currentUserSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-    if (currentUserSigner == null) {
-      throw EventSignerNotFoundException();
-    }
-
+  Future<EventMessage?> _unwrapGift(
+    EventMessage giftWrap, {
+    required String senderPubkey,
+    required EventSigner currentUserSigner,
+  }) async {
     try {
       final seal = await ref.read(ionConnectGiftWrapServiceProvider).decodeWrap(
             giftWrap.content,
-            pubkey,
+            senderPubkey,
             currentUserSigner,
           );
 
       return await ref.read(ionConnectSealServiceProvider).decodeSeal(
             seal,
             currentUserSigner,
-            pubkey,
+            currentUserSigner.publicKey,
           );
     } catch (error, stackTrace) {
       Logger.log(DecodeE2EMessageException().toString(), error: error, stackTrace: stackTrace);
