@@ -55,5 +55,5 @@ FutureOr<void> joinCommunity(
     throw FailedToSendInvitationException();
   }
 
-  ref.invalidate(communityJoinRequestsNotifierProvider);
+  ref.invalidate(communityJoinRequestsProvider);
 }

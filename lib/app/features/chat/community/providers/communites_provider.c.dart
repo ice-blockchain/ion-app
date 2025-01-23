@@ -7,18 +7,21 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'communites_provider.c.g.dart';
 
+///
+/// Returns communities the user has joined
+///
 @riverpod
 Future<List<CommunityDefinitionData>> communites(Ref ref) async {
-  final acceptedJoinEvents = ref.watch(communityJoinRequestsNotifierProvider).valueOrNull;
+  final acceptedJoinEvents = ref.watch(communityJoinRequestsProvider).valueOrNull;
 
-  final communities = <CommunityDefinitionData>[];
-  for (final event in [
-    ...(acceptedJoinEvents?.accepted ?? <JoinCommunityEntity>[]),
-    ...(acceptedJoinEvents?.waitingApproval ?? <JoinCommunityEntity>[]),
-  ]) {
-    final communityDefinition = await ref.watch(communityMetadataProvider(event.data.uuid).future);
-    communities.add(communityDefinition);
-  }
+  final communities = await Future.wait([
+    for (final event in [
+      ...(acceptedJoinEvents?.accepted ?? <JoinCommunityEntity>[]),
+      // TODO: remove this when search is implemented
+      ...(acceptedJoinEvents?.waitingApproval ?? <JoinCommunityEntity>[]),
+    ])
+      ref.watch(communityMetadataProvider(event.data.uuid).future),
+  ]);
 
   return communities;
 }

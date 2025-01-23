@@ -18,7 +18,7 @@ class ChatMainPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref
       ..watch(fetchConversationsProvider)
-      ..watch(communityJoinRequestsNotifierProvider);
+      ..watch(communityJoinRequestsProvider);
 
     final conversations = ref.watch(conversationsProvider);
 

@@ -28,7 +28,7 @@ class ChannelPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final channel = ref.watch(communityMetadataProvider(uuid)).valueOrNull;
-    final communities = ref.watch(communityJoinRequestsNotifierProvider).valueOrNull;
+    final communities = ref.watch(communityJoinRequestsProvider).valueOrNull;
     final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
     final isJoined = useMemoized(

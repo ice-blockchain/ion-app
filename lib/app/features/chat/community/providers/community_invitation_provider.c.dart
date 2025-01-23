@@ -8,6 +8,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'community_invitation_provider.c.g.dart';
 
+///
+/// Returns an invitation to join a community if one exists for the current user
+///
 @riverpod
 FutureOr<JoinCommunityEntity?> communityInvitation(
   Ref ref,
@@ -23,17 +26,20 @@ FutureOr<JoinCommunityEntity?> communityInvitation(
     filters: [
       RequestFilter(
         kinds: const [JoinCommunityEntity.kind],
-        authors: [currentPubkey],
         tags: {
           '#h': [communityUUID],
+          '#p': [currentPubkey],
         },
       ),
     ],
   );
 
-  final result = await ref
+  final joinCommunityEntity = await ref
       .watch(ionConnectNotifierProvider.notifier)
       .requestEntity<JoinCommunityEntity>(requestMessage);
 
-  return result;
+  if (joinCommunityEntity?.masterPubkey != currentPubkey) {
+    return joinCommunityEntity;
+  }
+  return null;
 }
