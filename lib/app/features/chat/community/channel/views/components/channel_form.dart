@@ -11,7 +11,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/community/channel/providers/channel_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/channel_type.dart';
+import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/view/pages/admins_management_modal/admins_management_modal.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
@@ -41,8 +41,8 @@ class ChannelForm extends HookConsumerWidget {
       channel == null
           ? null
           : channel!.isPublic
-              ? ChannelType.public
-              : ChannelType.private,
+              ? CommunityVisibilityType.public
+              : CommunityVisibilityType.private,
     );
     final channelAdmins = ref.watch(channelAdminsProvider(community: channel));
     final isFormValid = useState(false);
@@ -110,9 +110,9 @@ class ChannelForm extends HookConsumerWidget {
                   onPress: () {
                     showSimpleBottomSheet<void>(
                       context: context,
-                      child: TypeSelectionModal<ChannelType>(
+                      child: TypeSelectionModal<CommunityVisibilityType>(
                         title: context.i18n.channel_create_type_select_title,
-                        values: ChannelType.values,
+                        values: CommunityVisibilityType.values,
                         initiallySelectedType: channelType.value,
                         onUpdated: (newChannelType) => channelType.value = newChannelType,
                       ),

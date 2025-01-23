@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/chat/community/models/channel_type.dart';
+import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
@@ -16,7 +16,7 @@ class ChannelData with _$ChannelData {
     required String description,
     required Map<String, ChannelAdminType> admins,
     required List<String> users,
-    required ChannelType channelType,
+    required CommunityVisibilityType channelType,
     MediaFile? image,
     bool? isVerified,
   }) = _ChannelData;

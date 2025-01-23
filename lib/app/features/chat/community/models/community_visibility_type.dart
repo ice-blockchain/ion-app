@@ -5,31 +5,31 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/features/chat/model/selectable_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-enum ChannelType implements SelectableType {
+enum CommunityVisibilityType implements SelectableType {
   public,
   private;
 
   @override
   String getTitle(BuildContext context) {
     return switch (this) {
-      ChannelType.public => context.i18n.common_public,
-      ChannelType.private => context.i18n.common_private,
+      CommunityVisibilityType.public => context.i18n.common_public,
+      CommunityVisibilityType.private => context.i18n.common_private,
     };
   }
 
   @override
   String getDescription(BuildContext context) {
     return switch (this) {
-      ChannelType.public => context.i18n.channel_create_type_public_desc,
-      ChannelType.private => context.i18n.channel_create_type_private_desc,
+      CommunityVisibilityType.public => context.i18n.channel_create_type_public_desc,
+      CommunityVisibilityType.private => context.i18n.channel_create_type_private_desc,
     };
   }
 
   @override
   String get iconAsset {
     return switch (this) {
-      ChannelType.public => Assets.svg.iconChannelType,
-      ChannelType.private => Assets.svg.iconChannelPrivatetype,
+      CommunityVisibilityType.public => Assets.svg.iconChannelType,
+      CommunityVisibilityType.private => Assets.svg.iconChannelPrivatetype,
     };
   }
 }

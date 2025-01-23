@@ -5,11 +5,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
-import 'package:ion/app/features/chat/community/providers/invite_user_provider.c.dart';
-import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -18,67 +15,17 @@ import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'channel_provider.c.g.dart';
+part 'update_community_provider.c.g.dart';
 
 @riverpod
-class ChannelNotifier extends _$ChannelNotifier {
+class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
   @override
-  FutureOr<String?> build() {
+  FutureOr<CommunityDefinitionData?> build() {
     return null;
   }
 
-  Future<void> createChannel(
-    String name,
-    String? description,
-    CommunityVisibilityType channelType,
-  ) async {
-    state = const AsyncValue.loading();
-
-    state = await AsyncValue.guard(() async {
-      final avatar = await _uploadAvatar();
-      final channelAdmins = ref.read(channelAdminsProvider());
-
-      final communityDefinitionData = CommunityDefinitionData.fromData(
-        name: name,
-        description: description,
-        isPublic: channelType == CommunityVisibilityType.public,
-        isOpen: channelType == CommunityVisibilityType.public,
-        commentsEnabled: true,
-        avatar: avatar,
-        roleRequiredForPosting: RoleRequiredForPosting.moderator,
-        moderators: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.moderator)
-            .map((entry) => entry.key)
-            .toList(),
-        admins: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.admin)
-            .map((entry) => entry.key)
-            .toList(),
-      );
-
-      final channelEntity = await ref
-          .read(ionConnectNotifierProvider.notifier)
-          .sendEntityData<CommunityDefinitionEntity>(communityDefinitionData);
-
-      if (channelEntity == null) {
-        throw FailedToCreateChannelException();
-      }
-
-      // join community as owner and invite moderators/admins
-      await Future.wait([
-        ref.read(joinCommunityProvider(channelEntity.data.uuid).future),
-        ...channelAdmins.entries.map(
-          (admin) =>
-              ref.read(inviteUserToCommunityProvider(channelEntity.data.uuid, admin.key).future),
-        ),
-      ]);
-
-      return channelEntity.data.uuid;
-    });
-  }
-
-  Future<void> editChannel(
-    CommunityDefinitionData channel,
+  Future<void> updateCommunity(
+    CommunityDefinitionData community,
     String name,
     String? description,
     CommunityVisibilityType channelType,
@@ -94,7 +41,7 @@ class ChannelNotifier extends _$ChannelNotifier {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final editedChannelEntity = channel.copyWith(
+      final editedChannelEntity = community.copyWith(
         avatar: avatar,
         name: name,
         description: description,
@@ -114,13 +61,14 @@ class ChannelNotifier extends _$ChannelNotifier {
       final patchChannelResult =
           await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchChannelEntity);
 
-      final editChannelResult =
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(editedChannelEntity);
+      final editChannelResult = await ref
+          .read(ionConnectNotifierProvider.notifier)
+          .sendEntityData<CommunityDefinitionEntity>(editedChannelEntity);
 
       if (patchChannelResult == null || editChannelResult == null) {
         throw FailedToEditChannelException();
       }
-      return;
+      return editChannelResult.data;
     });
   }
 

@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_user_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
@@ -18,12 +16,12 @@ import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'channel_provider.c.g.dart';
+part 'create_community_provider.c.g.dart';
 
 @riverpod
-class ChannelNotifier extends _$ChannelNotifier {
+class CreateCommunityNotifier extends _$CreateCommunityNotifier {
   @override
-  FutureOr<String?> build() {
+  FutureOr<CommunityDefinitionData?> build() {
     return null;
   }
 
@@ -31,6 +29,7 @@ class ChannelNotifier extends _$ChannelNotifier {
     String name,
     String? description,
     CommunityVisibilityType channelType,
+    RoleRequiredForPosting? roleRequiredForPosting,
   ) async {
     state = const AsyncValue.loading();
 
@@ -45,7 +44,7 @@ class ChannelNotifier extends _$ChannelNotifier {
         isOpen: channelType == CommunityVisibilityType.public,
         commentsEnabled: true,
         avatar: avatar,
-        roleRequiredForPosting: RoleRequiredForPosting.moderator,
+        roleRequiredForPosting: roleRequiredForPosting,
         moderators: channelAdmins.entries
             .where((entry) => entry.value == ChannelAdminType.moderator)
             .map((entry) => entry.key)
@@ -73,54 +72,7 @@ class ChannelNotifier extends _$ChannelNotifier {
         ),
       ]);
 
-      return channelEntity.data.uuid;
-    });
-  }
-
-  Future<void> editChannel(
-    CommunityDefinitionData channel,
-    String name,
-    String? description,
-    CommunityVisibilityType channelType,
-  ) async {
-    state = const AsyncValue.loading();
-
-    state = await AsyncValue.guard(() async {
-      final avatar = await _uploadAvatar();
-      final channelAdmins = ref.read(channelAdminsProvider());
-      final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
-
-      if (pubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
-
-      final editedChannelEntity = channel.copyWith(
-        avatar: avatar,
-        name: name,
-        description: description,
-        isPublic: channelType == CommunityVisibilityType.public,
-        moderators: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.moderator)
-            .map((entry) => entry.key)
-            .toList(),
-        admins: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.admin)
-            .map((entry) => entry.key)
-            .toList(),
-      );
-
-      final patchChannelEntity =
-          CommunityUpdateData.fromCommunityDefinitionData(editedChannelEntity);
-      final patchChannelResult =
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchChannelEntity);
-
-      final editChannelResult =
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(editedChannelEntity);
-
-      if (patchChannelResult == null || editChannelResult == null) {
-        throw FailedToEditChannelException();
-      }
-      return;
+      return channelEntity.data;
     });
   }
 

@@ -59,7 +59,7 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
     required bool isPublic,
     required bool isOpen,
     required bool commentsEnabled,
-    required RoleRequiredForPosting roleRequiredForPosting,
+    required RoleRequiredForPosting? roleRequiredForPosting,
     required List<String> moderators,
     required List<String> admins,
     required String name,
@@ -118,7 +118,8 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
         CommunityVisibilityTag(isPublic: isPublic).toTag(),
         CommunityOpennessTag(isOpen: isOpen).toTag(),
         CommentsEnabledEventSetting(isEnabled: commentsEnabled).toTag(),
-        RoleRequiredForPostingEventSetting(role: roleRequiredForPosting).toTag(),
+        if (roleRequiredForPosting != null)
+          RoleRequiredForPostingEventSetting(role: roleRequiredForPosting!).toTag(),
         if (moderators.isNotEmpty) ...CommunityModeratorTag(values: moderators).toTag(),
         if (admins.isNotEmpty) ...CommunityAdminTag(values: admins).toTag(),
       ],
