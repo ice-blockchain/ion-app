@@ -7,6 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -87,7 +88,7 @@ Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
 
   final currentBookmarks = await ref.watch(currentUserBookmarksProvider.future);
   return switch (ionConnectEntity) {
-    PostEntity() => currentBookmarks.values.any(
+    ModifiablePostEntity() => currentBookmarks.values.any(
         (bookmarksSet) => bookmarksSet?.data.postsIds.contains(ionConnectEntity.id) ?? false,
       ),
     ArticleEntity() => currentBookmarks[BookmarksSetType.articles]
