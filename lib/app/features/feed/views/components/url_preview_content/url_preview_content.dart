@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/validators.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
 part 'components/url_metadata_preview.dart';
@@ -19,9 +20,7 @@ class UrlPreviewContent extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useAutomaticKeepAlive();
-
-    if (url.isEmpty) {
+    if (Validators.isInvalidUrl(url)) {
       return const SizedBox.shrink();
     }
 
