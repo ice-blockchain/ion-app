@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/channel/hooks/can_edit_channel.dart';
+import 'package:ion/app/features/chat/community/channel/hooks/use_can_edit_channel.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/channel_avatar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/share_link_tile.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
@@ -28,7 +28,7 @@ class ChannelSummary extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).requireValue;
 
-    final canEdit = canEditChannel(channel: channel, currentPubkey: currentUserPubkey);
+    final canEdit = useCanEditChannel(channel: channel, currentPubkey: currentUserPubkey);
 
     return Column(
       children: [

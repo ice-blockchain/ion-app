@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
@@ -14,16 +13,11 @@ class DescriptionTag with _$DescriptionTag {
 
   const DescriptionTag._();
 
-  factory DescriptionTag.fromTags(List<List<String>> tags) {
-    final tag = tags.firstWhereOrNull((tag) => tag[0] == tagName);
-
-    if (tag == null) {
-      return const DescriptionTag(value: null);
-    }
-
+  factory DescriptionTag.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
+
     if (tag.length != 2) {
       throw IncorrectEventTagException(tag: tag.toString());
     }
@@ -31,7 +25,7 @@ class DescriptionTag with _$DescriptionTag {
     return DescriptionTag(value: tag[1]);
   }
 
-  static const String tagName = 'description';
+  static const String tagName = 'd';
 
   List<String> toTag() {
     if (value == null) {

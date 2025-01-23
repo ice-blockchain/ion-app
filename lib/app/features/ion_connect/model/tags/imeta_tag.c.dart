@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -15,13 +14,7 @@ class ImetaTag with _$ImetaTag {
 
   const ImetaTag._();
 
-  factory ImetaTag.fromTags(List<List<String>> tags) {
-    final tag = tags.firstWhereOrNull((tag) => tag[0] == tagName);
-
-    if (tag == null) {
-      return const ImetaTag(value: null);
-    }
-
+  factory ImetaTag.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }

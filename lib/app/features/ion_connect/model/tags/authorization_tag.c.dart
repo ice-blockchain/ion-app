@@ -3,23 +3,22 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
-part 'entity_autherization_tag.c.freezed.dart';
+part 'authorization_tag.c.freezed.dart';
 
 @freezed
-class EntityAutherization with _$EntityAutherization {
-  const factory EntityAutherization({
+class AuthorizationTag with _$AuthorizationTag {
+  const factory AuthorizationTag({
     required String value,
-  }) = _EntityAutherization;
+  }) = _AuthorizationTag;
 
-  const EntityAutherization._();
+  const AuthorizationTag._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/40.md
-  factory EntityAutherization.fromTag(List<String> tag) {
+  factory AuthorizationTag.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
 
-    return EntityAutherization(
+    return AuthorizationTag(
       value: tag[1],
     );
   }

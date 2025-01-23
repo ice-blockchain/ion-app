@@ -13,9 +13,7 @@ class CommunityIdentifierTag with _$CommunityIdentifierTag {
 
   const CommunityIdentifierTag._();
 
-  factory CommunityIdentifierTag.fromTags(List<List<String>> tags) {
-    final tag = tags.firstWhere((tag) => tag[0] == tagName);
-
+  factory CommunityIdentifierTag.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }

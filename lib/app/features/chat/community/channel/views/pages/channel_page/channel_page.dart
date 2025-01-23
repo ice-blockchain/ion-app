@@ -7,7 +7,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/channel/hooks/can_post_to_channel.dart';
+import 'package:ion/app/features/chat/community/channel/hooks/use_can_post_to_channel.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/empty_state_copy_link.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
@@ -38,7 +38,7 @@ class ChannelPage extends HookConsumerWidget {
       uuid,
     ]);
 
-    final canPost = canPostToChannel(channel: channel, currentPubkey: currentPubkey);
+    final canPost = useCanPostToChannel(channel: channel, currentPubkey: currentPubkey);
 
     if (channel == null) {
       return const SizedBox.shrink();

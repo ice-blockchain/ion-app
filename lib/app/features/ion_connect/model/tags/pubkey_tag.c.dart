@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
@@ -14,11 +13,9 @@ class PubkeyTag with _$PubkeyTag {
 
   const PubkeyTag._();
 
-  factory PubkeyTag.fromTags(List<List<String>> tags) {
-    final tag = tags.firstWhereOrNull((tag) => tag[0] == tagName);
-
-    if (tag == null) {
-      return const PubkeyTag(value: null);
+  factory PubkeyTag.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
 
     if (tag.length != 2) {

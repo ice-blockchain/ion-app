@@ -13,9 +13,7 @@ class NameTag with _$NameTag {
 
   const NameTag._();
 
-  factory NameTag.fromTags(List<List<String>> tags) {
-    final tag = tags.firstWhere((tag) => tag[0] == tagName);
-
+  factory NameTag.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }

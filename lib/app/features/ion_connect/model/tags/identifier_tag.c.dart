@@ -13,9 +13,7 @@ class IdentifierTag with _$IdentifierTag {
 
   const IdentifierTag._();
 
-  factory IdentifierTag.fromTags(List<List<String>> tags) {
-    final tag = tags.firstWhere((tag) => tag[0] == tagName);
-
+  factory IdentifierTag.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }

@@ -22,7 +22,7 @@ class ActionButton extends HookConsumerWidget {
         case MessagingBottomBarState.hasText:
         case MessagingBottomBarState.voicePaused:
           return SendButton(
-            onSend: () async {
+            onSend: () {
               ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
             },
           );

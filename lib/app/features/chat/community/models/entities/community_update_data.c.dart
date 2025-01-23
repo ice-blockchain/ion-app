@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
@@ -85,17 +86,25 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
   }
 
   factory CommunityUpdateData.fromEventMessage(EventMessage eventMessage) {
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+
     return CommunityUpdateData(
-      uuid: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
-      name: NameTag.fromTags(eventMessage.tags).value,
-      description: DescriptionTag.fromTags(eventMessage.tags).value,
-      avatar: ImetaTag.fromTags(eventMessage.tags).value,
+      uuid: tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
+      name: tags[NameTag.tagName]!.map(NameTag.fromTag).first.value,
+      description: tags[DescriptionTag.tagName]?.map(DescriptionTag.fromTag).first.value,
+      avatar: tags[ImetaTag.tagName]?.map(ImetaTag.fromTag).first.value,
       isPublic: CommunityVisibilityTag.fromTags(eventMessage.tags).isPublic,
       isOpen: CommunityOpennessTag.fromTags(eventMessage.tags).isOpen,
       commentsEnabled: CommentsEnabledEventSetting.fromTags(eventMessage.tags).isEnabled,
       roleRequiredForPosting: RoleRequiredForPostingEventSetting.fromTags(eventMessage.tags).role,
-      moderators: CommunityModeratorTag.fromTags(eventMessage.tags).values,
-      admins: CommunityAdminTag.fromTags(eventMessage.tags).values,
+      moderators: tags[CommunityModeratorTag.tagName]
+              ?.map((tag) => CommunityModeratorTag.fromTag(tag).value)
+              .toList() ??
+          [],
+      admins: tags[CommunityAdminTag.tagName]
+              ?.map((tag) => CommunityAdminTag.fromTag(tag).value)
+              .toList() ??
+          [],
     );
   }
 
@@ -120,8 +129,9 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
         CommentsEnabledEventSetting(isEnabled: commentsEnabled).toTag(),
         if (roleRequiredForPosting != null)
           RoleRequiredForPostingEventSetting(role: roleRequiredForPosting!).toTag(),
-        if (moderators.isNotEmpty) ...CommunityModeratorTag(values: moderators).toTag(),
-        if (admins.isNotEmpty) ...CommunityAdminTag(values: admins).toTag(),
+        if (moderators.isNotEmpty)
+          ...moderators.map((moderator) => CommunityModeratorTag(value: moderator).toTag()),
+        if (admins.isNotEmpty) ...admins.map((admin) => CommunityAdminTag(value: admin).toTag()),
       ],
       content: '',
     );
