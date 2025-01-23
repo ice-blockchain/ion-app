@@ -2,13 +2,13 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
-import 'package:ion/app/features/chat/model/channel_admin_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -30,51 +30,51 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
     CommunityDefinitionData community,
     String name,
     String? description,
-    CommunityVisibilityType channelType,
+    CommunityVisibilityType communityVisibilityType,
   ) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
       final avatar = await _uploadAvatar() ?? community.avatar;
-      final channelAdmins = ref.read(channelAdminsProvider);
+      final communityAdmins = ref.read(communityAdminsProvider);
       final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
       if (pubkey == null) {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final editedChannelEntity = community.copyWith(
+      final editedCommunityEntity = community.copyWith(
         avatar: avatar,
         name: name,
         description: description,
-        isPublic: channelType == CommunityVisibilityType.public,
-        moderators: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.moderator)
+        isPublic: communityVisibilityType == CommunityVisibilityType.public,
+        moderators: communityAdmins.entries
+            .where((entry) => entry.value == CommunityAdminType.moderator)
             .map((entry) => entry.key)
             .toList(),
-        admins: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.admin)
+        admins: communityAdmins.entries
+            .where((entry) => entry.value == CommunityAdminType.admin)
             .map((entry) => entry.key)
             .toList(),
       );
 
-      final patchChannelEntity =
-          CommunityUpdateData.fromCommunityDefinitionData(editedChannelEntity);
-      final patchChannelResult =
-          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchChannelEntity);
+      final patchCommunityEntity =
+          CommunityUpdateData.fromCommunityDefinitionData(editedCommunityEntity);
+      final patchCommunityResult =
+          await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(patchCommunityEntity);
 
-      final editChannelResult = await ref
+      final editCommunityResult = await ref
           .read(ionConnectNotifierProvider.notifier)
-          .sendEntityData<CommunityDefinitionEntity>(editedChannelEntity);
+          .sendEntityData<CommunityDefinitionEntity>(editedCommunityEntity);
 
-      if (patchChannelResult == null || editChannelResult == null) {
-        throw FailedToEditChannelException();
+      if (patchCommunityResult == null || editCommunityResult == null) {
+        throw FailedToEditCommunityException();
       }
 
       final existingAdminsAndModerators = community.admins.toList() + community.moderators.toList();
 
       final newlyAddedAdminsAndModerators =
-          channelAdmins.keys.where((key) => !existingAdminsAndModerators.contains(key)).toList();
+          communityAdmins.keys.where((key) => !existingAdminsAndModerators.contains(key)).toList();
 
       if (newlyAddedAdminsAndModerators.isNotEmpty) {
         await Future.wait(
@@ -86,7 +86,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
 
       ref.invalidate(communityMetadataProvider(community.uuid));
 
-      return editChannelResult.data;
+      return editCommunityResult.data;
     });
   }
 

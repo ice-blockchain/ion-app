@@ -7,9 +7,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/pages/add_admin_modal/add_admin_modal.dart';
 import 'package:ion/app/features/chat/community/view/pages/admins_management_modal/components/admin_card.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -25,8 +25,8 @@ class AdminsManagementModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channelAdmins = ref.watch(channelAdminsProvider);
-    final channelAdminsPubkeys = useMemoized(() => channelAdmins.keys.toList(), [channelAdmins]);
+    final communityAdmins = ref.watch(communityAdminsProvider);
+    final communityAdminsPubkeys = useMemoized(communityAdmins.keys.toList, [communityAdmins]);
 
     final buttonSize = 56.0.s;
     final buttonPaddingTop = 8.0.s;
@@ -35,7 +35,7 @@ class AdminsManagementModal extends HookConsumerWidget {
         buttonSize +
         buttonPaddingTop +
         separatorHeight +
-        (AdminCard.itemHeight + separatorHeight) * channelAdminsPubkeys.length;
+        (AdminCard.itemHeight + separatorHeight) * communityAdminsPubkeys.length;
 
     return SizedBox(
       height: height,
@@ -81,12 +81,12 @@ class AdminsManagementModal extends HookConsumerWidget {
           ),
           SliverList.separated(
             separatorBuilder: (BuildContext _, int __) => SizedBox(height: separatorHeight),
-            itemCount: channelAdminsPubkeys.length,
+            itemCount: communityAdminsPubkeys.length,
             itemBuilder: (BuildContext context, int index) {
               return ScreenSideOffset.small(
                 child: AdminCard(
-                  pubkey: channelAdminsPubkeys[index],
-                  channelAdminType: channelAdmins[channelAdminsPubkeys[index]]!,
+                  pubkey: communityAdminsPubkeys[index],
+                  communityAdminType: communityAdmins[communityAdminsPubkeys[index]]!,
                   createChannelFlow: createChannelFlow,
                 ),
               );

@@ -49,7 +49,7 @@ class CreateChannelModal extends HookConsumerWidget {
                     child: ChannelForm(
                       isLoading: createCommunityNotifier.isLoading,
                       onSubmit: (name, description, channelType) {
-                        ref.read(createCommunityNotifierProvider.notifier).createChannel(
+                        ref.read(createCommunityNotifierProvider.notifier).createCommunity(
                               name,
                               description,
                               channelType,

@@ -7,9 +7,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/pages/admin_type_selection_modal/components/delete_admin_button.dart';
-import 'package:ion/app/features/chat/model/channel_admin_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/selection_list_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -23,7 +23,7 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
   });
 
   final String adminPubkey;
-  final ChannelAdminType adminType;
+  final CommunityAdminType adminType;
   final bool createChannelFlow;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,8 +41,8 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
           ],
           title: Text(context.i18n.channel_create_admin_type_title),
         ),
-        for (final ChannelAdminType adminType in ChannelAdminType.values
-            .where((e) => !createChannelFlow || e != ChannelAdminType.owner)
+        for (final CommunityAdminType adminType in CommunityAdminType.values
+            .where((e) => !createChannelFlow || e != CommunityAdminType.owner)
             .toSet())
           ScreenSideOffset.small(
             child: Column(
@@ -51,7 +51,7 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
                   title: adminType.getTitle(context),
                   onTap: () {
                     selectedAdminType.value = adminType;
-                    ref.read(channelAdminsProvider.notifier).setAdmin(adminPubkey, adminType);
+                    ref.read(communityAdminsProvider.notifier).setAdmin(adminPubkey, adminType);
                   },
                   iconAsset: adminType.iconAsset,
                   isSelected: selectedAdminType.value == adminType,

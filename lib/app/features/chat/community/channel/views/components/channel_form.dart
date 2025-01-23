@@ -12,8 +12,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/pages/admins_management_modal/admins_management_modal.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -47,7 +47,7 @@ class ChannelForm extends HookConsumerWidget {
               ? CommunityVisibilityType.public
               : CommunityVisibilityType.private,
     );
-    final channelAdmins = ref.watch(channelAdminsProvider);
+    final communityAdmins = ref.watch(communityAdminsProvider);
     final isFormValid = useState(false);
 
     useEffect(
@@ -119,7 +119,8 @@ class ChannelForm extends HookConsumerWidget {
                 GeneralSelectionButton(
                   iconAsset: Assets.svg.iconChannelAdmin,
                   title: context.i18n.channel_create_admins,
-                  selectedValue: channelAdmins.isNotEmpty ? channelAdmins.length.toString() : null,
+                  selectedValue:
+                      communityAdmins.isNotEmpty ? communityAdmins.length.toString() : null,
                   onPress: () {
                     showSimpleBottomSheet<void>(
                       context: context,
@@ -142,20 +143,6 @@ class ChannelForm extends HookConsumerWidget {
               trailingIcon: isLoading ? const IONLoadingIndicator() : null,
               type: isFormValid.value ? ButtonType.primary : ButtonType.disabled,
               onPressed: () {
-                // if (isEdit) {
-                //   ref.read(channelNotifierProvider.notifier).editChannel(
-                //         channel!,
-                //         titleController.text,
-                //         descController.text,
-                //         channelType.value!,
-                //       );
-                // } else {
-                //   ref.read(channelNotifierProvider.notifier).createChannel(
-                //         titleController.text,
-                //         descController.text,
-                //         channelType.value!,
-                //       );
-                // }
                 onSubmit(titleController.text, descController.text, channelType.value!);
               },
             ),

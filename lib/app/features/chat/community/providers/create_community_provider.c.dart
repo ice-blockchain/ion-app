@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
-import 'package:ion/app/features/chat/model/channel_admin_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -26,55 +26,56 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
     return null;
   }
 
-  Future<void> createChannel(
+  Future<void> createCommunity(
     String name,
     String? description,
-    CommunityVisibilityType channelType,
+    CommunityVisibilityType communityVisibilityType,
     RoleRequiredForPosting? roleRequiredForPosting,
   ) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
       final avatar = await _uploadAvatar();
-      final channelAdmins = ref.read(channelAdminsProvider);
+      final communityAdmins = ref.read(communityAdminsProvider);
 
       final communityDefinitionData = CommunityDefinitionData.fromData(
         name: name,
         description: description,
-        isPublic: channelType == CommunityVisibilityType.public,
-        isOpen: channelType == CommunityVisibilityType.public,
+        isPublic: communityVisibilityType == CommunityVisibilityType.public,
+        isOpen: communityVisibilityType == CommunityVisibilityType.public,
         commentsEnabled: true,
         avatar: avatar,
         roleRequiredForPosting: roleRequiredForPosting,
-        moderators: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.moderator)
+        moderators: communityAdmins.entries
+            .where((entry) => entry.value == CommunityAdminType.moderator)
             .map((entry) => entry.key)
             .toList(),
-        admins: channelAdmins.entries
-            .where((entry) => entry.value == ChannelAdminType.admin)
+        admins: communityAdmins.entries
+            .where((entry) => entry.value == CommunityAdminType.admin)
             .map((entry) => entry.key)
             .toList(),
       );
 
-      final channelEntity = await ref
+      final communityEntity = await ref
           .read(ionConnectNotifierProvider.notifier)
           .sendEntityData<CommunityDefinitionEntity>(communityDefinitionData);
 
-      if (channelEntity == null) {
-        throw FailedToCreateChannelException();
+      if (communityEntity == null) {
+        throw FailedToCreateCommunityException();
       }
 
       // join community as owner and invite moderators/admins
       await Future.wait([
-        ref.read(joinCommunityProvider(channelEntity.data.uuid).future),
-        ...channelAdmins.entries.map(
-          (admin) => ref.read(inviteToCommunityProvider(channelEntity.data.uuid, admin.key).future),
+        ref.read(joinCommunityProvider(communityEntity.data.uuid).future),
+        ...communityAdmins.entries.map(
+          (admin) =>
+              ref.read(inviteToCommunityProvider(communityEntity.data.uuid, admin.key).future),
         ),
       ]);
 
       ref.invalidate(communityJoinRequestsProvider);
 
-      return channelEntity.data;
+      return communityEntity.data;
     });
   }
 

@@ -10,9 +10,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_detail_app_bar.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_form.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_summary.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/update_community_provider.c.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 
 class EditChannelPage extends HookConsumerWidget {
   const EditChannelPage({
@@ -30,7 +30,7 @@ class EditChannelPage extends HookConsumerWidget {
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (channel == null) return;
-          ref.read(channelAdminsProvider.notifier).init(channel);
+          ref.read(communityAdminsProvider.notifier).init(channel);
         });
         return null;
       },

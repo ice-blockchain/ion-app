@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/channel_admin_type.dart';
-import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
+import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
+import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -60,8 +60,8 @@ class AddAdminModal extends HookConsumerWidget {
                 ),
                 onPressed: () {
                   ref
-                      .read(channelAdminsProvider.notifier)
-                      .setAdmin(selectedPubkey.value!, ChannelAdminType.admin);
+                      .read(communityAdminsProvider.notifier)
+                      .setAdmin(selectedPubkey.value!, CommunityAdminType.admin);
                   context.pop();
                 },
               ),

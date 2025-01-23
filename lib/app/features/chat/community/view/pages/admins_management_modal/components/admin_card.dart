@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
 import 'package:ion/app/features/chat/community/view/pages/admin_type_selection_modal/admin_type_selection_modal.dart';
-import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/username.dart';
@@ -15,7 +15,7 @@ import 'package:ion/generated/assets.gen.dart';
 class AdminCard extends ConsumerWidget {
   const AdminCard({
     required this.pubkey,
-    required this.channelAdminType,
+    required this.communityAdminType,
     this.onTap,
     super.key,
     this.createChannelFlow = false,
@@ -23,7 +23,7 @@ class AdminCard extends ConsumerWidget {
 
   final String pubkey;
   final VoidCallback? onTap;
-  final ChannelAdminType channelAdminType;
+  final CommunityAdminType communityAdminType;
   final bool createChannelFlow;
   static double get itemHeight => 60.0.s;
 
@@ -42,7 +42,7 @@ class AdminCard extends ConsumerWidget {
               context: context,
               child: AdminTypeSelectionModal(
                 adminPubkey: pubkey,
-                adminType: channelAdminType,
+                adminType: communityAdminType,
                 createChannelFlow: createChannelFlow,
               ),
             );
@@ -58,7 +58,7 @@ class AdminCard extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                channelAdminType.getTitle(context),
+                communityAdminType.getTitle(context),
                 style: context.theme.appTextThemes.body
                     .copyWith(color: context.theme.appColors.primaryAccent),
               ),

@@ -255,8 +255,8 @@ class FailedToFetchCommunityException extends IONException {
   FailedToFetchCommunityException(String uuid) : super(10054, 'Failed to fetch community $uuid');
 }
 
-class FailedToEditChannelException extends IONException {
-  FailedToEditChannelException() : super(10055, 'Failed to edit channel');
+class FailedToEditCommunityException extends IONException {
+  FailedToEditCommunityException() : super(10055, 'Failed to edit community');
 }
 
 class FailedToJoinCommunityException extends IONException {
