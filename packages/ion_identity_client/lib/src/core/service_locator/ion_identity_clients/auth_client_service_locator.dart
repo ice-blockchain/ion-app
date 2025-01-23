@@ -2,8 +2,10 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/credentials/create_new_credentials_service.dart';
-import 'package:ion_identity_client/src/auth/services/credentials/data_sources/recovery_credentials_data_source.dart';
-import 'package:ion_identity_client/src/auth/services/credentials/recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/data_sources/create_recovery_credentials_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/data_sources/get_credentials_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/get_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
@@ -47,11 +49,12 @@ class AuthClientServiceLocator {
       identitySigner: identitySigner,
       loginService: login(username: username, config: config, identitySigner: identitySigner),
       logoutService: logout(username: username, config: config),
-      recoveryCredentialsService: createRecoveryCredentials(
+      createRecoveryCredentialsService: createRecoveryCredentials(
         username: username,
         config: config,
         identitySigner: identitySigner,
       ),
+      getCredentialsService: getCredentials(username: username, config: config),
       createNewCredentialsService: createNewCredentials(
         username: username,
         config: config,
@@ -115,15 +118,15 @@ class AuthClientServiceLocator {
     );
   }
 
-  RecoveryCredentialsService createRecoveryCredentials({
+  CreateRecoveryCredentialsService createRecoveryCredentials({
     required String username,
     required IONIdentityConfig config,
     required IdentitySigner identitySigner,
   }) {
-    return RecoveryCredentialsService(
+    return CreateRecoveryCredentialsService(
       username: username,
       config: config,
-      dataSource: RecoveryCredentialsDataSource(
+      dataSource: CreateRecoveryCredentialsDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
         tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       ),
@@ -136,6 +139,19 @@ class AuthClientServiceLocator {
     );
   }
 
+  GetCredentialsService getCredentials({
+    required String username,
+    required IONIdentityConfig config,
+  }) {
+    return GetCredentialsService(
+      username: username,
+      dataSource: GetCredentialsDataSource(
+        networkClient: IONIdentityServiceLocator.networkClient(config: config),
+        tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      ),
+    );
+  }
+
   CreateNewCredentialsService createNewCredentials({
     required String username,
     required IONIdentityConfig config,
@@ -144,7 +160,7 @@ class AuthClientServiceLocator {
     return CreateNewCredentialsService(
       username: username,
       config: config,
-      dataSource: RecoveryCredentialsDataSource(
+      dataSource: CreateRecoveryCredentialsDataSource(
         networkClient: IONIdentityServiceLocator.networkClient(config: config),
         tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       ),

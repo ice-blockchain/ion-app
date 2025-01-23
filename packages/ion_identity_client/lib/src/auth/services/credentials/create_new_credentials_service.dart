@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/services/credentials/data_sources/recovery_credentials_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/data_sources/create_recovery_credentials_data_source.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:uuid/uuid.dart';
@@ -17,7 +17,7 @@ class CreateNewCredentialsService {
 
   final String username;
   final IONIdentityConfig config;
-  final RecoveryCredentialsDataSource dataSource;
+  final CreateRecoveryCredentialsDataSource dataSource;
   final UserActionSigner userActionSigner;
   final IdentitySigner identitySigner;
 
