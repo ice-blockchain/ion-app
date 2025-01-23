@@ -111,7 +111,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           final parentEntity =
               await ref.read(ionConnectEntityProvider(eventReference: parentEvent).future);
           if (parentEntity == null) {
-            throw EventNotFoundException(parentEvent);
+            throw EntityNotFoundException(parentEvent);
           }
           if (parentEntity is! ModifiablePostEntity && parentEntity is! ArticleEntity) {
             throw UnsupportedParentEntity(parentEvent);

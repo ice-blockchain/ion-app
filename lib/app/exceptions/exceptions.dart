@@ -79,12 +79,8 @@ class QuillParseException extends IONException {
 }
 
 class UnsupportedRepostException extends IONException {
-  UnsupportedRepostException({required String eventId})
-      : super(10015, 'Reposting events with $eventId is not supported');
-}
-
-class EventNotFoundException extends IONException {
-  EventNotFoundException(dynamic eventInfo) : super(10016, 'Event with not found $eventInfo');
+  UnsupportedRepostException(dynamic eventInfo)
+      : super(10015, 'Reposting event $eventInfo is not supported');
 }
 
 class AssetEntityFileNotFoundException extends IONException {
@@ -138,7 +134,7 @@ class CompressImageException extends IONException {
 }
 
 class EntityNotFoundException extends IONException {
-  EntityNotFoundException(String eventId) : super(10028, 'Entity not found $eventId');
+  EntityNotFoundException(dynamic entityInfo) : super(10028, 'Entity not found $entityInfo');
 }
 
 class CompressVideoException extends IONException {

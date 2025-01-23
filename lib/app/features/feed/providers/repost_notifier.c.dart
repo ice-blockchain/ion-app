@@ -47,7 +47,7 @@ class RepostNotifier extends _$RepostNotifier {
             repostedEvent: await entity.toEventMessage(entity.data),
             kind: ArticleEntity.kind,
           ),
-        _ => throw UnsupportedRepostException(eventId: eventReference.eventId),
+        _ => throw UnsupportedRepostException(eventReference),
       };
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
