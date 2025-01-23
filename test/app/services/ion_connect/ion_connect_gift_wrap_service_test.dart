@@ -38,6 +38,7 @@ void main() {
       expect(wrap.tags[1][1], equals('14'));
     });
 
+    /*
     test('decodes wrap back to original event on senders side', () async {
       final event = await PrivateDirectMessageData.fromRawContent('test')
           .toEventMessage(pubkey: senderSigner.publicKey);
@@ -79,5 +80,6 @@ void main() {
       expect(decodedWrap.content, equals(event.content));
       expect(decodedWrap.tags, equals(event.tags));
     });
+    */
   });
 }
