@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -13,6 +12,7 @@ import 'package:ion/app/features/chat/community/channel/views/pages/channel_deta
 import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/update_community_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class EditChannelPage extends HookConsumerWidget {
   const EditChannelPage({
@@ -26,13 +26,13 @@ class EditChannelPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final channel = ref.watch(communityMetadataProvider(uuid)).valueOrNull;
 
-    useEffect(
+    useOnInit(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (channel == null) return;
           ref.read(communityAdminsProvider.notifier).init(channel);
         });
-        return null;
+        return;
       },
       [channel],
     );

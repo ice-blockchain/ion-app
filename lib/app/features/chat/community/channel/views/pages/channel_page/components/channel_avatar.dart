@@ -9,7 +9,7 @@ import 'package:ion/app/features/chat/community/models/entities/community_defini
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ChannelAvatar extends HookConsumerWidget {
+class ChannelAvatar extends ConsumerWidget {
   const ChannelAvatar({
     required this.channel,
     required this.editMode,
