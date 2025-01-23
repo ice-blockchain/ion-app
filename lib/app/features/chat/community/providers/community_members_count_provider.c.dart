@@ -81,7 +81,7 @@ class CommunityMembersCount extends _$CommunityMembersCount {
 
   Future<NostrRelay> _getOwnerRandomUserRelay(String communityUUID) async {
     final community = await ref.read(communityMetadataProvider(communityUUID).future);
-    final userRelays = await ref.read(UserRelayProvider(community.ownerPubkey).future);
+    final userRelays = await ref.read(userRelayProvider(community.ownerPubkey).future);
     if (userRelays == null) {
       throw UserRelaysNotFoundException();
     }
