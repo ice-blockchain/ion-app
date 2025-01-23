@@ -1,9 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/communites_provider.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
@@ -50,6 +46,22 @@ class Conversations extends _$Conversations {
           conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
       final conversations = await Future.wait(lastPrivateDirectMesssages.map(_getConversationData));
+
+      //TODO: remove this after we extend the conversation data to include channel data
+      final joinedCommunities = await ref.read(communitesProvider.future);
+      for (final community in joinedCommunities) {
+        conversations.add(
+          Ee2eConversationEntity(
+            name: community.data.name,
+            type: ChatType.channel,
+            participants: [],
+            lastMessageAt: DateTime.now(),
+            lastMessageContent: 'channel created',
+            imageUrl: community.data.avatar?.url,
+            nickname: community.data.uuid,
+          ),
+        );
+      }
 
       return conversations;
     });
