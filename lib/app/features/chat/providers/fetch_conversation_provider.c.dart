@@ -27,7 +27,8 @@ class FetchConversations extends _$FetchConversations {
 
     final pubkey = eventSigner.publicKey;
 
-    final lastMessageDate = await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final lastMessageDate =
+        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 

@@ -41,9 +41,10 @@ class MessagesPage extends HookConsumerWidget {
           children: [
             MessagingHeader(
               imageUrl: conversationData.imageUrl,
-              imageWidget: conversationData.imageUrl != null && conversationData.type == ChatType.group
-                  ? Image.asset(conversationData.imageUrl!)
-                  : null,
+              imageWidget:
+                  conversationData.imageUrl != null && conversationData.type == ChatType.group
+                      ? Image.asset(conversationData.imageUrl!)
+                      : null,
               name: conversationData.name,
               subtitle: conversationData.type == ChatType.chat
                   ? Text(

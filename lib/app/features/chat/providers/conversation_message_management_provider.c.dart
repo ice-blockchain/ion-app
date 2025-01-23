@@ -157,7 +157,9 @@ class ConversationMessageManagementService {
     final decryptedDecompressedFiles = <File>[];
 
     for (final attachment in mediaAttachments) {
-      if (attachment.encryptionKey != null && attachment.encryptionNonce != null && attachment.encryptionMac != null) {
+      if (attachment.encryptionKey != null &&
+          attachment.encryptionNonce != null &&
+          attachment.encryptionMac != null) {
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
@@ -248,14 +250,12 @@ class ConversationMessageManagementService {
       receiverPubkey,
     );
 
-
     final wrap = await wrapService.createWrap(
       seal,
       receiverPubkey,
       PrivateDirectMessageEntity.kind,
       expirationTag: expirationTag,
     );
-
 
     return wrap;
   }
@@ -326,7 +326,8 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile = File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+          final compressedEncryptedFile =
+              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
 
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 

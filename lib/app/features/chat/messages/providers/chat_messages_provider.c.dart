@@ -26,7 +26,9 @@ class ChatMessages extends _$ChatMessages {
 
     state = const AsyncValue.loading();
 
-    final messages = await ref.read(conversationsDBServiceProvider).getConversationMessages(conversationData.id!);
+    final messages = await ref
+        .read(conversationsDBServiceProvider)
+        .getConversationMessages(conversationData.id!);
 
     final conversationMessageItems = messages.map(_mapMessage).toList();
 

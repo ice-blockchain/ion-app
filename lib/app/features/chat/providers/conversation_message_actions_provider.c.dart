@@ -29,7 +29,8 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
-  final conversationMessageManagementService = await ref.watch(conversationMessageManagementServiceProvider);
+  final conversationMessageManagementService =
+      await ref.watch(conversationMessageManagementServiceProvider);
 
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
@@ -219,7 +220,6 @@ class ConversationMessageActionsService {
     final wrap = await wrapService.createWrap(
       seal,
       receiverPubkey,
-   
       PrivateMessageReactionEntity.kind,
       expirationTag: expirationTag,
     );
