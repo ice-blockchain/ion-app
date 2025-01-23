@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -44,10 +44,8 @@ String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String curr
     return null;
   }
 
-  if (entity is PostEntity && entity.data.quotedEvent != null) {
-    return entity.data.quotedEvent!.eventId;
-  } else if (entity is RepostEntity) {
-    return entity.data.eventId;
+  if (entity is ModifiablePostEntity && entity.data.quotedEvent != null) {
+    return entity.data.quotedEvent!.eventReference.toString();
   } else if (entity is GenericRepostEntity) {
     return entity.data.eventReference.toString();
   } else {
@@ -57,9 +55,9 @@ String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String curr
 
 @riverpod
 bool isReposted(Ref ref, EventReference eventReference) {
-  if (eventReference is! ImmutableEventReference) {
-    //TODO:replaceable handle replaceable references
-    return false;
+  if (eventReference is! ReplaceableEventReference) {
+    throw UnsupportedEventReference(eventReference);
   }
-  return ref.watch(repostedEventsProvider).valueOrNull?.contains(eventReference.eventId) ?? false;
+  return ref.watch(repostedEventsProvider).valueOrNull?.contains(eventReference.toString()) ??
+      false;
 }
