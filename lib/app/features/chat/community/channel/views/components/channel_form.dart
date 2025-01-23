@@ -10,7 +10,6 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
-import 'package:ion/app/features/chat/community/channel/providers/channel_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/view/pages/admins_management_modal/admins_management_modal.dart';
@@ -23,13 +22,16 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ChannelForm extends HookConsumerWidget {
   const ChannelForm({
-    required this.onSuccess,
+    required this.isLoading,
+    required this.onSubmit,
     this.channel,
     super.key,
   });
 
   final CommunityDefinitionData? channel;
-  final void Function(String? id) onSuccess;
+  final bool isLoading;
+  final void Function(String name, String description, CommunityVisibilityType channelType)
+      onSubmit;
   bool get isEdit => channel != null;
 
   @override
@@ -69,12 +71,6 @@ class ChannelForm extends HookConsumerWidget {
       },
       [isEdit],
     );
-
-    ref
-      ..listenSuccess<String?>(channelNotifierProvider, onSuccess)
-      ..displayErrors(channelNotifierProvider);
-
-    final channelState = ref.watch(channelNotifierProvider);
 
     return Form(
       key: formKey,
@@ -141,24 +137,25 @@ class ChannelForm extends HookConsumerWidget {
               leadingIcon: isEdit
                   ? Assets.svg.iconProfileSave.icon()
                   : Assets.svg.iconPlusCreatechannel.icon(),
-              disabled: !isFormValid.value || channelState.isLoading,
-              trailingIcon: channelState.isLoading ? const IONLoadingIndicator() : null,
+              disabled: !isFormValid.value || isLoading,
+              trailingIcon: isLoading ? const IONLoadingIndicator() : null,
               type: isFormValid.value ? ButtonType.primary : ButtonType.disabled,
               onPressed: () {
-                if (isEdit) {
-                  ref.read(channelNotifierProvider.notifier).editChannel(
-                        channel!,
-                        titleController.text,
-                        descController.text,
-                        channelType.value!,
-                      );
-                } else {
-                  ref.read(channelNotifierProvider.notifier).createChannel(
-                        titleController.text,
-                        descController.text,
-                        channelType.value!,
-                      );
-                }
+                // if (isEdit) {
+                //   ref.read(channelNotifierProvider.notifier).editChannel(
+                //         channel!,
+                //         titleController.text,
+                //         descController.text,
+                //         channelType.value!,
+                //       );
+                // } else {
+                //   ref.read(channelNotifierProvider.notifier).createChannel(
+                //         titleController.text,
+                //         descController.text,
+                //         channelType.value!,
+                //       );
+                // }
+                onSubmit(titleController.text, descController.text, channelType.value!);
               },
             ),
             ScreenBottomOffset(),

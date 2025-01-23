@@ -5,6 +5,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
+import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
@@ -33,7 +34,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final avatar = await _uploadAvatar();
+      final avatar = await _uploadAvatar() ?? community.avatar;
       final channelAdmins = ref.read(channelAdminsProvider());
       final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
@@ -68,6 +69,20 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
       if (patchChannelResult == null || editChannelResult == null) {
         throw FailedToEditChannelException();
       }
+
+      final existingAdminsAndModerators = community.admins.toList() + community.moderators.toList();
+
+      final newlyAddedAdminsAndModerators =
+          channelAdmins.keys.where((key) => !existingAdminsAndModerators.contains(key)).toList();
+
+      if (newlyAddedAdminsAndModerators.isNotEmpty) {
+        await Future.wait(
+          newlyAddedAdminsAndModerators.map(
+            (pubkey) => ref.read(inviteToCommunityProvider(community.uuid, pubkey).future),
+          ),
+        );
+      }
+
       return editChannelResult.data;
     });
   }

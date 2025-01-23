@@ -5,10 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/channel/views/components/channel_form.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_detail_app_bar.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_summary.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/update_community_provider.c.dart';
 
 class EditChannelPage extends HookConsumerWidget {
   const EditChannelPage({
@@ -25,6 +27,14 @@ class EditChannelPage extends HookConsumerWidget {
     if (channel == null) {
       return const SizedBox.shrink();
     }
+
+    final updateCommunityNotifier = ref.watch(updateCommunityNotifierProvider);
+
+    ref
+      ..listenSuccess(updateCommunityNotifierProvider, (data) {
+        context.pop();
+      })
+      ..displayErrors(updateCommunityNotifierProvider);
 
     return Scaffold(
       body: ScreenTopOffset(
@@ -45,10 +55,14 @@ class EditChannelPage extends HookConsumerWidget {
                     ),
                   ),
                   ChannelForm(
-                    channel: channel,
-                    onSuccess: (_) {
-                      ref.invalidate(communityMetadataProvider(uuid));
-                      context.pop();
+                    isLoading: updateCommunityNotifier.isLoading,
+                    onSubmit: (name, description, channelType) {
+                      ref.read(updateCommunityNotifierProvider.notifier).updateCommunity(
+                            channel,
+                            name,
+                            description,
+                            channelType,
+                          );
                     },
                   ),
                 ],

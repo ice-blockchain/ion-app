@@ -5,10 +5,10 @@ import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'invite_user_provider.c.g.dart';
+part 'invite_to_community_provider.c.g.dart';
 
 @riverpod
-FutureOr<void> inviteUserToCommunity(
+FutureOr<void> inviteToCommunity(
   Ref ref,
   String communityUUUID,
   String invitedPubkey,
