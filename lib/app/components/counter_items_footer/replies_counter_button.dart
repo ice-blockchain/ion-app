@@ -76,7 +76,7 @@ class RepliesCounterButton extends HookConsumerWidget {
     if (!context.mounted) return;
 
     if (canReply) {
-      await CreatePostRoute(parentEvent: eventReference.toString()).push<void>(context);
+      await CreatePostRoute(parentEvent: eventReference.encode()).push<void>(context);
       await HapticFeedback.lightImpact();
     } else {
       await showSimpleBottomSheet<void>(

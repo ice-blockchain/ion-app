@@ -7,15 +7,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'interests.c.freezed.dart';
 
 @Freezed(equal: false)
-class InterestsEntity with _$InterestsEntity, IonConnectEntity implements CacheableEntity {
+class InterestsEntity
+    with _$InterestsEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory InterestsEntity({
     required String id,
     required String pubkey,
@@ -44,15 +46,15 @@ class InterestsEntity with _$InterestsEntity, IonConnectEntity implements Cachea
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 10015;
 }
 
 @freezed
-class InterestsData with _$InterestsData implements EventSerializable {
+class InterestsData with _$InterestsData implements EventSerializable, ReplaceableEntityData {
   const factory InterestsData({
     required List<String> hashtags,
     required List<ReplaceableEventReference> interestSetRefs,
@@ -87,6 +89,14 @@ class InterestsData with _$InterestsData implements EventSerializable {
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: InterestsEntity.kind,
+      pubkey: pubkey,
     );
   }
 }

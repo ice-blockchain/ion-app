@@ -80,7 +80,7 @@ class RepostOptionsModal extends HookConsumerWidget {
                             }
 
                           case RepostOptionAction.quotePost:
-                            CreatePostRoute(quotedEvent: eventReference.toString()).go(context);
+                            CreatePostRoute(quotedEvent: eventReference.encode()).go(context);
                           case RepostOptionAction.undoRepost:
                             selectedAction.value = option;
                             final repostEntity = ref.read(repostEntityProvider(eventReference));

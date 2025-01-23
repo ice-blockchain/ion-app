@@ -12,6 +12,11 @@ part 'likes_count_provider.c.g.dart';
 class LikesCount extends _$LikesCount {
   @override
   int build(EventReference eventReference) {
+    if (eventReference is! ImmutableEventReference) {
+      //TODO:replaceable handle replaceable references
+      throw UnimplementedError();
+    }
+
     final reactionsCountEntity = ref.watch(
       ionConnectCacheProvider.select(
         cacheSelector<EventCountResultEntity>(

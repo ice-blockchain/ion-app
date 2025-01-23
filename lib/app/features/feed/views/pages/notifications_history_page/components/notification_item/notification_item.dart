@@ -8,7 +8,6 @@ import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_info.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/notification_type_icon.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/notification_item/user_avatar.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class NotificationItem extends StatelessWidget {
   const NotificationItem({
@@ -60,9 +59,7 @@ class NotificationItem extends StatelessWidget {
                 height: 8.0.s,
               ),
               Post(
-                eventReference: EventReference.fromIonConnectEntity(
-                  notificationData.postEntity!,
-                ),
+                eventReference: notificationData.postEntity!.toEventReference(),
                 header: const SizedBox.shrink(),
                 footer: const SizedBox.shrink(),
               ),

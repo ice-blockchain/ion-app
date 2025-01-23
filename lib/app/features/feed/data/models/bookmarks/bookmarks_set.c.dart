@@ -7,10 +7,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'bookmarks_set.c.freezed.dart';
@@ -28,7 +28,9 @@ enum BookmarksSetType {
 }
 
 @Freezed(equal: false)
-class BookmarksSetEntity with _$BookmarksSetEntity, IonConnectEntity implements CacheableEntity {
+class BookmarksSetEntity
+    with _$BookmarksSetEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory BookmarksSetEntity({
     required String id,
     required String pubkey,
@@ -57,16 +59,15 @@ class BookmarksSetEntity with _$BookmarksSetEntity, IonConnectEntity implements 
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey, type: data.type);
-
-  static String cacheKeyBuilder({required String pubkey, required BookmarksSetType type}) =>
-      '$kind:$type:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 30003;
 }
 
 @freezed
-class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
+class BookmarksSetData with _$BookmarksSetData implements EventSerializable, ReplaceableEntityData {
   const factory BookmarksSetData({
     required BookmarksSetType type,
     required List<String> postsIds,
@@ -121,6 +122,7 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable {
     );
   }
 
+  @override
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       pubkey: pubkey,

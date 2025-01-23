@@ -26,6 +26,11 @@ class RepostNotifier extends _$RepostNotifier {
     state = await AsyncValue.guard(() async {
       final entity = ref.read(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
+      if (eventReference is! ImmutableEventReference) {
+        //TODO:replaceable handle replaceable references
+        throw UnimplementedError();
+      }
+
       if (entity == null) {
         throw EntityNotFoundException(eventReference.eventId);
       }

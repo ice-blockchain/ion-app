@@ -61,7 +61,7 @@ class _EntityListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata =
-        ref.watch(userMetadataProvider(entity.masterPubkey, cacheOnly: true)).valueOrNull;
+        ref.watch(userMetadataProvider(entity.masterPubkey, network: false)).valueOrNull;
 
     final isBlockedOrBlocking =
         ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: true)).valueOrNull ?? true;

@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 
 @immutable
@@ -24,6 +25,8 @@ abstract mixin class IonConnectEntity {
     );
   }
 
+  EventReference toEventReference();
+
   @override
   bool operator ==(Object other) {
     return other is IonConnectEntity && id == other.id;
@@ -31,6 +34,21 @@ abstract mixin class IonConnectEntity {
 
   @override
   int get hashCode => id.hashCode;
+}
+
+mixin ImmutableEntity on IonConnectEntity {
+  @override
+  ImmutableEventReference toEventReference() {
+    return ImmutableEventReference(eventId: id, pubkey: masterPubkey);
+  }
+}
+
+mixin ReplaceableEntity on IonConnectEntity {
+  ReplaceableEntityData get data;
+}
+
+abstract class ReplaceableEntityData {
+  ReplaceableEventReference toReplaceableEventReference(String pubkey);
 }
 
 class SimpleSigner implements EventSigner {

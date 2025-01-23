@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -16,7 +17,9 @@ part 'user_metadata.c.freezed.dart';
 part 'user_metadata.c.g.dart';
 
 @Freezed(equal: false)
-class UserMetadataEntity with _$UserMetadataEntity, IonConnectEntity implements CacheableEntity {
+class UserMetadataEntity
+    with _$UserMetadataEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
@@ -45,15 +48,15 @@ class UserMetadataEntity with _$UserMetadataEntity, IonConnectEntity implements 
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 0;
 }
 
 @freezed
-class UserMetadata with _$UserMetadata implements EventSerializable {
+class UserMetadata with _$UserMetadata implements EventSerializable, ReplaceableEntityData {
   const factory UserMetadata({
     @Default('') String name,
     @Default('') String displayName,
@@ -114,6 +117,14 @@ class UserMetadata with _$UserMetadata implements EventSerializable {
         ...tags,
         for (final attachment in media.values) attachment.toTag(),
       ],
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: UserMetadataEntity.kind,
+      pubkey: pubkey,
     );
   }
 }

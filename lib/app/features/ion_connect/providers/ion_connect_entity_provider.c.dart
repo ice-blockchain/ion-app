@@ -15,12 +15,13 @@ part 'ion_connect_entity_provider.c.g.dart';
 Future<IonConnectEntity?> ionConnectEntity(
   Ref ref, {
   required EventReference eventReference,
-  bool skipCache = false,
+  bool network = true,
+  bool cache = true,
 }) async {
-  if (!skipCache) {
+  if (cache) {
     final entity = ref.watch(
       ionConnectCacheProvider.select(
-        cacheSelector(eventReference.eventId),
+        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
       ),
     );
     if (entity != null) {
@@ -28,10 +29,34 @@ Future<IonConnectEntity?> ionConnectEntity(
     }
   }
 
-  final requestMessage = RequestMessage()
-    ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
-  return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
-        requestMessage,
-        actionSource: ActionSourceUser(eventReference.pubkey),
-      );
+  if (network) {
+    if (eventReference is ImmutableEventReference) {
+      final requestMessage = RequestMessage()
+        ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
+      return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
+            requestMessage,
+            actionSource: ActionSourceUser(eventReference.pubkey),
+          );
+    } else if (eventReference is ReplaceableEventReference) {
+      final requestMessage = RequestMessage()
+        ..addFilter(
+          RequestFilter(
+            kinds: [eventReference.kind],
+            authors: [eventReference.pubkey],
+            tags: {
+              if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
+            },
+            limit: 1,
+          ),
+        );
+      return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
+            requestMessage,
+            actionSource: ActionSourceUser(eventReference.pubkey),
+          );
+    } else {
+      throw UnsupportedError(eventReference.toString());
+    }
+  }
+
+  return null;
 }

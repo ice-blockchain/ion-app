@@ -13,7 +13,8 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'file_metadata.c.freezed.dart';
 
 @Freezed(equal: false)
-class FileMetadataEntity with _$FileMetadataEntity, IonConnectEntity implements CacheableEntity {
+class FileMetadataEntity
+    with _$FileMetadataEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory FileMetadataEntity({
     required String id,
     required String pubkey,
@@ -40,11 +41,6 @@ class FileMetadataEntity with _$FileMetadataEntity, IonConnectEntity implements 
       data: FileMetadata.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(id: id);
-
-  static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 1063;
 }

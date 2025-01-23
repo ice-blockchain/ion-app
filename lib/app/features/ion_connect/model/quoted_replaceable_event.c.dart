@@ -2,28 +2,28 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
-part 'quoted_modifiable_event.c.freezed.dart';
+part 'quoted_replaceable_event.c.freezed.dart';
 
 @freezed
-class QuotedModifiableEvent with _$QuotedModifiableEvent {
-  const factory QuotedModifiableEvent({
+class QuotedReplaceableEvent with _$QuotedReplaceableEvent {
+  const factory QuotedReplaceableEvent({
     required ReplaceableEventReference eventReference,
     required String pubkey,
-  }) = _QuotedModifiableEvent;
+  }) = _QuotedReplaceableEvent;
 
-  const QuotedModifiableEvent._();
+  const QuotedReplaceableEvent._();
 
   /// https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-01.md#quotes
-  factory QuotedModifiableEvent.fromTag(List<String> tag) {
+  factory QuotedReplaceableEvent.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
     if (tag.length < 4) {
       throw IncorrectEventTagException(tag: tag.toString());
     }
-    return QuotedModifiableEvent(
+    return QuotedReplaceableEvent(
       eventReference: ReplaceableEventReference.fromString(tag[1]),
       pubkey: tag[3],
     );

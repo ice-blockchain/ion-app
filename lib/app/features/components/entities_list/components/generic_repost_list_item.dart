@@ -21,11 +21,12 @@ class GenericRepostListItem extends StatelessWidget {
       return Text('Repost of kind ${repost.data.kind} is not supported');
     }
 
-    final eventReference = EventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
+    //TODO:replaceable - should not be immutable
+    final eventReference =
+        ImmutableEventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
 
     return GestureDetector(
-      onTap: () =>
-          ArticleDetailsRoute(eventReference: eventReference.toString()).push<void>(context),
+      onTap: () => ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
       behavior: HitTestBehavior.opaque,
       child: ScreenSideOffset.small(
         child: Column(

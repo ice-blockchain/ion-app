@@ -232,3 +232,8 @@ class DeleteEntityUnsupportedTypeException extends IONException {
   DeleteEntityUnsupportedTypeException()
       : super(10048, 'Failed to delete entity, unsupported type');
 }
+
+class UnknownEventReferenceType extends IONException {
+  UnknownEventReferenceType({required String type})
+      : super(10049, 'Unknown event reference type $type');
+}

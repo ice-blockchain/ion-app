@@ -16,8 +16,7 @@ part 'event_count_request_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class EventCountRequestEntity
-    with _$EventCountRequestEntity, IonConnectEntity
-    implements CacheableEntity {
+    with _$EventCountRequestEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory EventCountRequestEntity({
     required String id,
     required String pubkey,
@@ -44,11 +43,6 @@ class EventCountRequestEntity
       data: EventCountRequestData.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(id: id);
-
-  static String cacheKeyBuilder({required String id}) => id;
 
   static const int kind = 5400;
 }

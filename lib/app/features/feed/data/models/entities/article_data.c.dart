@@ -10,13 +10,13 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'article_data.c.freezed.dart';
@@ -24,7 +24,9 @@ part 'article_data.c.freezed.dart';
 const textEditorSingleImageKey = 'text-editor-single-image';
 
 @Freezed(equal: false)
-class ArticleEntity with _$ArticleEntity, IonConnectEntity implements CacheableEntity {
+class ArticleEntity
+    with _$ArticleEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory ArticleEntity({
     required String id,
     required String pubkey,
@@ -52,23 +54,15 @@ class ArticleEntity with _$ArticleEntity, IonConnectEntity implements CacheableE
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(id: id);
-
-  static String cacheKeyBuilder({required String id}) => id;
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const kind = 30023;
-
-  ReplaceableEventReference toReplaceableEventReference() {
-    return ReplaceableEventReference(
-      kind: kind,
-      pubkey: masterPubkey,
-      dTag: id,
-    );
-  }
 }
 
 @freezed
-class ArticleData with _$ArticleData implements EventSerializable {
+class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
     required String content,
     required Map<String, MediaAttachment> media,
@@ -157,6 +151,15 @@ class ArticleData with _$ArticleData implements EventSerializable {
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: ArticleEntity.kind,
+      pubkey: pubkey,
+      dTag: replaceableEventId.value,
     );
   }
 

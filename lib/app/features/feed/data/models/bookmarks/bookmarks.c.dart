@@ -7,15 +7,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'bookmarks.c.freezed.dart';
 
 @Freezed(equal: false)
-class BookmarksEntity with _$BookmarksEntity, IonConnectEntity implements CacheableEntity {
+class BookmarksEntity
+    with _$BookmarksEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory BookmarksEntity({
     required String id,
     required String pubkey,
@@ -44,15 +46,15 @@ class BookmarksEntity with _$BookmarksEntity, IonConnectEntity implements Cachea
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 10003;
 }
 
 @freezed
-class BookmarksData with _$BookmarksData implements EventSerializable {
+class BookmarksData with _$BookmarksData implements EventSerializable, ReplaceableEntityData {
   const factory BookmarksData({
     required List<String> ids,
     required List<ReplaceableEventReference> bookmarksSetRefs,
@@ -87,6 +89,14 @@ class BookmarksData with _$BookmarksData implements EventSerializable {
         ...ids.map((id) => ['e', id]),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: BookmarksEntity.kind,
+      pubkey: pubkey,
     );
   }
 }

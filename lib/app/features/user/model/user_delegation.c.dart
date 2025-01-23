@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
@@ -13,8 +14,8 @@ enum DelegationStatus { active, inactive, revoked }
 
 @Freezed(equal: false)
 class UserDelegationEntity
-    with _$UserDelegationEntity, IonConnectEntity
-    implements CacheableEntity {
+    with _$UserDelegationEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory UserDelegationEntity({
     required String id,
     required String pubkey,
@@ -43,15 +44,15 @@ class UserDelegationEntity
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 10100;
 }
 
 @freezed
-class UserDelegationData with _$UserDelegationData {
+class UserDelegationData with _$UserDelegationData implements ReplaceableEntityData {
   const factory UserDelegationData({
     required List<UserDelegate> delegates,
   }) = _UserDelegationData;
@@ -94,6 +95,14 @@ class UserDelegationData with _$UserDelegationData {
 
   List<List<String>> get tags {
     return delegates.map((delegate) => delegate.toTag()).toList();
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: UserDelegationEntity.kind,
+      pubkey: pubkey,
+    );
   }
 }
 

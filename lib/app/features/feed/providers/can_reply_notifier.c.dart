@@ -23,9 +23,9 @@ class CanReply extends _$CanReply {
   Future<bool> build(EventReference eventReference) async {
     ref.onDispose(() {
       ref
-        ..invalidate(followListProvider(eventReference.pubkey, skipCache: true))
+        ..invalidate(followListProvider(eventReference.pubkey, cache: false))
         ..invalidate(
-          ionConnectEntityProvider(eventReference: eventReference, skipCache: true),
+          ionConnectEntityProvider(eventReference: eventReference, cache: false),
         );
     });
 
@@ -35,7 +35,7 @@ class CanReply extends _$CanReply {
     }
 
     final ionConnectEntity = await ref.watch(
-      ionConnectEntityProvider(eventReference: eventReference, skipCache: _skipCache).future,
+      ionConnectEntityProvider(eventReference: eventReference, cache: !_skipCache).future,
     );
     if (ionConnectEntity == null) {
       return true;
@@ -60,7 +60,7 @@ class CanReply extends _$CanReply {
         return true;
       case WhoCanReplySettingsOption.followedAccounts:
         final followers =
-            await ref.watch(followListProvider(authorPubkey, skipCache: _skipCache).future);
+            await ref.watch(followListProvider(authorPubkey, cache: !_skipCache).future);
         if (followers == null) {
           return false;
         }

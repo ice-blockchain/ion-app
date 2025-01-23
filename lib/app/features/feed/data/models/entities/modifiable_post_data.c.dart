@@ -12,11 +12,12 @@ import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dar
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_modifiable_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
@@ -30,8 +31,8 @@ part 'modifiable_post_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class ModifiablePostEntity
-    with _$ModifiablePostEntity, IonConnectEntity
-    implements CacheableEntity {
+    with _$ModifiablePostEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
@@ -60,9 +61,9 @@ class ModifiablePostEntity
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(replaceableEventId: data.replaceableEventId.value);
-
-  static String cacheKeyBuilder({required String replaceableEventId}) => replaceableEventId;
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const kind = 30175;
 }
@@ -70,7 +71,7 @@ class ModifiablePostEntity
 @freezed
 class ModifiablePostData
     with _$ModifiablePostData, EntityMediaDataMixin
-    implements EventSerializable {
+    implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
@@ -78,7 +79,7 @@ class ModifiablePostData
     required EntityPublishedAt publishedAt,
     EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
-    QuotedModifiableEvent? quotedEvent,
+    QuotedReplaceableEvent? quotedEvent,
     List<RelatedReplaceableEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
@@ -102,8 +103,8 @@ class ModifiablePostData
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedModifiableEvent.tagName] != null
-          ? QuotedModifiableEvent.fromTag(tags[QuotedModifiableEvent.tagName]!.first)
+      quotedEvent: tags[QuotedReplaceableEvent.tagName] != null
+          ? QuotedReplaceableEvent.fromTag(tags[QuotedReplaceableEvent.tagName]!.first)
           : null,
       relatedEvents:
           tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
@@ -156,6 +157,15 @@ class ModifiablePostData
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: ModifiablePostEntity.kind,
+      pubkey: pubkey,
+      dTag: replaceableEventId.value,
     );
   }
 

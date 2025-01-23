@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class FollowedByAvatars extends StatelessWidget {
   const FollowedByAvatars({required this.pubkeys, super.key});
@@ -45,11 +44,7 @@ class _FollowedAvatar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // User metadata is fetched alongside the `followersYouKnowDataSourceProvider`, so don't fetch it manually
-    final userMetadata = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<UserMetadataEntity>(UserMetadataEntity.cacheKeyBuilder(pubkey: pubkey)),
-      ),
-    );
+    final userMetadata = ref.watch(userMetadataProvider(pubkey, network: false)).valueOrNull;
 
     return Container(
       padding: EdgeInsets.all(borderWidth),

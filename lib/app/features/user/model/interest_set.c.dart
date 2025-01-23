@@ -7,10 +7,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'interest_set.c.freezed.dart';
@@ -18,7 +18,9 @@ part 'interest_set.c.freezed.dart';
 enum InterestSetType { languages, unknown }
 
 @Freezed(equal: false)
-class InterestSetEntity with _$InterestSetEntity, IonConnectEntity implements CacheableEntity {
+class InterestSetEntity
+    with _$InterestSetEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory InterestSetEntity({
     required String id,
     required String pubkey,
@@ -47,16 +49,15 @@ class InterestSetEntity with _$InterestSetEntity, IonConnectEntity implements Ca
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey, type: data.type);
-
-  static String cacheKeyBuilder({required String pubkey, required InterestSetType type}) =>
-      '$kind:$type:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 30015;
 }
 
 @freezed
-class InterestSetData with _$InterestSetData implements EventSerializable {
+class InterestSetData with _$InterestSetData implements EventSerializable, ReplaceableEntityData {
   const factory InterestSetData({
     required InterestSetType type,
     required List<String> hashtags,
@@ -97,6 +98,7 @@ class InterestSetData with _$InterestSetData implements EventSerializable {
     );
   }
 
+  @override
   ReplaceableEventReference toReplaceableEventReference(String pubkey) {
     return ReplaceableEventReference(
       kind: InterestSetEntity.kind,

@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -13,7 +14,9 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'block_list.c.freezed.dart';
 
 @Freezed(equal: false)
-class BlockListEntity with _$BlockListEntity, IonConnectEntity implements CacheableEntity {
+class BlockListEntity
+    with _$BlockListEntity, IonConnectEntity, CacheableEntity
+    implements ReplaceableEntity {
   const factory BlockListEntity({
     required String id,
     required String pubkey,
@@ -42,15 +45,15 @@ class BlockListEntity with _$BlockListEntity, IonConnectEntity implements Cachea
   }
 
   @override
-  String get cacheKey => cacheKeyBuilder(pubkey: masterPubkey);
-
-  static String cacheKeyBuilder({required String pubkey}) => '$kind:$pubkey';
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 
   static const int kind = 10000;
 }
 
 @freezed
-class BlockListData with _$BlockListData implements EventSerializable {
+class BlockListData with _$BlockListData implements EventSerializable, ReplaceableEntityData {
   const factory BlockListData({
     required List<String> pubkeys,
   }) = _BlockListData;
@@ -78,6 +81,14 @@ class BlockListData with _$BlockListData implements EventSerializable {
         ...pubkeys.map((pubkey) => ['p', pubkey]),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String pubkey) {
+    return ReplaceableEventReference(
+      kind: BlockListEntity.kind,
+      pubkey: pubkey,
     );
   }
 }

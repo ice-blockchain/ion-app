@@ -14,7 +14,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'reaction_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class ReactionEntity with _$ReactionEntity, IonConnectEntity implements CacheableEntity {
+class ReactionEntity with _$ReactionEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
   const factory ReactionEntity({
     required String id,
     required String pubkey,

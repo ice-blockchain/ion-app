@@ -12,7 +12,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -27,7 +26,13 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
 ) async {
   final bookmarksMap = Map.fromEntries(
     BookmarksSetType.values.map((type) {
-      final cacheKey = BookmarksSetEntity.cacheKeyBuilder(pubkey: pubkey, type: type);
+      final cacheKey = CacheableEntity.cacheKeyBuilder(
+        eventReference: ReplaceableEventReference(
+          pubkey: pubkey,
+          kind: BookmarksSetEntity.kind,
+          dTag: type.dTagName,
+        ),
+      );
       final bookmarkSet = ref.watch(
         ionConnectCacheProvider.select(cacheSelector<BookmarksSetEntity>(cacheKey)),
       );
@@ -88,7 +93,7 @@ Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
     ArticleEntity() => currentBookmarks[BookmarksSetType.articles]
             ?.data
             .articlesRefs
-            .contains(ionConnectEntity.toReplaceableEventReference()) ??
+            .contains(ionConnectEntity.toEventReference()) ??
         false,
     _ => false,
   };
@@ -171,7 +176,7 @@ class BookmarksNotifier extends _$BookmarksNotifier {
   }
 
   void _toggleArticleBookmark(Set<ReplaceableEventReference> articlesRefs, ArticleEntity article) {
-    final articleRef = article.toReplaceableEventReference();
+    final articleRef = article.toEventReference();
     if (articlesRefs.contains(articleRef)) {
       articlesRefs.remove(articleRef);
     } else {
