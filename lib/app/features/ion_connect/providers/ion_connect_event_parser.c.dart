@@ -3,8 +3,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/join_community_data.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -50,7 +50,7 @@ class EventParser {
       ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(eventMessage),
       CommunityDefinitionEntity.kind => CommunityDefinitionEntity.fromEventMessage(eventMessage),
       CommunityUpdateEntity.kind => CommunityUpdateEntity.fromEventMessage(eventMessage),
-      JoinCommunityEntity.kind => JoinCommunityEntity.fromEventMessage(eventMessage),
+      CommunityJoinEntity.kind => CommunityJoinEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }

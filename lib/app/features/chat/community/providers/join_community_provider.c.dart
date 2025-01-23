@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/join_community_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_invitation_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
@@ -37,7 +37,7 @@ FutureOr<void> joinCommunity(
 
   final community = await ref.watch(communityMetadataProvider(communityUUUID).future);
 
-  var joinData = JoinCommunityData(
+  var joinData = CommunityJoinData(
     uuid: communityUUUID,
     pubkey: pubkey,
   );

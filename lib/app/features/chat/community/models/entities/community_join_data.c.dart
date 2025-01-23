@@ -13,29 +13,29 @@ import 'package:ion/app/features/ion_connect/model/tags/entity_autherization_tag
 import 'package:ion/app/features/ion_connect/model/tags/pubkey_tag.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
-part 'join_community_data.c.freezed.dart';
+part 'community_join_data.c.freezed.dart';
 
-@Freezed(equal: false)
-class JoinCommunityEntity with _$JoinCommunityEntity, IonConnectEntity {
-  const factory JoinCommunityEntity({
+@freezed
+class CommunityJoinEntity with _$CommunityJoinEntity, IonConnectEntity {
+  const factory CommunityJoinEntity({
     required String id,
     required String pubkey,
     required String masterPubkey,
     required String signature,
     required DateTime createdAt,
-    required JoinCommunityData data,
-  }) = _JoinCommunityEntity;
+    required CommunityJoinData data,
+  }) = _CommunityJoinEntity;
 
-  const JoinCommunityEntity._();
+  const CommunityJoinEntity._();
 
-  factory JoinCommunityEntity.fromEventMessage(EventMessage eventMessage) {
-    return JoinCommunityEntity(
+  factory CommunityJoinEntity.fromEventMessage(EventMessage eventMessage) {
+    return CommunityJoinEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
-      data: JoinCommunityData.fromEventMessage(eventMessage),
+      data: CommunityJoinData.fromEventMessage(eventMessage),
     );
   }
 
@@ -43,19 +43,19 @@ class JoinCommunityEntity with _$JoinCommunityEntity, IonConnectEntity {
   static const kind = 1750;
 }
 
-@Freezed(equal: false)
-class JoinCommunityData with _$JoinCommunityData implements EventSerializable {
-  const factory JoinCommunityData({
+@freezed
+class CommunityJoinData with _$CommunityJoinData implements EventSerializable {
+  const factory CommunityJoinData({
     required String uuid,
     String? pubkey,
     String? auth,
     DateTime? expiration,
-  }) = _JoinCommunityData;
+  }) = _CommunityJoinData;
 
-  factory JoinCommunityData.fromEventMessage(EventMessage eventMessage) {
+  factory CommunityJoinData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    return JoinCommunityData(
+    return CommunityJoinData(
       uuid: CommunityIdentifierTag.fromTags(eventMessage.tags).value,
       pubkey: PubkeyTag.fromTags(eventMessage.tags).value,
       auth: tags[EntityAutherization.tagName]?.map(EntityAutherization.fromTag).firstOrNull?.value,
@@ -63,7 +63,7 @@ class JoinCommunityData with _$JoinCommunityData implements EventSerializable {
     );
   }
 
-  const JoinCommunityData._();
+  const CommunityJoinData._();
 
   @override
   FutureOr<EventMessage> toEventMessage(
@@ -74,7 +74,7 @@ class JoinCommunityData with _$JoinCommunityData implements EventSerializable {
     return EventMessage.fromData(
       signer: eventSigner,
       createdAt: createdAt,
-      kind: JoinCommunityEntity.kind,
+      kind: CommunityJoinEntity.kind,
       tags: [
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),

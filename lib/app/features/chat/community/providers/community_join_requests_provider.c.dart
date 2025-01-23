@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_join_requests_state.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/join_community_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,8 +15,8 @@ part 'community_join_requests_provider.c.g.dart';
 /// Provides join requests for the current user.
 ///
 /// The state is exposed through [CommunityJoinRequestsState] which contains two lists:
-/// - accepted: List of [JoinCommunityEntity] that have been accepted
-/// - waitingApproval: List of [JoinCommunityEntity] pending approval
+/// - accepted: List of [CommunityJoinEntity] that have been accepted
+/// - waitingApproval: List of [CommunityJoinEntity] pending approval
 ///
 @riverpod
 FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
@@ -29,7 +29,7 @@ FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
   final requestMessage = RequestMessage(
     filters: [
       RequestFilter(
-        kinds: const [JoinCommunityEntity.kind],
+        kinds: const [CommunityJoinEntity.kind],
         tags: {
           '#p': [currentPubkey],
         },
@@ -40,11 +40,11 @@ FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
   final eventsStream =
       ref.watch(ionConnectNotifierProvider.notifier).requestEntities(requestMessage);
 
-  final accepted = <JoinCommunityEntity>[];
-  final waitingApproval = <JoinCommunityEntity>[];
+  final accepted = <CommunityJoinEntity>[];
+  final waitingApproval = <CommunityJoinEntity>[];
 
   await for (final entity in eventsStream) {
-    if (entity is JoinCommunityEntity) {
+    if (entity is CommunityJoinEntity) {
       if (entity.masterPubkey == currentPubkey) {
         accepted.add(entity);
       } else {

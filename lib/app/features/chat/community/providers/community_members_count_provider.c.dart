@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/chat/community/models/entities/join_community_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -20,7 +20,7 @@ Future<int> communityMembersCount(Ref ref, String communityUuid) async {
   final request = EventCountRequestData(
     filters: [
       RequestFilter(
-        kinds: const [JoinCommunityEntity.kind],
+        kinds: const [CommunityJoinEntity.kind],
         tags: {
           '#h': [communityUuid],
         },
