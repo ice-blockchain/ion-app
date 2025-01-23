@@ -9,6 +9,15 @@ import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 mixin EntityMediaDataMixin {
   List<TextMatch> get content;
   Map<String, MediaAttachment> get media;
+
+  String? get firstUrl {
+    return contentWithoutMedia
+        .firstWhereOrNull(
+          (match) => match.matcher is UrlMatcher && !media.containsKey(match.text),
+        )
+        ?.text;
+  }
+
   List<TextMatch> get contentWithoutMedia {
     if (media.isEmpty) return content;
 
