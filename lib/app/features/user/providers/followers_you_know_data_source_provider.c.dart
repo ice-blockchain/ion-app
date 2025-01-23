@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -14,29 +13,19 @@ part 'followers_you_know_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? followersYouKnowDataSource(Ref ref, String pubkey) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
-
-  if (currentPubkey == null || pubkey == currentPubkey) {
-    return null;
-  }
-
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
       entityFilter: (entity) => entity is FollowListEntity,
       requestFilters: [
         RequestFilter(
-          kinds: const [FollowListEntity.kind],
+          kinds: const [UserMetadataEntity.kind],
           tags: {
-            '#p': [pubkey, currentPubkey],
+            '#p': [pubkey],
           },
           search: SearchExtensions(
             [
               MostRelevantFollowersSearchExtension(),
-              GenericIncludeSearchExtension(
-                forKind: FollowListEntity.kind,
-                includeKind: UserMetadataEntity.kind,
-              ),
             ],
           ).toString(),
           limit: 3,
