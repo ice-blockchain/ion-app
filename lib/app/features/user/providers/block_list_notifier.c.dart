@@ -6,15 +6,12 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
-import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'block_list_notifier.c.g.dart';
@@ -23,31 +20,16 @@ part 'block_list_notifier.c.g.dart';
 Future<BlockListEntity?> blockList(
   Ref ref,
   String pubkey, {
-  bool cacheOnly = false,
+  bool cache = true,
+  bool network = true,
 }) async {
-  final cacheKey = CacheableEntity.cacheKeyBuilder(
-    eventReference: ReplaceableEventReference(pubkey: pubkey, kind: BlockListEntity.kind),
-  );
-  final blockList = ref.watch(
-    ionConnectCacheProvider.select(cacheSelector<BlockListEntity>(cacheKey)),
-  );
-
-  if (blockList != null || cacheOnly) {
-    return blockList;
-  }
-
-  final requestMessage = RequestMessage()
-    ..addFilter(
-      RequestFilter(
-        kinds: const [BlockListEntity.kind],
-        authors: [pubkey],
-      ),
-    );
-
-  return ref.watch(ionConnectNotifierProvider.notifier).requestEntity(
-        requestMessage,
-        actionSource: ActionSourceUser(pubkey),
-      );
+  return await ref.watch(
+    ionConnectEntityProvider(
+      eventReference: ReplaceableEventReference(pubkey: pubkey, kind: BlockListEntity.kind),
+      network: network,
+      cache: cache,
+    ).future,
+  ) as BlockListEntity?;
 }
 
 @riverpod
@@ -71,8 +53,7 @@ Future<bool> isBlocking(Ref ref, String pubkey, {bool cacheOnly = false}) async 
   if (currentPubkey == null) {
     return false;
   }
-  final otherUserBlockList =
-      await ref.watch(blockListProvider(pubkey, cacheOnly: cacheOnly).future);
+  final otherUserBlockList = await ref.watch(blockListProvider(pubkey, network: !cacheOnly).future);
   return otherUserBlockList?.data.pubkeys.contains(currentPubkey) ?? false;
 }
 

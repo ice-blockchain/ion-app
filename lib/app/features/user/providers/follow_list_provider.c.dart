@@ -19,14 +19,13 @@ Future<FollowListEntity?> followList(
   bool network = true,
   bool cache = true,
 }) async {
-  final entity = await ref.watch(
+  return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
       network: network,
       cache: cache,
     ).future,
-  );
-  return entity as FollowListEntity?;
+  ) as FollowListEntity?;
 }
 
 @Riverpod(keepAlive: true)

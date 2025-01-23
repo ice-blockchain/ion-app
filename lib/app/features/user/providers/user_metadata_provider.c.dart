@@ -17,14 +17,13 @@ Future<UserMetadataEntity?> userMetadata(
   bool network = true,
   bool cache = true,
 }) async {
-  final entity = await ref.watch(
+  return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind),
       network: network,
       cache: cache,
     ).future,
-  );
-  return entity as UserMetadataEntity?;
+  ) as UserMetadataEntity?;
 }
 
 @Riverpod(keepAlive: true)
