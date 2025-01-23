@@ -25,7 +25,7 @@ class CanReply extends _$CanReply {
       ref
         ..invalidate(followListProvider(eventReference.pubkey, skipCache: true))
         ..invalidate(
-          ionConnectEntityProvider(eventReference: eventReference, skipCache: true),
+          ionConnectEntityProvider(eventReference: eventReference, cache: false),
         );
     });
 
@@ -35,7 +35,7 @@ class CanReply extends _$CanReply {
     }
 
     final ionConnectEntity = await ref.watch(
-      ionConnectEntityProvider(eventReference: eventReference, skipCache: _skipCache).future,
+      ionConnectEntityProvider(eventReference: eventReference, cache: !_skipCache).future,
     );
     if (ionConnectEntity == null) {
       return true;

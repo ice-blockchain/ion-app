@@ -22,7 +22,7 @@ class FollowedByText extends HookConsumerWidget {
 
     // User metadata is fetched alongside the `followersYouKnowDataSourceProvider`, so don't fetch it manually
     final firstUserMetadata =
-        ref.watch(userMetadataProvider(firstUserPubkey, cacheOnly: true)).valueOrNull;
+        ref.watch(userMetadataProvider(firstUserPubkey, network: false)).valueOrNull;
 
     final userTapRecognizer = useTapGestureRecognizer(
       onTap: () => ProfileRoute(pubkey: firstUserPubkey).push<void>(context),

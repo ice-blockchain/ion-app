@@ -25,7 +25,7 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
       [context, eventReference],
     );
     final userMetadata =
-        ref.watch(userMetadataProvider(eventReference.pubkey, cacheOnly: true)).valueOrNull;
+        ref.watch(userMetadataProvider(eventReference.pubkey, network: false)).valueOrNull;
 
     return Column(
       children: [
