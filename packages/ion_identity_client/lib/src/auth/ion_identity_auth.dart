@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion_identity_client/ion_identity.dart';
-import 'package:ion_identity_client/src/auth/services/create_credentials/create_new_credentials_service.dart';
-import 'package:ion_identity_client/src/auth/services/create_credentials/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/create_new_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/create_recovery_credentials_service.dart';
+import 'package:ion_identity_client/src/auth/services/credentials/get_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart';
@@ -32,6 +33,7 @@ class IONIdentityAuth {
     required this.privateKeyStorage,
     required this.biometricsStateStorage,
     required this.createRecoveryCredentialsService,
+    required this.getCredentialsService,
     required this.createNewCredentialsService,
     required this.recoverUserService,
     required this.delegatedLoginService,
@@ -43,6 +45,7 @@ class IONIdentityAuth {
   final LoginService loginService;
   final LogoutService logoutService;
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
+  final GetCredentialsService getCredentialsService;
   final CreateNewCredentialsService createNewCredentialsService;
   final RecoverUserService recoverUserService;
   final DelegatedLoginService delegatedLoginService;
@@ -144,4 +147,6 @@ class IONIdentityAuth {
     List<TwoFAType> verificationCodes = const [],
   ]) =>
       twoFAService.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
+
+  Future<List<Credential>> getCredentialsList() => getCredentialsService.getCredentialsList();
 }
