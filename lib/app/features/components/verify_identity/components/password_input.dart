@@ -9,9 +9,12 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/password_validation_error_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+enum PasswordInputMode { create, verify }
+
 class PasswordInput extends HookWidget {
   const PasswordInput({
     required this.controller,
+    required this.passwordInputMode,
     this.onFocused,
     this.onValueChanged,
     this.isConfirmation = false,
@@ -19,6 +22,7 @@ class PasswordInput extends HookWidget {
     super.key,
   });
 
+  final PasswordInputMode passwordInputMode;
   final TextEditingController controller;
   final ValueChanged<bool>? onFocused;
   final ValueChanged<String>? onValueChanged;
@@ -52,9 +56,15 @@ class PasswordInput extends HookWidget {
       labelText:
           isConfirmation ? context.i18n.common_confirm_password : context.i18n.common_password,
       controller: controller,
-      validator: (String? value) => PasswordValidationErrorType.values
-          .firstWhereOrNull((v) => v.isInvalid(value))
-          ?.getDisplayName(context),
+      validator: (String? value) => switch (passwordInputMode) {
+        PasswordInputMode.create => PasswordValidationErrorType.values
+            .firstWhereOrNull((v) => v.isInvalid(value))
+            ?.getDisplayName(context),
+        PasswordInputMode.verify =>
+          PasswordValidationErrorType.values.any((v) => v.isInvalid(value))
+              ? context.i18n.error_invalid_password
+              : null,
+      },
       obscureText: isPasswordVisible.value == false,
       textInputAction: TextInputAction.done,
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),

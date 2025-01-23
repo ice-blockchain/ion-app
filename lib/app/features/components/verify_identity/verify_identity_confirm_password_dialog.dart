@@ -57,6 +57,7 @@ class VerifyIdentityConfirmPasswordDialog<T> extends HookConsumerWidget {
               SizedBox(height: 20.0.s),
               PasswordInput(
                 controller: passwordController,
+                passwordInputMode: PasswordInputMode.verify,
                 errorText: validationErrorMessage.value,
               ),
               SizedBox(height: 25.0.s),
