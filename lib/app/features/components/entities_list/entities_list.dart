@@ -8,10 +8,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/article_list_item.dart';
 import 'package:ion/app/features/components/entities_list/components/generic_repost_list_item.dart';
 import 'package:ion/app/features/components/entities_list/components/post_list_item.dart';
-import 'package:ion/app/features/components/entities_list/components/repost_list_item.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
@@ -101,7 +99,6 @@ class _EntityListItem extends ConsumerWidget {
       child: switch (entity) {
         final ModifiablePostEntity post => PostListItem(post: post, showParent: showParent),
         final ArticleEntity article => ArticleListItem(article: article),
-        final RepostEntity repost => RepostListItem(repost: repost),
         final GenericRepostEntity repost => GenericRepostListItem(repost: repost),
         _ => const SizedBox.shrink()
       },
