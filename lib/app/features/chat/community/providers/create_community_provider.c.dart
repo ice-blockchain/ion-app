@@ -3,6 +3,7 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
@@ -70,6 +71,8 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
           (admin) => ref.read(inviteToCommunityProvider(channelEntity.data.uuid, admin.key).future),
         ),
       ]);
+
+      ref.invalidate(communityJoinRequestsProvider);
 
       return channelEntity.data;
     });

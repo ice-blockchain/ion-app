@@ -5,6 +5,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_update_data.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/chat/model/channel_admin_type.dart';
 import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
@@ -82,6 +83,8 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
           ),
         );
       }
+
+      ref.invalidate(communityMetadataProvider(community.uuid));
 
       return editChannelResult.data;
     });
