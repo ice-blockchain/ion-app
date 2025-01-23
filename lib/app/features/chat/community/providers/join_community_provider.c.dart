@@ -26,15 +26,6 @@ FutureOr<void> joinCommunity(
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final invitation = await ref.watch(communityInvitationProvider(communityUUUID).future);
-
-  if (invitation != null) {
-    if (invitation.data.expiration != null &&
-        invitation.data.expiration!.isBefore(DateTime.now())) {
-      throw CommunityInvitationExpiredException();
-    }
-  }
-
   final community = await ref.watch(communityMetadataProvider(communityUUUID).future);
 
   var joinData = CommunityJoinData(
@@ -42,11 +33,20 @@ FutureOr<void> joinCommunity(
     pubkey: pubkey,
   );
 
-  if (!community.data.isOpen) {
-    if (invitation == null) {
+  if (!community.data.isOpen && pubkey != community.ownerPubkey) {
+    final invitationEvent = await ref.watch(communityInvitationProvider(communityUUUID).future);
+
+    if (invitationEvent == null) {
       throw CommunityInvitationNotFoundException();
     }
-    joinData = joinData.copyWith(auth: jsonEncode(invitation));
+
+    final invitation = CommunityJoinEntity.fromEventMessage(invitationEvent);
+
+    if (invitation.data.expiration != null &&
+        invitation.data.expiration!.isBefore(DateTime.now())) {
+      throw CommunityInvitationExpiredException();
+    }
+    joinData = joinData.copyWith(auth: jsonEncode(invitationEvent.toJson().last));
   }
 
   final result = await ref

@@ -18,8 +18,7 @@ Future<List<CommunityDefinitionEntity>> communites(Ref ref) async {
   final communities = await Future.wait([
     for (final event in [
       ...(acceptedJoinEvents.accepted),
-      // TODO: remove this when search is implemented
-      // ...(acceptedJoinEvents.waitingApproval ?? <CommunityJoinEntity>[]),
+      ...(acceptedJoinEvents.waitingApproval),
     ])
       ref.watch(communityMetadataProvider(event.data.uuid).future),
   ]);
