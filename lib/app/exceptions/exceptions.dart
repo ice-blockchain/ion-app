@@ -274,3 +274,8 @@ class CommunityInvitationExpiredException extends IONException {
 class CommunityInvitationNotFoundException extends IONException {
   CommunityInvitationNotFoundException() : super(10059, 'Community invitation not found');
 }
+
+class IncorrectEventTagValueException extends IONException {
+  IncorrectEventTagValueException({required String tag, required String? value})
+      : super(10056, 'Incorrect event tag value $tag: $value');
+}
