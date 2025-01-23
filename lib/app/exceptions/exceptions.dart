@@ -232,3 +232,8 @@ class UnknownEventReferenceType extends IONException {
   UnknownEventReferenceType({required String type})
       : super(10049, 'Unknown event reference type $type');
 }
+
+class UnsupportedEventReference extends IONException {
+  UnsupportedEventReference(dynamic eventReference)
+      : super(10050, 'Unsupported event reference $eventReference');
+}

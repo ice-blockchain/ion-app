@@ -14,7 +14,7 @@ part 'current_user_repost_provider.c.g.dart';
 @riverpod
 Future<EventReference?> currentUserRepost(Ref ref, EventReference eventReference) async {
   if (eventReference is! ReplaceableEventReference) {
-    throw UnsupportedRepostException(eventReference);
+    throw UnsupportedEventReference(eventReference);
   }
 
   final currentUserPubkey = await ref.watch(currentPubkeySelectorProvider.future);
