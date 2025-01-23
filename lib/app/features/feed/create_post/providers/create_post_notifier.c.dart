@@ -6,10 +6,11 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
@@ -17,10 +18,11 @@ import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -47,7 +49,18 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      var data = PostData.fromRawContent(content.trim());
+      var data = ModifiablePostData.fromRawContent(content.trim());
+
+      data = data.copyWith(
+        editingEndedAt: EntityEditingEndedAt(
+          value: DateTime.now().add(
+            Duration(
+              minutes:
+                  ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+            ),
+          ),
+        ),
+      );
 
       if (whoCanReply != WhoCanReplySettingsOption.everyone) {
         data = data.copyWith(
@@ -82,25 +95,34 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         );
       }
 
-      if (quotedEvent != null && quotedEvent is ImmutableEventReference) {
-        data = data.copyWith(
-          quotedEvent: QuotedEvent(eventId: quotedEvent.eventId, pubkey: quotedEvent.pubkey),
-        );
+      if (quotedEvent != null) {
+        if (quotedEvent is ReplaceableEventReference) {
+          data = data.copyWith(
+            quotedEvent:
+                QuotedReplaceableEvent(eventReference: quotedEvent, pubkey: quotedEvent.pubkey),
+          );
+        } else {
+          throw UnimplementedError();
+        }
       }
 
-      if (parentEvent != null && parentEvent is ImmutableEventReference) {
-        final parentEntity =
-            await ref.read(ionConnectEntityProvider(eventReference: parentEvent).future);
-        if (parentEntity == null) {
-          throw EventNotFoundException(eventId: parentEvent.eventId, pubkey: parentEvent.pubkey);
+      if (parentEvent != null) {
+        if (parentEvent is ReplaceableEventReference) {
+          final parentEntity =
+              await ref.read(ionConnectEntityProvider(eventReference: parentEvent).future);
+          if (parentEntity == null) {
+            throw EventNotFoundException(parentEvent);
+          }
+          if (parentEntity is! ModifiablePostEntity && parentEntity is! ArticleEntity) {
+            throw UnsupportedParentEntity(parentEvent);
+          }
+          data = data.copyWith(
+            relatedEvents: _buildRelatedEvents(parentEntity),
+            relatedPubkeys: _buildRelatedPubkeys(parentEntity),
+          );
+        } else {
+          throw UnimplementedError();
         }
-        if (parentEntity is! PostEntity && parentEntity is! ArticleEntity) {
-          throw UnsupportedParentEntity(eventId: parentEvent.eventId);
-        }
-        data = data.copyWith(
-          relatedEvents: _buildRelatedEvents(parentEntity),
-          relatedPubkeys: _buildRelatedPubkeys(parentEntity),
-        );
       }
 
       data = data.copyWith(relatedHashtags: _buildRelatedHashtags(data.content));
@@ -136,41 +158,41 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     ];
   }
 
-  List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
+  List<RelatedReplaceableEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
     if (parentEntity is ArticleEntity) {
       return [
-        RelatedEvent(
-          eventId: parentEntity.id,
+        RelatedReplaceableEvent(
+          eventReference: parentEntity.toEventReference(),
           pubkey: parentEntity.masterPubkey,
           marker: RelatedEventMarker.root,
         ),
       ];
-    } else if (parentEntity is PostEntity) {
+    } else if (parentEntity is ModifiablePostEntity) {
       final rootRelatedEvent = parentEntity.data.relatedEvents
           ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
       return [
         if (rootRelatedEvent != null) rootRelatedEvent,
-        RelatedEvent(
-          eventId: parentEntity.id,
+        RelatedReplaceableEvent(
+          eventReference: parentEntity.toEventReference(),
           pubkey: parentEntity.masterPubkey,
           marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
         ),
       ];
     } else {
-      throw UnsupportedParentEntity(eventId: parentEntity.id);
+      throw UnsupportedParentEntity(parentEntity);
     }
   }
 
   List<RelatedPubkey> _buildRelatedPubkeys(IonConnectEntity parentEntity) {
     if (parentEntity is ArticleEntity) {
       return [RelatedPubkey(value: parentEntity.masterPubkey)];
-    } else if (parentEntity is PostEntity) {
+    } else if (parentEntity is ModifiablePostEntity) {
       return <RelatedPubkey>{
         RelatedPubkey(value: parentEntity.masterPubkey),
         ...parentEntity.data.relatedPubkeys ?? [],
       }.toList();
     } else {
-      throw UnsupportedParentEntity(eventId: parentEntity.id);
+      throw UnsupportedParentEntity(parentEntity);
     }
   }
 

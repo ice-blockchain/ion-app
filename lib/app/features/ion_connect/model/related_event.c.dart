@@ -2,10 +2,9 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 
 part 'related_event.c.freezed.dart';
-
-enum RelatedEventMarker { reply, root, mention }
 
 @freezed
 class RelatedEvent with _$RelatedEvent {

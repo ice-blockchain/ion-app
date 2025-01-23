@@ -84,8 +84,7 @@ class UnsupportedRepostException extends IONException {
 }
 
 class EventNotFoundException extends IONException {
-  EventNotFoundException({required String eventId, required String pubkey})
-      : super(10016, 'Event with id $eventId not found for pubkey $pubkey');
+  EventNotFoundException(dynamic eventInfo) : super(10016, 'Event with not found $eventInfo');
 }
 
 class AssetEntityFileNotFoundException extends IONException {
@@ -179,8 +178,8 @@ class UnknownMediaTypeException extends IONException {
 }
 
 class UnsupportedParentEntity extends IONException {
-  UnsupportedParentEntity({required String eventId})
-      : super(10038, 'Unsupported parent entity: $eventId');
+  UnsupportedParentEntity(dynamic eventInfo)
+      : super(10038, 'Unsupported parent entity: $eventInfo');
 }
 
 class RelayRequestFailedException extends IONException {
