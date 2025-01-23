@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/providers/fetch_conversation_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
@@ -16,9 +15,7 @@ class ChatMainPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref
-      ..watch(fetchConversationsProvider)
-      ..watch(communityJoinRequestsProvider);
+    ref.watch(fetchConversationsProvider);
 
     final conversations = ref.watch(conversationsProvider);
 

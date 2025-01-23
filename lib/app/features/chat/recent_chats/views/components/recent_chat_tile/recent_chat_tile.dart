@@ -31,18 +31,13 @@ class RecentChatTile extends ConsumerWidget {
             ref.read(selectedConversationsIdsProvider.notifier).toggle([conversationData]);
           }
         } else {
-          if (conversationData.type == ChatType.channel) {
-            //TODO: improve UUID handling  after we extend the conversation data to include channel data
-            ChannelRoute(uuid: conversationData.nickname!).push<void>(context);
-          } else {
-            MessagesRoute(
-              name: conversationData.name,
-              chatType: conversationData.type,
-              imageUrl: conversationData.imageUrl ?? '',
-              participants: conversationData.participants,
-              nickname: '@${conversationData.nickname}',
-            ).push<void>(context);
-          }
+          MessagesRoute(
+            name: conversationData.name,
+            chatType: conversationData.type,
+            imageUrl: conversationData.imageUrl ?? '',
+            participants: conversationData.participants,
+            nickname: '@${conversationData.nickname}',
+          ).push<void>(context);
         }
       },
       behavior: HitTestBehavior.opaque,

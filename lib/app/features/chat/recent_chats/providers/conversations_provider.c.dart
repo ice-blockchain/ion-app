@@ -51,22 +51,6 @@ class Conversations extends _$Conversations {
 
       final conversations = await Future.wait(lastPrivateDirectMesssages.map(_getConversationData));
 
-      //TODO: remove this after we extend the conversation data to include channel data
-      final joinedCommunities = await ref.read(communitesProvider.future);
-      for (final community in joinedCommunities) {
-        conversations.add(
-          Ee2eConversationEntity(
-            name: community.data.name,
-            type: ChatType.channel,
-            participants: [],
-            lastMessageAt: DateTime.now(),
-            lastMessageContent: 'channel created',
-            imageUrl: community.data.avatar?.url,
-            nickname: community.data.uuid,
-          ),
-        );
-      }
-
       return conversations;
     });
 
