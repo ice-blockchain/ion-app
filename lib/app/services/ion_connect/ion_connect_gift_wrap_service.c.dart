@@ -27,7 +27,7 @@ abstract class IonConnectGiftWrapService {
   Future<EventMessage> decodeWrap(
     String content,
     String senderPubkey,
-    EventSigner signer,
+    String privateKey,
   );
 }
 
@@ -44,8 +44,8 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     final oneTimeSigner = await Ed25519KeyStore.generate();
 
     final conversationKey = await Ed25519KeyStore.getSharedSecret(
-      privateKey: oneTimeSigner.privateKey,
       publicKey: receiverPubkey,
+      privateKey: oneTimeSigner.privateKey,
     );
 
     final encryptedEvent = await Nip44.encryptMessage(
@@ -76,16 +76,16 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   Future<EventMessage> decodeWrap(
     String content,
     String senderPubkey,
-    EventSigner signer,
+    String privateKey,
   ) async {
     final conversationKey = await Ed25519KeyStore.getSharedSecret(
-      privateKey: signer.privateKey,
       publicKey: senderPubkey,
+      privateKey: privateKey,
     );
 
     final decryptedContent = await Nip44.decryptMessage(
       content,
-      signer.privateKey,
+      privateKey,
       senderPubkey,
       customConversationKey: conversationKey,
     );

@@ -23,7 +23,7 @@ abstract class IonConnectSealService {
 
   Future<EventMessage> decodeSeal(
     EventMessage seal,
-    EventSigner signer,
+    String privateKey,
     String pubkey,
   );
 }
@@ -68,16 +68,16 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   @override
   Future<EventMessage> decodeSeal(
     EventMessage seal,
-    EventSigner signer,
+    String privateKey,
     String pubkey,
   ) async {
     final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(privateKey: signer.privateKey, publicKey: pubkey),
+      await Ed25519KeyStore.getSharedSecret(privateKey: privateKey, publicKey: pubkey),
     );
 
     final decryptedContent = await Nip44.decryptMessage(
       seal.content,
-      signer.privateKey,
+      privateKey,
       pubkey,
       customConversationKey: conversationKey,
     );

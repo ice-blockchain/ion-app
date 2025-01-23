@@ -68,7 +68,7 @@ class FetchConversations extends _$FetchConversations {
       final rumor = await _unwrapGift(
         event,
         senderPubkey: event.pubkey,
-        currentUserSigner: eventSigner,
+        privateKey: eventSigner.privateKey,
       );
       if (rumor != null) {
         await dbProvider.insertEventMessage(rumor);
@@ -79,19 +79,19 @@ class FetchConversations extends _$FetchConversations {
   Future<EventMessage?> _unwrapGift(
     EventMessage giftWrap, {
     required String senderPubkey,
-    required EventSigner currentUserSigner,
+    required String privateKey,
   }) async {
     try {
       final seal = await ref.read(ionConnectGiftWrapServiceProvider).decodeWrap(
             giftWrap.content,
             senderPubkey,
-            currentUserSigner,
+            privateKey,
           );
 
       return await ref.read(ionConnectSealServiceProvider).decodeSeal(
             seal,
-            currentUserSigner,
-            currentUserSigner.publicKey,
+            privateKey,
+            senderPubkey,
           );
     } catch (error, stackTrace) {
       Logger.log(DecodeE2EMessageException().toString(), error: error, stackTrace: stackTrace);

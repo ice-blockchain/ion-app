@@ -46,7 +46,7 @@ void main() {
 
       final decodedSeal = await sealService.decodeSeal(
         seal,
-        signer,
+        signer.privateKey,
         pubkey,
       );
 
