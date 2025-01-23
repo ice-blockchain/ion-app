@@ -24,7 +24,7 @@ mixin _$WalletAsset {
   String? get contract => throw _privateConstructorUsedError;
   String get symbol => throw _privateConstructorUsedError;
   int get decimals => throw _privateConstructorUsedError;
-  double get balance => throw _privateConstructorUsedError;
+  String get balance => throw _privateConstructorUsedError;
   bool? get verified => throw _privateConstructorUsedError;
 
   /// Serializes this WalletAsset to a JSON map.
@@ -48,7 +48,7 @@ abstract class $WalletAssetCopyWith<$Res> {
       String? contract,
       String symbol,
       int decimals,
-      double balance,
+      String balance,
       bool? verified});
 }
 
@@ -94,7 +94,7 @@ class _$WalletAssetCopyWithImpl<$Res, $Val extends WalletAsset>
       balance: null == balance
           ? _value.balance
           : balance // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
       verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
@@ -116,7 +116,7 @@ abstract class _$$WalletAssetImplCopyWith<$Res>
       String? contract,
       String symbol,
       int decimals,
-      double balance,
+      String balance,
       bool? verified});
 }
 
@@ -160,7 +160,7 @@ class __$$WalletAssetImplCopyWithImpl<$Res>
       balance: null == balance
           ? _value.balance
           : balance // ignore: cast_nullable_to_non_nullable
-              as double,
+              as String,
       verified: freezed == verified
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
@@ -192,7 +192,7 @@ class _$WalletAssetImpl implements _WalletAsset {
   @override
   final int decimals;
   @override
-  final double balance;
+  final String balance;
   @override
   final bool? verified;
 
@@ -244,7 +244,7 @@ abstract class _WalletAsset implements WalletAsset {
       required final String? contract,
       required final String symbol,
       required final int decimals,
-      required final double balance,
+      required final String balance,
       required final bool? verified}) = _$WalletAssetImpl;
 
   factory _WalletAsset.fromJson(Map<String, dynamic> json) =
@@ -259,7 +259,7 @@ abstract class _WalletAsset implements WalletAsset {
   @override
   int get decimals;
   @override
-  double get balance;
+  String get balance;
   @override
   bool? get verified;
 

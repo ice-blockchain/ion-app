@@ -9,7 +9,7 @@ part 'wallet_view_item.c.g.dart';
 class WalletViewItem with _$WalletViewItem {
   const factory WalletViewItem({
     required String coinId,
-    required String walletId,
+    String? walletId,
   }) = _WalletViewItem;
 
   factory WalletViewItem.fromJson(Map<String, dynamic> json) => _$WalletViewItemFromJson(json);

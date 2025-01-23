@@ -42,8 +42,7 @@ Future<List<WalletViewData>> currentUserWalletViews(Ref ref) async {
             ?.asset;
 
         if (asset != null) {
-          coinAmount = asset.balance;
-          // TODO: (1) Check the result of formula with other services
+          coinAmount = double.tryParse(asset.balance) ?? 0;
           coinBalanceUSD = (coinAmount / pow(10, coinDTO.decimals)) * coinDTO.priceUSD;
         }
       }

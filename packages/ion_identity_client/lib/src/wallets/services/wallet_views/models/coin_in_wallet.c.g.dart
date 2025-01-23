@@ -9,7 +9,7 @@ part of 'coin_in_wallet.c.dart';
 _$CoinInWalletImpl _$$CoinInWalletImplFromJson(Map<String, dynamic> json) =>
     _$CoinInWalletImpl(
       coin: Coin.fromJson(json['coin'] as Map<String, dynamic>),
-      walletId: json['walletId'] as String,
+      walletId: json['walletId'] as String?,
     );
 
 Map<String, dynamic> _$$CoinInWalletImplToJson(_$CoinInWalletImpl instance) =>

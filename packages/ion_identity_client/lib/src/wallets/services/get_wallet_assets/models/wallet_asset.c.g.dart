@@ -12,7 +12,7 @@ _$WalletAssetImpl _$$WalletAssetImplFromJson(Map<String, dynamic> json) =>
       contract: json['contract'] as String?,
       symbol: json['symbol'] as String,
       decimals: (json['decimals'] as num).toInt(),
-      balance: (json['balance'] as num).toDouble(),
+      balance: json['balance'] as String,
       verified: json['verified'] as bool?,
     );
 

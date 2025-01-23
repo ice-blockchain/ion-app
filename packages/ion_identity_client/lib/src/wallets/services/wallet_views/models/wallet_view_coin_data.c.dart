@@ -8,8 +8,9 @@ part 'wallet_view_coin_data.c.g.dart';
 @freezed
 class WalletViewCoinData with _$WalletViewCoinData {
   const factory WalletViewCoinData({
-    required String walletId,
+
     required String coinId,
+    String? walletId,
   }) = _WalletViewCoinData;
 
   factory WalletViewCoinData.fromJson(Map<String, dynamic> json) =>
