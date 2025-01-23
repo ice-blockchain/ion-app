@@ -11,12 +11,11 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.c.dart';
+import 'package:ion/app/features/feed/providers/current_user_repost_provider.c.dart';
 import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
-import 'package:ion/app/features/feed/providers/repost_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -83,10 +82,10 @@ class RepostOptionsModal extends HookConsumerWidget {
                             CreatePostRoute(quotedEvent: eventReference.encode()).go(context);
                           case RepostOptionAction.undoRepost:
                             selectedAction.value = option;
-                            final repostEntity = ref.read(repostEntityProvider(eventReference));
-
-                            if (repostEntity case final CacheableEntity entity) {
-                              await ref.read(deleteEntityProvider(entity).future);
+                            final repostReference =
+                                await ref.read(currentUserRepostProvider(eventReference).future);
+                            if (repostReference != null) {
+                              await ref.read(deleteEntityProvider(repostReference).future);
                               if (context.mounted) {
                                 context.pop();
                               }

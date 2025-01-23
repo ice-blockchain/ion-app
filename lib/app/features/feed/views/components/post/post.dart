@@ -64,7 +64,7 @@ class Post extends ConsumerWidget {
               timeFormat: timeFormat,
               trailing: isOwnedByCurrentUser
                   ? DeleteFeedItemMenu(
-                      entity: postEntity,
+                      eventReference: eventReference,
                       onDelete: onDelete,
                     )
                   : UserInfoMenu(pubkey: eventReference.pubkey),

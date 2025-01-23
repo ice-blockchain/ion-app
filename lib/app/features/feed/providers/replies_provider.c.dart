@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/replies_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -34,11 +34,9 @@ class Replies extends _$Replies {
   }
 
   bool _isReply(IonConnectEntity entity, EventReference parentEventReference) {
-    if (parentEventReference is! ImmutableEventReference) {
-      //TODO:replaceable handle replaceable references
-      return false;
-    }
-    return entity is PostEntity && entity.data.parentEvent?.eventId == parentEventReference.eventId;
+    return parentEventReference is ReplaceableEventReference &&
+        entity is ModifiablePostEntity &&
+        entity.data.parentEvent?.eventReference == parentEventReference;
   }
 
   Future<void> deleteReply({
