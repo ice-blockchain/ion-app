@@ -39,6 +39,7 @@ class ChannelDetailListTile extends ConsumerWidget {
       subtitle: Text(
         subtitle,
         style: context.theme.appTextThemes.body,
+        overflow: TextOverflow.visible,
       ),
       trailing: trailing,
     );

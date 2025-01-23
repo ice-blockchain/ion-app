@@ -42,13 +42,11 @@ class ChannelSummary extends HookConsumerWidget {
         SizedBox(
           height: 10.0.s,
         ),
-        Flexible(
-          child: Text(
-            textAlign: TextAlign.center,
-            channel.data.name,
-            style: context.theme.appTextThemes.title.copyWith(
-              color: context.theme.appColors.primaryText,
-            ),
+        Text(
+          textAlign: TextAlign.center,
+          channel.data.name,
+          style: context.theme.appTextThemes.title.copyWith(
+            color: context.theme.appColors.primaryText,
           ),
         ),
         SizedBox(height: 2.0.s),

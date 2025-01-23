@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -11,6 +12,7 @@ import 'package:ion/app/features/chat/community/channel/views/components/channel
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/components/channel_summary.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/update_community_provider.c.dart';
+import 'package:ion/app/features/chat/providers/channel_admins_provider.c.dart';
 
 class EditChannelPage extends HookConsumerWidget {
   const EditChannelPage({
@@ -23,6 +25,17 @@ class EditChannelPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final channel = ref.watch(communityMetadataProvider(uuid)).valueOrNull;
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (channel == null) return;
+          ref.read(channelAdminsProvider.notifier).init(channel);
+        });
+        return null;
+      },
+      [channel],
+    );
 
     if (channel == null) {
       return const SizedBox.shrink();
@@ -55,6 +68,7 @@ class EditChannelPage extends HookConsumerWidget {
                     ),
                   ),
                   ChannelForm(
+                    channel: channel,
                     isLoading: updateCommunityNotifier.isLoading,
                     onSubmit: (name, description, channelType) {
                       ref.read(updateCommunityNotifierProvider.notifier).updateCommunity(

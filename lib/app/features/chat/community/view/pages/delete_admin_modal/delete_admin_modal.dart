@@ -56,7 +56,7 @@ class DeleteAdminModal extends ConsumerWidget {
                   minimumSize: minSize,
                   backgroundColor: context.theme.appColors.attentionRed,
                   onPressed: () {
-                    ref.read(channelAdminsProvider().notifier).deleteAdmin(pubkey);
+                    ref.read(channelAdminsProvider.notifier).deleteAdmin(pubkey);
                     context.pop(true);
                   },
                 ),

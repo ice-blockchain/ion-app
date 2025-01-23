@@ -9,16 +9,18 @@ part 'channel_admins_provider.c.g.dart';
 @riverpod
 class ChannelAdmins extends _$ChannelAdmins {
   @override
-  Map<String, ChannelAdminType> build({CommunityDefinitionData? community}) {
-    if (community == null) {
-      return {};
-    }
+  Map<String, ChannelAdminType> build() {
+    return {};
+  }
 
-    final admins = community.admins.map((e) => MapEntry(e, ChannelAdminType.admin)).toList();
+  void init(CommunityDefinitionEntity community) {
+    final admins = community.data.admins.map((e) => MapEntry(e, ChannelAdminType.admin)).toList();
     final moderators =
-        community.moderators.map((e) => MapEntry(e, ChannelAdminType.moderator)).toList();
-
-    return Map<String, ChannelAdminType>.unmodifiable(Map.fromEntries([...admins, ...moderators]));
+        community.data.moderators.map((e) => MapEntry(e, ChannelAdminType.moderator)).toList();
+    final owner = MapEntry(community.ownerPubkey, ChannelAdminType.owner);
+    state = Map<String, ChannelAdminType>.unmodifiable(
+      Map.fromEntries([...admins, ...moderators, owner]),
+    );
   }
 
   void setAdmin(String pubkey, ChannelAdminType type) {

@@ -35,7 +35,7 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
 
     state = await AsyncValue.guard(() async {
       final avatar = await _uploadAvatar();
-      final channelAdmins = ref.read(channelAdminsProvider());
+      final channelAdmins = ref.read(channelAdminsProvider);
 
       final communityDefinitionData = CommunityDefinitionData.fromData(
         name: name,

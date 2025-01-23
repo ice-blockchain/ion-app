@@ -28,7 +28,7 @@ class ChannelForm extends HookConsumerWidget {
     super.key,
   });
 
-  final CommunityDefinitionData? channel;
+  final CommunityDefinitionEntity? channel;
   final bool isLoading;
   final void Function(String name, String description, CommunityVisibilityType channelType)
       onSubmit;
@@ -37,16 +37,17 @@ class ChannelForm extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
-    final titleController = useTextEditingController(text: channel?.name ?? '');
-    final descController = useTextEditingWithHighlightsController(text: channel?.description ?? '');
+    final titleController = useTextEditingController(text: channel?.data.name ?? '');
+    final descController =
+        useTextEditingWithHighlightsController(text: channel?.data.description ?? '');
     final channelType = useState(
       channel == null
           ? null
-          : channel!.isPublic
+          : channel!.data.isPublic
               ? CommunityVisibilityType.public
               : CommunityVisibilityType.private,
     );
-    final channelAdmins = ref.watch(channelAdminsProvider(community: channel));
+    final channelAdmins = ref.watch(channelAdminsProvider);
     final isFormValid = useState(false);
 
     useEffect(

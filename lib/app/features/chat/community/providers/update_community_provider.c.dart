@@ -35,7 +35,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
 
     state = await AsyncValue.guard(() async {
       final avatar = await _uploadAvatar() ?? community.avatar;
-      final channelAdmins = ref.read(channelAdminsProvider());
+      final channelAdmins = ref.read(channelAdminsProvider);
       final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
       if (pubkey == null) {
