@@ -25,7 +25,7 @@ class DescriptionTag with _$DescriptionTag {
     return DescriptionTag(value: tag[1]);
   }
 
-  static const String tagName = 'd';
+  static const String tagName = 'description';
 
   List<String> toTag() {
     if (value == null) {
