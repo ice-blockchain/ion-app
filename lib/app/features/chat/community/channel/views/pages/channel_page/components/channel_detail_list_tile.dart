@@ -12,13 +12,14 @@ class ChannelDetailListTile extends ConsumerWidget {
     super.key,
     this.trailing,
     this.onTap,
+    this.borderColor,
   });
 
   final String title;
   final String subtitle;
   final Widget? trailing;
   final VoidCallback? onTap;
-
+  final Color? borderColor;
   static double get height => 58.0.s;
 
   @override
@@ -28,7 +29,7 @@ class ChannelDetailListTile extends ConsumerWidget {
       contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
       backgroundColor: context.theme.appColors.secondaryBackground,
       border: Border.all(
-        color: context.theme.appColors.strokeElements,
+        color: borderColor ?? context.theme.appColors.strokeElements,
       ),
       title: Text(
         title,

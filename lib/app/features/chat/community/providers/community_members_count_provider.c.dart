@@ -16,7 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'community_members_count_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class CommunityMembersCount extends _$CommunityMembersCount {
   @override
   Future<int> build(String communityUUID) async {
@@ -98,7 +98,6 @@ class CommunityMembersCount extends _$CommunityMembersCount {
       params: EventCountRequestParams(
         relay: relayUrl,
       ),
-      relays: [relayUrl],
       filters: [
         RequestFilter(
           kinds: const [CommunityJoinEntity.kind],
