@@ -49,20 +49,20 @@ class IonConnectCache extends _$IonConnectCache {
     state = {...state}..remove(key);
   }
 
-  T? get<T extends IonConnectEntity>(String key) {
-    final entry = state[key];
-    if (entry == null) return null;
+  // T? get<T extends IonConnectEntity>(String key) {
+  //   final entry = state[key];
+  //   if (entry == null) return null;
 
-    // if (T is EventCountResultEntity) {
-    //   final cacheMinutes = ref
-    //       .read(envProvider.notifier)
-    //       .get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
-    //   if (entry.createdAt.isBefore(DateTime.now().subtract(Duration(minutes: cacheMinutes)))) {
-    //     return null;
-    //   }
-    // }
-    return entry.entity as T;
-  }
+  //   // if (T is EventCountResultEntity) {
+  //   //   final cacheMinutes = ref
+  //   //       .read(envProvider.notifier)
+  //   //       .get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
+  //   //   if (entry.createdAt.isBefore(DateTime.now().subtract(Duration(minutes: cacheMinutes)))) {
+  //   //     return null;
+  //   //   }
+  //   // }
+  //   return entry.entity as T;
+  // }
 }
 
 @Riverpod(keepAlive: true)
@@ -75,18 +75,18 @@ Raw<Stream<IonConnectEntity>> ionConnectCacheStream(Ref ref) {
 // when riverpod_generator v3 is released:
 // https://pub.dev/packages/riverpod_generator/versions/3.0.0-dev.11/changelog#300-dev7---2023-10-29
 T? Function(Map<String, CacheEntry>) cacheSelector<T extends IonConnectEntity>(
-  String key,
-) {
+  String key, {
+  Duration? expirationDuration,
+}) {
   return (Map<String, CacheEntry> state) {
     final entry = state[key];
 
     if (entry == null) return null;
 
-    // if (entry.entity.cacheOptions.expirationDuration != null &&
-    //     entry.createdAt
-    //         .isBefore(DateTime.now().subtract(entry.entity.cacheOptions.expirationDuration!))) {
-    //   return null;
-    // }
+    if (expirationDuration != null &&
+        entry.createdAt.isBefore(DateTime.now().subtract(expirationDuration))) {
+      return null;
+    }
     return entry.entity as T;
   };
 }

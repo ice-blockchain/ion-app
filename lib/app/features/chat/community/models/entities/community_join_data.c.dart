@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/tags/authorization_tag.c.dart';
@@ -36,6 +37,14 @@ class CommunityJoinEntity with _$CommunityJoinEntity, IonConnectEntity {
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: CommunityJoinData.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  EventReference toEventReference() {
+    return ReplaceableEventReference(
+      pubkey: pubkey,
+      kind: kind,
     );
   }
 

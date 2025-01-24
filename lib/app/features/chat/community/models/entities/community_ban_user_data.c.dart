@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
@@ -36,6 +37,14 @@ class CommunityBanUserEntity with _$CommunityBanUserEntity, IonConnectEntity {
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: CommunityBanUserData.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  EventReference toEventReference() {
+    return ReplaceableEventReference(
+      pubkey: pubkey,
+      kind: kind,
     );
   }
 

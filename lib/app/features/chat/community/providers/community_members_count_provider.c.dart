@@ -38,13 +38,21 @@ class CommunityMembersCount extends _$CommunityMembersCount {
         community.createdAt.add(Duration(minutes: cacheMinutes)).isBefore(DateTime.now());
 
     if (!isCacheExpired) {
-      final communityMembersCountEntity =
-          ref.read(ionConnectCacheProvider.notifier).get<EventCountResultEntity>(
-                EventCountResultEntity.cacheKeyBuilder(
-                  key: community.data.uuid,
-                  type: EventCountResultType.members,
-                ),
-              );
+      final cacheMinutes = ref
+          .read(envProvider.notifier)
+          .get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
+
+      final communityMembersCountEntity = ref.read(
+        ionConnectCacheProvider.select(
+          cacheSelector<EventCountResultEntity>(
+            EventCountResultEntity.cacheKeyBuilder(
+              key: community.data.uuid,
+              type: EventCountResultType.members,
+            ),
+            expirationDuration: Duration(minutes: cacheMinutes),
+          ),
+        ),
+      );
 
       if (communityMembersCountEntity != null) {
         return communityMembersCountEntity.data.content as int;

@@ -4,11 +4,11 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/replaceable_event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_admin_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_moderator_tag.c.dart';
@@ -48,6 +48,14 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: CommunityDefinitionData.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  EventReference toEventReference() {
+    return ReplaceableEventReference(
+      pubkey: pubkey,
+      kind: kind,
     );
   }
 

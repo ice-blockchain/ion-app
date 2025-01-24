@@ -34,7 +34,9 @@ Future<Map<BookmarksSetType, BookmarksSetEntity?>> bookmarks(
         ),
       );
       final bookmarkSet = ref.watch(
-        ionConnectCacheProvider.select(cacheSelector<BookmarksSetEntity>(cacheKey)),
+        ionConnectCacheProvider.select(
+          cacheSelector<BookmarksSetEntity>(cacheKey),
+        ),
       );
       return MapEntry(type, bookmarkSet);
     }),

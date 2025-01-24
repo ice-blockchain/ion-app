@@ -74,7 +74,7 @@ Future<void> _deleteReply(Ref ref, ModifiablePostEntity post) async {
   ref.read(repliedEventsProvider.notifier).removeReply(parentEventReference.toString(), post.id);
 
   await _deleteFromDataSource(ref, dataSource, post);
-  ref.read(ionConnectCacheProvider.notifier).remove(post.cacheOptions.cacheKey);
+  ref.read(ionConnectCacheProvider.notifier).remove(post.cacheKey);
 }
 
 Future<void> _deleteArticle(Ref ref, CacheableEntity entity) async {
@@ -83,7 +83,7 @@ Future<void> _deleteArticle(Ref ref, CacheableEntity entity) async {
 
   await _deleteFromDataSource(ref, userArticlesDataSource ?? [], entity);
   await _deleteFromDataSource(ref, feedDataSources, entity);
-  ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheOptions.cacheKey);
+  ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
 }
 
 Future<void> _deletePost(Ref ref, IonConnectEntity entity) async {

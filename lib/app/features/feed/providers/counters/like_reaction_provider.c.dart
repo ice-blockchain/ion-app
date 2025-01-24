@@ -25,7 +25,8 @@ ReactionEntity? likeReaction(Ref ref, EventReference eventReference) {
           content: ReactionEntity.likeSymbol,
         ),
       ),
-    );
+    ),
+  );
 
   return reactionEntity;
 }

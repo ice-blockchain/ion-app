@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -46,6 +47,14 @@ class CommunityUpdateEntity with _$CommunityUpdateEntity, IonConnectEntity {
       signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: CommunityUpdateData.fromEventMessage(eventMessage),
+    );
+  }
+
+  @override
+  EventReference toEventReference() {
+    return ReplaceableEventReference(
+      pubkey: pubkey,
+      kind: kind,
     );
   }
 

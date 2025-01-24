@@ -42,7 +42,7 @@ class UserRelaysManager extends _$UserRelaysManager {
     final pubkeysToFetch = <String>[];
 
     for (final pubkey in pubkeys) {
-      final cached = ref.read(
+      final cached = ref.watch(
         ionConnectCacheProvider.select(
           cacheSelector<UserRelaysEntity>(
             CacheableEntity.cacheKeyBuilder(
