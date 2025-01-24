@@ -10,9 +10,9 @@ import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart'
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
+import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 
@@ -133,9 +133,9 @@ class EventCountResultData with _$EventCountResultData {
       return EventCountResultType.replies;
     } else if (filter.kinds != null &&
         filter.kinds!.contains(GenericRepostEntity.kind) &&
-        params?.group == RelatedEvent.tagName) {
+        params?.group == RelatedReplaceableEvent.tagName) {
       return EventCountResultType.reposts;
-    } else if (params?.group == QuotedEvent.tagName) {
+    } else if (params?.group == QuotedReplaceableEvent.tagName) {
       return EventCountResultType.quotes;
     } else if (filter.kinds != null && filter.kinds!.contains(ReactionEntity.kind)) {
       return EventCountResultType.reactions;
@@ -155,11 +155,14 @@ class EventCountResultData with _$EventCountResultData {
     final qTag = tags['#q'];
     final pTag = tags['#p'];
     final eTag = tags['#e'];
+    final aTag = tags['#a'];
 
     final key = switch (type) {
       EventCountResultType.quotes => qTag != null && qTag.isNotEmpty ? qTag.first : null,
       EventCountResultType.followers => pTag != null && pTag.isNotEmpty ? pTag.first : null,
-      _ => eTag != null && eTag.isNotEmpty ? eTag.first : null,
+      _ when eTag != null => eTag.isNotEmpty ? eTag.first : null,
+      _ when aTag != null => aTag.isNotEmpty ? aTag.first : null,
+      _ => null
     };
 
     if (key == null) {

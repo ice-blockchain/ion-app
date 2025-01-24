@@ -29,10 +29,7 @@ class SearchExtensions {
   }) {
     return SearchExtensions([
       RepliesCountSearchExtension(root: root, forKind: forKind),
-      if (forKind == ModifiablePostEntity.kind)
-        RepostsCountSearchExtension()
-      else
-        GenericRepostsCountSearchExtension(forKind: forKind),
+      GenericRepostsCountSearchExtension(forKind: forKind),
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
       ReplySampleSearchExtension(currentPubkey: currentPubkey, root: root, forKind: forKind),
@@ -89,7 +86,7 @@ class GenericRepostsCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  final String query = 'kind6400+kind16+group+e';
+  final String query = 'kind6400+kind16+group+a';
 }
 
 /// For every kind [forKind] that the subscription finds also include the count of quotes that it has
