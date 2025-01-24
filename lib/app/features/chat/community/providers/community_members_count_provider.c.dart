@@ -3,13 +3,13 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
-import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -27,15 +27,14 @@ class CommunityMembersCount extends _$CommunityMembersCount {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       // if 6 hours did not passed since community was created, fetch followers count from relay
-      final pubkey = community.ownerPubkey;
       const duration = Duration(hours: 6);
       if (community.createdAt.add(duration).isBefore(DateTime.now())) {
         final followersCountEntity = ref.read(
           ionConnectCacheProvider.select(
             cacheSelector<EventCountResultEntity>(
               EventCountResultEntity.cacheKeyBuilder(
-                key: pubkey,
-                type: EventCountResultType.followers,
+                key: community.data.uuid,
+                type: EventCountResultType.members,
               ),
             ),
           ),
@@ -46,15 +45,18 @@ class CommunityMembersCount extends _$CommunityMembersCount {
         }
       }
 
-      final relay = await _getRandomUserRelay();
+      final relay = await _getOwnerRandomUserRelay(community);
 
-      final requestEvent = await _buildRequestEvent(relayUrl: relay.url, pubkey: pubkey);
+      final requestEvent = await _buildRequestEvent(
+        relayUrl: relay.url,
+        communityUUID: community.data.uuid,
+      );
       final subscriptionMessage = RequestMessage()
         ..addFilter(
           RequestFilter(
-            kinds: const [EventCountResultEntity.kind, 7400],
+            kinds: const [EventCountResultEntity.kind],
             tags: {
-              '#p': [pubkey],
+              '#h': [community.data.uuid],
             },
           ),
         );
@@ -74,7 +76,7 @@ class CommunityMembersCount extends _$CommunityMembersCount {
             .timeout(const Duration(seconds: 10)) as EventMessage;
 
         final eventCountResultEntity =
-            EventCountResultEntity.fromEventMessage(responseMessage, key: pubkey);
+            EventCountResultEntity.fromEventMessage(responseMessage, key: community.data.uuid);
         ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
         return eventCountResultEntity.data.content as int;
@@ -84,8 +86,8 @@ class CommunityMembersCount extends _$CommunityMembersCount {
     });
   }
 
-  Future<NostrRelay> _getRandomUserRelay() async {
-    final userRelays = await ref.read(currentUserRelayProvider.future);
+  Future<NostrRelay> _getOwnerRandomUserRelay(CommunityDefinitionEntity community) async {
+    final userRelays = await ref.read(userRelayProvider(community.ownerPubkey).future);
     if (userRelays == null) {
       throw UserRelaysNotFoundException();
     }
@@ -96,18 +98,22 @@ class CommunityMembersCount extends _$CommunityMembersCount {
 
   Future<EventMessage> _buildRequestEvent({
     required String relayUrl,
-    required String pubkey,
+    required String communityUUID,
   }) async {
-    final followersCountRequest = EventCountRequestData(
-      relays: [relayUrl],
+    final communityMembersCountRequest = EventCountRequestData(
+      params: EventCountRequestParams(
+        relay: relayUrl,
+      ),
       filters: [
         RequestFilter(
-          kinds: const [FollowListEntity.kind],
-          authors: [pubkey],
+          kinds: const [CommunityJoinEntity.kind],
+          tags: {
+            '#h': [communityUUID],
+          },
         ),
       ],
     );
 
-    return ref.read(ionConnectNotifierProvider.notifier).sign(followersCountRequest);
+    return ref.read(ionConnectNotifierProvider.notifier).sign(communityMembersCountRequest);
   }
 }
