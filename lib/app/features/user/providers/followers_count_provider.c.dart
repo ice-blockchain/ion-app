@@ -16,7 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'followers_count_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class FollowersCount extends _$FollowersCount {
   @override
   Future<int> build(String pubkey) async {

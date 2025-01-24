@@ -3,20 +3,21 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_members_count_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CommunityMemberCountTile extends HookConsumerWidget {
+class CommunityMemberCountTile extends ConsumerWidget {
   const CommunityMemberCountTile({
-    required this.communityUUID,
+    required this.community,
     super.key,
   });
 
-  final String communityUUID;
+  final CommunityDefinitionEntity community;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(communityMembersCountProvider(communityUUID)).valueOrNull ?? 0;
+    final count = ref.watch(communityMembersCountProvider(community)).valueOrNull ?? 0;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

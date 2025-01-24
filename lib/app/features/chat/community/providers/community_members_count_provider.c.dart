@@ -2,6 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
@@ -19,23 +20,22 @@ part 'community_members_count_provider.c.g.dart';
 @riverpod
 class CommunityMembersCount extends _$CommunityMembersCount {
   @override
-  Future<int> build(String communityUUID) async {
+  Future<int> build(CommunityDefinitionEntity community) async {
     final communityMembersCountEntity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: communityUUID,
-            type: EventCountResultType.members,
-          ),
-        ),
-      ),
+      ionConnectCacheProvider.select((cache) {
+        final key = EventCountResultEntity.cacheKeyBuilder(
+          key: community.data.uuid,
+          type: EventCountResultType.members,
+        );
+        return cache[key]?.entity as EventCountResultEntity?;
+      }),
     );
 
     if (communityMembersCountEntity != null) {
       return communityMembersCountEntity.data.content as int;
     }
 
-    return _fetchCommunityMembersCount(communityUUID);
+    return _fetchCommunityMembersCount(community.data.uuid);
   }
 
   Future<int> _fetchCommunityMembersCount(String communityUUID) async {

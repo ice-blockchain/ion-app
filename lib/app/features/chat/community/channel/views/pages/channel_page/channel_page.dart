@@ -59,7 +59,7 @@ class ChannelPage extends HookConsumerWidget {
                   channel.data.avatar?.url != null ? Image.network(channel.data.avatar!.url) : null,
               name: channel.data.name,
               subtitle: CommunityMemberCountTile(
-                communityUUID: channel.data.uuid,
+                community: channel,
               ),
             ),
             MessagingEmptyView(

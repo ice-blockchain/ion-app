@@ -51,7 +51,7 @@ class ChannelSummary extends HookConsumerWidget {
         ),
         SizedBox(height: 2.0.s),
         CommunityMemberCountTile(
-          communityUUID: channel.data.uuid,
+          community: channel,
         ),
         if (!basicMode)
           if (canEdit) ...[
