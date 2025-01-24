@@ -5,9 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_members_count_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CommunityMemberCountTile extends ConsumerWidget {
+class CommunityMemberCountTile extends HookConsumerWidget {
   const CommunityMemberCountTile({
     required this.community,
     super.key,
@@ -17,7 +18,11 @@ class CommunityMemberCountTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(communityMembersCountProvider(community)).valueOrNull ?? 0;
+    useOnInit(() {
+      ref.read(communityMembersCountProvider.notifier).fetch(community);
+    });
+
+    final count = ref.watch(communityMembersCountProvider).valueOrNull;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -33,7 +38,7 @@ class CommunityMemberCountTile extends ConsumerWidget {
           width: 3.0.s,
         ),
         Text(
-          count.toString(),
+          count?.toString() ?? '',
           style: context.theme.appTextThemes.caption.copyWith(
             color: context.theme.appColors.quaternaryText,
           ),

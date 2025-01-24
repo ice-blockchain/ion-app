@@ -23,6 +23,7 @@ class CacheEntry {
     required this.entity,
     required this.createdAt,
   });
+
   final CacheableEntity entity;
   final DateTime createdAt;
 }
@@ -39,7 +40,8 @@ class IonConnectCache extends _$IonConnectCache {
       entity: entity,
       createdAt: DateTime.now(),
     );
-    state = {...state, entity.cacheKey: entry};
+    state = {...state, entity.cacheOptions.cacheKey: entry};
+
     _ionConnectCacheStreamController.sink.add(entity);
   }
 
@@ -62,12 +64,14 @@ T? Function(Map<String, CacheEntry>) cacheSelector<T extends IonConnectEntity>(
 ) {
   return (Map<String, CacheEntry> state) {
     final entry = state[key];
+
     if (entry == null) return null;
-    if (entry.createdAt.isBefore(DateTime.now().subtract(const Duration(seconds: 10)))) {
-      print('cache expired ${entry.entity.id}');
+
+    if (entry.entity.cacheOptions.expirationDuration != null &&
+        entry.createdAt
+            .isBefore(DateTime.now().subtract(entry.entity.cacheOptions.expirationDuration!))) {
       return null;
     }
-    print('cache hit ${entry.entity.id}');
     return entry.entity as T;
   };
 }
