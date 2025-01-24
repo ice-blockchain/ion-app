@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 
 void main() {
@@ -50,7 +50,7 @@ void main() {
   group('Count Search Extensions', () {
     test('RepliesCountSearchExtension formats query correctly', () {
       final extension = RepliesCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind1>kind6400+kind1+group+root');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind1+group+root');
 
       final nonRootExtension =
           RepliesCountSearchExtension(root: false, forKind: ArticleEntity.kind);
@@ -62,8 +62,8 @@ void main() {
 
     test('RepostsCountSearchExtension formats query correctly', () {
       final extension = RepostsCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind1>kind6400+kind6+group+e');
-      expect(extension.forKind, PostEntity.kind);
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind6+group+e');
+      expect(extension.forKind, ModifiablePostEntity.kind);
     });
 
     test('GenericRepostsCountSearchExtension formats query correctly', () {
@@ -73,12 +73,12 @@ void main() {
 
     test('QuotesCountSearchExtension formats query correctly', () {
       final extension = QuotesCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind1>kind6400+kind1+group+q');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind1+group+q');
     });
 
     test('ReactionsCountSearchExtension formats query correctly', () {
       final extension = ReactionsCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind1>kind6400+kind7+group+content');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind7+group+content');
     });
   });
 
@@ -87,7 +87,7 @@ void main() {
       final extension = ReplySampleSearchExtension(
         currentPubkey: testPubkey,
       );
-      expect(extension.toString(), 'include:dependencies:kind1>test_pubkey@kind1+e+root');
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind1+e+root');
 
       final nonRootExtension = ReplySampleSearchExtension(
         currentPubkey: testPubkey,
@@ -104,21 +104,21 @@ void main() {
       final extension = ReactionsSearchExtension(
         currentPubkey: testPubkey,
       );
-      expect(extension.toString(), 'include:dependencies:kind1>test_pubkey@kind7');
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind7');
     });
 
     test('QuoteSampleSearchExtension formats query correctly', () {
       final extension = QuoteSampleSearchExtension(
         currentPubkey: testPubkey,
       );
-      expect(extension.toString(), 'include:dependencies:kind1>test_pubkey@kind1+q');
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind1+q');
     });
 
     test('RepostSampleSearchExtension formats query correctly', () {
       final extension = RepostSampleSearchExtension(
         currentPubkey: testPubkey,
       );
-      expect(extension.toString(), 'include:dependencies:kind1>test_pubkey@kind6');
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind6');
     });
   });
 
@@ -194,10 +194,10 @@ void main() {
   group('Generic Include Search Extension', () {
     test('GenericIncludeSearchExtension formats query correctly', () {
       final extension = GenericIncludeSearchExtension(
-        forKind: PostEntity.kind,
+        forKind: ModifiablePostEntity.kind,
         includeKind: 1,
       );
-      expect(extension.toString(), 'include:dependencies:kind1>kind1');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind1');
     });
   });
 
