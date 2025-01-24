@@ -49,7 +49,7 @@ String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String curr
   } else if (entity is RepostEntity) {
     return entity.data.eventId;
   } else if (entity is GenericRepostEntity) {
-    return entity.data.eventId;
+    return entity.data.eventReference.toString();
   } else {
     return null;
   }

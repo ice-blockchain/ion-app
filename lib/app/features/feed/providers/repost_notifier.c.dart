@@ -2,8 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -26,24 +25,18 @@ class RepostNotifier extends _$RepostNotifier {
     state = await AsyncValue.guard(() async {
       final entity = ref.read(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-      if (eventReference is! ImmutableEventReference) {
-        //TODO:replaceable handle replaceable references
-        throw UnimplementedError();
-      }
-
       if (entity == null) {
-        throw EntityNotFoundException(eventReference.eventId);
+        throw EntityNotFoundException(eventReference);
       }
 
       final data = switch (entity) {
-        _ when entity is PostEntity => RepostData(
-            eventId: eventReference.eventId,
-            pubkey: eventReference.pubkey,
+        ModifiablePostEntity() => GenericRepostData(
+            eventReference: eventReference,
             repostedEvent: await entity.toEventMessage(entity.data),
+            kind: ModifiablePostEntity.kind,
           ),
-        _ when entity is ArticleEntity => GenericRepostData(
-            eventId: eventReference.eventId,
-            pubkey: eventReference.pubkey,
+        ArticleEntity() => GenericRepostData(
+            eventReference: eventReference,
             repostedEvent: await entity.toEventMessage(entity.data),
             kind: ArticleEntity.kind,
           ),

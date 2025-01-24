@@ -19,16 +19,10 @@ class GenericRepostListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventReference = switch (repost.data.kind) {
-      //TODO:replaceable add dTag
-      ArticleEntity.kind ||
-      ModifiablePostEntity.kind =>
-        ReplaceableEventReference(pubkey: repost.data.pubkey, kind: repost.data.kind),
-      _ => null
-    };
+    final eventReference = repost.data.eventReference;
 
-    if (eventReference == null) {
-      return Text('Repost of kind ${repost.data.kind} is not supported');
+    if (eventReference is! ReplaceableEventReference) {
+      return Text('Repost of $eventReference is not supported');
     }
 
     return GestureDetector(

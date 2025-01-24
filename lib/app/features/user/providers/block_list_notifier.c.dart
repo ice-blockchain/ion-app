@@ -78,8 +78,6 @@ Future<bool> isEntityBlockedOrBlocking(
   return switch (entity) {
     PostEntity() =>
       ref.watch(isPostChildBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future),
-    RepostEntity() =>
-      ref.watch(isRepostChildBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future),
     GenericRepostEntity() =>
       ref.watch(isGenericRepostChildBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future),
     _ => false,
@@ -125,9 +123,8 @@ Future<bool> isGenericRepostChildBlockedOrBlocking(
   GenericRepostEntity repost, {
   bool cacheOnly = false,
 }) async {
-  final eventReference =
-      ImmutableEventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
-  final entity = await ref.watch(ionConnectEntityProvider(eventReference: eventReference).future);
+  final entity =
+      await ref.watch(ionConnectEntityProvider(eventReference: repost.data.eventReference).future);
   if (entity == null) return false;
   return ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future);
 }

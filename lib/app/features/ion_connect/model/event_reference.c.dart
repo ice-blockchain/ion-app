@@ -19,6 +19,8 @@ abstract class EventReference {
 
   String encode();
 
+  List<String> toTag();
+
   static String separator = ':';
 }
 
@@ -40,6 +42,11 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
     }
 
     return ImmutableEventReference(eventId: parts[1], pubkey: parts[2]);
+  }
+
+  @override
+  List<String> toTag() {
+    return [tagName, eventId];
   }
 
   @override
@@ -97,6 +104,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
     );
   }
 
+  @override
   List<String> toTag() {
     return [
       tagName,
