@@ -100,22 +100,6 @@ Future<bool> isPostChildBlockedOrBlocking(
 }
 
 @riverpod
-<<<<<<< HEAD
-Future<bool> Future<Object> isRepostChildBlockedOrBlocking(
-  Ref ref,
-  RepostEntity repost, {
-  bool cacheOnly = false,
-}) async {
-  final eventReference =
-      ImmutableEventReference(eventId: repost.data.eventId, pubkey: repost.data.pubkey);
-  final entity = await ref.watch(ionConnectEntityProvider(eventReference: eventReference).future);
-  if (entity == null) return false;
-  return ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future);
-}
-
-@riverpod
-=======
->>>>>>> 5bceb4c16 (feat = RepostEntity -> GenericRepostEntity)
 Future<bool> isGenericRepostChildBlockedOrBlocking(
   Ref ref,
   GenericRepostEntity repost, {
