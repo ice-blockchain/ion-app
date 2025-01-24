@@ -7,12 +7,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/recovery_creds_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/models/recover_user_step.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_options_step.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 typedef RecoveryCreds = ({String name, String id, String code});
@@ -93,14 +95,26 @@ class RecoverUserPage extends HookConsumerWidget {
     required ValueNotifier<RecoverUserStep> step,
   }) {
     ref
-      ..listenError(initUserRecoveryActionNotifierProvider, (error) async {
+      ..listenError(initUserRecoveryActionNotifierProvider, (error) {
         switch (error) {
           case TwoFARequiredException(:final twoFAOptionsCount):
             twoFAOptionsCountRef.value = twoFAOptionsCount;
             step.value = RecoverUserStep.twoFAOptions;
+          case InvalidTwoFaCodeException():
+            showSimpleBottomSheet<void>(
+              context: ref.context,
+              child: const TwoFaTryAgainPage(),
+            );
           default:
         }
       })
+      ..displayErrors(
+        initUserRecoveryActionNotifierProvider,
+        excludedExceptions: {
+          TwoFARequiredException,
+          InvalidTwoFaCodeException,
+        },
+      )
       ..listenSuccess(initUserRecoveryActionNotifierProvider, (value) {
         final challenge = value?.whenOrNull(success: (challenge) => challenge);
 

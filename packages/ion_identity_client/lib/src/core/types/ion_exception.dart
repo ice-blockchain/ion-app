@@ -49,6 +49,19 @@ class TwoFARequiredException extends IONIdentityException {
   ) : super('Two-factor authentication is required');
 
   final int twoFAOptionsCount;
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        return responseData['error']['message'] == '2FA_REQUIRED';
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
 }
 
 class UnknownIONIdentityException extends IONIdentityException {
@@ -94,7 +107,10 @@ class InvalidTwoFaCodeException extends IONIdentityException {
 
     try {
       if (responseData is Map<String, dynamic>) {
-        return responseData['code'] == '2FA_INVALID_CODE';
+        final responseCode = responseData['code'] as String?;
+        final responseMessage = responseData['error']['message'] as String?;
+        final invalidCodes = ['2FA_INVALID_CODE', '2FA_EXPIRED_CODE'];
+        return invalidCodes.contains(responseCode) || invalidCodes.contains(responseMessage);
       }
       return false;
     } catch (_) {
