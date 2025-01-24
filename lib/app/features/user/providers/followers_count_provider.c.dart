@@ -20,16 +20,13 @@ part 'followers_count_provider.c.g.dart';
 class FollowersCount extends _$FollowersCount {
   @override
   Future<int> build(String pubkey) async {
-    final followersCountEntity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: pubkey,
-            type: EventCountResultType.followers,
-          ),
-        ),
-      ),
-    );
+    final followersCountEntity =
+        ref.watch(ionConnectCacheProvider.notifier).get<EventCountResultEntity>(
+              EventCountResultEntity.cacheKeyBuilder(
+                key: pubkey,
+                type: EventCountResultType.followers,
+              ),
+            );
 
     if (followersCountEntity != null) {
       return followersCountEntity.data.content as int;

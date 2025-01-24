@@ -4,6 +4,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -26,64 +27,72 @@ class CommunityMembersCount extends _$CommunityMembersCount {
   Future<void> fetch(CommunityDefinitionEntity community) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      // if 6 hours did not passed since community was created, fetch followers count from relay
-      const duration = Duration(hours: 6);
-      if (community.createdAt.add(duration).isBefore(DateTime.now())) {
-        final followersCountEntity = ref.read(
-          ionConnectCacheProvider.select(
-            cacheSelector<EventCountResultEntity>(
-              EventCountResultEntity.cacheKeyBuilder(
-                key: community.data.uuid,
-                type: EventCountResultType.members,
-              ),
-            ),
-          ),
-        );
-
-        if (followersCountEntity != null) {
-          return followersCountEntity.data.content as int;
-        }
-      }
-
-      final relay = await _getOwnerRandomUserRelay(community);
-
-      final requestEvent = await _buildRequestEvent(
-        relayUrl: relay.url,
-        communityUUID: community.data.uuid,
-      );
-      final subscriptionMessage = RequestMessage()
-        ..addFilter(
-          RequestFilter(
-            kinds: const [EventCountResultEntity.kind],
-            tags: {
-              '#h': [community.data.uuid],
-            },
-          ),
-        );
-
-      final subscription = relay.subscribe(subscriptionMessage);
-      EventMessage? responseMessage;
-
-      try {
-        await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
-              requestEvent,
-              actionSource: ActionSourceRelayUrl(relay.url),
-              cache: false,
-            );
-
-        responseMessage = await subscription.messages
-            .firstWhere((message) => message is EventMessage)
-            .timeout(const Duration(seconds: 10)) as EventMessage;
-
-        final eventCountResultEntity =
-            EventCountResultEntity.fromEventMessage(responseMessage, key: community.data.uuid);
-        ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
-
-        return eventCountResultEntity.data.content as int;
-      } finally {
-        relay.unsubscribe(subscription.id);
-      }
+      return _getFromCache(community) ?? _getFromRelay(community);
     });
+  }
+
+  int? _getFromCache(CommunityDefinitionEntity community) {
+    final cacheMinutes =
+        ref.read(envProvider.notifier).get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
+    final isCacheExpired =
+        community.createdAt.add(Duration(minutes: cacheMinutes)).isBefore(DateTime.now());
+
+    if (!isCacheExpired) {
+      final communityMembersCountEntity =
+          ref.read(ionConnectCacheProvider.notifier).get<EventCountResultEntity>(
+                EventCountResultEntity.cacheKeyBuilder(
+                  key: community.data.uuid,
+                  type: EventCountResultType.members,
+                ),
+              );
+
+      if (communityMembersCountEntity != null) {
+        return communityMembersCountEntity.data.content as int;
+      }
+    }
+
+    return null;
+  }
+
+  Future<int?> _getFromRelay(CommunityDefinitionEntity community) async {
+    final relay = await _getOwnerRandomUserRelay(community);
+
+    final requestEvent = await _buildRequestEvent(
+      relayUrl: relay.url,
+      communityUUID: community.data.uuid,
+    );
+    final subscriptionMessage = RequestMessage()
+      ..addFilter(
+        RequestFilter(
+          kinds: const [EventCountResultEntity.kind],
+          tags: {
+            '#h': [community.data.uuid],
+          },
+        ),
+      );
+
+    final subscription = relay.subscribe(subscriptionMessage);
+    EventMessage? responseMessage;
+
+    try {
+      await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
+            requestEvent,
+            actionSource: ActionSourceRelayUrl(relay.url),
+            cache: false,
+          );
+
+      responseMessage = await subscription.messages
+          .firstWhere((message) => message is EventMessage)
+          .timeout(const Duration(seconds: 10)) as EventMessage;
+
+      final eventCountResultEntity =
+          EventCountResultEntity.fromEventMessage(responseMessage, key: community.data.uuid);
+      ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
+
+      return eventCountResultEntity.data.content as int;
+    } finally {
+      relay.unsubscribe(subscription.id);
+    }
   }
 
   Future<NostrRelay> _getOwnerRandomUserRelay(CommunityDefinitionEntity community) async {

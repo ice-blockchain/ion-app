@@ -70,9 +70,11 @@ class EventCountResultEntity
   }
 
   @override
-  CacheableEntityOptions get cacheOptions => CacheableEntityOptions(
-        cacheKey: cacheKeyBuilder(key: data.key, type: data.type),
-      );
+  CacheableEntityOptions get cacheOptions {
+    return CacheableEntityOptions(
+      cacheKey: cacheKeyBuilder(key: data.key, type: data.type),
+    );
+  }
 
   static String cacheKeyBuilder({required String key, required EventCountResultType type}) =>
       '$key:${type.toShortString()}';

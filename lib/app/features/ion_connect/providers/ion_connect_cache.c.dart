@@ -40,13 +40,28 @@ class IonConnectCache extends _$IonConnectCache {
       entity: entity,
       createdAt: DateTime.now(),
     );
-    state = {...state, entity.cacheOptions.cacheKey: entry};
+    state = {...state, entity.cacheKey: entry};
 
     _ionConnectCacheStreamController.sink.add(entity);
   }
 
   void remove(String key) {
     state = {...state}..remove(key);
+  }
+
+  T? get<T extends IonConnectEntity>(String key) {
+    final entry = state[key];
+    if (entry == null) return null;
+
+    // if (T is EventCountResultEntity) {
+    //   final cacheMinutes = ref
+    //       .read(envProvider.notifier)
+    //       .get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
+    //   if (entry.createdAt.isBefore(DateTime.now().subtract(Duration(minutes: cacheMinutes)))) {
+    //     return null;
+    //   }
+    // }
+    return entry.entity as T;
   }
 }
 
@@ -67,11 +82,11 @@ T? Function(Map<String, CacheEntry>) cacheSelector<T extends IonConnectEntity>(
 
     if (entry == null) return null;
 
-    if (entry.entity.cacheOptions.expirationDuration != null &&
-        entry.createdAt
-            .isBefore(DateTime.now().subtract(entry.entity.cacheOptions.expirationDuration!))) {
-      return null;
-    }
+    // if (entry.entity.cacheOptions.expirationDuration != null &&
+    //     entry.createdAt
+    //         .isBefore(DateTime.now().subtract(entry.entity.cacheOptions.expirationDuration!))) {
+    //   return null;
+    // }
     return entry.entity as T;
   };
 }
