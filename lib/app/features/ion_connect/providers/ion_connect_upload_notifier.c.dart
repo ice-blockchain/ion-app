@@ -56,6 +56,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
       originalFileHash: fileMetadata.originalFileHash,
       alt: alt,
       thumb: fileMetadata.thumb,
+      imageColor: file.imageColor,
     );
 
     return (fileMetadata: fileMetadata, mediaAttachment: mediaAttachment);

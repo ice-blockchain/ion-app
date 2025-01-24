@@ -24,6 +24,7 @@ class MediaAttachment {
     this.encryptionMac,
     this.thumb,
     this.image,
+    this.imageColor,
   });
 
   /// https://github.com/nostr-protocol/nips/blob/master/92.md#example
@@ -44,6 +45,7 @@ class MediaAttachment {
     String? encryptionKey;
     String? encryptionNonce;
     String? encryptionMac;
+    String? imageColor;
 
     for (final params in tag.skip(1)) {
       final pair = params.split(' ');
@@ -78,6 +80,8 @@ class MediaAttachment {
             encryptionNonce = nonce;
             encryptionMac = mac;
           }
+        case 'imageColor':
+          imageColor = value;
       }
     }
 
@@ -94,6 +98,7 @@ class MediaAttachment {
       encryptionKey: encryptionKey,
       encryptionNonce: encryptionNonce,
       encryptionMac: encryptionMac,
+      imageColor: imageColor,
     );
   }
 
@@ -120,6 +125,8 @@ class MediaAttachment {
   final String? encryptionNonce;
 
   final String? encryptionMac;
+
+  final String? imageColor;
 
   late double? aspectRatio = _aspectRatioFromDimension(dimension);
 
@@ -171,6 +178,7 @@ class MediaAttachment {
         'encryption-key $encryptionKey $encryptionNonce $encryptionMac aes-gcm',
       if (thumb != null) 'thumb $thumb',
       if (image != null) 'image $image',
+      if (imageColor != null) 'imageColor $imageColor',
     ];
   }
 
@@ -194,6 +202,7 @@ class MediaAttachment {
     String? encryptionKey,
     String? encryptionNonce,
     String? encryptionMac,
+    String? imageColor,
   }) {
     return MediaAttachment(
       url: url ?? this.url,
@@ -208,6 +217,7 @@ class MediaAttachment {
       encryptionKey: encryptionKey ?? this.encryptionKey,
       encryptionNonce: encryptionNonce ?? this.encryptionNonce,
       encryptionMac: encryptionMac ?? this.encryptionMac,
+      imageColor: imageColor ?? this.imageColor,
     );
   }
 }

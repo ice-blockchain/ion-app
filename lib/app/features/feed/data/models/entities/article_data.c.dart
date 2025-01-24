@@ -136,6 +136,8 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
+    final imageColor = image != null ? media[image]?.imageColor : null;
+
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
@@ -148,6 +150,8 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+        if (imageColor != null) ['L', 'color'],
+        if (imageColor != null) ['l', imageColor, 'color'],
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,
