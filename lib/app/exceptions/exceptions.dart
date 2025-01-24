@@ -251,31 +251,30 @@ class FailedToCreateChannelException extends IONException {
   FailedToCreateChannelException() : super(10053, 'Failed to create channel');
 }
 
+class FailedToCreateCommunityException extends IONException {
+  FailedToCreateCommunityException() : super(10054, 'Failed to create channel');
+}
+
 class FailedToFetchCommunityException extends IONException {
-  FailedToFetchCommunityException(String uuid) : super(10054, 'Failed to fetch community $uuid');
+  FailedToFetchCommunityException(String uuid) : super(10055, 'Failed to fetch community $uuid');
 }
 
 class FailedToEditCommunityException extends IONException {
-  FailedToEditCommunityException() : super(10055, 'Failed to edit community');
+  FailedToEditCommunityException() : super(10056, 'Failed to edit community');
 }
 
 class FailedToJoinCommunityException extends IONException {
-  FailedToJoinCommunityException() : super(10056, 'Failed to join community');
+  FailedToJoinCommunityException() : super(10057, 'Failed to join community');
 }
 
 class FailedToSendInvitationException extends IONException {
-  FailedToSendInvitationException() : super(10057, 'Failed to send invitation');
+  FailedToSendInvitationException() : super(10058, 'Failed to send invitation');
 }
 
 class CommunityInvitationExpiredException extends IONException {
-  CommunityInvitationExpiredException() : super(10058, 'Community invitation expired');
+  CommunityInvitationExpiredException() : super(10059, 'Community invitation expired');
 }
 
 class CommunityInvitationNotFoundException extends IONException {
-  CommunityInvitationNotFoundException() : super(10059, 'Community invitation not found');
-}
-
-class IncorrectEventTagValueException extends IONException {
-  IncorrectEventTagValueException({required String tag, required String? value})
-      : super(10056, 'Incorrect event tag value $tag: $value');
+  CommunityInvitationNotFoundException() : super(10060, 'Community invitation not found');
 }
