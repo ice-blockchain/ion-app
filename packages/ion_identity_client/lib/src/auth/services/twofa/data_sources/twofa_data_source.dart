@@ -74,17 +74,22 @@ class TwoFADataSource {
     required String twoFAOption,
     required String code,
   }) async {
-    final token = tokenStorage.getToken(username: username)?.token;
-    if (token == null) {
-      throw const UnauthenticatedException();
-    }
+    try {
+      final token = tokenStorage.getToken(username: username)?.token;
+      if (token == null) {
+        throw const UnauthenticatedException();
+      }
 
-    return networkClient.patch(
-      sprintf(twoFaPath, [userId, twoFAOption]),
-      queryParams: {'code': code},
-      headers: RequestHeaders.getAuthorizationHeaders(token: token, username: username),
-      decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
-    );
+      return networkClient.patch(
+        sprintf(twoFaPath, [userId, twoFAOption]),
+        queryParams: {'code': code},
+        headers: RequestHeaders.getAuthorizationHeaders(token: token, username: username),
+        decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
+      );
+    } on RequestExecutionException catch (e) {
+      final exception = _mapException(e);
+      throw exception;
+    }
   }
 
   Future<void> deleteTwoFA({
@@ -94,34 +99,39 @@ class TwoFADataSource {
     required TwoFAType twoFAType,
     List<TwoFAType> verificationCodes = const [],
   }) async {
-    final token = tokenStorage.getToken(username: username)?.token;
-    if (token == null) {
-      throw const UnauthenticatedException();
+    try {
+      final token = tokenStorage.getToken(username: username)?.token;
+      if (token == null) {
+        throw const UnauthenticatedException();
+      }
+
+      final query = verificationCodes
+          .map(
+            (e) => '$queryOption=${e.option}&$queryValue=${e.value!}',
+          )
+          .join('&');
+      final twoFaValue = twoFAType.value ?? 0;
+      final uri = Uri.parse(networkClient.dio.options.baseUrl)
+          .resolveUri(
+            Uri(
+              path: sprintf(deleteTwoFaPath, [userId, twoFAType.option, twoFaValue]),
+              query: query,
+            ),
+          )
+          .toString();
+
+      return networkClient.delete<void>(
+        uri,
+        headers: {
+          ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
+          RequestHeaders.ionIdentityUserAction: signature,
+        },
+        decoder: (response) => response,
+      );
+    } on RequestExecutionException catch (e) {
+      final exception = _mapException(e);
+      throw exception;
     }
-
-    final query = verificationCodes
-        .map(
-          (e) => '$queryOption=${e.option}&$queryValue=${e.value!}',
-        )
-        .join('&');
-    final twoFaValue = twoFAType.value ?? 0;
-    final uri = Uri.parse(networkClient.dio.options.baseUrl)
-        .resolveUri(
-          Uri(
-            path: sprintf(deleteTwoFaPath, [userId, twoFAType.option, twoFaValue]),
-            query: query,
-          ),
-        )
-        .toString();
-
-    return networkClient.delete<void>(
-      uri,
-      headers: {
-        ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
-        RequestHeaders.ionIdentityUserAction: signature,
-      },
-      decoder: (response) => response,
-    );
   }
 
   Exception _mapException(RequestExecutionException e) {
@@ -130,6 +140,9 @@ class TwoFADataSource {
     final exception = e.error as DioException;
     if (TwoFaMethodNotConfiguredException.isMatch(exception)) {
       return TwoFaMethodNotConfiguredException();
+    }
+    if (InvalidTwoFaCodeException.isMatch(exception)) {
+      return InvalidTwoFaCodeException();
     }
 
     return e;

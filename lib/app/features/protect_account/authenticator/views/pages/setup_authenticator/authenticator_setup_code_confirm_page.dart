@@ -144,12 +144,8 @@ class AuthenticatorSetupCodeConfirmPage extends HookConsumerWidget {
     WidgetRef ref,
     ValueNotifier<bool> failedCodeNotifier,
   ) {
-    ref.listen(validateTwoFaCodeNotifierProvider, (prev, next) {
-      if (prev?.isLoading != true) {
-        return;
-      }
-
-      if (next.hasError && next.error is InvalidTwoFaCodeException) {
+    ref.listenError(validateTwoFaCodeNotifierProvider, (error) {
+      if (error is InvalidTwoFaCodeException) {
         failedCodeNotifier.value = true;
         showSimpleBottomSheet<void>(
           context: ref.context,

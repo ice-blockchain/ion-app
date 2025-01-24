@@ -35,12 +35,16 @@ class RecoverUserDataSource {
         decoder: (result) => parseJsonObject(result, fromJson: UserRegistrationChallenge.fromJson),
       );
     } on RequestExecutionException catch (e) {
-      final dioException = e.error is DioException ? e.error as DioException : null;
+      if (e.error is! DioException) rethrow;
 
-      if (dioException?.response?.statusCode == 403 &&
-          dioException?.response?.data['error']['message'] == '2FA_REQUIRED') {
-        final twoFAOptionsCount = dioException?.response?.data['data']['n'] as int;
+      final exception = e.error as DioException;
+
+      if (TwoFARequiredException.isMatch(exception)) {
+        final twoFAOptionsCount = exception.response?.data['data']['n'] as int;
         throw TwoFARequiredException(twoFAOptionsCount);
+      }
+      if (InvalidTwoFaCodeException.isMatch(exception)) {
+        throw InvalidTwoFaCodeException();
       }
       rethrow;
     }

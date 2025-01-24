@@ -20,6 +20,7 @@ import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_pas
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -50,13 +51,17 @@ class TwoFAInputStep extends HookConsumerWidget {
     _listenRequestTwoFaErrorResult(context, ref);
 
     final twoFaTypes = ref.watch(selectedTwoFaOptionsProvider);
+    final onGetPassword = useOnGetPassword();
+
+    useOnInit(
+      () => _requestRecoveryCodes(ref, twoFaTypes, onGetPassword),
+      [twoFaTypes],
+    );
 
     final formKey = useRef(GlobalKey<FormState>());
     final controllers = {
       for (final type in twoFaTypes) type: useTextEditingController(),
     };
-
-    final onGetPassword = useOnGetPassword();
 
     return SheetContent(
       body: AuthScrollContainer(
@@ -80,27 +85,8 @@ class TwoFAInputStep extends HookConsumerWidget {
                             child: TwoFaCodeInput(
                               controller: controllers[twoFaType]!,
                               twoFaType: twoFaType,
-                              onRequestCode: () async {
-                                await ref
-                                    .read(requestTwoFaCodeNotifierProvider.notifier)
-                                    .requestRecoveryTwoFaCode(twoFaType, identityKeyName, ({
-                                  required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
-                                  required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
-                                  required OnBiometricsFlow<GenerateSignatureResponse>
-                                      onBiometricsFlow,
-                                }) {
-                                  return ref.read(
-                                    verifyUserIdentityProvider(
-                                      onGetPassword: onGetPassword,
-                                      onPasswordFlow: onPasswordFlow,
-                                      onPasskeyFlow: onPasskeyFlow,
-                                      onBiometricsFlow: onBiometricsFlow,
-                                      localisedReasonForBiometricsDialog:
-                                          context.i18n.verify_with_biometrics_title,
-                                    ).future,
-                                  );
-                                });
-                              },
+                              onRequestCode: () =>
+                                  _requestRecoveryCode(ref, twoFaType, onGetPassword),
                               isSending: isRequesting,
                             ),
                           ),
@@ -150,6 +136,43 @@ class TwoFAInputStep extends HookConsumerWidget {
           ),
         );
       }
+    });
+  }
+
+  Future<void> _requestRecoveryCodes(
+    WidgetRef ref,
+    Set<TwoFaType> twoFaTypes,
+    Future<T> Function<T>(OnPasswordFlow<T> onPasswordFlow) onGetPassword,
+  ) async {
+    for (final twoFaType in twoFaTypes) {
+      await _requestRecoveryCode(ref, twoFaType, onGetPassword);
+    }
+  }
+
+  Future<void> _requestRecoveryCode(
+    WidgetRef ref,
+    TwoFaType twoFaType,
+    Future<T> Function<T>(OnPasswordFlow<T> onPasswordFlow) onGetPassword,
+  ) async {
+    if (twoFaType == TwoFaType.auth) {
+      return;
+    }
+    await ref
+        .read(requestTwoFaCodeNotifierProvider.notifier)
+        .requestRecoveryTwoFaCode(twoFaType, identityKeyName, ({
+      required OnPasswordFlow<GenerateSignatureResponse> onPasswordFlow,
+      required OnPasskeyFlow<GenerateSignatureResponse> onPasskeyFlow,
+      required OnBiometricsFlow<GenerateSignatureResponse> onBiometricsFlow,
+    }) {
+      return ref.read(
+        verifyUserIdentityProvider(
+          onGetPassword: onGetPassword,
+          onPasswordFlow: onPasswordFlow,
+          onPasskeyFlow: onPasskeyFlow,
+          onBiometricsFlow: onBiometricsFlow,
+          localisedReasonForBiometricsDialog: ref.context.i18n.verify_with_biometrics_title,
+        ).future,
+      );
     });
   }
 }
