@@ -43,6 +43,7 @@ class PostDetailsPage extends ConsumerWidget {
                   child: ScreenSideOffset.small(
                     child: Post(
                       eventReference: eventReference,
+                      isDetailView: true,
                       onDelete: () {
                         context.pop();
                       },

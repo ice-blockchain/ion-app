@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/del
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
+import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -26,6 +27,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.showParent = false,
+    this.isDetailView = false,
     this.onDelete,
     super.key,
   });
@@ -34,6 +36,7 @@ class Post extends ConsumerWidget {
   final bool showParent;
   final Widget? header;
   final Widget? footer;
+  final bool isDetailView;
   final VoidCallback? onDelete;
 
   @override
@@ -57,6 +60,10 @@ class Post extends ConsumerWidget {
         header ??
             UserInfo(
               pubkey: eventReference.pubkey,
+              timestamp: TimestampWidget(
+                createdAt: postEntity.createdAt,
+                showDetailed: isDetailView,
+              ),
               trailing: isOwnedByCurrentUser
                   ? DeleteFeedItemMenu(
                       entity: postEntity,
@@ -129,6 +136,10 @@ final class _QuotedPost extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final postEntity = ref
+        .watch(ionConnectEntityProvider(eventReference: eventReference))
+        .valueOrNull as PostEntity?;
+
     return QuotedEntityFrame.post(
       child: GestureDetector(
         onTap: () {
@@ -137,7 +148,14 @@ final class _QuotedPost extends ConsumerWidget {
         child: AbsorbPointer(
           child: Post(
             eventReference: eventReference,
-            header: UserInfo(pubkey: eventReference.pubkey),
+            header: UserInfo(
+              pubkey: eventReference.pubkey,
+              timestamp: postEntity != null
+                  ? TimestampWidget(
+                      createdAt: postEntity.createdAt,
+                    )
+                  : null,
+            ),
             footer: const SizedBox.shrink(),
           ),
         ),

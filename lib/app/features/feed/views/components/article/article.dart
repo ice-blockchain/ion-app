@@ -11,17 +11,18 @@ import 'package:ion/app/features/feed/views/components/article/components/articl
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/delete_feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
+import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
-import 'package:ion/app/utils/date.dart';
 
 class Article extends ConsumerWidget {
   const Article({
     required this.eventReference,
     this.showActionButtons = true,
+    this.isDetailView = false,
     super.key,
   });
 
@@ -33,6 +34,7 @@ class Article extends ConsumerWidget {
 
   final EventReference eventReference;
   final bool showActionButtons;
+  final bool isDetailView;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,7 +72,10 @@ class Article extends ConsumerWidget {
                 children: [
                   UserInfo(
                     pubkey: eventReference.pubkey,
-                    timestamp: formatFeedTimestamp(articleEntity.data.publishedAt.value),
+                    timestamp: TimestampWidget(
+                      createdAt: articleEntity.data.publishedAt.value,
+                      showDetailed: isDetailView,
+                    ),
                     trailing: showActionButtons
                         ? Row(
                             mainAxisSize: MainAxisSize.min,

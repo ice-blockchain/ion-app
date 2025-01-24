@@ -21,7 +21,7 @@ class UserInfo extends HookConsumerWidget {
 
   final String pubkey;
   final Widget? trailing;
-  final String? timestamp;
+  final Widget? timestamp;
   final TextStyle? textStyle;
 
   @override
@@ -56,10 +56,7 @@ class UserInfo extends HookConsumerWidget {
                 SizedBox(width: 4.0.s),
                 const Text('•'),
                 SizedBox(width: 4.0.s),
-                Text(
-                  timestamp!,
-                  style: textStyle,
-                ),
+                timestamp!,
               ],
             ],
           ),

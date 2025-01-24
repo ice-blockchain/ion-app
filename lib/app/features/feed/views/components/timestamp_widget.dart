@@ -1,25 +1,36 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 
-class TimestampWidget extends StatelessWidget {
+class TimestampWidget extends ConsumerWidget {
   const TimestampWidget({
     required this.createdAt,
     this.showDetailed = false,
+    this.style,
     super.key,
   });
+
   final DateTime createdAt;
   final bool showDetailed;
+  final TextStyle? style;
 
   @override
-  Widget build(BuildContext context) {
-    final formattedTime =
-        showDetailed ? formatDetailedPostTime(createdAt) : formatFeedTimestamp(createdAt);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(appLocaleProvider);
+    final formattedTime = showDetailed
+        ? formatDetailedPostTime(createdAt, locale: locale)
+        : formatFeedTimestamp(createdAt, locale: locale);
 
     return Text(
       formattedTime,
-      style: Theme.of(context).textTheme.bodySmall,
+      style: style ??
+          context.theme.appTextThemes.caption.copyWith(
+            color: context.theme.appColors.tertararyText,
+          ),
     );
   }
 }
