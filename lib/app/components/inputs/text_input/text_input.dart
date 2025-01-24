@@ -102,10 +102,10 @@ class TextInput extends HookWidget {
     void onChangedHandler(String text) {
       hasValue.value = text.isNotEmpty;
       onChanged?.call(text);
-      if (isLive) {
+      if (isLive && hasBeenChanged.value) {
         validate(text);
       }
-      hasBeenChanged.value;
+      hasBeenChanged.value = true;
     }
 
     useTextChanged(

@@ -87,6 +87,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
                     SizedBox(height: 16.0.s),
                     PasswordInput(
                       controller: passwordController,
+                      passwordInputMode: PasswordInputMode.create,
                       errorText: passwordsError.value,
                       onFocused: (value) => passwordInputFocused.value = value,
                       onValueChanged: onFocusedPasswordValue,
@@ -95,6 +96,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
                     PasswordInput(
                       isConfirmation: true,
                       controller: passwordConfirmationController,
+                      passwordInputMode: PasswordInputMode.create,
                       errorText: passwordsError.value,
                       onFocused: (value) => passwordConfirmationInputFocused.value = value,
                       onValueChanged: onFocusedPasswordValue,

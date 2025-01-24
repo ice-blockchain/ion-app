@@ -32,7 +32,7 @@ class IdentityKeyNameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextInput(
       isLive: true,
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.name,
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
         icons: [Assets.svg.iconIdentitykey.icon()],
