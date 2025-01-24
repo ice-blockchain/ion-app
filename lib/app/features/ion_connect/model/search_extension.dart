@@ -151,8 +151,10 @@ class ReactionsSearchExtension extends IncludeSearchExtension {
 /// For every kind [forKind] that the subscription finds also include 1 quote post
 /// that the logged in user made for it — if any
 class QuoteSampleSearchExtension extends IncludeSearchExtension {
-  QuoteSampleSearchExtension(
-      {required this.currentPubkey, this.forKind = ModifiablePostEntity.kind});
+  QuoteSampleSearchExtension({
+    required this.currentPubkey,
+    this.forKind = ModifiablePostEntity.kind,
+  });
 
   final String currentPubkey;
 
@@ -166,8 +168,10 @@ class QuoteSampleSearchExtension extends IncludeSearchExtension {
 /// For every kind [forKind] that the subscription finds also include 1 repost
 /// that the logged in user made for it — if any
 class RepostSampleSearchExtension extends IncludeSearchExtension {
-  RepostSampleSearchExtension(
-      {required this.currentPubkey, this.forKind = ModifiablePostEntity.kind});
+  RepostSampleSearchExtension({
+    required this.currentPubkey,
+    this.forKind = ModifiablePostEntity.kind,
+  });
 
   final String currentPubkey;
 
