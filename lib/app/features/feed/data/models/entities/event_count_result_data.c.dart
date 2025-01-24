@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/event_count_request_d
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
@@ -92,35 +94,35 @@ class EventCountResultData with _$EventCountResultData {
   const factory EventCountResultData({
     required EventCountRequestEntity request,
     required dynamic content,
-    required String eventId,
+    required EventReference eventReference,
     required String pubkey,
   }) = _EventCountResultData;
 
   const EventCountResultData._();
 
   factory EventCountResultData.fromEventMessage(EventMessage eventMessage) {
-    EventCountRequestEntity? request;
-    String? eventId;
-    String? pubkey;
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final pubkey = tags['p']!.first[1];
+    final eventRef = tags['a']?.first[1];
+    final eventId = tags['e']?.first[1];
+    final request = EventCountRequestEntity.fromEventMessage(
+      EventMessage.fromPayloadJson(jsonDecode(tags['request']!.first[1]) as Map<String, dynamic>),
+    );
 
-    for (final tag in eventMessage.tags) {
-      if (tag[0] == 'request') {
-        request = EventCountRequestEntity.fromEventMessage(
-          EventMessage.fromPayloadJson(jsonDecode(tag[1]) as Map<String, dynamic>),
-        );
-      }
-      if (tag[0] == 'e') eventId = tag[1];
-      if (tag[0] == 'p') pubkey = tag[1];
-    }
+    final eventReference = eventRef != null
+        ? ReplaceableEventReference.fromString(eventRef)
+        : eventId != null
+            ? ImmutableEventReference(eventId: eventId, pubkey: pubkey)
+            : null;
 
-    if (request == null || eventId == null || pubkey == null) {
+    if (eventReference == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
     return EventCountResultData(
       content: jsonDecode(eventMessage.content),
       request: request,
-      eventId: eventId,
+      eventReference: eventReference,
       pubkey: pubkey,
     );
   }
@@ -142,14 +144,14 @@ class EventCountResultData with _$EventCountResultData {
     } else if (filter.kinds != null && filter.kinds!.contains(FollowListEntity.kind)) {
       return EventCountResultType.followers;
     } else {
-      throw UnknownEventCountResultType(eventId: eventId);
+      throw UnknownEventCountResultType(eventReference);
     }
   }
 
   String getKey(EventCountResultType type) {
     final tags = request.data.filters.first.tags;
     if (tags == null || tags.isEmpty) {
-      throw UnknownEventCountResultKey(eventId: eventId);
+      throw UnknownEventCountResultKey(eventReference);
     }
 
     final qTag = tags['#q'];
@@ -166,7 +168,7 @@ class EventCountResultData with _$EventCountResultData {
     };
 
     if (key == null) {
-      throw UnknownEventCountResultKey(eventId: eventId);
+      throw UnknownEventCountResultKey(eventReference);
     }
 
     return key;

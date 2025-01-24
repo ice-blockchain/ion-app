@@ -88,13 +88,13 @@ class AssetEntityFileNotFoundException extends IONException {
 }
 
 class UnknownEventCountResultType extends IONException {
-  UnknownEventCountResultType({required String eventId})
-      : super(10019, 'Unknown EventCount result type $eventId');
+  UnknownEventCountResultType(dynamic eventInfo)
+      : super(10019, 'Unknown EventCount result type $eventInfo');
 }
 
 class UnknownEventCountResultKey extends IONException {
-  UnknownEventCountResultKey({required String eventId})
-      : super(10020, 'Unknown EventCount result key $eventId');
+  UnknownEventCountResultKey(dynamic eventInfo)
+      : super(10020, 'Unknown EventCount result key $eventInfo');
 }
 
 class UnsupportedSignatureAlgorithmException extends IONException {
