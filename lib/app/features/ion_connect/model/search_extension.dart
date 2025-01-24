@@ -97,7 +97,7 @@ class QuotesCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  final String query = 'kind6400+kind1+group+q';
+  final String query = 'kind6400+kind1+group+Q';
 }
 
 /// For every kind [forKind] that the subscription finds also include the count of reactions that it has

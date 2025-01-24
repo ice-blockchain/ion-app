@@ -68,12 +68,12 @@ void main() {
 
     test('GenericRepostsCountSearchExtension formats query correctly', () {
       final extension = GenericRepostsCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind30023>kind6400+kind16+group+e');
+      expect(extension.toString(), 'include:dependencies:kind30023>kind6400+kind16+group+a');
     });
 
     test('QuotesCountSearchExtension formats query correctly', () {
       final extension = QuotesCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind1+group+q');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind1+group+Q');
     });
 
     test('ReactionsCountSearchExtension formats query correctly', () {

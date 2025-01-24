@@ -154,7 +154,7 @@ class EventCountResultData with _$EventCountResultData {
       throw UnknownEventCountResultKey(eventReference);
     }
 
-    final qTag = tags['#q'];
+    final qTag = tags['#Q'];
     final pTag = tags['#p'];
     final eTag = tags['#e'];
     final aTag = tags['#a'];

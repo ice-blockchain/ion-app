@@ -11,17 +11,12 @@ part 'replies_count_provider.c.g.dart';
 class RepliesCount extends _$RepliesCount {
   @override
   int build(EventReference eventReference) {
-    if (eventReference is! ImmutableEventReference) {
-      //TODO:replaceable handle replaceable references
-      return 0;
-    }
-
     final cacheCount = ref
             .watch(
               ionConnectCacheProvider.select(
                 cacheSelector<EventCountResultEntity>(
                   EventCountResultEntity.cacheKeyBuilder(
-                    key: eventReference.eventId,
+                    key: eventReference.toString(),
                     type: EventCountResultType.replies,
                   ),
                 ),
