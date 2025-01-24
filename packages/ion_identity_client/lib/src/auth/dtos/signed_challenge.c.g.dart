@@ -6,19 +6,15 @@ part of 'signed_challenge.c.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-SignedChallenge _$SignedChallengeFromJson(Map<String, dynamic> json) =>
-    SignedChallenge(
+_$SignedChallengeImpl _$$SignedChallengeImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SignedChallengeImpl(
       firstFactorCredential: CredentialRequestData.fromJson(
           json['firstFactorCredential'] as Map<String, dynamic>),
-      wallets: (json['wallets'] as List<dynamic>?)
-              ?.map((e) =>
-                  RegisterCompleteWallet.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          RequestDefaults.registerCompleteWallets,
     );
 
-Map<String, dynamic> _$SignedChallengeToJson(SignedChallenge instance) =>
+Map<String, dynamic> _$$SignedChallengeImplToJson(
+        _$SignedChallengeImpl instance) =>
     <String, dynamic>{
       'firstFactorCredential': instance.firstFactorCredential.toJson(),
-      'wallets': instance.wallets.map((e) => e.toJson()).toList(),
     };

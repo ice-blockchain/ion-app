@@ -8,12 +8,10 @@ import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/d
 class TransactionCreatorFactory {
   TransactionCreatorFactory()
       : btcCreator = BtcTransactionCreator(),
-        ethCreator = EvmTransactionCreator(),
-        tonCreator = TonTransactionCreator();
+        ethCreator = EvmTransactionCreator();
 
   final BtcTransactionCreator btcCreator;
   final EvmTransactionCreator ethCreator;
-  final TonTransactionCreator tonCreator;
 
   TransactionCreator getCreator(String network) {
     switch (network.toLowerCase()) {
@@ -24,9 +22,13 @@ class TransactionCreatorFactory {
       case 'ethereumsepolia':
         return ethCreator;
       case 'ton':
+        return TonTransactionCreator(endpoint: 'https://toncenter.com/api/v2/jsonRPC');
       case 'tontestnet':
+        return TonTransactionCreator(endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC');
       case 'ion':
-        return tonCreator;
+        return TonTransactionCreator(endpoint: 'https://api.mainnet.ice.io/http/v2/jsonRPC');
+      case 'iontestnet':
+        return TonTransactionCreator(endpoint: 'https://api.testnet.ice.io/http/v2/jsonRPC');
       default:
         // Clearly handle unknown networks
         throw UnsupportedError('Unsupported network: $network');

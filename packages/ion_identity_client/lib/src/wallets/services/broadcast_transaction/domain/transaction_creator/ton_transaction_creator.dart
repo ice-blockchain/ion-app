@@ -8,7 +8,9 @@ import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/m
 import 'package:tonutils/tonutils.dart';
 
 class TonTransactionCreator implements TransactionCreator {
-  TonTransactionCreator() : _client = TonJsonRpc();
+  TonTransactionCreator({
+    required String endpoint,
+  }) : _client = TonJsonRpc(endpoint);
 
   final TonJsonRpc _client;
 
