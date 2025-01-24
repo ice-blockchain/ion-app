@@ -9,13 +9,13 @@ import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_admin_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_moderator_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_openness_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_visibility_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/description_tag.c.dart';
-import 'package:ion/app/features/ion_connect/model/tags/identifier_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/imeta_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/name_tag.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
@@ -53,10 +53,7 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
 
   @override
   EventReference toEventReference() {
-    return ReplaceableEventReference(
-      pubkey: pubkey,
-      kind: kind,
-    );
+    return data.toReplaceableEventReference(masterPubkey);
   }
 
   String get ownerPubkey => masterPubkey;
@@ -66,7 +63,9 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
 }
 
 @Freezed(equal: false)
-class CommunityDefinitionData with _$CommunityDefinitionData implements EventSerializable {
+class CommunityDefinitionData
+    with _$CommunityDefinitionData
+    implements EventSerializable, ReplaceableEntityData {
   const factory CommunityDefinitionData({
     required String uuid,
     required String id,
@@ -115,7 +114,10 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
 
     return CommunityDefinitionData(
       uuid: tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
-      id: tags[IdentifierTag.tagName]!.map(IdentifierTag.fromTag).first.value,
+      id: tags[ReplaceableEventIdentifier.tagName]!
+          .map(ReplaceableEventIdentifier.fromTag)
+          .first
+          .value,
       name: tags[NameTag.tagName]!.map(NameTag.fromTag).first.value,
       description: tags[DescriptionTag.tagName]?.map(DescriptionTag.fromTag).first.value,
       avatar: tags[ImetaTag.tagName]?.map(ImetaTag.fromTag).first.value,
@@ -147,7 +149,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       tags: [
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),
-        IdentifierTag(value: uuid).toTag(),
+        ReplaceableEventIdentifier(value: uuid).toTag(),
         NameTag(value: name).toTag(),
         if (description != null) DescriptionTag(value: description).toTag(),
         if (avatar != null) avatar!.toTag(),
@@ -166,6 +168,15 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
         ).toTag(),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String masterPubkey) {
+    return ReplaceableEventReference(
+      pubkey: masterPubkey,
+      kind: CommunityDefinitionEntity.kind,
+      dTag: uuid,
     );
   }
 }

@@ -42,10 +42,7 @@ class CommunityBanUserEntity with _$CommunityBanUserEntity, IonConnectEntity {
 
   @override
   EventReference toEventReference() {
-    return ReplaceableEventReference(
-      pubkey: pubkey,
-      kind: kind,
-    );
+    return data.toReplaceableEventReference(masterPubkey);
   }
 
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
@@ -53,7 +50,9 @@ class CommunityBanUserEntity with _$CommunityBanUserEntity, IonConnectEntity {
 }
 
 @Freezed(equal: false)
-class CommunityBanUserData with _$CommunityBanUserData implements EventSerializable {
+class CommunityBanUserData
+    with _$CommunityBanUserData
+    implements EventSerializable, ReplaceableEntityData {
   const factory CommunityBanUserData({
     required String uuid,
     required String bannedPubkey,
@@ -86,6 +85,14 @@ class CommunityBanUserData with _$CommunityBanUserData implements EventSerializa
         CommunityIdentifierTag(value: uuid).toTag(),
       ],
       content: '',
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String masterPubkey) {
+    return ReplaceableEventReference(
+      pubkey: masterPubkey,
+      kind: CommunityBanUserEntity.kind,
     );
   }
 }

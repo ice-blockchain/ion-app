@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
@@ -31,18 +32,13 @@ class RecentChatTile extends ConsumerWidget {
             ref.read(selectedConversationsIdsProvider.notifier).toggle([conversationData]);
           }
         } else {
-          if (conversationData.type == ChatType.channel) {
-            //TODO: improve UUID handling  after we extend the conversation data to include channel data
-            ChannelRoute(uuid: conversationData.nickname!).push<void>(context);
-          } else {
-            MessagesRoute(
-              name: conversationData.name,
-              chatType: conversationData.type,
-              imageUrl: conversationData.imageUrl ?? '',
-              participants: conversationData.participants,
-              nickname: '@${conversationData.nickname}',
-            ).push<void>(context);
-          }
+          MessagesRoute(
+            name: conversationData.name,
+            chatType: conversationData.type,
+            imageUrl: conversationData.imageUrl ?? '',
+            participants: conversationData.participants,
+            nickname: prefixUsername(username: conversationData.nickname, context: context),
+          ).push<void>(context);
         }
       },
       behavior: HitTestBehavior.opaque,

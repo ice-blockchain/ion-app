@@ -52,10 +52,7 @@ class CommunityUpdateEntity with _$CommunityUpdateEntity, IonConnectEntity {
 
   @override
   EventReference toEventReference() {
-    return ReplaceableEventReference(
-      pubkey: pubkey,
-      kind: kind,
-    );
+    return data.toReplaceableEventReference(masterPubkey);
   }
 
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
@@ -63,7 +60,9 @@ class CommunityUpdateEntity with _$CommunityUpdateEntity, IonConnectEntity {
 }
 
 @Freezed(equal: false)
-class CommunityUpdateData with _$CommunityUpdateData implements EventSerializable {
+class CommunityUpdateData
+    with _$CommunityUpdateData
+    implements EventSerializable, ReplaceableEntityData {
   const factory CommunityUpdateData({
     required String uuid,
     required bool isPublic,
@@ -114,6 +113,14 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
               ?.map((tag) => CommunityAdminTag.fromTag(tag).value)
               .toList() ??
           [],
+    );
+  }
+
+  @override
+  ReplaceableEventReference toReplaceableEventReference(String masterPubkey) {
+    return ReplaceableEventReference(
+      pubkey: masterPubkey,
+      kind: CommunityUpdateEntity.kind,
     );
   }
 

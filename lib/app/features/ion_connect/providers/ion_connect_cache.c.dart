@@ -48,21 +48,6 @@ class IonConnectCache extends _$IonConnectCache {
   void remove(String key) {
     state = {...state}..remove(key);
   }
-
-  // T? get<T extends IonConnectEntity>(String key) {
-  //   final entry = state[key];
-  //   if (entry == null) return null;
-
-  //   // if (T is EventCountResultEntity) {
-  //   //   final cacheMinutes = ref
-  //   //       .read(envProvider.notifier)
-  //   //       .get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
-  //   //   if (entry.createdAt.isBefore(DateTime.now().subtract(Duration(minutes: cacheMinutes)))) {
-  //   //     return null;
-  //   //   }
-  //   // }
-  //   return entry.entity as T;
-  // }
 }
 
 @Riverpod(keepAlive: true)

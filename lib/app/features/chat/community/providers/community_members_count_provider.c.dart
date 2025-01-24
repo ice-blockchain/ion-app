@@ -32,13 +32,14 @@ class CommunityMembersCount extends _$CommunityMembersCount {
   }
 
   int? _getFromCache(CommunityDefinitionEntity community) {
-    final cacheMinutes =
-        ref.read(envProvider.notifier).get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
-    final isCacheExpired =
-        community.createdAt.add(Duration(minutes: cacheMinutes)).isBefore(DateTime.now());
+    final getCommunityCreationCacheMinutes =
+        ref.read(envProvider.notifier).get<int>(EnvVariable.COMMUNITY_CREATION_CACHE_MINUTES);
+    final canUseCache = community.createdAt
+        .add(Duration(minutes: getCommunityCreationCacheMinutes))
+        .isAfter(DateTime.now());
 
-    if (!isCacheExpired) {
-      final cacheMinutes = ref
+    if (canUseCache) {
+      final getCommunityMembersCountCacheMinutes = ref
           .read(envProvider.notifier)
           .get<int>(EnvVariable.COMMUNITY_MEMBERS_COUNT_CACHE_MINUTES);
 
@@ -49,7 +50,7 @@ class CommunityMembersCount extends _$CommunityMembersCount {
               key: community.data.uuid,
               type: EventCountResultType.members,
             ),
-            expirationDuration: Duration(minutes: cacheMinutes),
+            expirationDuration: Duration(minutes: getCommunityMembersCountCacheMinutes),
           ),
         ),
       );

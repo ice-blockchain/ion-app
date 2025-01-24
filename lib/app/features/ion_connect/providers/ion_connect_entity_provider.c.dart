@@ -22,9 +22,7 @@ Future<IonConnectEntity?> ionConnectEntity(
   if (cache) {
     final entity = ref.watch(
       ionConnectCacheProvider.select(
-        cacheSelector<IonConnectEntity>(
-          CacheableEntity.cacheKeyBuilder(eventReference: eventReference),
-        ),
+        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
       ),
     );
     if (entity != null) {
