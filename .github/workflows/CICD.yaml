@@ -109,6 +109,7 @@ jobs:
           cd main-repo
           ./scripts/generate_locales.sh
           ./scripts/generate_code.sh
+          ./scripts/generate_launch_icons.sh
       - name: Analyze code
         id: analyze-code
         run: |
@@ -143,7 +144,7 @@ jobs:
           steps: ${{ '{}' }}
   ios-cicd:
     name: iOS -- build, deploy
-    needs: [flutter]
+    needs: [ flutter ]
     runs-on: macOS-latest
     env:
       FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 180
@@ -228,7 +229,7 @@ jobs:
           steps: ${{ '{}' }}
   android-cicd:
     name: Android -- build, deploy
-    needs: [flutter]
+    needs: [ flutter ]
     runs-on: macOS-latest
     steps:
       - uses: actions/cache@v3
