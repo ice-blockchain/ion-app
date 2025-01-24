@@ -3,8 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replied_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
@@ -41,9 +40,8 @@ Future<void> deleteEntity(
 
 Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
   final entityKind = switch (entity) {
-    PostEntity() => PostEntity.kind,
+    ModifiablePostEntity() => ModifiablePostEntity.kind,
     ArticleEntity() => ArticleEntity.kind,
-    RepostEntity() => RepostEntity.kind,
     GenericRepostEntity() => GenericRepostEntity.kind,
     _ => throw DeleteEntityUnsupportedTypeException(),
   };
@@ -55,7 +53,7 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
 }
 
 Future<void> _deleteFromDataSources(Ref ref, IonConnectEntity entity) async {
-  if (entity case final PostEntity post when post.data.parentEvent != null) {
+  if (entity case final ModifiablePostEntity post when post.data.parentEvent != null) {
     await _deleteReply(ref, post);
   } else if (entity case final ArticleEntity _) {
     await _deleteArticle(ref, entity);
@@ -64,34 +62,16 @@ Future<void> _deleteFromDataSources(Ref ref, IonConnectEntity entity) async {
   }
 }
 
-Future<void> _deleteReply(Ref ref, PostEntity post) async {
+Future<void> _deleteReply(Ref ref, ModifiablePostEntity post) async {
   final dataSource = ref.watch(userRepliesDataSourceProvider(post.masterPubkey)) ?? [];
 
-  final parentId = post.data.parentEvent!.eventId;
+  final parentEventReference = post.data.parentEvent!.eventReference;
 
-  ref
-      .read(
-        repliesCountProvider(
-          ImmutableEventReference(
-            eventId: parentId,
-            pubkey: post.data.parentEvent!.pubkey,
-          ),
-        ).notifier,
-      )
-      .removeOne();
+  ref.read(repliesCountProvider(parentEventReference).notifier).removeOne();
 
-  await ref
-      .read(
-        repliesProvider(
-          ImmutableEventReference(
-            eventId: parentId,
-            pubkey: post.data.parentEvent!.pubkey,
-          ),
-        ).notifier,
-      )
-      .deleteReply(entity: post);
+  await ref.read(repliesProvider(parentEventReference).notifier).deleteReply(entity: post);
 
-  ref.read(repliedEventsProvider.notifier).removeReply(parentId, post.id);
+  ref.read(repliedEventsProvider.notifier).removeReply(parentEventReference.toString(), post.id);
 
   await _deleteFromDataSource(ref, dataSource, post);
   ref.read(ionConnectCacheProvider.notifier).remove(post.cacheKey);

@@ -102,7 +102,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
                 QuotedReplaceableEvent(eventReference: quotedEvent, pubkey: quotedEvent.pubkey),
           );
         } else {
-          throw UnimplementedError();
+          throw UnsupportedEventReference(quotedEvent);
         }
       }
 
@@ -121,7 +121,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
             relatedPubkeys: _buildRelatedPubkeys(parentEntity),
           );
         } else {
-          throw UnimplementedError();
+          throw UnsupportedEventReference(quotedEvent);
         }
       }
 
