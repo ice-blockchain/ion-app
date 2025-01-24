@@ -8,7 +8,6 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
@@ -37,7 +36,6 @@ class EventParser {
       InterestSetEntity.kind => InterestSetEntity.fromEventMessage(eventMessage),
       InterestsEntity.kind => InterestsEntity.fromEventMessage(eventMessage),
       UserDelegationEntity.kind => UserDelegationEntity.fromEventMessage(eventMessage),
-      RepostEntity.kind => RepostEntity.fromEventMessage(eventMessage),
       GenericRepostEntity.kind => GenericRepostEntity.fromEventMessage(eventMessage),
       FileMetadataEntity.kind => FileMetadataEntity.fromEventMessage(eventMessage),
       ReactionEntity.kind => ReactionEntity.fromEventMessage(eventMessage),

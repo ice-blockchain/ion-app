@@ -44,6 +44,7 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
   @Deprecated('Use ModifiablePostEntity instead')
   const PostEntity._();
 
+  /// https://github.com/nostr-protocol/nips/blob/master/01.md
   @Deprecated('Use ModifiablePostEntity instead')
   factory PostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {

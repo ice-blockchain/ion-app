@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -13,8 +15,10 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 
 part 'repost_data.c.freezed.dart';
 
+@Deprecated('Use GenericRepostEntity instead')
 @Freezed(equal: false)
 class RepostEntity with _$RepostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
+  @Deprecated('Use GenericRepostEntity instead')
   const factory RepostEntity({
     required String id,
     required String pubkey,
@@ -24,9 +28,11 @@ class RepostEntity with _$RepostEntity, IonConnectEntity, ImmutableEntity, Cache
     required RepostData data,
   }) = _RepostEntity;
 
+  @Deprecated('Use GenericRepostEntity instead')
   const RepostEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/18.md
+  @Deprecated('Use GenericRepostEntity instead')
   factory RepostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventMessage.id, kind: kind);

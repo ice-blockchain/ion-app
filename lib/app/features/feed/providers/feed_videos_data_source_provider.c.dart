@@ -3,8 +3,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -42,11 +42,11 @@ List<EntitiesDataSource>? feedVideosDataSource(
         return (entity is ModifiablePostEntity &&
                 entity.data.parentEvent == null &&
                 entity.data.quotedEvent == null) ||
-            entity is RepostEntity;
+            entity is GenericRepostEntity;
       },
       requestFilters: [
         RequestFilter(
-          kinds: const [ModifiablePostEntity.kind, RepostEntity.kind],
+          kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
           search: SearchExtensions.withCounters(
             [
               ReferencesSearchExtension(contain: false),
