@@ -38,12 +38,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
+    IonConnectRelay? relay,
   }) async {
     final dislikedRelaysUrls = <String>{};
-    ion.IonConnectRelay? relay;
+
     return withRetry(
       ({error}) async {
-        relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay = relay ?? await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
           await sendAuthEvent(relay!);
@@ -68,8 +69,14 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
+    IonConnectRelay? relay,
   }) async {
-    final result = await sendEvents([event], actionSource: actionSource, cache: cache);
+    final result = await sendEvents(
+      [event],
+      actionSource: actionSource,
+      cache: cache,
+      relay: relay,
+    );
     return result?.elementAtOrNull(0);
   }
 
@@ -77,12 +84,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     final challenge = ref.read(authChallengeProvider(relay.url));
     if (challenge == null && challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
-    final authEvent = AuthEvent(
+    final signedAuthEvent = await createAuthEvent(
       challenge: challenge!,
-      relay: Uri.parse(relay.url).toString(),
+      relayUrl: Uri.parse(relay.url).toString(),
     );
-
-    final signedAuthEvent = await sign(authEvent);
 
     final authMessage = AuthMessage(
       challenge: jsonEncode(signedAuthEvent.toJson().last),
@@ -99,6 +104,18 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     }
 
     ref.read(authChallengeProvider(relay.url).notifier).clearChallenge();
+  }
+
+  Future<EventMessage> createAuthEvent({
+    required String challenge,
+    required String relayUrl,
+  }) async {
+    final authEvent = AuthEvent(
+      challenge: challenge,
+      relay: relayUrl,
+    );
+
+    return sign(authEvent);
   }
 
   Future<List<IonConnectEntity>?> sendEntitiesData(
