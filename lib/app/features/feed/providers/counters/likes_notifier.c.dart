@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
@@ -24,13 +25,13 @@ class LikesNotifier extends _$LikesNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final reference = eventReference;
-      if (reference is! ImmutableEventReference) {
-        //TODO:replaceable handle replaceable references
-        throw UnimplementedError();
-      }
+      final eventRef = eventReference;
 
-      final likeEntity = ref.read(likeReactionProvider(eventReference));
+      final likeEntity = ref.read(likeReactionProvider(eventRef));
+
+      if (eventRef is! ReplaceableEventReference) {
+        throw UnsupportedEventReference(eventRef);
+      }
 
       if (likeEntity != null) {
         final data = DeletionRequest(
@@ -38,15 +39,15 @@ class LikesNotifier extends _$LikesNotifier {
         );
         await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data, cache: false);
         ref.read(ionConnectCacheProvider.notifier).remove(likeEntity.cacheKey);
-        ref.read(likesCountProvider(eventReference).notifier).removeOne();
+        ref.read(likesCountProvider(eventRef).notifier).removeOne();
       } else {
         final data = ReactionData(
           content: ReactionEntity.likeSymbol,
-          eventId: reference.eventId,
-          pubkey: eventReference.pubkey,
+          eventReference: eventRef,
+          kind: eventRef.kind,
         );
         await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
-        ref.read(likesCountProvider(eventReference).notifier).addOne();
+        ref.read(likesCountProvider(eventRef).notifier).addOne();
       }
     });
   }

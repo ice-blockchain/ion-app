@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -58,25 +59,11 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
   const GenericRepostData._();
 
   factory GenericRepostData.fromEventMessage(EventMessage eventMessage) {
-    String? eventId;
-    String? eventRef;
-    String? pubkey;
-    int? kind;
-
-    for (final tag in eventMessage.tags) {
-      if (tag.isNotEmpty) {
-        switch (tag[0]) {
-          case 'e':
-            eventId = tag[1];
-          case 'a':
-            eventRef = tag[1];
-          case 'p':
-            pubkey = tag[1];
-          case 'k':
-            kind = int.tryParse(tag[1]);
-        }
-      }
-    }
+    final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final eventId = tags['e']?.first[1];
+    final eventRef = tags['a']?.first[1];
+    final pubkey = tags['p']?.first[1];
+    final kind = int.tryParse(tags['k']!.first[1]);
 
     if (pubkey == null || kind == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
@@ -104,7 +91,6 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
-    final eventRef = eventReference;
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
@@ -112,9 +98,9 @@ class GenericRepostData with _$GenericRepostData implements EventSerializable {
       content: repostedEvent != null ? jsonEncode(repostedEvent!.toJson().last) : '',
       tags: [
         ...tags,
-        ['p', eventRef.pubkey],
+        ['p', eventReference.pubkey],
         ['k', kind.toString()],
-        eventRef.toTag(),
+        eventReference.toTag(),
       ],
     );
   }
