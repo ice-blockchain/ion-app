@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -54,7 +55,7 @@ Future<IonConnectEntity?> ionConnectEntity(
             actionSource: ActionSourceUser(eventReference.pubkey),
           );
     } else {
-      throw UnsupportedError(eventReference.toString());
+      throw UnsupportedEventReference(eventReference);
     }
   }
 
