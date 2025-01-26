@@ -2,26 +2,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/contacts/providers/contacts_provider.c.dart';
+import 'package:ion/app/features/contacts/providers/contact_by_pubkey_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_modal_page/components/contact_item.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/share/share.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class ContactPage extends ConsumerWidget {
-  const ContactPage({required this.contactId, super.key});
+  const ContactPage({required this.pubkey, super.key});
 
-  final String contactId;
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contactData = ref.watch(contactByIdProvider(id: contactId));
+    final contactData = ref.watch(contactByPubkeyProvider(pubkey)).valueOrNull;
+
+    if (contactData == null) {
+      return const SizedBox.shrink();
+    }
 
     return SheetContent(
       body: Column(
@@ -31,36 +32,18 @@ class ContactPage extends ConsumerWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 20.0.s),
-                child: ContactItem(
-                  contactData: contactData,
-                ),
+                child: ContactItem(contactData: contactData),
               ),
             ],
           ),
-          SizedBox(
-            height: 20.0.s,
-          ),
-          if (contactData.hasIceAccount)
-            ScreenSideOffset.small(
-              child: BalanceActions(
-                onReceive: () => ReceiveCoinRoute().push<void>(context),
-                onSend: () => CoinSendRoute().push<void>(context),
-                onNeedToEnable2FA: () => Navigator.of(context).pop(true),
-              ),
-            )
-          else
-            ScreenSideOffset.small(
-              child: Button.compact(
-                mainAxisSize: MainAxisSize.max,
-                minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: Assets.svg.iconButtonInvite
-                    .icon(color: context.theme.appColors.onPrimaryAccent),
-                label: Text(
-                  context.i18n.wallet_invite_friends,
-                ),
-                onPressed: () => shareContent('Share', subject: 'Look what I found!'),
-              ),
+          SizedBox(height: 20.0.s),
+          ScreenSideOffset.small(
+            child: BalanceActions(
+              onReceive: () => ReceiveCoinRoute().push<void>(context),
+              onSend: () => CoinSendRoute().push<void>(context),
+              onNeedToEnable2FA: () => Navigator.of(context).pop(true),
             ),
+          ),
           ScreenBottomOffset(margin: 32.0.s),
         ],
       ),

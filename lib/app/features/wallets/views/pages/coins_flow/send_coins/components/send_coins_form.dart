@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/contacts/providers/contacts_provider.c.dart';
 import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
@@ -33,8 +32,8 @@ class SendCoinsForm extends HookConsumerWidget {
     final locale = context.i18n;
 
     final formController = ref.watch(sendAssetFormControllerProvider());
-    final notifier = ref.read(sendAssetFormControllerProvider().notifier);
-    final selectedContact = formController.selectedContact;
+    final notifier = ref.watch(sendAssetFormControllerProvider().notifier);
+    final selectedContactPubkey = formController.selectedContactPubkey;
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
@@ -76,14 +75,13 @@ class SendCoinsForm extends HookConsumerWidget {
                     ),
                     SizedBox(height: 12.0.s),
                     ContactInputSwitcher(
-                      contactId: selectedContact?.id,
-                      onClearTap: (contactId) => notifier.setContact(null),
+                      pubkey: selectedContactPubkey,
+                      onClearTap: (pubkey) => notifier.setContact(null),
                       onContactTap: () async {
                         final pubkey = await CoinsSelectFriendRoute().push<String>(context);
 
                         if (pubkey != null) {
-                          final contact = ref.read(contactByIdProvider(id: pubkey));
-                          notifier.setContact(contact);
+                          notifier.setContact(pubkey);
                         }
                       },
                     ),

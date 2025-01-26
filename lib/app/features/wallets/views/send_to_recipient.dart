@@ -1,40 +1,42 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/contact_data.c.dart';
+import 'package:ion/app/features/contacts/providers/contact_by_pubkey_provider.c.dart';
 
-class SendToRecipient extends StatelessWidget {
+class SendToRecipient extends ConsumerWidget {
   const SendToRecipient({
     required this.address,
-    this.contact,
+    this.pubkey,
     super.key,
   });
 
   final String address;
-  final ContactData? contact;
+  final String? pubkey;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
+    final contact = pubkey != null ? ref.watch(contactByPubkeyProvider(pubkey!)).valueOrNull : null;
 
     if (contact != null) {
       return RoundedCard.filled(
         child: Column(
           children: [
             ListItem.user(
-              title: Text(contact!.name),
-              subtitle: Text(contact!.nickname!),
-              profilePicture: contact!.icon,
+              title: Text(contact.name),
+              subtitle: Text(contact.nickname ?? ''),
+              profilePicture: contact.icon,
             ),
             SizedBox(height: 12.0.s),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 address,
-                style: context.theme.appTextThemes.caption3.copyWith(),
+                style: context.theme.appTextThemes.caption3,
               ),
             ),
           ],
@@ -48,7 +50,7 @@ class SendToRecipient extends StatelessWidget {
           child: Text(
             address,
             textAlign: TextAlign.center,
-            style: context.theme.appTextThemes.caption3.copyWith(),
+            style: context.theme.appTextThemes.caption3,
           ),
         ),
       );

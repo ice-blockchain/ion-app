@@ -7,12 +7,10 @@ part 'contact_data.c.freezed.dart';
 @freezed
 class ContactData with _$ContactData {
   const factory ContactData({
-    required String id,
+    required String pubkey,
     required String name,
     required String icon,
-    required bool hasIceAccount,
     String? nickname,
-    String? phoneNumber,
     bool? isVerified,
     DateTime? lastSeen,
   }) = _ContactData;

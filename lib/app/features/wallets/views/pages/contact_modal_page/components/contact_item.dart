@@ -27,22 +27,10 @@ class ContactItem extends StatelessWidget {
         ContactItemName(contactData: contactData),
         SizedBox(height: 4.0.s),
         Text(
-          contactData.hasIceAccount
-              ? prefixUsername(
-                  username: contactData.nickname,
-                  context: context,
-                )
-              : contactData.phoneNumber ?? '',
+          prefixUsername(username: contactData.nickname, context: context),
           style: context.theme.appTextThemes.caption
               .copyWith(color: context.theme.appColors.tertararyText),
         ),
-        if (!contactData.hasIceAccount) SizedBox(height: 34.0.s),
-        if (!contactData.hasIceAccount)
-          Text(
-            context.i18n.wallet_friends_does_not_have_account,
-            style: context.theme.appTextThemes.subtitle2,
-            textAlign: TextAlign.center,
-          ),
       ],
     );
   }

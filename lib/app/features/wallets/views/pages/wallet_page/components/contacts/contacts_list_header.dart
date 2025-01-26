@@ -34,7 +34,7 @@ class ContactListHeader extends StatelessWidget {
               final pubkey = await NftSelectFriendRoute().push<String>(context);
               if (pubkey != null) {
                 if (context.mounted) {
-                  final needToEnable2FA = await ContactRoute(contactId: pubkey).push<bool>(context);
+                  final needToEnable2FA = await ContactRoute(pubkey: pubkey).push<bool>(context);
                   if (needToEnable2FA != null && needToEnable2FA == true) {
                     await Future<void>.delayed(const Duration(seconds: 1));
                     if (context.mounted) {
