@@ -33,13 +33,12 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
-    final filteredCoinsState = ref.watch(filteredCoinsNotifierProvider);
     final nftsState = ref.watch(filteredNftsProvider);
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
     Widget getActiveTabContent() {
       if (activeTab.value == WalletTabType.coins) {
-        return filteredCoinsState.isLoading ? const ListLoader() : const CoinsTab();
+        return const CoinsTab();
       }
       if (nftsState.isLoading) {
         return nftLayoutType == NftLayoutType.list ? const ListLoader() : const GridLoader();

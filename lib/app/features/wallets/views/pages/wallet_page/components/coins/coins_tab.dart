@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallets/providers/filtered_wallet_coins_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/empty_state/empty_state.dart';
@@ -20,11 +20,11 @@ class CoinsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedCoinsState = ref.watch(filteredWalletCoinsProvider);
+    final selectedCoinsState = ref.watch(filteredCoinsNotifierProvider);
 
     return selectedCoinsState.maybeWhen(
-      data: (selectedCoins) {
-        if (selectedCoins.isEmpty) {
+      data: (groups) {
+        if (groups.isEmpty) {
           return EmptyState(
             tabType: tabType,
             onBottomActionTap: () {
@@ -36,16 +36,16 @@ class CoinsTab extends ConsumerWidget {
         return SliverMainAxisGroup(
           slivers: [
             SliverList.separated(
-              itemCount: selectedCoins.length,
+              itemCount: groups.length,
               separatorBuilder: (BuildContext context, int index) {
                 return SizedBox(height: 12.0.s);
               },
               itemBuilder: (BuildContext context, int index) {
                 return ScreenSideOffset.small(
-                  child: CoinItem(
-                    coinInWallet: selectedCoins[index],
+                  child: CoinsGroupItem(
+                    coinsGroup: groups[index],
                     onTap: () {
-                      CoinsDetailsRoute(coinId: selectedCoins[index].coin.abbreviation).go(context);
+                      CoinsDetailsRoute(symbolGroup: groups[index].symbolGroup).go(context);
                     },
                   ),
                 );

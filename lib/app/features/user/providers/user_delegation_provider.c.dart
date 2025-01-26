@@ -9,8 +9,8 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
-import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/wallets/main_wallet_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -46,9 +46,7 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
 @Riverpod(keepAlive: true)
 Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
-  if (mainWallet == null) {
-    return null;
-  }
+
   try {
     return await ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
   } on UserRelaysNotFoundException catch (_) {
@@ -82,7 +80,7 @@ class UserDelegationManager extends _$UserDelegationManager {
     OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   ) async {
     final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
-    final mainWallet = (await ref.read(mainWalletProvider.future))!;
+    final mainWallet = await ref.read(mainWalletProvider.future);
     final ionIdentity = await ref.read(ionIdentityProvider.future);
 
     final tags = userDelegationData.tags;

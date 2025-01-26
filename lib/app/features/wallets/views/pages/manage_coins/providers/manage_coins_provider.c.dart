@@ -4,9 +4,10 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/domain/search_coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/manage_coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/manage_coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/update_wallet_view_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -16,41 +17,45 @@ part 'manage_coins_provider.c.g.dart';
 @riverpod
 class ManageCoinsNotifier extends _$ManageCoinsNotifier {
   @override
-  Future<Map<String, ManageCoinData>> build() async {
+  Future<Map<String, ManageCoinsGroup>> build() async {
     final walletView = await ref.watch(currentWalletViewDataProvider.future);
 
-    final coinsFromWallet = <String, ManageCoinData>{
-      for (final coinInWallet in walletView.coins)
-        coinInWallet.coin.id: ManageCoinData(
-          coin: coinInWallet.coin,
-          isSelected: state.value?[coinInWallet.coin.id]?.isSelected ?? true,
+    final coinsFromWallet = <String, ManageCoinsGroup>{
+      for (final coinGroup in walletView.coinGroups)
+        coinGroup.symbolGroup: ManageCoinsGroup(
+          coinsGroup: coinGroup,
+          isSelected: state.value?[coinGroup.symbolGroup]?.isSelected ?? true,
         ),
     };
 
     return coinsFromWallet;
   }
 
-  void switchCoin({required CoinData coin}) {
-    final currentMap = state.value ?? <String, ManageCoinData>{};
-    currentMap[coin.id] = ManageCoinData(
-      coin: coin,
-      isSelected: !(currentMap[coin.id]?.isSelected ?? false),
+  void switchCoinsGroup(CoinsGroup coinsGroup) {
+    final currentMap = state.value ?? <String, ManageCoinsGroup>{};
+    final currentGroup = currentMap[coinsGroup.symbolGroup];
+
+    currentMap[coinsGroup.symbolGroup] = ManageCoinsGroup(
+      coinsGroup: coinsGroup,
+      isSelected: !(currentGroup?.isSelected ?? false),
     );
-    state = AsyncData<Map<String, ManageCoinData>>(currentMap);
+    state = AsyncData<Map<String, ManageCoinsGroup>>(currentMap);
   }
 
   Future<void> save() async {
+    final currentWalletView = await ref.read(currentWalletViewDataProvider.future);
     final updatedCoins = state.value?.values
-            .where((manageCoin) => manageCoin.isSelected)
-            .map((manageCoin) => manageCoin.coin)
+            .where((manageGroup) => manageGroup.isSelected)
+            .expand((manageGroup) => manageGroup.coinsGroup.coins)
+            .map((e) => e.coin)
             .toList() ??
         [];
-    final currentWalletView = await ref.read(currentWalletViewDataProvider.future);
 
-    final updateRequired = !(const ListEquality<CoinData>().equals(
-      updatedCoins,
-      currentWalletView.coins.map((e) => e.coin).toList(),
-    ));
+    final walletCoins =
+        currentWalletView.coinGroups.expand((e) => e.coins).map((e) => e.coin).toList();
+
+    final updateRequired = !(const ListEquality<CoinData>().equals(updatedCoins, walletCoins));
+
     if (updateRequired) {
       unawaited(
         ref.read(updateWalletViewNotifierProvider.notifier).updateWalletView(
@@ -65,13 +70,13 @@ class ManageCoinsNotifier extends _$ManageCoinsNotifier {
 @riverpod
 class SearchCoinsNotifier extends _$SearchCoinsNotifier {
   @override
-  Future<Set<CoinData>> build() async => {};
+  Future<Set<CoinsGroup>> build() async => {};
 
   Future<void> search({required String query}) async {
     if (query.isEmpty) {
       state = ref.read(manageCoinsNotifierProvider).map(
             data: (data) => AsyncData(
-              data.value.values.map((manageCoin) => manageCoin.coin).toSet(),
+              data.value.values.map((manageCoin) => manageCoin.coinsGroup).toSet(),
             ),
             error: (error) => AsyncError(error.error, error.stackTrace),
             loading: (loading) => const AsyncLoading(),
@@ -81,24 +86,24 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
 
     await ref.debounce();
 
-    final repository = ref.read(coinsRepositoryProvider);
-    final searchResult = await repository
-        .searchCoins(query)
-        .then((result) => result.map(CoinData.fromDB)); // TODO: (1) Move converting to the repo?
-
+    final searchService = await ref.read(searchCoinsServiceProvider.future);
+    final searchResult = await searchService.search(query).then((coinGroups) {
+      return {for (final group in coinGroups) group.symbolGroup: group};
+    });
     state = ref.read(manageCoinsNotifierProvider).maybeWhen(
           data: (coinsInWalletView) {
-            final coinsInWallet =
-                coinsInWalletView.values.map((coinInWallet) => coinInWallet.coin).toList();
+            final walletCoinGroups =
+                coinsInWalletView.values.map((manageGroup) => manageGroup.coinsGroup).toList();
 
             // Coins from wallet should be first in the search results list
-            final result = <CoinData>{};
-            for (final coinInWallet in coinsInWallet) {
-              if (searchResult.contains(coinInWallet)) {
-                result.add(coinInWallet);
+            final result = <CoinsGroup>{};
+            for (final coinsGroup in walletCoinGroups) {
+              final coinsGroupFromWalletView = searchResult[coinsGroup.symbolGroup];
+              if (coinsGroupFromWalletView != null) {
+                result.add(coinsGroupFromWalletView);
               }
             }
-            result.addAll(searchResult);
+            result.addAll(searchResult.values);
 
             return AsyncData(result);
           },

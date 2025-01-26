@@ -14,6 +14,7 @@ _$WalletAssetImpl _$$WalletAssetImplFromJson(Map<String, dynamic> json) =>
       decimals: (json['decimals'] as num).toInt(),
       balance: json['balance'] as String,
       verified: json['verified'] as bool?,
+      kind: json['kind'] as String,
     );
 
 Map<String, dynamic> _$$WalletAssetImplToJson(_$WalletAssetImpl instance) =>
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$WalletAssetImplToJson(_$WalletAssetImpl instance) =>
       'decimals': instance.decimals,
       'balance': instance.balance,
       'verified': instance.verified,
+      'kind': instance.kind,
     };

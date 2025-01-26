@@ -57,12 +57,11 @@ class CoinsRepository {
 
   /// Returns Stream of coins. Expects a list of coins to watch.
   /// If the [coins] list is not provided, all coins will be watched.
-  Stream<List<Coin>> watchCoins([List<Coin>? coins]) =>
-      _coinsDao.watch(coins?.map((coin) => coin.id));
+  Stream<List<Coin>> watchCoins([Iterable<String>? coinIds]) => _coinsDao.watch(coinIds);
 
   /// Returns Future of coins. Expects a list of coins to get.
   /// If the [coins] list is not provided, all coins will be returned.
-  Future<List<Coin>> getCoins([List<Coin>? coins]) => _coinsDao.get(coins?.map((coin) => coin.id));
+  Future<List<Coin>> getCoins([Iterable<String>? coinIds]) => _coinsDao.get(coinIds);
 
   int? getLastSyncTime() => _localStorage.getInt(_lastSyncTimeKey);
 

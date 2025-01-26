@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,7 +10,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_type.dart';
-import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
@@ -23,13 +23,15 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class CoinDetailsPage extends HookConsumerWidget {
-  const CoinDetailsPage({required this.coinId, super.key});
+  const CoinDetailsPage({required this.symbolGroup, super.key});
 
-  final String coinId;
+  final String symbolGroup;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
+    final walletView = ref.watch(currentWalletViewDataProvider).valueOrNull;
+    final coinsGroup = walletView?.coinGroups.firstWhereOrNull((e) => e.symbolGroup == symbolGroup);
+
     final walletId = ref.watch(currentWalletViewIdProvider).valueOrNull;
     final scrollController = useScrollController();
     final coinTransactionsMap = useTransactionsByDate(context, ref);
@@ -40,19 +42,19 @@ class CoinDetailsPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        if (walletId != null && walletId.isNotEmpty && coinId.isNotEmpty) {
+        if (walletId != null && walletId.isNotEmpty && coinsGroup != null) {
           ref.read(coinTransactionsNotifierProvider.notifier).fetch(
                 walletId: walletId,
-                coinId: coinId,
+                coinId: coinsGroup.symbolGroup,
                 networkType: activeNetworkType.value,
               );
         }
       },
-      <Object?>[walletId, coinId, activeNetworkType.value],
+      <Object?>[walletId, coinsGroup?.symbolGroup, activeNetworkType.value],
     );
 
     // TODO: add proper loading and error handling
-    if (coinInWallet == null) {
+    if (coinsGroup == null) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -60,17 +62,15 @@ class CoinDetailsPage extends HookConsumerWidget {
       );
     }
 
-    final coinData = coinInWallet.coin;
-
     return Scaffold(
       appBar: NavigationAppBar.screen(
         title: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CoinIconWidget(imageUrl: coinData.iconUrl),
+            CoinIconWidget(imageUrl: coinsGroup.iconUrl),
             SizedBox(width: 6.0.s),
-            Text(coinData.name),
+            Text(coinsGroup.name),
           ],
         ),
       ),
@@ -82,7 +82,7 @@ class CoinDetailsPage extends HookConsumerWidget {
               children: [
                 const Delimiter(),
                 Balance(
-                  coinData: coinInWallet,
+                  coinsGroup: coinsGroup,
                   networkType: activeNetworkType.value,
                 ),
                 const Delimiter(),
@@ -121,10 +121,12 @@ class CoinDetailsPage extends HookConsumerWidget {
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {
+                  // TODO: Transactions is not implemented
                   return ScreenSideOffset.small(
                     child: TransactionListItem(
                       transactionData: transactions[index],
-                      coinData: coinData,
+                      coinData: coinsGroup.coins.first.coin,
+                      // coinData: coinData,
                     ),
                   );
                 },

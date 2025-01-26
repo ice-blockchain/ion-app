@@ -20,7 +20,8 @@ class _CoinNetworkItem extends ConsumerWidget {
 
     return coinDataResult.maybeWhen(
       data: (coinInWallet) {
-        final coinData = coinInWallet.coin;
+        // TODO: Check nullability
+        final coinData = coinInWallet!.coin;
         return ListItem(
           title: Row(
             children: [

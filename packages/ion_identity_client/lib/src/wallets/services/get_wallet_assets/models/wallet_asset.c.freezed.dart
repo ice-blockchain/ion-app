@@ -26,6 +26,7 @@ mixin _$WalletAsset {
   int get decimals => throw _privateConstructorUsedError;
   String get balance => throw _privateConstructorUsedError;
   bool? get verified => throw _privateConstructorUsedError;
+  String get kind => throw _privateConstructorUsedError;
 
   /// Serializes this WalletAsset to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +50,8 @@ abstract class $WalletAssetCopyWith<$Res> {
       String symbol,
       int decimals,
       String balance,
-      bool? verified});
+      bool? verified,
+      String kind});
 }
 
 /// @nodoc
@@ -73,6 +75,7 @@ class _$WalletAssetCopyWithImpl<$Res, $Val extends WalletAsset>
     Object? decimals = null,
     Object? balance = null,
     Object? verified = freezed,
+    Object? kind = null,
   }) {
     return _then(_value.copyWith(
       name: freezed == name
@@ -99,6 +102,10 @@ class _$WalletAssetCopyWithImpl<$Res, $Val extends WalletAsset>
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
               as bool?,
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -117,7 +124,8 @@ abstract class _$$WalletAssetImplCopyWith<$Res>
       String symbol,
       int decimals,
       String balance,
-      bool? verified});
+      bool? verified,
+      String kind});
 }
 
 /// @nodoc
@@ -139,6 +147,7 @@ class __$$WalletAssetImplCopyWithImpl<$Res>
     Object? decimals = null,
     Object? balance = null,
     Object? verified = freezed,
+    Object? kind = null,
   }) {
     return _then(_$WalletAssetImpl(
       name: freezed == name
@@ -165,20 +174,26 @@ class __$$WalletAssetImplCopyWithImpl<$Res>
           ? _value.verified
           : verified // ignore: cast_nullable_to_non_nullable
               as bool?,
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$WalletAssetImpl implements _WalletAsset {
+class _$WalletAssetImpl extends _WalletAsset {
   const _$WalletAssetImpl(
       {required this.name,
       required this.contract,
       required this.symbol,
       required this.decimals,
       required this.balance,
-      required this.verified});
+      required this.verified,
+      required this.kind})
+      : super._();
 
   factory _$WalletAssetImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletAssetImplFromJson(json);
@@ -195,10 +210,12 @@ class _$WalletAssetImpl implements _WalletAsset {
   final String balance;
   @override
   final bool? verified;
+  @override
+  final String kind;
 
   @override
   String toString() {
-    return 'WalletAsset(name: $name, contract: $contract, symbol: $symbol, decimals: $decimals, balance: $balance, verified: $verified)';
+    return 'WalletAsset(name: $name, contract: $contract, symbol: $symbol, decimals: $decimals, balance: $balance, verified: $verified, kind: $kind)';
   }
 
   @override
@@ -214,13 +231,14 @@ class _$WalletAssetImpl implements _WalletAsset {
                 other.decimals == decimals) &&
             (identical(other.balance, balance) || other.balance == balance) &&
             (identical(other.verified, verified) ||
-                other.verified == verified));
+                other.verified == verified) &&
+            (identical(other.kind, kind) || other.kind == kind));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, name, contract, symbol, decimals, balance, verified);
+      runtimeType, name, contract, symbol, decimals, balance, verified, kind);
 
   /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.
@@ -238,14 +256,16 @@ class _$WalletAssetImpl implements _WalletAsset {
   }
 }
 
-abstract class _WalletAsset implements WalletAsset {
+abstract class _WalletAsset extends WalletAsset {
   const factory _WalletAsset(
       {required final String? name,
       required final String? contract,
       required final String symbol,
       required final int decimals,
       required final String balance,
-      required final bool? verified}) = _$WalletAssetImpl;
+      required final bool? verified,
+      required final String kind}) = _$WalletAssetImpl;
+  const _WalletAsset._() : super._();
 
   factory _WalletAsset.fromJson(Map<String, dynamic> json) =
       _$WalletAssetImpl.fromJson;
@@ -262,6 +282,8 @@ abstract class _WalletAsset implements WalletAsset {
   String get balance;
   @override
   bool? get verified;
+  @override
+  String get kind;
 
   /// Create a copy of WalletAsset
   /// with the given fields replaced by the non-null parameter values.

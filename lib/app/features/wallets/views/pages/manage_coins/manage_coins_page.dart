@@ -10,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/components/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/components/manage_coin_item_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
@@ -61,31 +62,13 @@ class ManageCoinsPage extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                // TODO: Refactor copy/paste
                 if (searchText.value.isEmpty)
                   manageCoins.maybeWhen(
-                    data: (manageCoins) {
-                      if (manageCoins.isEmpty) {
-                        return const EmptyState();
-                      }
-
-                      final coins = manageCoins.values;
-
-                      return SliverPadding(
-                        padding: EdgeInsets.only(
-                          bottom: ScreenBottomOffset.defaultMargin,
-                        ),
-                        sliver: SliverList.separated(
-                          itemCount: coins.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
-                          itemBuilder: (BuildContext context, int index) {
-                            return ScreenSideOffset.small(
-                              child: ManageCoinItemWidget(
-                                coin: coins.elementAt(index).coin,
-                              ),
-                            );
-                          },
-                        ),
+                    data: (coins) {
+                      if (coins.isEmpty) return const EmptyState();
+                      return _CoinsList(
+                        itemCount: coins.length,
+                        itemProvider: (index) => coins.values.elementAt(index).coinsGroup,
                       );
                     },
                     loading: () => const _ProgressIndicator(),
@@ -94,25 +77,10 @@ class ManageCoinsPage extends HookConsumerWidget {
                 else
                   searchResult.maybeWhen(
                     data: (coins) {
-                      if (coins.isEmpty) {
-                        return const EmptyState();
-                      }
-
-                      return SliverPadding(
-                        padding: EdgeInsets.only(
-                          bottom: ScreenBottomOffset.defaultMargin,
-                        ),
-                        sliver: SliverList.separated(
-                          itemCount: coins.length,
-                          separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
-                          itemBuilder: (BuildContext context, int index) {
-                            return ScreenSideOffset.small(
-                              child: ManageCoinItemWidget(
-                                coin: coins.elementAt(index),
-                              ),
-                            );
-                          },
-                        ),
+                      if (coins.isEmpty) return const EmptyState();
+                      return _CoinsList(
+                        itemCount: coins.length,
+                        itemProvider: (index) => coins.elementAt(index),
                       );
                     },
                     loading: () => const _ProgressIndicator(),
@@ -122,6 +90,33 @@ class ManageCoinsPage extends HookConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CoinsList extends StatelessWidget {
+  const _CoinsList({required this.itemCount, required this.itemProvider});
+
+  final int itemCount;
+  final CoinsGroup Function(int index) itemProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: EdgeInsets.only(
+        bottom: ScreenBottomOffset.defaultMargin,
+      ),
+      sliver: SliverList.separated(
+        itemCount: itemCount,
+        separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
+        itemBuilder: (BuildContext context, int index) {
+          return ScreenSideOffset.small(
+            child: ManageCoinItemWidget(
+              coinsGroup: itemProvider(index),
+            ),
+          );
+        },
       ),
     );
   }
