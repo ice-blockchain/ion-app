@@ -24,13 +24,11 @@ class SearchCoinsService {
   Future<List<CoinsGroup>> search(String query) async {
     final coins = await _coinsRepository.searchCoins(query);
     final grouped = coins.groupListsBy((coin) => coin.symbolGroup);
-    final result = grouped.keys
-        .where((symbolGroup) => grouped[symbolGroup]?.isNotEmpty ?? false)
-        .map(
-          (symbolGroup) => CoinsGroup.fromCoinsData(
-            grouped[symbolGroup]!.map(CoinData.fromDB),
-          ),
-        );
+    final result = grouped.keys.map(
+      (symbolGroup) => CoinsGroup.fromCoinsData(
+        grouped[symbolGroup]!.map(CoinData.fromDB),
+      ),
+    );
     return result.toList();
   }
 }
