@@ -97,6 +97,7 @@ jobs:
         id: bootstrap
         run: |
           cd main-repo
+          flutter clean
           ./scripts/bootstrap.sh
       - name: Install dependencies
         id: install-dependencies
@@ -109,7 +110,6 @@ jobs:
           cd main-repo
           ./scripts/generate_locales.sh
           ./scripts/generate_code.sh
-          ./scripts/generate_launch_icons.sh
       - name: Analyze code
         id: analyze-code
         run: |
@@ -207,6 +207,7 @@ jobs:
         id: build-app
         run: |
           cd main-repo
+          flutter clean
           set -a
           source .env
           set +a
