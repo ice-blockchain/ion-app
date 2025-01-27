@@ -24,6 +24,7 @@ mixin _$WalletViewAggregationWallet {
   WalletAsset get asset => throw _privateConstructorUsedError;
   String get walletId => throw _privateConstructorUsedError;
   String get network => throw _privateConstructorUsedError;
+  String? get coinId => throw _privateConstructorUsedError;
 
   /// Serializes this WalletViewAggregationWallet to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,7 +44,8 @@ abstract class $WalletViewAggregationWalletCopyWith<$Res> {
       _$WalletViewAggregationWalletCopyWithImpl<$Res,
           WalletViewAggregationWallet>;
   @useResult
-  $Res call({WalletAsset asset, String walletId, String network});
+  $Res call(
+      {WalletAsset asset, String walletId, String network, String? coinId});
 
   $WalletAssetCopyWith<$Res> get asset;
 }
@@ -67,6 +69,7 @@ class _$WalletViewAggregationWalletCopyWithImpl<$Res,
     Object? asset = null,
     Object? walletId = null,
     Object? network = null,
+    Object? coinId = freezed,
   }) {
     return _then(_value.copyWith(
       asset: null == asset
@@ -81,6 +84,10 @@ class _$WalletViewAggregationWalletCopyWithImpl<$Res,
           ? _value.network
           : network // ignore: cast_nullable_to_non_nullable
               as String,
+      coinId: freezed == coinId
+          ? _value.coinId
+          : coinId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -104,7 +111,8 @@ abstract class _$$WalletViewAggregationWalletImplCopyWith<$Res>
       __$$WalletViewAggregationWalletImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({WalletAsset asset, String walletId, String network});
+  $Res call(
+      {WalletAsset asset, String walletId, String network, String? coinId});
 
   @override
   $WalletAssetCopyWith<$Res> get asset;
@@ -128,6 +136,7 @@ class __$$WalletViewAggregationWalletImplCopyWithImpl<$Res>
     Object? asset = null,
     Object? walletId = null,
     Object? network = null,
+    Object? coinId = freezed,
   }) {
     return _then(_$WalletViewAggregationWalletImpl(
       asset: null == asset
@@ -142,6 +151,10 @@ class __$$WalletViewAggregationWalletImplCopyWithImpl<$Res>
           ? _value.network
           : network // ignore: cast_nullable_to_non_nullable
               as String,
+      coinId: freezed == coinId
+          ? _value.coinId
+          : coinId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -151,7 +164,10 @@ class __$$WalletViewAggregationWalletImplCopyWithImpl<$Res>
 class _$WalletViewAggregationWalletImpl
     implements _WalletViewAggregationWallet {
   const _$WalletViewAggregationWalletImpl(
-      {required this.asset, required this.walletId, required this.network});
+      {required this.asset,
+      required this.walletId,
+      required this.network,
+      this.coinId});
 
   factory _$WalletViewAggregationWalletImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -163,10 +179,12 @@ class _$WalletViewAggregationWalletImpl
   final String walletId;
   @override
   final String network;
+  @override
+  final String? coinId;
 
   @override
   String toString() {
-    return 'WalletViewAggregationWallet(asset: $asset, walletId: $walletId, network: $network)';
+    return 'WalletViewAggregationWallet(asset: $asset, walletId: $walletId, network: $network, coinId: $coinId)';
   }
 
   @override
@@ -177,12 +195,14 @@ class _$WalletViewAggregationWalletImpl
             (identical(other.asset, asset) || other.asset == asset) &&
             (identical(other.walletId, walletId) ||
                 other.walletId == walletId) &&
-            (identical(other.network, network) || other.network == network));
+            (identical(other.network, network) || other.network == network) &&
+            (identical(other.coinId, coinId) || other.coinId == coinId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, asset, walletId, network);
+  int get hashCode =>
+      Object.hash(runtimeType, asset, walletId, network, coinId);
 
   /// Create a copy of WalletViewAggregationWallet
   /// with the given fields replaced by the non-null parameter values.
@@ -206,7 +226,8 @@ abstract class _WalletViewAggregationWallet
   const factory _WalletViewAggregationWallet(
       {required final WalletAsset asset,
       required final String walletId,
-      required final String network}) = _$WalletViewAggregationWalletImpl;
+      required final String network,
+      final String? coinId}) = _$WalletViewAggregationWalletImpl;
 
   factory _WalletViewAggregationWallet.fromJson(Map<String, dynamic> json) =
       _$WalletViewAggregationWalletImpl.fromJson;
@@ -217,6 +238,8 @@ abstract class _WalletViewAggregationWallet
   String get walletId;
   @override
   String get network;
+  @override
+  String? get coinId;
 
   /// Create a copy of WalletViewAggregationWallet
   /// with the given fields replaced by the non-null parameter values.

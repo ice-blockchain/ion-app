@@ -12,6 +12,7 @@ _$WalletViewAggregationWalletImpl _$$WalletViewAggregationWalletImplFromJson(
       asset: WalletAsset.fromJson(json['asset'] as Map<String, dynamic>),
       walletId: json['walletId'] as String,
       network: json['network'] as String,
+      coinId: json['coinId'] as String?,
     );
 
 Map<String, dynamic> _$$WalletViewAggregationWalletImplToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$WalletViewAggregationWalletImplToJson(
       'asset': instance.asset.toJson(),
       'walletId': instance.walletId,
       'network': instance.network,
+      'coinId': instance.coinId,
     };
