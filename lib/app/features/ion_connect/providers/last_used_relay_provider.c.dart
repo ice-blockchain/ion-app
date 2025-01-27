@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'last_used_relay_provider.c.g.dart';
