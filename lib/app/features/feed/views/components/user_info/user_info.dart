@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -14,12 +16,16 @@ class UserInfo extends HookConsumerWidget {
     required this.pubkey,
     this.trailing,
     this.textStyle,
+    this.createdAt,
+    this.timeFormat = TimestampFormat.short,
     super.key,
   });
 
   final String pubkey;
   final Widget? trailing;
   final TextStyle? textStyle;
+  final DateTime? createdAt;
+  final TimestampFormat timeFormat;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,12 +45,27 @@ class UserInfo extends HookConsumerWidget {
               style: textStyle,
             ),
           ),
-          subtitle: GestureDetector(
-            onTap: openProfile,
-            child: Text(
-              prefixUsername(username: userMetadataEntity.data.name, context: context),
-              style: textStyle,
-            ),
+          subtitle: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: openProfile,
+                child: Text(
+                  prefixUsername(username: userMetadataEntity.data.name, context: context),
+                  style: textStyle,
+                ),
+              ),
+              if (createdAt != null) ...[
+                SizedBox(width: 4.0.s),
+                const Text('•'),
+                SizedBox(width: 4.0.s),
+                TimestampWidget(
+                  createdAt: createdAt!,
+                  timeFormat: timeFormat,
+                  style: textStyle,
+                ),
+              ],
+            ],
           ),
           profilePictureWidget: GestureDetector(
             onTap: openProfile,

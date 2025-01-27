@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:timeago_flutter/timeago_flutter.dart';
 
 part './variants/list_item_dapp.dart';
 part './variants/list_item_text_with_icon.dart';
@@ -56,7 +55,6 @@ class ListItem extends StatelessWidget {
     bool showProfilePictureIceBadge,
     bool ntfAvatar,
     bool isSelected,
-    DateTime? timeago,
     double? avatarSize,
   }) = _ListItemUser;
 

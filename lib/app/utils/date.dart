@@ -5,23 +5,16 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/l10n/timeago_locales.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
-/// Converts a timestamp to a more readable date string, with special handling
-/// for dates that represent "today" and "yesterday".
+/// Converts a timestamp (in milliseconds) into a human-readable string such as
+/// "today", "yesterday", or a formatted date (MMM d yyyy).
 ///
-/// The function checks if the given timestamp falls into today, yesterday, or
-/// any other day. If it's today or yesterday, it returns localized strings for
-/// these values. For other dates, it formats the date as 'MMM d yyyy'.
-///
-/// Parameters:
-///   - `timestamp`: The Unix timestamp (in milliseconds) that will be converted
-///     into a date string.
-///   - `context`: The BuildContext used for accessing localized strings for
-///     today and yesterday through an extension on BuildContext.
-///
-/// Returns: A string representing the human-readable date. This will be either
-/// "today", "yesterday", or a date formatted as 'MMM d yyyy'.
-String toPastDateDisplayValue(int timestamp, BuildContext context) {
+/// If the [timestamp] falls on today's date, returns a localized "today".
+/// If it falls on yesterday's date, returns a localized "yesterday".
+/// Otherwise, it formats the date as 'MMM d yyyy' (or localized equivalent).
+String toPastDateDisplayValue(int timestamp, BuildContext context, {Locale? locale}) {
   final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
@@ -35,33 +28,21 @@ String toPastDateDisplayValue(int timestamp, BuildContext context) {
     return context.i18n.date_yesterday;
   }
 
-  return DateFormat('MMM d yyyy').format(date);
+  return DateFormat.yMMMd(locale?.languageCode).format(date);
 }
 
-/// Converts a timestamp to a time string in the format 'HH:mm'.
+/// Converts a timestamp (in milliseconds) into a time string in the 'HH:mm' format.
+/// Honors the [locale] if provided.
 ///
-/// This method takes a Unix timestamp (in milliseconds) and formats it into
-/// a string showing only the hours and minutes of the time.
-///
-/// Parameters:
-///   - `timestamp`: The Unix timestamp (in milliseconds) that will be converted
-///     into a time string.
-///
-/// Returns: A string representing the time in 'HH:mm' format.
-String toTimeDisplayValue(int timestamp) {
+/// Returns a string representing the time in 'HH:mm', e.g., "14:30".
+String toTimeDisplayValue(int timestamp, {Locale? locale}) {
   final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-  return DateFormat('HH:mm').format(date);
+  return DateFormat.Hm(locale?.languageCode).format(date);
 }
 
-/// Formats a duration into a string in the format 'mm:ss'.
+/// Formats a [Duration] into a string of the format 'mm:ss'.
 ///
-/// This method takes a Duration object and formats it into a string showing
-/// only the minutes and seconds of the duration.
-///
-/// Parameters:
-///  - `duration`: The Duration object that will be converted into a time string.
-///
-/// Returns: A string representing the duration in 'mm:ss' format.
+/// For example, a duration of 125 seconds would be formatted as "02:05".
 String formatDuration(Duration duration) {
   String twoDigits(int n) => n.toString().padLeft(2, '0');
 
@@ -71,60 +52,36 @@ String formatDuration(Duration duration) {
   return '$minutes:$seconds';
 }
 
-/// Formats a timestamp into a human-readable string.
+/// Formats a [DateTime] for message timestamps based on how far in the past
+/// the given time is.
 ///
-/// This method takes a [DateTime] object and formats it into a string that
-/// represents the date in a human-readable format. The format of the string
-/// depends on how far in the past the date is:
-///
-/// - If the timestamp is from today, it returns the time in "HH:mm" format.
-/// - If the timestamp is from the current week, it returns the day of the week (e.g., "Mon").
-/// - If the timestamp is from the current year but not the current week, it returns the date in "dd/MM" format.
-/// - If the timestamp is from a previous year, it returns the date in "dd/MM/yyyy" format.
-///
-/// Example:
-/// ```dart
-/// formatMessageTimestamp(DateTime.now()); // Returns "14:30" if today
-/// ```
-///
-/// [dateTime]: The DateTime object to be formatted.
-/// Returns a formatted string based on the logic described above.
+/// - If [dateTime] is today, returns "HH:mm".
+/// - If it is within the past week, returns the day of the week (e.g., "Mon").
+/// - If it is within the current year but older than a week, returns "dd/MM".
+/// - Otherwise, returns "dd/MM/yyyy".
 String formatMessageTimestamp(DateTime dateTime) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
-  // Check if it's today
   if (messageDate == today) {
-    return DateFormat.Hm().format(dateTime); // Example: 14:30
+    return DateFormat.Hm().format(dateTime);
   }
 
-  // Check if it's within the past week
   if (messageDate.isAfter(today.subtract(const Duration(days: 7)))) {
-    return DateFormat.E().format(dateTime); // Example: Mon
+    return DateFormat.E().format(dateTime);
   }
 
-  // Check if it's within the current year
   if (messageDate.year == today.year) {
-    return DateFormat('dd/MM').format(dateTime); // Example: 17/10
+    return DateFormat('dd/MM').format(dateTime);
   }
 
-  // Otherwise, show full date with year
-  return DateFormat('dd/MM/yyyy').format(dateTime); // Example: 17/10/2023
+  return DateFormat('dd/MM/yyyy').format(dateTime);
 }
 
-/// Formats a [DateTime] object into a string in the format "MMMM d, yyyy".
-///
-/// Example:
-/// ```dart
-/// DateTime date = DateTime(2023, 6, 16);
-/// String formattedDate = formatDateToMonthDayYear(date); // "June 16, 2023"
-/// ```
-///
-/// [date]: The DateTime object to be formatted.
-/// Returns a formatted string based on the format "MMMM d, yyyy".
-String formatDateToMonthDayYear(DateTime date) {
-  return DateFormat('MMMM d, yyyy').format(date);
+/// Formats a [DateTime] into the "MMMM d, yyyy" format (e.g., "January 5, 2024").
+String formatDateToMonthDayYear(DateTime date, {Locale? locale}) {
+  return DateFormat('MMMM d, yyyy', locale?.languageCode).format(date);
 }
 
 /// Returns a random DateTime object before the current time.
@@ -140,4 +97,50 @@ DateTime randomDateBefore(Duration maxDuration) {
   final differenceInMilliseconds = now.difference(now.subtract(maxDuration)).inMilliseconds;
   final randomMilliseconds = Random().nextInt(differenceInMilliseconds);
   return now.subtract(Duration(milliseconds: randomMilliseconds));
+}
+
+/// Converts a Flutter [Locale] (e.g., 'de') to the equivalent short locale key
+/// for timeago (e.g., 'de_short'). If not found, falls back to 'en_short'.
+String toTimeagoShortLocale(Locale locale) {
+  final code = locale.languageCode.toLowerCase();
+  final shortCode = '${code}_short';
+  if (shortLocalesMap.containsKey(shortCode)) {
+    return shortCode;
+  }
+  return 'en_short';
+}
+
+/// Generates a short relative time for feed items. If the difference from [now]
+/// is less than 8 days, uses timeago with a short locale (e.g., "3h", "2d").
+/// Otherwise, returns either "Jan 10" or "Jan 10, 2024" depending on whether
+/// it's under or over 12 months old.
+///
+/// **Important**: If the post is newer than 1 minute (i.e. < 60 seconds),
+/// we show "1m" as the minimum value (no "0m" or "now").
+String formatShortTimestamp(DateTime dateTime, {Locale? locale}) {
+  locale ??= const Locale('en');
+  final now = DateTime.now();
+  final diff = now.difference(dateTime.toLocal());
+
+  final diffInDays = diff.inDays;
+  // If under 8 days, use timeago short.
+  if (diffInDays < 8) {
+    final shortLocale = toTimeagoShortLocale(locale);
+    return timeago.format(dateTime, locale: shortLocale);
+  }
+  // If under 1 year, show "Jan 10".
+  if (diffInDays < 365) {
+    return DateFormat.MMMd(locale.languageCode).format(dateTime);
+  }
+  // Otherwise, "Jan 10, 2024".
+  return DateFormat.yMMMd(locale.languageCode).format(dateTime);
+}
+
+/// Formats a [DateTime] in a detailed style for post details:
+/// "Jan 1, 2024, 08:45 PM" (month-day-year, hh:mm AM/PM).
+String formatDetailedTimestamp(DateTime dateTime, {Locale? locale}) {
+  locale ??= const Locale('en');
+  final localDateTime = dateTime.toLocal();
+  final dateFormat = DateFormat('MMM d, yyyy, hh:mm a', locale.languageCode);
+  return dateFormat.format(localDateTime);
 }

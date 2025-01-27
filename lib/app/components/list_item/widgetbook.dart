@@ -92,7 +92,6 @@ Widget userListItemUseCase(BuildContext context) {
             profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
             verifiedBadge: true,
             iceBadge: true,
-            timeago: DateTime(2024, 2, 27, 11),
             onTap: () {},
           ),
         ],
