@@ -58,7 +58,9 @@ class Article extends ConsumerWidget {
               clipBehavior: Clip.antiAlias,
               width: 4.0.s,
               decoration: BoxDecoration(
-                color: context.theme.appColors.primaryAccent,
+                color: articleEntity.data.imageColor != null
+                    ? Color(int.parse(articleEntity.data.imageColor!.replaceAll('#', '0xff')))
+                    : context.theme.appColors.primaryAccent,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(4.0.s),
                   bottomRight: Radius.circular(4.0.s),
