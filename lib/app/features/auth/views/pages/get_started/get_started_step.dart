@@ -10,7 +10,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
 import 'package:ion/app/features/auth/views/pages/get_started/login_form.dart';
-import 'package:ion/app/features/user/providers/user_verify_identity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -54,14 +53,14 @@ class GetStartedStep extends ConsumerWidget {
                       color: context.theme.appColors.secondaryText,
                     ),
                     onPressed: () async {
-                      final isPasskeyAvailable = await ref.read(isPasskeyAvailableProvider.future);
-                      if (context.mounted) {
-                        if (isPasskeyAvailable) {
-                          await SignUpPasskeyRoute().push<void>(context);
-                        } else {
-                          await SignUpPasswordRoute().push<void>(context);
-                        }
-                      }
+                      // final isPasskeyAvailable = await ref.read(isPasskeyAvailableProvider.future);
+                      // if (context.mounted) {
+                      //   if (isPasskeyAvailable) {
+                      //     await SignUpPasskeyRoute().push<void>(context);
+                      //   } else {
+                      await SignUpPasswordRoute().push<void>(context);
+                      // }
+                      // }
                     },
                     label: Text(context.i18n.button_register),
                     mainAxisSize: MainAxisSize.max,
