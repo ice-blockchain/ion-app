@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/features/core/model/timeago_locales.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 /// Converts a timestamp (in milliseconds) into a human-readable string such as
 /// "today", "yesterday", or a formatted date (MMM d yyyy).
@@ -26,7 +28,6 @@ String toPastDateDisplayValue(int timestamp, BuildContext context, {Locale? loca
     return context.i18n.date_yesterday;
   }
 
-  // For other dates, use localized yMMMd, e.g. "Jan 5, 2024"
   return DateFormat.yMMMd(locale?.languageCode).format(date);
 }
 
@@ -98,49 +99,53 @@ DateTime randomDateBefore(Duration maxDuration) {
   return now.subtract(Duration(milliseconds: randomMilliseconds));
 }
 
-/// Formats a [DateTime] to a short or relative style used on the feed.
-///
-/// - **< 60 minutes:** displays `[x]m`
-/// - **< 24 hours:** displays `[x]h`
-/// - **< 7 days:** displays `[x]d`
-/// - **< 365 days:** displays short month and day, e.g. "Jan 10"
-/// - **>= 365 days:** displays month, day, and year, e.g. "Jan 10, 2024"
-///
-/// [locale] is used for formatting the month/day/year fallback.
-String formatFeedTimestamp(DateTime dateTime, {Locale? locale}) {
-  final localDateTime = dateTime.toLocal();
-  final now = DateTime.now();
-  final difference = now.difference(localDateTime);
-  final diffInMinutes = difference.inMinutes;
-  final diffInHours = difference.inHours;
-  final diffInDays = difference.inDays;
-
-  if (diffInMinutes < 60) {
-    return '${diffInMinutes}m';
+/// Converts a Flutter [Locale] (e.g., 'de') to the equivalent short locale key
+/// for timeago (e.g., 'de_short'). If not found, falls back to 'en_short'.
+String toTimeagoShortLocale(Locale locale) {
+  final code = locale.languageCode.toLowerCase();
+  final shortCode = '${code}_short';
+  if (shortLocalesMap.containsKey(shortCode)) {
+    return shortCode;
   }
-
-  if (diffInHours < 24) {
-    return '${diffInHours}h';
-  }
-
-  if (diffInDays < 7) {
-    return '${diffInDays}d';
-  }
-
-  if (diffInDays < 365) {
-    return DateFormat.MMMd(locale?.languageCode).format(localDateTime);
-  }
-
-  // 12 months or more
-  return DateFormat.yMMMd(locale?.languageCode).format(localDateTime);
+  return 'en_short';
 }
 
-/// Formats a [DateTime] to a detailed style used on post detail screens, such
-/// as "Jan 1, 2024, 08:45 PM".
+/// Generates a short relative time for feed items. If the difference from [now]
+/// is less than 8 days, uses timeago with a short locale (e.g., "3h", "2d").
+/// Otherwise, returns either "Jan 10" or "Jan 10, 2024" depending on whether
+/// it's under or over 12 months old.
 ///
-/// [locale] is used for formatting date/time localization.
-String formatDetailedPostTime(DateTime dateTime, {Locale? locale}) {
+/// **Important**: If the post is newer than 1 minute (i.e. < 60 seconds),
+/// we show "1m" as the minimum value (no "0m" or "now").
+String formatShortTimestamp(DateTime dateTime, {Locale? locale}) {
+  locale ??= const Locale('en');
+  final now = DateTime.now();
+  final diff = now.difference(dateTime.toLocal());
+
+  // If under 60 seconds, force "1m".
+  if (diff.inSeconds < 60) {
+    return '1m';
+  }
+
+  final diffInDays = diff.inDays;
+  // If under 8 days, use timeago short.
+  if (diffInDays < 8) {
+    final shortLocale = toTimeagoShortLocale(locale);
+    return timeago.format(dateTime, locale: shortLocale);
+  }
+  // If under 1 year, show "Jan 10".
+  if (diffInDays < 365) {
+    return DateFormat.MMMd(locale.languageCode).format(dateTime);
+  }
+  // Otherwise, "Jan 10, 2024".
+  return DateFormat.yMMMd(locale.languageCode).format(dateTime);
+}
+
+/// Formats a [DateTime] in a detailed style for post details:
+/// "Jan 1, 2024, 08:45 PM" (month-day-year, hh:mm AM/PM).
+String formatDetailedTimestamp(DateTime dateTime, {Locale? locale}) {
+  locale ??= const Locale('en');
   final localDateTime = dateTime.toLocal();
-  final dateFormat = DateFormat('MMM d, yyyy, hh:mm a', locale?.languageCode);
+  final dateFormat = DateFormat('MMM d, yyyy, hh:mm a', locale.languageCode);
   return dateFormat.format(localDateTime);
 }

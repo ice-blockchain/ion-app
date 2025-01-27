@@ -14,7 +14,6 @@ import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/del
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
-import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -60,10 +59,8 @@ class Post extends ConsumerWidget {
         header ??
             UserInfo(
               pubkey: eventReference.pubkey,
-              timestamp: TimestampWidget(
-                createdAt: postEntity.createdAt,
-                showDetailed: isDetailView,
-              ),
+              createdAt: postEntity.createdAt,
+              showDetailed: isDetailView,
               trailing: isOwnedByCurrentUser
                   ? DeleteFeedItemMenu(
                       entity: postEntity,
@@ -150,11 +147,7 @@ final class _QuotedPost extends ConsumerWidget {
             eventReference: eventReference,
             header: UserInfo(
               pubkey: eventReference.pubkey,
-              timestamp: postEntity != null
-                  ? TimestampWidget(
-                      createdAt: postEntity.createdAt,
-                    )
-                  : null,
+              createdAt: postEntity?.createdAt,
             ),
             footer: const SizedBox.shrink(),
           ),

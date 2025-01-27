@@ -9,9 +9,9 @@ import 'package:ion/app/utils/date.dart';
 class TimestampWidget extends ConsumerWidget {
   const TimestampWidget({
     required this.createdAt,
+    super.key,
     this.showDetailed = false,
     this.style,
-    super.key,
   });
 
   final DateTime createdAt;
@@ -22,8 +22,8 @@ class TimestampWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(appLocaleProvider);
     final formattedTime = showDetailed
-        ? formatDetailedPostTime(createdAt, locale: locale)
-        : formatFeedTimestamp(createdAt, locale: locale);
+        ? formatDetailedTimestamp(createdAt, locale: locale)
+        : formatShortTimestamp(createdAt, locale: locale);
 
     return Text(
       formattedTime,

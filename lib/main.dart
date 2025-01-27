@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_quill/translations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/model/timeago_locales.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
@@ -23,6 +24,7 @@ const _riverpodLoggerEnabled = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  registerTimeagoLocalesForEnum();
   await SecureStorage().clearOnReinstall();
   await dotenv.load(fileName: Assets.aApp);
 
