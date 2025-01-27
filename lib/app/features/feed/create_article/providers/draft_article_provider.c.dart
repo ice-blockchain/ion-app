@@ -8,6 +8,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/utils/color.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,11 +46,7 @@ class DraftArticle extends _$DraftArticle {
       final imageProvider = FileImage(File(image.path));
       final paletteGenerator = await PaletteGenerator.fromImageProvider(imageProvider);
       final color = paletteGenerator.dominantColor?.color;
-      colorHex = color != null
-          ? '#${(color.r * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-              '${(color.g * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-              '${(color.b * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-          : null;
+      colorHex = color != null ? toHexColor(color) : null;
     }
 
     state = state.copyWith(
@@ -57,7 +54,7 @@ class DraftArticle extends _$DraftArticle {
       imageIds: imageIds,
       image: image,
       title: title.trim(),
-      imageColor: image == null ? null : colorHex,
+      imageColor: colorHex,
     );
   }
 }

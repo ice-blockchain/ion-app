@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -85,9 +86,13 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
 
-    final imageColor = tags['l']
-        ?.firstWhereOrNull((tag) => tag.length > 2 && tag[2] == 'color')
-        ?.elementAtOrNull(1);
+    final hasColorLabel =
+        tags['L']?.any((tag) => tag.length > 1 && tag[1] == ColorLabel.namespace) ?? false;
+    final imageColor = hasColorLabel
+        ? tags[ColorLabel.tagName]
+            ?.firstWhereOrNull((tag) => tag.length > 2 && tag[2] == ColorLabel.namespace)
+            ?.elementAtOrNull(1)
+        : null;
 
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
@@ -156,8 +161,8 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-        if (imageColor != null) ['L', 'color'],
-        if (imageColor != null) ['l', imageColor!, 'color'],
+        if (imageColor != null) ColorLabel(value: imageColor).toNamespaceTag(),
+        if (imageColor != null) ColorLabel(value: imageColor).toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,

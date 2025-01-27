@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/utils/algorithm.dart';
+import 'package:ion/app/utils/color.dart';
 
 class ArticlePreview extends ConsumerWidget {
   const ArticlePreview({
@@ -39,7 +40,7 @@ class ArticlePreview extends ConsumerWidget {
               width: 4.0.s,
               decoration: BoxDecoration(
                 color: imageColor != null
-                    ? Color(int.parse(imageColor.replaceAll('#', '0xff')))
+                    ? fromHexColor(imageColor)
                     : context.theme.appColors.primaryAccent,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(4.0.s),
