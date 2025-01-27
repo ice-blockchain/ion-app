@@ -50,13 +50,13 @@ void main() {
   group('Count Search Extensions', () {
     test('RepliesCountSearchExtension formats query correctly', () {
       final extension = RepliesCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind1+group+root');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind30175+group+root');
 
       final nonRootExtension =
           RepliesCountSearchExtension(root: false, forKind: ArticleEntity.kind);
       expect(
         nonRootExtension.toString(),
-        'include:dependencies:kind30023>kind6400+kind1+group+reply',
+        'include:dependencies:kind30023>kind6400+kind30175+group+reply',
       );
     });
 
@@ -68,12 +68,12 @@ void main() {
 
     test('GenericRepostsCountSearchExtension formats query correctly', () {
       final extension = GenericRepostsCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind30023>kind6400+kind16+group+a');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind16+group+e');
     });
 
     test('QuotesCountSearchExtension formats query correctly', () {
       final extension = QuotesCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind1+group+Q');
+      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind30175+group+q');
     });
 
     test('ReactionsCountSearchExtension formats query correctly', () {
@@ -87,7 +87,7 @@ void main() {
       final extension = ReplySampleSearchExtension(
         currentPubkey: testPubkey,
       );
-      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind1+e+root');
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind30175+e+root');
 
       final nonRootExtension = ReplySampleSearchExtension(
         currentPubkey: testPubkey,
@@ -96,7 +96,7 @@ void main() {
       );
       expect(
         nonRootExtension.toString(),
-        'include:dependencies:kind30023>test_pubkey@kind1+e+reply',
+        'include:dependencies:kind30023>test_pubkey@kind30175+e+reply',
       );
     });
 
@@ -111,14 +111,7 @@ void main() {
       final extension = QuoteSampleSearchExtension(
         currentPubkey: testPubkey,
       );
-      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind1+q');
-    });
-
-    test('RepostSampleSearchExtension formats query correctly', () {
-      final extension = RepostSampleSearchExtension(
-        currentPubkey: testPubkey,
-      );
-      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind6');
+      expect(extension.toString(), 'include:dependencies:kind30175>test_pubkey@kind30175+q');
     });
   });
 
