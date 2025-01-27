@@ -252,76 +252,77 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           throw UserMasterPubkeyNotFoundException();
         }
 
-        final lastUsedRelay = await _getLastUsedRelay(pubkey, dislikedUrls, actionSource.anonymous);
-        if (lastUsedRelay != null) return lastUsedRelay;
+        return _getRelayFromPubkey(
+          pubkey: pubkey,
+          dislikedUrls: dislikedUrls,
+          anonymous: actionSource.anonymous,
+          buildRelayList: (pubkey) =>
+              _getUserRelays(pubkey).then((userRelays) => userRelays.data.list),
+        );
 
-        final userRelays = await _getUserRelays(pubkey);
-        final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-        final selectedRelay = await ref
+      case ActionSourceUser():
+        return _getRelayFromPubkey(
+          pubkey: actionSource.pubkey,
+          dislikedUrls: dislikedUrls,
+          anonymous: actionSource.anonymous,
+          buildRelayList: (pubkey) =>
+              _getUserRelays(pubkey).then((userRelays) => userRelays.data.list),
+        );
+
+      case ActionSourceCurrentUserChat():
+        final pubkey = await ref.read(currentPubkeySelectorProvider.future);
+        if (pubkey == null) {
+          throw UserMasterPubkeyNotFoundException();
+        }
+
+        return _getRelayFromPubkey(
+          pubkey: pubkey,
+          dislikedUrls: dislikedUrls,
+          anonymous: actionSource.anonymous,
+          buildRelayList: (pubkey) =>
+              _getUserChatRelays(pubkey).then((userChatRelays) => userChatRelays.data.list),
+        );
+
+      case ActionSourceIndexers():
+        final indexers = await ref.read(currentUserIndexersProvider.future);
+        if (indexers == null) {
+          throw UserIndexersNotFoundException();
+        }
+
+        final relays = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
+        return await ref
+            .read(relayProvider(relays.random, anonymous: actionSource.anonymous).future);
+
+      case ActionSourceUserChat():
+        final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
+        final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
+        return await ref
             .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
 
-        ref.read(lastUsedRelayProvider.notifier).setLastUsedRelay(pubkey, selectedRelay.url);
-
-        return selectedRelay;
-      case ActionSourceUser():
-        {
-          final lastUsedRelay =
-              await _getLastUsedRelay(actionSource.pubkey, dislikedUrls, actionSource.anonymous);
-          if (lastUsedRelay != null) return lastUsedRelay;
-
-          final userRelays = await _getUserRelays(actionSource.pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-
-          final selectedRelay = await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
-
-          ref
-              .read(lastUsedRelayProvider.notifier)
-              .setLastUsedRelay(actionSource.pubkey, selectedRelay.url);
-
-          return selectedRelay;
-        }
-      case ActionSourceIndexers():
-        {
-          final indexers = await ref.read(currentUserIndexersProvider.future);
-          if (indexers == null) {
-            throw UserIndexersNotFoundException();
-          }
-
-          final relays = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random, anonymous: actionSource.anonymous).future);
-        }
       case ActionSourceRelayUrl():
-        {
-          // TODO: support multiple urls to allow retrying on different relays
-          return await ref
-              .read(relayProvider(actionSource.url, anonymous: actionSource.anonymous).future);
-        }
-      case ActionSourceCurrentUserChat():
-        {
-          final pubkey = await ref.read(currentPubkeySelectorProvider.future);
-          if (pubkey == null) {
-            throw UserMasterPubkeyNotFoundException();
-          }
-
-          final lastUsedRelay =
-              await _getLastUsedRelay(pubkey, dislikedUrls, actionSource.anonymous);
-          if (lastUsedRelay != null) return lastUsedRelay;
-
-          final userChatRelays = await _getUserChatRelays(pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
-        }
-      case ActionSourceUserChat():
-        {
-          final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
-        }
+        // TODO: support multiple urls to allow retrying on different relays
+        return await ref
+            .read(relayProvider(actionSource.url, anonymous: actionSource.anonymous).future);
     }
+  }
+
+  Future<IonConnectRelay> _getRelayFromPubkey({
+    required String pubkey,
+    required Set<String> dislikedUrls,
+    required bool anonymous,
+    required Future<List<UserRelay>> Function(String pubkey) buildRelayList,
+  }) async {
+    final lastUsedRelay = await _getLastUsedRelay(pubkey, dislikedUrls, anonymous);
+    if (lastUsedRelay != null) return lastUsedRelay;
+
+    final userRelays = await buildRelayList(pubkey);
+    final relays = _userRelaysAvoidingDislikedUrls(userRelays, dislikedUrls);
+    final selectedRelay =
+        await ref.read(relayProvider(relays.random.url, anonymous: anonymous).future);
+
+    ref.read(lastUsedRelayProvider.notifier).setLastUsedRelay(pubkey, selectedRelay.url);
+
+    return selectedRelay;
   }
 
   Future<IonConnectRelay?> _getLastUsedRelay(
