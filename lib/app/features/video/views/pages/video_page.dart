@@ -6,7 +6,7 @@ import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart'
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/video/views/components/video_actions.dart';
 import 'package:ion/app/features/video/views/components/video_controls.dart';
 import 'package:ion/app/features/video/views/components/video_header.dart';
@@ -24,7 +24,7 @@ class VideoPage extends HookConsumerWidget {
     super.key,
   });
 
-  final PostEntity video;
+  final ModifiablePostEntity video;
   final VoidCallback? onVideoEnded;
 
   @override

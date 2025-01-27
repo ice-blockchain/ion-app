@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_capture/components.dart';
@@ -20,7 +20,7 @@ class StoryViewerActionButtons extends ConsumerWidget {
     super.key,
   });
 
-  final PostEntity post;
+  final ModifiablePostEntity post;
   final double bottomPadding;
 
   @override
@@ -61,7 +61,7 @@ class _SoundButton extends ConsumerWidget {
     required this.post,
   });
 
-  final PostEntity post;
+  final ModifiablePostEntity post;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,7 +93,7 @@ class _SoundButton extends ConsumerWidget {
 class _LikeButton extends HookConsumerWidget {
   const _LikeButton({required this.post});
 
-  final PostEntity post;
+  final ModifiablePostEntity post;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

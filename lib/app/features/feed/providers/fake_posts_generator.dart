@@ -2,19 +2,19 @@
 
 import 'dart:math';
 
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 
-Future<PostEntity> generateFakePost() async {
+Future<ModifiablePostEntity> generateFakePost() async {
   final keyStore = await Ed25519KeyStore.generate();
   final random = Random.secure();
-  final postEntity = PostEntity.fromEventMessage(
+  final postEntity = ModifiablePostEntity.fromEventMessage(
     await EventMessage.fromData(
       signer: keyStore,
-      kind: PostEntity.kind,
+      kind: ModifiablePostEntity.kind,
       content: _fakeFeedMessages.elementAt(random.nextInt(_fakeFeedMessages.length)),
       tags: const [
         ['b', ''],
@@ -53,7 +53,7 @@ const _fakeFeedMessages = [
   'A big thank you to @everyone @team who supported me throughout this journey. Your encouragement means the world, and Im so grateful! #grateful #community',
   'Attended a workshop on mindfulness today with @guru, and it completely changed the way I think about things. https://mindful.org #mindfulness #growth Feeling inspired and ready to practice more!',
 ];
-Future<PostEntity> generateFakePostWithVideo() async {
+Future<ModifiablePostEntity> generateFakePostWithVideo() async {
   final basePost = await generateFakePost();
 
   final index = Random.secure().nextInt(fakeVideos.length);

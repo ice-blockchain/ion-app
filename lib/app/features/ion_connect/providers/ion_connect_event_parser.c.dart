@@ -7,7 +7,6 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
@@ -31,7 +30,6 @@ class EventParser {
   IonConnectEntity parse(EventMessage eventMessage) {
     return switch (eventMessage.kind) {
       UserMetadataEntity.kind => UserMetadataEntity.fromEventMessage(eventMessage),
-      PostEntity.kind => PostEntity.fromEventMessage(eventMessage),
       ArticleEntity.kind => ArticleEntity.fromEventMessage(eventMessage),
       UserRelaysEntity.kind => UserRelaysEntity.fromEventMessage(eventMessage),
       UserChatRelaysEntity.kind => UserChatRelaysEntity.fromEventMessage(eventMessage),

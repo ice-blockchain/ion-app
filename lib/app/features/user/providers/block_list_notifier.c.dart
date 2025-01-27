@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -76,7 +76,7 @@ Future<bool> isEntityBlockedOrBlocking(
       .watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: cacheOnly).future);
   if (isMainAuthorBlockedOrBlocking) return true;
   return switch (entity) {
-    PostEntity() =>
+    ModifiablePostEntity() =>
       ref.watch(isPostChildBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future),
     GenericRepostEntity() =>
       ref.watch(isGenericRepostChildBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future),
@@ -87,17 +87,13 @@ Future<bool> isEntityBlockedOrBlocking(
 @riverpod
 Future<bool> isPostChildBlockedOrBlocking(
   Ref ref,
-  PostEntity entity, {
+  ModifiablePostEntity entity, {
   bool cacheOnly = false,
 }) async {
   final quotedEvent = entity.data.quotedEvent;
   if (quotedEvent == null) return false;
-  final quotedPostReference = ImmutableEventReference(
-    eventId: quotedEvent.eventId,
-    pubkey: quotedEvent.pubkey,
-  );
   final quotedPost = await ref.watch(
-    ionConnectEntityProvider(eventReference: quotedPostReference).future,
+    ionConnectEntityProvider(eventReference: quotedEvent.eventReference).future,
   );
   if (quotedPost == null) return false;
 

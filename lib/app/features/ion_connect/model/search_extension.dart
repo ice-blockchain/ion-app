@@ -72,7 +72,7 @@ class RepliesCountSearchExtension extends IncludeSearchExtension {
   String get query => 'kind6400+kind1+group+${root ? 'root' : 'reply'}';
 }
 
-/// For every kind [PostEntity.kind] that the subscription finds also include the count of reposts that it has
+/// For every kind [ModifiablePostEntity.kind] that the subscription finds also include the count of reposts that it has
 class RepostsCountSearchExtension extends IncludeSearchExtension {
   @override
   int get forKind => ModifiablePostEntity.kind;

@@ -6,7 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
@@ -28,13 +28,13 @@ class VideosPage extends HookConsumerWidget {
 
     final ionConnectEntity =
         ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
-    if (ionConnectEntity is! PostEntity) {
+    if (ionConnectEntity is! ModifiablePostEntity) {
       return Center(
         child: Text(context.i18n.video_not_found),
       );
     }
 
-    final videosItems = videosData?.data.items?.whereType<PostEntity>().toList() ?? [];
+    final videosItems = videosData?.data.items?.whereType<ModifiablePostEntity>().toList() ?? [];
     final videos = [ionConnectEntity, ...videosItems];
 
     final userPageController = usePageController();

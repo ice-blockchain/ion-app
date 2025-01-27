@@ -2,7 +2,7 @@
 
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -47,7 +47,7 @@ class CanReply extends _$CanReply {
     }
 
     final whoCanReplySetting = switch (ionConnectEntity) {
-      PostEntity() => ionConnectEntity.data.whoCanReplySetting,
+      ModifiablePostEntity() => ionConnectEntity.data.whoCanReplySetting,
       ArticleEntity() => ionConnectEntity.data.whoCanReplySetting,
       _ => null,
     };

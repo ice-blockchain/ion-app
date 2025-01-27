@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/story.c.dart';
 
 part 'story_viewer_state.c.freezed.dart';
@@ -21,6 +21,7 @@ class StoryViewerState with _$StoryViewerState {
   bool get hasNextUser => currentUserIndex < userStories.length - 1;
   bool get hasPreviousUser => currentUserIndex > 0;
 
-  PostEntity? get currentStory => userStories[currentUserIndex].stories[currentStoryIndex];
+  ModifiablePostEntity? get currentStory =>
+      userStories[currentUserIndex].stories[currentStoryIndex];
   UserStories? get currentUser => userStories[currentUserIndex];
 }
