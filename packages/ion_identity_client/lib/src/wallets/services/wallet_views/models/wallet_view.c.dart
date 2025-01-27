@@ -17,6 +17,7 @@ class WalletView with _$WalletView {
     required List<CoinInWallet> coins,
     @JsonKey(defaultValue: {})
     required Map<String, WalletViewAggregationItem> aggregation,
+    @JsonKey(defaultValue: [])
     required List<String> symbolGroups,
     required String createdAt,
     required String updatedAt,

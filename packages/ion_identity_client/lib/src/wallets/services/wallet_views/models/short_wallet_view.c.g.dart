@@ -13,13 +13,14 @@ _$ShortWalletViewImpl _$$ShortWalletViewImplFromJson(
       coins: (json['coins'] as List<dynamic>)
           .map((e) => WalletViewCoinData.fromJson(e as Map<String, dynamic>))
           .toList(),
-      symbolGroups: (json['symbolGroups'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       userId: json['userId'] as String,
       id: json['id'] as String,
+      symbolGroups: (json['symbolGroups'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$$ShortWalletViewImplToJson(
@@ -27,9 +28,9 @@ Map<String, dynamic> _$$ShortWalletViewImplToJson(
     <String, dynamic>{
       'name': instance.name,
       'coins': instance.coins.map((e) => e.toJson()).toList(),
-      'symbolGroups': instance.symbolGroups,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'userId': instance.userId,
       'id': instance.id,
+      'symbolGroups': instance.symbolGroups,
     };

@@ -16,9 +16,10 @@ _$WalletViewImpl _$$WalletViewImplFromJson(Map<String, dynamic> json) =>
                 WalletViewAggregationItem.fromJson(e as Map<String, dynamic>)),
           ) ??
           {},
-      symbolGroups: (json['symbolGroups'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      symbolGroups: (json['symbolGroups'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       userId: json['userId'] as String,
