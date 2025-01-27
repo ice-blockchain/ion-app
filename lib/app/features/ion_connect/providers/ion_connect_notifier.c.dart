@@ -17,6 +17,7 @@ import 'package:ion/app/features/ion_connect/providers/auth_challenge_provider.c
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/last_used_relay_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
 import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
@@ -246,22 +247,39 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():
-        {
-          final pubkey = await ref.read(currentPubkeySelectorProvider.future);
-          if (pubkey == null) {
-            throw UserMasterPubkeyNotFoundException();
-          }
-          final userRelays = await _getUserRelays(pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
+        final pubkey = await ref.read(currentPubkeySelectorProvider.future);
+        if (pubkey == null) {
+          throw UserMasterPubkeyNotFoundException();
         }
+
+        final lastUsedRelay = await _getLastUsedRelay(pubkey, dislikedUrls, actionSource.anonymous);
+        if (lastUsedRelay != null) return lastUsedRelay;
+
+        final userRelays = await _getUserRelays(pubkey);
+        final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
+        final selectedRelay = await ref
+            .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
+
+        ref.read(lastUsedRelayProvider.notifier).setLastUsedRelay(pubkey, selectedRelay.url);
+
+        return selectedRelay;
       case ActionSourceUser():
         {
+          final lastUsedRelay =
+              await _getLastUsedRelay(actionSource.pubkey, dislikedUrls, actionSource.anonymous);
+          if (lastUsedRelay != null) return lastUsedRelay;
+
           final userRelays = await _getUserRelays(actionSource.pubkey);
           final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-          return await ref
+
+          final selectedRelay = await ref
               .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
+
+          ref
+              .read(lastUsedRelayProvider.notifier)
+              .setLastUsedRelay(actionSource.pubkey, selectedRelay.url);
+
+          return selectedRelay;
         }
       case ActionSourceIndexers():
         {
@@ -269,9 +287,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           if (indexers == null) {
             throw UserIndexersNotFoundException();
           }
-          final urls = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
+
+          final relays = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
           return await ref
-              .read(relayProvider(urls.random, anonymous: actionSource.anonymous).future);
+              .read(relayProvider(relays.random, anonymous: actionSource.anonymous).future);
         }
       case ActionSourceRelayUrl():
         {
@@ -285,6 +304,11 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           if (pubkey == null) {
             throw UserMasterPubkeyNotFoundException();
           }
+
+          final lastUsedRelay =
+              await _getLastUsedRelay(pubkey, dislikedUrls, actionSource.anonymous);
+          if (lastUsedRelay != null) return lastUsedRelay;
+
           final userChatRelays = await _getUserChatRelays(pubkey);
           final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
           return await ref
@@ -298,6 +322,25 @@ class IonConnectNotifier extends _$IonConnectNotifier {
               .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
         }
     }
+  }
+
+  Future<IonConnectRelay?> _getLastUsedRelay(
+    String? pubkey,
+    Set<String> dislikedUrls,
+    bool anonymous,
+  ) async {
+    if (pubkey == null) return null;
+
+    final lastUsedRelayUrl = ref.read(lastUsedRelayProvider)[pubkey];
+    if (lastUsedRelayUrl != null && !dislikedUrls.contains(lastUsedRelayUrl)) {
+      try {
+        return await ref.read(relayProvider(lastUsedRelayUrl, anonymous: anonymous).future);
+      } catch (e) {
+        Logger.log('Last used relay is unavailable, selecting a new one', error: e);
+        return null;
+      }
+    }
+    return null;
   }
 
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
