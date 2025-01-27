@@ -40,14 +40,7 @@ class DraftArticle extends _$DraftArticle {
   ) async {
     final deltaJson = jsonEncode(textEditorController.document.toDelta().toJson());
     final imageIds = ArticleData.extractImageIds(textEditorController);
-
-    String? colorHex;
-    if (image != null) {
-      final imageProvider = FileImage(File(image.path));
-      final paletteGenerator = await PaletteGenerator.fromImageProvider(imageProvider);
-      final color = paletteGenerator.dominantColor?.color;
-      colorHex = color != null ? toHexColor(color) : null;
-    }
+    final colorHex = await _extractDominantColorFromImage(image);
 
     state = state.copyWith(
       content: deltaJson,
@@ -56,5 +49,15 @@ class DraftArticle extends _$DraftArticle {
       title: title.trim(),
       imageColor: colorHex,
     );
+  }
+
+  Future<String?> _extractDominantColorFromImage(MediaFile? image) async {
+    if (image == null) return null;
+
+    final imageProvider = FileImage(File(image.path));
+    final paletteGenerator = await PaletteGenerator.fromImageProvider(imageProvider);
+    final dominantColor = paletteGenerator.dominantColor?.color;
+
+    return dominantColor != null ? toHexColor(dominantColor) : null;
   }
 }
