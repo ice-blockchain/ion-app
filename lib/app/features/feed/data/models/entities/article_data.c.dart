@@ -73,6 +73,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     String? summary,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
+    String? imageColor,
   }) = _ArticleData;
 
   const ArticleData._();
@@ -83,6 +84,13 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     final title = tags['title']?.firstOrNull?.elementAtOrNull(1);
     final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
+
+    final hasColorLabel = tags['L']?.any((tag) => tag.elementAtOrNull(1) == 'color');
+    final imageColor = hasColorLabel != null
+        ? tags['l']
+            ?.firstWhereOrNull((tag) => tag.length > 2 && tag[2] == 'color')
+            ?.elementAtOrNull(1)
+        : null;
 
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
@@ -97,6 +105,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
+      imageColor: imageColor,
     );
   }
 
@@ -109,6 +118,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
     Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
+    String? imageColor,
   }) {
     final setting = whoCanReplySettings.isEmpty ||
             whoCanReplySettings.every(
@@ -127,6 +137,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
       settings: setting != null ? [setting] : null,
+      imageColor: imageColor,
     );
   }
 
@@ -136,8 +147,6 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     List<List<String>> tags = const [],
     DateTime? createdAt,
   }) {
-    final imageColor = image != null ? media[image]?.imageColor : null;
-
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
@@ -151,7 +160,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
         if (summary != null) ['summary', summary!],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
         if (imageColor != null) ['L', 'color'],
-        if (imageColor != null) ['l', imageColor, 'color'],
+        if (imageColor != null) ['l', imageColor!, 'color'],
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,

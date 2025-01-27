@@ -46,6 +46,17 @@ class CreateArticle extends _$CreateArticle {
 
       final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(updatedContent);
 
+      String? colorHex;
+      if (imageId != null) {
+        final imageProvider = FileImage(File(imageId));
+        final paletteGenerator = await PaletteGenerator.fromImageProvider(imageProvider);
+        colorHex = paletteGenerator.dominantColor?.color != null
+            ? '#${(paletteGenerator.dominantColor!.color.r * 255).toInt().toRadixString(16).padLeft(2, '0')}'
+                '${(paletteGenerator.dominantColor!.color.g * 255).toInt().toRadixString(16).padLeft(2, '0')}'
+                '${(paletteGenerator.dominantColor!.color.b * 255).toInt().toRadixString(16).padLeft(2, '0')}'
+            : null;
+      }
+
       final articleData = ArticleData.fromData(
         title: title,
         summary: summary,
@@ -57,6 +68,7 @@ class CreateArticle extends _$CreateArticle {
         relatedHashtags: relatedHashtags,
         publishedAt: publishedAt ?? DateTime.now(),
         whoCanReplySettings: {whoCanReply},
+        imageColor: colorHex,
       );
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
@@ -123,24 +135,11 @@ class CreateArticle extends _$CreateArticle {
     final compressService = ref.read(compressServiceProvider);
     final dimension = await compressService.getImageDimension(path: imageId);
 
-    String? colorHex;
-    if (extractColor) {
-      final imageProvider = FileImage(File(imageId));
-      final paletteGenerator = await PaletteGenerator.fromImageProvider(imageProvider);
-      final color = paletteGenerator.dominantColor?.color;
-      colorHex = color != null
-          ? '#${(color.r * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-              '${(color.g * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-              '${(color.b * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-          : null;
-    }
-
     final result = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           MediaFile(
             path: imageId,
             width: dimension.width,
             height: dimension.height,
-            imageColor: colorHex,
           ),
           alt: FileAlt.article,
         );
