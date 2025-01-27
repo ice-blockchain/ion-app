@@ -157,10 +157,10 @@ flutter:
     - assets/videos/
     - assets/lottie/
     - assets/svg/
+    - assets/svg/logo/
     - assets/images/
     - assets/images/wallet/
     - assets/images/bg/
-    - assets/images/logo/
     - assets/images/qr_code/
     - assets/images/notifications/
     - assets/emoji_data_sets/emojis-by-group.json

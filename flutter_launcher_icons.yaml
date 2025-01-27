@@ -4,7 +4,7 @@ flutter_launcher_icons:
 
   # Android 
   android: true
-  adaptive_icon_background: "#120240"
+  adaptive_icon_background: "#0166FF"
   adaptive_icon_foreground: "assets/launch_icon/launch_icon_foreground.png"
 
   # iOS
@@ -13,13 +13,13 @@ flutter_launcher_icons:
   image_path_ios_dark_transparent: "assets/launch_icon/launch_icon_foreground_ios.png"
   image_path_ios_tinted_grayscale: "assets/launch_icon/launch_icon_foreground_ios.png"
   desaturate_tinted_to_grayscale_ios: true
-  background_color_ios: "#120240"
+  background_color_ios: "#0166FF"
 
   # Web
   web:
     generate: true
-    background_color: "#120240"
-    theme_color: "#120240"
+    background_color: "#0166FF"
+    theme_color: "#0166FF"
 
   # Windows
   windows:
