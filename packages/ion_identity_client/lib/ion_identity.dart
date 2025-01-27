@@ -34,5 +34,6 @@ export 'src/wallets/services/wallet_views/models/create_update_wallet_view_reque
 export 'src/wallets/services/wallet_views/models/short_wallet_view.c.dart';
 export 'src/wallets/services/wallet_views/models/wallet_view.c.dart';
 export 'src/wallets/services/wallet_views/models/wallet_view_aggregation_item.c.dart';
+export 'src/wallets/services/wallet_views/models/wallet_view_aggregation_wallet.c.dart';
 export 'src/wallets/services/wallet_views/models/wallet_view_coin_data.c.dart';
 export 'src/wallets/services/wallet_views/models/wallet_view_item.c.dart';

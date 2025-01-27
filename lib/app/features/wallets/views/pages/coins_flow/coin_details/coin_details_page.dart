@@ -126,7 +126,6 @@ class CoinDetailsPage extends HookConsumerWidget {
                     child: TransactionListItem(
                       transactionData: transactions[index],
                       coinData: coinsGroup.coins.first.coin,
-                      // coinData: coinData,
                     ),
                   );
                 },

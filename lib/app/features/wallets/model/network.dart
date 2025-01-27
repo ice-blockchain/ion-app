@@ -51,13 +51,6 @@ enum Network {
   xrpLedger,
   xrpLedgerTestnet;
 
-  // String getDisplayName(BuildContext context) {
-  //   return switch (this) {
-  //     Network.all => context.i18n.all_chains_item,
-  //     _ => serverName,
-  //   };
-  // }
-
   String get svgIconAsset {
     return switch (this) {
       Network.ion => Assets.svg.networks.walletIce,
