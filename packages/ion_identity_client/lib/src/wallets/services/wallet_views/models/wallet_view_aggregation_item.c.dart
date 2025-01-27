@@ -11,9 +11,19 @@ class WalletViewAggregationItem with _$WalletViewAggregationItem {
   const factory WalletViewAggregationItem({
     @JsonKey(defaultValue: [])
     required List<WalletViewAggregationWallet> wallets,
-    @JsonKey(defaultValue: 0)
-    required double totalBalance,
+    @TotalBalanceConverter()
+    required String totalBalance,
   }) = _WalletViewAggregationItem;
 
   factory WalletViewAggregationItem.fromJson(Map<String, dynamic> json) => _$WalletViewAggregationItemFromJson(json);
+}
+
+class TotalBalanceConverter implements JsonConverter<String, dynamic> {
+  const TotalBalanceConverter();
+
+  @override
+  String fromJson(dynamic json) => json == null ? '0' : json.toString();
+
+  @override
+  dynamic toJson(String object) => object;
 }
