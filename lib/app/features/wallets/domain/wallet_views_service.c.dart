@@ -52,8 +52,7 @@ class WalletViewsService {
 
   Future<WalletViewData> create(String name) async {
     final request = _CreateUpdateRequestBuilder().build(name: name);
-    final result = await _identity.wallets.createWalletView(request);
-    final walletView = await _identity.wallets.getWalletView(result.id).then(_parseWalletView);
+    final walletView = await _identity.wallets.createWalletView(request).then(_parseWalletView);
     return walletView;
   }
 
@@ -69,9 +68,7 @@ class WalletViewsService {
       userWallets: _userWallets,
     );
 
-    final updatedWallet = await _identity.wallets.updateWalletView(walletView.id, request);
-    final result = await _identity.wallets.getWalletView(updatedWallet.id).then(_parseWalletView);
-    return result;
+    return _identity.wallets.updateWalletView(walletView.id, request).then(_parseWalletView);
   }
 
   Future<void> delete({required String walletViewId}) async {
@@ -175,8 +172,7 @@ class WalletViewsService {
 
     // Attempt to find an element by indirect signs.
     // The search is performed on all aggregation items with a check
-    // for matching the wallet ID, network name,
-    // and the token being searched for must be native.
+    // for matching the wallet ID, network, and coinId.
     for (final aggregation in aggregation.values) {
       final associatedWallet = aggregation.wallets.firstWhereOrNull(
         (wallet) => wallet.walletId == coinInWalletDTO.walletId,
@@ -184,9 +180,8 @@ class WalletViewsService {
       if (associatedWallet != null) {
         final isNetworkMatch =
             associatedWallet.network.toLowerCase() == coinInWalletDTO.coin.network.toLowerCase();
-        if (isNetworkMatch && associatedWallet.asset.isNative) {
-          return aggregation;
-        }
+        final isCoinIdMatch = associatedWallet.coinId == coinInWalletDTO.coin.id;
+        if (isNetworkMatch && isCoinIdMatch) return aggregation;
       }
     }
 
