@@ -6,6 +6,7 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
+import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
@@ -31,7 +32,8 @@ class TabEntitiesList extends ConsumerWidget {
       key: key,
       type: TabEntityType.replies,
       pubkey: pubkey,
-      builder: (entities) => EntitiesList(entities: entities.toList(), showParent: true),
+      builder: (entities) =>
+          EntitiesList(entities: entities.toList(), framedEventType: FramedEventType.parent),
     );
   }
 

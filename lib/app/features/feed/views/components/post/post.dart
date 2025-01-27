@@ -21,19 +21,22 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
+enum FramedEventType { parent, quoted, none }
+
 class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
+    super.key,
+    this.framedEventType = FramedEventType.quoted,
     this.header,
     this.footer,
-    this.showParent = false,
     this.timeFormat = TimestampFormat.short,
     this.onDelete,
     super.key,
   });
 
   final EventReference eventReference;
-  final bool showParent;
+  final FramedEventType framedEventType;
   final Widget? header;
   final Widget? footer;
   final TimestampFormat timeFormat;
@@ -51,7 +54,8 @@ class Post extends ConsumerWidget {
 
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(postEntity.masterPubkey));
 
-    final framedEvent = _getFramedEventReference(postEntity);
+    final framedEventReference =
+        _getFramedEventReference(postEntity: postEntity, framedEventType: framedEventType);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +75,7 @@ class Post extends ConsumerWidget {
             ),
         SizedBox(height: 10.0.s),
         PostBody(postEntity: postEntity),
-        if (framedEvent != null) _FramedEvent(eventReference: framedEvent),
+        if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
         footer ??
             CounterItemsFooter(
               eventReference: eventReference,
@@ -80,19 +84,17 @@ class Post extends ConsumerWidget {
     );
   }
 
-  EventReference? _getFramedEventReference(ModifiablePostEntity postEntity) {
-    if (showParent) {
-      final parentEvent = postEntity.data.parentEvent;
-      if (parentEvent != null) {
-        return parentEvent.eventReference;
-      }
-    } else {
-      final quotedEvent = postEntity.data.quotedEvent;
-      if (quotedEvent != null) {
-        return quotedEvent.eventReference;
-      }
-    }
-    return null;
+  EventReference? _getFramedEventReference({
+    required ModifiablePostEntity postEntity,
+    required FramedEventType framedEventType,
+  }) {
+    return switch (framedEventType) {
+      FramedEventType.parent when postEntity.data.parentEvent != null =>
+        postEntity.data.parentEvent!.eventReference,
+      FramedEventType.quoted when postEntity.data.quotedEvent != null =>
+        postEntity.data.quotedEvent!.eventReference,
+      _ => null,
+    };
   }
 }
 
@@ -146,6 +148,7 @@ final class _QuotedPost extends ConsumerWidget {
         child: AbsorbPointer(
           child: Post(
             eventReference: eventReference,
+            framedEventType: FramedEventType.none,
             header: UserInfo(
               pubkey: eventReference.pubkey,
               createdAt: postEntity?.createdAt,

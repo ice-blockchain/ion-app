@@ -35,10 +35,11 @@ class QuotedEntity extends HookConsumerWidget {
     final quoteChild = useMemoized(
       () {
         switch (ionConnectEntity) {
-          case ModifiablePostData():
+          case ModifiablePostEntity():
             return QuotedEntityFrame.post(
               child: Post(
                 eventReference: eventReference,
+                framedEventType: FramedEventType.none,
                 header: UserInfo(pubkey: eventReference.pubkey),
                 footer: const SizedBox.shrink(),
               ),
