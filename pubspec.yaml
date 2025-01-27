@@ -95,7 +95,6 @@ dependencies:
   talker_flutter: 4.5.4
   talker_riverpod_logger: 4.5.4
   timeago: ^3.6.1
-  timeago_flutter: ^3.6.0
   uri_to_file: ^1.0.0
   url_launcher: ^6.0.12
   uuid: ^4.5.1
