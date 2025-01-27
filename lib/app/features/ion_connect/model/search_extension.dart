@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
@@ -34,7 +33,7 @@ class SearchExtensions {
       ReactionsCountSearchExtension(forKind: forKind),
       ReplySampleSearchExtension(currentPubkey: currentPubkey, root: root, forKind: forKind),
       QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
-      RepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
+      GenericRepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ...extensions,
     ]);
@@ -66,7 +65,7 @@ class RepliesCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  String get query => 'kind6400+kind1+group+${root ? 'root' : 'reply'}';
+  String get query => 'kind6400+kind30175+group+${root ? 'root' : 'reply'}';
 }
 
 /// For every kind [ModifiablePostEntity.kind] that the subscription finds also include the count of reposts that it has
@@ -80,7 +79,7 @@ class RepostsCountSearchExtension extends IncludeSearchExtension {
 
 /// For every kind [forKind] that the subscription finds also include the count of generic reposts that it has
 class GenericRepostsCountSearchExtension extends IncludeSearchExtension {
-  GenericRepostsCountSearchExtension({this.forKind = ArticleEntity.kind});
+  GenericRepostsCountSearchExtension({this.forKind = ModifiablePostEntity.kind});
 
   @override
   final int forKind;
@@ -97,7 +96,7 @@ class QuotesCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  final String query = 'kind6400+kind1+group+Q';
+  final String query = 'kind6400+kind30175+group+Q';
 }
 
 /// For every kind [forKind] that the subscription finds also include the count of reactions that it has
@@ -128,7 +127,7 @@ class ReplySampleSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  String get query => '$currentPubkey@kind1+e+${root ? 'root' : 'reply'}';
+  String get query => '$currentPubkey@kind30175+a+${root ? 'root' : 'reply'}';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 reaction event
@@ -159,13 +158,13 @@ class QuoteSampleSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  String get query => '$currentPubkey@kind1+q';
+  String get query => '$currentPubkey@kind30175+Q';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 repost
 /// that the logged in user made for it — if any
-class RepostSampleSearchExtension extends IncludeSearchExtension {
-  RepostSampleSearchExtension({
+class GenericRepostSampleSearchExtension extends IncludeSearchExtension {
+  GenericRepostSampleSearchExtension({
     required this.currentPubkey,
     this.forKind = ModifiablePostEntity.kind,
   });
@@ -176,7 +175,7 @@ class RepostSampleSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  String get query => '$currentPubkey@kind6';
+  String get query => '$currentPubkey@kind16';
 }
 
 class GenericIncludeSearchExtension extends IncludeSearchExtension {
