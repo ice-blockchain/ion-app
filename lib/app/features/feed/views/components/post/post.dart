@@ -28,6 +28,7 @@ class Post extends ConsumerWidget {
     required this.eventReference,
     super.key,
     this.framedEventType = FramedEventType.quoted,
+    this.repostReference,
     this.header,
     this.footer,
     this.timeFormat = TimestampFormat.short,
@@ -37,6 +38,7 @@ class Post extends ConsumerWidget {
 
   final EventReference eventReference;
   final FramedEventType framedEventType;
+  final EventReference? repostReference;
   final Widget? header;
   final Widget? footer;
   final TimestampFormat timeFormat;
@@ -77,9 +79,7 @@ class Post extends ConsumerWidget {
         PostBody(postEntity: postEntity),
         if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
         footer ??
-            CounterItemsFooter(
-              eventReference: eventReference,
-            ),
+            CounterItemsFooter(eventReference: eventReference, repostReference: repostReference),
       ],
     );
   }

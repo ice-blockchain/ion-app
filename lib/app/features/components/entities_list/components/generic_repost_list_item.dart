@@ -19,18 +19,18 @@ class GenericRepostListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventReference = repost.data.eventReference;
+    final repostedEventReference = repost.data.eventReference;
 
-    if (eventReference is! ReplaceableEventReference) {
-      return Text('Repost of $eventReference is not supported');
+    if (repostedEventReference is! ReplaceableEventReference) {
+      return Text('Repost of $repostedEventReference is not supported');
     }
 
     return GestureDetector(
-      onTap: () => switch (eventReference.kind) {
+      onTap: () => switch (repostedEventReference.kind) {
         ArticleEntity.kind =>
-          ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
+          ArticleDetailsRoute(eventReference: repostedEventReference.encode()).push<void>(context),
         ModifiablePostEntity.kind =>
-          PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
+          PostDetailsRoute(eventReference: repostedEventReference.encode()).push<void>(context),
         _ => null,
       },
       behavior: HitTestBehavior.opaque,
@@ -41,9 +41,12 @@ class GenericRepostListItem extends StatelessWidget {
             SizedBox(height: 6.0.s),
             Padding(
               padding: EdgeInsets.only(right: 16.0.s),
-              child: switch (eventReference.kind) {
-                ArticleEntity.kind => Article(eventReference: eventReference),
-                ModifiablePostEntity.kind => Post(eventReference: eventReference),
+              child: switch (repostedEventReference.kind) {
+                ArticleEntity.kind => Article(eventReference: repostedEventReference),
+                ModifiablePostEntity.kind => Post(
+                    eventReference: repostedEventReference,
+                    repostReference: repost.toEventReference(),
+                  ),
                 _ => const SizedBox.shrink(),
               },
             ),

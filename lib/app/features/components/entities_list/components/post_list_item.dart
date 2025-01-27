@@ -22,7 +22,10 @@ class PostListItem extends StatelessWidget {
       onTap: () => PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context),
       behavior: HitTestBehavior.opaque,
       child: ScreenSideOffset.small(
-        child: Post(eventReference: eventReference, framedEventType: framedEventType),
+        child: Post(
+          eventReference: eventReference,
+          framedEventType: framedEventType,
+        ),
       ),
     );
   }
