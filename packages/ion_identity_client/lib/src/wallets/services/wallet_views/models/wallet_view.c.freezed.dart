@@ -27,6 +27,7 @@ mixin _$WalletView {
   @JsonKey(defaultValue: {})
   Map<String, WalletViewAggregationItem> get aggregation =>
       throw _privateConstructorUsedError;
+  @JsonKey(defaultValue: [])
   List<String> get symbolGroups => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
@@ -54,7 +55,7 @@ abstract class $WalletViewCopyWith<$Res> {
       @CoinInWalletListConverter() List<CoinInWallet> coins,
       @JsonKey(defaultValue: {})
       Map<String, WalletViewAggregationItem> aggregation,
-      List<String> symbolGroups,
+      @JsonKey(defaultValue: []) List<String> symbolGroups,
       String createdAt,
       String updatedAt,
       String userId});
@@ -135,7 +136,7 @@ abstract class _$$WalletViewImplCopyWith<$Res>
       @CoinInWalletListConverter() List<CoinInWallet> coins,
       @JsonKey(defaultValue: {})
       Map<String, WalletViewAggregationItem> aggregation,
-      List<String> symbolGroups,
+      @JsonKey(defaultValue: []) List<String> symbolGroups,
       String createdAt,
       String updatedAt,
       String userId});
@@ -209,7 +210,7 @@ class _$WalletViewImpl implements _WalletView {
       @CoinInWalletListConverter() required final List<CoinInWallet> coins,
       @JsonKey(defaultValue: {})
       required final Map<String, WalletViewAggregationItem> aggregation,
-      required final List<String> symbolGroups,
+      @JsonKey(defaultValue: []) required final List<String> symbolGroups,
       required this.createdAt,
       required this.updatedAt,
       required this.userId})
@@ -244,6 +245,7 @@ class _$WalletViewImpl implements _WalletView {
 
   final List<String> _symbolGroups;
   @override
+  @JsonKey(defaultValue: [])
   List<String> get symbolGroups {
     if (_symbolGroups is EqualUnmodifiableListView) return _symbolGroups;
     // ignore: implicit_dynamic_type
@@ -317,7 +319,7 @@ abstract class _WalletView implements WalletView {
       @CoinInWalletListConverter() required final List<CoinInWallet> coins,
       @JsonKey(defaultValue: {})
       required final Map<String, WalletViewAggregationItem> aggregation,
-      required final List<String> symbolGroups,
+      @JsonKey(defaultValue: []) required final List<String> symbolGroups,
       required final String createdAt,
       required final String updatedAt,
       required final String userId}) = _$WalletViewImpl;
@@ -336,6 +338,7 @@ abstract class _WalletView implements WalletView {
   @JsonKey(defaultValue: {})
   Map<String, WalletViewAggregationItem> get aggregation;
   @override
+  @JsonKey(defaultValue: [])
   List<String> get symbolGroups;
   @override
   String get createdAt;
