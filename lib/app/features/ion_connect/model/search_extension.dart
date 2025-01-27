@@ -85,7 +85,7 @@ class GenericRepostsCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  final String query = 'kind6400+kind16+group+a';
+  final String query = 'kind6400+kind16+group+e';
 }
 
 /// For every kind [forKind] that the subscription finds also include the count of quotes that it has
@@ -96,7 +96,7 @@ class QuotesCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  final String query = 'kind6400+kind30175+group+Q';
+  final String query = 'kind6400+kind30175+group+q';
 }
 
 /// For every kind [forKind] that the subscription finds also include the count of reactions that it has
@@ -127,7 +127,7 @@ class ReplySampleSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  String get query => '$currentPubkey@kind30175+a+${root ? 'root' : 'reply'}';
+  String get query => '$currentPubkey@kind30175+e+${root ? 'root' : 'reply'}';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 reaction event
@@ -158,7 +158,7 @@ class QuoteSampleSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  String get query => '$currentPubkey@kind30175+Q';
+  String get query => '$currentPubkey@kind30175+q';
 }
 
 /// For every kind [forKind] that the subscription finds also include 1 repost
