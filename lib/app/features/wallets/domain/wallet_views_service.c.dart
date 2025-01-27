@@ -156,36 +156,31 @@ class WalletViewsService {
     required CoinInWallet coinInWalletDTO,
     required Map<String, WalletViewAggregationItem> aggregation,
   }) {
-    final symbol = coinInWalletDTO.coin.symbol;
+    WalletViewAggregationItem? search(Iterable<WalletViewAggregationItem> searchSample) {
+      for (final aggregation in aggregation.values) {
+        final associatedWallet = aggregation.wallets.firstWhereOrNull(
+          (e) => e.walletId == coinInWalletDTO.walletId && e.coinId == coinInWalletDTO.coin.id,
+        );
+        if (associatedWallet != null &&
+            associatedWallet.network.toLowerCase() == coinInWalletDTO.coin.network.toLowerCase()) {
+          return aggregation;
+        }
+      }
+      return null;
+    }
 
     // Return aggregation item if aggregation map contains coin symbol as a key
-    // with the same wallet id as in CoinInWallet
-    if (aggregation.keys.contains(symbol)) {
-      final aggregationItem = aggregation[symbol];
-      final associatedWallet = aggregationItem?.wallets.firstWhereOrNull(
-        (e) => e.walletId == coinInWalletDTO.walletId,
-      );
-      if (aggregationItem != null && associatedWallet != null) {
-        return aggregationItem;
-      }
+    // with the same wallet and coin ids as in CoinInWallet
+    final symbol = coinInWalletDTO.coin.symbol;
+    if (aggregation[symbol] case final WalletViewAggregationItem aggregation) {
+      final result = search([aggregation]);
+      if (result != null) return result;
     }
 
-    // Attempt to find an element by indirect signs.
+    // Attempt to find an aggregation item by indirect signs.
     // The search is performed on all aggregation items with a check
     // for matching the wallet ID, network, and coinId.
-    for (final aggregation in aggregation.values) {
-      final associatedWallet = aggregation.wallets.firstWhereOrNull(
-        (wallet) => wallet.walletId == coinInWalletDTO.walletId,
-      );
-      if (associatedWallet != null) {
-        final isNetworkMatch =
-            associatedWallet.network.toLowerCase() == coinInWalletDTO.coin.network.toLowerCase();
-        final isCoinIdMatch = associatedWallet.coinId == coinInWalletDTO.coin.id;
-        if (isNetworkMatch && isCoinIdMatch) return aggregation;
-      }
-    }
-
-    return null;
+    return search(aggregation.values);
   }
 
   WalletViewData mergeWalletViewWithPriceUpdates(
