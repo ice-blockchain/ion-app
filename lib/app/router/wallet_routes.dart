@@ -12,7 +12,7 @@ class WalletRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<ContactRoute>(path: 'one-contact/:contactId'),
+        TypedGoRoute<ContactRoute>(path: 'one-contact/:pubkey'),
         ...coinSendRoutes,
         ...coinReceiveRoutes,
       ],
@@ -319,13 +319,13 @@ class DeleteWalletRoute extends BaseRouteData {
 }
 
 class ContactRoute extends BaseRouteData {
-  ContactRoute({required this.contactId})
+  ContactRoute({required this.pubkey})
       : super(
-          child: ContactPage(contactId: contactId),
+          child: ContactPage(pubkey: pubkey),
           type: IceRouteType.bottomSheet,
         );
 
-  final String contactId;
+  final String pubkey;
 }
 
 class NftDetailsRoute extends BaseRouteData {

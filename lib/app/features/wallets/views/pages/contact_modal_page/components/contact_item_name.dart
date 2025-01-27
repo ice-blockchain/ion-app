@@ -2,31 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/contact_data.c.dart';
-import 'package:ion/generated/assets.gen.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 class ContactItemName extends StatelessWidget {
   const ContactItemName({
-    required this.contactData,
+    required this.userMetadata,
     super.key,
   });
 
-  final ContactData contactData;
+  final UserMetadata userMetadata;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          contactData.name,
-          style: context.theme.appTextThemes.title,
-        ),
-        if (contactData.isVerified ?? false) ...[
-          SizedBox(width: 4.0.s),
-          Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
-        ],
-      ],
+    return Text(
+      userMetadata.displayName,
+      style: context.theme.appTextThemes.title,
     );
   }
 }

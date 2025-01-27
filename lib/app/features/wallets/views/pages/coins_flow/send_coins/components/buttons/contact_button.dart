@@ -5,18 +5,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/contact_data.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ContactButton extends ConsumerWidget {
   const ContactButton({
-    required this.contact,
+    required this.userMetadata,
     required this.onContactTap,
     required this.onClearTap,
     super.key,
   });
 
-  final ContactData contact;
+  final UserMetadata userMetadata;
   final VoidCallback onContactTap;
   final VoidCallback onClearTap;
 
@@ -37,10 +37,9 @@ class ContactButton extends ConsumerWidget {
           bottom: 10.0.s,
           right: 8.0.s,
         ),
-        title: Text(contact.name),
-        subtitle: Text(contact.nickname!),
-        profilePicture: contact.icon,
-        timeago: contact.lastSeen,
+        title: Text(userMetadata.displayName),
+        subtitle: Text(userMetadata.name),
+        profilePicture: userMetadata.picture,
         trailing: IconButton(
           onPressed: onClearTap,
           icon: Assets.svg.iconSheetClose.icon(

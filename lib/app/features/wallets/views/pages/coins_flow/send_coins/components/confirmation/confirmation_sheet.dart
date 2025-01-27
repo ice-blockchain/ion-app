@@ -64,7 +64,7 @@ class ConfirmationSheet extends ConsumerWidget {
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
                     address: formData.address,
-                    contact: formData.selectedContact,
+                    pubkey: formData.selectedContactPubkey,
                   ),
                   if (formData.selectedCoin case final CoinData coin) ...[
                     SizedBox(height: 16.0.s),

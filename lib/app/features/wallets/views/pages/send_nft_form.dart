@@ -7,7 +7,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/contacts/providers/contacts_provider.c.dart';
+import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
@@ -33,7 +33,7 @@ class SendNftForm extends ConsumerWidget {
     final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
     final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
     final selectedNft = formController.selectedNft;
-    final selectedContact = formController.selectedContact;
+    final selectedContactPubkey = formController.selectedContactPubkey;
 
     return SheetContent(
       backgroundColor: colors.secondaryBackground,
@@ -63,17 +63,13 @@ class SendNftForm extends ConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       ContactInputSwitcher(
-                        contactId: selectedContact?.id,
-                        onClearTap: (contactId) => {
+                        pubkey: selectedContactPubkey,
+                        onClearTap: (pubkey) => {
                           notifier.setContact(null),
                         },
                         onContactTap: () async {
                           final pubkey = await NftSelectFriendRoute().push<String>(context);
-
-                          if (pubkey != null) {
-                            final contact = ref.read(contactByIdProvider(id: pubkey));
-                            notifier.setContact(contact);
-                          }
+                          pubkey?.let(notifier.setContact);
                         },
                       ),
                       SizedBox(height: 17.0.s),

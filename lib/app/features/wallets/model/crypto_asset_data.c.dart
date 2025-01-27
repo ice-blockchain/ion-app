@@ -2,7 +2,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/contact_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
@@ -19,7 +18,7 @@ class CryptoAssetData with _$CryptoAssetData {
     required String address,
     CoinInWalletData? selectedCoin,
     NftData? selectedNft,
-    ContactData? selectedContact,
+    String? selectedContactPubkey,
   }) = _CryptoAssetData;
 
   const CryptoAssetData._();
