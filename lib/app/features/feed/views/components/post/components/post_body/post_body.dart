@@ -7,6 +7,7 @@ import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
+import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -45,6 +46,13 @@ class PostBody extends HookConsumerWidget {
               top: 10.0.s,
             ),
             child: PostMedia(media: postMedia),
+          ),
+        if (postEntity.data.firstUrl != null)
+          Padding(
+            padding: EdgeInsets.only(
+              top: 10.0.s,
+            ),
+            child: UrlPreviewContent(url: postEntity.data.firstUrl!),
           ),
       ],
     );
