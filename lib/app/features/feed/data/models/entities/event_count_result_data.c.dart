@@ -12,9 +12,6 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
-import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 
@@ -130,19 +127,16 @@ class EventCountResultData with _$EventCountResultData {
   EventCountResultType getType() {
     final EventCountRequestData(:filters, :params) = request.data;
     final filter = filters.first;
-    if (params?.group == RelatedEventMarker.reply.toShortString() ||
-        params?.group == RelatedEventMarker.root.toShortString()) {
-      return EventCountResultType.replies;
-    } else if (filter.kinds != null &&
-        filter.kinds!.contains(GenericRepostEntity.kind) &&
-        params?.group == RelatedReplaceableEvent.tagName) {
+    if (filter.kinds != null && filter.kinds!.contains(GenericRepostEntity.kind)) {
       return EventCountResultType.reposts;
-    } else if (params?.group == QuotedReplaceableEvent.tagName) {
-      return EventCountResultType.quotes;
     } else if (filter.kinds != null && filter.kinds!.contains(ReactionEntity.kind)) {
       return EventCountResultType.reactions;
     } else if (filter.kinds != null && filter.kinds!.contains(FollowListEntity.kind)) {
       return EventCountResultType.followers;
+    } else if (filter.tags != null && filter.tags!.containsKey('#a')) {
+      return EventCountResultType.replies;
+    } else if (filter.tags != null && filter.tags!.containsKey('#q')) {
+      return EventCountResultType.quotes;
     } else {
       throw UnknownEventCountResultType(eventReference);
     }
@@ -154,18 +148,20 @@ class EventCountResultData with _$EventCountResultData {
       throw UnknownEventCountResultKey(eventReference);
     }
 
-    final qTag = tags['#Q'];
+    final qTag = tags['#q'];
     final pTag = tags['#p'];
     final eTag = tags['#e'];
     final aTag = tags['#a'];
 
     final key = switch (type) {
-      EventCountResultType.quotes => qTag != null && qTag.isNotEmpty ? qTag.first : null,
-      EventCountResultType.followers => pTag != null && pTag.isNotEmpty ? pTag.first : null,
-      _ when eTag != null => eTag.isNotEmpty ? eTag.first : null,
-      _ when aTag != null => aTag.isNotEmpty ? aTag.first : null,
+      EventCountResultType.quotes =>
+        qTag != null && qTag.isNotEmpty ? (qTag.first! as List<dynamic>).first : null,
+      EventCountResultType.followers =>
+        pTag != null && pTag.isNotEmpty ? (pTag.first! as List<dynamic>).first : null,
+      _ when eTag != null => eTag.isNotEmpty ? (eTag.first! as List<dynamic>).first : null,
+      _ when aTag != null => aTag.isNotEmpty ? (aTag.first! as List<dynamic>).first : null,
       _ => null
-    };
+    } as String?;
 
     if (key == null) {
       throw UnknownEventCountResultKey(eventReference);
