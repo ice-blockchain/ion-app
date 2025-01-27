@@ -24,7 +24,6 @@ class _ListItemUser extends ListItem {
     bool showProfilePictureIceBadge = false,
     bool ntfAvatar = false,
     super.isSelected,
-    DateTime? timeago,
 
     /// Pass a resized value (e.g., 30.0.s) instead of a raw value (e.g., 30.0)
     /// to ensure proper scaling across different screen sizes.
@@ -61,7 +60,6 @@ class _ListItemUser extends ListItem {
             crossAxisAlignment: CrossAxisAlignment.start, // Aligns the Column to the top of the Row
             children: [
               Flexible(child: subtitle),
-              if (timeago != null) _TimeAgo(date: timeago),
             ],
           ),
         );
@@ -90,21 +88,6 @@ class _ListItemUser extends ListItem {
       color: (isSelected ?? false)
           ? context.theme.appColors.onPrimaryAccent
           : context.theme.appColors.tertararyText,
-    );
-  }
-}
-
-class _TimeAgo extends StatelessWidget {
-  const _TimeAgo({required this.date});
-
-  final DateTime date;
-
-  @override
-  Widget build(BuildContext context) {
-    return Timeago(
-      date: date,
-      builder: (BuildContext context, String value) => Text(' • $value'),
-      locale: 'en_short',
     );
   }
 }
