@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/features/core/model/timeago_locales.dart';
+import 'package:ion/l10n/timeago_locales.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 /// Converts a timestamp (in milliseconds) into a human-readable string such as
@@ -121,11 +121,6 @@ String formatShortTimestamp(DateTime dateTime, {Locale? locale}) {
   locale ??= const Locale('en');
   final now = DateTime.now();
   final diff = now.difference(dateTime.toLocal());
-
-  // If under 60 seconds, force "1m".
-  if (diff.inSeconds < 60) {
-    return '1m';
-  }
 
   final diffInDays = diff.inDays;
   // If under 8 days, use timeago short.

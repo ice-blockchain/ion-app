@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/del
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
+import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -26,7 +27,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.showParent = false,
-    this.isDetailView = false,
+    this.timeFormat = TimestampFormat.short,
     this.onDelete,
     super.key,
   });
@@ -35,7 +36,7 @@ class Post extends ConsumerWidget {
   final bool showParent;
   final Widget? header;
   final Widget? footer;
-  final bool isDetailView;
+  final TimestampFormat timeFormat;
   final VoidCallback? onDelete;
 
   @override
@@ -60,7 +61,7 @@ class Post extends ConsumerWidget {
             UserInfo(
               pubkey: eventReference.pubkey,
               createdAt: postEntity.createdAt,
-              showDetailed: isDetailView,
+              timeFormat: timeFormat,
               trailing: isOwnedByCurrentUser
                   ? DeleteFeedItemMenu(
                       entity: postEntity,

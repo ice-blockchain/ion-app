@@ -13,6 +13,7 @@ import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/l10n/timeago_locales.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'init_provider.c.g.dart';
@@ -39,4 +40,6 @@ Future<void> initApp(Ref ref) async {
   await [
     ref.read(coinInitializerProvider).initialize(),
   ].wait;
+
+  registerTimeagoLocalesForEnum();
 }

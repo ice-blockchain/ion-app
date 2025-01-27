@@ -17,7 +17,7 @@ class UserInfo extends HookConsumerWidget {
     this.trailing,
     this.textStyle,
     this.createdAt,
-    this.showDetailed = false,
+    this.timeFormat = TimestampFormat.short,
     super.key,
   });
 
@@ -25,7 +25,7 @@ class UserInfo extends HookConsumerWidget {
   final Widget? trailing;
   final TextStyle? textStyle;
   final DateTime? createdAt;
-  final bool showDetailed;
+  final TimestampFormat timeFormat;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,7 +61,7 @@ class UserInfo extends HookConsumerWidget {
                 SizedBox(width: 4.0.s),
                 TimestampWidget(
                   createdAt: createdAt!,
-                  showDetailed: showDetailed,
+                  timeFormat: timeFormat,
                   style: textStyle,
                 ),
               ],
