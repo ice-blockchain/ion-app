@@ -30,7 +30,7 @@ class UserDelegationEntity
   /// https://github.com/nostr-protocol/nips/pull/1482/files
   factory UserDelegationEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return UserDelegationEntity(

@@ -29,10 +29,10 @@ class UserIndexersNotFoundException extends IONException {
 }
 
 class IncorrectEventKindException extends IONException {
-  IncorrectEventKindException({
-    required String eventId,
+  IncorrectEventKindException(
+    dynamic eventInfo, {
     required int kind,
-  }) : super(10006, 'Incorrect event $eventId, expected kind $kind');
+  }) : super(10006, 'Incorrect event $eventInfo, expected kind $kind');
 }
 
 class IncorrectEventTagNameException extends IONException {
@@ -79,13 +79,8 @@ class QuillParseException extends IONException {
 }
 
 class UnsupportedRepostException extends IONException {
-  UnsupportedRepostException({required String eventId})
-      : super(10015, 'Reposting events with $eventId is not supported');
-}
-
-class EventNotFoundException extends IONException {
-  EventNotFoundException({required String eventId, required String pubkey})
-      : super(10016, 'Event with id $eventId not found for pubkey $pubkey');
+  UnsupportedRepostException(dynamic eventInfo)
+      : super(10015, 'Reposting event $eventInfo is not supported');
 }
 
 class AssetEntityFileNotFoundException extends IONException {
@@ -93,13 +88,13 @@ class AssetEntityFileNotFoundException extends IONException {
 }
 
 class UnknownEventCountResultType extends IONException {
-  UnknownEventCountResultType({required String eventId})
-      : super(10019, 'Unknown EventCount result type $eventId');
+  UnknownEventCountResultType(dynamic eventInfo)
+      : super(10019, 'Unknown EventCount result type $eventInfo');
 }
 
 class UnknownEventCountResultKey extends IONException {
-  UnknownEventCountResultKey({required String eventId})
-      : super(10020, 'Unknown EventCount result key $eventId');
+  UnknownEventCountResultKey(dynamic eventInfo)
+      : super(10020, 'Unknown EventCount result key $eventInfo');
 }
 
 class UnsupportedSignatureAlgorithmException extends IONException {
@@ -139,7 +134,7 @@ class CompressImageException extends IONException {
 }
 
 class EntityNotFoundException extends IONException {
-  EntityNotFoundException(String eventId) : super(10028, 'Entity not found $eventId');
+  EntityNotFoundException(dynamic entityInfo) : super(10028, 'Entity not found $entityInfo');
 }
 
 class CompressVideoException extends IONException {
@@ -179,8 +174,8 @@ class UnknownMediaTypeException extends IONException {
 }
 
 class UnsupportedParentEntity extends IONException {
-  UnsupportedParentEntity({required String eventId})
-      : super(10038, 'Unsupported parent entity: $eventId');
+  UnsupportedParentEntity(dynamic eventInfo)
+      : super(10038, 'Unsupported parent entity: $eventInfo');
 }
 
 class RelayRequestFailedException extends IONException {
@@ -236,4 +231,13 @@ class DeleteEntityUnsupportedTypeException extends IONException {
 class UnknownEventReferenceType extends IONException {
   UnknownEventReferenceType({required String type})
       : super(10049, 'Unknown event reference type $type');
+}
+
+class UnsupportedEventReference extends IONException {
+  UnsupportedEventReference(dynamic eventReference)
+      : super(10050, 'Unsupported event reference $eventReference');
+}
+
+class UnsupportedEntityBookmarking extends IONException {
+  UnsupportedEntityBookmarking(dynamic entity) : super(10051, 'Unsupported bookmarking of $entity');
 }

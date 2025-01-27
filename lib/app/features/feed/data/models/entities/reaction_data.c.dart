@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -29,7 +30,7 @@ class ReactionEntity with _$ReactionEntity, IonConnectEntity, ImmutableEntity, C
   /// https://github.com/nostr-protocol/nips/blob/master/25.md
   factory ReactionEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return ReactionEntity(
@@ -44,14 +45,13 @@ class ReactionEntity with _$ReactionEntity, IonConnectEntity, ImmutableEntity, C
 
   @override
   String get cacheKey =>
-      cacheKeyBuilder(eventId: data.eventId, pubkey: masterPubkey, content: data.content);
+      cacheKeyBuilder(eventReference: data.eventReference, content: data.content);
 
   static String cacheKeyBuilder({
-    required String eventId,
-    required String pubkey,
+    required EventReference eventReference,
     required String content,
   }) =>
-      '$kind:$eventId:$pubkey:$content';
+      '$eventReference:$content';
 
   static const int kind = 7;
 
@@ -61,9 +61,9 @@ class ReactionEntity with _$ReactionEntity, IonConnectEntity, ImmutableEntity, C
 @freezed
 class ReactionData with _$ReactionData implements EventSerializable {
   const factory ReactionData({
+    required int kind,
     required String content,
-    required String eventId,
-    required String pubkey,
+    required EventReference eventReference,
   }) = _ReactionData;
 
   const ReactionData._();
@@ -71,15 +71,27 @@ class ReactionData with _$ReactionData implements EventSerializable {
   factory ReactionData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final eventId = tags['e']?.first[1];
+    final eventRef = tags['a']?.first[1];
     final pubkey = tags['p']?.first[1];
+    final kind = int.tryParse(tags['k']!.first[1]);
 
-    if (eventId == null || pubkey == null) {
+    if (pubkey == null || kind == null) {
+      throw IncorrectEventTagsException(eventId: eventMessage.id);
+    }
+
+    final eventReference = eventRef != null
+        ? ReplaceableEventReference.fromString(eventRef)
+        : eventId != null
+            ? ImmutableEventReference(eventId: eventId, pubkey: pubkey)
+            : null;
+
+    if (eventReference == null) {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
     return ReactionData(
-      eventId: eventId,
-      pubkey: pubkey,
+      kind: kind,
+      eventReference: eventReference,
       content: eventMessage.content,
     );
   }
@@ -97,8 +109,9 @@ class ReactionData with _$ReactionData implements EventSerializable {
       content: content,
       tags: [
         ...tags,
-        ['p', pubkey],
-        ['e', eventId],
+        ['p', eventReference.pubkey],
+        ['k', kind.toString()],
+        eventReference.toTag(),
       ],
     );
   }

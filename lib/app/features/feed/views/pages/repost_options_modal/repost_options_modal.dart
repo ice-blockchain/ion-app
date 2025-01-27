@@ -10,13 +10,10 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/providers/counters/reposted_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
-import 'package:ion/app/features/feed/providers/repost_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -25,21 +22,22 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class RepostOptionsModal extends HookConsumerWidget {
   const RepostOptionsModal({
     required this.eventReference,
+    this.repostReference,
     super.key,
   });
 
   final EventReference eventReference;
+  final EventReference? repostReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(repostNotifierProvider);
 
     final selectedAction = useState<RepostOptionAction?>(null);
-    final isReposted = ref.watch(isRepostedProvider(eventReference));
     final repostLoading = ref.watch(repostNotifierProvider).isLoading;
 
     final actions = [
-      if (isReposted) RepostOptionAction.undoRepost else RepostOptionAction.repost,
+      if (repostReference != null) RepostOptionAction.undoRepost else RepostOptionAction.repost,
       RepostOptionAction.quotePost,
     ];
 
@@ -83,10 +81,8 @@ class RepostOptionsModal extends HookConsumerWidget {
                             CreatePostRoute(quotedEvent: eventReference.encode()).go(context);
                           case RepostOptionAction.undoRepost:
                             selectedAction.value = option;
-                            final repostEntity = ref.read(repostEntityProvider(eventReference));
-
-                            if (repostEntity case final CacheableEntity entity) {
-                              await ref.read(deleteEntityProvider(entity).future);
+                            if (repostReference != null) {
+                              await ref.read(deleteEntityProvider(repostReference!).future);
                               if (context.mounted) {
                                 context.pop();
                               }

@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -28,8 +29,8 @@ class RepliedEvents extends _$RepliedEvents {
       yield repliedMap;
 
       await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
-        if (entity case final PostEntity post) {
-          final parentId = post.data.parentEvent?.eventId;
+        if (entity case final ModifiablePostEntity post) {
+          final parentId = post.data.parentEvent?.eventReference.toString();
           if (parentId == null) continue;
 
           final currentUserRepliedIds =
@@ -77,9 +78,9 @@ Map<String, List<String>> _buildInitialMap(
   String currentPubkey,
 ) {
   return cache.values.fold<Map<String, List<String>>>({}, (result, entry) {
-    if (entry case final PostEntity post) {
+    if (entry case final ModifiablePostEntity post) {
       final currentUserRepliedIds = _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
-      final parentId = post.data.parentEvent?.eventId;
+      final parentId = post.data.parentEvent?.eventReference.toString();
       if (currentUserRepliedIds != null && parentId != null) {
         if (!result.containsKey(parentId)) {
           result[parentId] = [];
@@ -93,7 +94,7 @@ Map<String, List<String>> _buildInitialMap(
 }
 
 List<String>? _getCurrentUserRepliedIds(IonConnectEntity entity, {required String currentPubkey}) {
-  if (entity case final PostEntity post when post.masterPubkey == currentPubkey) {
+  if (entity case final ModifiablePostEntity post when post.masterPubkey == currentPubkey) {
     if (post.data.parentEvent != null) {
       return [post.id];
     }
@@ -103,13 +104,12 @@ List<String>? _getCurrentUserRepliedIds(IonConnectEntity entity, {required Strin
 
 @riverpod
 bool isReplied(Ref ref, EventReference eventReference) {
-  if (eventReference is! ImmutableEventReference) {
-    //TODO:replaceable handle replaceable references
-    throw UnimplementedError();
+  if (eventReference is! ReplaceableEventReference) {
+    throw UnsupportedEventReference(eventReference);
   }
 
   final repliedMap = ref.watch(repliedEventsProvider).valueOrNull;
-  final replyIds = repliedMap?[eventReference.eventId];
+  final replyIds = repliedMap?[eventReference.toString()];
 
   final deletedIds = ref.read(repliedEventsProvider.notifier)._deletedIds;
   final validReplyIds = replyIds?.where((id) => !deletedIds.contains(id)).toList();

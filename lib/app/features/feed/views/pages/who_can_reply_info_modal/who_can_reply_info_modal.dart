@@ -7,7 +7,7 @@ import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -54,7 +54,7 @@ class WhoCanReplyInfoModal extends HookConsumerWidget {
     }
 
     final whoCanReplySetting = switch (entity) {
-      PostEntity() => entity.data.whoCanReplySetting,
+      ModifiablePostEntity() => entity.data.whoCanReplySetting,
       ArticleEntity() => entity.data.whoCanReplySetting,
       _ => null,
     };

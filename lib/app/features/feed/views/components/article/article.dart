@@ -80,9 +80,7 @@ class Article extends ConsumerWidget {
                             children: [
                               BookmarkButton(eventReference: eventReference),
                               if (isOwnedByCurrentUser)
-                                DeleteFeedItemMenu(
-                                  entity: articleEntity,
-                                )
+                                DeleteFeedItemMenu(eventReference: eventReference)
                               else
                                 UserInfoMenu(pubkey: eventReference.pubkey),
                             ],

@@ -10,16 +10,16 @@ import 'package:ion/app/features/components/user/user_info_summary/user_info_sum
 import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/delete_feed_item_menu.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class UserBiography extends ConsumerWidget {
-  const UserBiography({required this.entity, super.key});
+  const UserBiography({required this.eventReference, super.key});
 
-  final CacheableEntity entity;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
+    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
 
     return Container(
       alignment: Alignment.topLeft,
@@ -37,20 +37,20 @@ class UserBiography extends ConsumerWidget {
       child: Column(
         children: [
           UserInfo(
-            pubkey: entity.masterPubkey,
+            pubkey: eventReference.pubkey,
             trailing: isOwnedByCurrentUser
                 ? DeleteFeedItemMenu(
-                    entity: entity,
+                    eventReference: eventReference,
                     onDelete: () {
                       context.pop();
                     },
                   )
-                : UserInfoMenu(pubkey: entity.masterPubkey),
+                : UserInfoMenu(pubkey: eventReference.pubkey),
           ),
           SizedBox(height: 12.0.s),
-          UserAbout(pubkey: entity.masterPubkey),
+          UserAbout(pubkey: eventReference.pubkey),
           SizedBox(height: 12.0.s),
-          UserInfoSummary(pubkey: entity.masterPubkey),
+          UserInfoSummary(pubkey: eventReference.pubkey),
         ],
       ),
     );

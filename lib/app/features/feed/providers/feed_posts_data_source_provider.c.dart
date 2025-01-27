@@ -4,8 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
@@ -13,7 +12,8 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.d
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
-import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
+import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
@@ -63,7 +63,7 @@ EntitiesDataSource _buildArticlesDataSource({
       ReferencesSearchExtension(contain: false),
       ExpirationSearchExtension(expiration: false),
       TagMarkerSearchExtension(
-        tagName: RelatedEvent.tagName,
+        tagName: RelatedReplaceableEvent.tagName,
         marker: RelatedEventMarker.reply.toShortString(),
         negative: true,
       ),
@@ -121,30 +121,30 @@ EntitiesDataSource _buildVideosDataSource({
         return false;
       }
 
-      return (entity is PostEntity &&
+      return (entity is ModifiablePostEntity &&
               entity.data.parentEvent == null &&
               entity.data.quotedEvent == null) ||
-          entity is RepostEntity;
+          entity is GenericRepostEntity;
     },
     requestFilters: [
       RequestFilter(
-        kinds: const [PostEntity.kind, RepostEntity.kind],
+        kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
         search: SearchExtensions.withCounters(
           [
             ReferencesSearchExtension(contain: false),
             ExpirationSearchExtension(expiration: false),
             VideosSearchExtension(contain: true),
             TagMarkerSearchExtension(
-              tagName: RelatedEvent.tagName,
+              tagName: RelatedReplaceableEvent.tagName,
               marker: RelatedEventMarker.reply.toShortString(),
               negative: true,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: UserMetadataEntity.kind,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: BlockListEntity.kind,
             ),
           ],
@@ -169,26 +169,27 @@ EntitiesDataSource _buildPostsDataSource({
         return false;
       }
 
-      return (entity is PostEntity && entity.data.parentEvent == null) || entity is RepostEntity;
+      return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
+          entity is GenericRepostEntity;
     },
     requestFilters: [
       RequestFilter(
-        kinds: const [PostEntity.kind, RepostEntity.kind],
+        kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
         search: SearchExtensions.withCounters(
           [
             ReferencesSearchExtension(contain: false),
             ExpirationSearchExtension(expiration: false),
             TagMarkerSearchExtension(
-              tagName: RelatedEvent.tagName,
+              tagName: RelatedReplaceableEvent.tagName,
               marker: RelatedEventMarker.reply.toShortString(),
               negative: true,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: UserMetadataEntity.kind,
             ),
             GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
+              forKind: ModifiablePostEntity.kind,
               includeKind: BlockListEntity.kind,
             ),
           ],

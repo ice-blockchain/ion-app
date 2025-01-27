@@ -2,7 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 
 part 'story.c.freezed.dart';
 
@@ -10,14 +10,15 @@ part 'story.c.freezed.dart';
 class UserStories with _$UserStories {
   const factory UserStories({
     required String pubkey,
-    required List<PostEntity> stories,
+    required List<ModifiablePostEntity> stories,
   }) = _UserStories;
 
   const UserStories._();
 
   bool get hasStories => stories.isNotEmpty;
 
-  PostEntity? getStoryById(String id) => stories.firstWhereOrNull((post) => post.id == id);
+  ModifiablePostEntity? getStoryById(String id) =>
+      stories.firstWhereOrNull((post) => post.id == id);
 
   int getStoryIndex(String id) => stories.indexWhere((post) => post.id == id);
 

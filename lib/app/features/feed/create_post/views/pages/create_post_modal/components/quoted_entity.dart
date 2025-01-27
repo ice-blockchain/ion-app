@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
@@ -35,10 +35,11 @@ class QuotedEntity extends HookConsumerWidget {
     final quoteChild = useMemoized(
       () {
         switch (ionConnectEntity) {
-          case PostEntity():
+          case ModifiablePostEntity():
             return QuotedEntityFrame.post(
               child: Post(
                 eventReference: eventReference,
+                framedEventType: FramedEventType.none,
                 header: UserInfo(pubkey: eventReference.pubkey),
                 footer: const SizedBox.shrink(),
               ),

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:async';
 
 import 'package:collection/collection.dart';
@@ -16,6 +18,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -25,8 +28,10 @@ import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'post_data.c.freezed.dart';
 
+@Deprecated('Use ModifiablePostEntity instead')
 @Freezed(equal: false)
 class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
+  @Deprecated('Use ModifiablePostEntity instead')
   const factory PostEntity({
     required String id,
     required String pubkey,
@@ -36,12 +41,14 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
     required PostData data,
   }) = _PostEntity;
 
+  @Deprecated('Use ModifiablePostEntity instead')
   const PostEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/01.md
+  @Deprecated('Use ModifiablePostEntity instead')
   factory PostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return PostEntity(

@@ -31,7 +31,7 @@ class EventCountRequestEntity
   /// https://github.com/nostr-protocol/nips/blob/vending-machine/90.md
   factory EventCountRequestEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return EventCountRequestEntity(

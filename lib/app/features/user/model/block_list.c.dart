@@ -31,7 +31,7 @@ class BlockListEntity
   /// https://github.com/nostr-protocol/nips/blob/master/51.md#standard-lists
   factory BlockListEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventId: eventMessage.id, kind: kind);
+      throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
     return BlockListEntity(

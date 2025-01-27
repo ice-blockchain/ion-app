@@ -8,7 +8,7 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/section_header/section_header.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/trending_videos_overlay.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
@@ -55,7 +55,7 @@ class TrendingVideos extends ConsumerWidget {
         LoadMoreBuilder(
           slivers: [
             TrendingVideosList(
-              videos: videos.whereType<PostEntity>().toList(),
+              videos: videos.whereType<ModifiablePostEntity>().toList(),
               listOverlay: listOverlay,
             ),
           ],

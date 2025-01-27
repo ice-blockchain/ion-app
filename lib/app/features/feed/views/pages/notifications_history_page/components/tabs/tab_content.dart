@@ -10,7 +10,7 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/content_creators_data_source_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notification_data.c.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_tab_type.dart';
 import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
@@ -98,7 +98,7 @@ class TabContent extends HookConsumerWidget {
     }
 
     final mockedPosts = useMemoized(
-      () => entities.whereType<PostEntity>().take(10).toList(),
+      () => entities.whereType<ModifiablePostEntity>().take(10).toList(),
       [entities],
     );
 

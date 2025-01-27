@@ -7,7 +7,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -87,8 +87,9 @@ Future<bool> isBookmarked(Ref ref, EventReference eventReference) async {
 
   final currentBookmarks = await ref.watch(currentUserBookmarksProvider.future);
   return switch (ionConnectEntity) {
-    PostEntity() => currentBookmarks.values.any(
-        (bookmarksSet) => bookmarksSet?.data.postsIds.contains(ionConnectEntity.id) ?? false,
+    ModifiablePostEntity() => currentBookmarks.values.any(
+        (bookmarksSet) =>
+            bookmarksSet?.data.postsRefs.contains(ionConnectEntity.toEventReference()) ?? false,
       ),
     ArticleEntity() => currentBookmarks[BookmarksSetType.articles]
             ?.data
@@ -115,22 +116,23 @@ class BookmarksNotifier extends _$BookmarksNotifier {
       final ionConnectEntity = await ref.read(
         ionConnectEntityProvider(eventReference: eventReference).future,
       );
-      if (ionConnectEntity == null) return;
+      if (ionConnectEntity == null) {
+        throw EntityNotFoundException(eventReference);
+      }
 
       final bookmarkType = _getBookmarkType(ionConnectEntity);
-      if (bookmarkType == null) return;
 
       final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
       final bookmarksSet = bookmarksMap[bookmarkType];
       final bookmarksSetsData = bookmarksMap.map((key, value) => MapEntry(key, value?.data));
 
-      final postsIds = Set<String>.from(bookmarksSet?.data.postsIds ?? []);
+      final postsRefs = Set<ReplaceableEventReference>.from(bookmarksSet?.data.postsRefs ?? []);
       final articlesRefs =
           Set<ReplaceableEventReference>.from(bookmarksSet?.data.articlesRefs ?? []);
 
       switch (ionConnectEntity) {
-        case PostEntity():
-          _togglePostBookmark(postsIds, ionConnectEntity);
+        case ModifiablePostEntity():
+          _togglePostBookmark(postsRefs, ionConnectEntity);
         case ArticleEntity():
           _toggleArticleBookmark(articlesRefs, ionConnectEntity);
         default:
@@ -139,7 +141,7 @@ class BookmarksNotifier extends _$BookmarksNotifier {
 
       final newSingleBookmarksSetData = BookmarksSetData(
         type: bookmarkType,
-        postsIds: postsIds.toList(),
+        postsRefs: postsRefs.toList(),
         articlesRefs: articlesRefs.toList(),
       );
 
@@ -157,21 +159,21 @@ class BookmarksNotifier extends _$BookmarksNotifier {
     });
   }
 
-  BookmarksSetType? _getBookmarkType(IonConnectEntity entity) {
+  BookmarksSetType _getBookmarkType(IonConnectEntity entity) {
     return switch (entity) {
       ArticleEntity() => BookmarksSetType.articles,
-      PostEntity(data: PostData(hasVideo: true)) => BookmarksSetType.videos,
-      PostEntity() => BookmarksSetType.posts,
-      _ => null,
+      ModifiablePostEntity(data: ModifiablePostData(hasVideo: true)) => BookmarksSetType.videos,
+      ModifiablePostEntity() => BookmarksSetType.posts,
+      _ => throw UnsupportedEntityBookmarking(entity),
     };
   }
 
-  void _togglePostBookmark(Set<String> postsIds, PostEntity post) {
-    final postId = post.id;
-    if (postsIds.contains(postId)) {
-      postsIds.remove(postId);
+  void _togglePostBookmark(Set<ReplaceableEventReference> postsRefs, ModifiablePostEntity post) {
+    final postRef = post.toEventReference();
+    if (postsRefs.contains(postRef)) {
+      postsRefs.remove(postRef);
     } else {
-      postsIds.add(postId);
+      postsRefs.add(postRef);
     }
   }
 

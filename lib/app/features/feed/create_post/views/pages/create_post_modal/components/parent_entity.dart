@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/replying_to/replying_to.dart';
@@ -34,7 +34,7 @@ class ParentEntity extends ConsumerWidget {
       return const Skeleton(child: PostSkeleton());
     }
 
-    if (ionConnectEntity is! PostEntity) {
+    if (ionConnectEntity is! ModifiablePostEntity) {
       return Text('Replying to ${ionConnectEntity.runtimeType} is not supported yet');
     }
 

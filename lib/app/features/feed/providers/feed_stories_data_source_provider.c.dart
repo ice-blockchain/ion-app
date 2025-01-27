@@ -2,9 +2,9 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -29,10 +29,10 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
     for (final entry in filterRelays.entries)
       EntitiesDataSource(
         actionSource: ActionSourceRelayUrl(entry.key),
-        entityFilter: (entity) => entity is PostEntity,
+        entityFilter: (entity) => entity is ModifiablePostEntity,
         requestFilters: [
           RequestFilter(
-            kinds: const [PostEntity.kind, RepostEntity.kind],
+            kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
             authors: [currentPubkey, ...entry.value],
             search: SearchExtensions(
               [
@@ -41,11 +41,11 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
                 ExpirationSearchExtension(expiration: true),
                 VideosSearchExtension(contain: true),
                 GenericIncludeSearchExtension(
-                  forKind: PostEntity.kind,
+                  forKind: ModifiablePostEntity.kind,
                   includeKind: UserMetadataEntity.kind,
                 ),
                 GenericIncludeSearchExtension(
-                  forKind: PostEntity.kind,
+                  forKind: ModifiablePostEntity.kind,
                   includeKind: BlockListEntity.kind,
                 ),
               ],
@@ -53,7 +53,7 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
             limit: 10,
           ),
           RequestFilter(
-            kinds: const [PostEntity.kind, RepostEntity.kind],
+            kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
             authors: [currentPubkey, ...entry.value],
             search: SearchExtensions(
               [
@@ -62,11 +62,11 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
                 ExpirationSearchExtension(expiration: true),
                 ImagesSearchExtension(contain: true),
                 GenericIncludeSearchExtension(
-                  forKind: PostEntity.kind,
+                  forKind: ModifiablePostEntity.kind,
                   includeKind: UserMetadataEntity.kind,
                 ),
                 GenericIncludeSearchExtension(
-                  forKind: PostEntity.kind,
+                  forKind: ModifiablePostEntity.kind,
                   includeKind: BlockListEntity.kind,
                 ),
               ],

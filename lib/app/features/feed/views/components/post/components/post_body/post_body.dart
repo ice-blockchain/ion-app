@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder.dart';
 import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 
@@ -15,7 +15,7 @@ class PostBody extends HookConsumerWidget {
     super.key,
   });
 
-  final PostEntity postEntity;
+  final ModifiablePostEntity postEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
