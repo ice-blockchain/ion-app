@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/contacts/providers/contact_by_pubkey_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/address_input_field.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/contact_button.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -28,14 +28,14 @@ class ContactInputSwitcher extends ConsumerWidget {
       );
     }
 
-    final contact = ref.watch(contactByPubkeyProvider(pubkey!)).valueOrNull;
+    final userMetadata = ref.watch(userMetadataProvider(pubkey!)).valueOrNull;
 
-    if (contact == null) {
+    if (userMetadata == null) {
       return const SizedBox.shrink();
     }
 
     return ContactButton(
-      contact: contact,
+      userMetadata: userMetadata.data,
       onContactTap: onContactTap,
       onClearTap: () => onClearTap(null),
     );

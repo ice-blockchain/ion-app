@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/contacts/providers/contact_by_pubkey_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
 class SendToRecipient extends ConsumerWidget {
   const SendToRecipient({
@@ -20,16 +20,17 @@ class SendToRecipient extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final contact = pubkey != null ? ref.watch(contactByPubkeyProvider(pubkey!)).valueOrNull : null;
+    final userMetadata =
+        pubkey != null ? ref.watch(userMetadataProvider(pubkey!)).valueOrNull : null;
 
-    if (contact != null) {
+    if (userMetadata != null) {
       return RoundedCard.filled(
         child: Column(
           children: [
             ListItem.user(
-              title: Text(contact.name),
-              subtitle: Text(contact.nickname ?? ''),
-              profilePicture: contact.icon,
+              title: Text(userMetadata.data.displayName),
+              subtitle: Text(userMetadata.data.name),
+              profilePicture: userMetadata.data.picture,
             ),
             SizedBox(height: 12.0.s),
             Align(

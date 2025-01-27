@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/contacts/providers/contact_by_pubkey_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_modal_page/components/contact_item.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -18,9 +18,9 @@ class ContactPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contactData = ref.watch(contactByPubkeyProvider(pubkey)).valueOrNull;
+    final userMetadata = ref.watch(userMetadataProvider(pubkey)).valueOrNull;
 
-    if (contactData == null) {
+    if (userMetadata == null) {
       return const SizedBox.shrink();
     }
 
@@ -32,7 +32,7 @@ class ContactPage extends ConsumerWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 20.0.s),
-                child: ContactItem(contactData: contactData),
+                child: ContactItem(userMetadata: userMetadata.data),
               ),
             ],
           ),

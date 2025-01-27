@@ -2,20 +2,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/contact_data.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 class ContactItemName extends StatelessWidget {
   const ContactItemName({
-    required this.contactData,
+    required this.userMetadata,
     super.key,
   });
 
-  final ContactData contactData;
+  final UserMetadata userMetadata;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      contactData.name,
+      userMetadata.displayName,
       style: context.theme.appTextThemes.title,
     );
   }

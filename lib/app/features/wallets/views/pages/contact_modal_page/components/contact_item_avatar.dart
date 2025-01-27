@@ -3,15 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/contact_data.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 class ContactItemAvatar extends StatelessWidget {
   const ContactItemAvatar({
-    required this.contactData,
+    required this.userMetadata,
     super.key,
   });
 
-  final ContactData contactData;
+  final UserMetadata userMetadata;
 
   static double get imageWidth => 60.0.s;
 
@@ -19,7 +19,7 @@ class ContactItemAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Avatar(
       size: imageWidth,
-      imageUrl: contactData.icon,
+      imageUrl: userMetadata.picture,
       borderRadius: BorderRadius.circular(14.0.s),
     );
   }
