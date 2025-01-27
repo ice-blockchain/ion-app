@@ -26,12 +26,11 @@ enum FramedEventType { parent, quoted, none }
 class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
-    super.key,
     this.framedEventType = FramedEventType.quoted,
+    this.timeFormat = TimestampFormat.short,
     this.repostReference,
     this.header,
     this.footer,
-    this.timeFormat = TimestampFormat.short,
     this.onDelete,
     super.key,
   });
@@ -138,7 +137,7 @@ final class _QuotedPost extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final postEntity = ref
         .watch(ionConnectEntityProvider(eventReference: eventReference))
-        .valueOrNull as PostEntity?;
+        .valueOrNull as ModifiablePostEntity?;
 
     return QuotedEntityFrame.post(
       child: GestureDetector(
