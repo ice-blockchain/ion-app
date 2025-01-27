@@ -24,7 +24,8 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingValue = 20.0.s;
 
-    final DraftArticleState(:title, :image, :imageIds, :content, :imageColor) = ref.watch(draftArticleProvider);
+    final DraftArticleState(:title, :image, :imageIds, :content, :imageColor) =
+        ref.watch(draftArticleProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     return SheetContent(
