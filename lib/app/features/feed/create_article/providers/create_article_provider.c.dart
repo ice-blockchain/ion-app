@@ -2,9 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:flutter/rendering.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
@@ -14,7 +12,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_provider.c.g.dart';
@@ -32,6 +29,7 @@ class CreateArticle extends _$CreateArticle {
     String? imageId,
     DateTime? publishedAt,
     List<String>? mediaIds,
+    String? imageColor,
   }) async {
     state = const AsyncValue.loading();
 
@@ -46,17 +44,6 @@ class CreateArticle extends _$CreateArticle {
 
       final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(updatedContent);
 
-      String? colorHex;
-      if (imageId != null) {
-        final imageProvider = FileImage(File(imageId));
-        final paletteGenerator = await PaletteGenerator.fromImageProvider(imageProvider);
-        colorHex = paletteGenerator.dominantColor?.color != null
-            ? '#${(paletteGenerator.dominantColor!.color.r * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-                '${(paletteGenerator.dominantColor!.color.g * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-                '${(paletteGenerator.dominantColor!.color.b * 255).toInt().toRadixString(16).padLeft(2, '0')}'
-            : null;
-      }
-
       final articleData = ArticleData.fromData(
         title: title,
         summary: summary,
@@ -68,7 +55,7 @@ class CreateArticle extends _$CreateArticle {
         relatedHashtags: relatedHashtags,
         publishedAt: publishedAt ?? DateTime.now(),
         whoCanReplySettings: {whoCanReply},
-        imageColor: colorHex,
+        imageColor: imageColor,
       );
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, articleData]);

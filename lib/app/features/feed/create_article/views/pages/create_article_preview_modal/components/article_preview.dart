@@ -20,9 +20,9 @@ class ArticlePreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final title = ref.watch(draftArticleProvider).title;
-    final selectedImage = ref.watch(draftArticleProvider).image;
-    final content = ref.watch(draftArticleProvider).content;
+    final DraftArticleState(:title, :image, :content, :imageColor) =
+        ref.watch(draftArticleProvider);
+
     final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
     if (currentPubkey == null) {
@@ -38,7 +38,9 @@ class ArticlePreview extends ConsumerWidget {
               clipBehavior: Clip.antiAlias,
               width: 4.0.s,
               decoration: BoxDecoration(
-                color: context.theme.appColors.primaryAccent,
+                color: imageColor != null
+                    ? Color(int.parse(imageColor.replaceAll('#', '0xff')))
+                    : context.theme.appColors.primaryAccent,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(4.0.s),
                   bottomRight: Radius.circular(4.0.s),
@@ -56,7 +58,7 @@ class ArticlePreview extends ConsumerWidget {
                   ),
                   SizedBox(height: 10.0.s),
                   ArticlePreviewImage(
-                    mediaFile: selectedImage,
+                    mediaFile: image,
                     minutesToRead: calculateReadingTime(content),
                   ),
                   SizedBox(height: 10.0.s),
