@@ -35,11 +35,13 @@ Future<List<WalletViewData>> currentUserWalletViews(Ref ref) async {
 
       var coinAmount = 0.0;
       var coinBalanceUSD = 0.0;
+      String? network;
 
       if (aggregationItem != null) {
-        final asset = aggregationItem.wallets
-            .firstWhereOrNull((wallet) => wallet.walletId == coinInWalletDTO.walletId)
-            ?.asset;
+        final wallet = aggregationItem.wallets
+            .firstWhereOrNull((wallet) => wallet.walletId == coinInWalletDTO.walletId);
+        final asset = wallet?.asset;
+        network = wallet?.network;
 
         if (asset != null) {
           coinAmount = double.tryParse(asset.balance) ?? 0;
@@ -54,6 +56,7 @@ Future<List<WalletViewData>> currentUserWalletViews(Ref ref) async {
           amount: coinAmount,
           balanceUSD: coinBalanceUSD,
           walletId: coinInWalletDTO.walletId,
+          network: network,
           coin: CoinData.fromDTO(coinDTO),
         ),
       );

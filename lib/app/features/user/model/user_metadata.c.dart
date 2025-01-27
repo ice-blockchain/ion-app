@@ -65,6 +65,9 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
     String? website,
     String? banner,
     @Default({}) Map<String, MediaAttachment> media,
+    Map<String, String>? wallets,
+    WhoCanSetting? whoCanMessageYou,
+    WhoCanSetting? whoCanInviteYouToGroups,
   }) = _UserMetadata;
 
   const UserMetadata._();
@@ -90,6 +93,9 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
       website: userDataContent.website,
       banner: userDataContent.banner,
       media: media,
+      whoCanMessageYou: WhoCanSetting.fromString(userDataContent.whoCanMessageYou),
+      whoCanInviteYouToGroups: WhoCanSetting.fromString(userDataContent.whoCanInviteYouToGroups),
+      wallets: userDataContent.wallets,
     );
   }
 
@@ -111,6 +117,9 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
           displayName: displayName,
           website: website,
           banner: banner,
+          whoCanMessageYou: whoCanMessageYou?.name,
+          whoCanInviteYouToGroups: whoCanInviteYouToGroups?.name,
+          wallets: wallets,
         ).toJson(),
       ),
       tags: [
@@ -138,6 +147,9 @@ class UserDataEventMessageContent {
     this.displayName,
     this.website,
     this.banner,
+    this.whoCanMessageYou,
+    this.whoCanInviteYouToGroups,
+    this.wallets,
   });
 
   factory UserDataEventMessageContent.fromJson(Map<String, dynamic> json) =>
@@ -156,5 +168,26 @@ class UserDataEventMessageContent {
 
   final String? banner;
 
+  @JsonKey(name: 'who_can_message_you')
+  final String? whoCanMessageYou;
+
+  @JsonKey(name: 'who_can_invite_you_to_groups')
+  final String? whoCanInviteYouToGroups;
+
+  final Map<String, String>? wallets;
+
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
+}
+
+enum WhoCanSetting {
+  everyone,
+  follows,
+  friends;
+
+  static WhoCanSetting? fromString(String? value) => value == null
+      ? null
+      : WhoCanSetting.values.firstWhere(
+          (element) => element.name == value,
+          orElse: () => WhoCanSetting.everyone,
+        );
 }
