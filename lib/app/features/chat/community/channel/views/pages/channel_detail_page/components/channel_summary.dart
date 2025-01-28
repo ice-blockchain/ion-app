@@ -92,9 +92,9 @@ class ChannelSummary extends HookConsumerWidget {
           builder: (context, onCopy, content) {
             return ChannelDetailListTile(
               title: content.text,
-              subtitle: 'htps://ice.io/iceofficialchannel',
+              subtitle: channel.data.defaultInvitationLink,
               trailing: content.icon,
-              onTap: () => onCopy('htps://ice.io/iceofficialchannel'),
+              onTap: () => onCopy(channel.data.defaultInvitationLink),
               borderColor: content.borderColor,
             );
           },

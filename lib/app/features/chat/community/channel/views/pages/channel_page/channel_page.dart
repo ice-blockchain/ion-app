@@ -65,7 +65,7 @@ class ChannelPage extends HookConsumerWidget {
             MessagingEmptyView(
               title: context.i18n.common_invitation_link,
               asset: Assets.svg.iconChatEmptystate,
-              trailing: const EmptyStateCopyLink(link: 'htps://ice.io/iceofficialchannel'),
+              trailing: EmptyStateCopyLink(link: channel.data.defaultInvitationLink),
               leading: Column(
                 children: [
                   SizedBox(height: 12.0.s),

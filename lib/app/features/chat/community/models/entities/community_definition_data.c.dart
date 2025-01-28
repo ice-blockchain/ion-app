@@ -155,4 +155,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
       content: '',
     );
   }
+
+  //TODO: remove this when we have a real invitation link
+  String get defaultInvitationLink => 'https://ice.io/iceofficialchannel';
 }
