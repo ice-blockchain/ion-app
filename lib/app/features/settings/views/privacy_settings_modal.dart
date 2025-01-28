@@ -1,32 +1,39 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/settings/components/selectable_options_group.dart';
 import 'package:ion/app/features/settings/model/privacy_options.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class PrivacySettingsModal extends HookWidget {
+class PrivacySettingsModal extends ConsumerWidget {
   const PrivacySettingsModal({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: Replace it with logic implementation
-    final walletPrivacy = useState<WalletAddressPrivacyOption>(
-      WalletAddressPrivacyOption.public,
-    );
-    final messagingPrivacy = useState<UserVisibilityPrivacyOption>(
-      UserVisibilityPrivacyOption.everyone,
-    );
-    final invitingPrivacy = useState<UserVisibilityPrivacyOption>(
-      UserVisibilityPrivacyOption.everyone,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final metadata = ref.watch(currentUserMetadataProvider).valueOrNull;
+
+    ref.displayErrors(updateUserMetadataNotifierProvider);
+
+    if (metadata == null) {
+      return const SizedBox.shrink();
+    }
+
+    final walletPrivacy = WalletAddressPrivacyOption.fromWalletsMap(metadata.data.wallets);
+    final messagingPrivacy =
+        UserVisibilityPrivacyOption.fromWhoCanSetting(metadata.data.whoCanMessageYou);
+    final invitingPrivacy =
+        UserVisibilityPrivacyOption.fromWhoCanSetting(metadata.data.whoCanInviteYouToGroups);
 
     return SheetContent(
       body: Column(
@@ -47,21 +54,22 @@ class PrivacySettingsModal extends HookWidget {
                 children: [
                   SelectableOptionsGroup(
                     title: context.i18n.privacy_group_wallet_address_title,
-                    selected: [walletPrivacy.value],
+                    selected: [walletPrivacy],
                     options: WalletAddressPrivacyOption.values,
-                    onSelected: (option) => walletPrivacy.value = option,
+                    onSelected: (option) => _onWalletPrivacyOptionSelected(ref, metadata, option),
                   ),
                   SelectableOptionsGroup(
                     title: context.i18n.privacy_group_who_can_message_you_title,
-                    selected: [messagingPrivacy.value],
+                    selected: [messagingPrivacy],
                     options: UserVisibilityPrivacyOption.values,
-                    onSelected: (option) => messagingPrivacy.value = option,
+                    onSelected: (option) =>
+                        _onMessagingPrivacyOptionSelected(ref, metadata, option),
                   ),
                   SelectableOptionsGroup(
                     title: context.i18n.privacy_group_who_can_invite_you_title,
-                    selected: [invitingPrivacy.value],
+                    selected: [invitingPrivacy],
                     options: UserVisibilityPrivacyOption.values,
-                    onSelected: (option) => invitingPrivacy.value = option,
+                    onSelected: (option) => _onInvitingPrivacyOptionSelected(ref, metadata, option),
                   ),
                 ],
               ),
@@ -70,5 +78,46 @@ class PrivacySettingsModal extends HookWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _onWalletPrivacyOptionSelected(
+    WidgetRef ref,
+    UserMetadataEntity metadata,
+    WalletAddressPrivacyOption option,
+  ) async {
+    Map<String, String>? wallets;
+    if (option == WalletAddressPrivacyOption.public) {
+      final walletsList = await ref.read(currentUserWalletViewsProvider.future);
+      final coins = walletsList.expand((view) => view.coins).toList();
+      wallets = Map.fromEntries(
+        coins.map((coin) {
+          if (coin.network == null || coin.walletId == null) {
+            return null;
+          }
+          return MapEntry(coin.network!, coin.walletId!);
+        }).nonNulls,
+      );
+    }
+    final updatedMetadata = metadata.data.copyWith(wallets: wallets);
+    await ref.read(updateUserMetadataNotifierProvider.notifier).publish(updatedMetadata);
+  }
+
+  void _onMessagingPrivacyOptionSelected(
+    WidgetRef ref,
+    UserMetadataEntity metadata,
+    UserVisibilityPrivacyOption option,
+  ) {
+    final updatedMetadata = metadata.data.copyWith(whoCanMessageYou: option.toWhoCanSetting());
+    ref.read(updateUserMetadataNotifierProvider.notifier).publish(updatedMetadata);
+  }
+
+  void _onInvitingPrivacyOptionSelected(
+    WidgetRef ref,
+    UserMetadataEntity metadata,
+    UserVisibilityPrivacyOption option,
+  ) {
+    final updatedMetadata =
+        metadata.data.copyWith(whoCanInviteYouToGroups: option.toWhoCanSetting());
+    ref.read(updateUserMetadataNotifierProvider.notifier).publish(updatedMetadata);
   }
 }
