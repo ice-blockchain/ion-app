@@ -21,14 +21,7 @@ part 'community_members_count_provider.c.g.dart';
 class CommunityMembersCount extends _$CommunityMembersCount {
   @override
   FutureOr<int?> build(CommunityDefinitionEntity community) async {
-    return null;
-  }
-
-  Future<void> fetch() async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      return _getFromCache(community) ?? _getFromRelay(community);
-    });
+    return _getFromCache(community) ?? _getFromRelay(community);
   }
 
   int? _getFromCache(CommunityDefinitionEntity community) {
