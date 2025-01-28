@@ -41,6 +41,7 @@ class ImageProcessingConstants {
     aspectRatio: CropAspectRatio(ratioX: 9, ratioY: 16),
     targetWidth: 1080,
     targetHeight: 1920,
+    quality: 100,
   );
 }
 
