@@ -21,7 +21,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinInWallet = ref.watch(
+    final coinsGroup = ref.watch(
       receiveCoinsFormControllerProvider.select((state) => state.selectedCoin),
     );
     final networkType = ref.watch(
@@ -32,7 +32,7 @@ class ReceiveInfoCard extends HookConsumerWidget {
     );
 
     // TODO: (1) not implemented
-    if (networkType == null || coinInWallet == null || walletAddress == null) {
+    if (networkType == null || coinsGroup == null || walletAddress == null) {
       return const SizedBox.shrink();
     }
 
@@ -49,12 +49,12 @@ class ReceiveInfoCard extends HookConsumerWidget {
               children: [
                 SizedBox(height: 20.0.s),
                 CoinIconWithNetwork.medium(
-                  coinInWallet.coin,
+                  coinsGroup.coin,
                   network: networkType,
                 ),
                 SizedBox(height: 10.0.s),
                 Text(
-                  coinInWallet.coin.name,
+                  coinsGroup.coin.name,
                   style: context.theme.appTextThemes.body.copyWith(
                     color: context.theme.appColors.primaryText,
                   ),

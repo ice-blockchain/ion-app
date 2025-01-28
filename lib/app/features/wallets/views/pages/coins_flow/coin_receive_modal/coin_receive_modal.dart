@@ -56,7 +56,8 @@ class CoinReceiveModal extends HookConsumerWidget {
           if (receiveCoinState.selectedCoin != null)
             ScreenSideOffset.small(
               child: CoinAddressTile(
-                coinData: receiveCoinState.selectedCoin!.coin,
+                // TODO: (1) check coin data
+                coinData: receiveCoinState.selectedCoin!.coins.first.coin,
               ),
             ),
           SizedBox(

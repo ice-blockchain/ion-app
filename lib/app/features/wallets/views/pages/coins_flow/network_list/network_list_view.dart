@@ -28,7 +28,6 @@ class NetworkListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const networks = NetworkType.values;
     final coinData = switch (type) {
       NetworkListViewType.send => ref.watch(sendAssetFormControllerProvider()).selectedCoin!,
       NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin,

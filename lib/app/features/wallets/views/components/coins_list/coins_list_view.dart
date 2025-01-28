@@ -7,27 +7,26 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
-import 'package:ion/app/features/wallets/providers/filtered_wallet_coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
-class CoinsListView extends ConsumerWidget {
+class CoinsListView extends StatelessWidget {
   const CoinsListView({
     required this.onItemTap,
     required this.title,
+    required this.coinsResult,
     this.showBackButton = false,
     super.key,
   });
 
-  final void Function(CoinsGroup group) onItemTap;
   final String title;
   final bool showBackButton;
+  final AsyncValue<List<CoinsGroup>> coinsResult;
+  final void Function(CoinsGroup group) onItemTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final coinsResult = ref.watch(filteredWalletCoinsProvider);
-
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
