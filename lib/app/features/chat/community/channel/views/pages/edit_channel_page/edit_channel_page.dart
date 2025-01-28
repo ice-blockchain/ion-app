@@ -28,11 +28,8 @@ class EditChannelPage extends HookConsumerWidget {
 
     useOnInit(
       () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (channel == null) return;
-          ref.read(communityAdminsProvider.notifier).init(channel);
-        });
-        return;
+        if (channel == null) return;
+        ref.read(communityAdminsProvider.notifier).init(channel);
       },
       [channel],
     );
