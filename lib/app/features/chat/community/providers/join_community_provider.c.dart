@@ -23,13 +23,13 @@ class JoinCommunityNotifier extends _$JoinCommunityNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+      final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
       if (pubkey == null) {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final community = await ref.watch(communityMetadataProvider(communityUUUID).future);
+      final community = await ref.read(communityMetadataProvider(communityUUUID).future);
 
       var joinData = CommunityJoinData(
         uuid: communityUUUID,
@@ -37,7 +37,7 @@ class JoinCommunityNotifier extends _$JoinCommunityNotifier {
       );
 
       if (!community.data.isOpen && pubkey != community.ownerPubkey) {
-        final invitationEvent = await ref.watch(communityInvitationProvider(communityUUUID).future);
+        final invitationEvent = await ref.read(communityInvitationProvider(communityUUUID).future);
 
         if (invitationEvent == null) {
           throw CommunityInvitationNotFoundException();
