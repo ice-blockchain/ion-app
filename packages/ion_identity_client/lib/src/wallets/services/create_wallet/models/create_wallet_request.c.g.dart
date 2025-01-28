@@ -9,12 +9,12 @@ part of 'create_wallet_request.c.dart';
 CreateWalletRequest _$CreateWalletRequestFromJson(Map<String, dynamic> json) =>
     CreateWalletRequest(
       network: json['network'] as String,
-      name: json['name'] as String,
+      walletViewId: json['walletViewId'] as String,
     );
 
 Map<String, dynamic> _$CreateWalletRequestToJson(
         CreateWalletRequest instance) =>
     <String, dynamic>{
       'network': instance.network,
-      'name': instance.name,
+      'walletViewId': instance.walletViewId,
     };

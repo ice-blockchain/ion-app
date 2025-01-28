@@ -278,3 +278,19 @@ class CommunityInvitationExpiredException extends IONException {
 class CommunityInvitationNotFoundException extends IONException {
   CommunityInvitationNotFoundException() : super(10060, 'Community invitation not found');
 }
+
+class UpdateWalletViewRequestWithoutDataException extends IONException {
+  UpdateWalletViewRequestWithoutDataException()
+      : super(
+          10061,
+          'Cannot create create/update wallet view request without data',
+        );
+}
+
+class UpdateWalletViewRequestNoUserWalletsException extends IONException {
+  UpdateWalletViewRequestNoUserWalletsException()
+      : super(
+          10062,
+          'To build request from coins list user wallets should be provided',
+        );
+}

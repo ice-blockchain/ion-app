@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/riverpod.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_data_with_loading_state.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
@@ -22,15 +22,6 @@ class WalletSearchQueryController extends _$WalletSearchQueryController {
 }
 
 @Riverpod(keepAlive: true)
-Future<List<CoinInWalletData>> filteredCoins(Ref ref) async {
-  final searchQuery =
-      ref.watch(walletSearchQueryControllerProvider(WalletAssetType.coin)).toLowerCase();
-  await ref.debounce();
-  final coins = await ref.watch(coinsInWalletProvider.future);
-  return _filterCoins(coins, searchQuery);
-}
-
-@Riverpod(keepAlive: true)
 Future<List<NftData>> filteredNfts(Ref ref) async {
   final searchQuery =
       ref.watch(walletSearchQueryControllerProvider(WalletAssetType.nft)).toLowerCase();
@@ -39,15 +30,51 @@ Future<List<NftData>> filteredNfts(Ref ref) async {
   return _filterNfts(nfts, searchQuery);
 }
 
-List<CoinInWalletData> _filterCoins(List<CoinInWalletData> coins, String query) {
+@Riverpod(keepAlive: true)
+Future<List<CoinsGroup>> filteredCoins(Ref ref) async {
+  final searchQuery =
+      ref.watch(walletSearchQueryControllerProvider(WalletAssetType.coin)).toLowerCase();
+  await ref.debounce();
+  final coins = await ref.watch(coinsInWalletProvider.future);
+  return _filterCoins(coins, searchQuery);
+}
+
+@Riverpod(keepAlive: true)
+class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
+  ProviderSubscription<String>? _searchQueryListener;
+
+  @override
+  Future<List<CoinsGroup>> build() async {
+    _searchQueryListener = ref.listen<String>(
+      walletSearchQueryControllerProvider(WalletAssetType.coin),
+      (previous, next) => search(next),
+    );
+
+    ref.onDispose(() {
+      _searchQueryListener?.close();
+    });
+
+    final coinGroups = await ref.watch(coinsInWalletProvider.future);
+    return coinGroups;
+  }
+
+  Future<void> search(String query) async {
+    await ref.debounce();
+    final coinGroups = await ref.watch(coinsInWalletProvider.future);
+    final filteredCoins = _filterCoins(coinGroups, query);
+    state = AsyncData(filteredCoins);
+  }
+}
+
+List<CoinsGroup> _filterCoins(List<CoinsGroup> coins, String query) {
   if (query.isEmpty) {
     return coins;
   }
   return coins
       .where(
-        (coinInWallet) =>
-            coinInWallet.coin.name.toLowerCase().contains(query) ||
-            coinInWallet.coin.abbreviation.toLowerCase().contains(query),
+        (group) =>
+            group.name.toLowerCase().contains(query) ||
+            group.abbreviation.toLowerCase().contains(query),
       )
       .toList();
 }

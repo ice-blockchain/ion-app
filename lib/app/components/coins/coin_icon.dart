@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class CoinIconWidget extends StatelessWidget {
   const CoinIconWidget({
@@ -22,8 +23,7 @@ class CoinIconWidget extends StatelessWidget {
       imageUrl: imageUrl,
       width: iconSize,
       height: iconSize,
-      // TODO: Not implemented
-      errorWidget: (_, __, ___) => const SizedBox.shrink(),
+      errorWidget: (_, __, ___) => Assets.svg.walletIconWalletEmptycoins.icon(size: iconSize),
       imageBuilder: (context, imageProvider) => Container(
         width: iconSize,
         height: iconSize,

@@ -4,7 +4,7 @@ import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.da
 import 'package:ion_identity_client/ion_identity.dart' as ion_identity;
 
 class CoinsMapper {
-  List<Coin> fromDtoToDb(List<ion_identity.Coin> coins) => [
+  List<Coin> fromDtoToDb(Iterable<ion_identity.Coin> coins) => [
         for (final coin in coins)
           Coin(
             id: coin.id,

@@ -43,7 +43,7 @@ class WalletViewsDataSource {
     );
   }
 
-  Future<ShortWalletView> createWalletView(
+  Future<WalletView> createWalletView(
     String userId,
     String username,
     CreateUpdateWalletViewRequest request,
@@ -56,7 +56,7 @@ class WalletViewsDataSource {
         token: token.token,
       ),
       data: request.toJson(),
-      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+      decoder: (json) => parseJsonObject(json, fromJson: WalletView.fromJson),
     );
   }
 
@@ -77,7 +77,7 @@ class WalletViewsDataSource {
     );
   }
 
-  Future<ShortWalletView> updateWalletView({
+  Future<WalletView> updateWalletView({
     required String userId,
     required String username,
     required String walletViewId,
@@ -92,7 +92,7 @@ class WalletViewsDataSource {
         username: username,
       ),
       data: request.toJson(),
-      decoder: (json) => parseJsonObject(json, fromJson: ShortWalletView.fromJson),
+      decoder: (json) => parseJsonObject(json, fromJson: WalletView.fromJson),
     );
   }
 

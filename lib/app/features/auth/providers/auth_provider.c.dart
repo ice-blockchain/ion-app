@@ -4,9 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/wallets/main_wallet_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -84,9 +84,6 @@ String? currentIdentityKeyNameSelector(Ref ref) {
 @riverpod
 Future<String?> currentPubkeySelector(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
-  if (mainWallet == null) {
-    return null;
-  }
   return mainWallet.signingKey.publicKey;
 }
 
@@ -110,11 +107,7 @@ class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
 
   @override
   Future<String?> build() async {
-    // Watch prefs to be sure LocalStorage is initialized
-    await ref.watch(sharedPreferencesProvider.future);
-
     final localStorage = ref.watch(localStorageProvider);
-
     return localStorage.getString(_currentIdentityKeyNameKey);
   }
 

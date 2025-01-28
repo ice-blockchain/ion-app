@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/bool.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallets/data/coins/domain/coin_sync_service.c.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_sync_service.c.dart';
 
 class CoinsSyncWrapper extends HookConsumerWidget {
   const CoinsSyncWrapper({
@@ -18,7 +18,7 @@ class CoinsSyncWrapper extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isAuthenticated = ref.watch(authProvider).valueOrNull?.isAuthenticated;
-    final coinSyncService = ref.watch(coinSyncServiceProvider).valueOrNull;
+    final coinSyncService = ref.watch(coinsSyncServiceProvider).valueOrNull;
     final appState = useAppLifecycleState();
 
     useEffect(

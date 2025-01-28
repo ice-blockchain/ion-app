@@ -14,12 +14,14 @@ _$WalletViewAggregationItemImpl _$$WalletViewAggregationItemImplFromJson(
                   e as Map<String, dynamic>))
               .toList() ??
           [],
-      totalBalance: (json['totalBalance'] as num).toDouble(),
+      totalBalance:
+          const TotalBalanceConverter().fromJson(json['totalBalance']),
     );
 
 Map<String, dynamic> _$$WalletViewAggregationItemImplToJson(
         _$WalletViewAggregationItemImpl instance) =>
     <String, dynamic>{
       'wallets': instance.wallets.map((e) => e.toJson()).toList(),
-      'totalBalance': instance.totalBalance,
+      'totalBalance':
+          const TotalBalanceConverter().toJson(instance.totalBalance),
     };

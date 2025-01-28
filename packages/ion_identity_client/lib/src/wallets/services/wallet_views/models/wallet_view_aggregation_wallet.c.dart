@@ -12,6 +12,7 @@ class WalletViewAggregationWallet with _$WalletViewAggregationWallet {
     required WalletAsset asset,
     required String walletId,
     required String network,
+    String? coinId,
   }) = _WalletViewAggregationWallet;
 
   factory WalletViewAggregationWallet.fromJson(Map<String, dynamic> json) => _$WalletViewAggregationWalletFromJson(json);

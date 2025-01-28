@@ -9,13 +9,13 @@ part 'create_wallet_request.c.g.dart';
 class CreateWalletRequest {
   const CreateWalletRequest({
     required this.network,
-    required this.name,
+    required this.walletViewId,
   });
 
   factory CreateWalletRequest.fromJson(JsonObject map) => _$CreateWalletRequestFromJson(map);
 
   final String network;
-  final String name;
+  final String walletViewId;
 
   JsonObject toJson() => _$CreateWalletRequestToJson(this);
 }

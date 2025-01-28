@@ -23,7 +23,7 @@ class CoinIdButton extends ConsumerWidget {
 
     return coinDataResult.maybeWhen(
       data: (coinInWallet) => CoinButton(
-        coinInWallet: coinInWallet,
+        coinInWallet: coinInWallet!,
         onTap: onTap,
       ),
       orElse: () => ItemLoadingState(

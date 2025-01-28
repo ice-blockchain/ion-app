@@ -18,7 +18,7 @@ class WalletViewsService {
     return _walletViewsDataSource.getWalletViews(username, userId);
   }
 
-  Future<ShortWalletView> createWalletView(
+  Future<WalletView> createWalletView(
     CreateUpdateWalletViewRequest request,
     String userId,
   ) {
@@ -36,7 +36,7 @@ class WalletViewsService {
     );
   }
 
-  Future<ShortWalletView> updateWalletView(
+  Future<WalletView> updateWalletView(
     String userId,
     String walletViewId,
     CreateUpdateWalletViewRequest request,

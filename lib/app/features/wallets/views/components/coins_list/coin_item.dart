@@ -7,31 +7,30 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/utils/num.dart';
 
-class CoinItem extends ConsumerWidget {
-  const CoinItem({
-    required this.coinInWallet,
+class CoinsGroupItem extends ConsumerWidget {
+  const CoinsGroupItem({
+    required this.coinsGroup,
     required this.onTap,
     super.key,
   });
 
-  final CoinInWalletData coinInWallet;
+  final CoinsGroup coinsGroup;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
-    final coinData = coinInWallet.coin;
 
     return ListItem(
-      title: Text(coinData.name),
-      subtitle: Text(coinData.abbreviation),
+      title: Text(coinsGroup.name),
+      subtitle: Text(coinsGroup.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: CoinIconWidget(
-        imageUrl: coinData.iconUrl,
+        imageUrl: coinsGroup.iconUrl,
         size: 36.0.s,
       ),
       onTap: onTap,
@@ -39,12 +38,12 @@ class CoinItem extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            isBalanceVisible ? formatDouble(coinInWallet.amount) : '****',
+            isBalanceVisible ? formatDouble(coinsGroup.totalAmount) : '****',
             style: context.theme.appTextThemes.body
                 .copyWith(color: context.theme.appColors.primaryText),
           ),
           Text(
-            isBalanceVisible ? formatToCurrency(coinInWallet.balanceUSD) : '******',
+            isBalanceVisible ? formatToCurrency(coinsGroup.totalBalanceUSD) : '******',
             style: context.theme.appTextThemes.caption3
                 .copyWith(color: context.theme.appColors.secondaryText),
           ),

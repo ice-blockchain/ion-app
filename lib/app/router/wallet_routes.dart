@@ -250,12 +250,12 @@ class NftTransactionResultRoute extends BaseRouteData {
 }
 
 class CoinsDetailsRoute extends BaseRouteData {
-  CoinsDetailsRoute({required this.coinId})
+  CoinsDetailsRoute({required this.symbolGroup})
       : super(
-          child: CoinDetailsPage(coinId: coinId),
+          child: CoinDetailsPage(symbolGroup: symbolGroup),
         );
 
-  final String coinId;
+  final String symbolGroup;
 }
 
 class CoinReceiveRoute extends BaseRouteData {

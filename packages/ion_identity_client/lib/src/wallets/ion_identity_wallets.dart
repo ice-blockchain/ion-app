@@ -61,12 +61,12 @@ class IONIdentityWallets {
 
   Future<Wallet> createWallet({
     required String network,
-    required String name,
+    required String walletViewId,
     required OnVerifyIdentity<Wallet> onVerifyIdentity,
   }) =>
       _createWalletService.createWallet(
         network: network,
-        name: name,
+        walletViewId: walletViewId,
         onVerifyIdentity: onVerifyIdentity,
       );
 
@@ -154,7 +154,7 @@ class IONIdentityWallets {
     return _walletViewsService.getWalletViews(userId);
   }
 
-  Future<ShortWalletView> createWalletView(CreateUpdateWalletViewRequest request) {
+  Future<WalletView> createWalletView(CreateUpdateWalletViewRequest request) {
     final userId = _extractUserIdService.extractUserId(username: username);
     return _walletViewsService.createWalletView(request, userId);
   }
@@ -164,7 +164,7 @@ class IONIdentityWallets {
     return _walletViewsService.getWalletView(userId: userId, walletViewId: walletViewId);
   }
 
-  Future<ShortWalletView> updateWalletView(
+  Future<WalletView> updateWalletView(
     String walletViewId,
     CreateUpdateWalletViewRequest request,
   ) {

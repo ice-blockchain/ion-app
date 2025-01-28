@@ -12,7 +12,7 @@ class CreateWalletDataSource {
   UserActionSigningRequest buildCreateWalletSigningRequest({
     required String username,
     required String network,
-    required String name,
+    required String walletViewId,
   }) {
     return UserActionSigningRequest(
       username: username,
@@ -20,7 +20,7 @@ class CreateWalletDataSource {
       path: createWalletPath,
       body: CreateWalletRequest(
         network: network,
-        name: name,
+        walletViewId: walletViewId,
       ).toJson(),
     );
   }

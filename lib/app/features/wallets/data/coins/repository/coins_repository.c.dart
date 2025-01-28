@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart';
 import 'package:ion/app/features/wallets/data/coins/database/sync_coins_dao.c.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,7 +37,11 @@ class CoinsRepository {
 
   Future<List<Coin>> searchCoins(String query) => _coinsDao.search(query);
 
-  Future<void> updateCoins(List<Coin> coins) => _coinsDao.upsertAll(coins);
+  Future<void> updateCoins(List<Coin> coins) async {
+    final allowedNetworks = Network.values.map((e) => e.serverName.toLowerCase());
+    final coinsToInsert = coins.where((e) => allowedNetworks.contains(e.network.toLowerCase()));
+    await _coinsDao.upsertAll(coinsToInsert.toList());
+  }
 
   Future<void> updateCoinSyncQueue(List<SyncCoins> syncCoins) => _syncCoinsDao.insertAll(syncCoins);
 
@@ -52,12 +57,11 @@ class CoinsRepository {
 
   /// Returns Stream of coins. Expects a list of coins to watch.
   /// If the [coins] list is not provided, all coins will be watched.
-  Stream<List<Coin>> watchCoins([List<Coin>? coins]) =>
-      _coinsDao.watch(coins?.map((coin) => coin.id));
+  Stream<List<Coin>> watchCoins([Iterable<String>? coinIds]) => _coinsDao.watch(coinIds);
 
   /// Returns Future of coins. Expects a list of coins to get.
   /// If the [coins] list is not provided, all coins will be returned.
-  Future<List<Coin>> getCoins([List<Coin>? coins]) => _coinsDao.get(coins?.map((coin) => coin.id));
+  Future<List<Coin>> getCoins([Iterable<String>? coinIds]) => _coinsDao.get(coinIds);
 
   int? getLastSyncTime() => _localStorage.getInt(_lastSyncTimeKey);
 

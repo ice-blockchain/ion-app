@@ -10,6 +10,7 @@ part 'short_wallet_view.c.g.dart';
 class ShortWalletView with _$ShortWalletView {
   const factory ShortWalletView({
     required String name,
+    @JsonKey(defaultValue: [])
     required List<WalletViewCoinData> coins,
     required String createdAt,
     required String updatedAt,

@@ -21,6 +21,7 @@ ShortWalletView _$ShortWalletViewFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ShortWalletView {
   String get name => throw _privateConstructorUsedError;
+  @JsonKey(defaultValue: [])
   List<WalletViewCoinData> get coins => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
@@ -47,7 +48,7 @@ abstract class $ShortWalletViewCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      List<WalletViewCoinData> coins,
+      @JsonKey(defaultValue: []) List<WalletViewCoinData> coins,
       String createdAt,
       String updatedAt,
       String userId,
@@ -121,7 +122,7 @@ abstract class _$$ShortWalletViewImplCopyWith<$Res>
   @useResult
   $Res call(
       {String name,
-      List<WalletViewCoinData> coins,
+      @JsonKey(defaultValue: []) List<WalletViewCoinData> coins,
       String createdAt,
       String updatedAt,
       String userId,
@@ -188,7 +189,7 @@ class __$$ShortWalletViewImplCopyWithImpl<$Res>
 class _$ShortWalletViewImpl implements _ShortWalletView {
   const _$ShortWalletViewImpl(
       {required this.name,
-      required final List<WalletViewCoinData> coins,
+      @JsonKey(defaultValue: []) required final List<WalletViewCoinData> coins,
       required this.createdAt,
       required this.updatedAt,
       required this.userId,
@@ -204,6 +205,7 @@ class _$ShortWalletViewImpl implements _ShortWalletView {
   final String name;
   final List<WalletViewCoinData> _coins;
   @override
+  @JsonKey(defaultValue: [])
   List<WalletViewCoinData> get coins {
     if (_coins is EqualUnmodifiableListView) return _coins;
     // ignore: implicit_dynamic_type
@@ -281,7 +283,7 @@ class _$ShortWalletViewImpl implements _ShortWalletView {
 abstract class _ShortWalletView implements ShortWalletView {
   const factory _ShortWalletView(
       {required final String name,
-      required final List<WalletViewCoinData> coins,
+      @JsonKey(defaultValue: []) required final List<WalletViewCoinData> coins,
       required final String createdAt,
       required final String updatedAt,
       required final String userId,
@@ -295,6 +297,7 @@ abstract class _ShortWalletView implements ShortWalletView {
   @override
   String get name;
   @override
+  @JsonKey(defaultValue: [])
   List<WalletViewCoinData> get coins;
   @override
   String get createdAt;
