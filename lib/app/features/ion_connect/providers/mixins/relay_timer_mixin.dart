@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/providers/last_used_relay_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/active_relays_provider.c.dart';
 import 'package:ion/app/services/timer/restartable_timer.dart';
 
 mixin RelayTimerMixin {
@@ -41,12 +41,7 @@ mixin RelayTimerMixin {
       _timer.cancel();
       relay.close();
 
-      final lastUsedRelays = ref.read(lastUsedRelayProvider);
-      for (final entry in lastUsedRelays.entries) {
-        if (entry.value == relay.url) {
-          ref.read(lastUsedRelayProvider.notifier).clearLastUsedRelay(entry.key);
-        }
-      }
+      ref.read(activeRelaysProvider.notifier).removeRelay(relay.url);
 
       onInvalidate();
     }
