@@ -19,50 +19,48 @@ class MessagingContextMenu extends StatelessWidget {
       menuBuilder: (closeMenu) => Column(
         children: [
           OverlayMenuContainer(
-            child: IntrinsicWidth(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.0.s),
-                child: Column(
-                  children: [
-                    OverlayMenuItem(
-                      label: context.i18n.button_share,
-                      icon: Assets.svg.iconButtonShare.icon(
-                        size: iconSize,
-                        color: context.theme.appColors.quaternaryText,
-                      ),
-                      onPressed: closeMenu,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0.s),
+              child: Column(
+                children: [
+                  OverlayMenuItem(
+                    label: context.i18n.button_share,
+                    icon: Assets.svg.iconButtonShare.icon(
+                      size: iconSize,
+                      color: context.theme.appColors.quaternaryText,
                     ),
-                    const OverlayMenuItemSeperator(),
-                    OverlayMenuItem(
-                      label: context.i18n.button_mute,
-                      icon: Assets.svg.iconChannelMute
-                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                      onPressed: closeMenu,
-                    ),
-                    const OverlayMenuItemSeperator(),
-                    OverlayMenuItem(
-                      label: context.i18n.button_block,
-                      icon: Assets.svg.iconPhofileBlockuser
-                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                      onPressed: closeMenu,
-                    ),
-                    const OverlayMenuItemSeperator(),
-                    OverlayMenuItem(
-                      label: context.i18n.button_report,
-                      icon: Assets.svg.iconBlockClose3
-                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
-                      onPressed: closeMenu,
-                    ),
-                    const OverlayMenuItemSeperator(),
-                    OverlayMenuItem(
-                      label: context.i18n.button_delete,
-                      labelColor: context.theme.appColors.attentionRed,
-                      icon: Assets.svg.iconBlockDelete
-                          .icon(size: iconSize, color: context.theme.appColors.attentionRed),
-                      onPressed: closeMenu,
-                    ),
-                  ],
-                ),
+                    onPressed: closeMenu,
+                  ),
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_mute,
+                    icon: Assets.svg.iconChannelMute
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: closeMenu,
+                  ),
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_block,
+                    icon: Assets.svg.iconPhofileBlockuser
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: closeMenu,
+                  ),
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_report,
+                    icon: Assets.svg.iconBlockClose3
+                        .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                    onPressed: closeMenu,
+                  ),
+                  const OverlayMenuItemSeperator(),
+                  OverlayMenuItem(
+                    label: context.i18n.button_delete,
+                    labelColor: context.theme.appColors.attentionRed,
+                    icon: Assets.svg.iconBlockDelete
+                        .icon(size: iconSize, color: context.theme.appColors.attentionRed),
+                    onPressed: closeMenu,
+                  ),
+                ],
               ),
             ),
           ),

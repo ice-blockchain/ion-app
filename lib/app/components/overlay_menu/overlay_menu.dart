@@ -64,7 +64,7 @@ class OverlayMenu extends HookWidget {
                 child: ScaleTransition(
                   alignment: Alignment.topRight,
                   scale: scaleAnimation,
-                  child: menuBuilder(hideMenu),
+                  child: IntrinsicWidth(child: menuBuilder(hideMenu)),
                 ),
               ),
             ],

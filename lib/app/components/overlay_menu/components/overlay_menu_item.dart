@@ -43,8 +43,10 @@ class OverlayMenuItem extends StatelessWidget {
                   style: textStyles.subtitle3.copyWith(
                     color: labelColor ?? colors.primaryText,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
+              SizedBox(width: 9.0.s),
               icon,
             ],
           ),

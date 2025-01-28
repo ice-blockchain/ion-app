@@ -22,8 +22,8 @@ class FeedFiltersMenuOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OverlayMenuContainer(
-      child: SizedBox(
-        width: 200.0.s,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minWidth: 200.0.s),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

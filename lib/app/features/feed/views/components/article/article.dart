@@ -9,8 +9,8 @@ import 'package:ion/app/features/components/entities_list/components/bookmark_bu
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
-import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu/own_entity_menu.dart';
-import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu/user_info_menu.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
