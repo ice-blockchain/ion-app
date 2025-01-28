@@ -85,7 +85,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           content: [
             ...attachments.map(
               (attachment) {
-                final spaceSeparator = data.content.isNotEmpty ? ' ' : '';
+                final spaceSeparator = data.content.isNotEmpty || attachments.length > 1 ? ' ' : '';
                 return TextMatch('${attachment.url}$spaceSeparator');
               },
             ),
