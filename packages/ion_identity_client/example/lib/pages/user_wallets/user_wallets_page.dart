@@ -52,7 +52,7 @@ class _CreateWalletAction extends ConsumerWidget {
 
     return IconButton(
       onPressed: () {
-        ref.read(createWalletNotifierProvider.notifier).createWallet('TonTestnet');
+        ref.read(createWalletNotifierProvider.notifier).createWallet('BitcoinTestnet3');
       },
       icon: isLoading ? const CircularProgressIndicator() : const Icon(Icons.add),
     );

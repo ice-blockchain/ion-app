@@ -1,78 +1,100 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:bdk_flutter/bdk_flutter.dart';
+import 'package:convert/convert.dart';
 import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/domain/transaction_creator/transaction_creator.dart';
 import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/models/transaction_request.dart';
 
 class BtcTransactionCreator implements TransactionCreator {
+  BtcTransactionCreator({
+    required this.network,
+  });
+
+  final Network network;
+
+  static const _electrumStopGap = 20;
+  static const _electrumTimeout = 10;
+  static const _electrumRetry = 5;
+
   @override
   Future<Map<String, dynamic>> createTransaction(TransactionRequest request) async {
-    throw UnimplementedError();
-    // final amount = request.amount;
+    final amount = request.amount;
 
-    // // Input validation
-    // if (!isValidAmount(amount)) {
-    //   throw ArgumentError('Invalid amount: must be a positive integer');
-    // }
+    // Input validation
+    if (!isValidAmount(amount)) {
+      throw ArgumentError('Invalid amount: must be a positive integer');
+    }
 
-    // const network = Network.testnet;
-    // final publicKey = request.wallet.signingKey.publicKey;
-    // final addressTo = request.destinationAddress;
+    final publicKey = request.wallet.signingKey.publicKey;
+    final addressTo = request.destinationAddress;
 
-    // // Calculate fingerprint from first 4 bytes of public key hash
-    // final fingerprint = publicKey.substring(0, 8);
+    final descriptor = await Descriptor.create(
+      descriptor: 'wpkh($publicKey)',
+      network: network,
+    );
 
-    // final publicKeyDescriptor = await DescriptorPublicKey.fromString(publicKey);
+    final bdkWallet = await Wallet.create(
+      descriptor: descriptor,
+      network: network,
+      databaseConfig: const DatabaseConfig.memory(),
+    );
 
-    // // Create descriptor
-    // final descriptor = await Descriptor.newBip84Public(
-    //   publicKey: publicKeyDescriptor,
-    //   network: network,
-    //   fingerPrint: fingerprint,
-    //   keychain: KeychainKind.externalChain,
-    // );
+    // Sync with blockchain
+    final blockchain = await _getBlockchain(network);
+    await bdkWallet.sync(blockchain: blockchain);
 
-    // final bdkWallet = await Wallet.create(
-    //   descriptor: descriptor,
-    //   network: network,
-    //   databaseConfig: const DatabaseConfig.memory(),
-    // );
+    // Verify wallet has enough funds
+    final balance = bdkWallet.getBalance();
+    final amountSats = BigInt.parse(amount);
+    if (balance.total < amountSats) {
+      throw InsufficientFundsException(
+        'Insufficient funds: ${balance.total} < $amountSats',
+      );
+    }
 
-    // // Sync with blockchain
-    // final blockchain = await Blockchain.createTestnet();
-    // await bdkWallet.sync(blockchain: blockchain);
+    // Validate address
+    final address = await Address.fromString(
+      s: addressTo,
+      network: network,
+    );
+    if (!address.isValidForNetwork(network: network)) {
+      throw ArgumentError('Invalid address for network $network');
+    }
 
-    // // Verify wallet has enough funds
-    // final balance = bdkWallet.getBalance();
-    // final amountSats = BigInt.parse(amount);
-    // if (balance.total < amountSats) {
-    //   throw InsufficientFundsException(
-    //     'Insufficient funds: ${balance.total} < $amountSats',
-    //   );
-    // }
+    final txBuilder = TxBuilder()
+      ..addRecipient(
+        address.scriptPubkey(),
+        amountSats,
+      )
+      ..enableRbf();
 
-    // // Validate address
-    // final address = await Address.fromString(
-    //   s: addressTo,
-    //   network: network,
-    // );
-    // if (!address.isValidForNetwork(network: network)) {
-    //   throw ArgumentError('Invalid address for network $network');
-    // }
+    final (psbt, _) = await txBuilder.finish(bdkWallet);
+    final bytes = psbt.serialize();
 
-    // final txBuilder = TxBuilder()
-    //   ..addRecipient(
-    //     address.scriptPubkey(),
-    //     amountSats,
-    //   )
-    //   ..enableRbf();
+    return {
+      'kind': 'Psbt',
+      'psbt': '0x${hex.encode(bytes)}',
+    };
+  }
 
-    // final (psbt, _) = await txBuilder.finish(bdkWallet);
-    // final bytes = psbt.serialize();
+  Future<Blockchain> _getBlockchain(Network network) async {
+    final electrumUrl = switch (network) {
+      Network.bitcoin => 'ssl://electrum.blockstream.info:50002',
+      Network.testnet => 'ssl://electrum.blockstream.info:60002',
+      _ => throw UnsupportedError('Unsupported network: $network'),
+    };
 
-    // return {
-    //   'kind': 'Psbt',
-    //   'psbt': '0x${hex.encode(bytes)}',
-    // };
+    return Blockchain.create(
+      config: BlockchainConfig.electrum(
+        config: ElectrumConfig(
+          stopGap: BigInt.from(_electrumStopGap),
+          timeout: _electrumTimeout,
+          retry: _electrumRetry,
+          url: electrumUrl,
+          validateDomain: true,
+        ),
+      ),
+    );
   }
 }
 

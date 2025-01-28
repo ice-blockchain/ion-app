@@ -26,7 +26,17 @@ Future<IONIdentity> ionIdentity(Ref ref) async {
       requestBody: true,
       responseHeader: false,
       responseBody: true,
-      logPrint: (object) => debugPrint(object.toString()),
+      logPrint: (object) {
+        final str = object.toString();
+        if (str.length > 1000) {
+          for (var i = 0; i < str.length; i += 1000) {
+            final end = (i + 1000 < str.length) ? i + 1000 : str.length;
+            debugPrint(str.substring(i, end));
+          }
+        } else {
+          debugPrint(str);
+        }
+      },
     ),
   );
   final ionIdentity = IONIdentity.createDefault(config: config);

@@ -1,7 +1,12 @@
 PODS:
+  - bdk_flutter (0.31.3):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_secure_storage (6.0.0):
     - Flutter
+  - local_auth_darwin (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - passkeys_ios (0.0.1):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -11,17 +16,23 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - bdk_flutter (from `.symlinks/plugins/bdk_flutter/ios`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - passkeys_ios (from `.symlinks/plugins/passkeys_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - ua_client_hints (from `.symlinks/plugins/ua_client_hints/ios`)
 
 EXTERNAL SOURCES:
+  bdk_flutter:
+    :path: ".symlinks/plugins/bdk_flutter/ios"
   Flutter:
     :path: Flutter
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  local_auth_darwin:
+    :path: ".symlinks/plugins/local_auth_darwin/darwin"
   passkeys_ios:
     :path: ".symlinks/plugins/passkeys_ios/ios"
   path_provider_foundation:
@@ -30,8 +41,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/ua_client_hints/ios"
 
 SPEC CHECKSUMS:
+  bdk_flutter: 86c9ba59ee282dee08c3a29599abe867d10a8b10
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
+  local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   passkeys_ios: fdae8c06e2178a9fcb9261a6cb21fb9a06a81d53
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   ua_client_hints: 46bb5817a868f9e397c0ba7e3f2f5c5d90c35156
