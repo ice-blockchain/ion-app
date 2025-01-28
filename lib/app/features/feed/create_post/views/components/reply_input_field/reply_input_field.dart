@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_quill/quill_delta.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
@@ -103,15 +105,13 @@ class ReplyInputField extends HookConsumerWidget {
                                   final content = await CreatePostRoute(
                                     parentEvent: eventReference.encode(),
                                     showCollapseButton: true,
-                                    content: textEditorController.document.toPlainText().trim(),
-                                  ).push<String>(context);
+                                    content: jsonEncode(
+                                      textEditorController.document.toDelta().toJson(),
+                                    ),
+                                  ).push<Document?>(context);
                                   if (content != null) {
                                     textEditorController
-                                      ..setContents(
-                                        Delta.fromJson([
-                                          {'insert': content},
-                                        ]),
-                                      )
+                                      ..setContents(content.toDelta())
                                       ..moveCursorToEnd();
                                   }
                                 },

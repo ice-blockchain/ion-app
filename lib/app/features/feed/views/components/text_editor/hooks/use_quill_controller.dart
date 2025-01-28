@@ -1,15 +1,21 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 
 QuillController useQuillController({String? defaultText}) {
+  final document = defaultText != null
+      ? Document.fromDelta(Delta.fromJson(jsonDecode(defaultText) as List<dynamic>))
+      : null;
   final textEditorController = useRef(
-    defaultText != null
+    document != null
         ? QuillController(
-            document: Document()..insert(0, defaultText),
-            selection: TextSelection.collapsed(offset: defaultText.length),
+            document: document,
+            selection: TextSelection.collapsed(offset: document.length - 1),
           )
         : QuillController.basic(),
   );

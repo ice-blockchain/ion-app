@@ -14,7 +14,7 @@ class CollapseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () => context.pop(textEditorController.document.toPlainText()),
+      onPressed: () => context.pop(textEditorController.document),
       icon: Assets.svg.iconFeedScale.icon(
         color: context.theme.appColors.quaternaryText,
         size: 18.0.s,
