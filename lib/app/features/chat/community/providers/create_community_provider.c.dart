@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
@@ -65,13 +67,14 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
       }
 
       // join community as owner and invite moderators/admins
-      await Future.wait([
-        ref.read(joinCommunityProvider(communityEntity.data.uuid).future),
-        ...communityAdmins.entries.map(
-          (admin) =>
-              ref.read(inviteToCommunityProvider(communityEntity.data.uuid, admin.key).future),
-        ),
-      ]);
+      ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(communityEntity.data.uuid);
+
+      communityAdmins.entries.map(
+        (admin) => ref.read(inviteToCommunityNotifierProvider.notifier).inviteToCommunity(
+              communityEntity.data.uuid,
+              admin.key,
+            ),
+      );
 
       ref.invalidate(communityJoinRequestsProvider);
 

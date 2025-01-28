@@ -76,10 +76,11 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
           communityAdmins.keys.where((key) => !existingAdminsAndModerators.contains(key)).toList();
 
       if (newlyAddedAdminsAndModerators.isNotEmpty) {
-        await Future.wait(
-          newlyAddedAdminsAndModerators.map(
-            (pubkey) => ref.read(inviteToCommunityProvider(community.uuid, pubkey).future),
-          ),
+        newlyAddedAdminsAndModerators.map(
+          (pubkey) => ref.read(inviteToCommunityNotifierProvider.notifier).inviteToCommunity(
+                community.uuid,
+                pubkey,
+              ),
         );
       }
 

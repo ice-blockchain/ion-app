@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
@@ -16,46 +15,52 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'join_community_provider.c.g.dart';
 
 @riverpod
-FutureOr<void> joinCommunity(
-  Ref ref,
-  String communityUUUID,
-) async {
-  final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+class JoinCommunityNotifier extends _$JoinCommunityNotifier {
+  @override
+  FutureOr<void> build() {}
 
-  if (pubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
+  FutureOr<void> joinCommunity(String communityUUUID) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+
+      if (pubkey == null) {
+        throw UserMasterPubkeyNotFoundException();
+      }
+
+      final community = await ref.watch(communityMetadataProvider(communityUUUID).future);
+
+      var joinData = CommunityJoinData(
+        uuid: communityUUUID,
+        pubkey: pubkey,
+      );
+
+      if (!community.data.isOpen && pubkey != community.ownerPubkey) {
+        final invitationEvent = await ref.watch(communityInvitationProvider(communityUUUID).future);
+
+        if (invitationEvent == null) {
+          throw CommunityInvitationNotFoundException();
+        }
+
+        final invitation = CommunityJoinEntity.fromEventMessage(invitationEvent);
+
+        if (invitation.data.expiration != null &&
+            invitation.data.expiration!.isBefore(DateTime.now())) {
+          throw CommunityInvitationExpiredException();
+        }
+        joinData = joinData.copyWith(auth: jsonEncode(invitationEvent.toJson().last));
+      }
+
+      final result = await ref
+          .read(ionConnectNotifierProvider.notifier)
+          .sendEntityData(joinData, actionSource: ActionSourceUser(community.ownerPubkey));
+
+      if (result == null) {
+        throw FailedToJoinCommunityException();
+      }
+
+      ref.invalidate(communityJoinRequestsProvider);
+    });
   }
-
-  final community = await ref.watch(communityMetadataProvider(communityUUUID).future);
-
-  var joinData = CommunityJoinData(
-    uuid: communityUUUID,
-    pubkey: pubkey,
-  );
-
-  if (!community.data.isOpen && pubkey != community.ownerPubkey) {
-    final invitationEvent = await ref.watch(communityInvitationProvider(communityUUUID).future);
-
-    if (invitationEvent == null) {
-      throw CommunityInvitationNotFoundException();
-    }
-
-    final invitation = CommunityJoinEntity.fromEventMessage(invitationEvent);
-
-    if (invitation.data.expiration != null &&
-        invitation.data.expiration!.isBefore(DateTime.now())) {
-      throw CommunityInvitationExpiredException();
-    }
-    joinData = joinData.copyWith(auth: jsonEncode(invitationEvent.toJson().last));
-  }
-
-  final result = await ref
-      .read(ionConnectNotifierProvider.notifier)
-      .sendEntityData(joinData, actionSource: ActionSourceUser(community.ownerPubkey));
-
-  if (result == null) {
-    throw FailedToJoinCommunityException();
-  }
-
-  ref.invalidate(communityJoinRequestsProvider);
 }

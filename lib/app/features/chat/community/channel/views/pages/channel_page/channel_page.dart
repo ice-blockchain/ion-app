@@ -101,7 +101,7 @@ class ChannelPage extends HookConsumerWidget {
                   child: Button(
                     mainAxisSize: MainAxisSize.max,
                     onPressed: () {
-                      ref.read(joinCommunityProvider(uuid));
+                      ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(uuid);
                     },
                     label: Text(context.i18n.channel_join),
                     leadingIcon: Assets.svg.iconMenuLogout.icon(
