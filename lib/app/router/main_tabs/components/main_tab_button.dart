@@ -13,7 +13,7 @@ class MainTabButton extends StatelessWidget {
     final state = GoRouterState.of(context);
 
     final icon =
-        state.isMainModalOpen ? Assets.images.logo.logoButtonClose : Assets.images.logo.logoButton;
+        state.isMainModalOpen ? Assets.svg.logo.logoButtonClose : Assets.svg.logo.logoButton;
 
     return SizedBox.square(
       dimension: 50.0.s,
