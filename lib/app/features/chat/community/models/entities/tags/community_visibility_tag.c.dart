@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
 part 'community_visibility_tag.c.freezed.dart';
-
 @freezed
 class CommunityVisibilityTag with _$CommunityVisibilityTag {
   const factory CommunityVisibilityTag({
