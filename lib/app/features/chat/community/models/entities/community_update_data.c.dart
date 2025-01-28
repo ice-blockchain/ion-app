@@ -15,7 +15,6 @@ import 'package:ion/app/features/ion_connect/model/tags/community_moderator_tag.
 import 'package:ion/app/features/ion_connect/model/tags/community_openness_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_visibility_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/description_tag.c.dart';
-import 'package:ion/app/features/ion_connect/model/tags/imeta_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/tags/name_tag.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -92,7 +91,7 @@ class CommunityUpdateData with _$CommunityUpdateData implements EventSerializabl
       uuid: tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value,
       name: tags[NameTag.tagName]!.map(NameTag.fromTag).first.value,
       description: tags[DescriptionTag.tagName]?.map(DescriptionTag.fromTag).first.value,
-      avatar: tags[ImetaTag.tagName]?.map(ImetaTag.fromTag).first.value,
+      avatar: tags[MediaAttachment.tagName]?.map(MediaAttachment.fromTag).first,
       isPublic: CommunityVisibilityTag.fromTags(eventMessage.tags).isPublic,
       isOpen: CommunityOpennessTag.fromTags(eventMessage.tags).isOpen,
       commentsEnabled: CommentsEnabledEventSetting.fromTags(eventMessage.tags).isEnabled,
