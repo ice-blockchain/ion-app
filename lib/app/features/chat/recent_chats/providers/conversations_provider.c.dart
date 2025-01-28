@@ -42,7 +42,8 @@ class Conversations extends _$Conversations {
       );
 
       state = AsyncValue.data(
-          (conversations..sortBy<DateTime>((e) => e.lastMessageAt!)).reversed.toList());
+        (conversations..sortBy<DateTime>((e) => e.lastMessageAt!)).reversed.toList(),
+      );
     });
 
     ref.onDispose(conversationSubscription.cancel);
@@ -90,11 +91,9 @@ class Conversations extends _$Conversations {
 
     if (type == ChatType.chat) {
       final userMetadata = await ref.read(
-        userMetadataProvider(message.data.relatedPubkeys!
-                .where((key) => key.value != devicePublicKey)
-                .first
-                .value)
-            .future,
+        userMetadataProvider(
+          message.data.relatedPubkeys!.where((key) => key.value != devicePublicKey).first.value,
+        ).future,
       );
 
       if (userMetadata != null) {

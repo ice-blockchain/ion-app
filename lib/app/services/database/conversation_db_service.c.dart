@@ -292,7 +292,8 @@ class ConversationsDBService {
   }
 
   Future<List<PrivateDirectMessageEntity>> getConversationMessages(
-      E2eeConversationEntity conversation) async {
+    E2eeConversationEntity conversation,
+  ) async {
     if (conversation.id == null) {
       return [];
     }
@@ -333,7 +334,8 @@ class ConversationsDBService {
   }
 
   Stream<List<PrivateDirectMessageEntity>> watchConversationMessages(
-      E2eeConversationEntity conversation) {
+    E2eeConversationEntity conversation,
+  ) {
     late JoinedSelectStatement<HasResultSet, dynamic> query;
 
     if (conversation.id != null) {

@@ -16,7 +16,8 @@ part 'ion_connect_gift_wrap_service.c.g.dart';
 @riverpod
 Future<IonConnectGiftWrapService> ionConnectGiftWrapService(Ref ref) async =>
     IonConnectGiftWrapServiceImpl(
-        e2eeService: await ref.read(ionConnectE2eeServiceProvider.future));
+      e2eeService: await ref.read(ionConnectE2eeServiceProvider.future),
+    );
 
 abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
