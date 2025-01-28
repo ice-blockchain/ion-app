@@ -80,6 +80,7 @@ dependencies:
   permission_handler: ^11.3.0
   photo_manager: ^3.6.3
   photo_manager_image_provider: ^2.1.1
+  pinenacl: ^0.6.0
   qr_code_scanner:
     git:
       url: https://github.com/ice-blockchain/qr_code_scanner
@@ -92,7 +93,6 @@ dependencies:
   shared_preferences: ^2.3.5
   shimmer: ^3.0.0
   smooth_sheets: ^1.0.0-f324.0.10.2
-  pinenacl: ^0.6.0
   talker_dio_logger: 4.5.4
   talker_flutter: 4.5.4
   talker_riverpod_logger: 4.5.4
