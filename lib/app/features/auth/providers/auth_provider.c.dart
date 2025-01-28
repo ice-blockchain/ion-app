@@ -107,11 +107,7 @@ class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
 
   @override
   Future<String?> build() async {
-    // Watch prefs to be sure LocalStorage is initialized
-    await ref.watch(sharedPreferencesProvider.future);
-
     final localStorage = ref.watch(localStorageProvider);
-
     return localStorage.getString(_currentIdentityKeyNameKey);
   }
 

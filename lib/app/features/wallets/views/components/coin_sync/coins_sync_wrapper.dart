@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/bool.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallets/domain/coins_sync_service.c.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_sync_service.c.dart';
 
 class CoinsSyncWrapper extends HookConsumerWidget {
   const CoinsSyncWrapper({

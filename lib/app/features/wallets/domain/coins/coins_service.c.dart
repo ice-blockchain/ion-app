@@ -12,8 +12,6 @@ part 'coins_service.c.g.dart';
 
 @riverpod
 Future<CoinsService> coinsService(Ref ref) async {
-  await ref.watch(sharedPreferencesProvider.future);
-
   return CoinsService(
     ref.watch(coinsRepositoryProvider),
   );

@@ -4,8 +4,8 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/domain/coins_service.c.dart';
-import 'package:ion/app/features/wallets/domain/wallet_views_service.c.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
+import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provider.c.dart';
@@ -42,6 +42,7 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
         .map((coin) => coin.coin.id)
         .toSet();
 
+    await _subscription?.cancel();
     _subscription = coinsService.watchCoins(coinIds).listen((updatedCoins) {
       state = state.map(
         data: (data) {

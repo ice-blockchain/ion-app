@@ -5,10 +5,9 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart' as db;
 import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
-import 'package:ion/app/features/wallets/domain/coins_mapper.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_mapper.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,8 +15,6 @@ part 'coins_sync_service.c.g.dart';
 
 @riverpod
 Future<CoinsSyncService> coinsSyncService(Ref ref) async {
-  await ref.watch(sharedPreferencesProvider.future);
-
   return CoinsSyncService(
     ref.watch(coinsRepositoryProvider),
     await ref.watch(ionIdentityClientProvider.future),
