@@ -135,3 +135,23 @@ class TwoFaMethodNotConfiguredException extends IONIdentityException {
     }
   }
 }
+
+class InvalidRecoveryCredentialsException extends IONIdentityException {
+  InvalidRecoveryCredentialsException() : super('Invalid recovery credentials');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        final errorMessage = responseData['error']['message'] as String?;
+        final recoveryKeyNotFound = errorMessage == 'Recovery key not found.';
+        final userNotFound = errorMessage == 'USER_NOT_FOUND';
+        return recoveryKeyNotFound || userNotFound;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+}

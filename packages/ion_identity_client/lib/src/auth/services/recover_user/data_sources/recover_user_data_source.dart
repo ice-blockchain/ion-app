@@ -46,6 +46,9 @@ class RecoverUserDataSource {
       if (InvalidTwoFaCodeException.isMatch(exception)) {
         throw InvalidTwoFaCodeException();
       }
+      if (InvalidRecoveryCredentialsException.isMatch(exception)) {
+        throw InvalidRecoveryCredentialsException();
+      }
       rethrow;
     }
   }

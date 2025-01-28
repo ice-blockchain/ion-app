@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_page/components/errors/recover_invalid_credentials_error_alert.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/components/recovery_creds_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/models/recover_user_step.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
@@ -105,6 +106,11 @@ class RecoverUserPage extends HookConsumerWidget {
               context: ref.context,
               child: const TwoFaTryAgainPage(),
             );
+          case InvalidRecoveryCredentialsException():
+            showSimpleBottomSheet<void>(
+              context: ref.context,
+              child: const RecoverInvalidCredentialsErrorAlert(),
+            );
           default:
         }
       })
@@ -113,6 +119,7 @@ class RecoverUserPage extends HookConsumerWidget {
         excludedExceptions: {
           TwoFARequiredException,
           InvalidTwoFaCodeException,
+          InvalidRecoveryCredentialsException,
         },
       )
       ..listenSuccess(initUserRecoveryActionNotifierProvider, (value) {
