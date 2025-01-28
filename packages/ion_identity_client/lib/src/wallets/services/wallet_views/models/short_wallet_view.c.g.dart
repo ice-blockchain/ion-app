@@ -10,9 +10,11 @@ _$ShortWalletViewImpl _$$ShortWalletViewImplFromJson(
         Map<String, dynamic> json) =>
     _$ShortWalletViewImpl(
       name: json['name'] as String,
-      coins: (json['coins'] as List<dynamic>)
-          .map((e) => WalletViewCoinData.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      coins: (json['coins'] as List<dynamic>?)
+              ?.map(
+                  (e) => WalletViewCoinData.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
       userId: json['userId'] as String,
