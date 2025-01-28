@@ -24,7 +24,8 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddingValue = 20.0.s;
 
-    final DraftArticleState(:title, :image, :imageIds, :content) = ref.watch(draftArticleProvider);
+    final DraftArticleState(:title, :image, :imageIds, :content, :imageColor) =
+        ref.watch(draftArticleProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     return SheetContent(
@@ -63,6 +64,7 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                             imageId: image?.path,
                             mediaIds: imageIds,
                             whoCanReply: whoCanReply,
+                            imageColor: imageColor,
                           );
 
                       if (!ref.read(createArticleProvider).hasError && ref.context.mounted) {

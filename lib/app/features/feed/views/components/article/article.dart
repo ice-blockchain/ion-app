@@ -17,6 +17,7 @@ import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
+import 'package:ion/app/utils/color.dart';
 
 class Article extends ConsumerWidget {
   const Article({
@@ -58,7 +59,9 @@ class Article extends ConsumerWidget {
               clipBehavior: Clip.antiAlias,
               width: 4.0.s,
               decoration: BoxDecoration(
-                color: context.theme.appColors.primaryAccent,
+                color: articleEntity.data.imageColor != null
+                    ? fromHexColor(articleEntity.data.imageColor!)
+                    : context.theme.appColors.primaryAccent,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(4.0.s),
                   bottomRight: Radius.circular(4.0.s),

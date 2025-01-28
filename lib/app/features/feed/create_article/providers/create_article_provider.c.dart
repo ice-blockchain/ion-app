@@ -29,6 +29,7 @@ class CreateArticle extends _$CreateArticle {
     String? imageId,
     DateTime? publishedAt,
     List<String>? mediaIds,
+    String? imageColor,
   }) async {
     state = const AsyncValue.loading();
 
@@ -36,7 +37,7 @@ class CreateArticle extends _$CreateArticle {
       final files = <FileMetadata>[];
       final mediaAttachments = <MediaAttachment>[];
 
-      final mainImageFuture = _getUploadImage(imageId, files);
+      final mainImageFuture = _getUploadImage(imageId, files, mediaAttachments);
       final contentFuture = _prepareContent(content, mediaIds, files, mediaAttachments);
 
       final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
@@ -54,6 +55,7 @@ class CreateArticle extends _$CreateArticle {
         relatedHashtags: relatedHashtags,
         publishedAt: publishedAt ?? DateTime.now(),
         whoCanReplySettings: {whoCanReply},
+        imageColor: imageColor,
       );
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
@@ -63,11 +65,13 @@ class CreateArticle extends _$CreateArticle {
   Future<String?> _getUploadImage(
     String? imageId,
     List<FileMetadata> files,
+    List<MediaAttachment> mediaAttachments,
   ) async {
     if (imageId == null) return null;
 
-    final uploadResult = await _uploadImage(imageId);
+    final uploadResult = await _uploadImage(imageId, extractColor: true);
     files.add(uploadResult.fileMetadata);
+    mediaAttachments.add(uploadResult.mediaAttachment);
     return uploadResult.mediaAttachment.url;
   }
 
@@ -114,12 +118,11 @@ class CreateArticle extends _$CreateArticle {
     return jsonEncode(parsedContent);
   }
 
-  Future<UploadResult> _uploadImage(String imageId) async {
+  Future<UploadResult> _uploadImage(String imageId, {bool extractColor = false}) async {
     final compressService = ref.read(compressServiceProvider);
-
     final dimension = await compressService.getImageDimension(path: imageId);
 
-    return ref.read(ionConnectUploadNotifierProvider.notifier).upload(
+    final result = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           MediaFile(
             path: imageId,
             width: dimension.width,
@@ -127,5 +130,6 @@ class CreateArticle extends _$CreateArticle {
           ),
           alt: FileAlt.article,
         );
+    return result;
   }
 }

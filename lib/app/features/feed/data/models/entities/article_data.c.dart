@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -73,6 +74,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     String? summary,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
+    String? imageColor,
   }) = _ArticleData;
 
   const ArticleData._();
@@ -83,6 +85,12 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     final title = tags['title']?.firstOrNull?.elementAtOrNull(1);
     final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
+
+    final hasNamespaceTag =
+        tags[ColorLabel.namespaceTagName]?.any(ColorLabel.isNamespaceTag) ?? false;
+    final colorTag =
+        hasNamespaceTag ? tags[ColorLabel.tagName]?.firstWhereOrNull(ColorLabel.isValueTag) : null;
+    final imageColor = colorTag != null ? ColorLabel.extractValue(colorTag) : null;
 
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
@@ -97,6 +105,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
+      imageColor: imageColor,
     );
   }
 
@@ -109,6 +118,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
     Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
+    String? imageColor,
   }) {
     final setting = whoCanReplySettings.isEmpty ||
             whoCanReplySettings.every(
@@ -127,6 +137,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
       settings: setting != null ? [setting] : null,
+      imageColor: imageColor,
     );
   }
 
@@ -148,6 +159,8 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+        if (imageColor != null) ColorLabel(value: imageColor).toNamespaceTag(),
+        if (imageColor != null) ColorLabel(value: imageColor).toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,
