@@ -9,7 +9,7 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
-import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu_item.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu/user_info_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';

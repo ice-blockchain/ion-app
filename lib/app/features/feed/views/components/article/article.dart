@@ -9,11 +9,11 @@ import 'package:ion/app/features/components/entities_list/components/bookmark_bu
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
-import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/delete_feed_item_menu.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu/own_entity_menu.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
-import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
@@ -83,7 +83,7 @@ class Article extends ConsumerWidget {
                             children: [
                               BookmarkButton(eventReference: eventReference),
                               if (isOwnedByCurrentUser)
-                                DeleteFeedItemMenu(eventReference: eventReference)
+                                OwnEntityMenu(eventReference: eventReference)
                               else
                                 UserInfoMenu(pubkey: eventReference.pubkey),
                             ],

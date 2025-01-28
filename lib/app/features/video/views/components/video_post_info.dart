@@ -6,9 +6,9 @@ import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder
 import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
-import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/video/views/components/video_post_text.dart';
 
 class VideoPostInfo extends HookConsumerWidget {

@@ -10,13 +10,13 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
-import 'package:ion/app/features/feed/views/components/delete_feed_item_menu/delete_feed_item_menu.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu/own_entity_menu.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
 import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
-import 'package:ion/app/features/feed/views/components/user_info_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -68,10 +68,7 @@ class Post extends ConsumerWidget {
               createdAt: postEntity.createdAt,
               timeFormat: timeFormat,
               trailing: isOwnedByCurrentUser
-                  ? DeleteFeedItemMenu(
-                      eventReference: eventReference,
-                      onDelete: onDelete,
-                    )
+                  ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
                   : UserInfoMenu(pubkey: eventReference.pubkey),
             ),
         SizedBox(height: 10.0.s),
