@@ -101,6 +101,7 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
           ],
           content: '',
@@ -115,6 +116,7 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
           ],
           content: 'First message',
@@ -130,6 +132,7 @@ void main() {
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
             ['p', 'pubkey0'],
+            ['p', 'pubkey1'],
           ],
           content: 'Reply to the first message',
           sig: null,
