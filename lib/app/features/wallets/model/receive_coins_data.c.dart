@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 
 part 'receive_coins_data.c.freezed.dart';
 
@@ -10,7 +10,7 @@ part 'receive_coins_data.c.freezed.dart';
 class ReceiveCoinsData with _$ReceiveCoinsData {
   const factory ReceiveCoinsData({
     required CoinsGroup? selectedCoin,
-    required NetworkType? selectedNetwork,
+    required Network? selectedNetwork,
     required String? address,
   }) = _ReceiveCoinsData;
 }

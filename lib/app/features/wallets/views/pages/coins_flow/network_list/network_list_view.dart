@@ -49,8 +49,9 @@ class NetworkListView extends ConsumerWidget {
           ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network);
           CoinsSendFormRoute().push<void>(context);
         case NetworkListViewType.receive:
-          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
-          ShareAddressRoute().push<void>(context);
+          // TODO: Not implemented
+          // ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
+          // ShareAddressRoute().push<void>(context);
       }
     }
 
@@ -67,24 +68,25 @@ class NetworkListView extends ConsumerWidget {
               ],
             ),
           ),
-          ScreenBottomOffset(
-            margin: 32.0.s,
-            child: ScreenSideOffset.small(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: networks.length,
-                separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
-                itemBuilder: (BuildContext context, int index) {
-                  final network = networks[index];
-                  return NetworkItem(
-                    coinInWallet: coinData,
-                    networkType: networks[index],
-                    onTap: () => onTap(network),
-                  );
-                },
-              ),
-            ),
-          ),
+          // TODO: Not implemented
+          // ScreenBottomOffset(
+          //   margin: 32.0.s,
+          //   child: ScreenSideOffset.small(
+          //     child: ListView.separated(
+          //       shrinkWrap: true,
+          //       itemCount: networks.length,
+          //       separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
+          //       itemBuilder: (BuildContext context, int index) {
+          //         final network = networks[index];
+          //         return NetworkItem(
+          //           coinInWallet: coinData,
+          //           networkType: networks[index],
+          //           onTap: () => onTap(network),
+          //         );
+          //       },
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

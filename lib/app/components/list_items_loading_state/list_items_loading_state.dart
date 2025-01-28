@@ -32,17 +32,19 @@ class ListItemsLoadingState extends StatelessWidget {
     required BuildContext context,
   }) {
     return Skeleton(
-      child: SeparatedColumn(
-        separator: SizedBox(
-          height: separatorHeight ?? 16.0.s,
-        ),
-        children: List.generate(
-          itemsCount ?? 11,
-          (_) => ItemLoadingState(
-            paddingHorizontal: ScreenSideOffset.defaultSmallMargin,
-            itemHeight: itemHeight,
+      child: SingleChildScrollView(
+        child: SeparatedColumn(
+          separator: SizedBox(
+            height: separatorHeight ?? 16.0.s,
           ),
-        ).toList(),
+          children: List.generate(
+            itemsCount ?? 11,
+            (_) => ItemLoadingState(
+              paddingHorizontal: ScreenSideOffset.defaultSmallMargin,
+              itemHeight: itemHeight,
+            ),
+          ).toList(),
+        ),
       ),
     );
   }
