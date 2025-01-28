@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/providers/search_coins_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coins_list_view.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -16,6 +18,7 @@ class ReceiveCoinModalPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coinsResult = ref.watch(searchCoinsNotifierProvider);
+    // final walletCoins = ref.watch(currentWalletViewDataProvider);
 
     ref.watch(receiveCoinsFormControllerProvider);
 
