@@ -14,6 +14,7 @@ import 'package:ion/app/utils/username.dart';
 class ProfileShareMessage extends StatelessWidget {
   const ProfileShareMessage({
     required this.isMe,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.reactions,
     this.author,
@@ -21,6 +22,7 @@ class ProfileShareMessage extends StatelessWidget {
   });
 
   final bool isMe;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -68,7 +70,7 @@ class ProfileShareMessage extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16.0.s),
-            MessageMetaData(isMe: isMe),
+            MessageMetaData(isMe: isMe, createdAt: createdAt),
           ],
         ),
       ),
@@ -90,17 +92,13 @@ class _ProfileSummary extends StatelessWidget {
         title: Text(
           'Alina Proxima',
           style: context.theme.appTextThemes.subtitle3.copyWith(
-            color: isMe
-                ? context.theme.appColors.onPrimaryAccent
-                : context.theme.appColors.primaryText,
+            color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
           ),
         ),
         subtitle: Text(
           prefixUsername(username: 'alinaproxima', context: context),
           style: context.theme.appTextThemes.body2.copyWith(
-            color: isMe
-                ? context.theme.appColors.onPrimaryAccent
-                : context.theme.appColors.onTertararyBackground,
+            color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.onTertararyBackground,
           ),
         ),
         profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',

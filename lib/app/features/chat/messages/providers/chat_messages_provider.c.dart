@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
@@ -12,34 +13,35 @@ part 'chat_messages_provider.c.g.dart';
 @Riverpod()
 class ChatMessages extends _$ChatMessages {
   @override
-  Future<List<MessageListItem>> build(E2eeConversationEntity conversationData) async {
-    final messagesSubscription = ref
-        .read(conversationsDBServiceProvider)
-        .watchConversationMessages(conversationData.id!)
-        .listen((messages) async {
-      final conversationMessageItems = messages.map(_mapMessage).toList();
+  Future<List<MessageListItem>> build(E2eeConversationEntity conversation) async {
+    final messagesSubscription =
+        ref.read(conversationsDBServiceProvider).watchConversationMessages(conversation).listen((messages) async {
+      final conversationMessageItems = messages.map(_mapMessage).nonNulls.toList();
 
-      state = AsyncValue.data(conversationMessageItems);
+      state = AsyncValue.data(
+        conversationMessageItems.sorted((previous, next) => next.time.isBefore(previous.time) ? 1 : -1),
+      );
     });
 
     ref.onDispose(messagesSubscription.cancel);
 
     state = const AsyncValue.loading();
 
-    final messages = await ref
-        .read(conversationsDBServiceProvider)
-        .getConversationMessages(conversationData.id!);
+    final messages = await ref.read(conversationsDBServiceProvider).getConversationMessages(conversation);
 
-    final conversationMessageItems = messages.map(_mapMessage).toList();
+    final conversationMessageItems = messages.map(_mapMessage).nonNulls.toList();
 
-    return conversationMessageItems;
+    return conversationMessageItems.sorted((previous, next) => next.time.isBefore(previous.time) ? 1 : -1);
   }
 
-  MessageListItem _mapMessage(PrivateDirectMessageEntity message) {
+  MessageListItem? _mapMessage(PrivateDirectMessageEntity message) {
+    if (message.data.content.map((e) => e.text).join().isEmpty) {
+      return null;
+    }
     return MessageListItem.text(
       time: message.createdAt,
       text: message.data.content.map((e) => e.text).join(),
-      author: MessageAuthor(name: conversationData.name, imageUrl: conversationData.imageUrl!),
+      author: MessageAuthor(name: conversation.name, imageUrl: conversation.imageUrl!),
     );
   }
 

@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageMetaData extends StatelessWidget {
   const MessageMetaData({
     required this.isMe,
+    required this.createdAt,
     super.key,
   });
 
   final bool isMe;
+  final DateTime createdAt;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +23,9 @@ class MessageMetaData extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '12:23',
+            DateFormat.Hm().format(createdAt),
             style: context.theme.appTextThemes.caption4.copyWith(
-              color: isMe
-                  ? context.theme.appColors.strokeElements
-                  : context.theme.appColors.quaternaryText,
+              color: isMe ? context.theme.appColors.strokeElements : context.theme.appColors.quaternaryText,
             ),
           ),
           if (isMe)

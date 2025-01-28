@@ -49,7 +49,6 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 
   List<String> get allPubkeys {
     return data.relatedPubkeys?.map((pubkey) => pubkey.value).toList() ?? []
-      ..add(pubkey)
       ..sort();
   }
 

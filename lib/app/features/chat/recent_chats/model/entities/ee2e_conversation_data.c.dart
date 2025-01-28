@@ -7,7 +7,7 @@ part 'ee2e_conversation_data.c.freezed.dart';
 
 @freezed
 class E2eeConversationEntity with _$E2eeConversationEntity {
-  const factory E2eeConversationEntity({
+  factory E2eeConversationEntity({
     required String name,
     required ChatType type,
     required List<String> participants,

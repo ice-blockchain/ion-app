@@ -29,8 +29,7 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
-  final conversationMessageManagementService =
-      await ref.watch(conversationMessageManagementServiceProvider);
+  final conversationMessageManagementService = await ref.watch(conversationMessageManagementServiceProvider.future);
 
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
@@ -39,9 +38,9 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
     databaseService: databaseService,
     env: ref.watch(envProvider.notifier),
     userPubkey: await ref.watch(currentPubkeySelectorProvider.future),
-    sealService: ref.watch(ionConnectSealServiceProvider),
+    sealService: await ref.read(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
-    wrapService: ref.watch(ionConnectGiftWrapServiceProvider),
+    wrapService: await ref.read(ionConnectGiftWrapServiceProvider.future),
     conversationMessageManagementService: conversationMessageManagementService,
   );
 }

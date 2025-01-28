@@ -28,6 +28,7 @@ class AudioMessage extends HookConsumerWidget {
     required this.id,
     required this.audioUrl,
     required this.isMe,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
@@ -36,7 +37,9 @@ class AudioMessage extends HookConsumerWidget {
 
   final bool isMe;
   final String id;
+
   final String audioUrl;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -49,8 +52,7 @@ class AudioMessage extends HookConsumerWidget {
 
     final playerWaveStyle = useMemoized(
       () => PlayerWaveStyle(
-        liveWaveColor:
-            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+        liveWaveColor: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
         fixedWaveColor: context.theme.appColors.sheetLine,
         seekLineColor: Colors.transparent,
         waveThickness: 1.0.s,
@@ -126,8 +128,7 @@ class AudioMessage extends HookConsumerWidget {
                   ],
                 ),
                 SizedBox(
-                  width:
-                      MessageItemWrapper.maxWidth - contentPadding.horizontal - metadataWidth.value,
+                  width: MessageItemWrapper.maxWidth - contentPadding.horizontal - metadataWidth.value,
                   child: MessageReactions(reactions: reactions),
                 ),
               ],
@@ -135,6 +136,7 @@ class AudioMessage extends HookConsumerWidget {
             MessageMetaData(
               key: metadataKey,
               isMe: isMe,
+              createdAt: createdAt,
             ),
           ],
         ),

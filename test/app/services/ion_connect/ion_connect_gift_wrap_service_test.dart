@@ -1,26 +1,33 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   late IonConnectGiftWrapService giftWrapService;
   late EventSigner senderSigner;
   late EventSigner receiverSigner;
 
   setUp(() async {
-    giftWrapService = IonConnectGiftWrapServiceImpl();
     senderSigner = await Ed25519KeyStore.generate();
     receiverSigner = await Ed25519KeyStore.generate();
+    final e2eeService = IonConnectE2eeService(
+      eventSigner: senderSigner,
+      currentUserPubkey: senderSigner.publicKey,   
+    );
+    giftWrapService = IonConnectGiftWrapServiceImpl(e2eeService: e2eeService);
   });
 
   group('IonConnectGiftWrapService', () {
     test('creates wrap from event', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event,
@@ -39,8 +46,8 @@ void main() {
     });
 
     test('decodes wrap back to original event on senders side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event,
@@ -60,8 +67,8 @@ void main() {
     });
 
     test('decodes wrap back to original event on receivers side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event,

@@ -17,6 +17,7 @@ part 'poll_result_message.dart';
 class PollMessage extends HookWidget {
   const PollMessage({
     required this.isMe,
+    required this.createdAt,
     super.key,
     this.reactions,
     this.author,
@@ -24,6 +25,7 @@ class PollMessage extends HookWidget {
   });
 
   final bool isMe;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -33,7 +35,7 @@ class PollMessage extends HookWidget {
     final selectedId = useState<String?>(null);
 
     if (selectedId.value != null) {
-      return PollResultMessage(isMe: isMe, reactions: reactions);
+      return PollResultMessage(isMe: isMe, reactions: reactions, createdAt: createdAt);
     }
 
     return MessageItemWrapper(
@@ -51,9 +53,7 @@ class PollMessage extends HookWidget {
             child: Text(
               mockPoll.question,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: isMe
-                    ? context.theme.appColors.onPrimaryAccent
-                    : context.theme.appColors.primaryText,
+                color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
               ),
             ),
           ),
@@ -68,8 +68,7 @@ class PollMessage extends HookWidget {
                 backgroundColor: context.theme.appColors.tertararyBackground,
                 label: Text(
                   option.option,
-                  style: context.theme.appTextThemes.caption2
-                      .copyWith(color: context.theme.appColors.primaryText),
+                  style: context.theme.appTextThemes.caption2.copyWith(color: context.theme.appColors.primaryText),
                 ),
                 onPressed: () {
                   selectedId.value = option.id;
@@ -85,7 +84,7 @@ class PollMessage extends HookWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe),
+              MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),
         ],

@@ -4,15 +4,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
 import 'package:ion/app/utils/date.dart';
-import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_seal_service.c.g.dart';
 
 @riverpod
-IonConnectSealService ionConnectSealService(Ref ref) => IonConnectSealServiceImpl();
+Future<IonConnectSealService> ionConnectSealService(Ref ref) async =>
+    IonConnectSealServiceImpl(e2eeService: await ref.read(ionConnectE2eeServiceProvider.future));
 
 abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
@@ -22,14 +22,20 @@ abstract class IonConnectSealService {
   );
 
   Future<EventMessage> decodeSeal(
-    EventMessage seal,
+    String content,
+    String senderPubkey,
     String privateKey,
-    String pubkey,
   );
 }
 
 class IonConnectSealServiceImpl implements IonConnectSealService {
+  const IonConnectSealServiceImpl({
+    required IonConnectE2eeService e2eeService,
+  }) : _e2eeService = e2eeService;
+
   static const int kind = 13;
+
+  final IonConnectE2eeService _e2eeService;
 
   @override
   Future<EventMessage> createSeal(
@@ -39,18 +45,10 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   ) async {
     final encodedRumor = jsonEncode(rumor.toJson().last);
 
-    final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(
-        privateKey: signer.privateKey,
-        publicKey: receiverPubkey,
-      ),
-    );
-
-    final encryptedRumor = await Nip44.encryptMessage(
+    final encryptedRumor = await _e2eeService.encryptMessage(
       encodedRumor,
-      signer.privateKey,
-      receiverPubkey,
-      customConversationKey: conversationKey,
+      publicKey: receiverPubkey,
+      privateKey: signer.privateKey,
     );
 
     final createdAt = randomDateBefore(
@@ -58,8 +56,8 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
     );
 
     return EventMessage.fromData(
-      signer: signer,
       kind: kind,
+      signer: signer,
       createdAt: createdAt,
       content: encryptedRumor,
     );
@@ -67,19 +65,14 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
 
   @override
   Future<EventMessage> decodeSeal(
-    EventMessage seal,
+    String content,
+    String senderPubkey,
     String privateKey,
-    String pubkey,
   ) async {
-    final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(privateKey: privateKey, publicKey: pubkey),
-    );
-
-    final decryptedContent = await Nip44.decryptMessage(
-      seal.content,
-      privateKey,
-      pubkey,
-      customConversationKey: conversationKey,
+    final decryptedContent = await _e2eeService.decryptMessage(
+      content,
+      publicKey: senderPubkey,
+      privateKey: privateKey,
     );
 
     return EventMessage.fromPayloadJson(

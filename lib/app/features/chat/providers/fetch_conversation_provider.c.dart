@@ -27,8 +27,7 @@ class FetchConversations extends _$FetchConversations {
 
     final pubkey = eventSigner.publicKey;
 
-    final lastMessageDate =
-        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final lastMessageDate = await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
@@ -46,7 +45,10 @@ class FetchConversations extends _$FetchConversations {
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-    final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
+    final sealService = await ref.read(ionConnectSealServiceProvider.future);
+    final giftWrapService = await ref.read(ionConnectGiftWrapServiceProvider.future);
+
+    final wrapEvents = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,
       actionSource: const ActionSourceCurrentUserChat(),
       subscriptionBuilder: (requestMessage, relay) {
@@ -64,10 +66,11 @@ class FetchConversations extends _$FetchConversations {
 
     final dbProvider = ref.watch(conversationsDBServiceProvider);
 
-    await for (final event in events) {
+    await for (final wrap in wrapEvents) {
       final rumor = await _unwrapGift(
-        event,
-        senderPubkey: event.pubkey,
+        wrap,
+        sealService: sealService,
+        giftWrapService: giftWrapService,
         privateKey: eventSigner.privateKey,
       );
       if (rumor != null) {
@@ -78,21 +81,22 @@ class FetchConversations extends _$FetchConversations {
 
   Future<EventMessage?> _unwrapGift(
     EventMessage giftWrap, {
-    required String senderPubkey,
     required String privateKey,
+    required IonConnectSealService sealService,
+    required IonConnectGiftWrapService giftWrapService,
   }) async {
     try {
-      final seal = await ref.read(ionConnectGiftWrapServiceProvider).decodeWrap(
-            giftWrap.content,
-            senderPubkey,
-            privateKey,
-          );
+      final seal = await giftWrapService.decodeWrap(
+        giftWrap.content,
+        giftWrap.pubkey,
+        privateKey,
+      );
 
-      return await ref.read(ionConnectSealServiceProvider).decodeSeal(
-            seal,
-            privateKey,
-            senderPubkey,
-          );
+      return await sealService.decodeSeal(
+        seal.content,
+        seal.pubkey,
+        privateKey,
+      );
     } catch (error, stackTrace) {
       Logger.log(DecodeE2EMessageException().toString(), error: error, stackTrace: stackTrace);
     }

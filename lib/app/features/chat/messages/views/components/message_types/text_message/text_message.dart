@@ -15,6 +15,7 @@ class TextMessage extends StatelessWidget {
   const TextMessage({
     required this.isMe,
     required this.message,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.reactions = const [],
     this.author,
@@ -24,6 +25,7 @@ class TextMessage extends StatelessWidget {
 
   final bool isMe;
   final String message;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final RepliedMessage? repliedMessage;
@@ -60,16 +62,14 @@ class TextMessage extends StatelessWidget {
                       Text(
                         message,
                         style: context.theme.appTextThemes.body2.copyWith(
-                          color: isMe
-                              ? context.theme.appColors.onPrimaryAccent
-                              : context.theme.appColors.primaryText,
+                          color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
                         ),
                       ),
                       if (reactions.isNotEmpty) MessageReactions(reactions: reactions),
                     ],
                   ),
                 ),
-                MessageMetaData(isMe: isMe),
+                MessageMetaData(isMe: isMe, createdAt: createdAt),
               ],
             ),
           ],

@@ -24,6 +24,7 @@ class MoneyMessage extends HookWidget {
     required this.amount,
     required this.equivalentUsd,
     required this.chain,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
@@ -35,6 +36,7 @@ class MoneyMessage extends HookWidget {
   final double amount;
   final double equivalentUsd;
   final String chain;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -54,9 +56,7 @@ class MoneyMessage extends HookWidget {
     );
 
     final buttonLabel = useMemoized(
-      () => type == MoneyMessageType.receive
-          ? context.i18n.chat_money_received_button
-          : context.i18n.button_send,
+      () => type == MoneyMessageType.receive ? context.i18n.chat_money_received_button : context.i18n.button_send,
       [type],
     );
 
@@ -70,9 +70,7 @@ class MoneyMessage extends HookWidget {
     final buttonBackgroundColor = useMemoized(
       () => type == MoneyMessageType.receive
           ? (isMe ? context.theme.appColors.darkBlue : context.theme.appColors.tertararyBackground)
-          : (isMe
-              ? context.theme.appColors.secondaryBackground
-              : context.theme.appColors.primaryAccent),
+          : (isMe ? context.theme.appColors.secondaryBackground : context.theme.appColors.primaryAccent),
       [isMe],
     );
 
@@ -130,7 +128,7 @@ class MoneyMessage extends HookWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe),
+              MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),
         ],

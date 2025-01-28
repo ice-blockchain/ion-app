@@ -3,8 +3,14 @@
 part of 'poll_message.dart';
 
 class PollResultMessage extends StatelessWidget {
-  const PollResultMessage({required this.isMe, super.key, this.reactions});
+  const PollResultMessage({
+    required this.isMe,
+    required this.createdAt,
+    super.key,
+    this.reactions,
+  });
   final bool isMe;
+  final DateTime createdAt;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -22,9 +28,7 @@ class PollResultMessage extends StatelessWidget {
             child: Text(
               mockPoll.question,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: isMe
-                    ? context.theme.appColors.onPrimaryAccent
-                    : context.theme.appColors.primaryText,
+                color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
               ),
             ),
           ),
@@ -34,9 +38,7 @@ class PollResultMessage extends StatelessWidget {
           Text(
             'Votes: 2  •  Left: 1 day 2 hours',
             style: context.theme.appTextThemes.caption2.copyWith(
-              color: isMe
-                  ? context.theme.appColors.strokeElements
-                  : context.theme.appColors.quaternaryText,
+              color: isMe ? context.theme.appColors.strokeElements : context.theme.appColors.quaternaryText,
             ),
           ),
           SizedBox(height: 4.0.s),
@@ -45,7 +47,7 @@ class PollResultMessage extends StatelessWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe),
+              MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),
         ],
@@ -89,8 +91,7 @@ class _PollResultItem extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final percentage = useMemoized(() {
-      return option.votes /
-          mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
+      return option.votes / mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
     });
 
     return Stack(
@@ -117,17 +118,13 @@ class _PollResultItem extends HookWidget {
               Text(
                 option.option,
                 style: context.theme.appTextThemes.caption2.copyWith(
-                  color: isMe
-                      ? context.theme.appColors.onPrimaryAccent
-                      : context.theme.appColors.primaryText,
+                  color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
                 ),
               ),
               Text(
                 '${(percentage * 100).toInt()}%',
                 style: context.theme.appTextThemes.caption2.copyWith(
-                  color: isMe
-                      ? context.theme.appColors.onPrimaryAccent
-                      : context.theme.appColors.primaryText,
+                  color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
                 ),
               ),
             ],

@@ -6,11 +6,13 @@ class _MessageWithTimestamp extends StatelessWidget {
   const _MessageWithTimestamp({
     required this.message,
     required this.isMe,
+    required this.createdAt,
     this.reactions,
   });
 
   final String message;
   final bool isMe;
+    final DateTime createdAt;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -39,7 +41,7 @@ class _MessageWithTimestamp extends StatelessWidget {
               ],
             ),
           ),
-          MessageMetaData(isMe: isMe),
+          MessageMetaData(isMe: isMe, createdAt: createdAt),
         ],
       ),
     );

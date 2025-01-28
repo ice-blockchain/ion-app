@@ -45,8 +45,7 @@ class ChatMessagesList extends ConsumerWidget {
         itemBuilder: (context, index) {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
-          final author =
-              message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
+          final author = message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
 
           final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
@@ -54,9 +53,8 @@ class ChatMessagesList extends ConsumerWidget {
                 author,
               );
 
-          final authorToDisplay = displayAuthorsIncomingMessages
-              ? authorToDisplayProvider.getAuthorToDisplay(index)
-              : null;
+          final authorToDisplay =
+              displayAuthorsIncomingMessages ? authorToDisplayProvider.getAuthorToDisplay(index) : null;
 
           final isMe = author?.isCurrentUser ?? false;
 
@@ -65,6 +63,7 @@ class ChatMessagesList extends ConsumerWidget {
             system: (message) => SystemMessage(message: message.text),
             text: (message) => TextMessage(
               message: message.text,
+              createdAt: message.time,
               isMe: message.author.isCurrentUser,
               repliedMessage: message.repliedMessage,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
@@ -72,6 +71,7 @@ class ChatMessagesList extends ConsumerWidget {
             ),
             photo: (message) => PhotoMessage(
               isMe: isMe,
+              createdAt: message.time,
               imageUrl: message.imageUrl,
               message: message.text,
               reactions: mockReactionsMany,
@@ -80,6 +80,7 @@ class ChatMessagesList extends ConsumerWidget {
             ),
             emoji: (message) => EmojiMessage(
               emoji: message.emoji,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               isMe: isMe,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
@@ -88,6 +89,7 @@ class ChatMessagesList extends ConsumerWidget {
             ),
             audio: (message) => AudioMessage(
               id: message.audioId,
+              createdAt: message.time,
               audioUrl: message.audioUrl,
               isMe: isMe,
               reactions: mockReactionsMany,
@@ -97,6 +99,7 @@ class ChatMessagesList extends ConsumerWidget {
             video: (message) => VideoMessage(
               isMe: isMe,
               message: message.text,
+              createdAt: message.time,
               author: authorToDisplay,
               videoUrl: message.videoUrl,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
@@ -104,24 +107,28 @@ class ChatMessagesList extends ConsumerWidget {
             link: (message) => UrlPreviewMessage(
               isMe: isMe,
               url: message.link,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             shareProfile: (message) => ProfileShareMessage(
               isMe: isMe,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             poll: (message) => PollMessage(
               isMe: isMe,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             money: (message) => MoneyMessage(
               isMe: isMe,
+              createdAt: message.time,
               type: message.type,
               amount: message.amount,
               equivalentUsd: message.usdt,

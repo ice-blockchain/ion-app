@@ -31,7 +31,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_message_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Raw<Future<ConversationMessageManagementService>> conversationMessageManagementService(
+Future<ConversationMessageManagementService> conversationMessageManagementService(
   Ref ref,
 ) async {
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
@@ -40,10 +40,10 @@ Raw<Future<ConversationMessageManagementService>> conversationMessageManagementS
     eventSigner: eventSigner,
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
-    sealService: ref.watch(ionConnectSealServiceProvider),
     compressionService: ref.watch(compressServiceProvider),
+    sealService: await ref.read(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
-    wrapService: ref.watch(ionConnectGiftWrapServiceProvider),
+    wrapService: await ref.read(ionConnectGiftWrapServiceProvider.future),
     ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
   );
 }
@@ -157,9 +157,7 @@ class ConversationMessageManagementService {
     final decryptedDecompressedFiles = <File>[];
 
     for (final attachment in mediaAttachments) {
-      if (attachment.encryptionKey != null &&
-          attachment.encryptionNonce != null &&
-          attachment.encryptionMac != null) {
+      if (attachment.encryptionKey != null && attachment.encryptionNonce != null && attachment.encryptionMac != null) {
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
@@ -221,11 +219,11 @@ class ConversationMessageManagementService {
     final createdAt = DateTime.now().toUtc();
 
     final id = EventMessage.calculateEventId(
-      publicKey: signer.publicKey,
-      createdAt: createdAt,
-      kind: PrivateDirectMessageEntity.kind,
       tags: tags,
       content: content,
+      createdAt: createdAt,
+      publicKey: signer.publicKey,
+      kind: PrivateDirectMessageEntity.kind,
     );
 
     final eventMessage = EventMessage(
@@ -326,8 +324,7 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile =
-              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+          final compressedEncryptedFile = File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
 
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 

@@ -74,15 +74,13 @@ class Ed25519KeyStore with EventSigner {
     return Ed25519().verify(messageBytes, signature: signatureObject);
   }
 
-  static Future<Uint8List> getSharedSecret({
+  static Future<Uint8List> getX25519SharedSecret({
     required String privateKey,
     required String publicKey,
   }) async {
-    final keyPair = await Ed25519().newKeyPairFromSeed(hex.decode(privateKey));
-    final remotePublicKey = SimplePublicKey(hex.decode(publicKey), type: KeyPairType.ed25519);
-    // TODO Convert Ed25519 keys to X25519 keys
-    final sharedSecret =
-        await X25519().sharedSecretKey(keyPair: keyPair, remotePublicKey: remotePublicKey);
+    final keyPair = await X25519().newKeyPairFromSeed(hex.decode(privateKey));
+    final remotePublicKey = SimplePublicKey(hex.decode(publicKey), type: KeyPairType.x25519);
+    final sharedSecret = await X25519().sharedSecretKey(keyPair: keyPair, remotePublicKey: remotePublicKey);
     return Uint8List.fromList(await sharedSecret.extractBytes());
   }
 
