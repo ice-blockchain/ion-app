@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 
 part 'wallet_view_data.c.freezed.dart';
@@ -20,4 +21,6 @@ class WalletViewData with _$WalletViewData {
   }) = _WalletViewData;
 
   const WalletViewData._();
+
+  List<CoinInWalletData> get coins => coinGroups.expand((e) => e.coins).toList();
 }

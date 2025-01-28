@@ -11,7 +11,7 @@ import 'package:ion/app/features/settings/model/privacy_options.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/current_user_wallet_views_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -87,8 +87,9 @@ class PrivacySettingsModal extends ConsumerWidget {
   ) async {
     Map<String, String>? wallets;
     if (option == WalletAddressPrivacyOption.public) {
-      final walletsList = await ref.read(currentUserWalletViewsProvider.future);
-      final coins = walletsList.expand((view) => view.coins).toList();
+      final walletsList = await ref.read(walletViewsDataNotifierProvider.future);
+      final coins =
+          walletsList.expand((view) => view.coinGroups).expand((group) => group.coins).toList();
       wallets = Map.fromEntries(
         coins.map((coin) {
           if (coin.network == null || coin.walletId == null) {
