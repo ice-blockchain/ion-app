@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_admin_type.dart';
@@ -10,7 +12,6 @@ import 'package:ion/app/features/chat/community/providers/community_admins_provi
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
@@ -34,7 +35,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final avatar = await _uploadAvatar() ?? community.avatar;
+      final avatar = await _uploadAvatar();
       final communityAdmins = ref.read(communityAdminsProvider);
       final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
@@ -43,7 +44,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
       }
 
       final editedCommunityEntity = community.copyWith(
-        avatar: avatar,
+        avatar: avatar?.mediaAttachment ?? community.avatar,
         name: name,
         description: description,
         isPublic: communityVisibilityType == CommunityVisibilityType.public,
@@ -70,6 +71,12 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
         throw FailedToEditCommunityException();
       }
 
+      if (avatar != null) {
+        unawaited(
+          ref.read(ionConnectNotifierProvider.notifier).sendEntityData(avatar.fileMetadata),
+        );
+      }
+
       final existingAdminsAndModerators = community.admins.toList() + community.moderators.toList();
 
       final newlyAddedAdminsAndModerators =
@@ -90,7 +97,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
     });
   }
 
-  Future<MediaAttachment?> _uploadAvatar() async {
+  Future<UploadResult?> _uploadAvatar() async {
     final avatarFile =
         ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar)).whenOrNull(
               processed: (file) => file,
@@ -103,6 +110,6 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
         .read(ionConnectUploadNotifierProvider.notifier)
         .upload(avatarFile, alt: FileAlt.avatar);
 
-    return uploadAvatarResult.mediaAttachment;
+    return uploadAvatarResult;
   }
 }

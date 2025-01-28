@@ -12,7 +12,6 @@ import 'package:ion/app/features/chat/community/providers/invite_to_community_pr
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
@@ -46,7 +45,7 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
         isPublic: communityVisibilityType == CommunityVisibilityType.public,
         isOpen: communityVisibilityType == CommunityVisibilityType.public,
         commentsEnabled: true,
-        avatar: avatar,
+        avatar: avatar?.mediaAttachment,
         roleRequiredForPosting: roleRequiredForPosting,
         moderators: communityAdmins.entries
             .where((entry) => entry.value == CommunityAdminType.moderator)
@@ -57,6 +56,12 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
             .map((entry) => entry.key)
             .toList(),
       );
+
+      if (avatar != null) {
+        unawaited(
+          ref.read(ionConnectNotifierProvider.notifier).sendEntityData(avatar.fileMetadata),
+        );
+      }
 
       final communityEntity = await ref
           .read(ionConnectNotifierProvider.notifier)
@@ -82,7 +87,7 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
     });
   }
 
-  Future<MediaAttachment?> _uploadAvatar() async {
+  Future<UploadResult?> _uploadAvatar() async {
     final avatarFile =
         ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar)).whenOrNull(
               processed: (file) => file,
@@ -95,6 +100,6 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
         .read(ionConnectUploadNotifierProvider.notifier)
         .upload(avatarFile, alt: FileAlt.avatar);
 
-    return uploadAvatarResult.mediaAttachment;
+    return uploadAvatarResult;
   }
 }
