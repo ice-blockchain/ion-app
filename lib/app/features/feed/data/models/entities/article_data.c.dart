@@ -86,13 +86,9 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
 
-    final hasColorLabel =
-        tags['L']?.any((tag) => tag.length > 1 && tag[1] == ColorLabel.namespace) ?? false;
-    final imageColor = hasColorLabel
-        ? tags[ColorLabel.tagName]
-            ?.firstWhereOrNull((tag) => tag.length > 2 && tag[2] == ColorLabel.namespace)
-            ?.elementAtOrNull(1)
-        : null;
+    final colorTag = tags[ColorLabel.tagName]
+        ?.firstWhereOrNull((tag) => tag.length > 2 && tag[2] == ColorLabel.namespace);
+    final imageColor = colorTag != null ? ColorLabel.fromTag(colorTag).value : null;
 
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
