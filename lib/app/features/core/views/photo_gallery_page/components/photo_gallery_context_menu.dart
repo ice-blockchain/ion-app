@@ -25,21 +25,21 @@ class PhotoGalleryContextMenu extends StatelessWidget {
                     ),
                     onPressed: closeMenu,
                   ),
-                  const OverlayMenuItemSeperator(),
+                  const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_save,
                     icon: Assets.svg.iconSecurityDownload
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: closeMenu,
                   ),
-                  const OverlayMenuItemSeperator(),
+                  const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_report,
                     icon: Assets.svg.iconBlockClose3
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: closeMenu,
                   ),
-                  const OverlayMenuItemSeperator(),
+                  const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_delete,
                     labelColor: context.theme.appColors.attentionRed,

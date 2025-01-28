@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
-import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_seperator.dart';
+import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -31,28 +31,28 @@ class MessagingContextMenu extends StatelessWidget {
                     ),
                     onPressed: closeMenu,
                   ),
-                  const OverlayMenuItemSeperator(),
+                  const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_mute,
                     icon: Assets.svg.iconChannelMute
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: closeMenu,
                   ),
-                  const OverlayMenuItemSeperator(),
+                  const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_block,
                     icon: Assets.svg.iconPhofileBlockuser
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: closeMenu,
                   ),
-                  const OverlayMenuItemSeperator(),
+                  const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_report,
                     icon: Assets.svg.iconBlockClose3
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                     onPressed: closeMenu,
                   ),
-                  const OverlayMenuItemSeperator(),
+                  const OverlayMenuItemSeparator(),
                   OverlayMenuItem(
                     label: context.i18n.button_delete,
                     labelColor: context.theme.appColors.attentionRed,

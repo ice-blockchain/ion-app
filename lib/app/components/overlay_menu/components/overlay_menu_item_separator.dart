@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class OverlayMenuItemSeperator extends StatelessWidget {
-  const OverlayMenuItemSeperator({super.key});
+class OverlayMenuItemSeparator extends StatelessWidget {
+  const OverlayMenuItemSeparator({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(

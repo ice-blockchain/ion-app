@@ -46,7 +46,7 @@ class OverlayMenuItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: 9.0.s),
+              SizedBox(width: 8.0.s),
               icon,
             ],
           ),
