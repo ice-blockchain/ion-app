@@ -34,7 +34,6 @@ class GeneralUserDataInput extends HookWidget {
   final String? initialValue;
   final bool isLive;
   final bool showNoErrorsIndicator;
-
   @override
   Widget build(BuildContext context) {
     final isValid = useState(false);
@@ -56,6 +55,7 @@ class GeneralUserDataInput extends HookWidget {
       initialValue: initialValue,
       isLive: isLive,
       verified: isValid.value,
+      onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
       suffixIcon: isValid.value && showNoErrorsIndicator
           ? TextInputIcons(
               icons: [Assets.svg.iconBlockCheckboxOn.icon()],

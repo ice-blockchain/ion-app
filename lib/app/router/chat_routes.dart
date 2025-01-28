@@ -77,7 +77,7 @@ class NewChatModalRoute extends BaseRouteData {
 class NewChannelModalRoute extends BaseRouteData {
   NewChannelModalRoute()
       : super(
-          child: const NewChannelModal(),
+          child: const CreateChannelModal(),
           type: IceRouteType.bottomSheet,
         );
 }

@@ -7,6 +7,10 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 
+abstract mixin class IonConnectEntityReferecenable {
+  EventReference toEventReference();
+}
+
 @immutable
 abstract mixin class IonConnectEntity {
   String get id;
@@ -25,8 +29,6 @@ abstract mixin class IonConnectEntity {
     );
   }
 
-  EventReference toEventReference();
-
   @override
   bool operator ==(Object other) {
     return other is IonConnectEntity && id == other.id;
@@ -36,14 +38,14 @@ abstract mixin class IonConnectEntity {
   int get hashCode => id.hashCode;
 }
 
-mixin ImmutableEntity on IonConnectEntity {
+mixin ImmutableEntity on IonConnectEntity implements IonConnectEntityReferecenable {
   @override
   ImmutableEventReference toEventReference() {
     return ImmutableEventReference(eventId: id, pubkey: masterPubkey);
   }
 }
 
-mixin ReplaceableEntity on IonConnectEntity {
+mixin ReplaceableEntity on IonConnectEntity implements IonConnectEntityReferecenable {
   ReplaceableEntityData get data;
 }
 

@@ -11,23 +11,38 @@ part 'ion_connect_cache.c.g.dart';
 
 final _ionConnectCacheStreamController = StreamController<IonConnectEntity>.broadcast();
 
-mixin CacheableEntity on IonConnectEntity {
+mixin CacheableEntity on IonConnectEntity implements IonConnectEntityReferecenable {
   String get cacheKey => cacheKeyBuilder(eventReference: toEventReference());
 
   static String cacheKeyBuilder({required EventReference eventReference}) =>
       eventReference.toString();
 }
 
+class CacheEntry {
+  CacheEntry({
+    required this.entity,
+    required this.createdAt,
+  });
+
+  final CacheableEntity entity;
+  final DateTime createdAt;
+}
+
 @Riverpod(keepAlive: true)
 class IonConnectCache extends _$IonConnectCache {
   @override
-  Map<String, CacheableEntity> build() {
+  Map<String, CacheEntry> build() {
     return {};
   }
 
-  void cache(CacheableEntity event) {
-    state = {...state, event.cacheKey: event};
-    _ionConnectCacheStreamController.sink.add(event);
+  void cache(CacheableEntity entity) {
+    final entry = CacheEntry(
+      entity: entity,
+      createdAt: DateTime.now(),
+    );
+    state = {...state, entity.cacheKey: entry};
+
+    _ionConnectCacheStreamController.sink.add(entity);
   }
 
   void remove(String key) {
@@ -44,8 +59,19 @@ Raw<Stream<IonConnectEntity>> ionConnectCacheStream(Ref ref) {
 // Move to a generic family provider instead of current `ionConnectCacheProvider.select(cacheSelector<...>())` function
 // when riverpod_generator v3 is released:
 // https://pub.dev/packages/riverpod_generator/versions/3.0.0-dev.11/changelog#300-dev7---2023-10-29
-T? Function(Map<String, CacheableEntity>) cacheSelector<T extends IonConnectEntity>(
-  String key,
-) {
-  return (Map<String, CacheableEntity> state) => state[key] as T?;
+T? Function(Map<String, CacheEntry>) cacheSelector<T extends IonConnectEntity>(
+  String key, {
+  Duration? expirationDuration,
+}) {
+  return (Map<String, CacheEntry> state) {
+    final entry = state[key];
+
+    if (entry == null) return null;
+
+    if (expirationDuration != null &&
+        entry.createdAt.isBefore(DateTime.now().subtract(expirationDuration))) {
+      return null;
+    }
+    return entry.entity as T;
+  };
 }

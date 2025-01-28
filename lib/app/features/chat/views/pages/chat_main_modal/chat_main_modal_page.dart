@@ -34,12 +34,13 @@ class ChatMainModalPage extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               final type = menuItems[index];
 
+              final createFlowRouteLocation = _getSubRouteLocation(type);
               return MainModalItem(
                 item: type,
                 onTap: () {
                   context
                     ..go(GoRouterState.of(context).currentTab.baseRouteLocation)
-                    ..go(NewChatModalRoute().location);
+                    ..go(createFlowRouteLocation);
                 },
               );
             },
@@ -47,5 +48,13 @@ class ChatMainModalPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getSubRouteLocation(ConversationType type) {
+    return switch (type) {
+      ConversationType.private => NewChatModalRoute().location,
+      ConversationType.channel => NewChannelModalRoute().location,
+      ConversationType.group => CreateGroupModalRoute().location,
+    };
   }
 }

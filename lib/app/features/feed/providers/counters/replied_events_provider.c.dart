@@ -74,7 +74,7 @@ class RepliedEvents extends _$RepliedEvents {
 }
 
 Map<String, List<String>> _buildInitialMap(
-  Map<String, CacheableEntity> cache,
+  Map<String, CacheEntry> cache,
   String currentPubkey,
 ) {
   return cache.values.fold<Map<String, List<String>>>({}, (result, entry) {

@@ -16,6 +16,7 @@ class Avatar extends StatelessWidget {
     BorderRadiusGeometry? borderRadius,
     this.hexagon = false,
     BoxFit? fit,
+    this.defaultAvatar,
   })  : borderRadius = borderRadius ?? BorderRadius.circular(size * 0.3),
         fit = fit ?? BoxFit.fitWidth,
         assert(
@@ -30,7 +31,7 @@ class Avatar extends StatelessWidget {
   final Widget? badge;
   final String? imageUrl;
   final Widget? imageWidget;
-
+  final Widget? defaultAvatar;
   @override
   Widget build(BuildContext context) {
     final image = imageUrl != null
@@ -39,14 +40,14 @@ class Avatar extends StatelessWidget {
             width: size,
             height: size,
             fit: fit,
-            errorWidget: (context, url, error) => DefaultAvatar(size: size),
+            errorWidget: (context, url, error) => defaultAvatar ?? DefaultAvatar(size: size),
           )
         : imageWidget != null
             ? SizedBox.square(
                 dimension: size,
                 child: FittedBox(fit: fit, child: imageWidget),
               )
-            : DefaultAvatar(size: size);
+            : defaultAvatar ?? DefaultAvatar(size: size);
 
     return Stack(
       clipBehavior: Clip.none,

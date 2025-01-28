@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
@@ -22,7 +23,8 @@ enum EventCountResultType {
   reposts,
   quotes,
   followers,
-  reactions;
+  reactions,
+  members;
 }
 
 @Freezed(equal: false)
@@ -66,9 +68,6 @@ class EventCountResultEntity
       data: summary,
     );
   }
-
-  @override
-  String get cacheKey => cacheKeyBuilder(key: data.key, type: data.type);
 
   static String cacheKeyBuilder({required String key, required EventCountResultType type}) =>
       '$key:${type.toShortString()}';
@@ -137,6 +136,8 @@ class EventCountResultData with _$EventCountResultData {
       return EventCountResultType.replies;
     } else if (filter.tags != null && filter.tags!.containsKey('#q')) {
       return EventCountResultType.quotes;
+    } else if (filter.kinds != null && filter.kinds!.contains(CommunityJoinEntity.kind)) {
+      return EventCountResultType.members;
     } else {
       throw UnknownEventCountResultType(eventReference);
     }

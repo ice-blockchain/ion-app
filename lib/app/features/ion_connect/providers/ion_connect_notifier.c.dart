@@ -110,13 +110,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return sendEvents(events, actionSource: actionSource, cache: cache);
   }
 
-  Future<IonConnectEntity?> sendEntityData(
+  Future<T?> sendEntityData<T extends IonConnectEntity>(
     EventSerializable entityData, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
     final entities = await sendEntitiesData([entityData], actionSource: actionSource, cache: cache);
-    return entities?.elementAtOrNull(0);
+    return entities?.elementAtOrNull(0) as T?;
   }
 
   Stream<EventMessage> requestEvents(
@@ -172,13 +172,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return events.isNotEmpty ? events.first : null;
   }
 
-  Stream<IonConnectEntity> requestEntities(
+  Stream<T> requestEntities<T extends IonConnectEntity>(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
     await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
       try {
-        yield _parseAndCache(event);
+        yield _parseAndCache(event) as T;
       } catch (error, stackTrace) {
         Logger.log('Failed to process event ${event.id}', error: error, stackTrace: stackTrace);
       }

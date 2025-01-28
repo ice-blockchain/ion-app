@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/pages/user_picker_sheet/components/no_user_view.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/selectable_user_list_item.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.c.dart';
 
@@ -28,8 +29,11 @@ class FollowerUsers extends ConsumerWidget {
     final dataSource = ref.watch(followersDataSourceProvider(pubkey!));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final users = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();
+
+    if (users == null || users.isEmpty) return const NoUserView();
+
     final slivers = [
-      if (users == null || users.isEmpty)
+      if (users.isEmpty)
         const SliverToBoxAdapter(child: SizedBox.shrink())
       else
         SliverList.separated(

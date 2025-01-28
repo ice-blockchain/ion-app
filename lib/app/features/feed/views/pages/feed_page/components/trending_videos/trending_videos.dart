@@ -29,7 +29,7 @@ class TrendingVideos extends ConsumerWidget {
 
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
     final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final videos = videosData?.data.items;
+    final videos = videosData?.data.items?.toList();
 
     if (videos == null) {
       return Padding(
@@ -46,7 +46,8 @@ class TrendingVideos extends ConsumerWidget {
       children: [
         SectionHeader(
           onPress: () {
-            final eventReference = videos.first.toEventReference();
+            final eventReference =
+                videos.whereType<ModifiablePostEntity>().first.toEventReference();
             VideosRoute(eventReference: eventReference.encode()).push<void>(context);
           },
           title: context.i18n.feed_trending_videos,

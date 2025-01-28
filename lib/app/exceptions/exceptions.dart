@@ -241,3 +241,40 @@ class UnsupportedEventReference extends IONException {
 class UnsupportedEntityBookmarking extends IONException {
   UnsupportedEntityBookmarking(dynamic entity) : super(10051, 'Unsupported bookmarking of $entity');
 }
+
+class IncorrectEventTagValueException extends IONException {
+  IncorrectEventTagValueException({required String tag, required String? value})
+      : super(10052, 'Incorrect event tag value $tag: $value');
+}
+
+class FailedToCreateChannelException extends IONException {
+  FailedToCreateChannelException() : super(10053, 'Failed to create channel');
+}
+
+class FailedToCreateCommunityException extends IONException {
+  FailedToCreateCommunityException() : super(10054, 'Failed to create channel');
+}
+
+class FailedToFetchCommunityException extends IONException {
+  FailedToFetchCommunityException(String uuid) : super(10055, 'Failed to fetch community $uuid');
+}
+
+class FailedToEditCommunityException extends IONException {
+  FailedToEditCommunityException() : super(10056, 'Failed to edit community');
+}
+
+class FailedToJoinCommunityException extends IONException {
+  FailedToJoinCommunityException() : super(10057, 'Failed to join community');
+}
+
+class FailedToSendInvitationException extends IONException {
+  FailedToSendInvitationException() : super(10058, 'Failed to send invitation');
+}
+
+class CommunityInvitationExpiredException extends IONException {
+  CommunityInvitationExpiredException() : super(10059, 'Community invitation expired');
+}
+
+class CommunityInvitationNotFoundException extends IONException {
+  CommunityInvitationNotFoundException() : super(10060, 'Community invitation not found');
+}

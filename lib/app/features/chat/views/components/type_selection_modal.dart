@@ -16,13 +16,13 @@ class TypeSelectionModal<T extends SelectableType> extends HookConsumerWidget {
     required this.title,
     required this.values,
     required this.onUpdated,
-    required this.initiallySelectedType,
+    this.initiallySelectedType,
     super.key,
   });
 
   final String title;
 
-  final T initiallySelectedType;
+  final T? initiallySelectedType;
   final List<T> values;
   final void Function(T type) onUpdated;
 

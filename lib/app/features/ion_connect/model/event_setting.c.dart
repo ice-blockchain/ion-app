@@ -61,3 +61,74 @@ class WhoCanReplyEventSetting with _$WhoCanReplyEventSetting implements EventSet
 
   static const String tagName = 'who_can_reply';
 }
+
+@freezed
+class CommentsEnabledEventSetting with _$CommentsEnabledEventSetting implements EventSetting {
+  const factory CommentsEnabledEventSetting({
+    required bool isEnabled,
+  }) = _CommentsEnabledEventSetting;
+
+  const CommentsEnabledEventSetting._();
+
+  factory CommentsEnabledEventSetting.fromTags(List<List<String>> tags) {
+    final tag =
+        tags.firstWhere((tag) => tag[0] == EventSetting.settingTagName && tag[1] == tagName);
+
+    if (tag[0] != EventSetting.settingTagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: EventSetting.settingTagName);
+    }
+
+    return CommentsEnabledEventSetting(isEnabled: tag[2] == 'true');
+  }
+
+  @override
+  List<String> toTag() {
+    return [
+      EventSetting.settingTagName,
+      tagName,
+      isEnabled.toString(),
+      (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
+    ];
+  }
+
+  static const String tagName = 'comments_enabled';
+}
+
+@freezed
+class RoleRequiredForPostingEventSetting
+    with _$RoleRequiredForPostingEventSetting
+    implements EventSetting {
+  const factory RoleRequiredForPostingEventSetting({
+    required RoleRequiredForPosting role,
+  }) = _RoleRequiredForPostingEventSetting;
+
+  const RoleRequiredForPostingEventSetting._();
+
+  factory RoleRequiredForPostingEventSetting.fromTags(List<List<String>> tags) {
+    final tag =
+        tags.firstWhere((tag) => tag[0] == EventSetting.settingTagName && tag[1] == tagName);
+
+    if (tag[0] != EventSetting.settingTagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: EventSetting.settingTagName);
+    }
+
+    return RoleRequiredForPostingEventSetting(role: RoleRequiredForPosting.values.byName(tag[2]));
+  }
+
+  static const String tagName = 'role_required_for_posting';
+
+  @override
+  List<String> toTag() {
+    return [
+      EventSetting.settingTagName,
+      tagName,
+      role.name,
+      (DateTime.now().millisecondsSinceEpoch ~/ 1000).toString(),
+    ];
+  }
+}
+
+enum RoleRequiredForPosting {
+  admin,
+  moderator,
+}
