@@ -29,7 +29,7 @@ class TrendingVideos extends ConsumerWidget {
 
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
     final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final videos = videosData?.data.items;
+    final videos = videosData?.data.items?.whereType<ModifiablePostEntity>().toList();
 
     if (videos == null) {
       return Padding(

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -50,12 +49,6 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
       data: CommunityDefinitionData.fromEventMessage(eventMessage),
     );
   }
-
-  @override
-  EventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
-  }
-
   String get ownerPubkey => masterPubkey;
 
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
@@ -63,9 +56,7 @@ class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEnti
 }
 
 @Freezed(equal: false)
-class CommunityDefinitionData
-    with _$CommunityDefinitionData
-    implements EventSerializable, ReplaceableEntityData {
+class CommunityDefinitionData with _$CommunityDefinitionData implements EventSerializable {
   const factory CommunityDefinitionData({
     required String uuid,
     required String id,
@@ -161,22 +152,8 @@ class CommunityDefinitionData
         if (moderators.isNotEmpty)
           ...moderators.map((moderator) => CommunityModeratorTag(value: moderator).toTag()),
         if (admins.isNotEmpty) ...admins.map((admin) => CommunityAdminTag(value: admin).toTag()),
-        ReplaceableEventReference(
-          kind: CommunityDefinitionEntity.kind,
-          pubkey: tags.firstWhere((tag) => tag[0] == 'b').elementAt(1),
-          dTag: uuid,
-        ).toTag(),
       ],
       content: '',
-    );
-  }
-
-  @override
-  ReplaceableEventReference toReplaceableEventReference(String masterPubkey) {
-    return ReplaceableEventReference(
-      pubkey: masterPubkey,
-      kind: CommunityDefinitionEntity.kind,
-      dTag: uuid,
     );
   }
 }

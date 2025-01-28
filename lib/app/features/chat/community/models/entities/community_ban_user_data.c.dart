@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/tags/community_identifer_tag.c.dart';
@@ -40,19 +39,12 @@ class CommunityBanUserEntity with _$CommunityBanUserEntity, IonConnectEntity {
     );
   }
 
-  @override
-  EventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
-  }
-
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
   static const kind = 1752;
 }
 
 @Freezed(equal: false)
-class CommunityBanUserData
-    with _$CommunityBanUserData
-    implements EventSerializable, ReplaceableEntityData {
+class CommunityBanUserData with _$CommunityBanUserData implements EventSerializable {
   const factory CommunityBanUserData({
     required String uuid,
     required String bannedPubkey,
@@ -85,14 +77,6 @@ class CommunityBanUserData
         CommunityIdentifierTag(value: uuid).toTag(),
       ],
       content: '',
-    );
-  }
-
-  @override
-  ReplaceableEventReference toReplaceableEventReference(String masterPubkey) {
-    return ReplaceableEventReference(
-      pubkey: masterPubkey,
-      kind: CommunityBanUserEntity.kind,
     );
   }
 }

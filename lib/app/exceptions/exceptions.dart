@@ -243,7 +243,7 @@ class UnsupportedEntityBookmarking extends IONException {
 }
 
 class IncorrectEventTagValueException extends IONException {
-  IncorrectEventTagValueException({required String tag, required String value})
+  IncorrectEventTagValueException({required String tag, required String? value})
       : super(10052, 'Incorrect event tag value $tag: $value');
 }
 

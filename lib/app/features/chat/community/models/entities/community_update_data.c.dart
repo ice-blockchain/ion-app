@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -50,19 +49,12 @@ class CommunityUpdateEntity with _$CommunityUpdateEntity, IonConnectEntity {
     );
   }
 
-  @override
-  EventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
-  }
-
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
   static const kind = 1753;
 }
 
 @Freezed(equal: false)
-class CommunityUpdateData
-    with _$CommunityUpdateData
-    implements EventSerializable, ReplaceableEntityData {
+class CommunityUpdateData with _$CommunityUpdateData implements EventSerializable {
   const factory CommunityUpdateData({
     required String uuid,
     required bool isPublic,
@@ -113,14 +105,6 @@ class CommunityUpdateData
               ?.map((tag) => CommunityAdminTag.fromTag(tag).value)
               .toList() ??
           [],
-    );
-  }
-
-  @override
-  ReplaceableEventReference toReplaceableEventReference(String masterPubkey) {
-    return ReplaceableEventReference(
-      pubkey: masterPubkey,
-      kind: CommunityUpdateEntity.kind,
     );
   }
 

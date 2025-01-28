@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/tags/authorization_tag.c.dart';
@@ -40,19 +39,12 @@ class CommunityJoinEntity with _$CommunityJoinEntity, IonConnectEntity {
     );
   }
 
-  @override
-  EventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
-  }
-
   // https://github.com/ice-blockchain/subzero/blob/master/.ion-connect-protocol/ICIP-3000.md
   static const kind = 1750;
 }
 
 @freezed
-class CommunityJoinData
-    with _$CommunityJoinData
-    implements EventSerializable, ReplaceableEntityData {
+class CommunityJoinData with _$CommunityJoinData implements EventSerializable {
   const factory CommunityJoinData({
     required String uuid,
     String? pubkey,
@@ -70,14 +62,6 @@ class CommunityJoinData
       pubkey: tags[PubkeyTag.tagName]?.map(PubkeyTag.fromTag).first.value,
       auth: tags[AuthorizationTag.tagName]?.map(AuthorizationTag.fromTag).firstOrNull?.value,
       expiration: tags[EntityExpiration.tagName]?.map(EntityExpiration.fromTag).firstOrNull?.value,
-    );
-  }
-
-  @override
-  ReplaceableEventReference toReplaceableEventReference(String masterPubkey) {
-    return ReplaceableEventReference(
-      pubkey: masterPubkey,
-      kind: CommunityJoinEntity.kind,
     );
   }
 
