@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/providers/active_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 
 mixin RelayInitMixin {
@@ -29,6 +30,10 @@ mixin RelayInitMixin {
             relay: relay,
             cache: false,
           );
+
+      relay.onClose.listen(
+        (_) => ref.read(activeRelaysProvider.notifier).removeRelay(relay.url),
+      );
 
       completer.complete();
     } catch (e) {
