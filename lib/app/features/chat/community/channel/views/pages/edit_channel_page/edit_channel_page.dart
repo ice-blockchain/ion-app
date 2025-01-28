@@ -38,13 +38,14 @@ class EditChannelPage extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final updateCommunityNotifier = ref.watch(updateCommunityNotifierProvider);
+    final updateCommunityProvider = updateCommunityNotifierProvider(channel.data);
+    final updateCommunityNotifier = ref.watch(updateCommunityProvider);
 
     ref
-      ..listenSuccess(updateCommunityNotifierProvider, (data) {
+      ..listenSuccess(updateCommunityProvider, (data) {
         context.pop();
       })
-      ..displayErrors(updateCommunityNotifierProvider);
+      ..displayErrors(updateCommunityProvider);
 
     return Scaffold(
       body: ScreenTopOffset(
@@ -68,8 +69,7 @@ class EditChannelPage extends HookConsumerWidget {
                     channel: channel,
                     isLoading: updateCommunityNotifier.isLoading,
                     onSubmit: (name, description, channelType) {
-                      ref.read(updateCommunityNotifierProvider.notifier).updateCommunity(
-                            channel.data,
+                      ref.read(updateCommunityProvider.notifier).updateCommunity(
                             name,
                             description,
                             channelType,

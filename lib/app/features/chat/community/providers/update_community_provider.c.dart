@@ -22,12 +22,11 @@ part 'update_community_provider.c.g.dart';
 @riverpod
 class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
   @override
-  FutureOr<CommunityDefinitionData?> build() {
+  FutureOr<CommunityDefinitionData?> build(CommunityDefinitionData community) {
     return null;
   }
 
   Future<void> updateCommunity(
-    CommunityDefinitionData community,
     String name,
     String? description,
     CommunityVisibilityType communityVisibilityType,
