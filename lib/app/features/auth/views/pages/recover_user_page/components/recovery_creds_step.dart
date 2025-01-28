@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_footer/auth_footer.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_scrolled_body.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_page/components/errors/recover_invalid_credentials_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/data/models/recovery_key_property.dart';
 import 'package:ion/app/features/protect_account/backup/providers/recover_user_action_notifier.c.dart';
-import 'package:ion/app/features/protect_account/backup/views/components/errors/recovery_keys_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/recovery_key_input.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
@@ -77,6 +78,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
                       label: Text(context.i18n.button_restore),
                       mainAxisSize: MainAxisSize.max,
                       disabled: isInitLoading || isCompleteLoading,
+                      trailingIcon: isInitLoading ? const IONLoadingIndicator() : null,
                       onPressed: () {
                         if (formKey.value.currentState!.validate()) {
                           onContinuePressed(
@@ -87,7 +89,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
                         } else {
                           showSimpleBottomSheet<void>(
                             context: context,
-                            child: const RecoveryKeysErrorAlert(),
+                            child: const RecoverInvalidCredentialsErrorAlert(),
                           );
                         }
                       },
