@@ -2,6 +2,8 @@
 
 part of 'wallet_views_service.c.dart';
 
+typedef _RequestParams = (Set<String>, List<WalletViewCoinData>);
+
 class _CreateUpdateRequestBuilder {
   CreateUpdateWalletViewRequest build({
     String? name,
@@ -30,7 +32,7 @@ class _CreateUpdateRequestBuilder {
     );
   }
 
-  (Set<String>, List<WalletViewCoinData>) _getRequestDataFromWalletView(
+  _RequestParams _getRequestDataFromWalletView(
     WalletViewData walletView,
   ) {
     final symbolGroups = <String>{};
@@ -52,7 +54,7 @@ class _CreateUpdateRequestBuilder {
     return (symbolGroups, walletViewItems);
   }
 
-  (Set<String>, List<WalletViewCoinData>) _getRequestDataFromCoinsList(
+  _RequestParams _getRequestDataFromCoinsList(
     List<CoinData> coins,
     List<Wallet> userWallets,
   ) {
