@@ -71,6 +71,7 @@ class TwoFADataSource {
     required String userId,
     required String twoFAOption,
     required String code,
+    String? oldValue,
   }) async {
     try {
       final token = tokenStorage.getToken(username: username)?.token;
@@ -80,7 +81,10 @@ class TwoFADataSource {
 
       return await networkClient.patch(
         sprintf(twoFaPath, [userId, twoFAOption]),
-        queryParams: {'code': code},
+        queryParams: {
+          'code': code,
+          if (oldValue != null) 'replace': oldValue,
+        },
         headers: RequestHeaders.getAuthorizationHeaders(token: token, username: username),
         decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
       );

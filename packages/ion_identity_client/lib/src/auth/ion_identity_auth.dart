@@ -139,7 +139,8 @@ class IONIdentityAuth {
         recoveryIdentityKeyName: recoveryIdentityKeyName,
       );
 
-  Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);
+  Future<void> verifyTwoFA(TwoFAType twoFAType, {String? oldValue}) =>
+      twoFAService.verifyTwoFA(twoFAType);
 
   Future<void> deleteTwoFA({
     required TwoFAType twoFAType,

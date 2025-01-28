@@ -53,7 +53,7 @@ class TwoFAService {
     return _extractCodeFromResponse(response);
   }
 
-  Future<void> verifyTwoFA(TwoFAType twoFAType) async {
+  Future<void> verifyTwoFA(TwoFAType twoFAType, {String? oldValue}) async {
     final userId = _extractUserIdService.extractUserId(username: username);
 
     await _dataSource.verifyTwoFA(
@@ -61,6 +61,7 @@ class TwoFAService {
       userId: userId,
       twoFAOption: twoFAType.option,
       code: twoFAType.value!,
+      oldValue: oldValue,
     );
   }
 
