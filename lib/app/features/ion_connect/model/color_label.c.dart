@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 
 part 'color_label.c.freezed.dart';
 
@@ -13,15 +12,16 @@ class ColorLabel with _$ColorLabel {
 
   const ColorLabel._();
 
-  /// https://github.com/nostr-protocol/nips/blob/master/32.md
-  factory ColorLabel.fromTag(List<String> tag) {
-    if (tag[0] != tagName) {
-      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
-    }
-    if (tag.length < 3 || tag[2] != namespace) {
-      throw IncorrectEventTagException(tag: tag.toString());
-    }
-    return ColorLabel(value: tag[1]);
+  static bool isNamespaceTag(List<String> tag) {
+    return tag.length > 1 && tag[0] == namespaceTagName && tag[1] == namespace;
+  }
+
+  static bool isValueTag(List<String> tag) {
+    return tag.length > 2 && tag[0] == tagName && tag[2] == namespace;
+  }
+
+  static String? extractValue(List<String> tag) {
+    return isValueTag(tag) ? tag[1] : null;
   }
 
   List<String> toNamespaceTag() {
