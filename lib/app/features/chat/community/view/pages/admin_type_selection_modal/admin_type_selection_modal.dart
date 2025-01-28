@@ -29,6 +29,16 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedAdminType = useState(adminType);
 
+    final adminTypes = useMemoized(
+      () {
+        if (createChannelFlow) {
+          return CommunityAdminType.values.where((e) => e != CommunityAdminType.owner).toList();
+        }
+        return CommunityAdminType.values;
+      },
+      [createChannelFlow],
+    );
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -41,9 +51,7 @@ class AdminTypeSelectionModal extends HookConsumerWidget {
           ],
           title: Text(context.i18n.channel_create_admin_type_title),
         ),
-        for (final CommunityAdminType adminType in CommunityAdminType.values
-            .where((e) => !createChannelFlow || e != CommunityAdminType.owner)
-            .toSet())
+        for (final CommunityAdminType adminType in adminTypes)
           ScreenSideOffset.small(
             child: Column(
               children: [
