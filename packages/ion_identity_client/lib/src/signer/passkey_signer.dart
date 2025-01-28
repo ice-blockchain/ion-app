@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/src/core/storage/local_passkey_creds_state_storage.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:passkeys/authenticator.dart';
 import 'package:passkeys/types.dart';
@@ -10,18 +13,23 @@ import 'package:passkeys/types.dart';
 /// The default timeout value (in milliseconds) for operations within the
 /// passkey signing process.
 const int defaultWaitTimeout = 60000;
+const int defaultOtherDeviceWaitTimeout = 120000;
 
 /// A configuration class for passkey-related operations, providing options
 /// such as timeout settings.
 class PasskeysOptions {
-  /// Creates an instance of [PasskeysOptions] with the specified [timeout].
-  /// If no timeout is provided, it defaults to [defaultWaitTimeout].
+  /// Creates an instance of [PasskeysOptions] with the specified [timeout] and [otherDeviceTimeout].
+  /// If no timeout is provided, it defaults to [defaultWaitTimeout] and [defaultOtherDeviceWaitTimeout].
   const PasskeysOptions({
     this.timeout = defaultWaitTimeout,
+    this.otherDeviceTimeout = defaultOtherDeviceWaitTimeout,
   });
 
   /// The timeout value (in milliseconds) for passkey operations.
   final int timeout;
+
+  /// The timeout value (in milliseconds) for passkey operations when other device is involved through QR code.
+  final int otherDeviceTimeout;
 }
 
 /// A class responsible for handling passkey-based registration and signing
@@ -30,12 +38,14 @@ class PasskeysOptions {
 class PasskeysSigner {
   /// Creates an instance of [PasskeysSigner] with the specified [options].
   /// If no options are provided, the default [PasskeysOptions] are used.
-  PasskeysSigner([
+  PasskeysSigner({
+    required this.localPasskeyCredsStateStorage,
     this.options = const PasskeysOptions(),
-  ]);
+  });
 
   /// The configuration options for passkey operations.
-  PasskeysOptions options;
+  final PasskeysOptions options;
+  final LocalPasskeyCredsStateStorage localPasskeyCredsStateStorage;
 
   /// Registers a user based on the provided [challenge], returning a
   /// [CredentialRequestData] containing the attestation data.
@@ -94,6 +104,44 @@ class PasskeysSigner {
     );
   }
 
+  /// Logs in a user based on the provided [challenge].
+  ///
+  /// This method attempts to authenticate the user using passkey credentials
+  /// available on the current device. If no credentials are available, it updates
+  /// the [localPasskeyCredsStateStorage] to indicate that the system can suggest
+  /// creating new credentials and retries the sign operation without preferring
+  /// immediately available credentials.
+  ///
+  /// - [username]: The username of the user attempting to log in.
+  /// - [challenge]: The [UserActionChallenge] containing the authentication challenge.
+  ///
+  /// Returns an [AssertionRequestData] object containing the assertion data upon successful authentication.
+  ///
+  /// Throws [PasskeyValidationException] if the sign operation fails due to validation errors.
+  /// Propagates [NoCredentialsAvailableException] if no credentials are available even after state update.
+  Future<AssertionRequestData> login({
+    required String username,
+    required UserActionChallenge challenge,
+    required bool localCredsOnly,
+  }) async {
+    try {
+      return await sign(
+        challenge,
+        localCredsOnly: localCredsOnly,
+      );
+    } on NoCredentialsAvailableException {
+      // final assertionRequestData = await sign(challenge);
+      if (localCredsOnly) {
+        await localPasskeyCredsStateStorage.updateLocalPasskeyCredsState(
+          username: username,
+          state: LocalPasskeyCredsState.canSuggest,
+        );
+      }
+      throw const NoLocalPasskeyCredsFoundIONIdentityException();
+      // return assertionRequestData;
+    }
+  }
+
   /// Signs a user action challenge, returning a [AssertionRequestData] containing
   /// the assertion data.
   ///
@@ -101,15 +149,15 @@ class PasskeysSigner {
   /// user, utilizing the options specified in [PasskeysOptions].
   Future<AssertionRequestData> sign(
     UserActionChallenge challenge, {
-    bool preferImmediatelyAvailableCredentials = false,
+    bool localCredsOnly = false,
   }) async {
     try {
       final fido2Assertion = await PasskeyAuthenticator().authenticate(
         AuthenticateRequestType(
-          preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+          preferImmediatelyAvailableCredentials: localCredsOnly,
           relyingPartyId: challenge.rp.id,
           challenge: challenge.challenge,
-          timeout: options.timeout,
+          timeout: localCredsOnly == true ? options.timeout : options.otherDeviceTimeout,
           userVerification: challenge.userVerification,
           allowCredentials: List<CredentialType>.from(
             challenge.allowCredentials.webauthn.map(
@@ -133,13 +181,38 @@ class PasskeysSigner {
           userHandle: fido2Assertion.userHandle,
         ),
       );
+    } on NoCredentialsAvailableException {
+      rethrow;
     } catch (e) {
       throw const PasskeyValidationException();
     }
   }
 
-  Future<bool> canAuthenticate() async {
+  Future<bool> checkPasskeyAvailability() async {
+    final availability = PasskeyAuthenticator().getAvailability();
+
+    if (kIsWeb) {
+      // Web Platform
+      final webAvailability = await availability.web();
+      return webAvailability.hasPasskeySupport;
+    } else if (Platform.isAndroid) {
+      // Android Platform
+      final androidAvailability = await availability.android();
+      return androidAvailability.hasPasskeySupport;
+    } else if (Platform.isIOS) {
+      // iOS Platform
+      final iosAvailability = await availability.iOS();
+      return iosAvailability.hasPasskeySupport;
+    }
+
     // ignore: deprecated_member_use
     return PasskeyAuthenticator().canAuthenticate();
+  }
+
+  Future<void> rejectToCreateLocalPasskeyCreds(String username) {
+    return localPasskeyCredsStateStorage.updateLocalPasskeyCredsState(
+      username: username,
+      state: LocalPasskeyCredsState.rejected,
+    );
   }
 }

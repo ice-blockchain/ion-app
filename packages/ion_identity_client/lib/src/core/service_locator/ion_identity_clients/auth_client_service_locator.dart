@@ -72,6 +72,7 @@ class AuthClientServiceLocator {
       delegatedLoginService: delegatedLogin(config: config),
       privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
       biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
+      localPasskeyCredsStateStorage: IONIdentityServiceLocator.localPasskeyCredsStateStorage(),
     );
   }
 
@@ -117,7 +118,6 @@ class AuthClientServiceLocator {
       ),
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
-      biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
     );
   }
 
@@ -188,6 +188,7 @@ class AuthClientServiceLocator {
         identitySigner: identitySigner,
       ),
       identitySigner: identitySigner,
+      localPasskeyCredsStateStorage: IONIdentityServiceLocator.localPasskeyCredsStateStorage(),
     );
   }
 

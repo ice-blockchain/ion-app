@@ -12,6 +12,7 @@ import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_
 import 'package:ion_identity_client/src/auth/services/register/register_service.dart';
 import 'package:ion_identity_client/src/auth/services/twofa/twofa_service.dart';
 import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
+import 'package:ion_identity_client/src/core/storage/local_passkey_creds_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 
@@ -34,6 +35,7 @@ class IONIdentityAuth {
     required this.deleteService,
     required this.privateKeyStorage,
     required this.biometricsStateStorage,
+    required this.localPasskeyCredsStateStorage,
     required this.createRecoveryCredentialsService,
     required this.getCredentialsService,
     required this.createNewCredentialsService,
@@ -55,6 +57,7 @@ class IONIdentityAuth {
   final TwoFAService twoFAService;
   final PrivateKeyStorage privateKeyStorage;
   final BiometricsStateStorage biometricsStateStorage;
+  final LocalPasskeyCredsStateStorage localPasskeyCredsStateStorage;
 
   final String username;
 
@@ -68,12 +71,12 @@ class IONIdentityAuth {
   Future<void> loginUser({
     required OnVerifyIdentity<AssertionRequestData> onVerifyIdentity,
     required List<TwoFAType> twoFATypes,
-    bool preferImmediatelyAvailableCredentials = false,
+    required bool localCredsOnly,
   }) =>
       loginService.loginUser(
         onVerifyIdentity: onVerifyIdentity,
         twoFATypes: twoFATypes,
-        preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+        localCredsOnly: localCredsOnly,
       );
 
   Future<void> logOut() => logoutService.logOut();
@@ -97,15 +100,19 @@ class IONIdentityAuth {
         localisedReason: localisedReason,
       );
 
+  LocalPasskeyCredsState? getLocalPasskeyCredsState() =>
+      localPasskeyCredsStateStorage.getLocalPasskeyCredsState(username: username);
+
+  Future<void> rejectToCreateLocalPasskeyCreds() =>
+      identitySigner.rejectToCreateLocalPasskeyCreds(username);
+
   Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials(
     OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
   ) =>
       createRecoveryCredentialsService.createRecoveryCredentials(onVerifyIdentity);
 
-  Future<void> createNewCredentials(
-    OnVerifyIdentity<CredentialRequestData> onVerifyIdentity,
-  ) =>
-      createNewCredentialsService.createNewCredentials(onVerifyIdentity);
+  Future<void> createLocalPasskeyCreds() =>
+      createNewCredentialsService.createLocalPasskeyCredentials();
 
   Future<UserRegistrationChallenge> initRecovery({
     required String credentialId,

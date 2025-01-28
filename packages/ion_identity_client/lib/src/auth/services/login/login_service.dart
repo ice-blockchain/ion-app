@@ -52,7 +52,10 @@ class LoginService {
       }
     } on RequestExecutionException catch (e) {
       final dioException = e.error is DioException ? e.error as DioException : null;
-
+      if (dioException?.response?.statusCode == 401 &&
+          dioException?.response?.data['error']['message'] == 'Unauthorized') {
+        throw const IdentityNotFoundIONIdentityException();
+      }
       if (dioException?.response?.statusCode == 403 &&
           dioException?.response?.data['error']['message'] == '2FA_REQUIRED') {
         final twoFAOptionsCount = dioException?.response?.data['data']['n'] as int;
@@ -86,14 +89,15 @@ class LoginService {
   Future<void> loginUser({
     required OnVerifyIdentity<AssertionRequestData> onVerifyIdentity,
     required List<TwoFAType> twoFATypes,
-    bool preferImmediatelyAvailableCredentials = false,
+    required bool localCredsOnly,
   }) async {
     final challenge = await dataSource.loginInit(username: username, twoFATypes: twoFATypes);
     final assertion = await onVerifyIdentity(
       onPasskeyFlow: () {
-        return identitySigner.signWithPasskey(
-          challenge,
-          preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+        return identitySigner.loginWithPasskey(
+          username: username,
+          challenge: challenge,
+          localCredsOnly: localCredsOnly,
         );
       },
       onPasswordFlow: ({required String password}) {

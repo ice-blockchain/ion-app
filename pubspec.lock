@@ -1600,43 +1600,42 @@ packages:
     dependency: transitive
     description:
       name: passkeys
-      sha256: c14264d11c6cf631296b21760c0411b26a5e223511cab9387d4b8c551189c34c
+      sha256: "76c8f7573e233d7bc7892dcf9e87afd60f79c1608731438378d2b14894f5d092"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.5.0"
   passkeys_android:
     dependency: transitive
     description:
       name: passkeys_android
-      sha256: e7f6aa1131b0c0e954bb50d0b59e9bbf6fb8eb0a6a1c282d6af982df5d746b51
+      sha256: "2a2480bc00d577c8c42f59d837ffab5a9561cdf4dd68e2726e64494681c0bff0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.5.0"
   passkeys_ios:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "packages/passkeys/passkeys_ios"
-      ref: fix-ios-immediate-creds
-      resolved-ref: a282eccc77f7bf91b10273d477958b2ac104c5f9
-      url: "https://github.com/ice-tychon/flutter-passkeys.git"
-    source: git
-    version: "2.1.0"
+      name: passkeys_ios
+      sha256: d94b0112f799ea8ac1ebd90ae6844293919173fef3b33e298dad8c34986b3bce
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
   passkeys_platform_interface:
     dependency: transitive
     description:
       name: passkeys_platform_interface
-      sha256: e32fbac05561a1c3ab439a504e7c19daf96b8339fd6bcbdac40e2ed9281add57
+      sha256: b22e91ca4d15cf02b374c2205d5e1cd99662fd95b09ce3b14fab1fe3e0924086
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.1"
   passkeys_web:
     dependency: transitive
     description:
       name: passkeys_web
-      sha256: e09df6485e851581848ce3481c56bb2be571a12137c13325373bdfa519a9387a
+      sha256: a8849e633698d2915de56da82da5a2e474a6d5d72544d957d50d0eed39be5db3
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.3.0"
   path:
     dependency: "direct main"
     description:

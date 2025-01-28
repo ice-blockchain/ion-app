@@ -10,8 +10,12 @@ import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/pages/get_started/get_started_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_options_step.dart';
+import 'package:ion/app/features/components/passkey/hooks/use_on_suggest_to_create_local_passkey_creds.dart';
+import 'package:ion/app/features/components/passkey/identity_not_found_popup.dart';
+import 'package:ion/app/features/components/passkey/no_local_passkey_creds_popup.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 enum GetStartedPageStep {
@@ -33,7 +37,16 @@ class GetStartedPage extends HookConsumerWidget {
     final authState = ref.watch(authProvider);
     final loginActionState = ref.watch(loginActionNotifierProvider);
 
-    ref.displayErrors(loginActionNotifierProvider, excludedExceptions: {TwoFARequiredException});
+    ref.displayErrors(
+      loginActionNotifierProvider,
+      excludedExceptions: {
+        TwoFARequiredException,
+        NoLocalPasskeyCredsFoundIONIdentityException,
+        IdentityNotFoundIONIdentityException,
+      },
+    );
+
+    final onSuggestToCreatePasskeyCreds = useOnSuggestToCreateLocalPasskeyCreds(ref);
 
     return switch (step.value) {
       GetStartedPageStep.getStarted => GetStartedStep(
@@ -42,17 +55,46 @@ class GetStartedPage extends HookConsumerWidget {
             await ref.read(loginActionNotifierProvider.notifier).verifyUserLoginFlow(
                   keyName: username,
                 );
-            final loginState = ref.read(loginActionNotifierProvider);
-            if (loginState.hasError && loginState.error is TwoFARequiredException) {
-              final e = loginState.error! as TwoFARequiredException;
-              twoFAOptionsCount.value = e.twoFAOptionsCount;
-              step.value = GetStartedPageStep.twoFAOptions;
+            final loginState = ref.watch(loginActionNotifierProvider);
+            if (loginState.hasError) {
+              if (loginState.error is IdentityNotFoundIONIdentityException) {
+                if (context.mounted) {
+                  await showSimpleBottomSheet<void>(
+                    context: context,
+                    child: const IdentityNotFoundPopup(),
+                  );
+                }
+              } else if (loginState.error is TwoFARequiredException) {
+                final e = loginState.error! as TwoFARequiredException;
+                twoFAOptionsCount.value = e.twoFAOptionsCount;
+                step.value = GetStartedPageStep.twoFAOptions;
+              }
             } else {
               await _showSignInDialog(
                 ref,
                 usernameRef.value,
+                true,
                 twoFAOptions.value,
               );
+              final loginState = ref.read(loginActionNotifierProvider);
+              if (loginState.hasError &&
+                  loginState.error is NoLocalPasskeyCredsFoundIONIdentityException) {
+                if (context.mounted) {
+                  final proceed = await showSimpleBottomSheet<bool>(
+                    context: context,
+                    child: const NoLocalPasskeyCredsPopup(),
+                  );
+                  if (context.mounted && proceed != null && proceed) {
+                    await _showSignInDialog(
+                      ref,
+                      usernameRef.value,
+                      false,
+                      twoFAOptions.value,
+                    );
+                    await onSuggestToCreatePasskeyCreds(username);
+                  }
+                }
+              }
             }
           },
         ),
@@ -84,6 +126,7 @@ class GetStartedPage extends HookConsumerWidget {
               _showSignInDialog(
                 ref,
                 usernameRef.value,
+                false,
                 twoFAOptions.value,
               );
             },
@@ -94,7 +137,8 @@ class GetStartedPage extends HookConsumerWidget {
 
   Future<void> _showSignInDialog(
     WidgetRef ref,
-    String identityKeyName, [
+    String identityKeyName,
+    bool localCredsOnly, [
     Map<TwoFaType, String>? twoFaTypes,
   ]) {
     return guardPasskeyDialog(
@@ -108,6 +152,7 @@ class GetStartedPage extends HookConsumerWidget {
                 keyName: identityKeyName,
                 onVerifyIdentity: onVerifyIdentity,
                 twoFaTypes: twoFaTypes,
+                localCredsOnly: localCredsOnly,
               );
         },
         child: child,

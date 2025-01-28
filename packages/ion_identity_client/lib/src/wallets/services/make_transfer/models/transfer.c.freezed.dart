@@ -20,11 +20,20 @@ NativeTokenTransfer _$NativeTokenTransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$NativeTokenTransfer {
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of native tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Native'
   String get kind => throw _privateConstructorUsedError;
+
+  /// The priority that determines the fees paid for the transfer
   @JsonKey(includeIfNull: false)
   TransferPriority? get priority => throw _privateConstructorUsedError;
+
+  /// The memo or destination tag
   @JsonKey(includeIfNull: false)
   String? get memo => throw _privateConstructorUsedError;
 
@@ -171,16 +180,25 @@ class _$NativeTokenTransferImpl implements _NativeTokenTransfer {
   factory _$NativeTokenTransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$NativeTokenTransferImplFromJson(json);
 
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of native tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Native'
   @override
   @JsonKey()
   final String kind;
+
+  /// The priority that determines the fees paid for the transfer
   @override
   @JsonKey(includeIfNull: false)
   final TransferPriority? priority;
+
+  /// The memo or destination tag
   @override
   @JsonKey(includeIfNull: false)
   final String? memo;
@@ -237,15 +255,24 @@ abstract class _NativeTokenTransfer implements NativeTokenTransfer {
   factory _NativeTokenTransfer.fromJson(Map<String, dynamic> json) =
       _$NativeTokenTransferImpl.fromJson;
 
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of native tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Native'
   @override
   String get kind;
+
+  /// The priority that determines the fees paid for the transfer
   @override
   @JsonKey(includeIfNull: false)
   TransferPriority? get priority;
+
+  /// The memo or destination tag
   @override
   @JsonKey(includeIfNull: false)
   String? get memo;
@@ -264,9 +291,16 @@ AsaTransfer _$AsaTransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AsaTransfer {
+  /// The asset ID of the token
   String get assetId => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Asa'
   String get kind => throw _privateConstructorUsedError;
 
   /// Serializes this AsaTransfer to a JSON map.
@@ -391,12 +425,19 @@ class _$AsaTransferImpl implements _AsaTransfer {
   factory _$AsaTransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$AsaTransferImplFromJson(json);
 
+  /// The asset ID of the token
   @override
   final String assetId;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Asa'
   @override
   @JsonKey()
   final String kind;
@@ -447,12 +488,19 @@ abstract class _AsaTransfer implements AsaTransfer {
   factory _AsaTransfer.fromJson(Map<String, dynamic> json) =
       _$AsaTransferImpl.fromJson;
 
+  /// The asset ID of the token
   @override
   String get assetId;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Asa'
   @override
   String get kind;
 
@@ -470,10 +518,19 @@ Erc20Transfer _$Erc20TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Erc20Transfer {
+  /// The ERC20 contract address
   String get contract => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Erc20'
   String get kind => throw _privateConstructorUsedError;
+
+  /// The priority that determines the fees paid for the transfer
   @JsonKey(includeIfNull: false)
   TransferPriority? get priority => throw _privateConstructorUsedError;
 
@@ -620,15 +677,24 @@ class _$Erc20TransferImpl implements _Erc20Transfer {
   factory _$Erc20TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Erc20TransferImplFromJson(json);
 
+  /// The ERC20 contract address
   @override
   final String contract;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Erc20'
   @override
   @JsonKey()
   final String kind;
+
+  /// The priority that determines the fees paid for the transfer
   @override
   @JsonKey(includeIfNull: false)
   final TransferPriority? priority;
@@ -685,14 +751,23 @@ abstract class _Erc20Transfer implements Erc20Transfer {
   factory _Erc20Transfer.fromJson(Map<String, dynamic> json) =
       _$Erc20TransferImpl.fromJson;
 
+  /// The ERC20 contract address
   @override
   String get contract;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Erc20'
   @override
   String get kind;
+
+  /// The priority that determines the fees paid for the transfer
   @override
   @JsonKey(includeIfNull: false)
   TransferPriority? get priority;
@@ -711,10 +786,19 @@ Erc721Transfer _$Erc721TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Erc721Transfer {
+  /// The ERC721 contract address
   String get contract => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The token to transfer
   String get tokenId => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Erc721'
   String get kind => throw _privateConstructorUsedError;
+
+  /// The priority that determines the fees paid for the transfer
   @JsonKey(includeIfNull: false)
   TransferPriority? get priority => throw _privateConstructorUsedError;
 
@@ -861,15 +945,24 @@ class _$Erc721TransferImpl implements _Erc721Transfer {
   factory _$Erc721TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Erc721TransferImplFromJson(json);
 
+  /// The ERC721 contract address
   @override
   final String contract;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The token to transfer
   @override
   final String tokenId;
+
+  /// The kind, should be 'Erc721'
   @override
   @JsonKey()
   final String kind;
+
+  /// The priority that determines the fees paid for the transfer
   @override
   @JsonKey(includeIfNull: false)
   final TransferPriority? priority;
@@ -927,14 +1020,23 @@ abstract class _Erc721Transfer implements Erc721Transfer {
   factory _Erc721Transfer.fromJson(Map<String, dynamic> json) =
       _$Erc721TransferImpl.fromJson;
 
+  /// The ERC721 contract address
   @override
   String get contract;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The token to transfer
   @override
   String get tokenId;
+
+  /// The kind, should be 'Erc721'
   @override
   String get kind;
+
+  /// The priority that determines the fees paid for the transfer
   @override
   @JsonKey(includeIfNull: false)
   TransferPriority? get priority;
@@ -953,10 +1055,19 @@ SplTransfer _$SplTransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SplTransfer {
+  /// The mint account address
   String get mint => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Spl'
   String get kind => throw _privateConstructorUsedError;
+
+  /// If True, pay to create the associated token account of the recipient if it doesn't exist. Defaults to False.
   @JsonKey(includeIfNull: false)
   bool? get createDestinationAccount => throw _privateConstructorUsedError;
 
@@ -1103,15 +1214,24 @@ class _$SplTransferImpl implements _SplTransfer {
   factory _$SplTransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$SplTransferImplFromJson(json);
 
+  /// The mint account address
   @override
   final String mint;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Spl'
   @override
   @JsonKey()
   final String kind;
+
+  /// If True, pay to create the associated token account of the recipient if it doesn't exist. Defaults to False.
   @override
   @JsonKey(includeIfNull: false)
   final bool? createDestinationAccount;
@@ -1168,14 +1288,23 @@ abstract class _SplTransfer implements SplTransfer {
   factory _SplTransfer.fromJson(Map<String, dynamic> json) =
       _$SplTransferImpl.fromJson;
 
+  /// The mint account address
   @override
   String get mint;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Spl'
   @override
   String get kind;
+
+  /// If True, pay to create the associated token account of the recipient if it doesn't exist. Defaults to False.
   @override
   @JsonKey(includeIfNull: false)
   bool? get createDestinationAccount;
@@ -1194,10 +1323,19 @@ Spl2022Transfer _$Spl2022TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Spl2022Transfer {
+  /// The mint account address
   String get mint => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Spl2022'
   String get kind => throw _privateConstructorUsedError;
+
+  /// If True, pay to create the associated token account of the recipient if it doesn't exist. Defaults to False.
   @JsonKey(includeIfNull: false)
   bool? get createDestinationAccount => throw _privateConstructorUsedError;
 
@@ -1344,15 +1482,24 @@ class _$Spl2022TransferImpl implements _Spl2022Transfer {
   factory _$Spl2022TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Spl2022TransferImplFromJson(json);
 
+  /// The mint account address
   @override
   final String mint;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Spl2022'
   @override
   @JsonKey()
   final String kind;
+
+  /// If True, pay to create the associated token account of the recipient if it doesn't exist. Defaults to False.
   @override
   @JsonKey(includeIfNull: false)
   final bool? createDestinationAccount;
@@ -1410,14 +1557,23 @@ abstract class _Spl2022Transfer implements Spl2022Transfer {
   factory _Spl2022Transfer.fromJson(Map<String, dynamic> json) =
       _$Spl2022TransferImpl.fromJson;
 
+  /// The mint account address
   @override
   String get mint;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Spl2022'
   @override
   String get kind;
+
+  /// If True, pay to create the associated token account of the recipient if it doesn't exist. Defaults to False.
   @override
   @JsonKey(includeIfNull: false)
   bool? get createDestinationAccount;
@@ -1436,11 +1592,22 @@ Sep41Transfer _$Sep41TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Sep41Transfer {
+  /// The asset issuer address
   String get issuer => throw _privateConstructorUsedError;
+
+  /// The asset code
   String get assetCode => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Sep41'
   String get kind => throw _privateConstructorUsedError;
+
+  /// The memo
   @JsonKey(includeIfNull: false)
   String? get memo => throw _privateConstructorUsedError;
 
@@ -1600,17 +1767,28 @@ class _$Sep41TransferImpl implements _Sep41Transfer {
   factory _$Sep41TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Sep41TransferImplFromJson(json);
 
+  /// The asset issuer address
   @override
   final String issuer;
+
+  /// The asset code
   @override
   final String assetCode;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Sep41'
   @override
   @JsonKey()
   final String kind;
+
+  /// The memo
   @override
   @JsonKey(includeIfNull: false)
   final String? memo;
@@ -1667,16 +1845,27 @@ abstract class _Sep41Transfer implements Sep41Transfer {
   factory _Sep41Transfer.fromJson(Map<String, dynamic> json) =
       _$Sep41TransferImpl.fromJson;
 
+  /// The asset issuer address
   @override
   String get issuer;
+
+  /// The asset code
   @override
   String get assetCode;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Sep41'
   @override
   String get kind;
+
+  /// The memo
   @override
   @JsonKey(includeIfNull: false)
   String? get memo;
@@ -1695,9 +1884,16 @@ Tep74Transfer _$Tep74TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Tep74Transfer {
+  /// The jetton master address
   String get master => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Tep74'
   String get kind => throw _privateConstructorUsedError;
 
   /// Serializes this Tep74Transfer to a JSON map.
@@ -1822,12 +2018,19 @@ class _$Tep74TransferImpl implements _Tep74Transfer {
   factory _$Tep74TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Tep74TransferImplFromJson(json);
 
+  /// The jetton master address
   @override
   final String master;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Tep74'
   @override
   @JsonKey()
   final String kind;
@@ -1878,12 +2081,19 @@ abstract class _Tep74Transfer implements Tep74Transfer {
   factory _Tep74Transfer.fromJson(Map<String, dynamic> json) =
       _$Tep74TransferImpl.fromJson;
 
+  /// The jetton master address
   @override
   String get master;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Tep74'
   @override
   String get kind;
 
@@ -1901,9 +2111,16 @@ Trc10Transfer _$Trc10TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Trc10Transfer {
+  /// The token ID
   String get tokenId => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Trc10'
   String get kind => throw _privateConstructorUsedError;
 
   /// Serializes this Trc10Transfer to a JSON map.
@@ -2028,12 +2245,19 @@ class _$Trc10TransferImpl implements _Trc10Transfer {
   factory _$Trc10TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Trc10TransferImplFromJson(json);
 
+  /// The token ID
   @override
   final String tokenId;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Trc10'
   @override
   @JsonKey()
   final String kind;
@@ -2084,12 +2308,19 @@ abstract class _Trc10Transfer implements Trc10Transfer {
   factory _Trc10Transfer.fromJson(Map<String, dynamic> json) =
       _$Trc10TransferImpl.fromJson;
 
+  /// The token ID
   @override
   String get tokenId;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Trc10'
   @override
   String get kind;
 
@@ -2107,9 +2338,16 @@ Trc20Transfer _$Trc20TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Trc20Transfer {
+  /// The smart contract address
   String get contract => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The amount of tokens to transfer in minimum denomination
   String get amount => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Trc20'
   String get kind => throw _privateConstructorUsedError;
 
   /// Serializes this Trc20Transfer to a JSON map.
@@ -2234,12 +2472,19 @@ class _$Trc20TransferImpl implements _Trc20Transfer {
   factory _$Trc20TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Trc20TransferImplFromJson(json);
 
+  /// The smart contract address
   @override
   final String contract;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   final String amount;
+
+  /// The kind, should be 'Trc20'
   @override
   @JsonKey()
   final String kind;
@@ -2291,12 +2536,19 @@ abstract class _Trc20Transfer implements Trc20Transfer {
   factory _Trc20Transfer.fromJson(Map<String, dynamic> json) =
       _$Trc20TransferImpl.fromJson;
 
+  /// The smart contract address
   @override
   String get contract;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The amount of tokens to transfer in minimum denomination
   @override
   String get amount;
+
+  /// The kind, should be 'Trc20'
   @override
   String get kind;
 
@@ -2314,9 +2566,16 @@ Trc721Transfer _$Trc721TransferFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Trc721Transfer {
+  /// The smart contract address
   String get contract => throw _privateConstructorUsedError;
+
+  /// The destination address
   String get to => throw _privateConstructorUsedError;
+
+  /// The token to transfer
   String get tokenId => throw _privateConstructorUsedError;
+
+  /// The kind, should be 'Trc721'
   String get kind => throw _privateConstructorUsedError;
 
   /// Serializes this Trc721Transfer to a JSON map.
@@ -2441,12 +2700,19 @@ class _$Trc721TransferImpl implements _Trc721Transfer {
   factory _$Trc721TransferImpl.fromJson(Map<String, dynamic> json) =>
       _$$Trc721TransferImplFromJson(json);
 
+  /// The smart contract address
   @override
   final String contract;
+
+  /// The destination address
   @override
   final String to;
+
+  /// The token to transfer
   @override
   final String tokenId;
+
+  /// The kind, should be 'Trc721'
   @override
   @JsonKey()
   final String kind;
@@ -2499,12 +2765,19 @@ abstract class _Trc721Transfer implements Trc721Transfer {
   factory _Trc721Transfer.fromJson(Map<String, dynamic> json) =
       _$Trc721TransferImpl.fromJson;
 
+  /// The smart contract address
   @override
   String get contract;
+
+  /// The destination address
   @override
   String get to;
+
+  /// The token to transfer
   @override
   String get tokenId;
+
+  /// The kind, should be 'Trc721'
   @override
   String get kind;
 
