@@ -56,7 +56,9 @@ class MoneyMessage extends HookWidget {
     );
 
     final buttonLabel = useMemoized(
-      () => type == MoneyMessageType.receive ? context.i18n.chat_money_received_button : context.i18n.button_send,
+      () => type == MoneyMessageType.receive
+          ? context.i18n.chat_money_received_button
+          : context.i18n.button_send,
       [type],
     );
 
@@ -70,7 +72,9 @@ class MoneyMessage extends HookWidget {
     final buttonBackgroundColor = useMemoized(
       () => type == MoneyMessageType.receive
           ? (isMe ? context.theme.appColors.darkBlue : context.theme.appColors.tertararyBackground)
-          : (isMe ? context.theme.appColors.secondaryBackground : context.theme.appColors.primaryAccent),
+          : (isMe
+              ? context.theme.appColors.secondaryBackground
+              : context.theme.appColors.primaryAccent),
       [isMe],
     );
 

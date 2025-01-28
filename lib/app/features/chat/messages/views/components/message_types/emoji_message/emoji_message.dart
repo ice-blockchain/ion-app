@@ -44,8 +44,9 @@ class EmojiMessage extends StatelessWidget {
           MessageAuthorNameWidget(author: author),
           Row(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment:
-                (reactions != null || hasForwardedMessage) ? CrossAxisAlignment.end : CrossAxisAlignment.center,
+            crossAxisAlignment: (reactions != null || hasForwardedMessage)
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.center,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

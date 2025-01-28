@@ -45,7 +45,8 @@ class ChatMessagesList extends ConsumerWidget {
         itemBuilder: (context, index) {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
-          final author = message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
+          final author =
+              message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
 
           final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
@@ -53,8 +54,9 @@ class ChatMessagesList extends ConsumerWidget {
                 author,
               );
 
-          final authorToDisplay =
-              displayAuthorsIncomingMessages ? authorToDisplayProvider.getAuthorToDisplay(index) : null;
+          final authorToDisplay = displayAuthorsIncomingMessages
+              ? authorToDisplayProvider.getAuthorToDisplay(index)
+              : null;
 
           final isMe = author?.isCurrentUser ?? false;
 

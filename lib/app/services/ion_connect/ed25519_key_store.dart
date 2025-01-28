@@ -80,7 +80,8 @@ class Ed25519KeyStore with EventSigner {
   }) async {
     final keyPair = await X25519().newKeyPairFromSeed(hex.decode(privateKey));
     final remotePublicKey = SimplePublicKey(hex.decode(publicKey), type: KeyPairType.x25519);
-    final sharedSecret = await X25519().sharedSecretKey(keyPair: keyPair, remotePublicKey: remotePublicKey);
+    final sharedSecret =
+        await X25519().sharedSecretKey(keyPair: keyPair, remotePublicKey: remotePublicKey);
     return Uint8List.fromList(await sharedSecret.extractBytes());
   }
 

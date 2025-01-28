@@ -92,13 +92,17 @@ class _ProfileSummary extends StatelessWidget {
         title: Text(
           'Alina Proxima',
           style: context.theme.appTextThemes.subtitle3.copyWith(
-            color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+            color: isMe
+                ? context.theme.appColors.onPrimaryAccent
+                : context.theme.appColors.primaryText,
           ),
         ),
         subtitle: Text(
           prefixUsername(username: 'alinaproxima', context: context),
           style: context.theme.appTextThemes.body2.copyWith(
-            color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.onTertararyBackground,
+            color: isMe
+                ? context.theme.appColors.onPrimaryAccent
+                : context.theme.appColors.onTertararyBackground,
           ),
         ),
         profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',

@@ -153,7 +153,9 @@ class _MessageContent extends StatelessWidget {
                 Text(
                   message!,
                   style: context.theme.appTextThemes.body2.copyWith(
-                    color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+                    color: isMe
+                        ? context.theme.appColors.onPrimaryAccent
+                        : context.theme.appColors.primaryText,
                   ),
                 ),
               MessageReactions(reactions: reactions),

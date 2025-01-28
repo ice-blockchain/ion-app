@@ -28,7 +28,9 @@ class PollResultMessage extends StatelessWidget {
             child: Text(
               mockPoll.question,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+                color: isMe
+                    ? context.theme.appColors.onPrimaryAccent
+                    : context.theme.appColors.primaryText,
               ),
             ),
           ),
@@ -38,7 +40,9 @@ class PollResultMessage extends StatelessWidget {
           Text(
             'Votes: 2  •  Left: 1 day 2 hours',
             style: context.theme.appTextThemes.caption2.copyWith(
-              color: isMe ? context.theme.appColors.strokeElements : context.theme.appColors.quaternaryText,
+              color: isMe
+                  ? context.theme.appColors.strokeElements
+                  : context.theme.appColors.quaternaryText,
             ),
           ),
           SizedBox(height: 4.0.s),
@@ -91,7 +95,8 @@ class _PollResultItem extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final percentage = useMemoized(() {
-      return option.votes / mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
+      return option.votes /
+          mockPoll.options.map((e) => e.votes).reduce((value, element) => value + element);
     });
 
     return Stack(
@@ -118,13 +123,17 @@ class _PollResultItem extends HookWidget {
               Text(
                 option.option,
                 style: context.theme.appTextThemes.caption2.copyWith(
-                  color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+                  color: isMe
+                      ? context.theme.appColors.onPrimaryAccent
+                      : context.theme.appColors.primaryText,
                 ),
               ),
               Text(
                 '${(percentage * 100).toInt()}%',
                 style: context.theme.appTextThemes.caption2.copyWith(
-                  color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+                  color: isMe
+                      ? context.theme.appColors.onPrimaryAccent
+                      : context.theme.appColors.primaryText,
                 ),
               ),
             ],

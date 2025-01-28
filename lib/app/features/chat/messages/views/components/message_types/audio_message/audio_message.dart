@@ -52,7 +52,8 @@ class AudioMessage extends HookConsumerWidget {
 
     final playerWaveStyle = useMemoized(
       () => PlayerWaveStyle(
-        liveWaveColor: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+        liveWaveColor:
+            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
         fixedWaveColor: context.theme.appColors.sheetLine,
         seekLineColor: Colors.transparent,
         waveThickness: 1.0.s,
@@ -128,7 +129,8 @@ class AudioMessage extends HookConsumerWidget {
                   ],
                 ),
                 SizedBox(
-                  width: MessageItemWrapper.maxWidth - contentPadding.horizontal - metadataWidth.value,
+                  width:
+                      MessageItemWrapper.maxWidth - contentPadding.horizontal - metadataWidth.value,
                   child: MessageReactions(reactions: reactions),
                 ),
               ],

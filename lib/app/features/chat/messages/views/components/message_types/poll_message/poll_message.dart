@@ -53,7 +53,9 @@ class PollMessage extends HookWidget {
             child: Text(
               mockPoll.question,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+                color: isMe
+                    ? context.theme.appColors.onPrimaryAccent
+                    : context.theme.appColors.primaryText,
               ),
             ),
           ),
@@ -68,7 +70,8 @@ class PollMessage extends HookWidget {
                 backgroundColor: context.theme.appColors.tertararyBackground,
                 label: Text(
                   option.option,
-                  style: context.theme.appTextThemes.caption2.copyWith(color: context.theme.appColors.primaryText),
+                  style: context.theme.appTextThemes.caption2
+                      .copyWith(color: context.theme.appColors.primaryText),
                 ),
                 onPressed: () {
                   selectedId.value = option.id;

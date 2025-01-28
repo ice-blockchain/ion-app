@@ -12,7 +12,7 @@ class _MessageWithTimestamp extends StatelessWidget {
 
   final String message;
   final bool isMe;
-    final DateTime createdAt;
+  final DateTime createdAt;
   final List<MessageReactionGroup>? reactions;
 
   @override

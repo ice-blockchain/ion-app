@@ -49,7 +49,9 @@ class UrlPreviewMessage extends HookWidget {
               Text(
                 url,
                 style: context.theme.appTextThemes.body2.copyWith(
-                  color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
+                  color: isMe
+                      ? context.theme.appColors.onPrimaryAccent
+                      : context.theme.appColors.primaryAccent,
                 ),
               ),
               if (meta != null)

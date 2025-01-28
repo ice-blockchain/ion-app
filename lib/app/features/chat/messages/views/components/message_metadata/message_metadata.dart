@@ -25,7 +25,9 @@ class MessageMetaData extends StatelessWidget {
           Text(
             DateFormat.Hm().format(createdAt),
             style: context.theme.appTextThemes.caption4.copyWith(
-              color: isMe ? context.theme.appColors.strokeElements : context.theme.appColors.quaternaryText,
+              color: isMe
+                  ? context.theme.appColors.strokeElements
+                  : context.theme.appColors.quaternaryText,
             ),
           ),
           if (isMe)
