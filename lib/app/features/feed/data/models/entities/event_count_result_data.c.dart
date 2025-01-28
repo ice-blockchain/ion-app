@@ -72,9 +72,6 @@ class EventCountResultEntity
   static String cacheKeyBuilder({required String key, required EventCountResultType type}) =>
       '$key:${type.toShortString()}';
 
-  // @override
-  // Duration get expirationDuration => const Duration(days: 1);
-
   static const int kind = 6400;
 }
 

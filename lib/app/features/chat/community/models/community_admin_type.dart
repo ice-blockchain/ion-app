@@ -7,8 +7,7 @@ import 'package:ion/generated/assets.gen.dart';
 enum CommunityAdminType {
   owner,
   admin,
-  moderator,
-  ;
+  moderator;
 
   String getTitle(BuildContext context) {
     return switch (this) {
