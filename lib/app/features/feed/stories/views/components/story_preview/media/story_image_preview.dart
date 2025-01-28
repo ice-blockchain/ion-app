@@ -17,11 +17,14 @@ class StoryImagePreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
-      child: Image.file(
-        File(path),
-        fit: BoxFit.cover,
-        width: 600.0.s,
-        height: 600.0.s,
+      child: AspectRatio(
+        aspectRatio: 9 / 16,
+        child: Image.file(
+          File(path),
+          fit: BoxFit.cover,
+          width: 600.0.s,
+          height: 600.0.s,
+        ),
       ),
     );
   }
