@@ -31,40 +31,67 @@ class CounterItemsFooter extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPadding, top: topPadding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: RepliesCounterButton(
-              eventReference: eventReference,
-              color: color,
+      child: SizedBox(
+        height: 28.0.s,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _CenteredItem(
+              child: RepliesCounterButton(
+                eventReference: eventReference,
+                color: color,
+              ),
             ),
-          ),
-          Flexible(
-            child: RepostsCounterButton(
-              eventReference: eventReference,
-              repostReference: repostReference,
-              color: color,
+            _CenteredItem(
+              child: RepostsCounterButton(
+                eventReference: eventReference,
+                repostReference: repostReference,
+                color: color,
+              ),
             ),
-          ),
-          Flexible(
-            child: LikesCounterButton(
-              eventReference: eventReference,
-              color: color,
+            _CenteredItem(
+              child: LikesCounterButton(
+                eventReference: eventReference,
+                color: color,
+              ),
             ),
-          ),
-          BookmarkButton(
-            eventReference: eventReference,
-            iconSize: 16.0.s,
-            colorFilter:
-                ColorFilter.mode(context.theme.appColors.onTertararyBackground, BlendMode.srcIn),
-          ),
-          ShareButton(
-            eventReference: eventReference,
-            color: color,
-          ),
-        ],
+            _CenteredItem(
+              child: Row(
+                children: [
+                  BookmarkButton(
+                    eventReference: eventReference,
+                    iconSize: 16.0.s,
+                    colorFilter: ColorFilter.mode(
+                      context.theme.appColors.onTertararyBackground,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  ShareButton(
+                    eventReference: eventReference,
+                    color: color,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _CenteredItem extends StatelessWidget {
+  const _CenteredItem({
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: child,
     );
   }
 }

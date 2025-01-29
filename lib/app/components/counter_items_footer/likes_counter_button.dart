@@ -30,23 +30,28 @@ class LikesCounterButton extends ConsumerWidget {
     ref.displayErrors(likesNotifierProvider(eventReference));
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         HapticFeedback.lightImpact();
         ref.read(likesNotifierProvider(eventReference).notifier).toggle();
       },
-      child: TextActionButton(
-        icon: Assets.svg.iconVideoLikeOff.icon(
-          size: 16.0.s,
-          color: color ?? context.theme.appColors.onTertararyBackground,
+      child: Container(
+        constraints: BoxConstraints(minWidth: 50.0.s),
+        alignment: Alignment.center,
+        child: TextActionButton(
+          icon: Assets.svg.iconVideoLikeOff.icon(
+            size: 16.0.s,
+            color: color ?? context.theme.appColors.onTertararyBackground,
+          ),
+          textColor: color ?? context.theme.appColors.onTertararyBackground,
+          activeIcon: Assets.svg.iconVideoLikeOn.icon(
+            size: 16.0.s,
+            color: context.theme.appColors.attentionRed,
+          ),
+          activeTextColor: context.theme.appColors.attentionRed,
+          value: formatDoubleCompact(likesCount),
+          state: isLiked ? TextActionButtonState.active : TextActionButtonState.idle,
         ),
-        textColor: color ?? context.theme.appColors.onTertararyBackground,
-        activeIcon: Assets.svg.iconVideoLikeOn.icon(
-          size: 16.0.s,
-          color: context.theme.appColors.attentionRed,
-        ),
-        activeTextColor: context.theme.appColors.attentionRed,
-        value: formatDoubleCompact(likesCount),
-        state: isLiked ? TextActionButtonState.active : TextActionButtonState.idle,
       ),
     );
   }

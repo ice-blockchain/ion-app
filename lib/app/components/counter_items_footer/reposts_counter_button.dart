@@ -30,6 +30,7 @@ class RepostsCounterButton extends ConsumerWidget {
     final isReposted = ref.watch(isRepostedProvider(eventReference));
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         HapticFeedback.lightImpact();
         RepostOptionsModalRoute(
@@ -37,19 +38,23 @@ class RepostsCounterButton extends ConsumerWidget {
           repostReference: repostReference?.encode(),
         ).push<void>(context);
       },
-      child: TextActionButton(
-        icon: Assets.svg.iconBlockRepost.icon(
-          size: 16.0.s,
-          color: color ?? context.theme.appColors.onTertararyBackground,
+      child: Container(
+        constraints: BoxConstraints(minWidth: 50.0.s),
+        alignment: Alignment.center,
+        child: TextActionButton(
+          icon: Assets.svg.iconBlockRepost.icon(
+            size: 16.0.s,
+            color: color ?? context.theme.appColors.onTertararyBackground,
+          ),
+          textColor: color ?? context.theme.appColors.onTertararyBackground,
+          activeIcon: Assets.svg.iconBlockRepost.icon(
+            size: 16.0.s,
+            color: context.theme.appColors.primaryAccent,
+          ),
+          activeTextColor: context.theme.appColors.primaryAccent,
+          value: repostsCount != null ? formatDoubleCompact(repostsCount) : '',
+          state: isReposted ? TextActionButtonState.active : TextActionButtonState.idle,
         ),
-        textColor: color ?? context.theme.appColors.onTertararyBackground,
-        activeIcon: Assets.svg.iconBlockRepost.icon(
-          size: 16.0.s,
-          color: context.theme.appColors.primaryAccent,
-        ),
-        activeTextColor: context.theme.appColors.primaryAccent,
-        value: repostsCount != null ? formatDoubleCompact(repostsCount) : '',
-        state: isReposted ? TextActionButtonState.active : TextActionButtonState.idle,
       ),
     );
   }
