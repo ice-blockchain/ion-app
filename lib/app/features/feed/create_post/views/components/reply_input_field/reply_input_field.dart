@@ -113,6 +113,12 @@ class ReplyInputField extends HookConsumerWidget {
                                     textEditorController
                                       ..setContents(content.toDelta())
                                       ..moveCursorToEnd();
+                                  } else {
+                                    _clear(
+                                      focusNode: focusNode,
+                                      attachedMediaNotifier: attachedMediaNotifier,
+                                      textEditorController: textEditorController,
+                                    );
                                   }
                                 },
                                 child: Assets.svg.iconReplysearchScale.icon(size: 20.0.s),
@@ -141,22 +147,34 @@ class ReplyInputField extends HookConsumerWidget {
                 mediaFiles: attachedMediaNotifier.value,
                 createOption: CreatePostOption.reply,
                 onSubmitted: () {
-                  focusNode.unfocus();
-                  attachedMediaNotifier.value = [];
-
-                  /// calling `.replaceText` instead of `.clear` due to missing `ignoreFocus` parameter.
-                  textEditorController.replaceText(
-                    0,
-                    textEditorController.plainTextEditingValue.text.length - 1,
-                    '',
-                    const TextSelection.collapsed(offset: 0),
-                    ignoreFocus: true,
+                  _clear(
+                    focusNode: focusNode,
+                    attachedMediaNotifier: attachedMediaNotifier,
+                    textEditorController: textEditorController,
                   );
                 },
               ),
             ),
         ],
       ),
+    );
+  }
+
+  void _clear({
+    required FocusNode focusNode,
+    required ValueNotifier<List<MediaFile>> attachedMediaNotifier,
+    required QuillController textEditorController,
+  }) {
+    focusNode.unfocus();
+    attachedMediaNotifier.value = [];
+
+    /// calling `.replaceText` instead of `.clear` due to missing `ignoreFocus` parameter.
+    textEditorController.replaceText(
+      0,
+      textEditorController.plainTextEditingValue.text.length - 1,
+      '',
+      const TextSelection.collapsed(offset: 0),
+      ignoreFocus: true,
     );
   }
 }
