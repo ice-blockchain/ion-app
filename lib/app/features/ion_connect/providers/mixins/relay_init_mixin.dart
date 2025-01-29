@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 
 mixin RelayInitMixin {
   final _initCompleters = <String, Completer<void>>{};
+  final _subscriptions = <String, StreamSubscription<void>>{};
 
   Future<void> initRelay(IonConnectRelay relay, Ref ref) async {
     if (_initCompleters.containsKey(relay.url)) {
@@ -31,8 +32,11 @@ mixin RelayInitMixin {
             cache: false,
           );
 
-      relay.onClose.listen(
-        (_) => ref.read(activeRelaysProvider.notifier).removeRelay(relay.url),
+      _subscriptions[relay.url] = relay.onClose.listen(
+        (url) {
+          ref.read(activeRelaysProvider.notifier).removeRelay(url);
+          _subscriptions.remove(url)?.cancel();
+        },
       );
 
       completer.complete();
