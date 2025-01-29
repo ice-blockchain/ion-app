@@ -33,7 +33,8 @@ class SelectableUserListItem extends ConsumerWidget {
       data: (user) {
         if (user == null) return const SizedBox.shrink();
 
-        final isSelected = selectedPubkeys.contains(masterPubkey) || (selectedPubkeys.contains(pubkey));
+        final isSelected =
+            selectedPubkeys.contains(masterPubkey) || (selectedPubkeys.contains(pubkey));
         return ListItem.user(
           onTap: () => onUserSelected(user),
           title: Text(user.data.displayName),

@@ -59,7 +59,9 @@ class AddAdminModal extends HookConsumerWidget {
                   context.i18n.button_confirm,
                 ),
                 onPressed: () {
-                  ref.read(communityAdminsProvider.notifier).setAdmin(selectedPubkey.value!, CommunityAdminType.admin);
+                  ref
+                      .read(communityAdminsProvider.notifier)
+                      .setAdmin(selectedPubkey.value!, CommunityAdminType.admin);
                   context.pop();
                 },
               ),

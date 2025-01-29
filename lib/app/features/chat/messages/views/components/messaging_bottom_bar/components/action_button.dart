@@ -36,7 +36,8 @@ class ActionButton extends HookConsumerWidget {
         final ee2eGroupConversationService = ref.read(e2eeConversationManagementProvider.notifier);
 
         if (e2eeConversation!.type == ChatType.chat) {
-          await ee2eGroupConversationService.createOneOnOneConversation(e2eeConversation!.participants);
+          await ee2eGroupConversationService
+              .createOneOnOneConversation(e2eeConversation!.participants);
         } else if (e2eeConversation!.type == ChatType.group && e2eeConversation!.imageUrl != null) {
           await ee2eGroupConversationService.createGroup(
             subject: e2eeConversation!.name,

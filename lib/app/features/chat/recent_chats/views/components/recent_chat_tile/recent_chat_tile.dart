@@ -60,11 +60,13 @@ class RecentChatTile extends ConsumerWidget {
               children: [
                 if (conversationData.imageUrl != null)
                   Avatar(
-                    imageUrl: conversationData.type == ChatType.group && conversationData.imageUrl.isEmpty ||
+                    imageUrl: conversationData.type == ChatType.group &&
+                                conversationData.imageUrl.isEmpty ||
                             conversationData.type == ChatType.chat
                         ? conversationData.imageUrl
                         : null,
-                    imageWidget: conversationData.type == ChatType.group && conversationData.imageUrl.isNotEmpty
+                    imageWidget: conversationData.type == ChatType.group &&
+                            conversationData.imageUrl.isNotEmpty
                         ? Image.asset(conversationData.imageUrl!)
                         : null,
                     size: 40.0.s,

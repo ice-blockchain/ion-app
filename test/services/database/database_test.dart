@@ -45,7 +45,8 @@ void main() {
 
       final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
-      final conversationMessage = await database.select(database.conversationMessagesTable).getSingle();
+      final conversationMessage =
+          await database.select(database.conversationMessagesTable).getSingle();
 
       expect(eventMessage.id, '0');
       expect(conversationMessage.eventMessageId, eventMessage.id);
@@ -163,7 +164,8 @@ void main() {
 
       final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
-      final conversationMessage = await database.select(database.conversationMessagesTable).getSingle();
+      final conversationMessage =
+          await database.select(database.conversationMessagesTable).getSingle();
 
       final conversations = (await conversationsService.getAllConversations()).single;
 
@@ -652,7 +654,8 @@ void main() {
       );
 
       final conversationMessages = await database.select(database.eventMessagesTable).get();
-      final conversationReactions = await database.select(database.conversationReactionsTable).get();
+      final conversationReactions =
+          await database.select(database.conversationReactionsTable).get();
 
       expect(conversationMessages.length, 2);
       expect(conversationReactions.length, 2);
@@ -760,13 +763,15 @@ void main() {
       );
 
       final eventMessages = await database.select(database.eventMessagesTable).get();
-      final conversationReactions = await database.select(database.conversationReactionsTable).get();
+      final conversationReactions =
+          await database.select(database.conversationReactionsTable).get();
 
       expect(eventMessages.length, 6);
       expect(conversationReactions.length, 4);
 
-      final conversationMessage =
-          await (database.select(database.eventMessagesTable)..where((table) => table.id.equals('1'))).getSingle();
+      final conversationMessage = await (database.select(database.eventMessagesTable)
+            ..where((table) => table.id.equals('1')))
+          .getSingle();
 
       final reactions = await conversationsService.getMessageReactions(conversationMessage.id);
 

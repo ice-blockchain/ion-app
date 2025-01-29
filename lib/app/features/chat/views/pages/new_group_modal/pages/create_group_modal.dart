@@ -40,7 +40,8 @@ class CreateGroupModal extends HookConsumerWidget {
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
 
-    final members = currentPubkey != null ? [...createGroupForm.members, currentPubkey] : <String>[];
+    final members =
+        currentPubkey != null ? [...createGroupForm.members, currentPubkey] : <String>[];
 
     final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
 
@@ -181,7 +182,8 @@ class CreateGroupModal extends HookConsumerWidget {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
-                      final avatarProcessorState = ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar));
+                      final avatarProcessorState =
+                          ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar));
 
                       final groupPicture = avatarProcessorState.whenOrNull(
                         cropped: (file) => file,
