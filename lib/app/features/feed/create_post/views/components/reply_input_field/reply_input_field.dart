@@ -108,8 +108,8 @@ class ReplyInputField extends HookConsumerWidget {
                                     content: jsonEncode(
                                       textEditorController.document.toDelta().toJson(),
                                     ),
-                                  ).push<Document?>(context);
-                                  if (content != null) {
+                                  ).push<Object?>(context);
+                                  if (content is Document) {
                                     textEditorController
                                       ..setContents(content.toDelta())
                                       ..moveCursorToEnd();
