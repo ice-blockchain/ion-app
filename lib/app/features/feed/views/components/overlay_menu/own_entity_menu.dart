@@ -36,7 +36,7 @@ class OwnEntityMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-    if (entity == null) {
+    if (entity == null || entity is! ModifiablePostEntity) {
       return const SizedBox.shrink();
     }
 
@@ -56,9 +56,10 @@ class OwnEntityMenu extends ConsumerWidget {
                     ),
                     onPressed: () {
                       closeMenu();
-                      //TODO:add quoted / parent
                       CreatePostRoute(
-                        modifiedEvent: eventReference.encode(),
+                        parentEvent: entity.data.parentEvent?.eventReference.encode(),
+                        quotedEvent: entity.data.quotedEvent?.eventReference.encode(),
+                        modifiedEvent: entity.toEventReference().encode(),
                       ).push<void>(context);
                     },
                   ),
