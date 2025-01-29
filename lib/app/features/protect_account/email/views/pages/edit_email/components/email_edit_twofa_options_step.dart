@@ -8,26 +8,26 @@ import 'package:ion/app/features/protect_account/components/twofa_select_options
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class DeleteAuthenticatorSelectOptionsStep extends HookWidget {
-  const DeleteAuthenticatorSelectOptionsStep({
-    required this.onButtonPressed,
+class EmailEditTwoFaOptionsStep extends HookWidget {
+  const EmailEditTwoFaOptionsStep({
+    required this.onNext,
     super.key,
   });
 
-  final VoidCallback onButtonPressed;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerIcon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
-      headerTitle: locale.authenticator_delete_title,
-      headerDescription: locale.authenticator_delete_description,
+      headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
+      headerTitle: locale.two_fa_edit_email_title,
+      headerDescription: locale.two_fa_edit_email_options_description,
       child: TwoFASelectOptionStep(
         formKey: useRef(GlobalKey<FormState>()).value,
-        twoFaType: TwoFaType.auth,
-        onConfirm: onButtonPressed,
+        twoFaType: TwoFaType.email,
+        onConfirm: onNext,
       ),
     );
   }

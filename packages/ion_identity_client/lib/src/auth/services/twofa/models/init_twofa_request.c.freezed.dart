@@ -27,6 +27,8 @@ mixin _$InitTwoFARequest {
   String? get email => throw _privateConstructorUsedError;
   @JsonKey(includeIfNull: false)
   String? get phoneNumber => throw _privateConstructorUsedError;
+  @JsonKey(includeIfNull: false)
+  String? get replace => throw _privateConstructorUsedError;
 
   /// Serializes this InitTwoFARequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,7 +50,8 @@ abstract class $InitTwoFARequestCopyWith<$Res> {
       {@JsonKey(includeIfNull: false, name: '2FAVerificationCodes')
       Map<String, String>? verificationCodes,
       @JsonKey(includeIfNull: false) String? email,
-      @JsonKey(includeIfNull: false) String? phoneNumber});
+      @JsonKey(includeIfNull: false) String? phoneNumber,
+      @JsonKey(includeIfNull: false) String? replace});
 }
 
 /// @nodoc
@@ -69,6 +72,7 @@ class _$InitTwoFARequestCopyWithImpl<$Res, $Val extends InitTwoFARequest>
     Object? verificationCodes = freezed,
     Object? email = freezed,
     Object? phoneNumber = freezed,
+    Object? replace = freezed,
   }) {
     return _then(_value.copyWith(
       verificationCodes: freezed == verificationCodes
@@ -82,6 +86,10 @@ class _$InitTwoFARequestCopyWithImpl<$Res, $Val extends InitTwoFARequest>
       phoneNumber: freezed == phoneNumber
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String?,
+      replace: freezed == replace
+          ? _value.replace
+          : replace // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -99,7 +107,8 @@ abstract class _$$InitTwoFARequestImplCopyWith<$Res>
       {@JsonKey(includeIfNull: false, name: '2FAVerificationCodes')
       Map<String, String>? verificationCodes,
       @JsonKey(includeIfNull: false) String? email,
-      @JsonKey(includeIfNull: false) String? phoneNumber});
+      @JsonKey(includeIfNull: false) String? phoneNumber,
+      @JsonKey(includeIfNull: false) String? replace});
 }
 
 /// @nodoc
@@ -118,6 +127,7 @@ class __$$InitTwoFARequestImplCopyWithImpl<$Res>
     Object? verificationCodes = freezed,
     Object? email = freezed,
     Object? phoneNumber = freezed,
+    Object? replace = freezed,
   }) {
     return _then(_$InitTwoFARequestImpl(
       verificationCodes: freezed == verificationCodes
@@ -132,6 +142,10 @@ class __$$InitTwoFARequestImplCopyWithImpl<$Res>
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String?,
+      replace: freezed == replace
+          ? _value.replace
+          : replace // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -143,7 +157,8 @@ class _$InitTwoFARequestImpl implements _InitTwoFARequest {
       {@JsonKey(includeIfNull: false, name: '2FAVerificationCodes')
       final Map<String, String>? verificationCodes,
       @JsonKey(includeIfNull: false) this.email,
-      @JsonKey(includeIfNull: false) this.phoneNumber})
+      @JsonKey(includeIfNull: false) this.phoneNumber,
+      @JsonKey(includeIfNull: false) this.replace})
       : _verificationCodes = verificationCodes;
 
   factory _$InitTwoFARequestImpl.fromJson(Map<String, dynamic> json) =>
@@ -167,10 +182,13 @@ class _$InitTwoFARequestImpl implements _InitTwoFARequest {
   @override
   @JsonKey(includeIfNull: false)
   final String? phoneNumber;
+  @override
+  @JsonKey(includeIfNull: false)
+  final String? replace;
 
   @override
   String toString() {
-    return 'InitTwoFARequest(verificationCodes: $verificationCodes, email: $email, phoneNumber: $phoneNumber)';
+    return 'InitTwoFARequest(verificationCodes: $verificationCodes, email: $email, phoneNumber: $phoneNumber, replace: $replace)';
   }
 
   @override
@@ -182,7 +200,8 @@ class _$InitTwoFARequestImpl implements _InitTwoFARequest {
                 .equals(other._verificationCodes, _verificationCodes) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phoneNumber, phoneNumber) ||
-                other.phoneNumber == phoneNumber));
+                other.phoneNumber == phoneNumber) &&
+            (identical(other.replace, replace) || other.replace == replace));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -191,7 +210,8 @@ class _$InitTwoFARequestImpl implements _InitTwoFARequest {
       runtimeType,
       const DeepCollectionEquality().hash(_verificationCodes),
       email,
-      phoneNumber);
+      phoneNumber,
+      replace);
 
   /// Create a copy of InitTwoFARequest
   /// with the given fields replaced by the non-null parameter values.
@@ -215,7 +235,8 @@ abstract class _InitTwoFARequest implements InitTwoFARequest {
           {@JsonKey(includeIfNull: false, name: '2FAVerificationCodes')
           final Map<String, String>? verificationCodes,
           @JsonKey(includeIfNull: false) final String? email,
-          @JsonKey(includeIfNull: false) final String? phoneNumber}) =
+          @JsonKey(includeIfNull: false) final String? phoneNumber,
+          @JsonKey(includeIfNull: false) final String? replace}) =
       _$InitTwoFARequestImpl;
 
   factory _InitTwoFARequest.fromJson(Map<String, dynamic> json) =
@@ -230,6 +251,9 @@ abstract class _InitTwoFARequest implements InitTwoFARequest {
   @override
   @JsonKey(includeIfNull: false)
   String? get phoneNumber;
+  @override
+  @JsonKey(includeIfNull: false)
+  String? get replace;
 
   /// Create a copy of InitTwoFARequest
   /// with the given fields replaced by the non-null parameter values.

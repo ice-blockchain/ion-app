@@ -6,14 +6,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/components/two_fa_success_step.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class EmailDeleteSuccessPage extends ConsumerWidget {
-  const EmailDeleteSuccessPage({super.key});
+class EmailEditSuccessPage extends ConsumerWidget {
+  const EmailEditSuccessPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TwoFaSuccessStep(
-      iconAsset: Assets.svg.icon2faEmailVerification,
-      description: context.i18n.two_fa_delete_email_success,
+      iconAsset: Assets.svg.actionWalletConfirmemail,
+      description: context.i18n.two_fa_edit_email_success,
     );
   }
 }

@@ -45,13 +45,15 @@ class TwoFaCodeInput extends StatelessWidget {
       textInputAction: TextInputAction.next,
       scrollPadding: EdgeInsets.only(bottom: 200.0.s),
       keyboardType: TextInputType.number,
-      suffixIcon: switch (twoFaType) {
-        TwoFaType.email || TwoFaType.sms => SendButton(
-            onRequestCode: onRequestCode,
-            isSending: isSending,
-          ),
-        TwoFaType.auth => null,
-      },
+      suffixIcon: onRequestCode == null
+          ? null
+          : switch (twoFaType) {
+              TwoFaType.email || TwoFaType.sms => SendButton(
+                  onRequestCode: onRequestCode,
+                  isSending: isSending,
+                ),
+              TwoFaType.auth => null,
+            },
     );
   }
 }

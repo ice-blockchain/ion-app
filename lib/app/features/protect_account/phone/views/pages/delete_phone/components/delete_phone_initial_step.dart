@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ion/app/features/protect_account/components/delete_twofa_initial_scaffold.dart';
+import 'package:ion/app/features/protect_account/components/twofa_initial_scaffold.dart';
 import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.c.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -18,7 +18,7 @@ class DeletePhoneInitialStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = context.i18n;
 
-    return DeleteTwoFaInitialScaffold(
+    return TwoFaInitialScaffold(
       headerIcon: AuthHeaderIcon(
         icon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
       ),

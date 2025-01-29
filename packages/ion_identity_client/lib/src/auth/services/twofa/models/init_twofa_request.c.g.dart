@@ -15,6 +15,7 @@ _$InitTwoFARequestImpl _$$InitTwoFARequestImplFromJson(
       ),
       email: json['email'] as String?,
       phoneNumber: json['phoneNumber'] as String?,
+      replace: json['replace'] as String?,
     );
 
 Map<String, dynamic> _$$InitTwoFARequestImplToJson(
@@ -24,4 +25,5 @@ Map<String, dynamic> _$$InitTwoFARequestImplToJson(
         '2FAVerificationCodes': value,
       if (instance.email case final value?) 'email': value,
       if (instance.phoneNumber case final value?) 'phoneNumber': value,
+      if (instance.replace case final value?) 'replace': value,
     };

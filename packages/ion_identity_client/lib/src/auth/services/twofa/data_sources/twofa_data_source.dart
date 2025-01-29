@@ -32,10 +32,11 @@ class TwoFADataSource {
     required String username,
     required String userId,
     required String twoFAOption,
-    Map<String, String>? verificationCodes,
+    List<TwoFAType>? verificationCodes,
     String? signature,
     String? email,
     String? phoneNumber,
+    String? replace,
   }) async {
     try {
       final token = tokenStorage.getToken(username: username)?.token;
@@ -43,10 +44,20 @@ class TwoFADataSource {
         throw const UnauthenticatedException();
       }
 
+      final verificationCodesMap = verificationCodes?.fold<Map<String, String>>(
+            {},
+            (previousValue, element) => {
+              ...previousValue,
+              element.option: element.value!,
+            },
+          ) ??
+          {};
+
       final body = InitTwoFARequest(
-        verificationCodes: verificationCodes,
+        verificationCodes: verificationCodesMap,
         email: email,
         phoneNumber: phoneNumber,
+        replace: replace,
       );
 
       return await networkClient.put(
@@ -71,7 +82,6 @@ class TwoFADataSource {
     required String userId,
     required String twoFAOption,
     required String code,
-    String? oldValue,
   }) async {
     try {
       final token = tokenStorage.getToken(username: username)?.token;
@@ -81,10 +91,7 @@ class TwoFADataSource {
 
       return await networkClient.patch(
         sprintf(twoFaPath, [userId, twoFAOption]),
-        queryParams: {
-          'code': code,
-          if (oldValue != null) 'replace': oldValue,
-        },
+        queryParams: {'code': code},
         headers: RequestHeaders.getAuthorizationHeaders(token: token, username: username),
         decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
       );

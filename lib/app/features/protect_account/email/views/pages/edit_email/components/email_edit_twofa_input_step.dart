@@ -10,25 +10,29 @@ import 'package:ion/app/features/protect_account/authenticator/data/adapter/twof
 import 'package:ion/app/features/protect_account/components/twofa_input_step.dart';
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
 import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
-class DeleteEmailInputStep extends ConsumerWidget {
-  const DeleteEmailInputStep({super.key});
+class EmailEditTwoFaInputStep extends ConsumerWidget {
+  const EmailEditTwoFaInputStep({
+    required this.email,
+    required this.onNext,
+    super.key,
+  });
+
+  final String email;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
 
-    _listenDeleteTwoFAResult(ref);
-
     return TwoFAStepScaffold(
-      headerTitle: locale.two_fa_deleting_email_title,
-      headerDescription: locale.two_fa_deleting_email_description,
+      headerTitle: locale.two_fa_edit_email_title,
+      headerDescription: locale.two_fa_edit_email_options_description,
       headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       child: TwoFAInputStep(
         onConfirm: (controllers) => _onConfirm(ref, controllers),
@@ -41,30 +45,32 @@ class DeleteEmailInputStep extends ConsumerWidget {
     WidgetRef ref,
     Map<TwoFaType, String> controllers,
   ) {
+    _listenRequestTwoFAResult(ref);
     guardPasskeyDialog(
       ref.context,
       (child) => RiverpodVerifyIdentityRequestBuilder(
-        provider: deleteTwoFANotifierProvider,
+        provider: requestTwoFaCodeNotifierProvider,
         requestWithVerifyIdentity: (
           OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
         ) async {
-          final twoFaValue = await ref.read(linkedEmailProvider.future);
-          await ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
-            TwoFaTypeAdapter(TwoFaType.email, twoFaValue).twoFAType,
-            onVerifyIdentity,
-            [
-              for (final controller in controllers.entries)
-                TwoFaTypeAdapter(controller.key, controller.value).twoFAType,
-            ],
-          );
+          final linkedEmail = await ref.read(linkedEmailProvider.future);
+          await ref.read(requestTwoFaCodeNotifierProvider.notifier).requestEditTwoFaCode(
+                TwoFAType.email(email),
+                onVerifyIdentity,
+                verificationCodes: [
+                  for (final controller in controllers.entries)
+                    TwoFaTypeAdapter(controller.key, controller.value).twoFAType,
+                ],
+                oldTwoFaValue: linkedEmail,
+              );
         },
         child: child,
       ),
     );
   }
 
-  void _listenDeleteTwoFAResult(WidgetRef ref) {
-    ref.listen(deleteTwoFANotifierProvider, (prev, next) {
+  void _listenRequestTwoFAResult(WidgetRef ref) {
+    ref.listenManual(requestTwoFaCodeNotifierProvider, (prev, next) {
       if (prev?.isLoading != true) {
         return;
       }
@@ -80,7 +86,7 @@ class DeleteEmailInputStep extends ConsumerWidget {
       }
 
       if (next.hasValue) {
-        EmailDeleteSuccessRoute().push<void>(ref.context);
+        onNext();
       }
     });
   }

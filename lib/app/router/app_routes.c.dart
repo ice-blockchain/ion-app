@@ -76,6 +76,8 @@ import 'package:ion/app/features/protect_account/backup/views/pages/validate_rec
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/email_delete_page.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/email_delete_success.dart';
+import 'package:ion/app/features/protect_account/email/views/pages/edit_email/email_edit_page.dart';
+import 'package:ion/app/features/protect_account/email/views/pages/edit_email/email_edit_success_page.dart';
 import 'package:ion/app/features/protect_account/email/views/pages/setup_email/email_setup_page.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/select_country_page.dart';

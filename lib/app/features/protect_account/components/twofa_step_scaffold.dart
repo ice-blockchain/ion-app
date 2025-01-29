@@ -9,8 +9,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class DeleteTwoFAStepScaffold extends ConsumerWidget {
-  const DeleteTwoFAStepScaffold({
+class TwoFAStepScaffold extends ConsumerWidget {
+  const TwoFAStepScaffold({
     required this.headerTitle,
     required this.headerDescription,
     required this.headerIcon,
