@@ -45,8 +45,7 @@ void main() {
 
       final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
-      final conversationMessage =
-          await database.select(database.conversationMessagesTable).getSingle();
+      final conversationMessage = await database.select(database.conversationMessagesTable).getSingle();
 
       expect(eventMessage.id, '0');
       expect(conversationMessage.eventMessageId, eventMessage.id);
@@ -90,7 +89,7 @@ void main() {
       expect(eventMessages.length, 2);
       expect(conversationMessages.length, 2);
       expect(conversations.length, 1);
-      expect(conversations.single.data.content, 'First message');
+      expect(conversations.single.data.content.map((e) => e.text).join(), 'First message');
     });
 
     test('Insert initial one-to-one conversation, first message and reply', () async {
@@ -142,7 +141,7 @@ void main() {
       final conversations = await conversationsService.getAllConversations();
 
       expect(conversations.length, 1);
-      expect(conversations.single.data.content, 'Reply to the first message');
+      expect(conversations.single.data.content.map((e) => e.text).join(), 'Reply to the first message');
     });
 
     test('Insert initial group conversation', () async {
@@ -164,8 +163,7 @@ void main() {
 
       final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
-      final conversationMessage =
-          await database.select(database.conversationMessagesTable).getSingle();
+      final conversationMessage = await database.select(database.conversationMessagesTable).getSingle();
 
       final conversations = (await conversationsService.getAllConversations()).single;
 
@@ -654,8 +652,7 @@ void main() {
       );
 
       final conversationMessages = await database.select(database.eventMessagesTable).get();
-      final conversationReactions =
-          await database.select(database.conversationReactionsTable).get();
+      final conversationReactions = await database.select(database.conversationReactionsTable).get();
 
       expect(conversationMessages.length, 2);
       expect(conversationReactions.length, 2);
@@ -763,15 +760,13 @@ void main() {
       );
 
       final eventMessages = await database.select(database.eventMessagesTable).get();
-      final conversationReactions =
-          await database.select(database.conversationReactionsTable).get();
+      final conversationReactions = await database.select(database.conversationReactionsTable).get();
 
       expect(eventMessages.length, 6);
       expect(conversationReactions.length, 4);
 
-      final conversationMessage = await (database.select(database.eventMessagesTable)
-            ..where((table) => table.id.equals('1')))
-          .getSingle();
+      final conversationMessage =
+          await (database.select(database.eventMessagesTable)..where((table) => table.id.equals('1'))).getSingle();
 
       final reactions = await conversationsService.getMessageReactions(conversationMessage.id);
 
