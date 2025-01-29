@@ -75,13 +75,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         );
       }
 
-      if (whoCanReply != WhoCanReplySettingsOption.everyone) {
-        data = data.copyWith(
-          settings: [
-            WhoCanReplyEventSetting(values: {whoCanReply}),
-          ],
-        );
-      }
+      data = data.copyWith(
+        settings: whoCanReply != WhoCanReplySettingsOption.everyone
+            ? [
+                WhoCanReplyEventSetting(values: {whoCanReply}),
+              ]
+            : null,
+      );
 
       final files = <FileMetadata>[];
       if (mediaFiles != null) {
