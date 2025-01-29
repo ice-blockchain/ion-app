@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
@@ -29,8 +28,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
   Future<void> createOneOnOneConversation(
     List<String> participantsPubkeys,
   ) async {
-    final conversationMessageManagementService =
-        await ref.read(conversationMessageManagementServiceProvider.future);
+    final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
     await conversationMessageManagementService.sentMessage(
       content: '',
@@ -46,8 +44,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
       await conversationMessageManagementService.sentMessage(
         content: '',
@@ -71,13 +68,9 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
-      final conversationsEventMessages = await databaseService.getAllConversations();
-
-      final conversationsEntities =
-          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+      final conversationsEntities = await databaseService.getAllConversations();
 
       final pubkeys = conversationsEntities
               .singleWhere(
@@ -111,15 +104,11 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
-      final conversationsEntities =
-          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
-
-      final pubkeys = conversationsEntities
+      final pubkeys = conversationsEventMessages
               .singleWhere(
                 (e) => e.data.relatedSubject?.value == conversationSubject,
                 orElse: () => throw ConversationNotFoundException(),
@@ -155,15 +144,11 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
-      final conversationsEntities =
-          conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
-
-      final pubkeys = conversationsEntities
+      final pubkeys = conversationsEventMessages
               .singleWhere(
                 (e) => e.data.relatedSubject?.value == currentSubject,
                 orElse: () => throw ConversationNotFoundException(),
@@ -263,9 +248,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
             .toList(),
       );
 
-      await ref
-          .read(ionConnectNotifierProvider.notifier)
-          .sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
 
       await ref.read(conversationsProvider.notifier).getConversations();
     });

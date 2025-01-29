@@ -157,9 +157,7 @@ class ConversationMessageManagementService {
     final decryptedDecompressedFiles = <File>[];
 
     for (final attachment in mediaAttachments) {
-      if (attachment.encryptionKey != null &&
-          attachment.encryptionNonce != null &&
-          attachment.encryptionMac != null) {
+      if (attachment.encryptionKey != null && attachment.encryptionNonce != null && attachment.encryptionMac != null) {
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
@@ -240,6 +238,7 @@ class ConversationMessageManagementService {
 
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
+        // TODO:  Create GIFT_WRAP_EXPIRATION_TIME env variable
         Duration(hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS)),
       ),
     ).toTag();
@@ -263,8 +262,8 @@ class ConversationMessageManagementService {
   Future<IonConnectEntity?> _sendGiftWrap(EventMessage giftWrap, {required String pubkey}) async {
     return ionConnectNotifier.sendEvent(
       giftWrap,
-      actionSource: ActionSourceUserChat(pubkey, anonymous: true),
       cache: false,
+      actionSource: ActionSourceUserChat(pubkey, anonymous: true),
     );
   }
 
@@ -326,8 +325,7 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile =
-              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+          final compressedEncryptedFile = File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
 
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 

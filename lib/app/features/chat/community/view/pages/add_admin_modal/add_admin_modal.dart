@@ -31,7 +31,7 @@ class AddAdminModal extends HookConsumerWidget {
       height: MediaQuery.sizeOf(context).height * 0.8,
       child: UserPickerSheet(
         onUserSelected: (UserMetadataEntity user) => selectedPubkey.value = user.masterPubkey,
-        selectedPubkeys: selectedPubkey.value != null ? [selectedPubkey.value!] : null,
+        selectedPubkeys: selectedPubkey.value != null ? [selectedPubkey.value!] : [],
         selectable: true,
         navigationBar: NavigationAppBar.modal(
           title: Text(context.i18n.channel_create_admins_action),
@@ -59,9 +59,7 @@ class AddAdminModal extends HookConsumerWidget {
                   context.i18n.button_confirm,
                 ),
                 onPressed: () {
-                  ref
-                      .read(communityAdminsProvider.notifier)
-                      .setAdmin(selectedPubkey.value!, CommunityAdminType.admin);
+                  ref.read(communityAdminsProvider.notifier).setAdmin(selectedPubkey.value!, CommunityAdminType.admin);
                   context.pop();
                 },
               ),

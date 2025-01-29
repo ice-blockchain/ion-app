@@ -14,17 +14,17 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagesPage extends HookConsumerWidget {
-  const MessagesPage(this.conversationData, {super.key});
+  const MessagesPage(this.conversation, {super.key});
 
-  final E2eeConversationEntity conversationData;
+  final E2eeConversationEntity conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = ref.watch(chatMessagesProvider(conversationData)).value ?? [];
+    final messages = ref.watch(chatMessagesProvider(conversation)).value ?? [];
 
     ref
       ..displayErrors(e2eeConversationManagementProvider)
-      ..displayErrors(chatMessagesProvider(conversationData));
+      ..displayErrors(chatMessagesProvider(conversation));
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -36,15 +36,16 @@ class MessagesPage extends HookConsumerWidget {
         child: Column(
           children: [
             MessagingHeader(
-              imageUrl: conversationData.imageUrl,
-              imageWidget:
-                  conversationData.imageUrl != null && conversationData.type == ChatType.group
-                      ? Image.asset(conversationData.imageUrl!)
-                      : null,
-              name: conversationData.name,
-              subtitle: conversationData.type == ChatType.chat
+              imageUrl: conversation.imageUrl,
+              imageWidget: conversation.imageUrl != null &&
+                      conversation.imageUrl.isNotEmpty &&
+                      conversation.type == ChatType.group
+                  ? Image.asset(conversation.imageUrl!)
+                  : null,
+              name: conversation.name,
+              subtitle: conversation.type == ChatType.chat
                   ? Text(
-                      conversationData.nickname ?? '',
+                      conversation.nickname ?? '',
                       style: context.theme.appTextThemes.caption.copyWith(
                         color: context.theme.appColors.quaternaryText,
                       ),
@@ -54,7 +55,7 @@ class MessagesPage extends HookConsumerWidget {
                         Assets.svg.iconChannelMembers.icon(size: 10.0.s),
                         SizedBox(width: 4.0.s),
                         Text(
-                          conversationData.participants.length.toString(),
+                          conversation.participants.length.toString(),
                           style: context.theme.appTextThemes.caption.copyWith(
                             color: context.theme.appColors.quaternaryText,
                           ),
@@ -82,7 +83,7 @@ class MessagesPage extends HookConsumerWidget {
               Expanded(
                 child: ChatMessagesList(messages),
               ),
-            MessagingBottomBar(e2eeConversation: conversationData),
+            MessagingBottomBar(e2eeConversation: conversation),
           ],
         ),
       ),

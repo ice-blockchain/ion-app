@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/create_group_form_data.c.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,14 +9,7 @@ part 'create_group_form_controller_provider.c.g.dart';
 @riverpod
 class CreateGroupFormController extends _$CreateGroupFormController {
   @override
-  CreateGroupFormData build() {
-    final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
-    return CreateGroupFormData(
-      members: {
-        if (currentPubkey != null) currentPubkey,
-      },
-    );
-  }
+  CreateGroupFormData build() => const CreateGroupFormData();
 
   set type(GroupType value) => state = state.copyWith(type: value);
 
@@ -25,12 +17,9 @@ class CreateGroupFormController extends _$CreateGroupFormController {
 
   set members(Iterable<String> value) => state = state.copyWith(members: value.toSet());
 
-  void toggleMember(String member) {
-    // User cannot remove himself from the participants during group creation
-    if (member == ref.read(currentPubkeySelectorProvider).valueOrNull) return;
-
+  void toggleMember(String pubkey) {
     final updatedMembers = state.members.toSet();
-    updatedMembers.contains(member) ? updatedMembers.remove(member) : updatedMembers.add(member);
+    updatedMembers.contains(pubkey) ? updatedMembers.remove(pubkey) : updatedMembers.add(pubkey);
 
     state = state.copyWith(members: updatedMembers);
   }

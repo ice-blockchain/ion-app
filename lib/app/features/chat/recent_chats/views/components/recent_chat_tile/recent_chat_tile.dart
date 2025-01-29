@@ -36,7 +36,7 @@ class RecentChatTile extends ConsumerWidget {
             id: conversationData.id,
             name: conversationData.name,
             chatType: conversationData.type,
-            imageUrl: conversationData.imageUrl!,
+            imageUrl: conversationData.imageUrl,
             participants: conversationData.participants,
             nickname: prefixUsername(username: conversationData.nickname, context: context),
           ).push<void>(context);
@@ -60,9 +60,11 @@ class RecentChatTile extends ConsumerWidget {
               children: [
                 if (conversationData.imageUrl != null)
                   Avatar(
-                    imageUrl:
-                        conversationData.type == ChatType.chat ? conversationData.imageUrl : null,
-                    imageWidget: conversationData.type == ChatType.group
+                    imageUrl: conversationData.type == ChatType.group && conversationData.imageUrl.isEmpty ||
+                            conversationData.type == ChatType.chat
+                        ? conversationData.imageUrl
+                        : null,
+                    imageWidget: conversationData.type == ChatType.group && conversationData.imageUrl.isNotEmpty
                         ? Image.asset(conversationData.imageUrl!)
                         : null,
                     size: 40.0.s,

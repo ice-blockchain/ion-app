@@ -66,6 +66,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
   const factory PrivateDirectMessageData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
+    String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedEvent>? relatedEvents,

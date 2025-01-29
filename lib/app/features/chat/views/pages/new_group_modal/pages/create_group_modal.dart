@@ -9,7 +9,6 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
@@ -19,6 +18,7 @@ import 'package:ion/app/features/chat/views/components/general_selection_button.
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -35,12 +35,12 @@ class CreateGroupModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+    final currentPubkey = ref.watch(currentUserIonConnectEventSignerProvider).value?.publicKey;
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
 
-    final members = createGroupForm.members.toList();
+    final members = currentPubkey != null ? [...createGroupForm.members, currentPubkey] : <String>[];
 
     final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
 
@@ -181,8 +181,7 @@ class CreateGroupModal extends HookConsumerWidget {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
-                      final avatarProcessorState =
-                          ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar));
+                      final avatarProcessorState = ref.read(imageProcessorNotifierProvider(ImageProcessingType.avatar));
 
                       final groupPicture = avatarProcessorState.whenOrNull(
                         cropped: (file) => file,
@@ -190,12 +189,12 @@ class CreateGroupModal extends HookConsumerWidget {
                       );
 
                       MessagesRoute(
+                        participants: members,
                         chatType: ChatType.group,
                         name: createGroupForm.name!,
                         imageUrl: groupPicture!.path,
                         imageWidth: groupPicture.width,
                         imageHeight: groupPicture.height,
-                        participants: createGroupForm.members.toList(),
                       ).push<void>(context);
                     } else {
                       throw UnimplementedError();

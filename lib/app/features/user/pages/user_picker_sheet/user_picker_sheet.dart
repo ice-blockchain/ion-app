@@ -23,7 +23,7 @@ class UserPickerSheet extends HookConsumerWidget {
     required this.onUserSelected,
     this.header,
     super.key,
-    this.selectedPubkeys,
+    this.selectedPubkeys = const [],
     this.selectable = false,
     this.bottomContent,
     this.initialUserListType = UserListType.following,
@@ -31,7 +31,7 @@ class UserPickerSheet extends HookConsumerWidget {
 
   final NavigationAppBar navigationBar;
   final Widget? header;
-  final List<String>? selectedPubkeys;
+  final List<String> selectedPubkeys;
   final bool selectable;
   final Widget? bottomContent;
   final void Function(UserMetadataEntity user) onUserSelected;

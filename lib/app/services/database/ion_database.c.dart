@@ -62,6 +62,7 @@ class ConversationMessagesTable extends Table {
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get subject => text().nullable()();
   IntColumn get status => intEnum<DeliveryStatus>()();
+  TextColumn get groupImagePath => text().nullable()();
   BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
 
   @override
