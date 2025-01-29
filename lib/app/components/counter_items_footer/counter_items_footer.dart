@@ -36,26 +36,26 @@ class CounterItemsFooter extends HookConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _CenteredItem(
+            Center(
               child: RepliesCounterButton(
                 eventReference: eventReference,
                 color: color,
               ),
             ),
-            _CenteredItem(
+            Center(
               child: RepostsCounterButton(
                 eventReference: eventReference,
                 repostReference: repostReference,
                 color: color,
               ),
             ),
-            _CenteredItem(
+            Center(
               child: LikesCounterButton(
                 eventReference: eventReference,
                 color: color,
               ),
             ),
-            _CenteredItem(
+            Center(
               child: Row(
                 children: [
                   BookmarkButton(
@@ -76,22 +76,6 @@ class CounterItemsFooter extends HookConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _CenteredItem extends StatelessWidget {
-  const _CenteredItem({
-    required this.child,
-  });
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: child,
     );
   }
 }
