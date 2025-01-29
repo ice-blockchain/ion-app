@@ -96,6 +96,7 @@ class CreatePostModal extends HookConsumerWidget {
   }
 
   CreatePostOption _determineCreateOption() {
+    if (modifiedEvent != null) return CreatePostOption.modify;
     if (videoPath != null) return CreatePostOption.video;
     if (parentEvent != null) return CreatePostOption.reply;
     if (quotedEvent != null) return CreatePostOption.quote;

@@ -105,6 +105,9 @@ class GlobalNotificationBar extends HookConsumerWidget {
       ..listen(createPostNotifierProvider(CreatePostOption.story), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.story);
       })
+      ..listen(createPostNotifierProvider(CreatePostOption.modify), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.modify);
+      })
       ..listen(createArticleProvider, (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.article);
       })

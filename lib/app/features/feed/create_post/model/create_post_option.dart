@@ -8,7 +8,8 @@ enum CreatePostOption {
   quote,
   plain,
   story,
-  video;
+  video,
+  modify;
 
   String getTitle(BuildContext context) {
     return switch (this) {
@@ -16,6 +17,7 @@ enum CreatePostOption {
       CreatePostOption.quote => context.i18n.feed_quote,
       CreatePostOption.plain => context.i18n.create_post_modal_title,
       CreatePostOption.video => context.i18n.create_video_new_video,
+      CreatePostOption.modify => context.i18n.button_edit,
       _ => throw ArgumentError()
     };
   }
@@ -26,6 +28,7 @@ enum CreatePostOption {
       CreatePostOption.quote => context.i18n.feed_comment_hint,
       CreatePostOption.plain => context.i18n.create_post_modal_placeholder,
       CreatePostOption.video => context.i18n.create_video_input_placeholder,
+      CreatePostOption.modify => '',
       _ => throw ArgumentError()
     };
   }
