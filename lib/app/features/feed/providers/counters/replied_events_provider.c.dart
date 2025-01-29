@@ -78,7 +78,7 @@ Map<String, List<String>> _buildInitialMap(
   String currentPubkey,
 ) {
   return cache.values.fold<Map<String, List<String>>>({}, (result, entry) {
-    if (entry case final ModifiablePostEntity post) {
+    if (entry.entity case final ModifiablePostEntity post) {
       final currentUserRepliedIds = _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
       final parentId = post.data.parentEvent?.eventReference.toString();
       if (currentUserRepliedIds != null && parentId != null) {
