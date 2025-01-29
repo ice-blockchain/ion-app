@@ -40,7 +40,9 @@ QuillController? usePostQuillController(
                 ...content.map((match) {
                   if (match.matcher is HashtagMatcher) {
                     return Operation.insert(
-                        match.text, HashtagAttribute.withValue(match.text).toJson());
+                      match.text,
+                      HashtagAttribute.withValue(match.text).toJson(),
+                    );
                   } else {
                     return Operation.insert(match.text);
                   }
