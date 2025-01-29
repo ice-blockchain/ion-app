@@ -176,7 +176,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     );
   }
 
-  static List<RelatedHashtag> extractHashtagsFromMarkdown(String content) {
+  static List<RelatedHashtag> extractTagsFromMarkdown(String content) {
     final operations = jsonDecode(content) as List<dynamic>;
     const insertKey = 'insert';
 
@@ -186,7 +186,8 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
           (operation) =>
               operation.containsKey(insertKey) &&
               operation[insertKey] is String &&
-              (operation[insertKey] as String).startsWith('#'),
+              ((operation[insertKey] as String).startsWith('#') ||
+                  (operation[insertKey] as String).startsWith(r'$')),
         )
         .map((operation) {
       final insert = operation[insertKey]! as String;

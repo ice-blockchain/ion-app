@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/feed/providers/article/cashtag_suggestions_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/hashtag_suggestions_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/mention_suggestions_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -25,6 +26,8 @@ class SuggestionsNotifier extends _$SuggestionsNotifier {
           newSuggestions = await ref.read(hashtagSuggestionsProvider(query).future);
         } else if (taggingCharacter == '@') {
           newSuggestions = await ref.read(mentionSuggestionsProvider(query).future);
+        } else if (taggingCharacter == r'$') {
+          newSuggestions = await ref.read(cashtagSuggestionsProvider(query).future);
         }
       } catch (error) {
         Logger.log('Error fetching suggestions: $error');

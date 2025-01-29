@@ -27,3 +27,10 @@ class UrlMatcher extends TextMatcher {
   String get pattern =>
       r'https?://(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)\b';
 }
+
+class CashtagMatcher extends TextMatcher {
+  const CashtagMatcher();
+
+  @override
+  String get pattern => r'\$[A-Z]+\b';
+}
