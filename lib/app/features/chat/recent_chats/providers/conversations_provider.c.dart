@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -124,7 +123,9 @@ class Conversations extends _$Conversations {
 
         if (conversationId != null) {
           await database.updateGroupConversationImage(
-              conversationId: conversationId, groupImagePath: imageUrl);
+            conversationId: conversationId,
+            groupImagePath: imageUrl,
+          );
         }
       }
     }

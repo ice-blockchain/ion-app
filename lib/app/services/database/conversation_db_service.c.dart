@@ -401,7 +401,7 @@ class ConversationsDBService {
 
     final lastConversationGroupImagesMap = uniqueConversationRows.map((row) {
       final groupImagePath = {
-        row.data['event_message_id'] as String: row.data['group_image_path'] as String?
+        row.data['event_message_id'] as String: row.data['group_image_path'] as String?,
       };
       return groupImagePath;
     }).toList();
@@ -423,7 +423,8 @@ class ConversationsDBService {
       );
 
       return message.copyWith(
-          data: message.data.copyWith(relatedGroupImagePath: groupImagePath[message.id]));
+        data: message.data.copyWith(relatedGroupImagePath: groupImagePath[message.id]),
+      );
     }).toList();
 
     return lastConversationMessagesWithGroupImages;
@@ -433,9 +434,7 @@ class ConversationsDBService {
     String messageId,
   ) async {
     final reactionsEventMessagesIds = (await (_db.select(_db.conversationReactionsTable)
-              ..where(
-                (table) => table.messageId.equals(messageId),
-              ))
+              ..where((table) => table.messageId.equals(messageId)))
             .get())
         .map((reactionsTableData) => reactionsTableData.reactionEventId)
         .toList();
