@@ -142,8 +142,10 @@ void main() {
       final conversations = await conversationsService.getAllConversations();
 
       expect(conversations.length, 1);
-      expect(conversations.single.data.content.map((e) => e.text).join(),
-          'Reply to the first message');
+      expect(
+        conversations.single.data.content.map((e) => e.text).join(),
+        'Reply to the first message',
+      );
     });
 
     test('Insert initial group conversation', () async {
