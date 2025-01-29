@@ -69,6 +69,9 @@ class EventCountResultEntity
     );
   }
 
+  @override
+  String get cacheKey => cacheKeyBuilder(key: data.key, type: data.type);
+
   static String cacheKeyBuilder({required String key, required EventCountResultType type}) =>
       '$key:${type.toShortString()}';
 
