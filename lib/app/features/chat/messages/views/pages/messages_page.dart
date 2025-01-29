@@ -82,7 +82,7 @@ class MessagesPage extends HookConsumerWidget {
               Expanded(
                 child: ChatMessagesList(messages),
               ),
-            MessagingBottomBar(conversation: conversationData),
+            MessagingBottomBar(e2eeConversation: conversationData),
           ],
         ),
       ),

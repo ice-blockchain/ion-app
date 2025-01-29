@@ -16,10 +16,10 @@ import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class ActionButton extends HookConsumerWidget {
-  const ActionButton({required this.conversation, required this.controller, super.key});
+  const ActionButton({required this.e2eeConversation, required this.controller, super.key});
 
   final TextEditingController controller;
-  final E2eeConversationEntity conversation;
+  final E2eeConversationEntity? e2eeConversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,24 +27,27 @@ class ActionButton extends HookConsumerWidget {
     final paddingBottom = useState<double>(0);
 
     final sentMessage = useCallback(() async {
+      if (e2eeConversation == null) return;
+
       final conversationId = await ref
           .read(conversationsDBServiceProvider)
-          .lookupConversationByPubkeys(conversation.participants.join(','));
-      if (conversation.id == null && conversationId == null) {
+          .lookupConversationByPubkeys(e2eeConversation!.participants.join(','));
+      if (e2eeConversation!.id == null && conversationId == null) {
         final ee2eGroupConversationService = ref.read(e2eeConversationManagementProvider.notifier);
 
-        if (conversation.type == ChatType.chat) {
-          await ee2eGroupConversationService.createOneOnOneConversation(conversation.participants);
-        } else if (conversation.type == ChatType.group && conversation.imageUrl != null) {
+        if (e2eeConversation!.type == ChatType.chat) {
+          await ee2eGroupConversationService
+              .createOneOnOneConversation(e2eeConversation!.participants);
+        } else if (e2eeConversation!.type == ChatType.group && e2eeConversation!.imageUrl != null) {
           await ee2eGroupConversationService.createGroup(
-            subject: conversation.name,
+            subject: e2eeConversation!.name,
             groupImage: MediaFile(
               mimeType: 'image/webp',
-              path: conversation.imageUrl!,
-              width: conversation.imageWidth,
-              height: conversation.imageHeight,
+              path: e2eeConversation!.imageUrl!,
+              width: e2eeConversation!.imageWidth,
+              height: e2eeConversation!.imageHeight,
             ),
-            participantsPubkeys: conversation.participants,
+            participantsPubkeys: e2eeConversation!.participants,
           );
         }
       }
@@ -53,7 +56,7 @@ class ActionButton extends HookConsumerWidget {
         ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
         await (await ref.read(conversationMessageManagementServiceProvider.future)).sentMessage(
           content: controller.text,
-          participantsPubkeys: conversation.participants,
+          participantsPubkeys: e2eeConversation!.participants,
         );
       }
     });

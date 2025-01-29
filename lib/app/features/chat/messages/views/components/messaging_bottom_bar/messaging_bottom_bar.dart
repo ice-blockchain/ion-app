@@ -9,12 +9,9 @@ import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provi
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
-  const MessagingBottomBar({
-    required this.conversation,
-    super.key,
-  });
+  const MessagingBottomBar({this.e2eeConversation, super.key});
 
-  final E2eeConversationEntity conversation;
+  final E2eeConversationEntity? e2eeConversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +28,7 @@ class MessagingBottomBar extends HookConsumerWidget {
         ),
         if (bottomBarState.isVoice || bottomBarState.isVoiceLocked || bottomBarState.isVoicePaused)
           const BottomBarRecordingView(),
-        ActionButton(controller: controller, conversation: conversation),
+        ActionButton(controller: controller, e2eeConversation: e2eeConversation),
       ],
     );
   }
