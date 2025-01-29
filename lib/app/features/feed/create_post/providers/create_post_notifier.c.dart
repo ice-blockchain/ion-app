@@ -59,7 +59,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           throw UnsupportedEventReference(modifiedEvent);
         }
         data = modifiableEntity.data.copyWith(
-          content: data.content,
+          content: _buildContentWithMediaLinks(
+            content: data.content,
+            media: modifiableEntity.data.media.values.toList(),
+          ),
           relatedHashtags: data.relatedHashtags,
         );
       } else {
@@ -84,7 +87,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       );
 
       final files = <FileMetadata>[];
-      if (mediaFiles != null) {
+      if (mediaFiles != null && mediaFiles.isNotEmpty) {
         final attachments = <MediaAttachment>[];
         await Future.wait(
           mediaFiles.map((mediaFile) async {
@@ -95,15 +98,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         );
 
         data = data.copyWith(
-          content: [
-            ...attachments.map(
-              (attachment) {
-                final spaceSeparator = data.content.isNotEmpty || attachments.length > 1 ? ' ' : '';
-                return TextMatch('${attachment.url}$spaceSeparator');
-              },
-            ),
-            ...data.content,
-          ],
+          content: _buildContentWithMediaLinks(content: data.content, media: attachments),
           media: {for (final attachment in attachments) attachment.url: attachment},
         );
       }
@@ -162,6 +157,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ref.read(repliesCountProvider(parentEvent).notifier).addOne();
       }
     });
+  }
+
+  List<TextMatch> _buildContentWithMediaLinks({
+    required List<TextMatch> content,
+    required List<MediaAttachment> media,
+  }) {
+    return [
+      if (media.isNotEmpty) TextMatch(media.map((attachment) => attachment.url).join(' ')),
+      if (media.isNotEmpty && content.isNotEmpty) const TextMatch(' '),
+      ...content,
+    ];
   }
 
   List<RelatedHashtag> _buildRelatedHashtags(List<TextMatch> content) {
