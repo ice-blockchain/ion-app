@@ -5,8 +5,6 @@ import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -17,11 +15,7 @@ import 'package:ion/app/features/ion_connect/providers/auth_challenge_provider.c
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
-import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
-import 'package:ion/app/features/user/model/user_relays.c.dart';
-import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/wallets/main_wallet_provider.c.dart';
 import 'package:ion/app/utils/retry.dart';
@@ -38,12 +32,15 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     List<EventMessage> events, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
+    IonConnectRelay? relay,
   }) async {
     final dislikedRelaysUrls = <String>{};
-    ion.IonConnectRelay? relay;
+
     return withRetry(
       ({error}) async {
-        relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay ??= await ref
+            .read(relayCreationProvider.notifier)
+            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
           await sendAuthEvent(relay!);
@@ -68,8 +65,14 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
+    IonConnectRelay? relay,
   }) async {
-    final result = await sendEvents([event], actionSource: actionSource, cache: cache);
+    final result = await sendEvents(
+      [event],
+      actionSource: actionSource,
+      cache: cache,
+      relay: relay,
+    );
     return result?.elementAtOrNull(0);
   }
 
@@ -77,12 +80,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     final challenge = ref.read(authChallengeProvider(relay.url));
     if (challenge == null && challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
-    final authEvent = AuthEvent(
+    final signedAuthEvent = await createAuthEvent(
       challenge: challenge!,
-      relay: Uri.parse(relay.url).toString(),
+      relayUrl: Uri.parse(relay.url).toString(),
     );
-
-    final signedAuthEvent = await sign(authEvent);
 
     final authMessage = AuthMessage(
       challenge: jsonEncode(signedAuthEvent.toJson().last),
@@ -99,6 +100,18 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     }
 
     ref.read(authChallengeProvider(relay.url).notifier).clearChallenge();
+  }
+
+  Future<EventMessage> createAuthEvent({
+    required String challenge,
+    required String relayUrl,
+  }) async {
+    final authEvent = AuthEvent(
+      challenge: challenge,
+      relay: relayUrl,
+    );
+
+    return sign(authEvent);
   }
 
   Future<List<IonConnectEntity>?> sendEntitiesData(
@@ -130,7 +143,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     yield* withRetryStream(
       ({error}) async* {
-        relay = await _getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay = await ref
+            .read(relayCreationProvider.notifier)
+            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
           try {
@@ -223,82 +238,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return isSubscriptionAuthRequired || isSendEventAuthRequired;
   }
 
-  Future<IonConnectRelay> _getRelay(
-    ActionSource actionSource, {
-    Set<String> dislikedUrls = const {},
-  }) async {
-    switch (actionSource) {
-      case ActionSourceCurrentUser():
-        {
-          final pubkey = await ref.read(currentPubkeySelectorProvider.future);
-          if (pubkey == null) {
-            throw UserMasterPubkeyNotFoundException();
-          }
-          final userRelays = await _getUserRelays(pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
-        }
-      case ActionSourceUser():
-        {
-          final userRelays = await _getUserRelays(actionSource.pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userRelays.data.list, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
-        }
-      case ActionSourceIndexers():
-        {
-          final indexers = await ref.read(currentUserIndexersProvider.future);
-          if (indexers == null) {
-            throw UserIndexersNotFoundException();
-          }
-          final urls = _indexersAvoidingDislikedUrls(indexers, dislikedUrls);
-          return await ref
-              .read(relayProvider(urls.random, anonymous: actionSource.anonymous).future);
-        }
-      case ActionSourceRelayUrl():
-        {
-          // TODO: support multiple urls to allow retrying on different relays
-          return await ref
-              .read(relayProvider(actionSource.url, anonymous: actionSource.anonymous).future);
-        }
-      case ActionSourceCurrentUserChat():
-        {
-          final pubkey = await ref.read(currentPubkeySelectorProvider.future);
-          if (pubkey == null) {
-            throw UserMasterPubkeyNotFoundException();
-          }
-          final userChatRelays = await _getUserChatRelays(pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
-        }
-      case ActionSourceUserChat():
-        {
-          final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
-          final relays = _userRelaysAvoidingDislikedUrls(userChatRelays.data.list, dislikedUrls);
-          return await ref
-              .read(relayProvider(relays.random.url, anonymous: actionSource.anonymous).future);
-        }
-    }
-  }
-
-  Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
-    final userRelays = await ref.read(userRelayProvider(pubkey).future);
-    if (userRelays == null) {
-      throw UserRelaysNotFoundException();
-    }
-    return userRelays;
-  }
-
-  Future<UserChatRelaysEntity> _getUserChatRelays(String pubkey) async {
-    final userRelays = await ref.read(userChatRelaysProvider(pubkey).future);
-    if (userRelays == null) {
-      throw UserChatRelaysNotFoundException();
-    }
-    return userRelays;
-  }
-
   IonConnectEntity _parseAndCache(EventMessage event) {
     final parser = ref.read(eventParserProvider);
     final entity = parser.parse(event);
@@ -306,22 +245,5 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       ref.read(ionConnectCacheProvider.notifier).cache(entity);
     }
     return entity;
-  }
-
-  List<UserRelay> _userRelaysAvoidingDislikedUrls(
-    List<UserRelay> relays,
-    Set<String> dislikedRelaysUrls,
-  ) {
-    final urls = relays.where((relay) => !dislikedRelaysUrls.contains(relay.url)).toList();
-    if (urls.isEmpty) return relays;
-    return urls;
-  }
-
-  List<String> _indexersAvoidingDislikedUrls(List<String> indexers, Set<String> dislikedUrls) {
-    var urls = indexers.where((indexer) => !dislikedUrls.contains(indexer)).toList();
-    if (urls.isEmpty) {
-      urls = indexers;
-    }
-    return urls;
   }
 }

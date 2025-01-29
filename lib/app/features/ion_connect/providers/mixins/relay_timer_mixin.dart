@@ -31,10 +31,14 @@ mixin RelayTimerMixin {
     });
   }
 
-  void _processUpdate(IonConnectRelay relay, void Function() onInvalidate) {
+  void _processUpdate(
+    IonConnectRelay relay,
+    void Function() onInvalidate,
+  ) {
     if (_subscribersLength == 0 && !_timer.isActive) {
       _timer.cancel();
       relay.close();
+
       onInvalidate();
     }
   }
