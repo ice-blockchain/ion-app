@@ -16,8 +16,10 @@ part 'chat_messages_provider.c.g.dart';
 class ChatMessages extends _$ChatMessages {
   @override
   Future<List<MessageListItem>> build(E2eeConversationEntity conversation) async {
-    final messagesSubscription =
-        ref.read(conversationsDBServiceProvider).watchConversationMessages(conversation).listen((messages) async {
+    final messagesSubscription = ref
+        .read(conversationsDBServiceProvider)
+        .watchConversationMessages(conversation)
+        .listen((messages) async {
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
       if (eventSigner == null) {
@@ -27,7 +29,8 @@ class ChatMessages extends _$ChatMessages {
           messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();
 
       state = AsyncValue.data(
-        conversationMessageItems.sorted((previous, next) => next.time.isBefore(previous.time) ? 1 : -1),
+        conversationMessageItems
+            .sorted((previous, next) => next.time.isBefore(previous.time) ? 1 : -1),
       );
     });
 
@@ -41,12 +44,14 @@ class ChatMessages extends _$ChatMessages {
       throw EventSignerNotFoundException();
     }
 
-    final messages = await ref.read(conversationsDBServiceProvider).getConversationMessages(conversation);
+    final messages =
+        await ref.read(conversationsDBServiceProvider).getConversationMessages(conversation);
 
     final conversationMessageItems =
         messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();
 
-    return conversationMessageItems.sorted((previous, next) => next.time.isBefore(previous.time) ? 1 : -1);
+    return conversationMessageItems
+        .sorted((previous, next) => next.time.isBefore(previous.time) ? 1 : -1);
   }
 
   MessageListItem? _mapMessage(

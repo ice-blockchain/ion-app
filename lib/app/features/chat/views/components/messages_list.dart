@@ -53,7 +53,8 @@ class ChatMessagesList extends HookConsumerWidget {
         itemBuilder: (context, index) {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
-          final author = message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
+          final author =
+              message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
 
           final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
@@ -61,8 +62,9 @@ class ChatMessagesList extends HookConsumerWidget {
                 author,
               );
 
-          final authorToDisplay =
-              displayAuthorsIncomingMessages ? authorToDisplayProvider.getAuthorToDisplay(index) : null;
+          final authorToDisplay = displayAuthorsIncomingMessages
+              ? authorToDisplayProvider.getAuthorToDisplay(index)
+              : null;
 
           final isMe = author?.isCurrentUser ?? false;
 
