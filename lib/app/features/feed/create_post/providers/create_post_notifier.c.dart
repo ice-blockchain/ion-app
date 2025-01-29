@@ -44,6 +44,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required WhoCanReplySettingsOption whoCanReply,
     EventReference? parentEvent,
     EventReference? quotedEvent,
+    EventReference? modifiedEvent,
     List<MediaFile>? mediaFiles,
   }) async {
     state = const AsyncValue.loading();
@@ -51,16 +52,28 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = await AsyncValue.guard(() async {
       var data = ModifiablePostData.fromRawContent(content.trim());
 
-      data = data.copyWith(
-        editingEndedAt: EntityEditingEndedAt(
-          value: DateTime.now().add(
-            Duration(
-              minutes:
-                  ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+      if (modifiedEvent != null) {
+        final modifiableEntity =
+            await ref.read(ionConnectEntityProvider(eventReference: modifiedEvent).future);
+        if (modifiableEntity == null || modifiableEntity is! ModifiablePostEntity) {
+          throw UnsupportedEventReference(modifiedEvent);
+        }
+        data = modifiableEntity.data.copyWith(
+          content: data.content,
+          relatedHashtags: data.relatedHashtags,
+        );
+      } else {
+        data = data.copyWith(
+          editingEndedAt: EntityEditingEndedAt(
+            value: DateTime.now().add(
+              Duration(
+                minutes:
+                    ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+              ),
             ),
           ),
-        ),
-      );
+        );
+      }
 
       if (whoCanReply != WhoCanReplySettingsOption.everyone) {
         data = data.copyWith(

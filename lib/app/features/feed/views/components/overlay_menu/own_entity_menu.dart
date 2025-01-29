@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class OwnEntityMenu extends ConsumerWidget {
@@ -53,10 +54,12 @@ class OwnEntityMenu extends ConsumerWidget {
                       size: iconSize,
                       color: context.theme.appColors.quaternaryText,
                     ),
-                    onPressed: () async {
+                    onPressed: () {
                       closeMenu();
-                      await ref.read(deleteEntityProvider(eventReference).future);
-                      onDelete?.call();
+                      //TODO:add quoted / parent
+                      CreatePostRoute(
+                        modifiedEvent: eventReference.encode(),
+                      ).push<void>(context);
                     },
                   ),
                   const OverlayMenuItemSeparator(),

@@ -28,6 +28,7 @@ class CreatePostBottomPanel extends ConsumerWidget {
     required this.textEditorController,
     required this.parentEvent,
     required this.quotedEvent,
+    required this.modifiedEvent,
     required this.attachedMediaNotifier,
     required this.attachedVideoNotifier,
     required this.createOption,
@@ -37,6 +38,7 @@ class CreatePostBottomPanel extends ConsumerWidget {
   final QuillController textEditorController;
   final EventReference? parentEvent;
   final EventReference? quotedEvent;
+  final EventReference? modifiedEvent;
   final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
   final CreatePostOption createOption;
@@ -56,6 +58,7 @@ class CreatePostBottomPanel extends ConsumerWidget {
           textEditorController: textEditorController,
           parentEvent: parentEvent,
           quotedEvent: quotedEvent,
+          modifiedEvent: modifiedEvent,
           attachedMediaNotifier: attachedMediaNotifier,
           attachedVideoNotifier: attachedVideoNotifier,
           createOption: createOption,
@@ -109,6 +112,7 @@ class _ActionsSection extends StatelessWidget {
     required this.textEditorController,
     required this.parentEvent,
     required this.quotedEvent,
+    required this.modifiedEvent,
     required this.attachedMediaNotifier,
     required this.attachedVideoNotifier,
     required this.createOption,
@@ -117,6 +121,7 @@ class _ActionsSection extends StatelessWidget {
   final QuillController textEditorController;
   final EventReference? parentEvent;
   final EventReference? quotedEvent;
+  final EventReference? modifiedEvent;
   final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
   final CreatePostOption createOption;
@@ -138,6 +143,7 @@ class _ActionsSection extends StatelessWidget {
           textEditorController: textEditorController,
           parentEvent: parentEvent,
           quotedEvent: quotedEvent,
+          modifiedEvent: modifiedEvent,
           mediaFiles: [
             ...attachedMediaNotifier.value,
             if (attachedVideoNotifier.value != null) attachedVideoNotifier.value!,
