@@ -149,9 +149,10 @@ class _ActionsSection extends StatelessWidget {
     return ScreenSideOffset.small(
       child: ActionsToolbar(
         actions: [
-          ToolbarImageButton(
-            delegate: AttachedMediaHandler(attachedMediaNotifier),
-          ),
+          if (modifiedEvent == null)
+            ToolbarImageButton(
+              delegate: AttachedMediaHandler(attachedMediaNotifier),
+            ),
           ToolbarPollButton(textEditorController: textEditorController),
           ToolbarRegularButton(textEditorController: textEditorController),
           ToolbarItalicButton(textEditorController: textEditorController),
