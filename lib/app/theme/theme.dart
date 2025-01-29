@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/templates/template.c.dart';
 import 'package:ion/app/theme/app_bar_theme.dart';
@@ -14,6 +15,7 @@ import 'package:ion/app/theme/menu_theme.dart';
 import 'package:ion/app/theme/outline_button_theme.dart';
 import 'package:ion/app/theme/tab_bar_theme.dart';
 import 'package:ion/app/theme/text_button_theme.dart';
+import 'package:ion/app/theme/text_selection_theme.dart';
 
 ThemeData buildLightTheme(TemplateTheme templateTheme) {
   final colors = AppColorsExtension.fromTemplate(templateTheme.colors.light);
@@ -34,6 +36,15 @@ ThemeData buildLightTheme(TemplateTheme templateTheme) {
     scaffoldBackgroundColor: colors.secondaryBackground,
     bottomSheetTheme: buildBottomSheetTheme(colors),
     tabBarTheme: buildTabBarTheme(),
+    textSelectionTheme: buildTextSelectionTheme(colors),
+
+    /// Overrides the default Cupertino theme to ensure text selection handles and
+    /// other Cupertino-styled widgets use our brand color on iOS/macOS.
+    /// Without this, text selection handles on iOS remain the system default
+    /// (purple), rather than matching the Material theme’s selection color.
+    cupertinoOverrideTheme: const CupertinoThemeData().copyWith(
+      primaryColor: colors.primaryAccent,
+    ),
   );
 }
 
@@ -55,5 +66,9 @@ ThemeData buildDarkTheme(TemplateTheme templateTheme) {
     scaffoldBackgroundColor: colors.secondaryBackground,
     bottomSheetTheme: buildBottomSheetTheme(colors),
     tabBarTheme: buildTabBarTheme(),
+    textSelectionTheme: buildTextSelectionTheme(colors),
+    cupertinoOverrideTheme: const CupertinoThemeData().copyWith(
+      primaryColor: colors.primaryAccent,
+    ),
   );
 }
