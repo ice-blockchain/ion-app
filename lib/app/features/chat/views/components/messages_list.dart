@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -21,8 +22,9 @@ import 'package:ion/app/features/chat/messages/views/components/message_types/vi
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/providers/author_to_display_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
-class ChatMessagesList extends ConsumerWidget {
+class ChatMessagesList extends HookConsumerWidget {
   const ChatMessagesList(
     this.messages, {
     super.key,
@@ -37,16 +39,21 @@ class ChatMessagesList extends ConsumerWidget {
     final authorToDisplayProvider = ref.watch(
       authorsToDisplayProviderProvider(messages).notifier,
     );
+
+    final scrollController = useScrollController();
+
+    useOnInit(() => scrollController.jumpTo(scrollController.position.maxScrollExtent));
+
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
       child: ListView.separated(
         itemCount: messages.length,
+        controller: scrollController,
         padding: EdgeInsets.symmetric(vertical: 12.0.s),
         itemBuilder: (context, index) {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
-          final author =
-              message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
+          final author = message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
 
           final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
@@ -54,9 +61,8 @@ class ChatMessagesList extends ConsumerWidget {
                 author,
               );
 
-          final authorToDisplay = displayAuthorsIncomingMessages
-              ? authorToDisplayProvider.getAuthorToDisplay(index)
-              : null;
+          final authorToDisplay =
+              displayAuthorsIncomingMessages ? authorToDisplayProvider.getAuthorToDisplay(index) : null;
 
           final isMe = author?.isCurrentUser ?? false;
 

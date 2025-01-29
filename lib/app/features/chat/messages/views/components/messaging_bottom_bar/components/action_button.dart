@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/providers/conversation_message_management_
 import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class ActionButton extends HookConsumerWidget {
@@ -26,7 +27,10 @@ class ActionButton extends HookConsumerWidget {
     final paddingBottom = useState<double>(0);
 
     final sentMessage = useCallback(() async {
-      if (conversation.id == null) {
+      final conversationId = await ref
+          .read(conversationsDBServiceProvider)
+          .lookupConversationByPubkeys(conversation.participants.join(','));
+      if (conversation.id == null && conversationId == null) {
         final ee2eGroupConversationService = ref.read(e2eeConversationManagementProvider.notifier);
 
         if (conversation.type == ChatType.chat) {

@@ -23,10 +23,8 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   FutureOr<List<E2eeConversationEntity>> build() async {
-    final conversationSubscription = ref
-        .read(conversationsDBServiceProvider)
-        .watchConversations()
-        .listen((conversationsEventMessages) async {
+    final conversationSubscription =
+        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsEventMessages) async {
       final lastPrivateDirectMesssages =
           conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
@@ -37,8 +35,7 @@ class Conversations extends _$Conversations {
       }
 
       final conversations = await Future.wait(
-        lastPrivateDirectMesssages
-            .map((message) => _getConversationData(message, eventSigner.publicKey)),
+        lastPrivateDirectMesssages.map((message) => _getConversationData(message, eventSigner.publicKey)),
       );
 
       state = AsyncValue.data(
@@ -69,8 +66,7 @@ class Conversations extends _$Conversations {
           conversationsEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
 
       final conversations = await Future.wait(
-        lastPrivateDirectMesssages
-            .map((message) => _getConversationData(message, eventSigner.publicKey)),
+        lastPrivateDirectMesssages.map((message) => _getConversationData(message, eventSigner.publicKey)),
       );
 
       return (conversations..sortBy<DateTime>((e) => e.lastMessageAt!)).reversed.toList();
@@ -104,24 +100,21 @@ class Conversations extends _$Conversations {
     } else {
       name = message.data.relatedSubject?.value ?? '';
 
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
-      final imageUrls = await conversationMessageManagementService
-          .downloadDecryptDecompressMedia([message.data.primaryMedia!]);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
+      final imageUrls =
+          await conversationMessageManagementService.downloadDecryptDecompressMedia([message.data.primaryMedia!]);
       imageUrl = imageUrls.first.path;
     }
 
     final lastMessageAt = message.createdAt;
-    final participants =
-        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
     final lastMessageContent = message.data.content.map((m) => m.text).join();
 
     final database = ref.read(conversationsDBServiceProvider);
 
     final conversationId = await database.lookupConversationByEventMessageId(message.id);
 
-    final unreadMessagesCount =
-        conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
+    final unreadMessagesCount = conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
 
     final isArchived = await _checkConversationIsArchived(
       type: type,
@@ -136,10 +129,10 @@ class Conversations extends _$Conversations {
       nickname: nickname,
       imageUrl: imageUrl,
       isArchived: isArchived,
-      participants: participants,
       lastMessageAt: lastMessageAt,
       lastMessageContent: lastMessageContent,
       unreadMessagesCount: unreadMessagesCount,
+      participants: participants..sortBy<String>((e) => e),
     );
   }
 
@@ -163,8 +156,7 @@ class Conversations extends _$Conversations {
     var archivedConversations = <List<String>>[];
 
     if (archivedChatsBookmarksSet != null) {
-      final decryptedContent =
-          await e2eeService.decryptMessage(archivedChatsBookmarksSet.data.content);
+      final decryptedContent = await e2eeService.decryptMessage(archivedChatsBookmarksSet.data.content);
 
       archivedConversations = (jsonDecode(decryptedContent) as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
@@ -182,8 +174,7 @@ class Conversations extends _$Conversations {
         final archivedSubject = archivedConversation[1];
         final archivedParticipants = archivedConversation.sublist(2);
 
-        if (archivedSubject == subject &&
-            archivedParticipants.toSet().containsAll(participants.toSet())) {
+        if (archivedSubject == subject && archivedParticipants.toSet().containsAll(participants.toSet())) {
           return true;
         }
       }
