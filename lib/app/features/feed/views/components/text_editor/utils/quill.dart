@@ -86,12 +86,7 @@ DefaultStyles getCustomStyles(BuildContext context) {
 }
 
 TextStyle customTextStyleBuilder(Attribute<dynamic> attribute, BuildContext context) {
-  if (attribute.key == 'mention') {
-    return TextStyle(
-      color: context.theme.appColors.primaryAccent,
-      decoration: TextDecoration.none,
-    );
-  } else if (attribute.key == 'hashtag') {
+  if (attribute.key == 'mention' || attribute.key == 'hashtag' || attribute.key == 'cashtag') {
     return TextStyle(
       color: context.theme.appColors.primaryAccent,
       decoration: TextDecoration.none,

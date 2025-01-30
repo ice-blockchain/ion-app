@@ -42,7 +42,7 @@ class CreateArticle extends _$CreateArticle {
 
       final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
 
-      final relatedHashtags = ArticleData.extractHashtagsFromMarkdown(updatedContent);
+      final relatedHashtags = ArticleData.extractTagsFromMarkdown(updatedContent);
 
       final articleData = ArticleData.fromData(
         title: title,

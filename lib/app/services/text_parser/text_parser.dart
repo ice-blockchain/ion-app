@@ -53,6 +53,7 @@ class TextParser {
           UrlMatcher(),
           HashtagMatcher(),
           MentionMatcher(),
+          CashtagMatcher(),
         },
       );
 

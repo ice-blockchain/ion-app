@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/cashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
 
@@ -27,6 +28,13 @@ class HashtagAttribute extends Attribute<String> {
       : super('hashtag', AttributeScope.inline, hashtagValue);
 
   const HashtagAttribute.withValue(String value) : this(value);
+}
+
+class CashtagAttribute extends Attribute<String> {
+  const CashtagAttribute(String cashtagValue)
+      : super('cashtag', AttributeScope.inline, cashtagValue);
+
+  const CashtagAttribute.withValue(String value) : this(value);
 }
 
 class MentionsHashtagsHandler {
@@ -74,16 +82,21 @@ class MentionsHashtagsHandler {
       if (cursorIndex > 0) {
         final char = text.substring(cursorIndex - 1, cursorIndex);
 
-        if (char == '#' || char == '@') {
+        if (char == '#' || char == '@' || char == r'$') {
           taggingCharacter = char;
           lastTagIndex = cursorIndex - 1;
 
           controller.removeListener(_editorListener);
           try {
-            final attribute = taggingCharacter == '@'
-                ? MentionAttribute.withValue(taggingCharacter)
-                : HashtagAttribute.withValue(taggingCharacter);
-            controller.formatText(lastTagIndex, 1, attribute);
+            final attribute = switch (taggingCharacter) {
+              '@' => MentionAttribute.withValue(taggingCharacter),
+              '#' => HashtagAttribute.withValue(taggingCharacter),
+              r'$' => CashtagAttribute.withValue(taggingCharacter),
+              _ => null,
+            };
+            if (attribute != null) {
+              controller.formatText(lastTagIndex, 1, attribute);
+            }
           } finally {
             controller.addListener(_editorListener);
           }
@@ -101,10 +114,15 @@ class MentionsHashtagsHandler {
           if (lastTagIndex >= 0 && cursorIndex > lastTagIndex) {
             controller.removeListener(_editorListener);
             try {
-              final attribute = taggingCharacter == '@'
-                  ? MentionAttribute.withValue(currentTagText)
-                  : HashtagAttribute.withValue(currentTagText);
-              controller.formatText(lastTagIndex, cursorIndex - lastTagIndex, attribute);
+              final attribute = switch (taggingCharacter) {
+                '@' => MentionAttribute.withValue(currentTagText),
+                '#' => HashtagAttribute.withValue(currentTagText),
+                r'$' => CashtagAttribute.withValue(currentTagText),
+                _ => null,
+              };
+              if (attribute != null) {
+                controller.formatText(lastTagIndex, cursorIndex - lastTagIndex, attribute);
+              }
             } finally {
               controller.addListener(_editorListener);
             }
@@ -114,7 +132,7 @@ class MentionsHashtagsHandler {
 
       if (isBackspace && lastTagIndex != -1) {
         final remainingText = text.substring(lastTagIndex, cursorIndex);
-        if (remainingText == '#' || remainingText == '@') {
+        if (remainingText == '#' || remainingText == '@' || remainingText == r'$') {
           lastTagIndex = -1;
           lastTagIndex = cursorIndex - 1;
           ref.read(suggestionsNotifierProvider.notifier).updateSuggestions('', taggingCharacter);
@@ -125,20 +143,29 @@ class MentionsHashtagsHandler {
 
   void _onSuggestionSelected(String suggestion) {
     final cursorIndex = controller.selection.baseOffset;
-    final attribute = taggingCharacter == '@'
-        ? MentionAttribute.withValue(suggestion)
-        : HashtagAttribute.withValue(suggestion);
+    final attribute = switch (taggingCharacter) {
+      '@' => MentionAttribute.withValue(suggestion),
+      '#' => HashtagAttribute.withValue(suggestion),
+      r'$' => CashtagAttribute.withValue(suggestion),
+      _ => null,
+    };
 
     try {
       controller
         ..removeListener(_editorListener)
+        ..formatText(lastTagIndex, suggestion.length, attribute)
         ..replaceText(
           lastTagIndex,
           cursorIndex - lastTagIndex,
-          '$suggestion ',
+          suggestion,
           null,
         )
-        ..formatText(lastTagIndex, suggestion.length, attribute);
+        ..replaceText(
+          lastTagIndex + suggestion.length,
+          0,
+          ' ',
+          null,
+        );
 
       final newCursorIndex = lastTagIndex + suggestion.length + 1;
       controller.updateSelection(
@@ -156,23 +183,22 @@ class MentionsHashtagsHandler {
   }
 
   void _applyTagIfNeeded(int cursorIndex) {
-    if (overlayEntry != null && lastTagIndex != -1) {
-      final tagText = controller.document.toPlainText().substring(lastTagIndex, cursorIndex);
-      final attribute = taggingCharacter == '@'
-          ? MentionAttribute.withValue(tagText)
-          : HashtagAttribute.withValue(tagText);
+    if (lastTagIndex == -1) return;
 
-      if (lastTagIndex >= 0 && cursorIndex > lastTagIndex) {
-        try {
-          controller
-            ..replaceText(lastTagIndex, cursorIndex - lastTagIndex, tagText, null)
-            ..formatText(lastTagIndex, tagText.length, attribute);
-        } finally {
-          lastTagIndex = -1;
-          isLinkApplied = false;
-        }
-      }
+    final tagText = controller.document.toPlainText().substring(lastTagIndex, cursorIndex);
+    final attribute = switch (taggingCharacter) {
+      '@' => MentionAttribute.withValue(tagText),
+      '#' => HashtagAttribute.withValue(tagText),
+      r'$' => CashtagAttribute.withValue(tagText),
+      _ => null,
+    };
+
+    if (attribute != null) {
+      controller.formatText(lastTagIndex, tagText.length, attribute);
     }
+
+    lastTagIndex = -1;
+    taggingCharacter = '';
   }
 
   void _focusListener() {
@@ -221,15 +247,21 @@ class MentionsHashtagsHandler {
         child: Container(
           color: context.theme.appColors.secondaryBackground,
           height: totalSuggestionHeight,
-          child: taggingCharacter == '@'
-              ? MentionsSuggestions(
-                  suggestions: suggestions,
-                  onSuggestionSelected: _onSuggestionSelected,
-                )
-              : HashtagsSuggestions(
-                  suggestions: suggestions,
-                  onSuggestionSelected: _onSuggestionSelected,
-                ),
+          child: switch (taggingCharacter) {
+            '@' => MentionsSuggestions(
+                suggestions: suggestions,
+                onSuggestionSelected: _onSuggestionSelected,
+              ),
+            '#' => HashtagsSuggestions(
+                suggestions: suggestions,
+                onSuggestionSelected: _onSuggestionSelected,
+              ),
+            r'$' => CashtagsSuggestions(
+                suggestions: suggestions,
+                onSuggestionSelected: _onSuggestionSelected,
+              ),
+            _ => const SizedBox.shrink(),
+          },
         ),
       ),
     );

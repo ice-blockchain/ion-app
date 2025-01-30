@@ -48,7 +48,8 @@ class TextSpanBuilder {
       if (onTap != null) {
         final recognizedMatchers = match.matcher is HashtagMatcher ||
             match.matcher is MentionMatcher ||
-            match.matcher is UrlMatcher;
+            match.matcher is UrlMatcher ||
+            match.matcher is CashtagMatcher;
 
         if (recognizedMatchers) {
           recognizer = TapGestureRecognizer()..onTap = () => onTap(match);
@@ -82,6 +83,7 @@ class TextSpanBuilder {
       const HashtagMatcher(): defaultStyle,
       const UrlMatcher(): defaultStyle,
       const MentionMatcher(): defaultStyle,
+      const CashtagMatcher(): defaultStyle,
     };
   }
 
@@ -91,6 +93,8 @@ class TextSpanBuilder {
     required TextMatch match,
   }) {
     if (match.matcher is UrlMatcher) openUrlInAppBrowser(match.text);
-    if (match.matcher is HashtagMatcher) FeedAdvancedSearchRoute(query: match.text).go(context);
+    if (match.matcher is HashtagMatcher || match.matcher is CashtagMatcher) {
+      FeedAdvancedSearchRoute(query: match.text).go(context);
+    }
   }
 }
