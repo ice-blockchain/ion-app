@@ -61,7 +61,7 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                       ref.read(createArticleProvider.notifier).create(
                             title: title,
                             content: content,
-                            imageId: image?.path,
+                            coverImagePath: image?.path,
                             mediaIds: imageIds,
                             whoCanReply: whoCanReply,
                             imageColor: imageColor,

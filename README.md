@@ -14,7 +14,7 @@ Example directory structure:
     ~/projects/flutter-app
     ~/projects/flutter-app-secrets
 ```
-To switch or set up an environment, run the `./scripts/configure_env.sh` script from the root of the main app project passing it a desired environment (`staging` or `production`).
+To switch or set up an environment, run the `./scripts/configure_env.sh` script from the root of the main app project passing it a desired environment (`staging` / `production` / `testnet`).
 Example:
 
 ```

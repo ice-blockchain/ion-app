@@ -93,7 +93,7 @@ class Article extends ConsumerWidget {
                   SizedBox(height: 10.0.s),
                   ArticleImage(
                     imageUrl: articleEntity.data.image,
-                    minutesToRead: calculateReadingTime(articleEntity.data.content),
+                    minutesToRead: calculateReadingTime(articleEntity.data.content.toString()),
                   ),
                   SizedBox(height: 10.0.s),
                   ArticleFooter(text: articleEntity.data.title ?? ''),

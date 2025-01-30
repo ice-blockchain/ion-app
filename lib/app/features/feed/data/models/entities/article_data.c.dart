@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -23,8 +21,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 import 'package:ion/app/services/quill/markdown.dart';
 
 part 'article_data.c.freezed.dart';
-
-const textEditorSingleImageKey = 'text-editor-single-image';
 
 @Freezed(equal: false)
 class ArticleEntity
@@ -69,7 +65,7 @@ class ArticleData
     with _$ArticleData, EntitySettingsDataMixin
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
-    required String content,
+    required Delta content,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
@@ -92,7 +88,7 @@ class ArticleData
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
-      content: jsonEncode(markdownToDelta(eventMessage.content).toJson()), //TODO:Delta in content
+      content: markdownToDelta(eventMessage.content),
       media: mediaAttachments,
       title: title,
       image: image,
@@ -107,7 +103,7 @@ class ArticleData
   }
 
   factory ArticleData.fromData({
-    required String content,
+    required Delta content,
     required Map<String, MediaAttachment> media,
     String? title,
     String? image,
@@ -153,9 +149,7 @@ class ArticleData
         if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
-      content: deltaToMarkdown(
-        Delta.fromJson(jsonDecode(content) as List<dynamic>),
-      ), //TODO:keep Delta in content
+      content: deltaToMarkdown(content),
     );
   }
 
@@ -168,34 +162,17 @@ class ArticleData
     );
   }
 
-  static List<RelatedHashtag> extractTagsFromMarkdown(String content) {
-    final operations = jsonDecode(content) as List<dynamic>;
-    const insertKey = 'insert';
-
-    return operations
-        .whereType<Map<String, dynamic>>()
+  static List<RelatedHashtag> extractTags(Delta content) {
+    return content.operations
         .where(
-          (operation) =>
-              operation.containsKey(insertKey) &&
-              operation[insertKey] is String &&
-              ((operation[insertKey] as String).startsWith('#') ||
-                  (operation[insertKey] as String).startsWith(r'$')),
-        )
+      (operation) =>
+          operation.isInsert &&
+          ((operation.value as String).startsWith('#') ||
+              (operation.value as String).startsWith(r'$')),
+    )
         .map((operation) {
-      final insert = operation[insertKey]! as String;
-      return RelatedHashtag(value: insert);
+      return RelatedHashtag(value: (operation.value as String).trim());
     }).toList();
-  }
-
-  static List<String> extractImageIds(QuillController textEditorController) {
-    final imageIds = <String>[];
-    for (final operation in textEditorController.document.toDelta().operations) {
-      final data = operation.data;
-      if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
-        imageIds.add(data[textEditorSingleImageKey] as String);
-      }
-    }
-    return imageIds;
   }
 
   static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/color.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -18,7 +18,7 @@ part 'draft_article_provider.c.g.dart';
 @freezed
 class DraftArticleState with _$DraftArticleState {
   const factory DraftArticleState({
-    @Default('') String content,
+    required Delta content,
     @Default([]) List<String> imageIds,
     MediaFile? image,
     @Default('') String title,
@@ -30,7 +30,7 @@ class DraftArticleState with _$DraftArticleState {
 class DraftArticle extends _$DraftArticle {
   @override
   DraftArticleState build() {
-    return const DraftArticleState();
+    return DraftArticleState(content: Delta());
   }
 
   Future<void> updateArticleDetails(
@@ -38,12 +38,14 @@ class DraftArticle extends _$DraftArticle {
     MediaFile? image,
     String title,
   ) async {
-    final deltaJson = jsonEncode(textEditorController.document.toDelta().toJson());
-    final imageIds = ArticleData.extractImageIds(textEditorController);
+    final delta = textEditorController.document.toDelta();
+    final imageIds =
+        TextEditorSingleImageBuilder.extractImageIds(textEditorController.document.toDelta());
+
     final colorHex = await _extractDominantColorFromImage(image);
 
     state = state.copyWith(
-      content: deltaJson,
+      content: delta,
       imageIds: imageIds,
       image: image,
       title: title.trim(),
