@@ -44,39 +44,37 @@ class StoryContextMenu extends HookConsumerWidget {
       onOpen: () => ref.read(storyPauseControllerProvider.notifier).paused = true,
       onClose: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
       menuBuilder: (closeMenu) => OverlayMenuContainer(
-        child: IntrinsicWidth(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ContextMenuItem(
-                label: context.i18n.button_report,
-                iconAsset: Assets.svg.iconReport,
-                onPressed: () {
-                  showSimpleBottomSheet<void>(
-                    context: context,
-                    child: ReportUserModal(pubkey: pubkey),
-                  );
-                },
-                onLayout: updateWidth,
-              ),
-              const ContextMenuItemDivider(),
-              ContextMenuItem(
-                label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
-                iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
-                onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
-                onLayout: updateWidth,
-              ),
-              const ContextMenuItemDivider(),
-              ContextMenuItem(
-                label: context.i18n.button_unfollow,
-                iconAsset: Assets.svg.iconCategoriesUnflow,
-                onPressed: () {
-                  closeMenu();
-                },
-                onLayout: updateWidth,
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ContextMenuItem(
+              label: context.i18n.button_report,
+              iconAsset: Assets.svg.iconReport,
+              onPressed: () {
+                showSimpleBottomSheet<void>(
+                  context: context,
+                  child: ReportUserModal(pubkey: pubkey),
+                );
+              },
+              onLayout: updateWidth,
+            ),
+            const ContextMenuItemDivider(),
+            ContextMenuItem(
+              label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
+              iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
+              onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
+              onLayout: updateWidth,
+            ),
+            const ContextMenuItemDivider(),
+            ContextMenuItem(
+              label: context.i18n.button_unfollow,
+              iconAsset: Assets.svg.iconCategoriesUnflow,
+              onPressed: () {
+                closeMenu();
+              },
+              onLayout: updateWidth,
+            ),
+          ],
         ),
       ),
       child: child,

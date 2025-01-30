@@ -22,7 +22,13 @@ class Replies extends _$Replies {
         .where((entity) => _isReply(entity, eventReference))
         .distinct()
         .listen((entity) {
-      if (state?.data.items?.any((e) => e.id == entity.id) ?? false) {
+      if (state?.data.items?.any(
+            (stateEntity) =>
+                stateEntity is ModifiablePostEntity &&
+                entity is ModifiablePostEntity &&
+                stateEntity.toEventReference() == entity.toEventReference(),
+          ) ??
+          false) {
         return;
       }
 
@@ -34,8 +40,7 @@ class Replies extends _$Replies {
   }
 
   bool _isReply(IonConnectEntity entity, EventReference parentEventReference) {
-    return parentEventReference is ReplaceableEventReference &&
-        entity is ModifiablePostEntity &&
+    return entity is ModifiablePostEntity &&
         entity.data.parentEvent?.eventReference == parentEventReference;
   }
 

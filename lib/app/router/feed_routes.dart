@@ -133,6 +133,7 @@ class CreatePostRoute extends BaseRouteData {
   CreatePostRoute({
     this.parentEvent,
     this.quotedEvent,
+    this.modifiedEvent,
     this.content,
     this.showCollapseButton = false,
     this.videoPath,
@@ -140,6 +141,7 @@ class CreatePostRoute extends BaseRouteData {
           child: CreatePostModal(
             parentEvent: parentEvent != null ? EventReference.fromEncoded(parentEvent) : null,
             quotedEvent: quotedEvent != null ? EventReference.fromEncoded(quotedEvent) : null,
+            modifiedEvent: modifiedEvent != null ? EventReference.fromEncoded(modifiedEvent) : null,
             content: content,
             showCollapseButton: showCollapseButton,
             videoPath: videoPath,
@@ -150,6 +152,8 @@ class CreatePostRoute extends BaseRouteData {
   final String? parentEvent;
 
   final String? quotedEvent;
+
+  final String? modifiedEvent;
 
   final String? content;
 

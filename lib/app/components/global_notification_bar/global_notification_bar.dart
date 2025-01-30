@@ -96,6 +96,9 @@ class GlobalNotificationBar extends HookConsumerWidget {
       ..listen(createPostNotifierProvider(CreatePostOption.plain), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.post);
       })
+      ..listen(createPostNotifierProvider(CreatePostOption.quote), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.post);
+      })
       ..listen(createPostNotifierProvider(CreatePostOption.reply), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.reply);
       })
@@ -104,6 +107,9 @@ class GlobalNotificationBar extends HookConsumerWidget {
       })
       ..listen(createPostNotifierProvider(CreatePostOption.story), (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.story);
+      })
+      ..listen(createPostNotifierProvider(CreatePostOption.modify), (_, next) {
+        _handleNotification(ref, notifier: next, type: NotificationContentType.modify);
       })
       ..listen(createArticleProvider, (_, next) {
         _handleNotification(ref, notifier: next, type: NotificationContentType.article);

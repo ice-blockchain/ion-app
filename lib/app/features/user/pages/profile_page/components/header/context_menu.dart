@@ -40,38 +40,36 @@ class ContextMenu extends HookConsumerWidget {
 
     return OverlayMenu(
       menuBuilder: (closeMenu) => OverlayMenuContainer(
-        child: IntrinsicWidth(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ContextMenuItem(
-                label: context.i18n.button_share,
-                iconAsset: Assets.svg.iconButtonShare,
-                onPressed: closeMenu,
-                onLayout: updateWidth,
-              ),
-              const ContextMenuItemDivider(),
-              _BlockUserMenuItem(
-                pubkey: pubkey,
-                onLayout: updateWidth,
-                closeMenu: closeMenu,
-              ),
-              const ContextMenuItemDivider(),
-              ContextMenuItem(
-                label: context.i18n.button_report,
-                iconAsset: Assets.svg.iconReport,
-                onPressed: () {
-                  showSimpleBottomSheet<void>(
-                    context: context,
-                    child: ReportUserModal(
-                      pubkey: pubkey,
-                    ),
-                  );
-                },
-                onLayout: updateWidth,
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ContextMenuItem(
+              label: context.i18n.button_share,
+              iconAsset: Assets.svg.iconButtonShare,
+              onPressed: closeMenu,
+              onLayout: updateWidth,
+            ),
+            const ContextMenuItemDivider(),
+            _BlockUserMenuItem(
+              pubkey: pubkey,
+              onLayout: updateWidth,
+              closeMenu: closeMenu,
+            ),
+            const ContextMenuItemDivider(),
+            ContextMenuItem(
+              label: context.i18n.button_report,
+              iconAsset: Assets.svg.iconReport,
+              onPressed: () {
+                showSimpleBottomSheet<void>(
+                  context: context,
+                  child: ReportUserModal(
+                    pubkey: pubkey,
+                  ),
+                );
+              },
+              onLayout: updateWidth,
+            ),
+          ],
         ),
       ),
       child: HeaderAction(

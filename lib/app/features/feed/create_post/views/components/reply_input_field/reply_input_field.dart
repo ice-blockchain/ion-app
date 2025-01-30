@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_quill/quill_delta.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
@@ -103,16 +105,20 @@ class ReplyInputField extends HookConsumerWidget {
                                   final content = await CreatePostRoute(
                                     parentEvent: eventReference.encode(),
                                     showCollapseButton: true,
-                                    content: textEditorController.document.toPlainText().trim(),
-                                  ).push<String>(context);
-                                  if (content != null) {
+                                    content: jsonEncode(
+                                      textEditorController.document.toDelta().toJson(),
+                                    ),
+                                  ).push<Object?>(context);
+                                  if (content is Document) {
                                     textEditorController
-                                      ..setContents(
-                                        Delta.fromJson([
-                                          {'insert': content},
-                                        ]),
-                                      )
+                                      ..setContents(content.toDelta())
                                       ..moveCursorToEnd();
+                                  } else {
+                                    _clear(
+                                      focusNode: focusNode,
+                                      attachedMediaNotifier: attachedMediaNotifier,
+                                      textEditorController: textEditorController,
+                                    );
                                   }
                                 },
                                 child: Assets.svg.iconReplysearchScale.icon(size: 20.0.s),
@@ -141,22 +147,34 @@ class ReplyInputField extends HookConsumerWidget {
                 mediaFiles: attachedMediaNotifier.value,
                 createOption: CreatePostOption.reply,
                 onSubmitted: () {
-                  focusNode.unfocus();
-                  attachedMediaNotifier.value = [];
-
-                  /// calling `.replaceText` instead of `.clear` due to missing `ignoreFocus` parameter.
-                  textEditorController.replaceText(
-                    0,
-                    textEditorController.plainTextEditingValue.text.length - 1,
-                    '',
-                    const TextSelection.collapsed(offset: 0),
-                    ignoreFocus: true,
+                  _clear(
+                    focusNode: focusNode,
+                    attachedMediaNotifier: attachedMediaNotifier,
+                    textEditorController: textEditorController,
                   );
                 },
               ),
             ),
         ],
       ),
+    );
+  }
+
+  void _clear({
+    required FocusNode focusNode,
+    required ValueNotifier<List<MediaFile>> attachedMediaNotifier,
+    required QuillController textEditorController,
+  }) {
+    focusNode.unfocus();
+    attachedMediaNotifier.value = [];
+
+    /// calling `.replaceText` instead of `.clear` due to missing `ignoreFocus` parameter.
+    textEditorController.replaceText(
+      0,
+      textEditorController.plainTextEditingValue.text.length - 1,
+      '',
+      const TextSelection.collapsed(offset: 0),
+      ignoreFocus: true,
     );
   }
 }

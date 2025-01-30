@@ -27,6 +27,7 @@ class PostSubmitButton extends HookConsumerWidget {
     super.key,
     this.parentEvent,
     this.quotedEvent,
+    this.modifiedEvent,
     this.mediaFiles = const [],
     this.onSubmitted,
   });
@@ -36,6 +37,8 @@ class PostSubmitButton extends HookConsumerWidget {
   final EventReference? parentEvent;
 
   final EventReference? quotedEvent;
+
+  final EventReference? modifiedEvent;
 
   final List<MediaFile> mediaFiles;
 
@@ -85,6 +88,7 @@ class PostSubmitButton extends HookConsumerWidget {
                 content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
                 parentEvent: parentEvent,
                 quotedEvent: quotedEvent,
+                modifiedEvent: modifiedEvent,
                 mediaFiles: convertedMediaFiles,
                 whoCanReply: whoCanReply,
               ),

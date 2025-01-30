@@ -27,7 +27,5 @@ class EntityEditingEndedAt with _$EntityEditingEndedAt {
     return [tagName, (value.millisecondsSinceEpoch ~/ 1000).toString()];
   }
 
-  bool get isEnded => value.isBefore(DateTime.now());
-
   static const String tagName = 'editing_ended_at';
 }

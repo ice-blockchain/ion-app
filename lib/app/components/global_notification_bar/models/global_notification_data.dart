@@ -43,7 +43,8 @@ enum NotificationContentType {
   post,
   article,
   reply,
-  repost;
+  repost,
+  modify;
 
   GlobalNotificationData loading() => GlobalNotificationData(
         status: NotificationStatus.loading,
@@ -67,6 +68,7 @@ enum NotificationContentType {
           article => locale.notification_article_loading,
           reply => locale.notification_reply_loading,
           repost => locale.notification_repost_loading,
+          modify => locale.notification_modify_loading,
         },
       NotificationStatus.published => switch (this) {
           video => locale.notification_video_published,
@@ -74,6 +76,7 @@ enum NotificationContentType {
           post => locale.notification_post_published,
           article => locale.notification_article_published,
           reply => locale.notification_reply_published,
+          modify => locale.notification_modify_published,
           repost => throw ArgumentError('No published state for $this'),
         },
       NotificationStatus.success => switch (this) {
