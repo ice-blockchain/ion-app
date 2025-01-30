@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/database/conversation_database.c.steps.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -21,6 +22,8 @@ ConversationDatabase conversationDatabase(Ref ref) => ConversationDatabase();
     ConversationMessagesTable,
     ConversationMessageStatusTable,
     ConversationReactionsTable,
+    ConversationTable,
+    CommunityMessageTable,
   ],
 )
 class ConversationDatabase extends _$ConversationDatabase {
@@ -35,6 +38,22 @@ class ConversationDatabase extends _$ConversationDatabase {
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'conversation_database');
   }
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (Migrator m) async {
+          await m.createAll();
+        },
+        onUpgrade: stepByStep(
+          from1To2: (m, schema) async {
+            await m.createTable(schema.conversationTable);
+            await m.createTable(schema.communityMessageTable);
+          },
+        ),
+        beforeOpen: (details) async {
+          await customStatement('PRAGMA foreign_keys = ON');
+        },
+      );
 }
 
 // Table for all EventMessage
@@ -172,4 +191,42 @@ class EventMessageTableData implements Insertable<EventMessageTableData> {
       conversationId: conversationId ?? this.conversationId,
     );
   }
+}
+
+///
+/// Table for community messages
+/// kind 1 and h tag are used to identify community messages
+///
+@UseRowClass(EventMessageTableData)
+class CommunityMessageTable extends Table {
+  TextColumn get id => text()();
+  TextColumn get sig => text().nullable()();
+  TextColumn get tags => text()();
+  TextColumn get pubkey => text()();
+  IntColumn get kind => integer()();
+  TextColumn get content => text()();
+  DateTimeColumn get createdAt => dateTime()();
+
+  TextColumn get conversationId =>
+      text().references(ConversationTable, #id, onDelete: KeyAction.cascade)();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
+///
+/// Table for all conversations
+///
+@UseRowClass(EventMessageTableData)
+class ConversationTable extends Table {
+  TextColumn get id => text()();
+  TextColumn get sig => text().nullable()();
+  TextColumn get tags => text()();
+  TextColumn get pubkey => text()();
+  IntColumn get kind => integer()();
+  TextColumn get content => text()();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
 }

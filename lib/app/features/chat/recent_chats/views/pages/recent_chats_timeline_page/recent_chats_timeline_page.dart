@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/recent_chats/providers/conversations_provi
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class RecentChatsTimelinePage extends ConsumerWidget {
@@ -47,13 +48,19 @@ class RecentChatsTimelinePage extends ConsumerWidget {
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
               final conversation = conversations[index];
-              if (conversation.isArchived) {
+              // if (conversation.isArchived) {
+              if (false) {
                 return const SizedBox.shrink();
               }
               return Column(
                 children: [
                   if (index == 0 && !showArchive) const RecentChatSeparator(isAtTop: true),
-                  RecentChatTile(conversation),
+                  FutureBuilder(
+                    future: _buildRecentChatTile(conversation, ref),
+                    builder: (context, snapshot) {
+                      return snapshot.hasData ? snapshot.data! : const SizedBox.shrink();
+                    },
+                  ),
                   const RecentChatSeparator(),
                 ],
               );
@@ -63,5 +70,24 @@ class RecentChatsTimelinePage extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  Future<Widget> _buildRecentChatTile(EventMessage message, WidgetRef ref) async {
+    if (message.kind == CommunityJoinEntity.kind) {
+      final entity = CommunityJoinEntity.fromEventMessage(message);
+      final community = await ref.read(communityMetadataProvider(entity.data.uuid).future);
+      final conversation = E2eeConversationEntity(
+        id: entity.id,
+        name: community.data.name,
+        type: ChatType.chat,
+        imageUrl: community.data.avatar?.url,
+        participants: [],
+        lastMessageContent: community.data.description,
+        lastMessageAt: message.createdAt,
+      );
+      return RecentChatTile(conversation);
+    }
+
+    return const SizedBox.shrink();
   }
 }
