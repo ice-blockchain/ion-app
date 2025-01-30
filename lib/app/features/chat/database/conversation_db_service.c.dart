@@ -7,7 +7,7 @@ import 'package:ion/app/features/chat/model/entities/private_direct_message_data
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/database/conversation_database.c.dart';
+import 'package:ion/app/features/chat/database/conversation_database.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

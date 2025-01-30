@@ -25,4 +25,4 @@ targets:
           use_sql_column_name_as_json_key : true
           databases:
             # Required: A name for the database and it's path
-            conversation_database: lib/app/services/database/conversation_database.c.dart
+            conversation_database: lib/app/features/chat/database/conversation_database.c.dart

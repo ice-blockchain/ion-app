@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/providers/conversation_message_management_
 import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
-import 'package:ion/app/services/database/conversation_db_service.c.dart';
+import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class ActionButton extends HookConsumerWidget {

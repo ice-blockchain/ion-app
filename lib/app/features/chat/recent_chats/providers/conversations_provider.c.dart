@@ -13,7 +13,7 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/services/database/conversation_db_service.c.dart';
+import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
