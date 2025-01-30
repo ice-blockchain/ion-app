@@ -76,7 +76,7 @@ class ArticleData
     String? summary,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
-    String? imageColor,
+    ColorLabel? colorLabel,
   }) = _ArticleData;
 
   const ArticleData._();
@@ -87,13 +87,6 @@ class ArticleData
     final title = tags['title']?.firstOrNull?.elementAtOrNull(1);
     final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
-
-    final hasNamespaceTag =
-        tags[ColorLabel.namespaceTagName]?.any(ColorLabel.isNamespaceTag) ?? false;
-    final colorTag =
-        hasNamespaceTag ? tags[ColorLabel.tagName]?.firstWhereOrNull(ColorLabel.isValueTag) : null;
-    final imageColor = colorTag != null ? ColorLabel.extractValue(colorTag) : null;
-
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
@@ -107,7 +100,7 @@ class ArticleData
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
-      imageColor: imageColor,
+      colorLabel: ColorLabel.fromTags(tags, eventId: eventMessage.id),
     );
   }
 
@@ -132,7 +125,7 @@ class ArticleData
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
       settings: settings,
-      imageColor: imageColor,
+      colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
     );
   }
 
@@ -154,8 +147,8 @@ class ArticleData
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-        if (imageColor != null) ColorLabel(value: imageColor).toNamespaceTag(),
-        if (imageColor != null) ColorLabel(value: imageColor).toValueTag(),
+        if (colorLabel != null) colorLabel!.toNamespaceTag(),
+        if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,
