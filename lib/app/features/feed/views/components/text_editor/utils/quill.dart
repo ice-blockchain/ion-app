@@ -7,6 +7,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/services/quill/attributes.dart';
 
 String encodeArticleContent(QuillController controller) {
   return jsonEncode(controller.document.toDelta().toJson());
@@ -86,7 +87,9 @@ DefaultStyles getCustomStyles(BuildContext context) {
 }
 
 TextStyle customTextStyleBuilder(Attribute<dynamic> attribute, BuildContext context) {
-  if (attribute.key == 'mention' || attribute.key == 'hashtag' || attribute.key == 'cashtag') {
+  if (attribute.key == MentionAttribute.attributeKey ||
+      attribute.key == HashtagAttribute.attributeKey ||
+      attribute.key == CashtagAttribute.attributeKey) {
     return TextStyle(
       color: context.theme.appColors.primaryAccent,
       decoration: TextDecoration.none,

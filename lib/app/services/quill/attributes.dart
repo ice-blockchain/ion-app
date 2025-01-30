@@ -2,21 +2,27 @@ import 'package:flutter_quill/flutter_quill.dart';
 
 class MentionAttribute extends Attribute<String> {
   const MentionAttribute(String mentionValue)
-      : super('mention', AttributeScope.inline, mentionValue);
+      : super(attributeKey, AttributeScope.inline, mentionValue);
 
   const MentionAttribute.withValue(String value) : this(value);
+
+  static const String attributeKey = 'mention';
 }
 
 class HashtagAttribute extends Attribute<String> {
   const HashtagAttribute(String hashtagValue)
-      : super('hashtag', AttributeScope.inline, hashtagValue);
+      : super(attributeKey, AttributeScope.inline, hashtagValue);
 
   const HashtagAttribute.withValue(String value) : this(value);
+
+  static const String attributeKey = 'hashtag';
 }
 
 class CashtagAttribute extends Attribute<String> {
   const CashtagAttribute(String cashtagValue)
-      : super('cashtag', AttributeScope.inline, cashtagValue);
+      : super(attributeKey, AttributeScope.inline, cashtagValue);
 
   const CashtagAttribute.withValue(String value) : this(value);
+
+  static const String attributeKey = 'cashtag';
 }
