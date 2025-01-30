@@ -6,12 +6,12 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
@@ -71,7 +71,7 @@ class ModifiablePostEntity
 
 @freezed
 class ModifiablePostData
-    with _$ModifiablePostData, EntityMediaDataMixin
+    with _$ModifiablePostData, EntityMediaDataMixin, EntitySettingsDataMixin
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
     required List<TextMatch> content,
@@ -184,13 +184,6 @@ class ModifiablePostData
       }
     }
     return replyId ?? rootReplyId;
-  }
-
-  WhoCanReplySettingsOption? get whoCanReplySetting {
-    final whoCanReplySetting =
-        settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
-            as WhoCanReplyEventSetting?;
-    return whoCanReplySetting?.values.firstOrNull;
   }
 
   @override

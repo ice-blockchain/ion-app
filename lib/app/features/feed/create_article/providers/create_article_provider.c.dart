@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -53,8 +54,8 @@ class CreateArticle extends _$CreateArticle {
           for (final attachment in mediaAttachments) attachment.url: attachment,
         },
         relatedHashtags: relatedHashtags,
-        publishedAt: publishedAt ?? DateTime.now(),
-        whoCanReplySettings: {whoCanReply},
+        publishedAt: publishedAt,
+        settings: EntitySettingsDataMixin.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
       );
 

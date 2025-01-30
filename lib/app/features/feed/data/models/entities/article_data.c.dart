@@ -7,10 +7,10 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
@@ -63,7 +63,9 @@ class ArticleEntity
 }
 
 @freezed
-class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEntityData {
+class ArticleData
+    with _$ArticleData, EntitySettingsDataMixin
+    implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
     required String content,
     required Map<String, MediaAttachment> media,
@@ -117,16 +119,9 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     String? summary,
     DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
-    Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
+    List<EventSetting>? settings,
     String? imageColor,
   }) {
-    final setting = whoCanReplySettings.isEmpty ||
-            whoCanReplySettings.every(
-              (option) => option.tagValue == null,
-            )
-        ? null
-        : WhoCanReplyEventSetting(values: whoCanReplySettings);
-
     return ArticleData(
       content: content,
       media: media,
@@ -136,7 +131,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
       publishedAt: EntityPublishedAt(value: publishedAt ?? DateTime.now()),
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
-      settings: setting != null ? [setting] : null,
+      settings: settings,
       imageColor: imageColor,
     );
   }
@@ -212,12 +207,5 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
       for (final tag in mediaTags)
         if (tag.length > 1) tag[1]: MediaAttachment.fromTag(tag),
     };
-  }
-
-  WhoCanReplySettingsOption? get whoCanReplySetting {
-    final whoCanReplySetting =
-        settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
-            as WhoCanReplyEventSetting?;
-    return whoCanReplySetting?.values.firstOrNull;
   }
 }
