@@ -6,20 +6,19 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
+import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/wallets/main_wallet_provider.c.dart';
-import 'package:ion/app/services/wallets/wallets_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'wallet_views_service.c.g.dart';
-
 part 'create_update_wallet_view_request_builder.dart';
+part 'wallet_views_service.c.g.dart';
 
 @riverpod
 Future<WalletViewsService> walletViewsService(Ref ref) async {
