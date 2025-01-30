@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
@@ -12,7 +13,6 @@ import 'package:ion/app/features/chat/providers/conversation_message_management_
 import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
-import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class ActionButton extends HookConsumerWidget {
