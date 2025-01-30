@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ion/app/extensions/go_router_state.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 class MainModalContent extends StatelessWidget {
@@ -22,7 +21,7 @@ class MainModalContent extends StatelessWidget {
           final metrics = controller.metrics;
 
           if (metrics.hasDimensions) {
-            context.go(state.currentTab.baseRouteLocation);
+            context.pop();
           }
         }
       },
