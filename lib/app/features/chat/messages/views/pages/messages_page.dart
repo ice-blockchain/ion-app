@@ -17,7 +17,8 @@ import 'package:ion/generated/assets.gen.dart';
 class MessagesPage extends HookConsumerWidget {
   MessagesPage(E2eeConversationEntity conversation, {super.key})
       : _conversation = conversation.copyWith(
-            participants: List<String>.from(conversation.participants)..sortBy<String>((e) => e));
+          participants: List<String>.from(conversation.participants)..sortBy<String>((e) => e),
+        );
 
   final E2eeConversationEntity _conversation;
 
