@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -357,7 +356,7 @@ class MessagesRoute extends BaseRouteData {
               imageUrl: imageUrl,
               imageWidth: imageWidth,
               imageHeight: imageHeight,
-              participants: List<String>.from(participants)..sortBy<String>((e) => e),
+              participants: participants,
             ),
           ),
           type: IceRouteType.fade,

@@ -41,9 +41,9 @@ Future<ConversationMessageManagementService> conversationMessageManagementServic
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
     compressionService: ref.watch(compressServiceProvider),
-    sealService: await ref.read(ionConnectSealServiceProvider.future),
+    sealService: await ref.watch(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
-    wrapService: await ref.read(ionConnectGiftWrapServiceProvider.future),
+    wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
     ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
   );
 }

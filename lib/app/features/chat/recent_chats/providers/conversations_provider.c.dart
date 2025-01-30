@@ -73,6 +73,7 @@ class Conversations extends _$Conversations {
     return state.requireValue;
   }
 
+  // TODO: Refactor and render conversation images in [recent_chat_tile]
   Future<E2eeConversationEntity> _getConversationData(
     PrivateDirectMessageEntity message,
     String devicePublicKey,

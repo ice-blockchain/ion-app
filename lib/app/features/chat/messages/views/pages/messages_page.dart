@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -14,17 +15,19 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagesPage extends HookConsumerWidget {
-  const MessagesPage(this.conversation, {super.key});
+  MessagesPage(E2eeConversationEntity conversation, {super.key})
+      : _conversation = conversation.copyWith(
+            participants: List<String>.from(conversation.participants)..sortBy<String>((e) => e));
 
-  final E2eeConversationEntity conversation;
+  final E2eeConversationEntity _conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = ref.watch(chatMessagesProvider(conversation)).value ?? [];
+    final messages = ref.watch(chatMessagesProvider(_conversation)).value ?? [];
 
     ref
       ..displayErrors(e2eeConversationManagementProvider)
-      ..displayErrors(chatMessagesProvider(conversation));
+      ..displayErrors(chatMessagesProvider(_conversation));
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -36,16 +39,16 @@ class MessagesPage extends HookConsumerWidget {
         child: Column(
           children: [
             MessagingHeader(
-              imageUrl: conversation.imageUrl,
-              imageWidget: conversation.imageUrl != null &&
-                      conversation.imageUrl.isNotEmpty &&
-                      conversation.type == ChatType.group
-                  ? Image.asset(conversation.imageUrl!)
+              imageUrl: _conversation.imageUrl,
+              imageWidget: _conversation.imageUrl != null &&
+                      _conversation.imageUrl.isNotEmpty &&
+                      _conversation.type == ChatType.group
+                  ? Image.asset(_conversation.imageUrl!)
                   : null,
-              name: conversation.name,
-              subtitle: conversation.type == ChatType.chat
+              name: _conversation.name,
+              subtitle: _conversation.type == ChatType.chat
                   ? Text(
-                      conversation.nickname ?? '',
+                      _conversation.nickname ?? '',
                       style: context.theme.appTextThemes.caption.copyWith(
                         color: context.theme.appColors.quaternaryText,
                       ),
@@ -55,7 +58,7 @@ class MessagesPage extends HookConsumerWidget {
                         Assets.svg.iconChannelMembers.icon(size: 10.0.s),
                         SizedBox(width: 4.0.s),
                         Text(
-                          conversation.participants.length.toString(),
+                          _conversation.participants.length.toString(),
                           style: context.theme.appTextThemes.caption.copyWith(
                             color: context.theme.appColors.quaternaryText,
                           ),
@@ -83,7 +86,7 @@ class MessagesPage extends HookConsumerWidget {
               Expanded(
                 child: ChatMessagesList(messages),
               ),
-            MessagingBottomBar(e2eeConversation: conversation),
+            MessagingBottomBar(e2eeConversation: _conversation),
           ],
         ),
       ),

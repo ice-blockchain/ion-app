@@ -16,7 +16,11 @@ import 'package:ion/app/services/database/conversation_db_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class ActionButton extends HookConsumerWidget {
-  const ActionButton({required this.e2eeConversation, required this.controller, super.key});
+  const ActionButton({
+    required this.e2eeConversation,
+    required this.controller,
+    super.key,
+  });
 
   final TextEditingController controller;
   final E2eeConversationEntity? e2eeConversation;

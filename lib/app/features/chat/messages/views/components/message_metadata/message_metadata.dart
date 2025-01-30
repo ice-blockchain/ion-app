@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageMetaData extends StatelessWidget {
@@ -23,7 +23,7 @@ class MessageMetaData extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            DateFormat.Hm().format(createdAt),
+            toTimeDisplayValue(createdAt.millisecondsSinceEpoch),
             style: context.theme.appTextThemes.caption4.copyWith(
               color: isMe
                   ? context.theme.appColors.strokeElements

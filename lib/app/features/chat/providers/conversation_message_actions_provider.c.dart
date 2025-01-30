@@ -39,9 +39,9 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
     databaseService: databaseService,
     env: ref.watch(envProvider.notifier),
     userPubkey: await ref.watch(currentPubkeySelectorProvider.future),
-    sealService: await ref.read(ionConnectSealServiceProvider.future),
+    sealService: await ref.watch(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
-    wrapService: await ref.read(ionConnectGiftWrapServiceProvider.future),
+    wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
     conversationMessageManagementService: conversationMessageManagementService,
   );
 }
