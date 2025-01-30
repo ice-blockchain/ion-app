@@ -7,66 +7,64 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
 import 'package:ion/app/utils/date.dart';
-import 'package:nip44/nip44.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_gift_wrap_service.c.g.dart';
 
 @riverpod
-IonConnectGiftWrapService ionConnectGiftWrapService(Ref ref) => IonConnectGiftWrapServiceImpl();
+Future<IonConnectGiftWrapService> ionConnectGiftWrapService(Ref ref) async =>
+    IonConnectGiftWrapServiceImpl(
+      e2eeService: await ref.read(ionConnectE2eeServiceProvider.future),
+    );
 
 abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap(
     EventMessage event,
     String receiverPubkey,
-    EventSigner signer,
     int contentKind, {
     List<String>? expirationTag,
   });
 
   Future<EventMessage> decodeWrap(
     String content,
-    String pubkey,
-    EventSigner signer,
+    String senderPubkey,
+    String privateKey,
   );
 }
 
 class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
+  const IonConnectGiftWrapServiceImpl({
+    required IonConnectE2eeService e2eeService,
+  }) : _e2eeService = e2eeService;
+
   static const int kind = 1059;
+  final IonConnectE2eeService _e2eeService;
 
   @override
   Future<EventMessage> createWrap(
     EventMessage event,
     String receiverPubkey,
-    EventSigner signer,
     int contentKind, {
     List<String>? expirationTag,
   }) async {
-    final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(
-        privateKey: signer.privateKey,
-        publicKey: receiverPubkey,
-      ),
-    );
+    final oneTimeSigner = await Ed25519KeyStore.generate();
 
-    final encryptedEvent = await Nip44.encryptMessage(
+    final encryptedEvent = await _e2eeService.encryptMessage(
       jsonEncode(event.toJson().last),
-      signer.privateKey,
-      receiverPubkey,
-      customConversationKey: conversationKey,
+      publicKey: receiverPubkey,
+      privateKey: oneTimeSigner.privateKey,
     );
 
     final createdAt = randomDateBefore(
       const Duration(days: 2),
     );
 
-    final oneTimeSigner = await Ed25519KeyStore.generate();
-
     return EventMessage.fromData(
-      signer: oneTimeSigner,
       kind: kind,
       createdAt: createdAt,
+      signer: oneTimeSigner,
       content: encryptedEvent,
       tags: [
         [RelatedPubkey.tagName, receiverPubkey],
@@ -79,18 +77,13 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   @override
   Future<EventMessage> decodeWrap(
     String content,
-    String pubkey,
-    EventSigner signer,
+    String senderPubkey,
+    String privateKey,
   ) async {
-    final conversationKey = Nip44.deriveConversationKey(
-      await Ed25519KeyStore.getSharedSecret(privateKey: signer.privateKey, publicKey: pubkey),
-    );
-
-    final decryptedContent = await Nip44.decryptMessage(
+    final decryptedContent = await _e2eeService.decryptMessage(
       content,
-      signer.privateKey,
-      pubkey,
-      customConversationKey: conversationKey,
+      publicKey: senderPubkey,
+      privateKey: privateKey,
     );
 
     return EventMessage.fromPayloadJson(

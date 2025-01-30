@@ -74,7 +74,7 @@ class Ed25519KeyStore with EventSigner {
     return Ed25519().verify(messageBytes, signature: signatureObject);
   }
 
-  static Future<Uint8List> getSharedSecret({
+  static Future<Uint8List> getX25519SharedSecret({
     required String privateKey,
     required String publicKey,
   }) async {

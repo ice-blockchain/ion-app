@@ -14,6 +14,7 @@ class EmojiMessage extends StatelessWidget {
   const EmojiMessage({
     required this.emoji,
     required this.isMe,
+    required this.createdAt,
     this.author,
     this.reactions,
     this.hasForwardedMessage = false,
@@ -22,6 +23,7 @@ class EmojiMessage extends StatelessWidget {
   });
   final bool isMe;
   final String emoji;
+  final DateTime createdAt;
   final List<MessageReactionGroup>? reactions;
   final bool isLastMessageFromAuthor;
   final bool hasForwardedMessage;
@@ -57,7 +59,7 @@ class EmojiMessage extends StatelessWidget {
                   MessageReactions(reactions: reactions),
                 ],
               ),
-              MessageMetaData(isMe: isMe),
+              MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),
         ],

@@ -15,13 +15,13 @@ class FollowerUsers extends ConsumerWidget {
   const FollowerUsers({
     required this.onUserSelected,
     this.selectable = false,
-    this.selectedPubkeys,
+    this.selectedPubkeys = const [],
     super.key,
   });
 
   final void Function(UserMetadataEntity user) onUserSelected;
   final bool selectable;
-  final List<String>? selectedPubkeys;
+  final List<String> selectedPubkeys;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +42,8 @@ class FollowerUsers extends ConsumerWidget {
           itemBuilder: (BuildContext context, int index) {
             final user = users.elementAt(index);
             return SelectableUserListItem(
-              pubkey: user.masterPubkey,
+              pubkey: user.pubkey,
+              masterPubkey: user.masterPubkey,
               onUserSelected: onUserSelected,
               selectedPubkeys: selectedPubkeys,
               selectable: selectable,

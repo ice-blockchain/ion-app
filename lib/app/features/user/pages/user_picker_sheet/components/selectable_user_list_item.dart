@@ -12,26 +12,29 @@ import 'package:ion/generated/assets.gen.dart';
 class SelectableUserListItem extends ConsumerWidget {
   const SelectableUserListItem({
     required this.pubkey,
+    required this.masterPubkey,
     required this.onUserSelected,
     super.key,
-    this.selectedPubkeys,
+    this.selectedPubkeys = const [],
     this.selectable = false,
   });
 
   final String pubkey;
+  final String masterPubkey;
   final void Function(UserMetadataEntity user) onUserSelected;
-  final List<String>? selectedPubkeys;
+  final List<String> selectedPubkeys;
   final bool selectable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataResult = ref.watch(userMetadataProvider(pubkey));
+    final userMetadataResult = ref.watch(userMetadataProvider(masterPubkey));
 
     return userMetadataResult.maybeWhen(
       data: (user) {
         if (user == null) return const SizedBox.shrink();
 
-        final isSelected = selectedPubkeys?.contains(pubkey) ?? false;
+        final isSelected =
+            selectedPubkeys.contains(masterPubkey) || (selectedPubkeys.contains(pubkey));
         return ListItem.user(
           onTap: () => onUserSelected(user),
           title: Text(user.data.displayName),

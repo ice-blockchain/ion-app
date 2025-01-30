@@ -2,15 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageMetaData extends StatelessWidget {
   const MessageMetaData({
     required this.isMe,
+    required this.createdAt,
     super.key,
   });
 
   final bool isMe;
+  final DateTime createdAt;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class MessageMetaData extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '12:23',
+            toTimeDisplayValue(createdAt.millisecondsSinceEpoch),
             style: context.theme.appTextThemes.caption4.copyWith(
               color: isMe
                   ? context.theme.appColors.strokeElements

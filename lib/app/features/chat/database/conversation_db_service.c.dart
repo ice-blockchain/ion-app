@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/database/conversation_database.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/database/ion_database.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,22 +15,25 @@ part 'conversation_db_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
 ConversationsDBService conversationsDBService(Ref ref) =>
-    ConversationsDBService(ref.watch(ionDatabaseProvider));
+    ConversationsDBService(ref.watch(conversationDatabaseProvider));
 
 class ConversationsDBService {
   ConversationsDBService(this._db);
 
-  final IONDatabase _db;
+  final ConversationDatabase _db;
 
   Future<int> _insertConversationData({
     required String conversationId,
     required EventMessage eventMessage,
     bool isDeleted = false,
-  }) {
+  }) async {
+    String? groupImagePath;
+
     final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return _db.into(_db.conversationMessagesTable).insert(
           ConversationMessagesTableData(
             isDeleted: isDeleted,
+            groupImagePath: groupImagePath,
             conversationId: conversationId,
             eventMessageId: conversationMessage.id,
             createdAt: conversationMessage.createdAt,
@@ -39,6 +43,19 @@ class ConversationsDBService {
           ),
           mode: InsertMode.insertOrReplace,
         );
+  }
+
+  Future<int> updateGroupConversationImage({
+    required String conversationId,
+    required String groupImagePath,
+  }) async {
+    return (_db.update(_db.conversationMessagesTable)
+          ..where((table) => table.conversationId.equals(conversationId)))
+        .write(
+      ConversationMessagesTableCompanion(
+        groupImagePath: Value(groupImagePath),
+      ),
+    );
   }
 
   Future<int> _insertConversationReactionsTableData(EventMessage eventMessage) {
@@ -63,10 +80,6 @@ class ConversationsDBService {
           mode: InsertMode.insertOrReplace,
         );
 
-    await _db.transaction<bool>(() async {
-      return true;
-    });
-
     if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
       await _updateConversationMessagesTable(eventMessage);
     } else if (eventMessage.kind == PrivateMessageReactionEntity.kind) {
@@ -87,7 +100,9 @@ class ConversationsDBService {
     if (eventMessage.kind != PrivateDirectMessageEntity.kind) return;
 
     final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-    final conversationIdByPubkeys = await _lookupConversationByPubkeys(conversationMessage);
+
+    final conversationIdByPubkeys =
+        await lookupConversationByPubkeys(conversationMessage.allPubkeysMask);
 
     if (conversationIdByPubkeys != null) {
       // Existing conversation (one-to-one or group)
@@ -97,23 +112,21 @@ class ConversationsDBService {
       );
     } else {
       // Existing group conversation (change of participants)
-      final conversationIdBySubject = await _lookupConversationBySubject(conversationMessage);
+      final conversationIdBySubject =
+          await lookupConversationBySubject(conversationMessage.data.relatedSubject?.value);
 
       if (conversationIdBySubject != null) {
         await _insertConversationData(
           eventMessage: eventMessage,
           conversationId: conversationIdBySubject,
         );
-      } else if (eventMessage.content.isEmpty) {
+      } else {
         // New conversation
         final uuid = generateUuid();
         await _insertConversationData(
           eventMessage: eventMessage,
           conversationId: uuid,
         );
-      } else {
-        // Invalid message (doesn't belong to any conversation)
-        throw ConversationIsNotFoundException();
       }
     }
   }
@@ -131,12 +144,10 @@ class ConversationsDBService {
   }
 
   // Check if there are conversations with the same pubkeys
-  Future<String?> _lookupConversationByPubkeys(
-    PrivateDirectMessageEntity conversationMessage,
-  ) async {
+  Future<String?> lookupConversationByPubkeys(String allPubkeysMask) async {
     final conversationsWithSameParticipants = await (_db.select(_db.conversationMessagesTable)
           ..where(
-            (table) => table.pubKeys.equals(conversationMessage.allPubkeysMask),
+            (table) => table.pubKeys.equals(allPubkeysMask),
           )
           ..limit(1))
         .get();
@@ -150,11 +161,7 @@ class ConversationsDBService {
 
   // Check if there are conversations with the same subject but different pubkeys
   // (this means that amount of participants in conversation was changed)
-  Future<String?> _lookupConversationBySubject(
-    PrivateDirectMessageEntity conversationMessage,
-  ) async {
-    final subject = conversationMessage.data.relatedSubject?.value;
-
+  Future<String?> lookupConversationBySubject(String? subject) async {
     if (subject == null) return null;
 
     final conversationWithChangedParticipants = await (_db.select(_db.conversationMessagesTable)
@@ -288,20 +295,56 @@ class ConversationsDBService {
   final _allConversationsLatestMessageQuery =
       'SELECT * FROM (SELECT * FROM conversation_messages_table WHERE is_deleted = 0 ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
 
-  Future<List<EventMessage>> getAllConversations() async {
+  Future<List<PrivateDirectMessageEntity>> getAllConversations() async {
     // Select last message of each conversation
     final uniqueConversationRows = await _db.customSelect(
       _allConversationsLatestMessageQuery,
       readsFrom: {_db.conversationMessagesTable},
     ).get();
 
-    final lastConversationEventMessages =
+    final lastConversationMessages =
         await _selectLastMessageOfEachConversation(uniqueConversationRows);
 
-    return lastConversationEventMessages;
+    return lastConversationMessages;
   }
 
-  Stream<List<EventMessage>> watchConversations() {
+  Future<List<PrivateDirectMessageEntity>> getConversationMessages(
+    E2eeConversationEntity conversation,
+  ) async {
+    late JoinedSelectStatement<HasResultSet, dynamic> query;
+    if (conversation.id != null) {
+      query = _db.select(_db.conversationMessagesTable).join([
+        innerJoin(
+          _db.eventMessagesTable,
+          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+        ),
+      ])
+        ..where(_db.conversationMessagesTable.conversationId.equals(conversation.id!))
+        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
+    } else {
+      query = _db.select(_db.conversationMessagesTable).join([
+        innerJoin(
+          _db.eventMessagesTable,
+          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+        ),
+      ])
+        ..where(_db.conversationMessagesTable.pubKeys.equals(conversation.participants.join(',')))
+        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
+    }
+
+    final data = await query.get();
+
+    final conversationMessages = data.map((row) {
+      final eventMessage = row.readTable(_db.eventMessagesTable);
+      return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
+    }).toList();
+
+    final sortedConversationMessages = conversationMessages.sortedBy<DateTime>((e) => e.createdAt);
+
+    return sortedConversationMessages;
+  }
+
+  Stream<List<PrivateDirectMessageEntity>> watchConversations() {
     return _db
         .customSelect(
           _allConversationsLatestMessageQuery,
@@ -317,28 +360,81 @@ class ConversationsDBService {
         });
   }
 
-  Future<List<EventMessage>> _selectLastMessageOfEachConversation(
+  Stream<List<PrivateDirectMessageEntity>> watchConversationMessages(
+    E2eeConversationEntity conversation,
+  ) {
+    late JoinedSelectStatement<HasResultSet, dynamic> query;
+
+    if (conversation.id != null) {
+      query = _db.select(_db.conversationMessagesTable).join([
+        innerJoin(
+          _db.eventMessagesTable,
+          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+        ),
+      ])
+        ..where(_db.conversationMessagesTable.conversationId.equals(conversation.id!))
+        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
+    } else {
+      query = _db.select(_db.conversationMessagesTable).join([
+        innerJoin(
+          _db.eventMessagesTable,
+          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+        ),
+      ])
+        ..where(_db.conversationMessagesTable.pubKeys.equals(conversation.participants.join(',')))
+        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
+    }
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        final eventMessage = row.readTable(_db.eventMessagesTable);
+        return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
+      }).toList();
+    });
+  }
+
+  FutureOr<List<PrivateDirectMessageEntity>> _selectLastMessageOfEachConversation(
     List<QueryRow> uniqueConversationRows,
   ) async {
-    final lastConversationMessagesIds =
+    final lastConversationMessagesId =
         uniqueConversationRows.map((row) => row.data['event_message_id'] as String).toList();
 
-    final lastConversationEventMessages = (await (_db.select(_db.eventMessagesTable)
-              ..where((table) => table.id.isIn(lastConversationMessagesIds)))
-            .get())
-        .map((e) => e.toEventMessage())
-        .toList();
+    final lastConversationGroupImagesMap = uniqueConversationRows.map((row) {
+      final groupImagePath = {
+        row.data['event_message_id'] as String: row.data['group_image_path'] as String?,
+      };
+      return groupImagePath;
+    }).toList();
 
-    return lastConversationEventMessages;
+    final lastConversationEventMessagesTableData = await (_db.select(_db.eventMessagesTable)
+          ..where((table) => table.id.isIn(lastConversationMessagesId)))
+        .get();
+
+    final lastConversationEventMessages =
+        lastConversationEventMessagesTableData.map((e) => e.toEventMessage());
+
+    final lastConversationMessages =
+        lastConversationEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
+
+    final lastConversationMessagesWithGroupImages = lastConversationMessages.map((message) {
+      final groupImagePath = lastConversationGroupImagesMap.firstWhere(
+        (element) => element.containsKey(message.id),
+        orElse: () => {message.id: null},
+      );
+
+      return message.copyWith(
+        data: message.data.copyWith(relatedGroupImagePath: groupImagePath[message.id]),
+      );
+    }).toList();
+
+    return lastConversationMessagesWithGroupImages;
   }
 
   Future<List<PrivateMessageReactionEntity>> getMessageReactions(
     String messageId,
   ) async {
     final reactionsEventMessagesIds = (await (_db.select(_db.conversationReactionsTable)
-              ..where(
-                (table) => table.messageId.equals(messageId),
-              ))
+              ..where((table) => table.messageId.equals(messageId)))
             .get())
         .map((reactionsTableData) => reactionsTableData.reactionEventId)
         .toList();

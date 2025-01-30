@@ -1,31 +1,37 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   late IonConnectGiftWrapService giftWrapService;
-  late EventSigner signer;
-  late String pubkey;
+  late EventSigner senderSigner;
+  late EventSigner receiverSigner;
 
   setUp(() async {
-    giftWrapService = IonConnectGiftWrapServiceImpl();
-    signer = await Ed25519KeyStore.generate();
-    pubkey = (await Ed25519KeyStore.generate()).publicKey;
+    senderSigner = await Ed25519KeyStore.generate();
+    receiverSigner = await Ed25519KeyStore.generate();
+    final e2eeService = IonConnectE2eeService(
+      eventSigner: senderSigner,
+      currentUserPubkey: senderSigner.publicKey,
+    );
+    giftWrapService = IonConnectGiftWrapServiceImpl(e2eeService: e2eeService);
   });
 
   group('IonConnectGiftWrapService', () {
     test('creates wrap from event', () async {
-      final event =
-          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: pubkey);
+      final event = await PrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event,
-        pubkey,
-        signer,
+        receiverSigner.publicKey,
         PrivateDirectMessageEntity.kind,
       );
 
@@ -34,26 +40,46 @@ void main() {
       expect(wrap.content, isNot(equals(event.content)));
       expect(wrap.tags, hasLength(2));
       expect(wrap.tags[0][0], equals('p'));
-      expect(wrap.tags[0][1], equals(pubkey));
+      expect(wrap.tags[0][1], equals(receiverSigner.publicKey));
       expect(wrap.tags[1][0], equals('k'));
       expect(wrap.tags[1][1], equals('14'));
     });
 
-    test('decodes wrap back to original event', () async {
-      final event =
-          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: pubkey);
+    test('decodes wrap back to original event on senders side', () async {
+      final event = await PrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event,
-        pubkey,
-        signer,
+        senderSigner.publicKey,
         PrivateDirectMessageEntity.kind,
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
         wrap.content,
-        pubkey,
-        signer,
+        wrap.pubkey,
+        senderSigner.privateKey,
+      );
+
+      expect(decodedWrap.kind, equals(14));
+      expect(decodedWrap.content, equals(event.content));
+      expect(decodedWrap.tags, equals(event.tags));
+    });
+
+    test('decodes wrap back to original event on receivers side', () async {
+      final event = await PrivateDirectMessageData.fromRawContent('test')
+          .toEventMessage(pubkey: senderSigner.publicKey);
+
+      final wrap = await giftWrapService.createWrap(
+        event,
+        receiverSigner.publicKey,
+        PrivateDirectMessageEntity.kind,
+      );
+
+      final decodedWrap = await giftWrapService.decodeWrap(
+        wrap.content,
+        wrap.pubkey,
+        receiverSigner.privateKey,
       );
 
       expect(decodedWrap.kind, equals(14));

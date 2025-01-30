@@ -24,6 +24,7 @@ class MoneyMessage extends HookWidget {
     required this.amount,
     required this.equivalentUsd,
     required this.chain,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
@@ -35,6 +36,7 @@ class MoneyMessage extends HookWidget {
   final double amount;
   final double equivalentUsd;
   final String chain;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -130,7 +132,7 @@ class MoneyMessage extends HookWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe),
+              MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),
         ],

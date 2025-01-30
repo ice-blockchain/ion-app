@@ -7,19 +7,22 @@ import 'package:ion/generated/assets.gen.dart';
 class SendButton extends StatelessWidget {
   const SendButton({
     required this.onSend,
+    this.disabled = false,
     super.key,
   });
 
+  final bool disabled;
   final VoidCallback onSend;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onSend,
+      onTap: disabled ? null : onSend,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 4.0.s),
         decoration: BoxDecoration(
-          color: context.theme.appColors.primaryAccent,
+          color:
+              disabled ? context.theme.appColors.sheetLine : context.theme.appColors.primaryAccent,
           borderRadius: BorderRadius.circular(12.0.s),
         ),
         child: Assets.svg.iconChatSendmessage.icon(

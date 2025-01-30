@@ -3,18 +3,18 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ion/app/features/chat/database/conversation_database.c.dart';
+import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/database/conversation_db_service.c.dart';
-import 'package:ion/app/services/database/ion_database.c.dart';
 
 void main() {
-  late IONDatabase database;
+  late ConversationDatabase database;
   late ConversationsDBService conversationsService;
 
   setUp(() async {
-    database = IONDatabase.test(
+    database = ConversationDatabase.test(
       DatabaseConnection(
         NativeDatabase.memory(),
         closeStreamsSynchronously: true,
@@ -90,7 +90,7 @@ void main() {
       expect(eventMessages.length, 2);
       expect(conversationMessages.length, 2);
       expect(conversations.length, 1);
-      expect(conversations.single.content, 'First message');
+      expect(conversations.single.data.content.map((e) => e.text).join(), 'First message');
     });
 
     test('Insert initial one-to-one conversation, first message and reply', () async {
@@ -101,6 +101,7 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
           ],
           content: '',
@@ -115,6 +116,7 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
           ],
           content: 'First message',
@@ -130,6 +132,7 @@ void main() {
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
             ['p', 'pubkey0'],
+            ['p', 'pubkey1'],
           ],
           content: 'Reply to the first message',
           sig: null,
@@ -139,7 +142,10 @@ void main() {
       final conversations = await conversationsService.getAllConversations();
 
       expect(conversations.length, 1);
-      expect(conversations.single.content, 'Reply to the first message');
+      expect(
+        conversations.single.data.content.map((e) => e.text).join(),
+        'Reply to the first message',
+      );
     });
 
     test('Insert initial group conversation', () async {
@@ -164,9 +170,7 @@ void main() {
       final conversationMessage =
           await database.select(database.conversationMessagesTable).getSingle();
 
-      final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await conversationsService.getAllConversations()).single,
-      );
+      final conversations = (await conversationsService.getAllConversations()).single;
 
       expect(eventMessage.id, '0');
       expect(conversationMessage.eventMessageId, eventMessage.id);
@@ -206,9 +210,7 @@ void main() {
         ),
       );
 
-      final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await conversationsService.getAllConversations()).single,
-      );
+      final conversations = (await conversationsService.getAllConversations()).single;
 
       expect(
         conversations.data.content.map((m) => m.text).join(' '),
@@ -265,9 +267,7 @@ void main() {
         ),
       );
 
-      final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await conversationsService.getAllConversations()).single,
-      );
+      final conversations = (await conversationsService.getAllConversations()).single;
 
       expect(
         conversations.data.content.map((m) => m.text).join(' '),
@@ -324,9 +324,7 @@ void main() {
         ),
       );
 
-      final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await conversationsService.getAllConversations()).single,
-      );
+      final conversations = (await conversationsService.getAllConversations()).single;
 
       expect(conversations.data.relatedSubject?.value, 'Group subject changed');
     });
@@ -381,9 +379,7 @@ void main() {
         ),
       );
 
-      final conversations = PrivateDirectMessageEntity.fromEventMessage(
-        (await conversationsService.getAllConversations()).single,
-      );
+      final conversations = (await conversationsService.getAllConversations()).single;
 
       expect(conversations.data.relatedPubkeys?.length, 3);
       expect(conversations.data.relatedSubject?.value, 'Group subject');

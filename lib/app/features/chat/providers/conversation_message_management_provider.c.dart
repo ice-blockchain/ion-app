@@ -24,7 +24,6 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,7 +31,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_message_management_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Raw<Future<ConversationMessageManagementService>> conversationMessageManagementService(
+Future<ConversationMessageManagementService> conversationMessageManagementService(
   Ref ref,
 ) async {
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
@@ -41,10 +40,10 @@ Raw<Future<ConversationMessageManagementService>> conversationMessageManagementS
     eventSigner: eventSigner,
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
-    sealService: ref.watch(ionConnectSealServiceProvider),
     compressionService: ref.watch(compressServiceProvider),
+    sealService: await ref.watch(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
-    wrapService: ref.watch(ionConnectGiftWrapServiceProvider),
+    wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
     ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
   );
 }
@@ -222,11 +221,11 @@ class ConversationMessageManagementService {
     final createdAt = DateTime.now().toUtc();
 
     final id = EventMessage.calculateEventId(
-      publicKey: signer.publicKey,
-      createdAt: createdAt,
-      kind: PrivateDirectMessageEntity.kind,
       tags: tags,
       content: content,
+      createdAt: createdAt,
+      publicKey: signer.publicKey,
+      kind: PrivateDirectMessageEntity.kind,
     );
 
     final eventMessage = EventMessage(
@@ -241,11 +240,10 @@ class ConversationMessageManagementService {
 
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
+        // TODO:  Create GIFT_WRAP_EXPIRATION_TIME env variable
         Duration(hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS)),
       ),
     ).toTag();
-
-    Logger.log('Event message $eventMessage');
 
     final seal = await sealService.createSeal(
       eventMessage,
@@ -253,17 +251,12 @@ class ConversationMessageManagementService {
       receiverPubkey,
     );
 
-    Logger.log('Seal message $seal');
-
     final wrap = await wrapService.createWrap(
       seal,
       receiverPubkey,
-      signer,
       PrivateDirectMessageEntity.kind,
       expirationTag: expirationTag,
     );
-
-    Logger.log('Wrap message $wrap');
 
     return wrap;
   }
@@ -271,8 +264,8 @@ class ConversationMessageManagementService {
   Future<IonConnectEntity?> _sendGiftWrap(EventMessage giftWrap, {required String pubkey}) async {
     return ionConnectNotifier.sendEvent(
       giftWrap,
-      actionSource: ActionSourceUserChat(pubkey, anonymous: true),
       cache: false,
+      actionSource: ActionSourceUserChat(pubkey, anonymous: true),
     );
   }
 

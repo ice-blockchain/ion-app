@@ -18,6 +18,7 @@ class VideoMessage extends HookConsumerWidget {
   const VideoMessage({
     required this.isMe,
     required this.videoUrl,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.author,
     this.message,
@@ -28,6 +29,7 @@ class VideoMessage extends HookConsumerWidget {
   final bool isMe;
   final String? message;
   final String videoUrl;
+  final DateTime createdAt;
   final bool isLastMessageFromAuthor;
   final MessageAuthor? author;
   final List<MessageReactionGroup>? reactions;
@@ -86,6 +88,7 @@ class VideoMessage extends HookConsumerWidget {
               isMe: isMe,
               message: message ?? '',
               reactions: reactions,
+              createdAt: createdAt,
             ),
           ],
         ),

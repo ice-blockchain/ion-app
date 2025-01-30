@@ -16,6 +16,7 @@ class PhotoMessage extends HookWidget {
   const PhotoMessage({
     required this.isMe,
     required this.imageUrl,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.message,
     this.reactions,
@@ -24,8 +25,10 @@ class PhotoMessage extends HookWidget {
   });
 
   final bool isMe;
+
   final String? message;
   final String imageUrl;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -77,6 +80,7 @@ class PhotoMessage extends HookWidget {
                 ),
                 SizedBox(height: 8.0.s),
                 _MessageContent(
+                  createdAt: createdAt,
                   key: contentContainerKey.value,
                   message: message,
                   isMe: isMe,
@@ -122,6 +126,7 @@ class _PhotoContent extends StatelessWidget {
 class _MessageContent extends StatelessWidget {
   const _MessageContent({
     required this.isMe,
+    required this.createdAt,
     this.message,
     this.reactions,
     super.key,
@@ -129,6 +134,7 @@ class _MessageContent extends StatelessWidget {
 
   final String? message;
   final bool isMe;
+  final DateTime createdAt;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -156,7 +162,7 @@ class _MessageContent extends StatelessWidget {
             ],
           ),
         ),
-        MessageMetaData(isMe: isMe),
+        MessageMetaData(isMe: isMe, createdAt: createdAt),
       ],
     );
   }

@@ -28,6 +28,7 @@ class AudioMessage extends HookConsumerWidget {
     required this.id,
     required this.audioUrl,
     required this.isMe,
+    required this.createdAt,
     this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
@@ -36,7 +37,9 @@ class AudioMessage extends HookConsumerWidget {
 
   final bool isMe;
   final String id;
+
   final String audioUrl;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -135,6 +138,7 @@ class AudioMessage extends HookConsumerWidget {
             MessageMetaData(
               key: metadataKey,
               isMe: isMe,
+              createdAt: createdAt,
             ),
           ],
         ),

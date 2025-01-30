@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -21,8 +22,9 @@ import 'package:ion/app/features/chat/messages/views/components/message_types/vi
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/providers/author_to_display_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
-class ChatMessagesList extends ConsumerWidget {
+class ChatMessagesList extends HookConsumerWidget {
   const ChatMessagesList(
     this.messages, {
     super.key,
@@ -37,10 +39,16 @@ class ChatMessagesList extends ConsumerWidget {
     final authorToDisplayProvider = ref.watch(
       authorsToDisplayProviderProvider(messages).notifier,
     );
+
+    final scrollController = useScrollController();
+
+    useOnInit(() => scrollController.jumpTo(scrollController.position.maxScrollExtent));
+
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
       child: ListView.separated(
         itemCount: messages.length,
+        controller: scrollController,
         padding: EdgeInsets.symmetric(vertical: 12.0.s),
         itemBuilder: (context, index) {
           final message = messages[index];
@@ -65,6 +73,7 @@ class ChatMessagesList extends ConsumerWidget {
             system: (message) => SystemMessage(message: message.text),
             text: (message) => TextMessage(
               message: message.text,
+              createdAt: message.time,
               isMe: message.author.isCurrentUser,
               repliedMessage: message.repliedMessage,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
@@ -72,6 +81,7 @@ class ChatMessagesList extends ConsumerWidget {
             ),
             photo: (message) => PhotoMessage(
               isMe: isMe,
+              createdAt: message.time,
               imageUrl: message.imageUrl,
               message: message.text,
               reactions: mockReactionsMany,
@@ -80,6 +90,7 @@ class ChatMessagesList extends ConsumerWidget {
             ),
             emoji: (message) => EmojiMessage(
               emoji: message.emoji,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               isMe: isMe,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
@@ -88,6 +99,7 @@ class ChatMessagesList extends ConsumerWidget {
             ),
             audio: (message) => AudioMessage(
               id: message.audioId,
+              createdAt: message.time,
               audioUrl: message.audioUrl,
               isMe: isMe,
               reactions: mockReactionsMany,
@@ -97,6 +109,7 @@ class ChatMessagesList extends ConsumerWidget {
             video: (message) => VideoMessage(
               isMe: isMe,
               message: message.text,
+              createdAt: message.time,
               author: authorToDisplay,
               videoUrl: message.videoUrl,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
@@ -104,24 +117,28 @@ class ChatMessagesList extends ConsumerWidget {
             link: (message) => UrlPreviewMessage(
               isMe: isMe,
               url: message.link,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             shareProfile: (message) => ProfileShareMessage(
               isMe: isMe,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             poll: (message) => PollMessage(
               isMe: isMe,
+              createdAt: message.time,
               reactions: mockReactionsSimple,
               author: authorToDisplay,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
             ),
             money: (message) => MoneyMessage(
               isMe: isMe,
+              createdAt: message.time,
               type: message.type,
               amount: message.amount,
               equivalentUsd: message.usdt,

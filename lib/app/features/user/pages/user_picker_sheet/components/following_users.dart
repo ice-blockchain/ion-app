@@ -11,13 +11,13 @@ import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 class FollowingUsers extends ConsumerWidget {
   const FollowingUsers({
     required this.onUserSelected,
-    this.selectedPubkeys,
+    this.selectedPubkeys = const [],
     this.selectable = false,
     super.key,
   });
 
   final void Function(UserMetadataEntity user) onUserSelected;
-  final List<String>? selectedPubkeys;
+  final List<String> selectedPubkeys;
   final bool selectable;
 
   @override
@@ -31,6 +31,7 @@ class FollowingUsers extends ConsumerWidget {
           itemBuilder: (context, index) {
             return SelectableUserListItem(
               pubkey: pubkeys[index],
+              masterPubkey: pubkeys[index],
               onUserSelected: onUserSelected,
               selectedPubkeys: selectedPubkeys,
               selectable: selectable,

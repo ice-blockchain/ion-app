@@ -18,6 +18,7 @@ class UrlPreviewMessage extends HookWidget {
   const UrlPreviewMessage({
     required this.url,
     required this.isMe,
+    required this.createdAt,
     this.author,
     this.reactions,
     this.isLastMessageFromAuthor = true,
@@ -26,6 +27,7 @@ class UrlPreviewMessage extends HookWidget {
 
   final bool isMe;
   final String url;
+  final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
@@ -67,7 +69,7 @@ class UrlPreviewMessage extends HookWidget {
                 children: [
                   MessageReactions(reactions: reactions),
                   const Spacer(),
-                  MessageMetaData(isMe: isMe),
+                  MessageMetaData(isMe: isMe, createdAt: createdAt),
                 ],
               ),
             ],

@@ -8,10 +8,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_database.c.g.dart';
+part 'conversation_database.c.g.dart';
 
 @Riverpod(keepAlive: true)
-IONDatabase ionDatabase(Ref ref) => IONDatabase();
+ConversationDatabase conversationDatabase(Ref ref) => ConversationDatabase();
 
 // DO NOT create or use database directly, use proxy notifier
 // [IONDatabaseNotifier] methods instead
@@ -22,17 +22,17 @@ IONDatabase ionDatabase(Ref ref) => IONDatabase();
     ConversationReactionsTable,
   ],
 )
-class IONDatabase extends _$IONDatabase {
-  IONDatabase() : super(_openConnection());
+class ConversationDatabase extends _$ConversationDatabase {
+  ConversationDatabase() : super(_openConnection());
 
   // For testing executor
-  IONDatabase.test(super.e);
+  ConversationDatabase.test(super.e);
 
   @override
   int get schemaVersion => 1;
 
   static QueryExecutor _openConnection() {
-    return driftDatabase(name: 'ion_database');
+    return driftDatabase(name: 'conversation_database');
   }
 }
 
@@ -62,6 +62,7 @@ class ConversationMessagesTable extends Table {
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get subject => text().nullable()();
   IntColumn get status => intEnum<DeliveryStatus>()();
+  TextColumn get groupImagePath => text().nullable()();
   BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
 
   @override

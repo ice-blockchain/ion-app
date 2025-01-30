@@ -3,8 +3,14 @@
 part of 'poll_message.dart';
 
 class PollResultMessage extends StatelessWidget {
-  const PollResultMessage({required this.isMe, super.key, this.reactions});
+  const PollResultMessage({
+    required this.isMe,
+    required this.createdAt,
+    super.key,
+    this.reactions,
+  });
   final bool isMe;
+  final DateTime createdAt;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -45,7 +51,7 @@ class PollResultMessage extends StatelessWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe),
+              MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),
         ],

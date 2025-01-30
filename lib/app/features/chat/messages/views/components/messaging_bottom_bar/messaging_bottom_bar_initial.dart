@@ -10,12 +10,14 @@ import 'package:ion/generated/assets.gen.dart';
 
 class BottomBarInitialView extends HookConsumerWidget {
   const BottomBarInitialView({
+    required this.controller,
     super.key,
   });
 
+  final TextEditingController controller;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useTextEditingController();
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
     useEffect(
@@ -116,7 +118,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  onSubmitted: (value) => controller.clear(),
+                  onSubmitted: (_) => controller.clear(),
                 ),
               ),
               SizedBox(width: 6.0.s),

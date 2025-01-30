@@ -49,7 +49,6 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 
   List<String> get allPubkeys {
     return data.relatedPubkeys?.map((pubkey) => pubkey.value).toList() ?? []
-      ..add(pubkey)
       ..sort();
   }
 
@@ -67,6 +66,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
   const factory PrivateDirectMessageData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
+    String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedEvent>? relatedEvents,
