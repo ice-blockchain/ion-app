@@ -12,9 +12,9 @@ import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteEmailInitialStep extends StatelessWidget {
-  const DeleteEmailInitialStep({required this.onButtonPressed, super.key});
+  const DeleteEmailInitialStep({required this.onNext, super.key});
 
-  final VoidCallback onButtonPressed;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class DeleteEmailInitialStep extends StatelessWidget {
         ],
       ),
       buttonLabel: locale.two_fa_delete_email_button,
-      onButtonPressed: onButtonPressed,
+      onButtonPressed: onNext,
     );
   }
 }

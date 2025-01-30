@@ -10,11 +10,13 @@ import 'package:ion/generated/assets.gen.dart';
 
 class DeleteAuthenticatorSelectOptionsStep extends HookWidget {
   const DeleteAuthenticatorSelectOptionsStep({
-    required this.onButtonPressed,
+    required this.onNext,
+    required this.onPrevious,
     super.key,
   });
 
-  final VoidCallback onButtonPressed;
+  final VoidCallback onNext;
+  final VoidCallback onPrevious;
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +26,11 @@ class DeleteAuthenticatorSelectOptionsStep extends HookWidget {
       headerIcon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
       headerTitle: locale.authenticator_delete_title,
       headerDescription: locale.authenticator_delete_description,
+      onBackPress: onPrevious,
       child: TwoFASelectOptionStep(
         formKey: useRef(GlobalKey<FormState>()).value,
         twoFaType: TwoFaType.auth,
-        onConfirm: onButtonPressed,
+        onConfirm: onNext,
       ),
     );
   }

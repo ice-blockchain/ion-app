@@ -20,7 +20,7 @@ class TwoFAInputStep extends HookConsumerWidget {
   });
 
   final List<TwoFaType> twoFaTypes;
-  final void Function(Map<TwoFaType, String> controllers) onConfirm;
+  final void Function(Map<TwoFaType, String> values) onConfirm;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

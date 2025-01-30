@@ -43,8 +43,7 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
   }
 
   Future<void> requestEditTwoFaCode(
-    TwoFAType newTwoFa,
-    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity, {
+    TwoFAType newTwoFa, {
     required List<TwoFAType> verificationCodes,
     required String oldTwoFaValue,
   }) async {
@@ -57,12 +56,25 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
     state = await AsyncValue.guard(() async {
       final client = await ref.read(ionIdentityClientProvider.future);
 
-      return client.auth.requestTwoFACode(
-        twoFAType: newTwoFa,
-        onVerifyIdentity: onVerifyIdentity,
-        verificationCodes: verificationCodes,
-        twoFaValueToReplace: oldTwoFaValue,
+      final verificationCodesMap = verificationCodes.fold<Map<String, String>>(
+        {},
+        (previousValue, element) => {
+          ...previousValue,
+          element.option: element.value!,
+        },
       );
+
+      final twoFaWrapper = ref.read(twoFaSignatureWrapperNotifierProvider.notifier);
+      String? code;
+      await twoFaWrapper.wrapWithSignature((signature) async {
+        code = await client.auth.requestTwoFACode(
+          twoFAType: newTwoFa,
+          verificationCodes: verificationCodesMap,
+          twoFaValueToReplace: oldTwoFaValue,
+          signature: signature,
+        );
+      });
+      return code;
     });
   }
 

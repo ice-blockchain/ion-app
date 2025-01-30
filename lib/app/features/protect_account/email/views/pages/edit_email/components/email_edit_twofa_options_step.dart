@@ -11,10 +11,12 @@ import 'package:ion/generated/assets.gen.dart';
 class EmailEditTwoFaOptionsStep extends HookWidget {
   const EmailEditTwoFaOptionsStep({
     required this.onNext,
+    required this.onPrevious,
     super.key,
   });
 
   final VoidCallback onNext;
+  final VoidCallback onPrevious;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class EmailEditTwoFaOptionsStep extends HookWidget {
       headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       headerTitle: locale.two_fa_edit_email_title,
       headerDescription: locale.two_fa_edit_email_options_description,
+      onBackPress: onPrevious,
       child: TwoFASelectOptionStep(
         formKey: useRef(GlobalKey<FormState>()).value,
         twoFaType: TwoFaType.email,

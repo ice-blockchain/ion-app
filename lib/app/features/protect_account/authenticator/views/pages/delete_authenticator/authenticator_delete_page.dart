@@ -8,6 +8,7 @@ import 'package:ion/app/features/protect_account/authenticator/views/pages/delet
 import 'package:ion/app/features/protect_account/authenticator/views/pages/delete_authenticator/components/delete_authenticator_select_options_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/delete_twofa_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class AuthenticatorDeletePage extends HookWidget {
   const AuthenticatorDeletePage({super.key});
@@ -22,12 +23,16 @@ class AuthenticatorDeletePage extends HookWidget {
       ],
       child: switch (step.value) {
         DeleteTwoFAStep.initial => DeleteAuthenticatorInitialStep(
-            onButtonPressed: () => step.value = DeleteTwoFAStep.selectOptions,
+            onNext: () => step.value = DeleteTwoFAStep.selectOptions,
           ),
         DeleteTwoFAStep.selectOptions => DeleteAuthenticatorSelectOptionsStep(
-            onButtonPressed: () => step.value = DeleteTwoFAStep.input,
+            onNext: () => step.value = DeleteTwoFAStep.input,
+            onPrevious: () => Navigator.of(context).pop(),
           ),
-        DeleteTwoFAStep.input => const DeleteAuthenticatorInputStep(),
+        DeleteTwoFAStep.input => DeleteAuthenticatorInputStep(
+            onNext: () => AuthenticatorDeleteSuccessRoute().push<void>(context),
+            onPrevious: () => step.value = DeleteTwoFAStep.selectOptions,
+          ),
       },
     );
   }

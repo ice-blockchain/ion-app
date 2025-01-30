@@ -2,17 +2,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/protect_account/components/twofa_initial_scaffold.dart';
 import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeletePhoneInitialStep extends StatelessWidget {
-  const DeletePhoneInitialStep({required this.onButtonPressed, super.key});
+  const DeletePhoneInitialStep({required this.onNext, super.key});
 
-  final VoidCallback onButtonPressed;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +30,12 @@ class DeletePhoneInitialStep extends StatelessWidget {
           Assets.svg.icon2faPhoneVerification.icon(size: 80.0.s),
           SizedBox(height: 16.0.s),
           const _LinkedPhone(),
+          SizedBox(height: 24.0.s),
+          const _EditPhoneButton(),
         ],
       ),
       buttonLabel: locale.button_delete,
-      onButtonPressed: onButtonPressed,
+      onButtonPressed: onNext,
     );
   }
 }
@@ -56,25 +60,32 @@ class _LinkedPhone extends ConsumerWidget {
           ),
         ),
         SizedBox(height: 8.0.s),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              shortenedPhone,
-              style: context.theme.appTextThemes.subtitle.copyWith(
-                color: colors.primaryText,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Assets.svg.iconEditLink.icon(
-                size: 24.0.s,
-                color: colors.primaryAccent,
-              ),
-            ),
-          ],
+        Text(
+          shortenedPhone,
+          style: context.theme.appTextThemes.subtitle.copyWith(
+            color: colors.primaryText,
+          ),
         ),
       ],
+    );
+  }
+}
+
+class _EditPhoneButton extends StatelessWidget {
+  const _EditPhoneButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = context.i18n;
+    final colors = context.theme.appColors;
+
+    return Button(
+      type: ButtonType.outlined,
+      label: Text(locale.two_fa_edit_phone_button),
+      minimumSize: Size(0.0.s, 44.0.s),
+      leadingIcon: Assets.svg.iconEditLink.icon(size: 24.0.s),
+      borderColor: colors.onTerararyFill,
+      onPressed: () => PhoneEditRoute().push<void>(context),
     );
   }
 }

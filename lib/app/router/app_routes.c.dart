@@ -83,6 +83,8 @@ import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/select_country_page.dart';
 import 'package:ion/app/features/protect_account/phone/views/pages/delete_phone/phone_delete_page.dart';
 import 'package:ion/app/features/protect_account/phone/views/pages/delete_phone/phone_delete_success.dart';
+import 'package:ion/app/features/protect_account/phone/views/pages/edit_phone/phone_edit_page.dart';
+import 'package:ion/app/features/protect_account/phone/views/pages/edit_phone/phone_edit_success_page.dart';
 import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/phone_setup_page.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_modal.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_options_page.dart';

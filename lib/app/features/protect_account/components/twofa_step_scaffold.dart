@@ -16,6 +16,7 @@ class TwoFAStepScaffold extends ConsumerWidget {
     required this.headerIcon,
     required this.child,
     this.contentPadding,
+    this.onBackPress,
     super.key,
   });
 
@@ -24,6 +25,7 @@ class TwoFAStepScaffold extends ConsumerWidget {
   final Widget headerIcon;
   final Widget child;
   final double? contentPadding;
+  final VoidCallback? onBackPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,6 +39,7 @@ class TwoFAStepScaffold extends ConsumerWidget {
               actions: const [
                 NavigationCloseButton(),
               ],
+              onBackPress: onBackPress,
             ),
             toolbarHeight: NavigationAppBar.modalHeaderHeight,
             automaticallyImplyLeading: false,

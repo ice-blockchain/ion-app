@@ -32,7 +32,7 @@ class TwoFADataSource {
     required String username,
     required String userId,
     required String twoFAOption,
-    List<TwoFAType>? verificationCodes,
+    Map<String, String>? verificationCodes,
     String? signature,
     String? email,
     String? phoneNumber,
@@ -44,17 +44,8 @@ class TwoFADataSource {
         throw const UnauthenticatedException();
       }
 
-      final verificationCodesMap = verificationCodes?.fold<Map<String, String>>(
-            {},
-            (previousValue, element) => {
-              ...previousValue,
-              element.option: element.value!,
-            },
-          ) ??
-          {};
-
       final body = InitTwoFARequest(
-        verificationCodes: verificationCodesMap,
+        verificationCodes: verificationCodes,
         email: email,
         phoneNumber: phoneNumber,
         replace: replace,

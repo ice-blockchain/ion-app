@@ -9,9 +9,14 @@ import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.
 import 'package:ion/generated/assets.gen.dart';
 
 class DeletePhoneSelectOptionsStep extends HookWidget {
-  const DeletePhoneSelectOptionsStep({required this.onButtonPressed, super.key});
+  const DeletePhoneSelectOptionsStep({
+    required this.onNext,
+    required this.onPrevious,
+    super.key,
+  });
 
-  final VoidCallback onButtonPressed;
+  final VoidCallback onNext;
+  final VoidCallback onPrevious;
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +26,11 @@ class DeletePhoneSelectOptionsStep extends HookWidget {
       headerIcon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
       headerTitle: locale.two_fa_deleting_phone_title,
       headerDescription: locale.two_fa_deleting_phone_description,
+      onBackPress: onPrevious,
       child: TwoFASelectOptionStep(
         formKey: useRef(GlobalKey<FormState>()).value,
         twoFaType: TwoFaType.sms,
-        onConfirm: onButtonPressed,
+        onConfirm: onNext,
       ),
     );
   }

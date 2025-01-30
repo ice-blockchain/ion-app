@@ -24,6 +24,8 @@ class ProtectAccountRoutes {
     TypedGoRoute<EmailDeleteRoute>(path: 'email-delete'),
     TypedGoRoute<EmailDeleteSuccessRoute>(path: 'email-delete-success'),
     TypedGoRoute<PhoneSetupRoute>(path: 'phone-setup/:step'),
+    TypedGoRoute<PhoneEditRoute>(path: 'phone-edit'),
+    TypedGoRoute<PhoneEditSuccessRoute>(path: 'phone-edit-success'),
     TypedGoRoute<PhoneDeleteRoute>(path: 'phone-delete'),
     TypedGoRoute<PhoneDeleteSuccessRoute>(path: 'phone-delete-success'),
     TypedGoRoute<SelectCountriesRoute>(path: 'select-countries'),
@@ -194,6 +196,22 @@ class PhoneSetupRoute extends BaseRouteData {
 
   final PhoneSetupSteps step;
   String? phone;
+}
+
+class PhoneEditRoute extends BaseRouteData {
+  PhoneEditRoute()
+      : super(
+          child: const PhoneEditPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class PhoneEditSuccessRoute extends BaseRouteData {
+  PhoneEditSuccessRoute()
+      : super(
+          child: const PhoneEditSuccessPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class PhoneDeleteRoute extends BaseRouteData {

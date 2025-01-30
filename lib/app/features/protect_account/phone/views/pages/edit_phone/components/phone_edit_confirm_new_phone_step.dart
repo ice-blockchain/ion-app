@@ -8,15 +8,15 @@ import 'package:ion/app/features/protect_account/components/two_fa_edit_new_valu
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class EmailEditConfirmNewEmailStep extends HookConsumerWidget {
-  const EmailEditConfirmNewEmailStep({
-    required this.email,
+class PhoneEditConfirmNewPhoneStep extends HookConsumerWidget {
+  const PhoneEditConfirmNewPhoneStep({
+    required this.phone,
     required this.onNext,
     required this.onPrevious,
     super.key,
   });
 
-  final String email;
+  final String phone;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
 
@@ -25,14 +25,14 @@ class EmailEditConfirmNewEmailStep extends HookConsumerWidget {
     final locale = context.i18n;
 
     return TwoFAStepScaffold(
-      headerTitle: locale.two_fa_edit_email_title,
+      headerTitle: locale.two_fa_edit_phone_title,
       headerDescription: locale.two_fa_code_confirmation,
-      headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
+      headerIcon: Assets.svg.icon2faPhoneconfirm.icon(size: 36.0.s),
       onBackPress: onPrevious,
       contentPadding: 0,
       child: TwoFaEditConfirmNewValueStep(
-        newValue: email,
-        twoFaType: TwoFaType.email,
+        newValue: phone,
+        twoFaType: TwoFaType.sms,
         onNext: onNext,
       ),
     );
