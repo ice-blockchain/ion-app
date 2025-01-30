@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -19,6 +20,7 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/services/quill/markdown.dart';
 
 part 'article_data.c.freezed.dart';
 
@@ -90,7 +92,7 @@ class ArticleData
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
-      content: eventMessage.content,
+      content: jsonEncode(markdownToDelta(eventMessage.content).toJson()), //TODO:Delta in content
       media: mediaAttachments,
       title: title,
       image: image,
@@ -151,7 +153,9 @@ class ArticleData
         if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
-      content: content,
+      content: deltaToMarkdown(
+        Delta.fromJson(jsonDecode(content) as List<dynamic>),
+      ), //TODO:keep Delta in content
     );
   }
 
