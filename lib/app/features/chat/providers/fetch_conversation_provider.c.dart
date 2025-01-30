@@ -19,7 +19,7 @@ part 'fetch_conversation_provider.c.g.dart';
 class FetchConversations extends _$FetchConversations {
   @override
   Future<void> build() async {
-    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+    final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
@@ -46,8 +46,8 @@ class FetchConversations extends _$FetchConversations {
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-    final sealService = await ref.read(ionConnectSealServiceProvider.future);
-    final giftWrapService = await ref.read(ionConnectGiftWrapServiceProvider.future);
+    final sealService = await ref.watch(ionConnectSealServiceProvider.future);
+    final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
 
     final wrapEvents = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,

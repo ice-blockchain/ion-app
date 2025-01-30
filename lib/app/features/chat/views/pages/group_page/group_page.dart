@@ -33,7 +33,6 @@ class GroupPage extends ConsumerWidget {
                 displayAuthorsIncomingMessages: true,
               ),
             ),
-            //const MessagingBottomBar(),
           ],
         ),
       ),

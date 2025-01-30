@@ -28,6 +28,7 @@ class SearchedUsers extends ConsumerWidget {
     final masterPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
     final dataSource = ref.watch(searchUsersDataSourceProvider).valueOrNull;
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    // TODO: https://github.com/ice-blockchain/ion-app/pull/617#discussion_r1935389058
     final users = entitiesPagedData?.data.items
         ?.whereType<UserMetadataEntity>()
         .whereNot((user) => user.masterPubkey == masterPubkey)

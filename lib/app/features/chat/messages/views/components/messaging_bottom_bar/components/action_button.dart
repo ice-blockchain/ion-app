@@ -29,48 +29,68 @@ class ActionButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
     final paddingBottom = useState<double>(0);
+    final sendButtonDisabled = useState<bool>(false);
 
-    final sentMessage = useCallback(() async {
-      if (e2eeConversation == null) return;
-
-      final conversationId = await ref
+    Future<String?> lookupConversation() async {
+      return ref
           .read(conversationsDBServiceProvider)
           .lookupConversationByPubkeys(e2eeConversation!.participants.join(','));
-      if (e2eeConversation!.id == null && conversationId == null) {
-        final ee2eGroupConversationService = ref.read(e2eeConversationManagementProvider.notifier);
+    }
 
-        if (e2eeConversation!.type == ChatType.chat) {
-          await ee2eGroupConversationService
-              .createOneOnOneConversation(e2eeConversation!.participants);
-        } else if (e2eeConversation!.type == ChatType.group && e2eeConversation!.imageUrl != null) {
-          await ee2eGroupConversationService.createGroup(
-            subject: e2eeConversation!.name,
-            groupImage: MediaFile(
-              mimeType: 'image/webp',
-              path: e2eeConversation!.imageUrl!,
-              width: e2eeConversation!.imageWidth,
-              height: e2eeConversation!.imageHeight,
-            ),
-            participantsPubkeys: e2eeConversation!.participants,
-          );
-        }
+    Future<void> createConversation() async {
+      final ee2eGroupConversationService = ref.watch(e2eeConversationManagementProvider.notifier);
+
+      if (e2eeConversation!.type == ChatType.chat) {
+        await ee2eGroupConversationService
+            .createOneOnOneConversation(e2eeConversation!.participants);
+      } else if (e2eeConversation!.type == ChatType.group && e2eeConversation!.imageUrl != null) {
+        await ee2eGroupConversationService.createGroup(
+          subject: e2eeConversation!.name,
+          groupImage: MediaFile(
+            mimeType: 'image/webp',
+            path: e2eeConversation!.imageUrl!,
+            width: e2eeConversation!.imageWidth,
+            height: e2eeConversation!.imageHeight,
+          ),
+          participantsPubkeys: e2eeConversation!.participants,
+        );
+      }
+    }
+
+    Future<void> sendMessage() async {
+      ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+      await (await ref.read(conversationMessageManagementServiceProvider.future)).sentMessage(
+        content: controller.text,
+        participantsPubkeys: e2eeConversation!.participants,
+        subject: e2eeConversation!.type == ChatType.group ? e2eeConversation!.name : null,
+      );
+    }
+
+    final onSend = useCallback(() async {
+      if (e2eeConversation == null) return;
+
+      sendButtonDisabled.value = true;
+
+      final conversationId = await lookupConversation();
+      if (e2eeConversation!.id == null && conversationId == null) {
+        await createConversation();
       }
 
       if (controller.text.isNotEmpty) {
-        ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-        await (await ref.read(conversationMessageManagementServiceProvider.future)).sentMessage(
-          content: controller.text,
-          participantsPubkeys: e2eeConversation!.participants,
-          subject: e2eeConversation!.type == ChatType.group ? e2eeConversation!.name : null,
-        );
+        await sendMessage();
       }
+
+      sendButtonDisabled.value = false;
     });
 
     Widget subButton() {
       switch (bottomBarState) {
         case MessagingBottomBarState.hasText:
         case MessagingBottomBarState.voicePaused:
-          return SendButton(onSend: sentMessage);
+          return SendButton(
+            onSend: onSend,
+            disabled: sendButtonDisabled.value,
+          );
         case MessagingBottomBarState.voice:
         case MessagingBottomBarState.voiceLocked:
           return AudioRecordingButton(paddingBottom: paddingBottom.value);
