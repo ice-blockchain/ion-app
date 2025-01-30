@@ -1,6 +1,6 @@
 targets:
   $default:
-    builders:
+    builders:         
       freezed:freezed:
         generate_for:
           include:
@@ -23,3 +23,6 @@ targets:
             - lib/**.c.dart
         options:
           use_sql_column_name_as_json_key : true
+          databases:
+            # Required: A name for the database and it's path
+            conversation_database: lib/app/services/database/conversation_database.c.dart

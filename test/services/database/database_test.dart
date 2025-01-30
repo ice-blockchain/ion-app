@@ -6,15 +6,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/services/database/conversation_database.c.dart';
 import 'package:ion/app/services/database/conversation_db_service.c.dart';
-import 'package:ion/app/services/database/ion_database.c.dart';
 
 void main() {
-  late IONDatabase database;
+  late ConversationDatabase database;
   late ConversationsDBService conversationsService;
 
   setUp(() async {
-    database = IONDatabase.test(
+    database = ConversationDatabase.test(
       DatabaseConnection(
         NativeDatabase.memory(),
         closeStreamsSynchronously: true,
@@ -45,8 +45,7 @@ void main() {
 
       final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
-      final conversationMessage =
-          await database.select(database.conversationMessagesTable).getSingle();
+      final conversationMessage = await database.select(database.conversationMessagesTable).getSingle();
 
       expect(eventMessage.id, '0');
       expect(conversationMessage.eventMessageId, eventMessage.id);
@@ -167,8 +166,7 @@ void main() {
 
       final eventMessage = await database.select(database.eventMessagesTable).getSingle();
 
-      final conversationMessage =
-          await database.select(database.conversationMessagesTable).getSingle();
+      final conversationMessage = await database.select(database.conversationMessagesTable).getSingle();
 
       final conversations = (await conversationsService.getAllConversations()).single;
 
@@ -657,8 +655,7 @@ void main() {
       );
 
       final conversationMessages = await database.select(database.eventMessagesTable).get();
-      final conversationReactions =
-          await database.select(database.conversationReactionsTable).get();
+      final conversationReactions = await database.select(database.conversationReactionsTable).get();
 
       expect(conversationMessages.length, 2);
       expect(conversationReactions.length, 2);
@@ -766,15 +763,13 @@ void main() {
       );
 
       final eventMessages = await database.select(database.eventMessagesTable).get();
-      final conversationReactions =
-          await database.select(database.conversationReactionsTable).get();
+      final conversationReactions = await database.select(database.conversationReactionsTable).get();
 
       expect(eventMessages.length, 6);
       expect(conversationReactions.length, 4);
 
-      final conversationMessage = await (database.select(database.eventMessagesTable)
-            ..where((table) => table.id.equals('1')))
-          .getSingle();
+      final conversationMessage =
+          await (database.select(database.eventMessagesTable)..where((table) => table.id.equals('1'))).getSingle();
 
       final reactions = await conversationsService.getMessageReactions(conversationMessage.id);
 
