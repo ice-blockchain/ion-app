@@ -23,8 +23,10 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   FutureOr<List<E2eeConversationEntity>> build() async {
-    final conversationSubscription =
-        ref.read(conversationsDBServiceProvider).watchConversations().listen((conversationsMessages) async {
+    final conversationSubscription = ref
+        .read(conversationsDBServiceProvider)
+        .watchConversations()
+        .listen((conversationsMessages) async {
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
       if (eventSigner == null) {
@@ -32,7 +34,8 @@ class Conversations extends _$Conversations {
       }
 
       final conversations = await Future.wait(
-        conversationsMessages.map((message) => _getConversationData(message, eventSigner.publicKey)),
+        conversationsMessages
+            .map((message) => _getConversationData(message, eventSigner.publicKey)),
       );
 
       state = AsyncValue.data(
@@ -60,7 +63,8 @@ class Conversations extends _$Conversations {
       final conversationsMessages = await database.getAllConversations();
 
       final conversations = await Future.wait(
-        conversationsMessages.map((message) => _getConversationData(message, eventSigner.publicKey)),
+        conversationsMessages
+            .map((message) => _getConversationData(message, eventSigner.publicKey)),
       );
 
       return (conversations..sortBy<DateTime>((e) => e.lastMessageAt!)).reversed.toList();
@@ -83,7 +87,8 @@ class Conversations extends _$Conversations {
     var imageUrl = message.data.relatedGroupImagePath;
 
     final type = (message.data.relatedSubject != null) ? ChatType.group : ChatType.chat;
-    final participants = message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
+    final participants =
+        message.data.relatedPubkeys?.map((toElement) => toElement.value).toList() ?? [];
 
     if (type == ChatType.chat) {
       final userMetadata = await ref.read(
@@ -106,7 +111,8 @@ class Conversations extends _$Conversations {
           E2eeConversationEntity(name: name, type: type, participants: participants),
         );
 
-        final latestMessageWithIMetaTag = conversationMessages.firstWhere((m) => m.data.primaryMedia != null);
+        final latestMessageWithIMetaTag =
+            conversationMessages.firstWhere((m) => m.data.primaryMedia != null);
 
         final conversationMessageManagementService =
             await ref.read(conversationMessageManagementServiceProvider.future);
@@ -129,7 +135,8 @@ class Conversations extends _$Conversations {
 
     final lastMessageContent = message.data.content.map((m) => m.text).join();
 
-    final unreadMessagesCount = conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
+    final unreadMessagesCount =
+        conversationId != null ? await database.getUnreadMessagesCount(conversationId) : null;
 
     final isArchived = await _checkConversationIsArchived(
       type: type,
@@ -171,7 +178,8 @@ class Conversations extends _$Conversations {
     var archivedConversations = <List<String>>[];
 
     if (archivedChatsBookmarksSet != null) {
-      final decryptedContent = await e2eeService.decryptMessage(archivedChatsBookmarksSet.data.content);
+      final decryptedContent =
+          await e2eeService.decryptMessage(archivedChatsBookmarksSet.data.content);
 
       archivedConversations = (jsonDecode(decryptedContent) as List<dynamic>)
           .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
@@ -189,7 +197,8 @@ class Conversations extends _$Conversations {
         final archivedSubject = archivedConversation[1];
         final archivedParticipants = archivedConversation.sublist(2);
 
-        if (archivedSubject == subject && archivedParticipants.toSet().containsAll(participants.toSet())) {
+        if (archivedSubject == subject &&
+            archivedParticipants.toSet().containsAll(participants.toSet())) {
           return true;
         }
       }
