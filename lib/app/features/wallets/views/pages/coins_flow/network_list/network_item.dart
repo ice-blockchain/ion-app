@@ -74,9 +74,7 @@ class _NetworkLabel extends StatelessWidget {
         color: context.theme.appColors.attentionBlock,
       ),
       child: Text(
-        // TODO: Should we use prettyfied names here?
-        // network.getDisplayName(context),
-        network.serverName,
+        network.displayName,
         style: context.theme.appTextThemes.caption3.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),

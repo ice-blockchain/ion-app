@@ -5,26 +5,59 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/wallet_address_loader_notifier_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
-class ShareAddressView extends ConsumerWidget {
+class ShareAddressView extends HookConsumerWidget {
   const ShareAddressView({super.key});
 
   static const List<NetworkType> networkTypeValues = NetworkType.values;
+
+  Future<void> _loadAddress(WidgetRef ref) async {
+    final addressNotifier = ref.read(walletAddressLoaderNotifierProvider.notifier);
+    final network = ref.read(receiveCoinsFormControllerProvider).selectedNetwork;
+
+    var address = await addressNotifier.loadWalletAddress();
+
+    if (address == null && network != null && ref.context.mounted) {
+      await guardPasskeyDialog(
+        ref.context,
+        (child) => RiverpodVerifyIdentityRequestBuilder(
+          provider: walletAddressLoaderNotifierProvider,
+          requestWithVerifyIdentity: (OnVerifyIdentity<Wallet> onVerifyIdentity) async {
+            address = await addressNotifier.createWallet(
+              onVerifyIdentity: onVerifyIdentity,
+              network: network,
+            );
+          },
+          child: child,
+        ),
+      );
+    }
+
+    if (address != null) {
+      ref.read(receiveCoinsFormControllerProvider.notifier).setWalletAddress(address!);
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final walletAddress = ref.watch(
       receiveCoinsFormControllerProvider.select((state) => state.address),
     );
+
+    useOnInit(() => _loadAddress(ref));
 
     return SheetContent(
       body: Column(

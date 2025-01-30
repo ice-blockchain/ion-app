@@ -27,6 +27,7 @@ class SendCoinModalPage extends ConsumerWidget {
         },
         title: context.i18n.wallet_send_coins,
         showBackButton: true,
+        onQueryChanged: (String query) {},
       ),
     );
   }

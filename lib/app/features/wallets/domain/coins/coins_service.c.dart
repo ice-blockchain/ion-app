@@ -17,13 +17,17 @@ Future<CoinsService> coinsService(Ref ref) async {
 }
 
 class CoinsService {
-  CoinsService(
-    this._coinsRepository,
-  );
+  CoinsService(this._coinsRepository);
 
   final CoinsRepository _coinsRepository;
 
   Stream<Iterable<CoinData>> watchCoins(Iterable<String>? coinIds) {
     return _coinsRepository.watchCoins(coinIds).map((coins) => coins.map(CoinData.fromDB));
+  }
+
+  Future<Iterable<CoinData>> getCoinsBySymbolGroup(String symbolGroup) async {
+    return _coinsRepository
+        .getCoinsBySymbolGroup(symbolGroup)
+        .then((result) => result.map(CoinData.fromDB));
   }
 }

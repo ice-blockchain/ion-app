@@ -69,9 +69,7 @@ class CoinReceiveModal extends HookConsumerWidget {
             ScreenSideOffset.small(
               child: ListItem(
                 title: Text(context.i18n.wallet_network),
-                // TODO: Check the name
-                subtitle: Text(network.serverName),
-                // subtitle: Text(network.getDisplayName(context)),
+                subtitle: Text(network.displayName),
                 switchTitleStyles: true,
                 leading: network.svgIconAsset.icon(size: 36.0.s),
                 trailing: Text(
@@ -81,9 +79,8 @@ class CoinReceiveModal extends HookConsumerWidget {
                   ),
                 ),
                 onTap: () async {
-                  // TODO: Not implemented
-                  // final result = await ChangeNetworkShareWalletRoute().push<NetworkType?>(context);
-                  // if (result != null) updateNetwork(result);
+                  final result = await ChangeNetworkShareWalletRoute().push<Network?>(context);
+                  if (result != null) updateNetwork(result);
                 },
               ),
             ),

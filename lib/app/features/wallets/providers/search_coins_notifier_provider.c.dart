@@ -1,5 +1,5 @@
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/domain/search_coins_service.c.dart';
+import 'package:ion/app/features/wallets/domain/wallet_views/search_coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

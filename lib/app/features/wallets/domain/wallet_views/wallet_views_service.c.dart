@@ -45,8 +45,7 @@ class WalletViewsService {
     final viewsDetailsDTO = await Future.wait(
       shortViews.map((e) => _identity.wallets.getWalletView(e.id)),
     );
-    final walletViews = viewsDetailsDTO.map(_parseWalletView);
-    return walletViews.toList();
+    return viewsDetailsDTO.map(_parseWalletView).toList();
   }
 
   Future<WalletViewData> create(String name) async {

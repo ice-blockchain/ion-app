@@ -50,6 +50,7 @@ class SelectCoinModal extends ConsumerWidget {
           }
         },
         title: context.i18n.common_select_coin,
+        onQueryChanged: (String query) {},
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,
     );

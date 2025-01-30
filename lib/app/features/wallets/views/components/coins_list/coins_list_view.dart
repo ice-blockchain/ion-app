@@ -16,6 +16,7 @@ class CoinsListView extends StatelessWidget {
     required this.onItemTap,
     required this.title,
     required this.coinsResult,
+    required this.onQueryChanged,
     this.showBackButton = false,
     super.key,
   });
@@ -24,6 +25,7 @@ class CoinsListView extends StatelessWidget {
   final bool showBackButton;
   final AsyncValue<List<CoinsGroup>> coinsResult;
   final void Function(CoinsGroup group) onItemTap;
+  final void Function(String query) onQueryChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class CoinsListView extends StatelessWidget {
         ),
         ScreenSideOffset.small(
           child: SearchInput(
-            onTextChanged: (String value) {},
+            onTextChanged: onQueryChanged,
           ),
         ),
         SizedBox(
