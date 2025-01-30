@@ -48,6 +48,7 @@ class PostDetailsPage extends ConsumerWidget {
                       onDelete: () {
                         context.pop();
                       },
+                      isTextSelectable: true,
                     ),
                   ),
                 ),

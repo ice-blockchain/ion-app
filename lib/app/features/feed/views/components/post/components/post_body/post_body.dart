@@ -12,10 +12,12 @@ import 'package:ion/app/features/feed/views/components/url_preview_content/url_p
 class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.postEntity,
+    this.isTextSelectable = false,
     super.key,
   });
 
   final ModifiablePostEntity postEntity;
+  final bool isTextSelectable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,21 +39,15 @@ class PostBody extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (postText.toPlainText().isNotEmpty)
-          Text.rich(
-            postText,
-          ),
+          isTextSelectable ? SelectableText.rich(postText) : Text.rich(postText),
         if (postMedia.isNotEmpty)
           Padding(
-            padding: EdgeInsets.only(
-              top: 10.0.s,
-            ),
+            padding: EdgeInsets.only(top: 10.0.s),
             child: PostMedia(media: postMedia),
           ),
         if (postEntity.data.firstUrl != null)
           Padding(
-            padding: EdgeInsets.only(
-              top: 10.0.s,
-            ),
+            padding: EdgeInsets.only(top: 10.0.s),
             child: UrlPreviewContent(url: postEntity.data.firstUrl!),
           ),
       ],
