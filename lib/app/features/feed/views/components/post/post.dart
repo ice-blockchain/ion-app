@@ -32,7 +32,7 @@ class Post extends ConsumerWidget {
     this.header,
     this.footer,
     this.onDelete,
-    this.selectable = false,
+    this.isTextSelectable = false,
     super.key,
   });
 
@@ -43,7 +43,7 @@ class Post extends ConsumerWidget {
   final Widget? footer;
   final TimestampFormat timeFormat;
   final VoidCallback? onDelete;
-  final bool selectable;
+  final bool isTextSelectable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,7 +76,7 @@ class Post extends ConsumerWidget {
         SizedBox(height: 10.0.s),
         PostBody(
           postEntity: postEntity,
-          selectable: selectable,
+          isTextSelectable: isTextSelectable,
         ),
         if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
         footer ??

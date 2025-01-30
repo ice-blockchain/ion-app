@@ -13,12 +13,12 @@ import 'package:ion/app/features/feed/views/components/url_preview_content/url_p
 class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.postEntity,
-    this.selectable = false,
+    this.isTextSelectable = false,
     super.key,
   });
 
   final ModifiablePostEntity postEntity;
-  final bool selectable;
+  final bool isTextSelectable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,10 +42,8 @@ class PostBody extends HookConsumerWidget {
       children: [
         if (postText.toPlainText().isNotEmpty)
           GestureDetector(
-            onLongPress: selectable ? () => isSelectionEnabled.value = true : null,
-            child: isSelectionEnabled.value && selectable
-                ? SelectableText.rich(postText)
-                : Text.rich(postText),
+            onLongPress: isTextSelectable ? () => isSelectionEnabled.value = true : null,
+            child: isSelectionEnabled.value ? SelectableText.rich(postText) : Text.rich(postText),
           ),
         if (postMedia.isNotEmpty)
           Padding(
