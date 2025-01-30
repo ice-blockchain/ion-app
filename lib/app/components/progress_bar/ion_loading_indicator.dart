@@ -2,13 +2,34 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:lottie/lottie.dart';
 
 enum IndicatorType {
   light,
   dark,
+}
+
+class IONLoadingIndicatorThemed extends ConsumerWidget {
+  const IONLoadingIndicatorThemed({
+    this.size,
+    super.key,
+  });
+
+  final Size? size;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
+
+    return IONLoadingIndicator(
+      type: isLightTheme ? IndicatorType.dark : IndicatorType.light,
+      size: size,
+    );
+  }
 }
 
 class IONLoadingIndicator extends HookWidget {

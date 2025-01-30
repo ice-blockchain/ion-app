@@ -33,6 +33,8 @@ class WalletRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<ManageCoinsRoute>(path: 'manage-coins'),
+        TypedGoRoute<ImportTokenRoute>(path: 'import-token'),
+        TypedGoRoute<SelectNetworkForTokenRoute>(path: 'select-network'),
       ],
     ),
     ...DappsRoutes.routes,
@@ -270,6 +272,22 @@ class ManageCoinsRoute extends BaseRouteData {
   ManageCoinsRoute()
       : super(
           child: const ManageCoinsPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ImportTokenRoute extends BaseRouteData {
+  ImportTokenRoute()
+      : super(
+          child: const ImportTokenPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class SelectNetworkForTokenRoute extends BaseRouteData {
+  SelectNetworkForTokenRoute()
+      : super(
+          child: const SelectNetworkList(),
           type: IceRouteType.bottomSheet,
         );
 }

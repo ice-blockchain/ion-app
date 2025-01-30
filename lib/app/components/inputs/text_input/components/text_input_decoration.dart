@@ -9,6 +9,10 @@ class TextInputDecoration extends InputDecoration {
   TextInputDecoration({
     required BuildContext context,
     required bool verified,
+    InputBorder? disabledBorder,
+    Color? fillColor,
+    Color? labelColor,
+    Color? floatingLabelColor,
     super.errorText,
     super.contentPadding,
     super.labelText,
@@ -26,9 +30,10 @@ class TextInputDecoration extends InputDecoration {
                   : context.theme.appColors.strokeElements,
             ),
           ),
-          disabledBorder: TextInputBorder(
-            borderSide: BorderSide(color: context.theme.appColors.primaryBackground),
-          ),
+          disabledBorder: disabledBorder ??
+              TextInputBorder(
+                borderSide: BorderSide(color: context.theme.appColors.primaryBackground),
+              ),
           focusedBorder: TextInputBorder(
             borderSide: BorderSide(
               color: verified
@@ -43,13 +48,14 @@ class TextInputDecoration extends InputDecoration {
             borderSide: BorderSide(color: context.theme.appColors.attentionRed),
           ),
           filled: true,
-          fillColor: WidgetStateColor.resolveWith((Set<WidgetState> states) {
-            return states.contains(WidgetState.disabled)
-                ? context.theme.appColors.onSecondaryBackground
-                : context.theme.appColors.secondaryBackground;
-          }),
+          fillColor: fillColor ??
+              WidgetStateColor.resolveWith((Set<WidgetState> states) {
+                return states.contains(WidgetState.disabled)
+                    ? context.theme.appColors.onSecondaryBackground
+                    : context.theme.appColors.secondaryBackground;
+              }),
           labelStyle: context.theme.appTextThemes.body.copyWith(
-            color: context.theme.appColors.tertararyText,
+            color: labelColor ?? context.theme.appColors.tertararyText,
           ),
           prefixStyle: context.theme.appTextThemes.body.copyWith(
             color: context.theme.appColors.primaryText,
@@ -57,11 +63,12 @@ class TextInputDecoration extends InputDecoration {
           errorStyle: const TextStyle(fontSize: 0),
           floatingLabelStyle: WidgetStateTextStyle.resolveWith((Set<WidgetState> states) {
             return context.theme.appTextThemes.caption2.copyWith(
-              color: states.contains(WidgetState.error)
-                  ? context.theme.appColors.attentionRed
-                  : states.contains(WidgetState.focused) && !verified
-                      ? context.theme.appColors.primaryAccent
-                      : context.theme.appColors.tertararyText,
+              color: floatingLabelColor ??
+                  (states.contains(WidgetState.error)
+                      ? context.theme.appColors.attentionRed
+                      : states.contains(WidgetState.focused) && !verified
+                          ? context.theme.appColors.primaryAccent
+                          : context.theme.appColors.tertararyText),
               height: 1,
             );
           }),

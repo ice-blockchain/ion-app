@@ -36,6 +36,11 @@ class TextInput extends HookWidget {
     this.alwaysShowPrefixIcon = false,
     this.obscureText = false,
     this.onTapOutside,
+    this.color,
+    this.disabledBorder,
+    this.fillColor,
+    this.labelColor,
+    this.floatingLabelColor,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
@@ -74,6 +79,12 @@ class TextInput extends HookWidget {
   final int? maxLength;
   final bool isLive;
   final bool obscureText;
+
+  final Color? color;
+  final InputBorder? disabledBorder;
+  final Color? fillColor;
+  final Color? labelColor;
+  final Color? floatingLabelColor;
 
   final TapRegionCallback? onTapOutside;
 
@@ -134,7 +145,7 @@ class TextInput extends HookWidget {
             ]
           : inputFormatters,
       style: context.theme.appTextThemes.body.copyWith(
-        color: context.theme.appColors.primaryText,
+        color: color ?? context.theme.appColors.primaryText,
       ),
       cursorErrorColor: context.theme.appColors.primaryAccent,
       cursorColor: context.theme.appColors.primaryAccent,
@@ -156,6 +167,10 @@ class TextInput extends HookWidget {
             : error.value.isNotEmpty
                 ? error.value
                 : labelText,
+        disabledBorder: disabledBorder,
+        fillColor: fillColor,
+        labelColor: labelColor,
+        floatingLabelColor: floatingLabelColor,
       ),
     );
   }

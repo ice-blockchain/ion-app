@@ -2,7 +2,7 @@
 
 import 'package:ion_identity_client/src/coins/models/coin.c.dart';
 import 'package:ion_identity_client/src/coins/models/coins_response.c.dart';
-import 'package:ion_identity_client/src/coins/services/data_sources/get_coins_data_source.dart';
+import 'package:ion_identity_client/src/coins/services/get_coins/data_sources/get_coins_data_source.dart';
 
 class GetCoinsService {
   GetCoinsService({
