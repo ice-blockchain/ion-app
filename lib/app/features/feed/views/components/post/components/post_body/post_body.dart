@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder.dart';
 import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
@@ -22,7 +21,6 @@ class PostBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSelectionEnabled = useState(false);
     final postMedia = postEntity.data.media.values.toList();
 
     final textSpanBuilder = useTextSpanBuilder(
@@ -41,10 +39,7 @@ class PostBody extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (postText.toPlainText().isNotEmpty)
-          GestureDetector(
-            onLongPress: isTextSelectable ? () => isSelectionEnabled.value = true : null,
-            child: isSelectionEnabled.value ? SelectableText.rich(postText) : Text.rich(postText),
-          ),
+          isTextSelectable ? SelectableText.rich(postText) : Text.rich(postText),
         if (postMedia.isNotEmpty)
           Padding(
             padding: EdgeInsets.only(top: 10.0.s),
