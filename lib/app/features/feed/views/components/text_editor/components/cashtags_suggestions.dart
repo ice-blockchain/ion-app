@@ -5,9 +5,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-const double cashtagContainerPadding = 5;
-const double cashtagItemSize = 30;
-
 class CashtagsSuggestions extends StatelessWidget {
   const CashtagsSuggestions({
     required this.suggestions,
@@ -27,7 +24,7 @@ class CashtagsSuggestions extends StatelessWidget {
         const HorizontalSeparator(),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: cashtagContainerPadding),
+            padding: EdgeInsets.symmetric(vertical: 5.0.s),
             child: ListView.builder(
               padding: EdgeInsets.zero,
               itemCount: suggestions.length,
@@ -39,7 +36,7 @@ class CashtagsSuggestions extends StatelessWidget {
                   child: ScreenSideOffset.small(
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      height: cashtagItemSize,
+                      height: 30.0.s,
                       child: DefaultTextStyle(
                         style: context.theme.appTextThemes.caption.copyWith(
                           color: context.theme.appColors.primaryText,
