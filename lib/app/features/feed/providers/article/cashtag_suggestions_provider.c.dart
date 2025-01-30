@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'cashtag_suggestions_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<String>> cashtagSuggestions(Ref ref, String query) async {
   if (query.isEmpty || !query.startsWith(r'$')) {
     return [];
