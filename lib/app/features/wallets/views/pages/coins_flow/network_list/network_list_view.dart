@@ -31,10 +31,8 @@ class NetworkListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinsGroup =
-        ref.watch(receiveCoinsFormControllerProvider).selectedCoin!;
-    final coinsState = ref
-        .watch(coinsBySymbolGroupProvider(symbolGroup: coinsGroup.symbolGroup));
+    final coinsGroup = ref.watch(receiveCoinsFormControllerProvider).selectedCoin!;
+    final coinsState = ref.watch(coinsBySymbolGroupProvider(symbolGroup: coinsGroup.symbolGroup));
 
     void onTap(Network network) {
       if (onSelectReturnType) {
@@ -50,9 +48,7 @@ class NetworkListView extends ConsumerWidget {
           //     .setNetwork(network);
           CoinsSendFormRoute().push<void>(context);
         case NetworkListViewType.receive:
-          ref
-              .read(receiveCoinsFormControllerProvider.notifier)
-              .setNetwork(network);
+          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
           ShareAddressRoute().push<void>(context);
       }
     }
@@ -128,7 +124,6 @@ class _LoadingState extends StatelessWidget {
     );
   }
 }
-
 
 class _NetworksList extends StatelessWidget {
   const _NetworksList({

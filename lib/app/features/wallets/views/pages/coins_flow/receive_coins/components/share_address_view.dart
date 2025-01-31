@@ -36,10 +36,11 @@ class ShareAddressView extends HookConsumerWidget {
         (child) => RiverpodVerifyIdentityRequestBuilder(
           provider: walletAddressLoaderNotifierProvider,
           requestWithVerifyIdentity: (OnVerifyIdentity<Wallet> onVerifyIdentity) async {
-            address = await addressNotifier.createWallet(
+            final wallet = await addressNotifier.createWallet(
               onVerifyIdentity: onVerifyIdentity,
               network: network,
             );
+            address = wallet?.address;
           },
           child: child,
         ),

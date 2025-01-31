@@ -14,23 +14,22 @@ class WalletAddressLoaderNotifier extends _$WalletAddressLoaderNotifier {
   @override
   FutureOr<void> build() {}
 
-  Future<String?> createWallet({
+  Future<Wallet?> createWallet({
     required Network network,
     required OnVerifyIdentity<Wallet> onVerifyIdentity,
   }) async {
     state = const AsyncValue.loading();
 
-    String? result;
+    Wallet? result;
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityClientProvider.future);
       final walletView = await ref.read(currentWalletViewDataProvider.future);
 
-      final wallet = await ionIdentity.wallets.createWallet(
+       result = await ionIdentity.wallets.createWallet(
         network: network.keyName,
         walletViewId: walletView.id,
         onVerifyIdentity: onVerifyIdentity,
       );
-      result = wallet.address;
     });
     return result;
   }

@@ -6,12 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_receive_modal/components/coin_address_tile/coin_address_tile.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -30,8 +27,9 @@ class CoinReceiveModal extends HookConsumerWidget {
     final updateNetwork = useCallback(
       (Network? network) {
         if (network != null) {
-          // final clarifiedNetwork = network == NetworkType.all ? NetworkType.arbitrum : network;
-          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
+          ref
+              .read(receiveCoinsFormControllerProvider.notifier)
+              .setNetwork(network);
         }
       },
       [],
