@@ -77,6 +77,8 @@ class PostData
     final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
 
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final quotedEventTag =
+        tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
     return PostData(
       content: parsedContent,
@@ -84,9 +86,7 @@ class PostData
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedEvent.tagName] != null
-          ? QuotedEvent.fromTag(tags[QuotedEvent.tagName]!.first)
-          : null,
+      quotedEvent: quotedEventTag != null ? QuotedEvent.fromTag(quotedEventTag.first) : null,
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),

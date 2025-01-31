@@ -18,7 +18,7 @@ import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -80,7 +80,7 @@ class ModifiablePostData
     required EntityPublishedAt publishedAt,
     EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
-    QuotedReplaceableEvent? quotedEvent,
+    QuotedEvent? quotedEvent,
     List<RelatedReplaceableEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
@@ -91,6 +91,8 @@ class ModifiablePostData
     final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
 
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final quotedEventTag =
+        tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
     return ModifiablePostData(
       content: parsedContent,
@@ -104,9 +106,7 @@ class ModifiablePostData
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedReplaceableEvent.tagName] != null
-          ? QuotedReplaceableEvent.fromTag(tags[QuotedReplaceableEvent.tagName]!.first)
-          : null,
+      quotedEvent: quotedEventTag != null ? QuotedEvent.fromTag(quotedEventTag.first) : null,
       relatedEvents:
           tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),

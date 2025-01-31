@@ -7,6 +7,7 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
@@ -19,7 +20,7 @@ import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -148,19 +149,18 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   Future<IonConnectEntity?> _getParentEntity(EventReference parentEventReference) async {
-    if (parentEventReference is ReplaceableEventReference) {
-      final parentEntity =
-          await ref.read(ionConnectEntityProvider(eventReference: parentEventReference).future);
-      if (parentEntity == null) {
-        throw EntityNotFoundException(parentEventReference);
-      }
-      if (parentEntity is! ModifiablePostEntity && parentEntity is! ArticleEntity) {
-        throw UnsupportedParentEntity(parentEntity);
-      }
-      return parentEntity;
-    } else {
-      throw UnsupportedEventReference(parentEventReference);
+    final parentEntity =
+        await ref.read(ionConnectEntityProvider(eventReference: parentEventReference).future);
+    if (parentEntity == null) {
+      throw EntityNotFoundException(parentEventReference);
     }
+
+    if (parentEntity is! ModifiablePostEntity &&
+        parentEntity is! ArticleEntity &&
+        parentEntity is! PostEntity) {
+      throw UnsupportedParentEntity(parentEntity);
+    }
+    return parentEntity;
   }
 
   Future<ModifiablePostEntity> _getModifiedEntity(EventReference modifiedEventReference) async {
@@ -172,15 +172,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return modifiableEntity;
   }
 
-  QuotedReplaceableEvent _buildQuotedEvent(EventReference quotedEventReference) {
-    if (quotedEventReference is ReplaceableEventReference) {
-      return QuotedReplaceableEvent(
-        eventReference: quotedEventReference,
-        pubkey: quotedEventReference.pubkey,
-      );
-    } else {
-      throw UnsupportedEventReference(quotedEventReference);
-    }
+  QuotedEvent _buildQuotedEvent(EventReference quotedEventReference) {
+    return switch (quotedEventReference) {
+      ReplaceableEventReference() => QuotedReplaceableEvent(eventReference: quotedEventReference),
+      ImmutableEventReference() => QuotedImmutableEvent(eventReference: quotedEventReference),
+      _ => throw UnsupportedEventReference(quotedEventReference)
+    };
   }
 
   List<TextMatch> _buildContentWithMediaLinks({

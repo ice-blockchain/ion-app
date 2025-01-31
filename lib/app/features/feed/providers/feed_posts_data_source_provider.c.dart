@@ -181,7 +181,6 @@ EntitiesDataSource _buildPostsDataSource({
       RequestFilter(
         kinds: const [
           PostEntity.kind,
-          //TODO:uncomment
           // ModifiablePostEntity.kind,
           // GenericRepostEntity.kind,
           RepostEntity.kind,
