@@ -57,9 +57,11 @@ class MainTabNavigation extends HookConsumerWidget {
   void _handleMainButtonTap(BuildContext context, TabItem currentTab) {
     HapticFeedback.mediumImpact();
 
-    context.go(
-      state.isMainModalOpen ? currentTab.baseRouteLocation : currentTab.mainModalLocation,
-    );
+    if (state.isMainModalOpen) {
+      context.pop();
+    } else {
+      context.push(currentTab.mainModalLocation);
+    }
   }
 
   void _navigateToTab(BuildContext context, TabItem tabItem, {required bool initialLocation}) =>
