@@ -5,6 +5,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
@@ -170,11 +172,18 @@ EntitiesDataSource _buildPostsDataSource({
       }
 
       return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
+          (entity is PostEntity && entity.data.parentEvent == null) ||
+          entity is RepostEntity ||
           entity is GenericRepostEntity;
     },
     requestFilters: [
       RequestFilter(
-        kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
+        kinds: const [
+          PostEntity.kind,
+          ModifiablePostEntity.kind,
+          GenericRepostEntity.kind,
+          RepostEntity.kind,
+        ],
         search: SearchExtensions.withCounters(
           [
             ReferencesSearchExtension(contain: false),

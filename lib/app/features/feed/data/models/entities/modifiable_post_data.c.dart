@@ -25,7 +25,6 @@ import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.d
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'modifiable_post_data.c.freezed.dart';
@@ -112,23 +111,6 @@ class ModifiablePostData
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
-    );
-  }
-
-  factory ModifiablePostData.fromRawContent(String content) {
-    final parsedContent = TextParser.allMatchers().parse(content);
-
-    final hashtags = parsedContent
-        .where((match) => match.matcher is HashtagMatcher)
-        .map((match) => RelatedHashtag(value: match.text))
-        .toList();
-
-    return ModifiablePostData(
-      content: parsedContent,
-      relatedHashtags: hashtags,
-      replaceableEventId: ReplaceableEventIdentifier.generate(),
-      publishedAt: EntityPublishedAt(value: DateTime.now()),
-      media: {},
     );
   }
 

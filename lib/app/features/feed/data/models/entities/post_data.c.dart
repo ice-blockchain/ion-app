@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'dart:async';
 
 import 'package:collection/collection.dart';
@@ -23,15 +21,12 @@ import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'post_data.c.freezed.dart';
 
-@Deprecated('Use ModifiablePostEntity instead')
 @Freezed(equal: false)
 class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
-  @Deprecated('Use ModifiablePostEntity instead')
   const factory PostEntity({
     required String id,
     required String pubkey,
@@ -41,11 +36,9 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
     required PostData data,
   }) = _PostEntity;
 
-  @Deprecated('Use ModifiablePostEntity instead')
   const PostEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/01.md
-  @Deprecated('Use ModifiablePostEntity instead')
   factory PostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
@@ -97,21 +90,6 @@ class PostData
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
-    );
-  }
-
-  factory PostData.fromRawContent(String content) {
-    final parsedContent = TextParser.allMatchers().parse(content);
-
-    final hashtags = parsedContent
-        .where((match) => match.matcher is HashtagMatcher)
-        .map((match) => RelatedHashtag(value: match.text))
-        .toList();
-
-    return PostData(
-      content: parsedContent,
-      relatedHashtags: hashtags,
-      media: {},
     );
   }
 
