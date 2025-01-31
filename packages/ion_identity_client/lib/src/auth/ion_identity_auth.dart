@@ -148,5 +148,10 @@ class IONIdentityAuth {
   ]) =>
       twoFAService.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
 
+  Future<String> generateSignature(
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  ) =>
+      twoFAService.generateSignature(onVerifyIdentity);
+
   Future<List<Credential>> getCredentialsList() => getCredentialsService.getCredentialsList();
 }
