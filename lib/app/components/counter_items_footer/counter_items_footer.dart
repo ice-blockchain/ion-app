@@ -31,39 +31,50 @@ class CounterItemsFooter extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPadding, top: topPadding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: RepliesCounterButton(
-              eventReference: eventReference,
-              color: color,
+      child: SizedBox(
+        height: 28.0.s,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Center(
+              child: RepliesCounterButton(
+                eventReference: eventReference,
+                color: color,
+              ),
             ),
-          ),
-          Flexible(
-            child: RepostsCounterButton(
-              eventReference: eventReference,
-              repostReference: repostReference,
-              color: color,
+            Center(
+              child: RepostsCounterButton(
+                eventReference: eventReference,
+                repostReference: repostReference,
+                color: color,
+              ),
             ),
-          ),
-          Flexible(
-            child: LikesCounterButton(
-              eventReference: eventReference,
-              color: color,
+            Center(
+              child: LikesCounterButton(
+                eventReference: eventReference,
+                color: color,
+              ),
             ),
-          ),
-          BookmarkButton(
-            eventReference: eventReference,
-            iconSize: 16.0.s,
-            colorFilter:
-                ColorFilter.mode(context.theme.appColors.onTertararyBackground, BlendMode.srcIn),
-          ),
-          ShareButton(
-            eventReference: eventReference,
-            color: color,
-          ),
-        ],
+            Center(
+              child: Row(
+                children: [
+                  BookmarkButton(
+                    eventReference: eventReference,
+                    iconSize: 16.0.s,
+                    colorFilter: ColorFilter.mode(
+                      context.theme.appColors.onTertararyBackground,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  ShareButton(
+                    eventReference: eventReference,
+                    color: color,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

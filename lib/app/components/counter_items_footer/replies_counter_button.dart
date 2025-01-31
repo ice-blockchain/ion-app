@@ -34,6 +34,7 @@ class RepliesCounterButton extends HookConsumerWidget {
     final isLoading = useRef(false);
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: isLoading.value
           ? null
           : () async {
@@ -44,28 +45,32 @@ class RepliesCounterButton extends HookConsumerWidget {
                 isLoading.value = false;
               }
             },
-      child: TextActionButton(
-        icon: Assets.svg.iconBlockComment.icon(
-          size: 16.0.s,
-          color: color ?? context.theme.appColors.onTertararyBackground,
+      child: Container(
+        constraints: BoxConstraints(minWidth: 50.0.s),
+        alignment: Alignment.centerLeft,
+        child: TextActionButton(
+          icon: Assets.svg.iconBlockComment.icon(
+            size: 16.0.s,
+            color: color ?? context.theme.appColors.onTertararyBackground,
+          ),
+          textColor: color ?? context.theme.appColors.onTertararyBackground,
+          activeIcon: Assets.svg.iconBlockCommenton.icon(
+            size: 16.0.s,
+            color: context.theme.appColors.primaryAccent,
+          ),
+          activeTextColor: context.theme.appColors.primaryAccent,
+          disabledIcon: Assets.svg.iconBlockComment.icon(
+            size: 16.0.s,
+            color: context.theme.appColors.tertararyText,
+          ),
+          disabledTextColor: context.theme.appColors.tertararyText,
+          value: formatDoubleCompact(repliesCount),
+          state: switch ((canReply, isReplied)) {
+            (false, _) => TextActionButtonState.disabled,
+            (true, true) => TextActionButtonState.active,
+            (true, false) => TextActionButtonState.idle,
+          },
         ),
-        textColor: color ?? context.theme.appColors.onTertararyBackground,
-        activeIcon: Assets.svg.iconBlockCommenton.icon(
-          size: 16.0.s,
-          color: context.theme.appColors.primaryAccent,
-        ),
-        activeTextColor: context.theme.appColors.primaryAccent,
-        disabledIcon: Assets.svg.iconBlockComment.icon(
-          size: 16.0.s,
-          color: context.theme.appColors.tertararyText,
-        ),
-        disabledTextColor: context.theme.appColors.tertararyText,
-        value: formatDoubleCompact(repliesCount),
-        state: switch ((canReply, isReplied)) {
-          (false, _) => TextActionButtonState.disabled,
-          (true, true) => TextActionButtonState.active,
-          (true, false) => TextActionButtonState.idle,
-        },
       ),
     );
   }
