@@ -7,8 +7,8 @@ import 'package:markdown_quill/markdown_quill.dart';
 final _deltaToMd = DeltaToMarkdown();
 final _mdToDelta = MarkdownToDelta(markdownDocument: md.Document(encodeHtml: false));
 
-//TODO: process text-editor-single-image
+//TODO: process text-editor-single-image, hashtags and other custom attr
 String deltaToMarkdown(Delta delta) => _deltaToMd.convert(delta);
 
-//TODO: process text-editor-single-image
+//TODO: process text-editor-single-image, hashtags and other custom attr
 Delta markdownToDelta(String markdown) => _mdToDelta.convert(markdown);

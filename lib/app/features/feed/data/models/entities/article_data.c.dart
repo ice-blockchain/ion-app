@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -18,7 +17,6 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/services/markdown/quill.dart';
 
 part 'article_data.c.freezed.dart';
 
@@ -65,7 +63,7 @@ class ArticleData
     with _$ArticleData, EntitySettingsDataMixin
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
-    required Delta content,
+    required String content,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
@@ -88,7 +86,7 @@ class ArticleData
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
-      content: markdownToDelta(eventMessage.content),
+      content: eventMessage.content,
       media: mediaAttachments,
       title: title,
       image: image,
@@ -103,7 +101,7 @@ class ArticleData
   }
 
   factory ArticleData.fromData({
-    required Delta content,
+    required String content,
     required Map<String, MediaAttachment> media,
     String? title,
     String? image,
@@ -149,7 +147,7 @@ class ArticleData
         if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
-      content: deltaToMarkdown(content),
+      content: content,
     );
   }
 
@@ -160,19 +158,6 @@ class ArticleData
       pubkey: pubkey,
       dTag: replaceableEventId.value,
     );
-  }
-
-  static List<RelatedHashtag> extractTags(Delta content) {
-    return content.operations
-        .where(
-      (operation) =>
-          operation.isInsert &&
-          ((operation.value as String).startsWith('#') ||
-              (operation.value as String).startsWith(r'$')),
-    )
-        .map((operation) {
-      return RelatedHashtag(value: (operation.value as String).trim());
-    }).toList();
   }
 
   static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {

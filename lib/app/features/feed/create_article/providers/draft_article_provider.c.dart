@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/utils/extract_image_ids.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/color.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -39,8 +39,7 @@ class DraftArticle extends _$DraftArticle {
     String title,
   ) async {
     final delta = textEditorController.document.toDelta();
-    final imageIds =
-        TextEditorSingleImageBuilder.extractImageIds(textEditorController.document.toDelta());
+    final imageIds = extractImageIds(textEditorController.document.toDelta());
 
     final colorHex = await _extractDominantColorFromImage(image);
 

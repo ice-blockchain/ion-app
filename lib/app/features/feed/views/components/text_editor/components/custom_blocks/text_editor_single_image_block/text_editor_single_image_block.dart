@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_local_image.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_network_image.dart';
@@ -59,16 +58,5 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
         ),
       ],
     );
-  }
-
-  static List<String> extractImageIds(Delta delta) {
-    final imageIds = <String>[];
-    for (final operation in delta.operations) {
-      final data = operation.data;
-      if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
-        imageIds.add(data[textEditorSingleImageKey] as String);
-      }
-    }
-    return imageIds;
   }
 }
