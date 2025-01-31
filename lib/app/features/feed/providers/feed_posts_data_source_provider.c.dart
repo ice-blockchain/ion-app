@@ -16,7 +16,6 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
-import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
@@ -195,7 +194,7 @@ EntitiesDataSource _buildPostsDataSource({
               negative: true,
             ),
             TagMarkerSearchExtension(
-              tagName: RelatedEvent.tagName,
+              tagName: RelatedImmutableEvent.tagName,
               marker: RelatedEventMarker.reply.toShortString(),
               negative: true,
             ),

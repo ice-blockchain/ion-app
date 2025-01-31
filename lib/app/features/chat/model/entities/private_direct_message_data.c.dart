@@ -82,7 +82,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
     );
   }
 

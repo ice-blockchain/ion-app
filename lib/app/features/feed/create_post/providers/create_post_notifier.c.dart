@@ -21,10 +21,10 @@ import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -198,7 +198,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     ];
   }
 
-  List<RelatedReplaceableEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
+  List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
     if (parentEntity is ArticleEntity) {
       return [
         RelatedReplaceableEvent(
@@ -224,16 +224,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   List<RelatedPubkey> _buildRelatedPubkeys(IonConnectEntity parentEntity) {
-    if (parentEntity is ArticleEntity) {
-      return [RelatedPubkey(value: parentEntity.masterPubkey)];
-    } else if (parentEntity is ModifiablePostEntity) {
-      return <RelatedPubkey>{
-        RelatedPubkey(value: parentEntity.masterPubkey),
-        ...parentEntity.data.relatedPubkeys ?? [],
-      }.toList();
-    } else {
-      throw UnsupportedParentEntity(parentEntity);
-    }
+    return [
+      RelatedPubkey(value: parentEntity.masterPubkey),
+      if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+      if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
+    ];
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(

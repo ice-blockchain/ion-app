@@ -9,6 +9,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -60,7 +61,7 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
 
 @freezed
 class PostData
-    with _$PostData, EntityDataWithMediaContent, EntityDataWithSettings
+    with _$PostData, EntityDataWithMediaContent, EntityDataWithSettings, EntityDataWithRelatedEvents
     implements EventSerializable {
   const factory PostData({
     required List<TextMatch> content,
@@ -87,7 +88,7 @@ class PostData
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
       quotedEvent: quotedEventTag != null ? QuotedEvent.fromTag(quotedEventTag.first) : null,
-      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedEvents: EntityDataWithRelatedEvents.fromTags(tags),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
@@ -123,21 +124,5 @@ class PostData
   @override
   String toString() {
     return 'PostData(${content.map((match) => match.text).join()})';
-  }
-
-  RelatedEvent? get parentEvent {
-    if (relatedEvents == null) return null;
-
-    RelatedEvent? rootReplyId;
-    RelatedEvent? replyId;
-    for (final relatedEvent in relatedEvents!) {
-      if (relatedEvent.marker == RelatedEventMarker.reply) {
-        replyId = relatedEvent;
-        break;
-      } else if (relatedEvent.marker == RelatedEventMarker.root) {
-        rootReplyId = relatedEvent;
-      }
-    }
-    return replyId ?? rootReplyId;
   }
 }

@@ -9,6 +9,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -19,10 +20,9 @@ import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
@@ -71,7 +71,11 @@ class ModifiablePostEntity
 
 @freezed
 class ModifiablePostData
-    with _$ModifiablePostData, EntityDataWithMediaContent, EntityDataWithSettings
+    with
+        _$ModifiablePostData,
+        EntityDataWithMediaContent,
+        EntityDataWithSettings,
+        EntityDataWithRelatedEvents
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
     required List<TextMatch> content,
@@ -81,7 +85,7 @@ class ModifiablePostData
     EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
     QuotedEvent? quotedEvent,
-    List<RelatedReplaceableEvent>? relatedEvents,
+    List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
@@ -107,8 +111,7 @@ class ModifiablePostData
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
       quotedEvent: quotedEventTag != null ? QuotedEvent.fromTag(quotedEventTag.first) : null,
-      relatedEvents:
-          tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
+      relatedEvents: EntityDataWithRelatedEvents.fromTags(tags),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
@@ -151,22 +154,6 @@ class ModifiablePostData
       pubkey: pubkey,
       dTag: replaceableEventId.value,
     );
-  }
-
-  RelatedReplaceableEvent? get parentEvent {
-    if (relatedEvents == null) return null;
-
-    RelatedReplaceableEvent? rootReplyId;
-    RelatedReplaceableEvent? replyId;
-    for (final relatedEvent in relatedEvents!) {
-      if (relatedEvent.marker == RelatedEventMarker.reply) {
-        replyId = relatedEvent;
-        break;
-      } else if (relatedEvent.marker == RelatedEventMarker.root) {
-        rootReplyId = relatedEvent;
-      }
-    }
-    return replyId ?? rootReplyId;
   }
 
   @override
