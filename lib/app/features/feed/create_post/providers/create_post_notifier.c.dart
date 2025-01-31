@@ -13,8 +13,8 @@ import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -75,7 +75,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
-        settings: _buildSettings(whoCanReply: whoCanReply),
+        settings: EntitySettingsDataMixin.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
       );
 
@@ -145,14 +145,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         media: {for (final attachment in attachments) attachment.url: attachment}
       );
     }
-  }
-
-  List<EventSetting>? _buildSettings({required WhoCanReplySettingsOption whoCanReply}) {
-    return whoCanReply != WhoCanReplySettingsOption.everyone
-        ? [
-            WhoCanReplyEventSetting(values: {whoCanReply}),
-          ]
-        : null;
   }
 
   Future<IonConnectEntity?> _getParentEntity(EventReference parentEventReference) async {

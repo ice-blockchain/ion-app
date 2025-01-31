@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
@@ -21,8 +19,6 @@ import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'article_data.c.freezed.dart';
-
-const textEditorSingleImageKey = 'text-editor-single-image';
 
 @Freezed(equal: false)
 class ArticleEntity
@@ -63,7 +59,9 @@ class ArticleEntity
 }
 
 @freezed
-class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEntityData {
+class ArticleData
+    with _$ArticleData, EntitySettingsDataMixin
+    implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
     required String content,
     required Map<String, MediaAttachment> media,
@@ -74,7 +72,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     String? summary,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
-    String? imageColor,
+    ColorLabel? colorLabel,
   }) = _ArticleData;
 
   const ArticleData._();
@@ -85,13 +83,6 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     final title = tags['title']?.firstOrNull?.elementAtOrNull(1);
     final image = tags['image']?.firstOrNull?.elementAtOrNull(1);
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
-
-    final hasNamespaceTag =
-        tags[ColorLabel.namespaceTagName]?.any(ColorLabel.isNamespaceTag) ?? false;
-    final colorTag =
-        hasNamespaceTag ? tags[ColorLabel.tagName]?.firstWhereOrNull(ColorLabel.isValueTag) : null;
-    final imageColor = colorTag != null ? ColorLabel.extractValue(colorTag) : null;
-
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
     return ArticleData(
@@ -105,7 +96,7 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
-      imageColor: imageColor,
+      colorLabel: ColorLabel.fromTags(tags, eventId: eventMessage.id),
     );
   }
 
@@ -117,16 +108,9 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     String? summary,
     DateTime? publishedAt,
     List<RelatedHashtag>? relatedHashtags,
-    Set<WhoCanReplySettingsOption> whoCanReplySettings = const {},
+    List<EventSetting>? settings,
     String? imageColor,
   }) {
-    final setting = whoCanReplySettings.isEmpty ||
-            whoCanReplySettings.every(
-              (option) => option.tagValue == null,
-            )
-        ? null
-        : WhoCanReplyEventSetting(values: whoCanReplySettings);
-
     return ArticleData(
       content: content,
       media: media,
@@ -136,8 +120,8 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
       publishedAt: EntityPublishedAt(value: publishedAt ?? DateTime.now()),
       replaceableEventId: ReplaceableEventIdentifier.generate(),
       relatedHashtags: relatedHashtags,
-      settings: setting != null ? [setting] : null,
-      imageColor: imageColor,
+      settings: settings,
+      colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
     );
   }
 
@@ -159,8 +143,8 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
         if (image != null) ['image', image!],
         if (summary != null) ['summary', summary!],
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
-        if (imageColor != null) ColorLabel(value: imageColor).toNamespaceTag(),
-        if (imageColor != null) ColorLabel(value: imageColor).toValueTag(),
+        if (colorLabel != null) colorLabel!.toNamespaceTag(),
+        if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
       ],
       content: content,
@@ -176,48 +160,11 @@ class ArticleData with _$ArticleData implements EventSerializable, ReplaceableEn
     );
   }
 
-  static List<RelatedHashtag> extractTagsFromMarkdown(String content) {
-    final operations = jsonDecode(content) as List<dynamic>;
-    const insertKey = 'insert';
-
-    return operations
-        .whereType<Map<String, dynamic>>()
-        .where(
-          (operation) =>
-              operation.containsKey(insertKey) &&
-              operation[insertKey] is String &&
-              ((operation[insertKey] as String).startsWith('#') ||
-                  (operation[insertKey] as String).startsWith(r'$')),
-        )
-        .map((operation) {
-      final insert = operation[insertKey]! as String;
-      return RelatedHashtag(value: insert);
-    }).toList();
-  }
-
-  static List<String> extractImageIds(QuillController textEditorController) {
-    final imageIds = <String>[];
-    for (final operation in textEditorController.document.toDelta().operations) {
-      final data = operation.data;
-      if (data is Map<String, dynamic> && data.containsKey(textEditorSingleImageKey)) {
-        imageIds.add(data[textEditorSingleImageKey] as String);
-      }
-    }
-    return imageIds;
-  }
-
   static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {
     if (mediaTags == null) return {};
     return {
       for (final tag in mediaTags)
         if (tag.length > 1) tag[1]: MediaAttachment.fromTag(tag),
     };
-  }
-
-  WhoCanReplySettingsOption? get whoCanReplySetting {
-    final whoCanReplySetting =
-        settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
-            as WhoCanReplyEventSetting?;
-    return whoCanReplySetting?.values.firstOrNull;
   }
 }

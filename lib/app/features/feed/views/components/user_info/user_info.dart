@@ -6,7 +6,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/timestamp_widget.dart';
+import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -59,8 +59,8 @@ class UserInfo extends HookConsumerWidget {
                 SizedBox(width: 4.0.s),
                 const Text('•'),
                 SizedBox(width: 4.0.s),
-                TimestampWidget(
-                  createdAt: createdAt!,
+                TimeAgo(
+                  time: createdAt!,
                   timeFormat: timeFormat,
                   style: textStyle,
                 ),

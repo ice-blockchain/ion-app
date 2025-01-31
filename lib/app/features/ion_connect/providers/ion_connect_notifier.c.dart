@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -17,7 +17,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/wallets/main_wallet_provider.c.dart';
 import 'package:ion/app/utils/retry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -78,10 +77,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
   Future<void> sendAuthEvent(IonConnectRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
-    if (challenge == null && challenge.isEmpty) throw AuthChallengeIsEmptyException();
+    if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
     final signedAuthEvent = await createAuthEvent(
-      challenge: challenge!,
+      challenge: challenge,
       relayUrl: Uri.parse(relay.url).toString(),
     );
 

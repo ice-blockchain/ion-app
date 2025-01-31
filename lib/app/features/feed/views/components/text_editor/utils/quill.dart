@@ -1,30 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill/quill_delta.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-
-String encodeArticleContent(QuillController controller) {
-  return jsonEncode(controller.document.toDelta().toJson());
-}
-
-QuillController decodeArticleContent(String encodedContent) {
-  try {
-    final decodedJson = jsonDecode(encodedContent) as List<dynamic>;
-    final delta = Delta.fromJson(decodedJson);
-    return QuillController(
-      document: Document.fromDelta(delta),
-      selection: const TextSelection.collapsed(offset: 0),
-      readOnly: true,
-    );
-  } catch (error) {
-    throw QuillParseException(error);
-  }
-}
+import 'package:ion/app/features/feed/views/components/text_editor/attributes.dart';
 
 DefaultStyles getCustomStyles(BuildContext context) {
   return DefaultStyles(
@@ -86,7 +65,9 @@ DefaultStyles getCustomStyles(BuildContext context) {
 }
 
 TextStyle customTextStyleBuilder(Attribute<dynamic> attribute, BuildContext context) {
-  if (attribute.key == 'mention' || attribute.key == 'hashtag' || attribute.key == 'cashtag') {
+  if (attribute.key == MentionAttribute.attributeKey ||
+      attribute.key == HashtagAttribute.attributeKey ||
+      attribute.key == CashtagAttribute.attributeKey) {
     return TextStyle(
       color: context.theme.appColors.primaryAccent,
       decoration: TextDecoration.none,

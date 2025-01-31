@@ -8,15 +8,15 @@ import 'package:ion/app/utils/date.dart';
 
 enum TimestampFormat { short, detailed }
 
-class TimestampWidget extends ConsumerWidget {
-  const TimestampWidget({
-    required this.createdAt,
+class TimeAgo extends ConsumerWidget {
+  const TimeAgo({
+    required this.time,
     required this.timeFormat,
     super.key,
     this.style,
   });
 
-  final DateTime createdAt;
+  final DateTime time;
   final TimestampFormat timeFormat;
   final TextStyle? style;
 
@@ -24,8 +24,8 @@ class TimestampWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(appLocaleProvider);
     final formattedTime = timeFormat == TimestampFormat.detailed
-        ? formatDetailedTimestamp(createdAt, locale: locale)
-        : formatShortTimestamp(createdAt, locale: locale);
+        ? formatDetailedTimestamp(time, locale: locale)
+        : formatShortTimestamp(time, locale: locale);
 
     return Text(
       formattedTime,

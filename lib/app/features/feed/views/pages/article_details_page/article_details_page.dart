@@ -21,6 +21,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArticleDetailsPage extends HookConsumerWidget {
@@ -43,6 +44,10 @@ class ArticleDetailsPage extends HookConsumerWidget {
 
     final scrollController = useScrollController();
     final progress = useScrollIndicator(scrollController);
+    final content = useMemoized(
+      () => markdownToDelta(articleEntity.data.content),
+      [articleEntity.data.content],
+    );
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -82,7 +87,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
                     ScreenSideOffset.small(
                       child: TextEditorPreview(
-                        content: articleEntity.data.content,
+                        content: content,
                         media: articleEntity.data.media,
                       ),
                     ),
