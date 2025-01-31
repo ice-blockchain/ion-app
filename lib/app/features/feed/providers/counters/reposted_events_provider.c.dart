@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -43,13 +44,13 @@ String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String curr
     return null;
   }
 
-  if (entity is ModifiablePostEntity && entity.data.quotedEvent != null) {
-    return entity.data.quotedEvent!.eventReference.toString();
-  } else if (entity is GenericRepostEntity) {
-    return entity.data.eventReference.toString();
-  } else {
-    return null;
-  }
+  return switch (entity) {
+    ModifiablePostEntity() when entity.data.quotedEvent != null =>
+      entity.data.quotedEvent!.eventReference.toString(),
+    GenericRepostEntity() => entity.data.eventReference.toString(),
+    RepostEntity() => entity.data.eventReference.toString(),
+    _ => null,
+  };
 }
 
 @riverpod
