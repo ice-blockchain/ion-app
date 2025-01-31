@@ -27,9 +27,7 @@ class CoinReceiveModal extends HookConsumerWidget {
     final updateNetwork = useCallback(
       (Network? network) {
         if (network != null) {
-          ref
-              .read(receiveCoinsFormControllerProvider.notifier)
-              .setNetwork(network);
+          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
         }
       },
       [],
