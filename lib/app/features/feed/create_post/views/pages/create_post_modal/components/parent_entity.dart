@@ -65,7 +65,7 @@ class ParentEntity extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  PostBody(postEntity: ionConnectEntity),
+                  PostBody(entity: ionConnectEntity),
                   SizedBox(height: 12.0.s),
                   ReplyingTo(name: userMetadata.data.name),
                   SizedBox(height: 16.0.s),

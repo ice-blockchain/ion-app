@@ -2,14 +2,14 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 part 'quoted_event.c.freezed.dart';
 
 @freezed
 class QuotedEvent with _$QuotedEvent {
   const factory QuotedEvent({
-    required String eventId,
-    required String pubkey,
+    required ImmutableEventReference eventReference,
   }) = _QuotedEvent;
 
   const QuotedEvent._();
@@ -23,13 +23,12 @@ class QuotedEvent with _$QuotedEvent {
       throw IncorrectEventTagException(tag: tag.toString());
     }
     return QuotedEvent(
-      eventId: tag[1],
-      pubkey: tag[3],
+      eventReference: ImmutableEventReference(eventId: tag[1], pubkey: tag[3]),
     );
   }
 
   List<String> toTag() {
-    return [tagName, eventId, '', pubkey];
+    return [tagName, eventReference.eventId, '', eventReference.pubkey];
   }
 
   static const String tagName = 'q';

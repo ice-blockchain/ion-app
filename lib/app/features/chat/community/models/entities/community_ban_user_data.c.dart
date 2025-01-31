@@ -12,7 +12,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'community_ban_user_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class CommunityBanUserEntity with _$CommunityBanUserEntity, IonConnectEntity {
+class CommunityBanUserEntity with _$CommunityBanUserEntity, IonConnectEntity, ImmutableEntity {
   const factory CommunityBanUserEntity({
     required String id,
     required String pubkey,

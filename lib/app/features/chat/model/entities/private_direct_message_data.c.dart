@@ -7,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
@@ -62,7 +62,7 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 }
 
 @freezed
-class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataMixin {
+class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMediaContent {
   const factory PrivateDirectMessageData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
@@ -79,7 +79,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityMediaDataM
 
     return PrivateDirectMessageData(
       content: parsedContent,
-      media: EntityMediaDataMixin.parseImeta(tags[MediaAttachment.tagName]),
+      media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),

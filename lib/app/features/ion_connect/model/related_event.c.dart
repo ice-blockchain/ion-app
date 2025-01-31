@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 
 part 'related_event.c.freezed.dart';
@@ -9,7 +10,7 @@ part 'related_event.c.freezed.dart';
 @freezed
 class RelatedEvent with _$RelatedEvent {
   const factory RelatedEvent({
-    required String eventId,
+    required ImmutableEventReference eventReference,
     required String pubkey,
     required RelatedEventMarker marker,
   }) = _RelatedEvent;
@@ -27,14 +28,14 @@ class RelatedEvent with _$RelatedEvent {
     }
 
     return RelatedEvent(
-      eventId: tag[1],
+      eventReference: ImmutableEventReference(eventId: tag[1], pubkey: tag[4]),
       marker: RelatedEventMarker.values.byName(tag[3]),
       pubkey: tag[4],
     );
   }
 
   List<String> toTag() {
-    return [tagName, eventId, '', marker.name, pubkey];
+    return [tagName, eventReference.eventId, '', marker.name, pubkey];
   }
 
   static const String tagName = 'e';

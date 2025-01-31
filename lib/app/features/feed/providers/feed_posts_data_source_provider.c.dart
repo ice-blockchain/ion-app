@@ -14,6 +14,7 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.d
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -180,8 +181,9 @@ EntitiesDataSource _buildPostsDataSource({
       RequestFilter(
         kinds: const [
           PostEntity.kind,
-          ModifiablePostEntity.kind,
-          GenericRepostEntity.kind,
+          //TODO:uncomment
+          // ModifiablePostEntity.kind,
+          // GenericRepostEntity.kind,
           RepostEntity.kind,
         ],
         search: SearchExtensions.withCounters(
@@ -193,12 +195,25 @@ EntitiesDataSource _buildPostsDataSource({
               marker: RelatedEventMarker.reply.toShortString(),
               negative: true,
             ),
+            TagMarkerSearchExtension(
+              tagName: RelatedEvent.tagName,
+              marker: RelatedEventMarker.reply.toShortString(),
+              negative: true,
+            ),
             GenericIncludeSearchExtension(
               forKind: ModifiablePostEntity.kind,
               includeKind: UserMetadataEntity.kind,
             ),
             GenericIncludeSearchExtension(
               forKind: ModifiablePostEntity.kind,
+              includeKind: BlockListEntity.kind,
+            ),
+            GenericIncludeSearchExtension(
+              forKind: PostEntity.kind,
+              includeKind: UserMetadataEntity.kind,
+            ),
+            GenericIncludeSearchExtension(
+              forKind: PostEntity.kind,
               includeKind: BlockListEntity.kind,
             ),
           ],

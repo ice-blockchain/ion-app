@@ -4,12 +4,13 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
-import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -59,7 +60,7 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
 
 @freezed
 class PostData
-    with _$PostData, EntityMediaDataMixin, EntitySettingsDataMixin
+    with _$PostData, EntityDataWithMediaContent, EntityDataWithSettings
     implements EventSerializable {
   const factory PostData({
     required List<TextMatch> content,
@@ -79,7 +80,7 @@ class PostData
 
     return PostData(
       content: parsedContent,
-      media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      media: EntityDataWithMediaContent.buildMedia(tags[MediaAttachment.tagName], parsedContent),
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,

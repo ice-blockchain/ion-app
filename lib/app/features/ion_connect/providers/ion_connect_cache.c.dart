@@ -11,7 +11,7 @@ part 'ion_connect_cache.c.g.dart';
 
 final _ionConnectCacheStreamController = StreamController<IonConnectEntity>.broadcast();
 
-mixin CacheableEntity on IonConnectEntity implements IonConnectEntityReferecenable {
+mixin CacheableEntity on IonConnectEntity {
   String get cacheKey => cacheKeyBuilder(eventReference: toEventReference());
 
   static String cacheKeyBuilder({required EventReference eventReference}) =>

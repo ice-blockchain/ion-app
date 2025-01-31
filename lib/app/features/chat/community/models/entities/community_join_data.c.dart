@@ -16,7 +16,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'community_join_data.c.freezed.dart';
 
 @freezed
-class CommunityJoinEntity with _$CommunityJoinEntity, IonConnectEntity {
+class CommunityJoinEntity with _$CommunityJoinEntity, IonConnectEntity, ImmutableEntity {
   const factory CommunityJoinEntity({
     required String id,
     required String pubkey,

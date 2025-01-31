@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
@@ -55,9 +54,6 @@ String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String curr
 
 @riverpod
 bool isReposted(Ref ref, EventReference eventReference) {
-  if (eventReference is! ReplaceableEventReference) {
-    throw UnsupportedEventReference(eventReference);
-  }
   return ref.watch(repostedEventsProvider).valueOrNull?.contains(eventReference.toString()) ??
       false;
 }
