@@ -21,6 +21,8 @@ abstract class EventReference {
 
   List<String> toTag();
 
+  MapEntry<String, List<String>> toFilterEntry();
+
   static String separator = ':';
 }
 
@@ -52,6 +54,11 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
   @override
   String encode() {
     return [tagName, eventId, pubkey].join(EventReference.separator);
+  }
+
+  @override
+  MapEntry<String, List<String>> toFilterEntry() {
+    return MapEntry('#$tagName', [eventId]);
   }
 
   @override
@@ -115,6 +122,11 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
   @override
   String encode() {
     return [tagName, kind, pubkey, dTag].nonNulls.join(EventReference.separator);
+  }
+
+  @override
+  MapEntry<String, List<String>> toFilterEntry() {
+    return MapEntry('#$tagName', [toString()]);
   }
 
   @override

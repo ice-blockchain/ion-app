@@ -5,9 +5,11 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -31,9 +33,11 @@ List<EntitiesDataSource>? repliesDataSource(
     return null;
   }
 
-  if (entity is! ModifiablePostEntity) {
-    throw IncorrectEventKindException(eventReference, kind: ModifiablePostEntity.kind);
-  }
+  final hasParent = switch (entity) {
+    ModifiablePostEntity() => entity.data.parentEvent != null,
+    PostEntity() => entity.data.parentEvent != null,
+    _ => throw UnsupportedEventReference(eventReference)
+  };
 
   final dataSources = [
     EntitiesDataSource(
@@ -44,16 +48,19 @@ List<EntitiesDataSource>? repliesDataSource(
       requestFilters: [
         RequestFilter(
           kinds: const [ModifiablePostEntity.kind],
-          tags: {
-            '#a': [eventReference.toString()],
-          },
+          tags: Map.fromEntries([eventReference.toFilterEntry()]),
           search: SearchExtensions.withCounters(
             [
               ExpirationSearchExtension(expiration: false),
               TagMarkerSearchExtension(
                 tagName: RelatedReplaceableEvent.tagName,
                 marker: RelatedEventMarker.reply.toShortString(),
-                negative: entity.data.parentEvent == null,
+                negative: !hasParent,
+              ),
+              TagMarkerSearchExtension(
+                tagName: RelatedEvent.tagName,
+                marker: RelatedEventMarker.reply.toShortString(),
+                negative: !hasParent,
               ),
               GenericIncludeSearchExtension(
                 forKind: ModifiablePostEntity.kind,
@@ -61,6 +68,14 @@ List<EntitiesDataSource>? repliesDataSource(
               ),
               GenericIncludeSearchExtension(
                 forKind: ModifiablePostEntity.kind,
+                includeKind: BlockListEntity.kind,
+              ),
+              GenericIncludeSearchExtension(
+                forKind: PostEntity.kind,
+                includeKind: UserMetadataEntity.kind,
+              ),
+              GenericIncludeSearchExtension(
+                forKind: PostEntity.kind,
                 includeKind: BlockListEntity.kind,
               ),
             ],

@@ -117,7 +117,7 @@ class _FramedEvent extends HookConsumerWidget {
     final quotedEntity = useMemoized(
       () {
         switch (ionConnectEntity) {
-          case ModifiablePostEntity():
+          case ModifiablePostEntity() || PostEntity():
             return _QuotedPost(eventReference: eventReference);
           case ArticleEntity():
             return _QuotedArticle(eventReference: eventReference);
@@ -142,9 +142,8 @@ final class _QuotedPost extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity = ref
-        .watch(ionConnectEntityProvider(eventReference: eventReference))
-        .valueOrNull as ModifiablePostEntity?;
+    final postEntity =
+        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
     return QuotedEntityFrame.post(
       child: GestureDetector(
