@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/protect_account/secure_account/providers/two_fa_signature_wrapper_notifier.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,14 +14,20 @@ class DeleteTwoFANotifier extends _$DeleteTwoFANotifier {
 
   Future<void> deleteTwoFa(
     TwoFAType twoFAType,
-    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
     List<TwoFAType> verificationCodes,
   ) async {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final client = await ref.read(ionIdentityClientProvider.future);
-      await client.auth.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
+      final twoFaWrapper = ref.read(twoFaSignatureWrapperNotifierProvider.notifier);
+      await twoFaWrapper.wrapWithSignature(
+        (signature) => client.auth.deleteTwoFA(
+          twoFAType: twoFAType,
+          signature: signature,
+          verificationCodes: verificationCodes,
+        ),
+      );
     });
   }
 }

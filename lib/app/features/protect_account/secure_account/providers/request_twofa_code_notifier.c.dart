@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/two_fa_signature_wrapper_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/user_details_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
@@ -18,7 +19,6 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
 
   Future<void> requestTwoFaCode(
     TwoFaType twoFaType,
-    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   ) async {
     if (state.isLoading) {
       return;
@@ -30,7 +30,15 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
       final client = await ref.read(ionIdentityClientProvider.future);
       final twoFAType = await _getTwoFAType(twoFaType);
 
-      return client.auth.requestTwoFACode(twoFAType: twoFAType, onVerifyIdentity: onVerifyIdentity);
+      final twoFaWrapper = ref.read(twoFaSignatureWrapperNotifierProvider.notifier);
+      String? code;
+      await twoFaWrapper.wrapWithSignature((signature) async {
+        code = await client.auth.requestTwoFACode(
+          twoFAType: twoFAType,
+          signature: signature,
+        );
+      });
+      return code;
     });
   }
 
@@ -49,11 +57,16 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
       final client = await ref.read(ionIdentityProvider.future);
       final twoFAType = TwoFaTypeAdapter(twoFaType).twoFAType;
 
-      return client(username: '').auth.requestTwoFACode(
-            twoFAType: twoFAType,
-            recoveryIdentityKeyName: recoveryIdentityKeyName,
-            onVerifyIdentity: onVerifyIdentity,
-          );
+      final twoFaWrapper = ref.read(twoFaSignatureWrapperNotifierProvider.notifier);
+      String? code;
+      await twoFaWrapper.wrapWithSignature((signature) async {
+        code = await client(username: '').auth.requestTwoFACode(
+              twoFAType: twoFAType,
+              recoveryIdentityKeyName: recoveryIdentityKeyName,
+              signature: signature,
+            );
+      });
+      return code;
     });
   }
 

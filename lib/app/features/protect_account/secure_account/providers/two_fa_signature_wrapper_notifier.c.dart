@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'dart:async';
+
 import 'package:ion/app/features/protect_account/secure_account/providers/two_fa_signature_notifier.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -9,45 +13,45 @@ typedef SignedAction = Future<void> Function(String? signature);
 
 @Riverpod(keepAlive: true)
 class TwoFaSignatureWrapperNotifier extends _$TwoFaSignatureWrapperNotifier {
+  Completer<void>? _completer;
+
   @override
   FutureOr<SignedAction?> build() async => null;
 
   Future<void> wrapWithSignature(SignedAction action, [String? twoFaSignature]) async {
+    _completer = Completer<void>();
     state = const AsyncLoading();
 
     try {
-      state = await AsyncValue.guard(
-        () async {
-          final signature = twoFaSignature ?? ref.read(twoFaSignatureNotifierProvider);
-          await action(signature);
-          return null;
-        },
-        (error) {
-          // return error is! InvalidSignatureException;
-          return true;
-        },
-      );
-      // } on InvalidSignatureException catch (e) {
+      final signature = twoFaSignature ?? ref.read(twoFaSignatureNotifierProvider);
+      await action(signature);
+
+      state = const AsyncValue.data(null);
+      _completer?.complete();
+    } on InvalidSignatureException {
+      // set state with failed action to retry
+      state = AsyncValue.data(action);
     } catch (e) {
-      // if invalid signature error, set state with failed action to retry
-      // state = AsyncValue(action);
+      state = const AsyncValue.data(null);
+      rethrow;
     }
+
+    return _completer?.future;
   }
 
   Future<void> retryWithVerifyIdentity(
     SignedAction action,
     OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   ) async {
-    state = const AsyncLoading();
-
-    state = await AsyncValue.guard(() async {
+    try {
       final client = await ref.read(ionIdentityClientProvider.future);
       final signature = await client.auth.generateSignature(onVerifyIdentity);
       await ref.read(twoFaSignatureNotifierProvider.notifier).setSignature(signature);
 
-      await wrapWithSignature(action, signature);
-
-      return null;
-    });
+      await action(signature);
+      _completer?.complete();
+    } catch (e) {
+      _completer?.completeError(e);
+    }
   }
 }

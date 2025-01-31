@@ -10,7 +10,6 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
 import 'package:ion/app/features/components/verify_identity/hooks/use_on_get_password.dart';
-import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/components/authenticator_setup_instructions_error_state.dart';
 import 'package:ion/app/features/protect_account/authenticator/views/pages/setup_authenticator/components/authenticator_setup_instructions_success_state.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
@@ -19,7 +18,6 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:ion_identity_client/ion_identity.dart';
 
 class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
   const AuthenticatorSetupInstructionsPage({super.key});
@@ -32,20 +30,7 @@ class AuthenticatorSetupInstructionsPage extends HookConsumerWidget {
     ref.displayErrors(requestTwoFaCodeNotifierProvider);
 
     final requestCode = useCallback(() {
-      guardPasskeyDialog(
-        ref.context,
-        (child) => RiverpodVerifyIdentityRequestBuilder(
-          provider: requestTwoFaCodeNotifierProvider,
-          requestWithVerifyIdentity:
-              (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) {
-            ref.read(requestTwoFaCodeNotifierProvider.notifier).requestTwoFaCode(
-                  TwoFaType.auth,
-                  onVerifyIdentity,
-                );
-          },
-          child: child,
-        ),
-      );
+      ref.read(requestTwoFaCodeNotifierProvider.notifier).requestTwoFaCode(TwoFaType.auth);
     });
 
     useOnInit(requestCode, [onGetPassword]);

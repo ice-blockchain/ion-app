@@ -155,3 +155,21 @@ class InvalidRecoveryCredentialsException extends IONIdentityException {
     }
   }
 }
+
+class InvalidSignatureException extends IONIdentityException {
+  InvalidSignatureException() : super('Invalid signature');
+
+  static bool isMatch(DioException dioException) {
+    final responseData = dioException.response?.data;
+
+    try {
+      if (responseData is Map<String, dynamic>) {
+        final responseCode = responseData['code'] as String?;
+        return responseCode == 'INVALID_SIGNATURE';
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+}
