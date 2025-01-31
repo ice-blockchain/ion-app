@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/providers/counters/like_reaction_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_count_provider.c.dart';
@@ -25,13 +25,8 @@ class LikesNotifier extends _$LikesNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      final likeEntity = ref.read(likeReactionProvider(eventReference));
       final eventRef = eventReference;
-
-      final likeEntity = ref.read(likeReactionProvider(eventRef));
-
-      if (eventRef is! ReplaceableEventReference) {
-        throw UnsupportedEventReference(eventRef);
-      }
 
       if (likeEntity != null) {
         final data = DeletionRequest(
@@ -44,7 +39,7 @@ class LikesNotifier extends _$LikesNotifier {
         final data = ReactionData(
           content: ReactionEntity.likeSymbol,
           eventReference: eventRef,
-          kind: eventRef.kind,
+          kind: eventRef is ReplaceableEventReference ? eventRef.kind : PostEntity.kind,
         );
         await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
         ref.read(likesCountProvider(eventRef).notifier).addOne();
