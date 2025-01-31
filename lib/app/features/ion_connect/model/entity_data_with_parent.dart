@@ -23,7 +23,7 @@ mixin EntityDataWithRelatedEvents {
   }
 
   static List<RelatedEvent>? fromTags(Map<String, List<List<String>>> tags) {
-    final relatedEvents = [
+    final relatedEvents = <RelatedEvent>[
       ...(tags[RelatedImmutableEvent.tagName]?.map(RelatedImmutableEvent.fromTag) ?? []),
       ...(tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag) ?? []),
     ];

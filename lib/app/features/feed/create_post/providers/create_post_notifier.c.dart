@@ -218,6 +218,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
         ),
       ];
+    } else if (parentEntity is PostEntity) {
+      final rootRelatedEvent = parentEntity.data.relatedEvents
+          ?.firstWhereOrNull((relatedEvent) => relatedEvent.marker == RelatedEventMarker.root);
+      return [
+        if (rootRelatedEvent != null) rootRelatedEvent,
+        RelatedImmutableEvent(
+          eventReference: parentEntity.toEventReference(),
+          pubkey: parentEntity.masterPubkey,
+          marker: rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root,
+        ),
+      ];
     } else {
       throw UnsupportedParentEntity(parentEntity);
     }
