@@ -45,7 +45,6 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
   Future<void> requestRecoveryTwoFaCode(
     TwoFaType twoFaType,
     String recoveryIdentityKeyName,
-    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   ) async {
     if (state.isLoading) {
       return;
