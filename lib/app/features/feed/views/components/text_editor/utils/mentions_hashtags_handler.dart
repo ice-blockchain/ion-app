@@ -9,10 +9,10 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/attributes.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/cashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
-import 'package:ion/app/services/quill/attributes.dart';
 
 const maxMentionsLength = 3;
 const maxHashtagsLength = 5;

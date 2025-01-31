@@ -18,7 +18,7 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/services/quill/markdown.dart';
+import 'package:ion/app/services/markdown/quill.dart';
 
 part 'article_data.c.freezed.dart';
 

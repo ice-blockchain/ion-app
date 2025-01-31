@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/services/quill/attributes.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/attributes.dart';
 
 DefaultStyles getCustomStyles(BuildContext context) {
   return DefaultStyles(
