@@ -25,25 +25,29 @@ class ShareAddressView extends HookConsumerWidget {
   static const List<NetworkType> networkTypeValues = NetworkType.values;
 
   Future<void> _loadAddress(WidgetRef ref) async {
-    final addressNotifier = ref.read(walletAddressLoaderNotifierProvider.notifier);
     final network = ref.read(receiveCoinsFormControllerProvider).selectedNetwork;
-
-    var address = await addressNotifier.loadWalletAddress();
+    var address = await ref.read(walletAddressLoaderNotifierProvider.notifier).loadWalletAddress();
 
     if (address == null && network != null && ref.context.mounted) {
       await guardPasskeyDialog(
         ref.context,
-        (child) => RiverpodVerifyIdentityRequestBuilder(
-          provider: walletAddressLoaderNotifierProvider,
-          requestWithVerifyIdentity: (OnVerifyIdentity<Wallet> onVerifyIdentity) async {
-            final wallet = await addressNotifier.createWallet(
-              onVerifyIdentity: onVerifyIdentity,
-              network: network,
-            );
-            address = wallet?.address;
-          },
-          child: child,
-        ),
+        (child) {
+          return RiverpodVerifyIdentityRequestBuilder(
+            provider: walletAddressLoaderNotifierProvider,
+            requestWithVerifyIdentity: (OnVerifyIdentity<Wallet> onVerifyIdentity) async {
+              final wallet = await ref
+                  .read(
+                    walletAddressLoaderNotifierProvider.notifier,
+                  )
+                  .createWallet(
+                    onVerifyIdentity: onVerifyIdentity,
+                    network: network,
+                  );
+              address = wallet?.address;
+            },
+            child: child,
+          );
+        },
       );
     }
 
@@ -95,8 +99,8 @@ class ShareAddressView extends HookConsumerWidget {
                   label: Text(
                     context.i18n.button_share,
                   ),
+                  disabled: walletAddress == null,
                   onPressed: () {
-                    // TODO: (1) Probably we should disable button at all if walletAddress is null
                     if (walletAddress != null) {
                       shareContent(walletAddress);
                     }
