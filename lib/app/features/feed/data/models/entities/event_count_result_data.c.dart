@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -129,13 +130,16 @@ class EventCountResultData with _$EventCountResultData {
   EventCountResultType getType() {
     final EventCountRequestData(:filters, :params) = request.data;
     final filter = filters.first;
-    if (filter.kinds != null && filter.kinds!.contains(GenericRepostEntity.kind)) {
+    if (filter.kinds != null &&
+        (filter.kinds!.contains(GenericRepostEntity.kind) ||
+            filter.kinds!.contains(RepostEntity.kind))) {
       return EventCountResultType.reposts;
     } else if (filter.kinds != null && filter.kinds!.contains(ReactionEntity.kind)) {
       return EventCountResultType.reactions;
     } else if (filter.kinds != null && filter.kinds!.contains(FollowListEntity.kind)) {
       return EventCountResultType.followers;
-    } else if (filter.tags != null && filter.tags!.containsKey('#a')) {
+    } else if (filter.tags != null &&
+        (filter.tags!.containsKey('#a') || filter.tags!.containsKey('#e'))) {
       return EventCountResultType.replies;
     } else if (filter.tags != null && filter.tags!.containsKey('#q')) {
       return EventCountResultType.quotes;

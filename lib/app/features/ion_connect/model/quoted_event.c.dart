@@ -72,7 +72,7 @@ class QuotedImmutableEvent with _$QuotedImmutableEvent implements QuotedEvent {
 
   @override
   List<String> toTag() {
-    return [tagName, eventReference.eventId, '', eventReference.pubkey];
+    return [tagName, eventReference.toString(), '', eventReference.pubkey];
   }
 
   static const String tagName = 'q';

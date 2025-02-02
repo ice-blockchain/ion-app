@@ -63,7 +63,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
 
   @override
   String toString() {
-    return [eventId, pubkey].nonNulls.join(EventReference.separator);
+    return eventId;
   }
 
   static const String tagName = 'e';

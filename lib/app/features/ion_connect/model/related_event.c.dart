@@ -52,7 +52,7 @@ class RelatedImmutableEvent with _$RelatedImmutableEvent implements RelatedEvent
 
   @override
   List<String> toTag() {
-    return [tagName, eventReference.eventId, '', marker.name, pubkey];
+    return [tagName, eventReference.toString(), '', marker.name, pubkey];
   }
 
   static const String tagName = 'e';
