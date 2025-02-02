@@ -42,44 +42,56 @@ List<EntitiesDataSource>? repliesDataSource(
     EntitiesDataSource(
       actionSource: ActionSourceUser(eventReference.pubkey),
       entityFilter: (entity) =>
-          entity is ModifiablePostEntity &&
-          entity.data.parentEvent?.eventReference == eventReference,
+          (entity is ModifiablePostEntity &&
+              entity.data.parentEvent?.eventReference == eventReference) ||
+          (entity is PostEntity && entity.data.parentEvent?.eventReference == eventReference),
       requestFilters: [
         RequestFilter(
-          kinds: const [ModifiablePostEntity.kind],
+          kinds: const [ModifiablePostEntity.kind, PostEntity.kind],
           tags: Map.fromEntries([eventReference.toFilterEntry()]),
-          search: SearchExtensions.withCounters(
+          search: SearchExtensions(
             [
+              ...SearchExtensions.withCounters(
+                [
+                  TagMarkerSearchExtension(
+                    tagName: RelatedReplaceableEvent.tagName,
+                    marker: RelatedEventMarker.reply.toShortString(),
+                    negative: !hasParent,
+                  ),
+                  GenericIncludeSearchExtension(
+                    forKind: ModifiablePostEntity.kind,
+                    includeKind: UserMetadataEntity.kind,
+                  ),
+                  GenericIncludeSearchExtension(
+                    forKind: ModifiablePostEntity.kind,
+                    includeKind: BlockListEntity.kind,
+                  ),
+                ],
+                currentPubkey: currentPubkey,
+                root: false,
+              ).extensions,
+              ...SearchExtensions.withCounters(
+                [
+                  TagMarkerSearchExtension(
+                    tagName: RelatedImmutableEvent.tagName,
+                    marker: RelatedEventMarker.reply.toShortString(),
+                    negative: !hasParent,
+                  ),
+                  GenericIncludeSearchExtension(
+                    forKind: PostEntity.kind,
+                    includeKind: UserMetadataEntity.kind,
+                  ),
+                  GenericIncludeSearchExtension(
+                    forKind: PostEntity.kind,
+                    includeKind: BlockListEntity.kind,
+                  ),
+                ],
+                currentPubkey: currentPubkey,
+                root: false,
+                forKind: PostEntity.kind,
+              ).extensions,
               ExpirationSearchExtension(expiration: false),
-              TagMarkerSearchExtension(
-                tagName: RelatedReplaceableEvent.tagName,
-                marker: RelatedEventMarker.reply.toShortString(),
-                negative: !hasParent,
-              ),
-              TagMarkerSearchExtension(
-                tagName: RelatedImmutableEvent.tagName,
-                marker: RelatedEventMarker.reply.toShortString(),
-                negative: !hasParent,
-              ),
-              GenericIncludeSearchExtension(
-                forKind: ModifiablePostEntity.kind,
-                includeKind: UserMetadataEntity.kind,
-              ),
-              GenericIncludeSearchExtension(
-                forKind: ModifiablePostEntity.kind,
-                includeKind: BlockListEntity.kind,
-              ),
-              GenericIncludeSearchExtension(
-                forKind: PostEntity.kind,
-                includeKind: UserMetadataEntity.kind,
-              ),
-              GenericIncludeSearchExtension(
-                forKind: PostEntity.kind,
-                includeKind: BlockListEntity.kind,
-              ),
             ],
-            currentPubkey: currentPubkey,
-            root: false,
           ).toString(),
           limit: 10,
         ),
