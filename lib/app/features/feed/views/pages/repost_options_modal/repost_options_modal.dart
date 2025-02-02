@@ -10,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_option_action.dart';
@@ -35,9 +36,13 @@ class RepostOptionsModal extends HookConsumerWidget {
 
     final selectedAction = useState<RepostOptionAction?>(null);
     final repostLoading = ref.watch(repostNotifierProvider).isLoading;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
     final actions = [
-      if (repostReference != null) RepostOptionAction.undoRepost else RepostOptionAction.repost,
+      if (repostReference != null && repostReference!.pubkey == currentPubkey)
+        RepostOptionAction.undoRepost
+      else
+        RepostOptionAction.repost,
       RepostOptionAction.quotePost,
     ];
 
