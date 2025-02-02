@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_filter.dart';
-import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -25,6 +24,40 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
     return null;
   }
 
+  final searchVideos = SearchExtensions(
+    [
+      ReactionsSearchExtension(currentPubkey: currentPubkey),
+      ReferencesSearchExtension(contain: false),
+      ExpirationSearchExtension(expiration: true),
+      VideosSearchExtension(contain: true),
+      GenericIncludeSearchExtension(
+        forKind: ModifiablePostEntity.kind,
+        includeKind: UserMetadataEntity.kind,
+      ),
+      GenericIncludeSearchExtension(
+        forKind: ModifiablePostEntity.kind,
+        includeKind: BlockListEntity.kind,
+      ),
+    ],
+  ).toString();
+
+  final searchImages = SearchExtensions(
+    [
+      ReactionsSearchExtension(currentPubkey: currentPubkey),
+      ReferencesSearchExtension(contain: false),
+      ExpirationSearchExtension(expiration: true),
+      ImagesSearchExtension(contain: true),
+      GenericIncludeSearchExtension(
+        forKind: ModifiablePostEntity.kind,
+        includeKind: UserMetadataEntity.kind,
+      ),
+      GenericIncludeSearchExtension(
+        forKind: ModifiablePostEntity.kind,
+        includeKind: BlockListEntity.kind,
+      ),
+    ],
+  ).toString();
+
   final dataSources = [
     for (final entry in filterRelays.entries)
       EntitiesDataSource(
@@ -32,45 +65,15 @@ List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
         entityFilter: (entity) => entity is ModifiablePostEntity,
         requestFilters: [
           RequestFilter(
-            kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
+            kinds: const [ModifiablePostEntity.kind],
             authors: [currentPubkey, ...entry.value],
-            search: SearchExtensions(
-              [
-                ReactionsSearchExtension(currentPubkey: currentPubkey),
-                ReferencesSearchExtension(contain: false),
-                ExpirationSearchExtension(expiration: true),
-                VideosSearchExtension(contain: true),
-                GenericIncludeSearchExtension(
-                  forKind: ModifiablePostEntity.kind,
-                  includeKind: UserMetadataEntity.kind,
-                ),
-                GenericIncludeSearchExtension(
-                  forKind: ModifiablePostEntity.kind,
-                  includeKind: BlockListEntity.kind,
-                ),
-              ],
-            ).toString(),
+            search: searchVideos,
             limit: 10,
           ),
           RequestFilter(
-            kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
+            kinds: const [ModifiablePostEntity.kind],
             authors: [currentPubkey, ...entry.value],
-            search: SearchExtensions(
-              [
-                ReactionsSearchExtension(currentPubkey: currentPubkey),
-                ReferencesSearchExtension(contain: false),
-                ExpirationSearchExtension(expiration: true),
-                ImagesSearchExtension(contain: true),
-                GenericIncludeSearchExtension(
-                  forKind: ModifiablePostEntity.kind,
-                  includeKind: UserMetadataEntity.kind,
-                ),
-                GenericIncludeSearchExtension(
-                  forKind: ModifiablePostEntity.kind,
-                  includeKind: BlockListEntity.kind,
-                ),
-              ],
-            ).toString(),
+            search: searchImages,
             limit: 10,
           ),
         ],
