@@ -37,4 +37,3 @@ export 'src/wallets/services/wallet_views/models/wallet_view_aggregation_item.c.
 export 'src/wallets/services/wallet_views/models/wallet_view_aggregation_wallet.c.dart';
 export 'src/wallets/services/wallet_views/models/wallet_view_coin_data.c.dart';
 export 'src/wallets/services/wallet_views/models/wallet_view_item.c.dart';
-
