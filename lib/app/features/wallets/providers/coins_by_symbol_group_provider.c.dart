@@ -34,6 +34,7 @@ Future<List<CoinInWalletData>> coinsBySymbolGroup(
     return a.coin.network.serverName.compareTo(b.coin.network.serverName);
   });
 
+  // Added a small delay to avoid too fast transition from the loading to data display
   await Future<void>.delayed(const Duration(milliseconds: 500));
 
   return result;

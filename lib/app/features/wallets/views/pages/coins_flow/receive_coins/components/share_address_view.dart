@@ -10,7 +10,7 @@ import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/wallet_address_loader_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/wallet_address_notifier_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -26,24 +26,23 @@ class ShareAddressView extends HookConsumerWidget {
 
   Future<void> _loadAddress(WidgetRef ref) async {
     final network = ref.read(receiveCoinsFormControllerProvider).selectedNetwork;
-    var address = await ref.read(walletAddressLoaderNotifierProvider.notifier).loadWalletAddress();
+    var address = await ref.read(walletAddressNotifierProvider.notifier).loadWalletAddress();
 
     if (address == null && network != null && ref.context.mounted) {
       await guardPasskeyDialog(
         ref.context,
         (child) {
           return RiverpodVerifyIdentityRequestBuilder(
-            provider: walletAddressLoaderNotifierProvider,
+            provider: walletAddressNotifierProvider,
             requestWithVerifyIdentity: (OnVerifyIdentity<Wallet> onVerifyIdentity) async {
-              final wallet = await ref
+              address = await ref
                   .read(
-                    walletAddressLoaderNotifierProvider.notifier,
+                    walletAddressNotifierProvider.notifier,
                   )
                   .createWallet(
                     onVerifyIdentity: onVerifyIdentity,
                     network: network,
                   );
-              address = wallet?.address;
             },
             child: child,
           );

@@ -6,10 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart' as db;
 import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_mapper.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,7 +15,6 @@ part 'coins_sync_service.c.g.dart';
 
 @riverpod
 Future<CoinsSyncService> coinsSyncService(Ref ref) async {
-  await ref.watch(sharedPreferencesProvider.future);
   return CoinsSyncService(
     ref.watch(coinsRepositoryProvider),
     await ref.watch(ionIdentityClientProvider.future),
@@ -71,7 +68,7 @@ class CoinsSyncService {
       return;
     }
 
-    await saveCoins(response.coins);
+    await _coinsRepository.updateCoins(CoinsMapper().fromDtoToDb(response.coins));
     await _updateCoinsSyncQueue(
       response.coins.map(
         (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
@@ -121,22 +118,6 @@ class CoinsSyncService {
     _syncQueueInitialized = false;
   }
 
-  Future<void> saveCoins(Iterable<Coin> coinsDTO) async {
-    final allowedNetworks = Network.values.map((e) => e.serverName.toLowerCase());
-
-    await _coinsRepository.updateCoins(
-      CoinsMapper().fromDtoToDb(
-        coinsDTO.where((coin) {
-          final result = allowedNetworks.contains(coin.network.toLowerCase());
-          if (!result) {
-            Logger.info('Skip coin ${coin.symbol}');
-          }
-          return result;
-        }),
-      ),
-    );
-  }
-
   Future<void> syncActiveCoins() async {
     final nextUpdate = await _coinsRepository.getNextSyncTime();
 
@@ -180,15 +161,8 @@ class CoinsSyncService {
           contractAddress: coinDB.contractAddress,
         );
       });
-      await saveCoins(syncedCoins);
-      // final syncedCoins = coins.map((coin) {
-      //   final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coin.symbolGroup);
-      //
-      //   return coin.copyWith(
 
-      //   );
-      // }).toList();
-      // await _coinsRepository.updateCoins(syncedCoins);
+      await _coinsRepository.updateCoins(CoinsMapper().fromDtoToDb(syncedCoins));
 
       await _updateCoinsSyncQueue(
         syncedCoins.map(

@@ -16,7 +16,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion/app/services/wallets/main_wallet_provider.c.dart';
+import 'package:ion/app/features/core/main_wallet_provider.c.dart';
 import 'package:ion/app/utils/retry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
