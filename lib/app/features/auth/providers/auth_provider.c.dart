@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/core/main_wallet_provider.c.dart';
+import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
