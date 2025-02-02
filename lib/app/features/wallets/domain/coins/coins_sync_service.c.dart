@@ -149,18 +149,16 @@ class CoinsSyncService {
           await _ionIdentityClient.coins.syncCoins(coins.map((e) => e.symbolGroup).toSet());
 
       final syncedCoins = coins.map((coinDB) {
-        final syncedData =
-            syncedCoinsData.firstWhere((coin) => coin.symbolGroup == coinDB.symbolGroup);
+        final syncedData = syncedCoinsData.firstWhere((e) => e.symbolGroup == coinDB.symbolGroup);
 
         return coinDB.copyWith(
-          syncFrequency: syncedData.syncFrequency,
           priceUSD: syncedData.priceUSD,
+          syncFrequency: syncedData.syncFrequency,
           decimals: syncedData.decimals,
         );
       }).toList();
 
       await _coinsRepository.updateCoins(syncedCoins);
-
       await _updateCoinsSyncQueue(
         syncedCoins.map(
           (coin) => (coinId: coin.id, syncFrequency: coin.syncFrequency),
