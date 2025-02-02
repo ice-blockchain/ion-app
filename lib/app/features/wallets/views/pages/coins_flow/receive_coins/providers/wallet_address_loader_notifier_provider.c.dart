@@ -28,7 +28,7 @@ class WalletAddressLoaderNotifier extends _$WalletAddressLoaderNotifier {
       final walletView = await ref.read(currentWalletViewDataProvider.future);
 
       result = await ionIdentity.wallets.createWallet(
-        network: network.keyName,
+        network: network.serverName,
         walletViewId: walletView.id,
         onVerifyIdentity: onVerifyIdentity,
       );
