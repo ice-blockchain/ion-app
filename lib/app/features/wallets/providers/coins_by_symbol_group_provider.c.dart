@@ -31,7 +31,7 @@ Future<List<CoinInWalletData>> coinsBySymbolGroup(
     if (balanceComparison != 0) return balanceComparison;
 
     // If balanceUSD is equal, sort by network name in ascending order
-    return a.coin.network.keyName.compareTo(b.coin.network.keyName);
+    return a.coin.network.serverName.compareTo(b.coin.network.serverName);
   });
 
   await Future<void>.delayed(const Duration(milliseconds: 500));

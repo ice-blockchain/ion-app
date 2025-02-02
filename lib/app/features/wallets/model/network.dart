@@ -133,9 +133,10 @@ enum Network {
     };
   }
 
-  String get keyName => _serverNames[this]!;
+  String get serverName => _serverNames[this]!;
 
-  String get displayName => keyName;
+  // A blank in case we use a different naming convention in the future.
+  String get displayName => serverName;
 
   static Network fromServerName(String name) => _serverNames.entries
       .firstWhere(
