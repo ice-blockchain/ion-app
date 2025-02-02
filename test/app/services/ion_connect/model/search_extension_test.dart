@@ -3,6 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 
 void main() {
@@ -62,8 +63,8 @@ void main() {
 
     test('RepostsCountSearchExtension formats query correctly', () {
       final extension = RepostsCountSearchExtension();
-      expect(extension.toString(), 'include:dependencies:kind30175>kind6400+kind6+group+e');
-      expect(extension.forKind, ModifiablePostEntity.kind);
+      expect(extension.toString(), 'include:dependencies:kind1>kind6400+kind6+group+e');
+      expect(extension.forKind, PostEntity.kind);
     });
 
     test('GenericRepostsCountSearchExtension formats query correctly', () {
