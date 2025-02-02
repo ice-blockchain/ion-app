@@ -116,6 +116,49 @@ EntitiesDataSource _buildVideosDataSource({
   required List<String>? authors,
   required String currentPubkey,
 }) {
+  final search = SearchExtensions([
+    ...SearchExtensions.withCounters(
+      [
+        TagMarkerSearchExtension(
+          tagName: RelatedReplaceableEvent.tagName,
+          marker: RelatedEventMarker.reply.toShortString(),
+          negative: true,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: ModifiablePostEntity.kind,
+          includeKind: UserMetadataEntity.kind,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: ModifiablePostEntity.kind,
+          includeKind: BlockListEntity.kind,
+        ),
+      ],
+      currentPubkey: currentPubkey,
+    ).extensions,
+    ...SearchExtensions.withCounters(
+      [
+        TagMarkerSearchExtension(
+          tagName: RelatedImmutableEvent.tagName,
+          marker: RelatedEventMarker.reply.toShortString(),
+          negative: true,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: PostEntity.kind,
+          includeKind: UserMetadataEntity.kind,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: PostEntity.kind,
+          includeKind: BlockListEntity.kind,
+        ),
+      ],
+      currentPubkey: currentPubkey,
+      forKind: PostEntity.kind,
+    ).extensions,
+    ReferencesSearchExtension(contain: false),
+    ExpirationSearchExtension(expiration: false),
+    VideosSearchExtension(contain: true),
+  ]).toString();
+
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
@@ -126,33 +169,30 @@ EntitiesDataSource _buildVideosDataSource({
       return (entity is ModifiablePostEntity &&
               entity.data.parentEvent == null &&
               entity.data.quotedEvent == null) ||
+          (entity is PostEntity &&
+              entity.data.parentEvent == null &&
+              entity.data.quotedEvent == null) ||
+          entity is RepostEntity ||
           entity is GenericRepostEntity;
     },
     requestFilters: [
       RequestFilter(
-        kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
-        search: SearchExtensions.withCounters(
-          [
-            ReferencesSearchExtension(contain: false),
-            ExpirationSearchExtension(expiration: false),
-            VideosSearchExtension(contain: true),
-            TagMarkerSearchExtension(
-              tagName: RelatedReplaceableEvent.tagName,
-              marker: RelatedEventMarker.reply.toShortString(),
-              negative: true,
-            ),
-            GenericIncludeSearchExtension(
-              forKind: ModifiablePostEntity.kind,
-              includeKind: UserMetadataEntity.kind,
-            ),
-            GenericIncludeSearchExtension(
-              forKind: ModifiablePostEntity.kind,
-              includeKind: BlockListEntity.kind,
-            ),
-          ],
-          currentPubkey: currentPubkey,
-        ).toString(),
+        kinds: const [
+          PostEntity.kind,
+          ModifiablePostEntity.kind,
+          RepostEntity.kind,
+        ],
+        search: search,
         authors: authors,
+        limit: 20,
+      ),
+      RequestFilter(
+        kinds: const [GenericRepostEntity.kind],
+        authors: authors,
+        search: search,
+        tags: {
+          '#k': [ModifiablePostEntity.kind.toString()],
+        },
         limit: 20,
       ),
     ],
@@ -164,6 +204,48 @@ EntitiesDataSource _buildPostsDataSource({
   required List<String>? authors,
   required String currentPubkey,
 }) {
+  final search = SearchExtensions([
+    ...SearchExtensions.withCounters(
+      [
+        TagMarkerSearchExtension(
+          tagName: RelatedReplaceableEvent.tagName,
+          marker: RelatedEventMarker.reply.toShortString(),
+          negative: true,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: ModifiablePostEntity.kind,
+          includeKind: UserMetadataEntity.kind,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: ModifiablePostEntity.kind,
+          includeKind: BlockListEntity.kind,
+        ),
+      ],
+      currentPubkey: currentPubkey,
+    ).extensions,
+    ...SearchExtensions.withCounters(
+      [
+        TagMarkerSearchExtension(
+          tagName: RelatedImmutableEvent.tagName,
+          marker: RelatedEventMarker.reply.toShortString(),
+          negative: true,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: PostEntity.kind,
+          includeKind: UserMetadataEntity.kind,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: PostEntity.kind,
+          includeKind: BlockListEntity.kind,
+        ),
+      ],
+      currentPubkey: currentPubkey,
+      forKind: PostEntity.kind,
+    ).extensions,
+    ReferencesSearchExtension(contain: false),
+    ExpirationSearchExtension(expiration: false),
+  ]).toString();
+
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
@@ -180,44 +262,20 @@ EntitiesDataSource _buildPostsDataSource({
       RequestFilter(
         kinds: const [
           PostEntity.kind,
-          // ModifiablePostEntity.kind,
-          // GenericRepostEntity.kind,
+          ModifiablePostEntity.kind,
           RepostEntity.kind,
         ],
-        search: SearchExtensions.withCounters(
-          [
-            ReferencesSearchExtension(contain: false),
-            ExpirationSearchExtension(expiration: false),
-            TagMarkerSearchExtension(
-              tagName: RelatedReplaceableEvent.tagName,
-              marker: RelatedEventMarker.reply.toShortString(),
-              negative: true,
-            ),
-            TagMarkerSearchExtension(
-              tagName: RelatedImmutableEvent.tagName,
-              marker: RelatedEventMarker.reply.toShortString(),
-              negative: true,
-            ),
-            GenericIncludeSearchExtension(
-              forKind: ModifiablePostEntity.kind,
-              includeKind: UserMetadataEntity.kind,
-            ),
-            GenericIncludeSearchExtension(
-              forKind: ModifiablePostEntity.kind,
-              includeKind: BlockListEntity.kind,
-            ),
-            GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
-              includeKind: UserMetadataEntity.kind,
-            ),
-            GenericIncludeSearchExtension(
-              forKind: PostEntity.kind,
-              includeKind: BlockListEntity.kind,
-            ),
-          ],
-          currentPubkey: currentPubkey,
-        ).toString(),
+        search: search,
         authors: authors,
+        limit: 20,
+      ),
+      RequestFilter(
+        kinds: const [GenericRepostEntity.kind],
+        authors: authors,
+        search: search,
+        tags: {
+          '#k': [ModifiablePostEntity.kind.toString()],
+        },
         limit: 20,
       ),
     ],
