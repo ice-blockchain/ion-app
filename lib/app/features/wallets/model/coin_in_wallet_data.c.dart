@@ -12,7 +12,7 @@ class CoinInWalletData with _$CoinInWalletData {
     @Default(0) double amount,
     @Default(0) double balanceUSD,
     String? walletId, // real wallet, not wallet view. Can be null if wallet wasn't created.
-    String? network,
+    String? walletAddress,
   }) = _CoinInWalletData;
 
   const CoinInWalletData._();

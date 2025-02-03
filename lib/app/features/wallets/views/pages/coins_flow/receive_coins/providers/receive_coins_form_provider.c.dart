@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/receive_coins_data.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,10 +13,12 @@ class ReceiveCoinsFormController extends _$ReceiveCoinsFormController {
   ReceiveCoinsData build() => const ReceiveCoinsData(
         address: null,
         selectedCoin: null,
-        selectedNetwork: NetworkType.eth,
+        selectedNetwork: null,
       );
 
-  void setCoin(CoinInWalletData coin) => state = state.copyWith(selectedCoin: coin);
+  void setCoin(CoinsGroup coin) => state = state.copyWith(selectedCoin: coin);
 
-  void setNetwork(NetworkType network) => state = state.copyWith(selectedNetwork: network);
+  void setNetwork(Network network) => state = state.copyWith(selectedNetwork: network);
+
+  void setWalletAddress(String address) => state = state.copyWith(address: address);
 }

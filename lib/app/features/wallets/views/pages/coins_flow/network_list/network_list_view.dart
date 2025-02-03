@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/providers/coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -28,18 +31,10 @@ class NetworkListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const networks = NetworkType.values;
-    final coinData = switch (type) {
-      NetworkListViewType.send => ref.watch(sendAssetFormControllerProvider()).selectedCoin!,
-      NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin,
-    };
+    final coinsGroup = ref.watch(receiveCoinsFormControllerProvider).selectedCoin!;
+    final coinsState = ref.watch(coinsBySymbolGroupProvider(symbolGroup: coinsGroup.symbolGroup));
 
-    // TODO: (1) null case is not implemented
-    if (coinData == null) {
-      return const SizedBox.shrink();
-    }
-
-    void onTap(NetworkType network) {
+    void onTap(Network network) {
       if (onSelectReturnType) {
         Navigator.of(context).pop(network);
         return;
@@ -47,7 +42,10 @@ class NetworkListView extends ConsumerWidget {
 
       switch (type) {
         case NetworkListViewType.send:
-          ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network);
+          // TODO: Not implemented
+          // ref
+          //     .read(sendAssetFormControllerProvider().notifier)
+          //     .setNetwork(network);
           CoinsSendFormRoute().push<void>(context);
         case NetworkListViewType.receive:
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
@@ -71,23 +69,78 @@ class NetworkListView extends ConsumerWidget {
           ScreenBottomOffset(
             margin: 32.0.s,
             child: ScreenSideOffset.small(
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemCount: networks.length,
-                separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
-                itemBuilder: (BuildContext context, int index) {
-                  final network = networks[index];
-                  return NetworkItem(
-                    coinInWallet: coinData,
-                    networkType: networks[index],
-                    onTap: () => onTap(network),
-                  );
-                },
+              child: coinsState.maybeMap(
+                data: (data) => _NetworksList(
+                  itemCount: data.value.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final coin = data.value[index];
+                    return NetworkItem(
+                      coinInWallet: coin,
+                      network: coin.coin.network,
+                      onTap: () => onTap(coin.coin.network),
+                    );
+                  },
+                ),
+                orElse: () => const _LoadingState(),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _LoadingState extends StatelessWidget {
+  const _LoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeleton(
+      child: _NetworksList(
+        itemCount: 3,
+        itemBuilder: (_, __) {
+          const network = Network.bitcoinTestnet3;
+          return NetworkItem(
+            coinInWallet: const CoinInWalletData(
+              coin: CoinData(
+                id: '',
+                contractAddress: '',
+                decimals: 1,
+                iconUrl: '',
+                name: '',
+                network: network,
+                priceUSD: 1,
+                abbreviation: '',
+                symbolGroup: '',
+                syncFrequency: Duration.zero,
+              ),
+            ),
+            network: network,
+            onTap: () {},
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _NetworksList extends StatelessWidget {
+  const _NetworksList({
+    required this.itemCount,
+    required this.itemBuilder,
+  });
+
+  final int itemCount;
+  final NullableIndexedWidgetBuilder itemBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemCount: itemCount,
+      separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
+      itemBuilder: itemBuilder,
     );
   }
 }

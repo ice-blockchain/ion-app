@@ -5,20 +5,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallets/views/components/coin_icon_with_network.dart';
 import 'package:ion/app/utils/num.dart';
 
 class NetworkItem extends ConsumerWidget {
   const NetworkItem({
-    required this.networkType,
+    required this.network,
     required this.coinInWallet,
     required this.onTap,
     super.key,
   });
 
-  final NetworkType networkType;
+  final Network network;
   final CoinInWalletData coinInWallet;
   final VoidCallback onTap;
 
@@ -31,14 +31,14 @@ class NetworkItem extends ConsumerWidget {
         children: [
           Text(coinInWallet.coin.name),
           SizedBox(width: 5.0.s),
-          _NetworkLabel(network: networkType),
+          _NetworkLabel(network: network),
         ],
       ),
       subtitle: Text(coinInWallet.coin.abbreviation),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: CoinIconWithNetwork.small(
-        coinInWallet.coin,
-        network: networkType,
+        coinInWallet.coin.iconUrl,
+        network: network,
       ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -63,7 +63,7 @@ class NetworkItem extends ConsumerWidget {
 class _NetworkLabel extends StatelessWidget {
   const _NetworkLabel({required this.network});
 
-  final NetworkType network;
+  final Network network;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class _NetworkLabel extends StatelessWidget {
         color: context.theme.appColors.attentionBlock,
       ),
       child: Text(
-        network.getDisplayName(context),
+        network.displayName,
         style: context.theme.appTextThemes.caption3.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),

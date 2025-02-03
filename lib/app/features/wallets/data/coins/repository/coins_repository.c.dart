@@ -63,6 +63,9 @@ class CoinsRepository {
   /// If the [coins] list is not provided, all coins will be returned.
   Future<List<Coin>> getCoins([Iterable<String>? coinIds]) => _coinsDao.get(coinIds);
 
+  Future<List<Coin>> getCoinsBySymbolGroup(String symbolGroup) =>
+      _coinsDao.getBySymbolGroup(symbolGroup);
+
   int? getLastSyncTime() => _localStorage.getInt(_lastSyncTimeKey);
 
   int? getCoinsVersion() => _localStorage.getInt(_coinsVersionKey);

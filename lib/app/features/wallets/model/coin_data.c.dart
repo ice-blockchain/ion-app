@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart' as db;
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 part 'coin_data.c.freezed.dart';
@@ -15,7 +16,7 @@ class CoinData with _$CoinData {
     required int decimals,
     required String iconUrl,
     required String name,
-    required String network,
+    required Network network,
     required double priceUSD,
     required String abbreviation,
     required String symbolGroup,
@@ -29,7 +30,7 @@ class CoinData with _$CoinData {
       decimals: coin.decimals,
       iconUrl: coin.iconURL,
       name: coin.name,
-      network: coin.network,
+      network: Network.fromServerName(coin.network),
       priceUSD: coin.priceUSD,
       abbreviation: coin.symbol.toUpperCase(),
       symbolGroup: coin.symbolGroup,
@@ -44,7 +45,7 @@ class CoinData with _$CoinData {
       decimals: coin.decimals,
       iconUrl: coin.iconURL,
       name: coin.name,
-      network: coin.network,
+      network: Network.fromServerName(coin.network),
       priceUSD: coin.priceUSD,
       abbreviation: coin.symbol.toUpperCase(),
       symbolGroup: coin.symbolGroup,

@@ -3,12 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 
 class CoinIconWithNetwork extends StatelessWidget {
   const CoinIconWithNetwork._({
-    required this.coin,
+    required this.iconUrl,
     required this.network,
     required this.coinSize,
     required this.networkSize,
@@ -16,11 +15,11 @@ class CoinIconWithNetwork extends StatelessWidget {
   });
 
   factory CoinIconWithNetwork.small(
-    CoinData coin, {
-    required NetworkType network,
+    String iconUrl, {
+    required Network network,
   }) =>
       CoinIconWithNetwork._(
-        coin: coin,
+        iconUrl: iconUrl,
         network: network,
         coinSize: 36.0.s,
         networkSize: 16.0.s,
@@ -28,19 +27,19 @@ class CoinIconWithNetwork extends StatelessWidget {
       );
 
   factory CoinIconWithNetwork.medium(
-    CoinData coin, {
-    required NetworkType network,
+    String iconUrl, {
+    required Network network,
   }) =>
       CoinIconWithNetwork._(
-        coin: coin,
+        iconUrl: iconUrl,
         network: network,
         coinSize: 46.0.s,
         networkSize: 21.0.s,
         containerSize: 50.0.s,
       );
 
-  final CoinData coin;
-  final NetworkType network;
+  final String iconUrl;
+  final Network network;
 
   final double coinSize;
   final double networkSize;
@@ -56,14 +55,14 @@ class CoinIconWithNetwork extends StatelessWidget {
             top: 0,
             left: 0,
             child: CoinIconWidget(
-              imageUrl: coin.iconUrl,
+              imageUrl: iconUrl,
               size: coinSize,
             ),
           ),
           Positioned(
             bottom: 0,
             right: 0,
-            child: network.iconAsset.icon(size: networkSize),
+            child: network.svgIconAsset.icon(size: networkSize),
           ),
         ],
       ),
