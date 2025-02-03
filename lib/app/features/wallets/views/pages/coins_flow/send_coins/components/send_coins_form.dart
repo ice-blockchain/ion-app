@@ -37,7 +37,8 @@ class SendCoinsForm extends HookConsumerWidget {
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
-        text: formatDouble(formController.selectedCoin?.amount ?? 0),
+        // TODO: Not implementd
+        text: formatDouble(formController.selectedCoin?.totalAmount ?? 0),
       ),
     );
 
@@ -60,19 +61,21 @@ class SendCoinsForm extends HookConsumerWidget {
                 child: Column(
                   children: [
                     if (formController.selectedCoin != null)
-                      CoinButton(
-                        coinInWallet: formController.selectedCoin!,
-                        onTap: () {
-                          CoinSendRoute().push<void>(context);
-                        },
-                      ),
+                      // TODO: Not implemented
+                      // CoinButton(
+                      //   coinInWallet: formController.selectedCoin!,
+                      //   onTap: () {
+                      //     CoinSendRoute().push<void>(context);
+                      //   },
+                      // ),
                     SizedBox(height: 12.0.s),
-                    NetworkButton(
-                      networkType: formController.selectedNetwork,
-                      onTap: () {
-                        NetworkSelectSendRoute().push<void>(context);
-                      },
-                    ),
+                    // TODO: Not implemented
+                    // NetworkButton(
+                    //   networkType: formController.selectedNetwork,
+                    //   onTap: () {
+                    //     NetworkSelectSendRoute().push<void>(context);
+                    //   },
+                    // ),
                     SizedBox(height: 12.0.s),
                     ContactInputSwitcher(
                       pubkey: selectedContactPubkey,
@@ -88,7 +91,7 @@ class SendCoinsForm extends HookConsumerWidget {
                     SizedBox(height: 12.0.s),
                     CoinAmountInput(
                       controller: amountController,
-                      coinId: formController.selectedCoin!.coin.abbreviation,
+                      coinId: formController.selectedCoin!.abbreviation,
                       showApproximateInUsd: false,
                     ),
                     SizedBox(height: 17.0.s),
