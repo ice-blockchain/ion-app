@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_input_field.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
@@ -27,6 +29,25 @@ class PostDetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final canReply = ref.watch(canReplyProvider(eventReference)).value ?? false;
+    final hasMoreReplies =
+        ref.watch(repliesProvider(eventReference).select((state) => (state?.hasMore).falseOrValue));
+
+    final slivers = [
+      SliverToBoxAdapter(
+        child: ScreenSideOffset.small(
+          child: Post(
+            eventReference: eventReference,
+            timeFormat: TimestampFormat.detailed,
+            onDelete: () {
+              context.pop();
+            },
+            isTextSelectable: true,
+          ),
+        ),
+      ),
+      SliverToBoxAdapter(child: FeedListSeparator()),
+      ReplyList(eventReference: eventReference),
+    ];
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -38,23 +59,14 @@ class PostDetailsPage extends ConsumerWidget {
       body: Column(
         children: [
           Flexible(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: ScreenSideOffset.small(
-                    child: Post(
-                      eventReference: eventReference,
-                      timeFormat: TimestampFormat.detailed,
-                      onDelete: () {
-                        context.pop();
-                      },
-                      isTextSelectable: true,
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(child: FeedListSeparator()),
-                ReplyList(eventReference: eventReference),
-              ],
+            child: LoadMoreBuilder(
+              slivers: slivers,
+              hasMore: hasMoreReplies,
+              onLoadMore: () =>
+                  ref.read(repliesProvider(eventReference).notifier).loadMore(eventReference),
+              builder: (_, slivers) => CustomScrollView(
+                slivers: slivers,
+              ),
             ),
           ),
           if (canReply) ...[
