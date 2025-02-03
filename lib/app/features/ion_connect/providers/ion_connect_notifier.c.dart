@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
@@ -16,8 +17,10 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
+import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_notifier.c.g.dart';
@@ -225,6 +228,54 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       tags: [
         if (includeMasterPubkey) ['b', mainWallet.signingKey.publicKey],
       ],
+    );
+  }
+
+  Future<EventMessage> buildEventFromTagsAndSignWithMasterKey({
+    required List<List<String>> tags,
+    required int kind,
+    required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  }) async {
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
+    final mainWallet = await ref.read(mainWalletProvider.future);
+    final ionIdentity = await ref.read(ionIdentityProvider.future);
+
+    final createdAt = DateTime.now();
+    final masterPubkey = mainWallet.signingKey.publicKey;
+
+    final eventId = EventMessage.calculateEventId(
+      publicKey: masterPubkey,
+      createdAt: createdAt,
+      kind: kind,
+      tags: tags,
+      content: '',
+    );
+
+    final signResponse =
+        await ionIdentity(username: currentIdentityKeyName).wallets.generateHashSignature(
+              walletId: mainWallet.id,
+              hash: eventId,
+              onVerifyIdentity: onVerifyIdentity,
+            );
+
+    final curveName = switch (mainWallet.signingKey.curve) {
+      'ed25519' => 'curve25519',
+      _ => throw UnsupportedSignatureAlgorithmException(mainWallet.signingKey.curve)
+    };
+
+    final signaturePrefix = '${mainWallet.signingKey.scheme}/$curveName'.toLowerCase();
+    final signatureBody =
+        '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
+    final signature = '$signaturePrefix:$signatureBody';
+
+    return EventMessage(
+      id: eventId,
+      pubkey: masterPubkey,
+      createdAt: createdAt,
+      kind: kind,
+      tags: tags,
+      content: '',
+      sig: signature,
     );
   }
 

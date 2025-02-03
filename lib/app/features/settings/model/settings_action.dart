@@ -11,7 +11,8 @@ enum SettingsAction {
   pushNotifications,
   privacyPolicy,
   termsConditions,
-  logout;
+  logout,
+  delete;
 
   String getLabel(BuildContext context) => switch (this) {
         SettingsAction.account => context.i18n.common_account,
@@ -21,10 +22,12 @@ enum SettingsAction {
         SettingsAction.privacyPolicy => context.i18n.settings_privacy_policy,
         SettingsAction.termsConditions => context.i18n.settings_terms_conditions,
         SettingsAction.logout => context.i18n.settings_logout,
+        SettingsAction.delete => context.i18n.settings_delete,
       };
 
   Color getIconColor(BuildContext context) => switch (this) {
         SettingsAction.logout => context.theme.appColors.attentionRed,
+        SettingsAction.delete => context.theme.appColors.attentionRed,
         _ => context.theme.appColors.primaryAccent,
       };
 
@@ -37,6 +40,7 @@ enum SettingsAction {
       SettingsAction.privacyPolicy => Assets.svg.iconProfilePrivacypolicy,
       SettingsAction.termsConditions => Assets.svg.iconProfileTerms,
       SettingsAction.logout => Assets.svg.iconMenuLogout,
+      SettingsAction.delete => Assets.svg.iconBlockDelete,
     };
 
     return icon.icon(color: getIconColor(context));

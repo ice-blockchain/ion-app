@@ -14,6 +14,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifi
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/interests.c.dart';
+import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
@@ -157,9 +158,10 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         .read(userDelegationManagerProvider.notifier)
         .buildCurrentUserDelegationDataWith(pubkey: eventSigner.publicKey);
 
-    return ref.read(userDelegationManagerProvider.notifier).buildDelegationEventFrom(
-          userDelegationData,
-          onVerifyIdentity,
+    return ref.read(ionConnectNotifierProvider.notifier).buildEventFromTagsAndSignWithMasterKey(
+          onVerifyIdentity: onVerifyIdentity,
+          kind: UserDelegationEntity.kind,
+          tags: userDelegationData.tags,
         );
   }
 

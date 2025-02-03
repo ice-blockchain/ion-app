@@ -91,27 +91,10 @@ class TwoFAService {
 
     final hash = sha256.convert(utf8.encode('$timestamp:$userId'));
 
-    final signatureResponse = await onVerifyIdentity(
-      onPasswordFlow: ({required String password}) {
-        return _wallets.generateHashSignatureWithPassword(
-          mainWallet.id,
-          hash.toString(),
-          password,
-        );
-      },
-      onPasskeyFlow: () {
-        return _wallets.generateHashSignatureWithPasskey(
-          mainWallet.id,
-          hash.toString(),
-        );
-      },
-      onBiometricsFlow: ({required String localisedReason}) {
-        return _wallets.generateHashSignatureWithBiometrics(
-          mainWallet.id,
-          hash.toString(),
-          localisedReason,
-        );
-      },
+    final signatureResponse = await _wallets.generateHashSignature(
+      walletId: mainWallet.id,
+      hash: hash.toString(),
+      onVerifyIdentity: onVerifyIdentity,
     );
 
     final signature = signatureResponse.signature['encoded'].toString().substring(2);

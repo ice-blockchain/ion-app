@@ -8,6 +8,8 @@ import 'package:ion_identity_client/src/auth/services/credentials/data_sources/g
 import 'package:ion_identity_client/src/auth/services/credentials/get_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/data_sources/delegated_login_data_source.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
+import 'package:ion_identity_client/src/auth/services/delete/data_sources/delete_user_data_source.dart';
+import 'package:ion_identity_client/src/auth/services/delete/delete_service.dart';
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/data_sources/login_data_source.dart';
@@ -49,6 +51,7 @@ class AuthClientServiceLocator {
       identitySigner: identitySigner,
       loginService: login(username: username, config: config, identitySigner: identitySigner),
       logoutService: logout(username: username, config: config),
+      deleteService: delete(username: username, config: config),
       createRecoveryCredentialsService: createRecoveryCredentials(
         username: username,
         config: config,
@@ -115,6 +118,22 @@ class AuthClientServiceLocator {
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
       biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
+    );
+  }
+
+  DeleteService delete({
+    required String username,
+    required IONIdentityConfig config,
+  }) {
+    return DeleteService(
+      username: username,
+      dataSource: DeleteUserDataSource(
+        networkClient: IONIdentityServiceLocator.networkClient(config: config),
+      ),
+      tokenStorage: IONIdentityServiceLocator.tokenStorage(),
+      privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
+      biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
+      extractUserIdService: AuthClientServiceLocator().extractUserId(),
     );
   }
 

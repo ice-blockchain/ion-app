@@ -118,36 +118,34 @@ class IONIdentityWallets {
         password: password,
       );
 
-  Future<GenerateSignatureResponse> generateHashSignatureWithPasskey(
-    String walletId,
-    String hash,
-  ) =>
-      _generateSignatureService.generateHashSignatureWithPasskey(
-        walletId: walletId,
-        hash: hash,
-      );
-
-  Future<GenerateSignatureResponse> generateHashSignatureWithPassword(
-    String walletId,
-    String hash,
-    String password,
-  ) =>
-      _generateSignatureService.generateHashSignatureWithPassword(
-        walletId: walletId,
-        hash: hash,
-        password: password,
-      );
-
-  Future<GenerateSignatureResponse> generateHashSignatureWithBiometrics(
-    String walletId,
-    String hash,
-    String localisedReason,
-  ) =>
-      _generateSignatureService.generateHashSignatureWithBiometrics(
-        walletId: walletId,
-        hash: hash,
-        localisedReason: localisedReason,
-      );
+  Future<GenerateSignatureResponse> generateHashSignature({
+    required String walletId,
+    required String hash,
+    required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  }) async {
+    return onVerifyIdentity(
+      onPasswordFlow: ({required String password}) {
+        return _generateSignatureService.generateHashSignatureWithPassword(
+          walletId: walletId,
+          hash: hash,
+          password: password,
+        );
+      },
+      onPasskeyFlow: () {
+        return _generateSignatureService.generateHashSignatureWithPasskey(
+          walletId: walletId,
+          hash: hash,
+        );
+      },
+      onBiometricsFlow: ({required String localisedReason}) {
+        return _generateSignatureService.generateHashSignatureWithBiometrics(
+          walletId: walletId,
+          hash: hash,
+          localisedReason: localisedReason,
+        );
+      },
+    );
+  }
 
   Future<List<ShortWalletView>> getWalletViews() {
     final userId = _extractUserIdService.extractUserId(username: username);

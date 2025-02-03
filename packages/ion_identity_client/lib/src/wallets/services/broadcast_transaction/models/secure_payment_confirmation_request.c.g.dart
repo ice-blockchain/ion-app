@@ -16,9 +16,18 @@ _$SecurePaymentConfirmationRequestImpl
         );
 
 Map<String, dynamic> _$$SecurePaymentConfirmationRequestImplToJson(
-        _$SecurePaymentConfirmationRequestImpl instance) =>
-    <String, dynamic>{
-      'kind': instance.kind,
-      'transaction': instance.transaction,
-      if (instance.authorization case final value?) 'authorization': value,
-    };
+    _$SecurePaymentConfirmationRequestImpl instance) {
+  final val = <String, dynamic>{
+    'kind': instance.kind,
+    'transaction': instance.transaction,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('authorization', instance.authorization);
+  return val;
+}
