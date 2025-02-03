@@ -6,11 +6,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/text_action_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replied_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_info_modal/who_can_reply_info_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/num.dart';
@@ -40,7 +42,7 @@ class RepliesCounterButton extends HookConsumerWidget {
           : () async {
               try {
                 isLoading.value = true;
-                await _onTap(context, ref);
+                await _onTap(ref);
               } finally {
                 isLoading.value = false;
               }
@@ -75,17 +77,23 @@ class RepliesCounterButton extends HookConsumerWidget {
     );
   }
 
-  Future<void> _onTap(BuildContext context, WidgetRef ref) async {
+  Future<void> _onTap(WidgetRef ref) async {
     ref.read(canReplyProvider(eventReference).notifier).refreshIfNeeded(eventReference);
     final canReply = await ref.read(canReplyProvider(eventReference).future);
-    if (!context.mounted) return;
+    final entity = await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+
+    if (!ref.context.mounted || entity == null) return;
 
     if (canReply) {
-      await CreatePostRoute(parentEvent: eventReference.encode()).push<void>(context);
+      if (entity is ArticleEntity) {
+        await ArticleRepliesRoute(eventReference: eventReference.encode()).push<void>(ref.context);
+      } else {
+        await CreatePostRoute(parentEvent: eventReference.encode()).push<void>(ref.context);
+      }
       await HapticFeedback.lightImpact();
     } else {
       await showSimpleBottomSheet<void>(
-        context: context,
+        context: ref.context,
         child: WhoCanReplyInfoModal(
           eventReference: eventReference,
         ),
