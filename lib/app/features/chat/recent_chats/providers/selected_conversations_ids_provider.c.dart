@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'selected_conversations_ids_provider.c.g.dart';
@@ -8,15 +7,15 @@ part 'selected_conversations_ids_provider.c.g.dart';
 @Riverpod()
 class SelectedConversationsIds extends _$SelectedConversationsIds {
   @override
-  List<ConversationEntity> build() {
+  List<String> build() {
     return [];
   }
 
-  void toggle(List<ConversationEntity> conversation) {
-    if (Set<ConversationEntity>.from(state).containsAll(conversation)) {
-      state = List.from(state)..removeWhere((element) => conversation.contains(element));
+  void toggle(String conversationId) {
+    if (state.contains(conversationId)) {
+      state = state.where((element) => element != conversationId).toList();
     } else {
-      state = List.from(state)..addAll(conversation);
+      state = [...state, conversationId];
     }
   }
 

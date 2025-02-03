@@ -17,7 +17,7 @@ class ConversationEditBottomBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedConversations = ref.watch(selectedConversationsIdsProvider);
-    final isArchive = selectedConversations.every((c) => c.isArchived);
+    const isArchive = false;
 
     return Positioned(
       top: 0,
@@ -28,15 +28,15 @@ class ConversationEditBottomBar extends ConsumerWidget {
         alignment: Alignment.topCenter,
         color: context.theme.appColors.secondaryBackground,
         padding: EdgeInsets.only(top: 16.0.s, left: 16.0.s, right: 16.0.s),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Expanded(child: ConversationReadAllButton()),
+            Expanded(child: ConversationReadAllButton()),
             if (isArchive)
-              const Expanded(child: ConversationUnarchiveButton())
+              Expanded(child: ConversationUnarchiveButton())
             else
-              const Expanded(child: ConversationArchiveButton()),
-            const Expanded(child: ConversationDeleteButton()),
+              Expanded(child: ConversationArchiveButton()),
+            Expanded(child: ConversationDeleteButton()),
           ],
         ),
       ),

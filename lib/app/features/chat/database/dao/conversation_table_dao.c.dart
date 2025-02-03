@@ -37,7 +37,7 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
       ),
       leftOuterJoin(
         eventMessageTable,
-        eventMessageTable.id.equalsExp(chatMessageTable.eventMessage),
+        eventMessageTable.id.equalsExp(chatMessageTable.eventMessageId),
       ),
     ]);
 
@@ -61,7 +61,7 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
       ),
       leftOuterJoin(
         eventMessageTable,
-        eventMessageTable.id.equalsExp(chatMessageTable.eventMessage),
+        eventMessageTable.id.equalsExp(chatMessageTable.eventMessageId),
       ),
     ]);
 

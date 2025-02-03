@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/database/conversation_database.c.dart';
+import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class AppTestPage extends ConsumerWidget {
@@ -44,7 +44,7 @@ class AppTestPage extends ConsumerWidget {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  ref.read(conversationDatabaseProvider).allTables.forEach((table) {
+                  ref.read(chatDatabaseProvider).allTables.forEach((table) {
                     table.delete().go();
                   });
                 },

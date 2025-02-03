@@ -15,8 +15,7 @@ class ConversationReadAllButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedConversations =
-        ref.watch(selectedConversationsIdsProvider).map((e) => e.id).toList();
+    final selectedConversations = ref.watch(selectedConversationsIdsProvider);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

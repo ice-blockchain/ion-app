@@ -9,7 +9,9 @@ import 'package:ion/app/features/chat/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
+import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsTimelinePage extends ConsumerWidget {
   const RecentChatsTimelinePage({super.key});
@@ -55,13 +57,13 @@ class RecentChatsTimelinePage extends ConsumerWidget {
               return Column(
                 children: [
                   if (index == 0 && !showArchive) const RecentChatSeparator(isAtTop: true),
-                  FutureBuilder(
-                    future: _buildRecentChatTile(conversation, ref),
-                    builder: (context, snapshot) {
-                      return snapshot.hasData ? snapshot.data! : const SizedBox.shrink();
-                    },
-                  ),
                   const RecentChatSeparator(),
+                  if (conversation.type == ConversationType.community)
+                    CommunityRecentChatTile(conversation: conversation),
+                  // else
+                  //   RecentChatTile(conversation.uuid, conversation.name, conversation.imageUrl,
+                  //       conversation.lastMessageAt, conversation.lastMessageContent,
+                  //       conversation.unreadMessagesCount),
                 ],
               );
             },
@@ -71,17 +73,35 @@ class RecentChatsTimelinePage extends ConsumerWidget {
       ],
     );
   }
+}
 
-  Future<Widget> _buildRecentChatTile(
-    ConversationListItem conversation,
-    WidgetRef ref,
-  ) async {
-    if (conversation.type == ConversationType.community) {
-      final community = await ref.read(communityMetadataProvider(conversation.uuid).future);
+class CommunityRecentChatTile extends ConsumerWidget {
+  const CommunityRecentChatTile({required this.conversation, super.key});
 
-      return Text(community.data.name);
+  final ConversationListItem conversation;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final community = ref.watch(communityMetadataProvider(conversation.uuid)).valueOrNull;
+
+    if (community == null) {
+      return const SizedBox.shrink();
     }
 
-    return const SizedBox.shrink();
+    const unreadMessagesCount = 10;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => ChannelDetailRoute(uuid: conversation.uuid).push<void>(context),
+      child: RecentChatTile(
+        uuid: conversation.uuid,
+        name: community.data.name,
+        avatarUrl: community.data.avatar?.url,
+        defaultAvatar: Assets.svg.iconContactList,
+        lastMessageAt: conversation.latestMessage?.createdAt ?? community.createdAt,
+        lastMessageContent: conversation.latestMessage?.content ?? 'Community is created',
+        unreadMessagesCount: unreadMessagesCount,
+      ),
+    );
   }
 }

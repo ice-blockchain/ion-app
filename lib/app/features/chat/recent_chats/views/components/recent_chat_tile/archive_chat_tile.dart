@@ -25,7 +25,7 @@ class ArchiveChatTile extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isEditMode) {
-          ref.read(selectedConversationsIdsProvider.notifier).toggle(conversations);
+          // ref.read(selectedConversationsIdsProvider.notifier).toggle(conversations);
         } else {
           ArchivedChatsMainRoute().push<void>(context);
         }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -22,9 +21,9 @@ class ConversationUnarchiveButton extends ConsumerWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         if (selectedConversations.isNotEmpty) {
-          await ref
-              .read(e2eeConversationManagementProvider.notifier)
-              .toggleArchivedConversations(selectedConversations);
+          // await ref
+          //     .read(e2eeConversationManagementProvider.notifier)
+          //     .toggleArchivedConversations(selectedConversations);
           ref.read(conversationsEditModeProvider.notifier).editMode = false;
           ref.read(selectedConversationsIdsProvider.notifier).clear();
           if (context.mounted && context.canPop()) {

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -16,15 +15,15 @@ class ConversationArchiveButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedConversations = ref.watch(selectedConversationsIdsProvider);
-    final isNotArchived = selectedConversations.every((c) => !c.isArchived);
+    const isNotArchived = false;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         if (selectedConversations.isNotEmpty && isNotArchived) {
-          await ref
-              .read(e2eeConversationManagementProvider.notifier)
-              .toggleArchivedConversations(selectedConversations);
+          // await ref
+          //     .read(e2eeConversationManagementProvider.notifier)
+          //     .toggleArchivedConversations(selectedConversations);
           ref.read(conversationsEditModeProvider.notifier).editMode = false;
           ref.read(selectedConversationsIdsProvider.notifier).clear();
         } else {}
