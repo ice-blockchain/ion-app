@@ -24,6 +24,7 @@ class Article extends ConsumerWidget {
     required this.eventReference,
     this.showActionButtons = true,
     this.timeFormat = TimestampFormat.short,
+    this.header,
     super.key,
   });
 
@@ -36,6 +37,7 @@ class Article extends ConsumerWidget {
   final EventReference eventReference;
   final bool showActionButtons;
   final TimestampFormat timeFormat;
+  final Widget? header;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,24 +75,28 @@ class Article extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UserInfo(
-                    pubkey: eventReference.pubkey,
-                    createdAt: articleEntity.data.publishedAt.value,
-                    timeFormat: timeFormat,
-                    trailing: showActionButtons
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              BookmarkButton(eventReference: eventReference),
-                              if (isOwnedByCurrentUser)
-                                OwnEntityMenu(eventReference: eventReference)
-                              else
-                                UserInfoMenu(pubkey: eventReference.pubkey),
-                            ],
-                          )
-                        : null,
-                  ),
-                  SizedBox(height: 10.0.s),
+                  if (header != null)
+                    header!
+                  else ...[
+                    UserInfo(
+                      pubkey: eventReference.pubkey,
+                      createdAt: articleEntity.data.publishedAt.value,
+                      timeFormat: timeFormat,
+                      trailing: showActionButtons
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                BookmarkButton(eventReference: eventReference),
+                                if (isOwnedByCurrentUser)
+                                  OwnEntityMenu(eventReference: eventReference)
+                                else
+                                  UserInfoMenu(pubkey: eventReference.pubkey),
+                              ],
+                            )
+                          : null,
+                    ),
+                    SizedBox(height: 10.0.s),
+                  ],
                   ArticleImage(
                     imageUrl: articleEntity.data.image,
                     minutesToRead: calculateReadingTime(articleEntity.data.content),
