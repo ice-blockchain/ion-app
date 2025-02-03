@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/providers/filtered_wallet_coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coins_list_view.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class SendCoinModalPage extends ConsumerWidget {
@@ -21,9 +22,8 @@ class SendCoinModalPage extends ConsumerWidget {
       body: CoinsListView(
         coinsResult: coinsResult,
         onItemTap: (group) {
-          // TODO: Not implemented
-          // ref.read(sendAssetFormControllerProvider().notifier).setCoin(coinInWallet);
-          // NetworkSelectSendRoute().push<void>(context);
+          ref.read(sendAssetFormControllerProvider().notifier).setCoin(group);
+          NetworkSelectSendRoute().push<void>(context);
         },
         title: context.i18n.wallet_send_coins,
         showBackButton: true,

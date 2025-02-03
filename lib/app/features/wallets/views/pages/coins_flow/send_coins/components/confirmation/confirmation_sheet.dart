@@ -96,8 +96,8 @@ class ConfirmationSheet extends ConsumerWidget {
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_network),
-                    value: formData.selectedNetwork.getDisplayName(context),
-                    icon: formData.selectedNetwork.iconAsset.icon(
+                    value: formData.selectedNetwork.displayName,
+                    icon: formData.selectedNetwork.svgIconAsset.icon(
                       size: 16.0.s,
                     ),
                   ),

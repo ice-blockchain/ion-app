@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 
@@ -12,11 +12,11 @@ part 'crypto_asset_data.c.freezed.dart';
 class CryptoAssetData with _$CryptoAssetData {
   const factory CryptoAssetData({
     required WalletViewData wallet,
-    required NetworkType selectedNetwork,
+    required Network selectedNetwork,
     required int arrivalTime,
     required DateTime arrivalDateTime,
     required String address,
-    CoinInWalletData? selectedCoin,
+    CoinsGroup? selectedCoin,
     NftData? selectedNft,
     String? selectedContactPubkey,
   }) = _CryptoAssetData;
@@ -24,13 +24,14 @@ class CryptoAssetData with _$CryptoAssetData {
   const CryptoAssetData._();
 
   double? get price {
-    if (selectedCoin != null) return selectedCoin!.balanceUSD;
+    if (selectedCoin != null) return selectedCoin!.totalBalanceUSD; // TODO: Recheck this one
     if (selectedNft != null) return selectedNft!.price;
     return null;
   }
 
   String get networkName {
-    if (selectedCoin != null) return selectedCoin!.coin.network.name;
+    // if (selectedCoin != null) return selectedCoin!.coin.network.displayName; // TODO: Not implemented
+    if (selectedCoin != null) return 'Not implemented';
     if (selectedNft != null) return selectedNft!.network;
     return '';
   }
