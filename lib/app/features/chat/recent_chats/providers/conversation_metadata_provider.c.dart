@@ -16,8 +16,10 @@ part 'conversation_metadata_provider.c.g.dart';
 @riverpod
 class ConversationMetadata extends _$ConversationMetadata {
   @override
-  Future<ConversationEntity> build(ConversationEntity conversation,
-      {bool loadPubkeys = false}) async {
+  Future<ConversationEntity> build(
+    ConversationEntity conversation, {
+    bool loadPubkeys = false,
+  }) async {
     state = const AsyncValue.loading();
 
     var updatedConversation = conversation;
@@ -120,7 +122,9 @@ class ConversationMetadata extends _$ConversationMetadata {
         }
 
         return ChatParticipantData(
-            pubkey: userMetadata.pubkey, masterPubkey: userMetadata.masterPubkey);
+          pubkey: userMetadata.pubkey,
+          masterPubkey: userMetadata.masterPubkey,
+        );
       }),
     );
 

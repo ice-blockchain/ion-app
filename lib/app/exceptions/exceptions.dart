@@ -23,7 +23,9 @@ class EventSignerNotFoundException extends IONException {
 class UserRelaysNotFoundException extends IONException {
   UserRelaysNotFoundException([String? pubkey])
       : super(
-            10004, pubkey != null ? 'User relays not found for $pubkey' : 'User relays not found');
+          10004,
+          pubkey != null ? 'User relays not found for $pubkey' : 'User relays not found',
+        );
 }
 
 class UserIndexersNotFoundException extends IONException {

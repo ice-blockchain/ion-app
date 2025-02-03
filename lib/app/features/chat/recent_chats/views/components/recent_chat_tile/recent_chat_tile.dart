@@ -87,7 +87,8 @@ class RecentChatTile extends ConsumerWidget {
                                 ChatPreview(content: conversationWithMetadata.lastMessageContent),
                           ),
                           UnreadCountBadge(
-                              unreadCount: conversationWithMetadata.unreadMessagesCount),
+                            unreadCount: conversationWithMetadata.unreadMessagesCount,
+                          ),
                         ],
                       ),
                     ],

@@ -281,7 +281,8 @@ class ConversationsDBService {
   }
 
   Stream<List<PrivateDirectMessageEntity>> watchConversationMessages(
-      ConversationEntity conversation) {
+    ConversationEntity conversation,
+  ) {
     final query = _db.select(_db.conversationMessagesTable).join([
       innerJoin(
         _db.eventMessagesTable,
