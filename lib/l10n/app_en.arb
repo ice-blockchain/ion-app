@@ -741,5 +741,6 @@
   "biometrics_suggestion_title": "Add biometric authentication",
   "biometrics_suggestion_desc": "Do you want to use your device biometric data for a faster authentication?",
   "members_count": "{count, plural, =1 {{count} member} other {{count} members}}",
-  "all_chains_item": "All chains"
+  "all_chains_item": "All chains",
+  "all_chains_item_small": "All"
 }
