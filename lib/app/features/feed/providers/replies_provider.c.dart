@@ -62,7 +62,7 @@ class Replies extends _$Replies {
   }
 
   Future<void> loadMore(EventReference eventReference) async {
-    final dataSource = ref.watch(repliesDataSourceProvider(eventReference: eventReference));
+    final dataSource = ref.read(repliesDataSourceProvider(eventReference: eventReference));
     await ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
   }
 }

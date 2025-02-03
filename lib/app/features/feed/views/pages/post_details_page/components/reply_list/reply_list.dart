@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
@@ -17,15 +18,21 @@ class ReplyList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final replies = ref.watch(repliesProvider(eventReference));
     final entities = replies?.data.items;
+    final hasMoreReplies =
+        ref.watch(repliesProvider(eventReference).select((state) => (state?.hasMore).falseOrValue));
 
     if (entities == null) {
       return const EntitiesListSkeleton();
     }
 
-    return EntitiesList(
-      entities: entities.toList(),
-      separatorHeight: 1.0.s,
-      hideBlocked: false,
+    return LoadMoreBuilder.sliver(
+      hasMore: hasMoreReplies,
+      onLoadMore: () => ref.read(repliesProvider(eventReference).notifier).loadMore(eventReference),
+      sliver: EntitiesList(
+        entities: entities.toList(),
+        separatorHeight: 1.0.s,
+        hideBlocked: false,
+      ),
     );
   }
 }

@@ -14,7 +14,16 @@ class LoadMoreBuilder extends HookWidget {
     super.key,
   });
 
-  final Widget Function(BuildContext context, List<Widget> slivers) builder;
+  LoadMoreBuilder.sliver({
+    required Widget sliver,
+    required this.onLoadMore,
+    required this.hasMore,
+    this.loadMoreOffset,
+    super.key,
+  })  : builder = null,
+        slivers = [sliver];
+
+  final Widget Function(BuildContext context, List<Widget> slivers)? builder;
 
   final List<Widget> slivers;
 
@@ -28,22 +37,31 @@ class LoadMoreBuilder extends HookWidget {
   Widget build(BuildContext context) {
     final loading = useState(false);
 
+    final loadingIndicator = SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.only(top: 8.0.s),
+        child: const Center(child: CircularProgressIndicator.adaptive()),
+      ),
+    );
+
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) => _onMetricsChanged(notification, loading),
-      child: builder(
-        context,
-        loading.value
-            ? [
+      child: builder != null
+          ? builder!(
+              context,
+              loading.value
+                  ? [
+                      ...slivers,
+                      loadingIndicator,
+                    ]
+                  : slivers,
+            )
+          : SliverMainAxisGroup(
+              slivers: [
                 ...slivers,
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 8.0.s),
-                    child: const Center(child: CircularProgressIndicator.adaptive()),
-                  ),
-                ),
-              ]
-            : slivers,
-      ),
+                if (loading.value) loadingIndicator,
+              ],
+            ),
     );
   }
 
