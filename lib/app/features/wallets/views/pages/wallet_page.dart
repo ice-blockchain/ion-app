@@ -60,8 +60,10 @@ class WalletPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Balance(),
-                const Delimiter(),
-                if (showFriends) const ContactsList(),
+                if (showFriends) ...[
+                  const Delimiter(),
+                  const ContactsList(),
+                ],
                 const Delimiter(),
                 WalletTabsHeader(
                   activeTab: activeTab.value,
