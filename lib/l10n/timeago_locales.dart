@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/core/model/language.dart';
-import 'package:ion/l10n/lookup_messages_overrides.dart';
+import 'package:ion/l10n/short_timeago_messages_adapter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:timeago/timeago.dart';
 
@@ -128,8 +128,8 @@ void registerTimeagoLocalesForEnum() {
     final shortLocale = shortLocalesMap[shortKey];
 
     if (shortLocale != null) {
-      final overridden = LessThanOneMinuteAsAboutAMinute(shortLocale);
-      
+      final overridden = ShortTimeagoMessagesAdapter(shortLocale);
+
       timeago.setLocaleMessages(shortKey, overridden);
     } else {
       final fallbackShortLocale = shortLocalesMap['en_short'];

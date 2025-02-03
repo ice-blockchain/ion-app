@@ -2,42 +2,55 @@
 
 import 'package:timeago/timeago.dart';
 
-class LessThanOneMinuteAsAboutAMinute implements LookupMessages {
-  LessThanOneMinuteAsAboutAMinute(this.base);
+class ShortTimeagoMessagesAdapter implements LookupMessages {
+  ShortTimeagoMessagesAdapter(this.base);
+
   final LookupMessages base;
 
+  String _removeTilde(String value) => value.replaceAll('~', '');
+
   @override
-  String lessThanOneMinute(int seconds) {
-    return base.aboutAMinute(1);
-  }
+  String aboutAnHour(int minutes) => _removeTilde(base.aboutAnHour(minutes));
+
+  @override
+  String aDay(int hours) => _removeTilde(base.aDay(hours));
+
+  @override
+  String aboutAMonth(int days) => _removeTilde(base.aboutAMonth(days));
+
+  @override
+  String aboutAYear(int years) => _removeTilde(base.aboutAYear(years));
+
+  @override
+  String lessThanOneMinute(int seconds) => base.aboutAMinute(1);
 
   @override
   String prefixAgo() => base.prefixAgo();
+
   @override
   String prefixFromNow() => base.prefixFromNow();
+
   @override
   String suffixAgo() => base.suffixAgo();
+
   @override
   String suffixFromNow() => base.suffixFromNow();
 
   @override
-  String aboutAMinute(int minutes) => base.aboutAMinute(minutes);
+  String aboutAMinute(int minutes) => _removeTilde(base.aboutAMinute(minutes));
+
   @override
   String minutes(int minutes) => base.minutes(minutes);
-  @override
-  String aboutAnHour(int minutes) => base.aboutAnHour(minutes);
+
   @override
   String hours(int hours) => base.hours(hours);
-  @override
-  String aDay(int hours) => base.aDay(hours);
+
   @override
   String days(int days) => base.days(days);
-  @override
-  String aboutAMonth(int days) => base.aboutAMonth(days);
+
   @override
   String months(int months) => base.months(months);
-  @override
-  String aboutAYear(int year) => base.aboutAYear(year);
+
   @override
   String years(int years) => base.years(years);
 
