@@ -6,6 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/providers/fetch_conversation_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empty_page/recent_chats_empty_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
@@ -19,7 +20,9 @@ class ChatMainPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(
       () {
-        ref.read(communityJoinRequestsProvider);
+        ref
+          ..read(fetchConversationsProvider)
+          ..read(communityJoinRequestsProvider);
       },
     );
 

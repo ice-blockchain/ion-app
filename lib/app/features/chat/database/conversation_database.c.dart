@@ -22,8 +22,9 @@ ConversationDatabase conversationDatabase(Ref ref) => ConversationDatabase();
     ConversationMessagesTable,
     ConversationMessageStatusTable,
     ConversationReactionsTable,
-    ConversationTable,
-    CommunityMessageTable,
+  ],
+  views: [
+    ConversationsView,
   ],
 )
 class ConversationDatabase extends _$ConversationDatabase {
@@ -194,13 +195,40 @@ class EventMessageTableData implements Insertable<EventMessageTableData> {
 }
 
 ///
-/// Table for community messages
-/// kind 1 and h tag are used to identify community messages
 ///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+///
+
 @UseRowClass(EventMessageTableData)
-class CommunityMessageTable extends Table {
+class NonEncryptedConversationTable extends Table {
   TextColumn get id => text()();
-  TextColumn get sig => text().nullable()();
+  TextColumn get sig => text()();
+  TextColumn get tags => text()();
+  TextColumn get pubkey => text()();
+  IntColumn get kind => integer()();
+  TextColumn get content => text()();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
+@UseRowClass(EventMessageTableData)
+class NonEncryptedMessageTable extends Table {
+  TextColumn get id => text()();
+  TextColumn get sig => text()();
   TextColumn get tags => text()();
   TextColumn get pubkey => text()();
   IntColumn get kind => integer()();
@@ -208,17 +236,14 @@ class CommunityMessageTable extends Table {
   DateTimeColumn get createdAt => dateTime()();
 
   TextColumn get conversationId =>
-      text().references(ConversationTable, #id, onDelete: KeyAction.cascade)();
+      text().references(NonEncryptedConversationTable, #id, onDelete: KeyAction.cascade)();
 
   @override
   Set<Column<Object>> get primaryKey => {id};
 }
 
-///
-/// Table for all conversations
-///
 @UseRowClass(EventMessageTableData)
-class ConversationTable extends Table {
+class EncryptedMessageTable extends Table {
   TextColumn get id => text()();
   TextColumn get sig => text().nullable()();
   TextColumn get tags => text()();
@@ -229,4 +254,21 @@ class ConversationTable extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {id};
+}
+
+abstract class ConversationsView extends View {
+  NonEncryptedMessageTable get nonEncryptedMessageTable;
+  NonEncryptedConversationTable get nonEncryptedConversationTable;
+  EncryptedMessageTable get encryptedMessageTable;
+
+  // @override
+  // Query<HasResultSet, dynamic> as() => select([
+  //       nonEncryptedMessageTable.id,
+  //     ]).from(nonEncryptedMessageTable);
+
+  ///generate me query to list all conversations with latest message information
+  @override
+  Query<HasResultSet, dynamic> as() => select([
+        nonEncryptedMessageTable.id,
+      ]).from(nonEncryptedMessageTable);
 }

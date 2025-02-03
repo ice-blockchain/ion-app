@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
+import 'package:ion/app/features/chat/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
-import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class RecentChatsTimelinePage extends ConsumerWidget {
@@ -72,20 +72,14 @@ class RecentChatsTimelinePage extends ConsumerWidget {
     );
   }
 
-  Future<Widget> _buildRecentChatTile(EventMessage message, WidgetRef ref) async {
-    if (message.kind == CommunityJoinEntity.kind) {
-      final entity = CommunityJoinEntity.fromEventMessage(message);
-      final community = await ref.read(communityMetadataProvider(entity.data.uuid).future);
-      final conversation = E2eeConversationEntity(
-        id: entity.id,
-        name: community.data.name,
-        type: ChatType.chat,
-        imageUrl: community.data.avatar?.url,
-        participants: [],
-        lastMessageContent: community.data.description,
-        lastMessageAt: message.createdAt,
-      );
-      return RecentChatTile(conversation);
+  Future<Widget> _buildRecentChatTile(
+    ConversationListItem conversation,
+    WidgetRef ref,
+  ) async {
+    if (conversation.type == ConversationType.community) {
+      final community = await ref.read(communityMetadataProvider(conversation.uuid).future);
+
+      return Text(community.data.name);
     }
 
     return const SizedBox.shrink();

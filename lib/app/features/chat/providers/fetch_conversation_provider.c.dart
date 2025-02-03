@@ -2,10 +2,11 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/services/conversation_database_service.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
@@ -70,26 +71,20 @@ class FetchConversations extends _$FetchConversations {
       },
     );
 
-    final dbProvider = ref.watch(conversationsDBServiceProvider);
-
-    await for (final giftwrap in wrapEvents) {
-      if (eventSigner.publicKey != _receiverDevicePubkey(giftwrap)) {
+    await for (final wrap in wrapEvents) {
+      if (eventSigner.publicKey != _receiverDevicePubkey(wrap)) {
         continue;
       }
-
-      try {
-        final rumor = await _unwrapGift(
-          giftWrap: giftwrap,
-          sealService: sealService,
-          giftWrapService: giftWrapService,
-          privateKey: eventSigner.privateKey,
-        );
-        if (rumor != null) {
-          await dbProvider.insertEventMessage(eventMessage: rumor, masterPubkey: masterPubkey);
+      final rumor = await _unwrapGift(
+        wrap,
+        sealService: sealService,
+        giftWrapService: giftWrapService,
+        privateKey: eventSigner.privateKey,
+      );
+      if (rumor != null) {
+        if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName)) {
+          await ref.watch(conversationDatabaseServiceProvider).add([rumor]);
         }
-      } catch (e) {
-        Logger.log('Failed to unwrap gift', error: e);
-        continue;
       }
     }
   }

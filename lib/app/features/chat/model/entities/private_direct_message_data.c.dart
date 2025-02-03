@@ -14,6 +14,7 @@ import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
 
@@ -67,6 +68,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
   const factory PrivateDirectMessageData({
     required List<TextMatch> content,
     required Map<String, MediaAttachment> media,
+    required String uuid,
     String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
     List<RelatedEvent>? relatedEvents,
@@ -84,9 +86,10 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
-      relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
-      relatedConversationId:
-          tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).singleOrNull,
+      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      uuid:
+          tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).single.value ??
+              '',
     );
   }
 
@@ -96,6 +99,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     return PrivateDirectMessageData(
       content: parsedContent,
       media: {},
+      uuid: generateUuid(),
     );
   }
 
@@ -108,6 +112,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
       if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
       if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
+      CommunityIdentifierTag(value: uuid).toTag(),
     ];
 
     final createdAt = DateTime.now();

@@ -1,0 +1,33 @@
+import 'dart:convert';
+
+import 'package:drift/drift.dart';
+import 'package:drift_flutter/drift_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'chat_database.c.g.dart';
+part 'dao/chat_message_table_dao.c.dart';
+part 'dao/conversation_table_dao.c.dart';
+part 'dao/event_message_table_dao.c.dart';
+part 'tables/chat_message_table.dart';
+part 'tables/conversation_table.dart';
+part 'tables/event_message_table.dart';
+part 'tables/reaction_table.dart';
+
+@Riverpod(keepAlive: true)
+ChatDatabase chatDatabase(Ref ref) => ChatDatabase();
+
+@DriftDatabase(tables: [ConversationTable, EventMessageTable, ChatMessageTable])
+class ChatDatabase extends _$ChatDatabase {
+  ChatDatabase() : super(_openConnection());
+
+  @override
+  // TODO: implement schemaVersion
+  int get schemaVersion => 1;
+
+  static QueryExecutor _openConnection() {
+    return driftDatabase(name: 'chat_database');
+  }
+}

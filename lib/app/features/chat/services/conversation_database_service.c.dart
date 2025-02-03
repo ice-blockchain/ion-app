@@ -4,14 +4,14 @@ import 'package:ion/app/features/chat/database/conversation_database.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'conversation_db_service.c.g.dart';
+part 'conversation_database_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
-ConversationsDBService conversationsDBService(Ref ref) =>
-    ConversationsDBService(ref.watch(conversationDatabaseProvider));
+ConversationDatabaseService conversationDatabaseService(Ref ref) =>
+    ConversationDatabaseService(ref.watch(conversationDatabaseProvider));
 
-class ConversationsDBService {
-  ConversationsDBService(this._db);
+class ConversationDatabaseService {
+  ConversationDatabaseService(this._db);
 
   final ConversationDatabase _db;
 
@@ -21,24 +21,25 @@ class ConversationsDBService {
 
     await _db.batch(
       (b) {
-        b.insertAll(_db.conversationTable, data, mode: InsertMode.insertOrReplace);
+        b.insertAll(_db.nonEncryptedConversationTable, data, mode: InsertMode.insertOrReplace);
       },
     );
   }
 
   //watch conversations
   Stream<List<EventMessage>> watchConversations() {
-    return _db.select(_db.conversationTable).map((e) => e.toEventMessage()).watch();
+    return _db.select(_db.nonEncryptedConversationTable).map((e) => e.toEventMessage()).watch();
   }
 
   //get conversations
   Future<List<EventMessage>> getAll() {
-    return _db.select(_db.conversationTable).map((e) => e.toEventMessage()).get();
+    return _db.select(_db.nonEncryptedConversationTable).map((e) => e.toEventMessage()).get();
   }
 
   //get conversation by id
   Future<EventMessageTableData?> getById(String id) async {
-    return (_db.select(_db.conversationTable)..where((conversation) => conversation.id.equals(id)))
+    return (_db.select(_db.nonEncryptedConversationTable)
+          ..where((conversation) => conversation.id.equals(id)))
         .getSingle();
   }
 }
