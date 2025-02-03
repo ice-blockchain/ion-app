@@ -100,7 +100,7 @@ class CommunityMembersCount extends _$CommunityMembersCount {
   Future<NostrRelay> _getOwnerRandomUserRelay(CommunityDefinitionEntity community) async {
     final userRelays = await ref.read(userRelayProvider(community.ownerPubkey).future);
     if (userRelays == null) {
-      throw UserRelaysNotFoundException();
+      throw UserRelaysNotFoundException(community.ownerPubkey);
     }
 
     final relayUrl = userRelays.data.list.random.url;

@@ -20,8 +20,9 @@ import 'package:ion/app/features/chat/community/channel/views/pages/channel_page
 import 'package:ion/app/features/chat/community/channel/views/pages/create_channel_modal/create_channel_modal.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/edit_channel_page/edit_channel_page.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
+import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
@@ -336,41 +337,39 @@ class WalletMainModalRoute extends BaseRouteData {
 )
 class MessagesRoute extends BaseRouteData {
   MessagesRoute({
+    required this.id,
     required this.name,
     required this.chatType,
-    this.id,
-    this.imageUrl,
     this.nickname,
-    this.imageWidth,
-    this.imageHeight,
-    this.conversationId,
-    this.participants = const [],
+    this.imageUrl,
+    this.participantsMasterkeys = const [],
   }) : super(
           child: MessagesPage(
-            E2eeConversationEntity(
+            ConversationEntity(
               id: id,
               name: name,
               type: chatType,
-              nickname: nickname,
               imageUrl: imageUrl,
-              imageWidth: imageWidth,
-              imageHeight: imageHeight,
-              participants: participants,
+              nickname: nickname ?? '',
+              participants: participantsMasterkeys
+                  .map(
+                    (masterPubkey) => ChatParticipantData(
+                      pubkey: '',
+                      masterPubkey: masterPubkey,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
           type: IceRouteType.fade,
         );
 
+  final String id;
   final String name;
-
-  final ChatType chatType;
-  final String? id;
-  final int? imageWidth;
-  final int? imageHeight;
   final String? nickname;
+  final ChatType chatType;
   final String? imageUrl;
-  final String? conversationId;
-  final List<String> participants;
+  final List<String> participantsMasterkeys;
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

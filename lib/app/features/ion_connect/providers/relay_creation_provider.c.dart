@@ -163,7 +163,7 @@ class RelayCreation extends _$RelayCreation {
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {
     final userRelays = await ref.read(userRelayProvider(pubkey).future);
     if (userRelays == null) {
-      throw UserRelaysNotFoundException();
+      throw UserRelaysNotFoundException(pubkey);
     }
     return userRelays;
   }

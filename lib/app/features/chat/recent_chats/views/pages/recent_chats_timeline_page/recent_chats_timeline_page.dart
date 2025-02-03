@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
@@ -19,6 +20,8 @@ class RecentChatsTimelinePage extends ConsumerWidget {
     if (conversations == null) {
       return const SizedBox.shrink();
     }
+
+    ref.displayErrors(conversationsProvider);
 
     final showArchive = conversations.any((c) => c.isArchived);
 

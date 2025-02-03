@@ -9,7 +9,7 @@ class RecentChatDataModel {
     this.unreadMessageCount,
     this.message,
     this.id, {
-    this.type = ChatType.chat,
+    this.type = ChatType.oneOnOne,
   });
 
   final String id;

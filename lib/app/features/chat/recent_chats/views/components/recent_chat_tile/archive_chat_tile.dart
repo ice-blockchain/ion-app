@@ -80,7 +80,7 @@ class ArchiveChatTile extends ConsumerWidget {
                           ),
                           UnreadCountBadge(
                             unreadCount: conversations
-                                .map((c) => c.unreadMessagesCount!)
+                                .map((c) => c.unreadMessagesCount)
                                 .reduce((a, b) => a + b),
                           ),
                         ],

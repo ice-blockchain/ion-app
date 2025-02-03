@@ -15,6 +15,8 @@ import 'package:ion/app/features/chat/community/providers/join_community_provide
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -82,7 +84,15 @@ class ChannelPage extends HookConsumerWidget {
             ),
             if (isJoined)
               if (canPost)
-                const MessagingBottomBar()
+                // TODO (kreios): Replace mock with implementation
+                MessagingBottomBar(
+                  conversation: ConversationEntity(
+                    id: '',
+                    name: '',
+                    participants: [],
+                    type: ChatType.channel,
+                  ),
+                )
               else
                 ScreenSideOffset.large(
                   child: Padding(

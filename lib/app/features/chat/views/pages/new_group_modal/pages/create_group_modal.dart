@@ -9,7 +9,9 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
+import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
@@ -26,6 +28,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -35,13 +38,26 @@ class CreateGroupModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
+    final currentMasterPubkey = ref.watch(currentPubkeySelectorProvider).value;
     final currentPubkey = ref.watch(currentUserIonConnectEventSignerProvider).value?.publicKey;
+
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
 
-    final members =
-        currentPubkey != null ? [...createGroupForm.members, currentPubkey] : <String>[];
+    final currentUserAsParticipant = currentPubkey != null && currentMasterPubkey != null
+        ? ChatParticipantData(
+            pubkey: currentPubkey,
+            masterPubkey: currentMasterPubkey,
+          )
+        : null;
+
+    final participants = currentUserAsParticipant != null
+        ? [
+            ...createGroupForm.members,
+            currentUserAsParticipant,
+          ]
+        : <ChatParticipantData>[];
 
     final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
 
@@ -121,7 +137,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         Assets.svg.iconCategoriesFollowing.icon(size: 16.0.s),
                         SizedBox(width: 6.0.s),
                         Text(
-                          context.i18n.group_create_members_number(members.length),
+                          context.i18n.group_create_members_number(participants.length),
                         ),
                         const Spacer(),
                         TextButton(
@@ -140,17 +156,17 @@ class CreateGroupModal extends HookConsumerWidget {
                     SizedBox(height: 20.0.s),
                     Expanded(
                       child: ListView.separated(
-                        itemCount: members.length,
+                        itemCount: participants.length,
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (_, int i) {
-                          final member = members[i];
+                          final participant = participants[i];
 
-                          return GroupMemberListItem(
-                            isCurrentPubkey: member == currentPubkey,
+                          return GroupPariticipantsListItem(
+                            participant: participant,
+                            isCurrentUser: participant == currentUserAsParticipant,
                             onRemove: () {
-                              createGroupFormNotifier.toggleMember(member);
+                              createGroupFormNotifier.toggleMember(participant);
                             },
-                            pubkey: member,
                           );
                         },
                       ),
@@ -179,7 +195,7 @@ class CreateGroupModal extends HookConsumerWidget {
                   ),
                 ),
                 label: Text(context.i18n.group_create_create_button),
-                onPressed: () {
+                onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
                       final avatarProcessorState =
@@ -190,14 +206,30 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      MessagesRoute(
-                        participants: members,
-                        chatType: ChatType.group,
-                        name: createGroupForm.name!,
-                        imageUrl: groupPicture!.path,
-                        imageWidth: groupPicture.width,
-                        imageHeight: groupPicture.height,
-                      ).push<void>(context);
+                      if (groupPicture == null) {
+                        return;
+                      }
+
+                      final conversationId = generateUuid();
+
+                      await ref.read(e2eeConversationManagementProvider.notifier).createGroup(
+                            groupImage: groupPicture,
+                            participants: participants,
+                            conversationId: conversationId,
+                            subject: createGroupForm.name!,
+                          );
+
+                      if (context.mounted) {
+                        Navigator.maybeOf(context, rootNavigator: true)?.pop();
+
+                        await MessagesRoute(
+                          id: conversationId,
+                          chatType: ChatType.group,
+                          name: createGroupForm.name!,
+                          imageUrl: groupPicture.path,
+                          participantsMasterkeys: participants.map((e) => e.masterPubkey).toList(),
+                        ).push<void>(context);
+                      }
                     } else {
                       throw UnimplementedError();
                     }

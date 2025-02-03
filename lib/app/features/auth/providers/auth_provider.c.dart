@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
@@ -65,6 +66,7 @@ class Auth extends _$Auth {
 
     final ionIdentity = await ref.read(ionIdentityProvider.future);
     await ionIdentity(username: currentUser).auth.logOut();
+    await ref.read(conversationsDBServiceProvider).signOut();
   }
 
   void setCurrentUser(String identityKeyName) {

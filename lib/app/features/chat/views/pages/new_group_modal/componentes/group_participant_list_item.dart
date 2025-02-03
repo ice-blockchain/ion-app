@@ -4,25 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class GroupMemberListItem extends ConsumerWidget {
-  const GroupMemberListItem({
-    required this.isCurrentPubkey,
+class GroupPariticipantsListItem extends ConsumerWidget {
+  const GroupPariticipantsListItem({
     required this.onRemove,
-    required this.pubkey,
+    required this.participant,
+    required this.isCurrentUser,
     super.key,
   });
 
-  final String pubkey;
-  final bool isCurrentPubkey;
+  final bool isCurrentUser;
   final VoidCallback onRemove;
+  final ChatParticipantData participant;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataResult = ref.watch(userMetadataProvider(pubkey));
+    final userMetadataResult = ref.watch(userMetadataProvider(participant.masterPubkey));
 
     return userMetadataResult.maybeWhen(
       data: (userMetadata) {
@@ -39,7 +40,7 @@ class GroupMemberListItem extends ConsumerWidget {
           profilePicture: userMetadata.data.picture,
           contentPadding: EdgeInsets.zero,
           constraints: BoxConstraints(maxHeight: 39.0.s),
-          trailing: isCurrentPubkey
+          trailing: isCurrentUser
               ? null
               : GestureDetector(
                   onTap: onRemove,

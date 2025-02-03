@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/components/avatar/default_avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversation_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -16,32 +18,20 @@ import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends ConsumerWidget {
-  const RecentChatTile(this.conversationData, {super.key});
+  const RecentChatTile(this.conversation, {super.key});
 
-  final E2eeConversationEntity conversationData;
+  final ConversationEntity conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
     final selectedConversationsIds = ref.watch(selectedConversationsIdsProvider);
+    final conversationWithMetadata =
+        ref.watch(conversationMetadataProvider(conversation)).value ?? conversation;
+
+    ref.displayErrors(conversationMetadataProvider(conversation));
 
     return GestureDetector(
-      onTap: () {
-        if (isEditMode) {
-          if (conversationData.id != null) {
-            ref.read(selectedConversationsIdsProvider.notifier).toggle([conversationData]);
-          }
-        } else {
-          MessagesRoute(
-            id: conversationData.id,
-            name: conversationData.name,
-            chatType: conversationData.type,
-            imageUrl: conversationData.imageUrl,
-            participants: conversationData.participants,
-            nickname: prefixUsername(username: conversationData.nickname, context: context),
-          ).push<void>(context);
-        }
-      },
       behavior: HitTestBehavior.opaque,
       child: Row(
         children: [
@@ -50,7 +40,7 @@ class RecentChatTile extends ConsumerWidget {
             width: isEditMode ? 40.0.s : 0,
             child: Padding(
               padding: EdgeInsets.only(right: 10.0.s),
-              child: selectedConversationsIds.contains(conversationData)
+              child: selectedConversationsIds.contains(conversation)
                   ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                   : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
             ),
@@ -58,19 +48,18 @@ class RecentChatTile extends ConsumerWidget {
           Flexible(
             child: Row(
               children: [
-                if (conversationData.imageUrl != null)
-                  Avatar(
-                    imageUrl: conversationData.type == ChatType.group &&
-                                conversationData.imageUrl.isEmpty ||
-                            conversationData.type == ChatType.chat
-                        ? conversationData.imageUrl
-                        : null,
-                    imageWidget: conversationData.type == ChatType.group &&
-                            conversationData.imageUrl.isNotEmpty
-                        ? Image.asset(conversationData.imageUrl!)
-                        : null,
-                    size: 40.0.s,
-                  ),
+                Avatar(
+                  size: 40.0.s,
+                  imageUrl: conversation.type == ChatType.oneOnOne
+                      ? conversationWithMetadata.imageUrl
+                      : null,
+                  imageWidget: conversation.type == ChatType.group
+                      ? Image.asset(
+                          conversation.imageUrl ?? '',
+                          errorBuilder: (_, __, ___) => DefaultAvatar(size: 40.0.s),
+                        )
+                      : null,
+                ),
                 SizedBox(width: 12.0.s),
                 Expanded(
                   child: Column(
@@ -82,11 +71,11 @@ class RecentChatTile extends ConsumerWidget {
                         children: [
                           SenderSummary(
                             sender: MessageAuthor(
-                              name: conversationData.name,
-                              imageUrl: conversationData.imageUrl ?? '',
+                              name: conversationWithMetadata.name,
+                              imageUrl: conversationWithMetadata.imageUrl ?? '',
                             ),
                           ),
-                          ChatTimestamp(conversationData.lastMessageAt!),
+                          ChatTimestamp(conversationWithMetadata.lastMessageAt!),
                         ],
                       ),
                       SizedBox(height: 2.0.s),
@@ -94,9 +83,11 @@ class RecentChatTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: ChatPreview(content: conversationData.lastMessageContent!),
+                            child:
+                                ChatPreview(content: conversationWithMetadata.lastMessageContent),
                           ),
-                          UnreadCountBadge(unreadCount: conversationData.unreadMessagesCount ?? 0),
+                          UnreadCountBadge(
+                              unreadCount: conversationWithMetadata.unreadMessagesCount),
                         ],
                       ),
                     ],
@@ -107,6 +98,23 @@ class RecentChatTile extends ConsumerWidget {
           ),
         ],
       ),
+      onTap: () {
+        if (isEditMode) {
+          ref.read(selectedConversationsIdsProvider.notifier).toggle([conversationWithMetadata]);
+        } else {
+          final participantsMasterpubkeys =
+              conversationWithMetadata.participants.map((e) => e.masterPubkey).toList();
+
+          MessagesRoute(
+            id: conversationWithMetadata.id,
+            name: conversationWithMetadata.name,
+            chatType: conversationWithMetadata.type,
+            imageUrl: conversationWithMetadata.imageUrl,
+            participantsMasterkeys: participantsMasterpubkeys,
+            nickname: prefixUsername(username: conversationWithMetadata.nickname, context: context),
+          ).push<void>(context);
+        }
+      },
     );
   }
 }
@@ -172,10 +180,11 @@ class ChatPreview extends StatelessWidget {
         //RecentChatMessageIcon(message: message, color: textColor),
         Flexible(
           child: Text(
-            content,
+            content.isNotEmpty ? content : context.i18n.group_create_first_message,
             maxLines: maxLines,
             overflow: TextOverflow.ellipsis,
             style: context.theme.appTextThemes.body2.copyWith(
+              fontStyle: content.isEmpty ? FontStyle.italic : FontStyle.normal,
               color: textColor ?? context.theme.appColors.onTertararyBackground,
             ),
           ),

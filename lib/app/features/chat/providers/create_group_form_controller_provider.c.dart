@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/create_group_form_data.c.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,11 +16,14 @@ class CreateGroupFormController extends _$CreateGroupFormController {
 
   set title(String value) => state = state.copyWith(name: value);
 
-  set members(Iterable<String> value) => state = state.copyWith(members: value.toSet());
+  set members(Iterable<ChatParticipantData> value) =>
+      state = state.copyWith(members: value.toSet());
 
-  void toggleMember(String pubkey) {
+  void toggleMember(ChatParticipantData pariticipant) {
     final updatedMembers = state.members.toSet();
-    updatedMembers.contains(pubkey) ? updatedMembers.remove(pubkey) : updatedMembers.add(pubkey);
+    updatedMembers.contains(pariticipant)
+        ? updatedMembers.remove(pariticipant)
+        : updatedMembers.add(pariticipant);
 
     state = state.copyWith(members: updatedMembers);
   }

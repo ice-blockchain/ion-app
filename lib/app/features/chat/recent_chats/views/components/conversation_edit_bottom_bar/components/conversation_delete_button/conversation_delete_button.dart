@@ -16,7 +16,7 @@ class ConversationDeleteButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedConversationsIds =
-        ref.watch(selectedConversationsIdsProvider).map((e) => e.id!).toList();
+        ref.watch(selectedConversationsIdsProvider).map((e) => e.id).toList();
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

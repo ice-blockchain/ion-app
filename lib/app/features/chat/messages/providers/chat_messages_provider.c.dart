@@ -5,7 +5,7 @@ import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,7 +14,7 @@ part 'chat_messages_provider.c.g.dart';
 @riverpod
 class ChatMessages extends _$ChatMessages {
   @override
-  Future<List<MessageListItem>> build(E2eeConversationEntity conversation) async {
+  Future<List<MessageListItem>> build(ConversationEntity conversation) async {
     final messagesSubscription = ref
         .watch(conversationsDBServiceProvider)
         .watchConversationMessages(conversation)
@@ -41,7 +41,7 @@ class ChatMessages extends _$ChatMessages {
     }
 
     final messages =
-        await ref.watch(conversationsDBServiceProvider).getConversationMessages(conversation);
+        await ref.watch(conversationsDBServiceProvider).getConversationMessages(conversation.id);
 
     final conversationMessageItems =
         messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();
@@ -61,7 +61,7 @@ class ChatMessages extends _$ChatMessages {
       text: message.data.content.map((e) => e.text).join(),
       author: MessageAuthor(
         name: conversation.name,
-        imageUrl: conversation.imageUrl!,
+        imageUrl: conversation.imageUrl ?? '',
         isCurrentUser: message.pubkey == devicePubkey,
       ),
     );
