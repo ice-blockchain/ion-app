@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -33,6 +34,7 @@ List<EntitiesDataSource>? repliesDataSource(
   }
 
   final hasParent = switch (entity) {
+    ArticleEntity() => false,
     ModifiablePostEntity() => entity.data.parentEvent != null,
     PostEntity() => entity.data.parentEvent != null,
     _ => throw UnsupportedEventReference(eventReference)

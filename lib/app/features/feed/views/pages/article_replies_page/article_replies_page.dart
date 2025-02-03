@@ -5,9 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
-import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_input_field.dart';
+import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
+import 'package:ion/app/features/feed/views/components/reply_list/reply_list.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class ArticleRepliesPage extends HookConsumerWidget {
@@ -20,11 +21,7 @@ class ArticleRepliesPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
-
-    if (entity is! ArticleEntity) {
-      return const SizedBox.shrink();
-    }
+    final canReply = ref.watch(canReplyProvider(eventReference)).value ?? false;
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -33,9 +30,20 @@ class ArticleRepliesPage extends HookConsumerWidget {
           BookmarkButton(eventReference: eventReference),
         ],
       ),
-      body: const Column(
+      body: Column(
         children: [
-          HorizontalSeparator(),
+          const HorizontalSeparator(),
+          Flexible(
+            child: CustomScrollView(
+              slivers: [
+                ReplyList(eventReference: eventReference),
+              ],
+            ),
+          ),
+          if (canReply) ...[
+            const HorizontalSeparator(),
+            ReplyInputField(eventReference: eventReference),
+          ],
         ],
       ),
     );
