@@ -28,11 +28,47 @@ class ListItemsLoadingState extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final ListItemsLoadingStateType listItemsLoadingStateType;
 
-  Widget _buildSkeleton({
-    required BuildContext context,
-  }) {
+  @override
+  Widget build(BuildContext context) {
+    final skeleton = _Skeleton(
+      itemsCount: itemsCount,
+      itemHeight: itemHeight,
+      separatorHeight: separatorHeight,
+    );
+    switch (listItemsLoadingStateType) {
+      case ListItemsLoadingStateType.listView:
+        return Padding(
+          padding: padding ?? EdgeInsets.zero,
+          child: skeleton,
+        );
+      case ListItemsLoadingStateType.scrollView:
+        return SliverPadding(
+          padding: padding ?? EdgeInsets.only(top: 16.0.s),
+          sliver: SliverToBoxAdapter(
+            child: skeleton,
+          ),
+        );
+    }
+  }
+}
+
+class _Skeleton extends StatelessWidget {
+  const _Skeleton({
+    this.separatorHeight,
+    this.itemHeight,
+    this.itemsCount,
+  });
+
+  final double? separatorHeight;
+  final double? itemHeight;
+  final int? itemsCount;
+
+  @override
+  Widget build(BuildContext context) {
     return Skeleton(
-      child: SingleChildScrollView(
+      child: OverflowBox(
+        maxHeight: double.infinity,
+        alignment: Alignment.topCenter,
         child: SeparatedColumn(
           separator: SizedBox(
             height: separatorHeight ?? 16.0.s,
@@ -47,23 +83,5 @@ class ListItemsLoadingState extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    switch (listItemsLoadingStateType) {
-      case ListItemsLoadingStateType.listView:
-        return Padding(
-          padding: padding ?? EdgeInsets.zero,
-          child: _buildSkeleton(context: context),
-        );
-      case ListItemsLoadingStateType.scrollView:
-        return SliverPadding(
-          padding: padding ?? EdgeInsets.only(top: 16.0.s),
-          sliver: SliverToBoxAdapter(
-            child: _buildSkeleton(context: context),
-          ),
-        );
-    }
   }
 }
