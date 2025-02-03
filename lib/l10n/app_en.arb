@@ -95,6 +95,7 @@
   "common_invitation_link": "Invitation link",
   "common_share_link": "Share link",
   "common_copied": "Copied",
+  "common_comments": "Comments",
   "create_local_creds_prompt_dialog_title": "Do you want to create local credentials?",
   "create_local_creds_prompt_dialog_create_button": "Create",
   "create_local_creds_prompt_dialog_skip_button": "Skip",
