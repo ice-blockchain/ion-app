@@ -13,7 +13,6 @@ import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/countries.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
 import 'package:ion/app/features/protect_account/phone/provider/country_provider.c.dart';
@@ -95,18 +94,9 @@ class PhoneSetupInputPage extends HookConsumerWidget {
                       phoneController.text.trim(),
                     );
 
-                    await guardPasskeyDialog(
-                      context,
-                      (child) => HookVerifyIdentityRequestBuilder(
-                        requestWithVerifyIdentity:
-                            (OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity) =>
-                                requestTwoFACode(
-                          ref,
-                          TwoFAType.sms(phoneNumber),
-                          onVerifyIdentity,
-                        ),
-                        child: child,
-                      ),
+                    await requestTwoFACode(
+                      ref,
+                      TwoFAType.sms(phoneNumber),
                     );
 
                     if (!context.mounted) {

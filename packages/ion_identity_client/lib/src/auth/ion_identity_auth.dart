@@ -128,25 +128,34 @@ class IONIdentityAuth {
 
   Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
-    required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+    required String? signature,
     Map<String, String>? verificationCodes,
     String? recoveryIdentityKeyName,
   }) =>
       twoFAService.requestTwoFACode(
         twoFAType: twoFAType,
-        onVerifyIdentity: onVerifyIdentity,
+        signature: signature,
         verificationCodes: verificationCodes,
         recoveryIdentityKeyName: recoveryIdentityKeyName,
       );
 
   Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);
 
-  Future<void> deleteTwoFA(
-    TwoFAType twoFAType,
-    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity, [
+  Future<void> deleteTwoFA({
+    required TwoFAType twoFAType,
+    required String? signature,
     List<TwoFAType> verificationCodes = const [],
-  ]) =>
-      twoFAService.deleteTwoFA(twoFAType, onVerifyIdentity, verificationCodes);
+  }) =>
+      twoFAService.deleteTwoFA(
+        twoFAType: twoFAType,
+        signature: signature,
+        verificationCodes: verificationCodes,
+      );
+
+  Future<String> generateSignature(
+    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+  ) =>
+      twoFAService.generateSignature(onVerifyIdentity);
 
   Future<List<Credential>> getCredentialsList() => getCredentialsService.getCredentialsList();
 }

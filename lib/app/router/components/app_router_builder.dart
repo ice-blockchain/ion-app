@@ -7,6 +7,7 @@ import 'package:ion/app/components/global_notification_bar/global_notification_b
 import 'package:ion/app/components/global_notification_bar/providers/global_notification_provider.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/debug/views/debug_shake_gesture.dart';
+import 'package:ion/app/features/protect_account/secure_account/views/components/two_fa_signature_wrapper.dart';
 import 'package:ion/app/hooks/use_interval.dart';
 import 'package:ion/app/services/ui_event_queue/ui_event_queue_listener.dart';
 
@@ -43,7 +44,9 @@ class AppRouterBuilder extends HookConsumerWidget {
             const UiEventQueueListener(),
             Expanded(
               child: DebugShakeGesture(
-                child: child ?? const SizedBox.shrink(),
+                child: TwoFaSignatureWrapper(
+                  child: child ?? const SizedBox.shrink(),
+                ),
               ),
             ),
           ],

@@ -49,7 +49,7 @@ class TwoFADataSource {
         phoneNumber: phoneNumber,
       );
 
-      final result = await networkClient.put(
+      return await networkClient.put(
         sprintf(twoFaPath, [userId, twoFAOption]),
         data: body.toJson(),
         headers: token == null
@@ -60,8 +60,6 @@ class TwoFADataSource {
               },
         decoder: (json) => parseJsonObject(json, fromJson: (json) => json),
       );
-
-      return result;
     } on RequestExecutionException catch (e) {
       final exception = _mapException(e);
       throw exception;
@@ -80,7 +78,7 @@ class TwoFADataSource {
         throw const UnauthenticatedException();
       }
 
-      return networkClient.patch(
+      return await networkClient.patch(
         sprintf(twoFaPath, [userId, twoFAOption]),
         queryParams: {'code': code},
         headers: RequestHeaders.getAuthorizationHeaders(token: token, username: username),
@@ -93,15 +91,15 @@ class TwoFADataSource {
   }
 
   Future<void> deleteTwoFA({
-    required String signature,
     required String username,
     required String userId,
     required TwoFAType twoFAType,
+    String? signature,
     List<TwoFAType> verificationCodes = const [],
   }) async {
     try {
       final token = tokenStorage.getToken(username: username)?.token;
-      if (token == null) {
+      if (token == null && signature != null) {
         throw const UnauthenticatedException();
       }
 
@@ -120,12 +118,14 @@ class TwoFADataSource {
           )
           .toString();
 
-      return networkClient.delete<void>(
+      return await networkClient.delete<void>(
         uri,
-        headers: {
-          ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
-          RequestHeaders.ionIdentityUserAction: signature,
-        },
+        headers: token == null
+            ? {}
+            : {
+                ...RequestHeaders.getAuthorizationHeaders(token: token, username: username),
+                RequestHeaders.ionIdentityUserAction: signature,
+              },
         decoder: (response) => response,
       );
     } on RequestExecutionException catch (e) {
@@ -143,6 +143,9 @@ class TwoFADataSource {
     }
     if (InvalidTwoFaCodeException.isMatch(exception)) {
       return InvalidTwoFaCodeException();
+    }
+    if (InvalidSignatureException.isMatch(exception)) {
+      return InvalidSignatureException();
     }
 
     return e;

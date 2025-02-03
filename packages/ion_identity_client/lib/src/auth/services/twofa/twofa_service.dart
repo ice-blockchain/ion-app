@@ -25,7 +25,7 @@ class TwoFAService {
 
   Future<String?> requestTwoFACode({
     required TwoFAType twoFAType,
-    required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
+    required String? signature,
     required Map<String, String>? verificationCodes,
     String? recoveryIdentityKeyName,
   }) async {
@@ -39,10 +39,9 @@ class TwoFAService {
     }
 
     final userId = _extractUserIdService.extractUserId(username: username);
-    final base64Signature = await _generateSignature(userId, onVerifyIdentity);
 
     final response = await _dataSource.requestTwoFACode(
-      signature: base64Signature,
+      signature: signature,
       username: username,
       userId: userId,
       twoFAOption: twoFAType.option,
@@ -65,16 +64,15 @@ class TwoFAService {
     );
   }
 
-  Future<void> deleteTwoFA(
-    TwoFAType twoFAType,
-    OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity, [
+  Future<void> deleteTwoFA({
+    required TwoFAType twoFAType,
+    required String? signature,
     List<TwoFAType> verificationCodes = const [],
-  ]) async {
+  }) async {
     final userId = _extractUserIdService.extractUserId(username: username);
-    final base64Signature = await _generateSignature(userId, onVerifyIdentity);
 
     await _dataSource.deleteTwoFA(
-      signature: base64Signature,
+      signature: signature,
       username: username,
       userId: userId,
       twoFAType: twoFAType,
@@ -82,10 +80,10 @@ class TwoFAService {
     );
   }
 
-  Future<String> _generateSignature(
-    String userId,
+  Future<String> generateSignature(
     OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   ) async {
+    final userId = _extractUserIdService.extractUserId(username: username);
     final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final mainWallet = (await _wallets.getWallets()).first;
 
