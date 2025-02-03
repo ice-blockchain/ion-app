@@ -6,11 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_receive_modal/components/coin_address_tile/coin_address_tile.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -27,10 +24,9 @@ class CoinReceiveModal extends HookConsumerWidget {
     final receiveCoinState = ref.watch(receiveCoinsFormControllerProvider);
 
     final updateNetwork = useCallback(
-      (NetworkType? network) {
+      (Network? network) {
         if (network != null) {
-          final clarifiedNetwork = network == NetworkType.all ? NetworkType.arbitrum : network;
-          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(clarifiedNetwork);
+          ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
         }
       },
       [],
@@ -56,20 +52,21 @@ class CoinReceiveModal extends HookConsumerWidget {
           if (receiveCoinState.selectedCoin != null)
             ScreenSideOffset.small(
               child: CoinAddressTile(
-                coinData: receiveCoinState.selectedCoin!.coin,
+                // TODO: (1) check coin data
+                coinData: receiveCoinState.selectedCoin!.coins.first.coin,
               ),
             ),
           SizedBox(
             height: 15.0.s,
           ),
           // TODO: (1) Check nullability
-          if (receiveCoinState.selectedNetwork case final NetworkType network)
+          if (receiveCoinState.selectedNetwork case final Network network)
             ScreenSideOffset.small(
               child: ListItem(
                 title: Text(context.i18n.wallet_network),
-                subtitle: Text(network.getDisplayName(context)),
+                subtitle: Text(network.displayName),
                 switchTitleStyles: true,
-                leading: network.iconAsset.icon(size: 36.0.s),
+                leading: network.svgIconAsset.icon(size: 36.0.s),
                 trailing: Text(
                   context.i18n.wallet_change,
                   style: context.theme.appTextThemes.caption.copyWith(
@@ -77,7 +74,7 @@ class CoinReceiveModal extends HookConsumerWidget {
                   ),
                 ),
                 onTap: () async {
-                  final result = await ChangeNetworkShareWalletRoute().push<NetworkType?>(context);
+                  final result = await ChangeNetworkShareWalletRoute().push<Network?>(context);
                   if (result != null) updateNetwork(result);
                 },
               ),

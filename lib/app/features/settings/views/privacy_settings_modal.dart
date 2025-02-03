@@ -92,10 +92,10 @@ class PrivacySettingsModal extends ConsumerWidget {
           walletsList.expand((view) => view.coinGroups).expand((group) => group.coins).toList();
       wallets = Map.fromEntries(
         coins.map((coin) {
-          if (coin.network == null || coin.walletId == null) {
+          if (coin.walletId == null) {
             return null;
           }
-          return MapEntry(coin.network!, coin.walletId!);
+          return MapEntry(coin.coin.network.serverName, coin.walletId!);
         }).nonNulls,
       );
     }

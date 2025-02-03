@@ -45,6 +45,10 @@ class CoinsDao extends DatabaseAccessor<CoinsDatabase> with _$CoinsDaoMixin {
     return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).get();
   }
 
+  Future<List<Coin>> getBySymbolGroup(String symbolGroup) {
+    return (select(coinsTable)..where((row) => row.symbolGroup.equals(symbolGroup))).get();
+  }
+
   Future<List<Coin>> search(String query) {
     final formattedQuery = '%${query.trim().toLowerCase()}%';
 

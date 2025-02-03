@@ -16,10 +16,10 @@ Future<List<CoinsGroup>> filteredWalletCoins(Ref ref) async {
 
   return selectedCoinsState.maybeWhen(
     data: (walletView) {
-      final coins = walletView.coinGroups;
+      final groups = walletView.coinGroups;
       return isZeroValueAssetsVisible
-          ? coins
-          : coins.where((coin) => coin.totalBalanceUSD > 0.00).toList();
+          ? groups
+          : groups.where((coin) => coin.totalBalanceUSD > 0.00).toList();
     },
     orElse: () => [],
   );
