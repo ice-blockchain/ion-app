@@ -1,17 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 // TODO: Fix tests
-/*
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/chat/database/conversation_database.c.dart';
-import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
-import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-void main() {
+void main() {}
+/*
   late ConversationDatabase database;
   late ConversationsDBService conversationsService;
 
