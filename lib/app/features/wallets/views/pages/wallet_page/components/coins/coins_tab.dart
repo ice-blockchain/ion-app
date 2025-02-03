@@ -37,19 +37,14 @@ class CoinsTab extends ConsumerWidget {
           slivers: [
             SliverList.separated(
               itemCount: groups.length,
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: 12.0.s);
-              },
-              itemBuilder: (BuildContext context, int index) {
-                return ScreenSideOffset.small(
-                  child: CoinsGroupItem(
-                    coinsGroup: groups[index],
-                    onTap: () {
-                      CoinsDetailsRoute(symbolGroup: groups[index].symbolGroup).go(context);
-                    },
-                  ),
-                );
-              },
+              separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
+              itemBuilder: (context, index) => ScreenSideOffset.small(
+                child: CoinsGroupItem(
+                  coinsGroup: groups[index],
+                  onTap: () =>
+                      CoinsDetailsRoute(symbolGroup: groups[index].symbolGroup).go(context),
+                ),
+              ),
             ),
             const CoinsTabFooter(),
           ],

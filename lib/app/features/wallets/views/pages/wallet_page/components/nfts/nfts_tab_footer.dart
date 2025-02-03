@@ -6,6 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/bottom_action/bottom_action.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 
@@ -32,7 +33,7 @@ class NftsTabFooter extends ConsumerWidget {
                 onTap: () {},
               ),
             )
-          : const SizedBox.shrink(),
+          : SizedBox(height: NftConstants.gridSpacing),
     );
   }
 }
