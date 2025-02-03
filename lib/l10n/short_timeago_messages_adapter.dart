@@ -10,19 +10,7 @@ class ShortTimeagoMessagesAdapter implements LookupMessages {
   String _removeTilde(String value) => value.replaceAll('~', '');
 
   @override
-  String aboutAnHour(int minutes) => _removeTilde(base.aboutAnHour(minutes));
-
-  @override
-  String aDay(int hours) => _removeTilde(base.aDay(hours));
-
-  @override
-  String aboutAMonth(int days) => _removeTilde(base.aboutAMonth(days));
-
-  @override
-  String aboutAYear(int years) => _removeTilde(base.aboutAYear(years));
-
-  @override
-  String lessThanOneMinute(int seconds) => base.aboutAMinute(1);
+  String lessThanOneMinute(int seconds) => _removeTilde(base.aboutAMinute(1));
 
   @override
   String prefixAgo() => base.prefixAgo();
@@ -43,13 +31,25 @@ class ShortTimeagoMessagesAdapter implements LookupMessages {
   String minutes(int minutes) => base.minutes(minutes);
 
   @override
+  String aboutAnHour(int minutes) => _removeTilde(base.aboutAnHour(minutes));
+
+  @override
   String hours(int hours) => base.hours(hours);
+
+  @override
+  String aDay(int hours) => _removeTilde(base.aDay(hours));
 
   @override
   String days(int days) => base.days(days);
 
   @override
+  String aboutAMonth(int days) => _removeTilde(base.aboutAMonth(days));
+
+  @override
   String months(int months) => base.months(months);
+
+  @override
+  String aboutAYear(int year) => _removeTilde(base.aboutAYear(year));
 
   @override
   String years(int years) => base.years(years);
