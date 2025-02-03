@@ -85,7 +85,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
-      relatedConversationId: tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).singleOrNull,
+      relatedConversationId:
+          tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).singleOrNull,
     );
   }
 
