@@ -7,12 +7,8 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 
-abstract mixin class IonConnectEntityReferecenable {
-  EventReference toEventReference();
-}
-
 @immutable
-abstract mixin class IonConnectEntity {
+abstract mixin class IonConnectEntity implements IonConnectEntityReferenceable {
   String get id;
   String get pubkey;
   String get masterPubkey;
@@ -38,14 +34,18 @@ abstract mixin class IonConnectEntity {
   int get hashCode => id.hashCode;
 }
 
-mixin ImmutableEntity on IonConnectEntity implements IonConnectEntityReferecenable {
+abstract mixin class IonConnectEntityReferenceable {
+  EventReference toEventReference();
+}
+
+mixin ImmutableEntity on IonConnectEntity implements IonConnectEntityReferenceable {
   @override
   ImmutableEventReference toEventReference() {
     return ImmutableEventReference(eventId: id, pubkey: masterPubkey);
   }
 }
 
-mixin ReplaceableEntity on IonConnectEntity implements IonConnectEntityReferecenable {
+mixin ReplaceableEntity on IonConnectEntity implements IonConnectEntityReferenceable {
   ReplaceableEntityData get data;
 }
 

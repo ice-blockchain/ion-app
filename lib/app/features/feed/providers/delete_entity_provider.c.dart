@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replied_events_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
@@ -42,6 +43,7 @@ Future<void> _deleteFromServer(Ref ref, IonConnectEntity entity) async {
   final entityKind = switch (entity) {
     ModifiablePostEntity() => ModifiablePostEntity.kind,
     ArticleEntity() => ArticleEntity.kind,
+    RepostEntity() => RepostEntity.kind,
     GenericRepostEntity() => GenericRepostEntity.kind,
     _ => throw DeleteEntityUnsupportedTypeException(),
   };

@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 
-mixin EntitySettingsDataMixin {
+mixin EntityDataWithSettings {
   List<EventSetting>? get settings;
 
   WhoCanReplySettingsOption? get whoCanReplySetting {

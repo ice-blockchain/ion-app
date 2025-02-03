@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -9,16 +7,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'repost_data.c.freezed.dart';
 
-@Deprecated('Use GenericRepostEntity instead')
 @Freezed(equal: false)
 class RepostEntity with _$RepostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
-  @Deprecated('Use GenericRepostEntity instead')
   const factory RepostEntity({
     required String id,
     required String pubkey,
@@ -28,11 +25,9 @@ class RepostEntity with _$RepostEntity, IonConnectEntity, ImmutableEntity, Cache
     required RepostData data,
   }) = _RepostEntity;
 
-  @Deprecated('Use GenericRepostEntity instead')
   const RepostEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/18.md
-  @Deprecated('Use GenericRepostEntity instead')
   factory RepostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
@@ -54,8 +49,7 @@ class RepostEntity with _$RepostEntity, IonConnectEntity, ImmutableEntity, Cache
 @freezed
 class RepostData with _$RepostData implements EventSerializable {
   const factory RepostData({
-    required String eventId,
-    required String pubkey,
+    required ImmutableEventReference eventReference,
     required EventMessage? repostedEvent,
   }) = _RepostData;
 
@@ -81,8 +75,7 @@ class RepostData with _$RepostData implements EventSerializable {
     }
 
     return RepostData(
-      eventId: eventId,
-      pubkey: pubkey,
+      eventReference: ImmutableEventReference(eventId: eventId, pubkey: pubkey),
       repostedEvent: null,
     );
   }
@@ -100,8 +93,8 @@ class RepostData with _$RepostData implements EventSerializable {
       content: repostedEvent != null ? jsonEncode(repostedEvent!.toJson().last) : '',
       tags: [
         ...tags,
-        ['p', pubkey],
-        ['e', eventId],
+        ['p', eventReference.pubkey],
+        ['e', eventReference.eventId],
       ],
     );
   }

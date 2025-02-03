@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -26,6 +27,8 @@ class BookmarkButton extends ConsumerWidget {
     }
 
     final isBookmarked = ref.watch(isBookmarkedProvider(eventReference!)).value ?? false;
+
+    ref.displayErrors(bookmarksNotifierProvider);
 
     return IconButton(
       icon: SvgPicture.asset(

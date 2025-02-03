@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -19,21 +20,30 @@ List<EntitiesDataSource>? userRepliesDataSource(Ref ref, String pubkey) {
     return null;
   }
 
+  final search = SearchExtensions([
+    ...SearchExtensions.withCounters(
+      [],
+      currentPubkey: currentPubkey,
+    ).extensions,
+    ...SearchExtensions.withCounters(
+      [],
+      currentPubkey: currentPubkey,
+      forKind: PostEntity.kind,
+    ).extensions,
+    ReferencesSearchExtension(contain: true),
+    ExpirationSearchExtension(expiration: false),
+  ]).toString();
+
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      entityFilter: (entity) => entity.masterPubkey == pubkey && entity is ModifiablePostEntity,
+      entityFilter: (entity) =>
+          entity.masterPubkey == pubkey && (entity is ModifiablePostEntity || entity is PostEntity),
       requestFilters: [
         RequestFilter(
-          kinds: const [ModifiablePostEntity.kind],
+          kinds: const [ModifiablePostEntity.kind, PostEntity.kind],
           authors: [pubkey],
-          search: SearchExtensions.withCounters(
-            [
-              ReferencesSearchExtension(contain: true),
-              ExpirationSearchExtension(expiration: false),
-            ],
-            currentPubkey: currentPubkey,
-          ).toString(),
+          search: search,
           limit: 10,
         ),
       ],

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 
 abstract class SearchExtension {
@@ -71,7 +72,7 @@ class RepliesCountSearchExtension extends IncludeSearchExtension {
 /// For every kind [ModifiablePostEntity.kind] that the subscription finds also include the count of reposts that it has
 class RepostsCountSearchExtension extends IncludeSearchExtension {
   @override
-  int get forKind => ModifiablePostEntity.kind;
+  int get forKind => PostEntity.kind;
 
   @override
   final String query = 'kind6400+kind6+group+e';
@@ -96,7 +97,7 @@ class QuotesCountSearchExtension extends IncludeSearchExtension {
   final int forKind;
 
   @override
-  final String query = 'kind6400+kind30175+group+q';
+  String get query => 'kind6400+kind30175+group+q';
 }
 
 /// For every kind [forKind] that the subscription finds also include the count of reactions that it has

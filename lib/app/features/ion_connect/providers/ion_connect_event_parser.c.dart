@@ -10,7 +10,9 @@ import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
@@ -40,6 +42,7 @@ class EventParser {
       InterestsEntity.kind => InterestsEntity.fromEventMessage(eventMessage),
       UserDelegationEntity.kind => UserDelegationEntity.fromEventMessage(eventMessage),
       GenericRepostEntity.kind => GenericRepostEntity.fromEventMessage(eventMessage),
+      RepostEntity.kind => RepostEntity.fromEventMessage(eventMessage),
       FileMetadataEntity.kind => FileMetadataEntity.fromEventMessage(eventMessage),
       ReactionEntity.kind => ReactionEntity.fromEventMessage(eventMessage),
       EventCountResultEntity.kind => EventCountResultEntity.fromEventMessage(eventMessage),
@@ -48,6 +51,7 @@ class EventParser {
       BlockListEntity.kind => BlockListEntity.fromEventMessage(eventMessage),
       NotAuthoritativeEvent.kind => NotAuthoritativeEvent.fromEventMessage(eventMessage),
       ModifiablePostEntity.kind => ModifiablePostEntity.fromEventMessage(eventMessage),
+      PostEntity.kind => PostEntity.fromEventMessage(eventMessage),
       CommunityDefinitionEntity.kind => CommunityDefinitionEntity.fromEventMessage(eventMessage),
       CommunityUpdateEntity.kind => CommunityUpdateEntity.fromEventMessage(eventMessage),
       CommunityJoinEntity.kind => CommunityJoinEntity.fromEventMessage(eventMessage),

@@ -21,7 +21,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'community_update_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class CommunityUpdateEntity with _$CommunityUpdateEntity, IonConnectEntity {
+class CommunityUpdateEntity with _$CommunityUpdateEntity, IonConnectEntity, ImmutableEntity {
   const factory CommunityUpdateEntity({
     required String id,
     required String pubkey,

@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
@@ -26,16 +25,12 @@ class ParentEntity extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionConnectEntity =
+    final parentEntity =
         ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
     final userMetadata = ref.watch(userMetadataProvider(eventReference.pubkey)).valueOrNull;
 
-    if (ionConnectEntity == null || userMetadata == null) {
+    if (parentEntity == null || userMetadata == null) {
       return const Skeleton(child: PostSkeleton());
-    }
-
-    if (ionConnectEntity is! ModifiablePostEntity) {
-      return Text('Replying to ${ionConnectEntity.runtimeType} is not supported yet');
     }
 
     return Column(
@@ -65,7 +60,7 @@ class ParentEntity extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  PostBody(postEntity: ionConnectEntity),
+                  PostBody(entity: parentEntity),
                   SizedBox(height: 12.0.s),
                   ReplyingTo(name: userMetadata.data.name),
                   SizedBox(height: 16.0.s),

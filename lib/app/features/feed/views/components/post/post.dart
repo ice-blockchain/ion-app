@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
@@ -18,6 +19,7 @@ import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quote
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -47,18 +49,16 @@ class Post extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity = ref
-        .watch(ionConnectEntityProvider(eventReference: eventReference))
-        .valueOrNull as ModifiablePostEntity?;
+    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-    if (postEntity == null) {
+    if (entity == null) {
       return const Skeleton(child: PostSkeleton());
     }
 
-    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(postEntity.masterPubkey));
+    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
 
     final framedEventReference =
-        _getFramedEventReference(postEntity: postEntity, framedEventType: framedEventType);
+        _getFramedEventReference(entity: entity, framedEventType: framedEventType);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +67,7 @@ class Post extends ConsumerWidget {
         header ??
             UserInfo(
               pubkey: eventReference.pubkey,
-              createdAt: postEntity.createdAt,
+              createdAt: entity.createdAt,
               timeFormat: timeFormat,
               trailing: isOwnedByCurrentUser
                   ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
@@ -75,7 +75,7 @@ class Post extends ConsumerWidget {
             ),
         SizedBox(height: 10.0.s),
         PostBody(
-          postEntity: postEntity,
+          entity: entity,
           isTextSelectable: isTextSelectable,
         ),
         if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
@@ -89,14 +89,16 @@ class Post extends ConsumerWidget {
   }
 
   EventReference? _getFramedEventReference({
-    required ModifiablePostEntity postEntity,
+    required IonConnectEntity entity,
     required FramedEventType framedEventType,
   }) {
     return switch (framedEventType) {
-      FramedEventType.parent when postEntity.data.parentEvent != null =>
-        postEntity.data.parentEvent!.eventReference,
-      FramedEventType.quoted when postEntity.data.quotedEvent != null =>
-        postEntity.data.quotedEvent!.eventReference,
+      FramedEventType.parent when entity is ModifiablePostEntity =>
+        entity.data.parentEvent?.eventReference,
+      FramedEventType.parent when entity is PostEntity => entity.data.parentEvent?.eventReference,
+      FramedEventType.quoted when entity is ModifiablePostEntity =>
+        entity.data.quotedEvent?.eventReference,
+      FramedEventType.quoted when entity is PostEntity => entity.data.quotedEvent?.eventReference,
       _ => null,
     };
   }
@@ -115,7 +117,7 @@ class _FramedEvent extends HookConsumerWidget {
     final quotedEntity = useMemoized(
       () {
         switch (ionConnectEntity) {
-          case ModifiablePostEntity():
+          case ModifiablePostEntity() || PostEntity():
             return _QuotedPost(eventReference: eventReference);
           case ArticleEntity():
             return _QuotedArticle(eventReference: eventReference);
@@ -140,9 +142,8 @@ final class _QuotedPost extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity = ref
-        .watch(ionConnectEntityProvider(eventReference: eventReference))
-        .valueOrNull as ModifiablePostEntity?;
+    final postEntity =
+        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
     return QuotedEntityFrame.post(
       child: GestureDetector(

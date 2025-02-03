@@ -1,37 +1,33 @@
 // SPDX-License-Identifier: ice License 1.0
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
-import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'post_data.c.freezed.dart';
 
-@Deprecated('Use ModifiablePostEntity instead')
 @Freezed(equal: false)
 class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, CacheableEntity {
-  @Deprecated('Use ModifiablePostEntity instead')
   const factory PostEntity({
     required String id,
     required String pubkey,
@@ -41,11 +37,9 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
     required PostData data,
   }) = _PostEntity;
 
-  @Deprecated('Use ModifiablePostEntity instead')
   const PostEntity._();
 
   /// https://github.com/nostr-protocol/nips/blob/master/01.md
-  @Deprecated('Use ModifiablePostEntity instead')
   factory PostEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
@@ -66,7 +60,7 @@ class PostEntity with _$PostEntity, IonConnectEntity, ImmutableEntity, Cacheable
 
 @freezed
 class PostData
-    with _$PostData, EntityMediaDataMixin, EntitySettingsDataMixin
+    with _$PostData, EntityDataWithMediaContent, EntityDataWithSettings, EntityDataWithRelatedEvents
     implements EventSerializable {
   const factory PostData({
     required List<TextMatch> content,
@@ -83,35 +77,20 @@ class PostData
     final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
 
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final quotedEventTag =
+        tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
     return PostData(
       content: parsedContent,
-      media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      media: EntityDataWithMediaContent.buildMedia(tags[MediaAttachment.tagName], parsedContent),
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedEvent.tagName] != null
-          ? QuotedEvent.fromTag(tags[QuotedEvent.tagName]!.first)
-          : null,
-      relatedEvents: tags[RelatedEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      quotedEvent: quotedEventTag != null ? QuotedEvent.fromTag(quotedEventTag.first) : null,
+      relatedEvents: EntityDataWithRelatedEvents.fromTags(tags),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
-    );
-  }
-
-  factory PostData.fromRawContent(String content) {
-    final parsedContent = TextParser.allMatchers().parse(content);
-
-    final hashtags = parsedContent
-        .where((match) => match.matcher is HashtagMatcher)
-        .map((match) => RelatedHashtag(value: match.text))
-        .toList();
-
-    return PostData(
-      content: parsedContent,
-      relatedHashtags: hashtags,
-      media: {},
     );
   }
 
@@ -144,21 +123,5 @@ class PostData
   @override
   String toString() {
     return 'PostData(${content.map((match) => match.text).join()})';
-  }
-
-  RelatedEvent? get parentEvent {
-    if (relatedEvents == null) return null;
-
-    RelatedEvent? rootReplyId;
-    RelatedEvent? replyId;
-    for (final relatedEvent in relatedEvents!) {
-      if (relatedEvent.marker == RelatedEventMarker.reply) {
-        replyId = relatedEvent;
-        break;
-      } else if (relatedEvent.marker == RelatedEventMarker.root) {
-        rootReplyId = relatedEvent;
-      }
-    }
-    return replyId ?? rootReplyId;
   }
 }

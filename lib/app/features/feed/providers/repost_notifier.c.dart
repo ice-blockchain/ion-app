@@ -3,6 +3,8 @@
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -30,17 +32,21 @@ class RepostNotifier extends _$RepostNotifier {
       }
 
       final data = switch (entity) {
+        PostEntity() => RepostData(
+            eventReference: entity.toEventReference(),
+            repostedEvent: await entity.toEventMessage(entity.data),
+          ),
         ModifiablePostEntity() => GenericRepostData(
-            eventReference: eventReference,
+            eventReference: entity.toEventReference(),
             repostedEvent: await entity.toEventMessage(entity.data),
             kind: ModifiablePostEntity.kind,
           ),
         ArticleEntity() => GenericRepostData(
-            eventReference: eventReference,
+            eventReference: entity.toEventReference(),
             repostedEvent: await entity.toEventMessage(entity.data),
             kind: ArticleEntity.kind,
           ),
-        _ => throw UnsupportedRepostException(eventReference),
+        _ => throw UnsupportedRepostException(entity.toEventReference()),
       };
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);

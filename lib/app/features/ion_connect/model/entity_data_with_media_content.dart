@@ -6,7 +6,7 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
-mixin EntityMediaDataMixin {
+mixin EntityDataWithMediaContent {
   List<TextMatch> get content;
   Map<String, MediaAttachment> get media;
 

@@ -4,28 +4,28 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_parent.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_media_data.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_settings_data.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/model/quoted_replaceable_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
+import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/features/ion_connect/model/related_replaceable_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'modifiable_post_data.c.freezed.dart';
@@ -71,7 +71,11 @@ class ModifiablePostEntity
 
 @freezed
 class ModifiablePostData
-    with _$ModifiablePostData, EntityMediaDataMixin, EntitySettingsDataMixin
+    with
+        _$ModifiablePostData,
+        EntityDataWithMediaContent,
+        EntityDataWithSettings,
+        EntityDataWithRelatedEvents
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
     required List<TextMatch> content,
@@ -80,8 +84,8 @@ class ModifiablePostData
     required EntityPublishedAt publishedAt,
     EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
-    QuotedReplaceableEvent? quotedEvent,
-    List<RelatedReplaceableEvent>? relatedEvents,
+    QuotedEvent? quotedEvent,
+    List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
@@ -91,10 +95,12 @@ class ModifiablePostData
     final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
 
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
+    final quotedEventTag =
+        tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
     return ModifiablePostData(
       content: parsedContent,
-      media: EntityMediaDataMixin.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      media: EntityDataWithMediaContent.buildMedia(tags[MediaAttachment.tagName], parsedContent),
       replaceableEventId:
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       publishedAt: EntityPublishedAt.fromTag(tags[EntityPublishedAt.tagName]!.first),
@@ -104,31 +110,11 @@ class ModifiablePostData
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
-      quotedEvent: tags[QuotedReplaceableEvent.tagName] != null
-          ? QuotedReplaceableEvent.fromTag(tags[QuotedReplaceableEvent.tagName]!.first)
-          : null,
-      relatedEvents:
-          tags[RelatedReplaceableEvent.tagName]?.map(RelatedReplaceableEvent.fromTag).toList(),
+      quotedEvent: quotedEventTag != null ? QuotedEvent.fromTag(quotedEventTag.first) : null,
+      relatedEvents: EntityDataWithRelatedEvents.fromTags(tags),
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
-    );
-  }
-
-  factory ModifiablePostData.fromRawContent(String content) {
-    final parsedContent = TextParser.allMatchers().parse(content);
-
-    final hashtags = parsedContent
-        .where((match) => match.matcher is HashtagMatcher)
-        .map((match) => RelatedHashtag(value: match.text))
-        .toList();
-
-    return ModifiablePostData(
-      content: parsedContent,
-      relatedHashtags: hashtags,
-      replaceableEventId: ReplaceableEventIdentifier.generate(),
-      publishedAt: EntityPublishedAt(value: DateTime.now()),
-      media: {},
     );
   }
 
@@ -168,22 +154,6 @@ class ModifiablePostData
       pubkey: pubkey,
       dTag: replaceableEventId.value,
     );
-  }
-
-  RelatedReplaceableEvent? get parentEvent {
-    if (relatedEvents == null) return null;
-
-    RelatedReplaceableEvent? rootReplyId;
-    RelatedReplaceableEvent? replyId;
-    for (final relatedEvent in relatedEvents!) {
-      if (relatedEvent.marker == RelatedEventMarker.reply) {
-        replyId = relatedEvent;
-        break;
-      } else if (relatedEvent.marker == RelatedEventMarker.root) {
-        rootReplyId = relatedEvent;
-      }
-    }
-    return replyId ?? rootReplyId;
   }
 
   @override

@@ -22,7 +22,8 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'community_definition_data.c.freezed.dart';
 
 @Freezed(equal: false)
-class CommunityDefinitionEntity with _$CommunityDefinitionEntity, IonConnectEntity {
+class CommunityDefinitionEntity
+    with _$CommunityDefinitionEntity, IonConnectEntity, ImmutableEntity {
   const factory CommunityDefinitionEntity({
     required String id,
     required String pubkey,
