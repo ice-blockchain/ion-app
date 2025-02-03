@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -23,6 +25,7 @@ class CreateArticleModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final articleState = useCreateArticle(ref);
+    final scrollController = useScrollController();
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
       return showSimpleBottomSheet<bool>(
@@ -69,47 +72,59 @@ class CreateArticleModal extends HookConsumerWidget {
                 ),
               ],
             ),
-            CreateArticleAddImage(
-              selectedImage: articleState.selectedImage,
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                left: ScreenSideOffset.defaultSmallMargin,
-                right: ScreenSideOffset.defaultSmallMargin,
-                top: ScreenSideOffset.defaultSmallMargin,
-                bottom: 6.0.s,
-              ),
-              child: TextField(
-                controller: articleState.titleController,
-                autofocus: true,
-                textInputAction: TextInputAction.next,
-                onSubmitted: (_) {
-                  articleState.textEditorController.editorFocusNode?.requestFocus();
-                  articleState.editorFocusNotifier.value = true;
-                },
-                style: context.theme.appTextThemes.headline2.copyWith(
-                  color: context.theme.appColors.primaryText,
-                ),
-                decoration: InputDecoration(
-                  hintText: context.i18n.create_article_title_placeholder,
-                  hintStyle: context.theme.appTextThemes.headline2.copyWith(
-                    color: context.theme.appColors.tertararyText,
-                  ),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
             Expanded(
-              child: ScreenSideOffset.small(
-                child: ValueListenableBuilder<bool>(
-                  valueListenable: articleState.editorFocusNotifier,
-                  builder: (context, isFocused, child) {
-                    return TextEditor(
-                      autoFocus: isFocused,
-                      articleState.textEditorController,
-                      placeholder: context.i18n.create_article_story_placeholder,
-                    );
-                  },
+              child: KeyboardDismissOnTap(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    children: [
+                      CreateArticleAddImage(
+                        selectedImage: articleState.selectedImage,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: ScreenSideOffset.defaultSmallMargin,
+                          right: ScreenSideOffset.defaultSmallMargin,
+                          top: ScreenSideOffset.defaultSmallMargin,
+                          bottom: 6.0.s,
+                        ),
+                        child: TextField(
+                          controller: articleState.titleController,
+                          autofocus: true,
+                          textInputAction: TextInputAction.next,
+                          onSubmitted: (_) {
+                            articleState.textEditorController.editorFocusNode?.requestFocus();
+                            articleState.editorFocusNotifier.value = true;
+                          },
+                          style: context.theme.appTextThemes.headline2.copyWith(
+                            color: context.theme.appColors.primaryText,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: context.i18n.create_article_title_placeholder,
+                            hintStyle: context.theme.appTextThemes.headline2.copyWith(
+                              color: context.theme.appColors.tertararyText,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      ScreenSideOffset.small(
+                        child: ValueListenableBuilder<bool>(
+                          valueListenable: articleState.editorFocusNotifier,
+                          builder: (context, isFocused, child) {
+                            return TextEditor(
+                              autoFocus: isFocused,
+                              articleState.textEditorController,
+                              placeholder: context.i18n.create_article_story_placeholder,
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16.0.s,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
