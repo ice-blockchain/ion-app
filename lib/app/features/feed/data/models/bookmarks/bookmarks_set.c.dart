@@ -6,6 +6,8 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -91,11 +93,13 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable, Rep
       postsRefs: eventMessage.tags
           .where((tag) => tag[0] == ReplaceableEventReference.tagName)
           .map(ReplaceableEventReference.fromTag)
+          .where((event) => event.kind == ModifiablePostEntity.kind)
           .toList(),
       communitiesIds: eventMessage.tags.where((tag) => tag[0] == 'h').map((tag) => tag[1]).toList(),
       articlesRefs: eventMessage.tags
           .where((tag) => tag[0] == ReplaceableEventReference.tagName)
           .map(ReplaceableEventReference.fromTag)
+          .where((event) => event.kind == ArticleEntity.kind)
           .toList(),
       type: BookmarksSetType.values.singleWhereOrNull((set) => set.dTagName == typeName) ??
           BookmarksSetType.unknown,
