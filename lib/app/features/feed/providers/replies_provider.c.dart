@@ -19,21 +19,11 @@ class Replies extends _$Replies {
 
     final subscription = ref
         .watch(ionConnectCacheStreamProvider)
-        .where((entity) => _isReply(entity, eventReference))
+        .where((entity) => _isReply(entity, eventReference) && !_isPartOfState(entity))
         .distinct()
-        .listen((entity) {
-      if (state?.data.items?.any(
-            (stateEntity) =>
-                stateEntity is ModifiablePostEntity &&
-                entity is ModifiablePostEntity &&
-                stateEntity.toEventReference() == entity.toEventReference(),
-          ) ??
-          false) {
-        return;
-      }
-
-      state = state?.copyWith.data(items: {entity, ...state?.data.items ?? {}});
-    });
+        .listen(
+          (entity) => state = state?.copyWith.data(items: {entity, ...state?.data.items ?? {}}),
+        );
     ref.onDispose(subscription.cancel);
 
     return entitiesPagedData;
@@ -42,6 +32,16 @@ class Replies extends _$Replies {
   bool _isReply(IonConnectEntity entity, EventReference parentEventReference) {
     return entity is ModifiablePostEntity &&
         entity.data.parentEvent?.eventReference == parentEventReference;
+  }
+
+  bool _isPartOfState(IonConnectEntity entity) {
+    return state?.data.items?.any(
+          (stateEntity) =>
+              stateEntity is ModifiablePostEntity &&
+              entity is ModifiablePostEntity &&
+              stateEntity.toEventReference() == entity.toEventReference(),
+        ) ??
+        false;
   }
 
   Future<void> deleteReply({
@@ -59,5 +59,10 @@ class Replies extends _$Replies {
         ),
       );
     }
+  }
+
+  Future<void> loadMore(EventReference eventReference) async {
+    final dataSource = ref.read(repliesDataSourceProvider(eventReference: eventReference));
+    await ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
   }
 }
