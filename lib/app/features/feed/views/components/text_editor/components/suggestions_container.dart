@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/cashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/suggestions_container_empty.dart';
 
 class SuggestionsContainer extends ConsumerWidget {
   const SuggestionsContainer({
@@ -21,7 +22,7 @@ class SuggestionsContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (suggestions.isEmpty) return const SizedBox.shrink();
+    if (suggestions.isEmpty) return const SuggestionsContainerEmpty();
 
     return Container(
       height: 160.0.s,

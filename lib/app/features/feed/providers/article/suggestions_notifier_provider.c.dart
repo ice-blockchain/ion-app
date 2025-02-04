@@ -12,10 +12,12 @@ class SuggestionsState {
   const SuggestionsState({
     this.suggestions = const [],
     this.taggingCharacter = '',
+    this.isVisible = false,
   });
 
   final List<String> suggestions;
   final String taggingCharacter;
+  final bool isVisible;
 }
 
 @riverpod
@@ -42,6 +44,7 @@ class SuggestionsNotifier extends _$SuggestionsNotifier {
       state = SuggestionsState(
         suggestions: suggestions,
         taggingCharacter: taggingCharacter,
+        isVisible: true,
       );
     } catch (error) {
       Logger.log('Error fetching suggestions: $error');

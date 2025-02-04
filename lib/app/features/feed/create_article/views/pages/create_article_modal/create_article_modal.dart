@@ -137,11 +137,15 @@ class CreateArticleModal extends HookConsumerWidget {
             ),
             Column(
               children: [
-                if (showMentionsSuggestions && suggestionsState.suggestions.isNotEmpty)
+                if (showMentionsSuggestions && suggestionsState.isVisible)
+                  const HorizontalSeparator(),
+                if (showMentionsSuggestions && suggestionsState.isVisible)
                   SuggestionsContainer(
                     taggingCharacter: suggestionsState.taggingCharacter,
                     suggestions: suggestionsState.suggestions,
-                    onSuggestionSelected: (suggestion) {},
+                    onSuggestionSelected: (suggestion) {
+                      ref.read(suggestionsNotifierProvider.notifier).clear();
+                    },
                   ),
                 const HorizontalSeparator(),
                 ScreenSideOffset.small(
