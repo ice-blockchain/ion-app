@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/utils/date.dart';
 
 class ArticleDetailsDateTopics extends StatelessWidget {
@@ -12,7 +13,7 @@ class ArticleDetailsDateTopics extends StatelessWidget {
   });
 
   final DateTime? publishedAt;
-  final List<String>? topics;
+  final List<ArticleTopic>? topics;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class ArticleDetailsDateTopics extends StatelessWidget {
           Row(
             children: [
               Text(
-                topics![0],
+                topics![0].getTitle(context),
                 style: context.theme.appTextThemes.caption.copyWith(
                   color: context.theme.appColors.quaternaryText,
                 ),

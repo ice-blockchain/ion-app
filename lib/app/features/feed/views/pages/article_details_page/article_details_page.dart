@@ -35,11 +35,10 @@ class ArticleDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleEntity = ref
-        .watch(ionConnectEntityProvider(eventReference: eventReference))
-        .valueOrNull as ArticleEntity?;
+    final articleEntity =
+        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-    if (articleEntity == null) {
+    if (articleEntity is! ArticleEntity) {
       return const SizedBox.shrink();
     }
 
@@ -69,10 +68,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: ArticleDetailsDateTopics(
                         publishedAt: articleEntity.data.publishedAt.value,
-                        topics: const [
-                          'Technology',
-                          'Crypto',
-                        ], // TODO: get topics from articleEntity
+                        topics: articleEntity.data.topics,
                       ),
                     ),
                     SizedBox(height: 16.0.s),

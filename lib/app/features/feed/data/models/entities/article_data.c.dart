@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
@@ -146,6 +147,7 @@ class ArticleData
         if (colorLabel != null) colorLabel!.toNamespaceTag(),
         if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
+        if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
       ],
       content: content,
     );
@@ -159,6 +161,14 @@ class ArticleData
       dTag: replaceableEventId.value,
     );
   }
+
+  List<ArticleTopic>? get topics => relatedHashtags
+      ?.map(
+        (hashtag) =>
+            ArticleTopic.values.firstWhereOrNull((topic) => topic.toShortString() == hashtag.value),
+      )
+      .nonNulls
+      .toList();
 
   static Map<String, MediaAttachment> _buildMedia(List<List<String>>? mediaTags) {
     if (mediaTags == null) return {};

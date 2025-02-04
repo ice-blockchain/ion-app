@@ -3,6 +3,8 @@
 import 'dart:async';
 
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
@@ -30,6 +32,7 @@ class CreateArticle extends _$CreateArticle {
   Future<void> create({
     required Delta content,
     required WhoCanReplySettingsOption whoCanReply,
+    required List<ArticleTopic> topics,
     String? title,
     String? summary,
     String? coverImagePath,
@@ -48,8 +51,10 @@ class CreateArticle extends _$CreateArticle {
 
       final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
 
-      final relatedHashtags =
-          extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)).toList();
+      final relatedHashtags = [
+        ...topics.map((topic) => RelatedHashtag(value: topic.toShortString())),
+        ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
+      ];
 
       final articleData = ArticleData.fromData(
         title: title,
