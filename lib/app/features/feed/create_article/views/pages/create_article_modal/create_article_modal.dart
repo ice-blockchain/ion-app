@@ -9,9 +9,13 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_add_image.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_toolbar.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/hooks/use_create_article.dart';
+import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
+import 'package:ion/app/features/feed/views/components/text_editor/components/suggestions_container.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -26,6 +30,9 @@ class CreateArticleModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final articleState = useCreateArticle(ref);
     final scrollController = useScrollController();
+    final suggestionsState = ref.watch(suggestionsNotifierProvider);
+    final showMentionsSuggestions =
+        ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showMentionsSuggestions);
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
       return showSimpleBottomSheet<bool>(
@@ -130,6 +137,12 @@ class CreateArticleModal extends HookConsumerWidget {
             ),
             Column(
               children: [
+                if (showMentionsSuggestions && suggestionsState.suggestions.isNotEmpty)
+                  SuggestionsContainer(
+                    taggingCharacter: suggestionsState.taggingCharacter,
+                    suggestions: suggestionsState.suggestions,
+                    onSuggestionSelected: (suggestion) {},
+                  ),
                 const HorizontalSeparator(),
                 ScreenSideOffset.small(
                   child: CreateArticleToolbar(

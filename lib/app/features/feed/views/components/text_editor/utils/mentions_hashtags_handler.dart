@@ -5,14 +5,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/model/feature_flags.dart';
-import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/attributes.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/cashtags_suggestions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/hashtags_suggestions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/mentions_suggestions.dart';
 
 const maxMentionsLength = 3;
 const maxHashtagsLength = 5;
@@ -29,10 +23,8 @@ class MentionsHashtagsHandler {
   final FocusNode focusNode;
   final BuildContext context;
   final WidgetRef ref;
-  OverlayEntry? overlayEntry;
   String taggingCharacter = '';
   int lastTagIndex = -1;
-  bool isLinkApplied = false;
   Timer? _debounce;
   String? previousText;
 
@@ -45,7 +37,6 @@ class MentionsHashtagsHandler {
     controller.removeListener(_editorListener);
     focusNode.removeListener(_focusListener);
     _debounce?.cancel();
-    removeOverlay();
   }
 
   void _editorListener() {
@@ -80,11 +71,12 @@ class MentionsHashtagsHandler {
           } finally {
             controller.addListener(_editorListener);
           }
-
-          showOverlay();
+          ref
+              .read(suggestionsNotifierProvider.notifier)
+              .updateSuggestions(taggingCharacter, taggingCharacter);
         } else if (char == ' ' || char == '\n') {
           _applyTagIfNeeded(cursorIndex);
-          removeOverlay();
+          ref.read(suggestionsNotifierProvider.notifier).clear();
         } else if (lastTagIndex != -1) {
           final currentTagText = text.substring(lastTagIndex, cursorIndex);
           ref
@@ -121,7 +113,7 @@ class MentionsHashtagsHandler {
     });
   }
 
-  void _onSuggestionSelected(String suggestion) {
+  void onSuggestionSelected(String suggestion) {
     final cursorIndex = controller.selection.baseOffset;
     final attribute = switch (taggingCharacter) {
       '@' => MentionAttribute.withValue(suggestion),
@@ -158,8 +150,7 @@ class MentionsHashtagsHandler {
     } finally {
       controller.addListener(_editorListener);
     }
-
-    removeOverlay();
+    ref.read(suggestionsNotifierProvider.notifier).clear();
   }
 
   void _applyTagIfNeeded(int cursorIndex) {
@@ -182,68 +173,8 @@ class MentionsHashtagsHandler {
   }
 
   void _focusListener() {
-    if (!focusNode.hasFocus) removeOverlay();
-  }
-
-  void showOverlay() {
-    final showMentionsSuggestions =
-        ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showMentionsSuggestions);
-
-    if (!showMentionsSuggestions) return;
-
-    removeOverlay();
-    overlayEntry = _createOverlayEntry();
-    Overlay.of(context).insert(overlayEntry!);
-  }
-
-  void removeOverlay() {
-    overlayEntry?.remove();
-    overlayEntry = null;
-  }
-
-  OverlayEntry _createOverlayEntry() {
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null) return OverlayEntry(builder: (_) => const SizedBox());
-
-    final position = renderBox.localToGlobal(Offset.zero);
-
-    final suggestions = ref.read(suggestionsNotifierProvider);
-    final itemsLength = taggingCharacter == '@'
-        ? (suggestions.length > maxMentionsLength ? maxMentionsLength : suggestions.length)
-        : (suggestions.length > maxHashtagsLength ? maxHashtagsLength : suggestions.length);
-    final itemSize = taggingCharacter == '@' ? mentionItemSize : hashtagItemSize;
-    final containerPadding =
-        taggingCharacter == '@' ? mentionContainerPadding : hashtagContainerPadding;
-
-    final totalSuggestionHeight = itemsLength * itemSize + containerPadding * 2;
-
-    final topPosition = position.dy - totalSuggestionHeight;
-
-    return OverlayEntry(
-      builder: (context) => Positioned(
-        left: 0,
-        top: topPosition - 8.0.s,
-        right: 0,
-        child: Container(
-          color: context.theme.appColors.secondaryBackground,
-          height: totalSuggestionHeight,
-          child: switch (taggingCharacter) {
-            '@' => MentionsSuggestions(
-                suggestions: suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
-              ),
-            '#' => HashtagsSuggestions(
-                suggestions: suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
-              ),
-            r'$' => CashtagsSuggestions(
-                suggestions: suggestions,
-                onSuggestionSelected: _onSuggestionSelected,
-              ),
-            _ => const SizedBox.shrink(),
-          },
-        ),
-      ),
-    );
+    if (!focusNode.hasFocus) {
+      ref.read(suggestionsNotifierProvider.notifier).clear();
+    }
   }
 }
