@@ -35,6 +35,7 @@ class WalletTile extends ConsumerWidget {
           if (!isSelected) {
             ref.read(selectedWalletViewIdNotifierProvider.notifier).selectedWalletId =
                 walletData.id;
+            Navigator.of(context).pop();
           }
         },
         leading: const WalletIcon(),
