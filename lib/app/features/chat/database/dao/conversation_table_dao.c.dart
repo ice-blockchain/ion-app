@@ -40,6 +40,9 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
         eventMessageTable.id.equalsExp(chatMessageTable.eventMessageId),
       ),
     ])
+      ..addColumns([
+        eventMessageTable.createdAt.max(),
+      ])
       ..groupBy([
         conversationTable.uuid,
       ])

@@ -57,20 +57,14 @@ class RecentChatsTimelinePage extends ConsumerWidget {
                 children: [
                   if (index == 0 && !showArchive) const RecentChatSeparator(isAtTop: true),
                   if (conversation.type == ConversationType.community)
-                    Column(
+                    CommunityRecentChatTile(
+                      conversation: conversation,
                       key: ValueKey(conversation.uuid),
-                      children: [
-                        CommunityRecentChatTile(conversation: conversation),
-                        const RecentChatSeparator(),
-                      ],
                     )
                   else if (conversation.type == ConversationType.e2ee)
-                    Column(
+                    E2eeRecentChatTile(
+                      conversation: conversation,
                       key: ValueKey(conversation.uuid),
-                      children: [
-                        E2eeRecentChatTile(conversation: conversation),
-                        const RecentChatSeparator(),
-                      ],
                     ),
                 ],
               );
@@ -92,11 +86,10 @@ class CommunityRecentChatTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final community = ref.watch(communityMetadataProvider(conversation.uuid)).valueOrNull;
 
+    const unreadMessagesCount = 10;
     if (community == null) {
       return const SizedBox.shrink();
     }
-
-    const unreadMessagesCount = 10;
 
     return RecentChatTile(
       uuid: conversation.uuid,
@@ -124,10 +117,14 @@ class E2eeRecentChatTile extends ConsumerWidget {
 
     final userMetadata = ref.watch(userMetadataProvider(receiver.value)).valueOrNull;
 
+    if (userMetadata == null) {
+      return const SizedBox.shrink();
+    }
+
     return RecentChatTile(
       uuid: conversation.uuid,
-      name: userMetadata?.data.name ?? '',
-      avatarUrl: userMetadata?.data.picture,
+      name: userMetadata.data.name,
+      avatarUrl: userMetadata.data.picture,
       defaultAvatar: Assets.svg.iconContactList,
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: conversation.latestMessage?.content ?? 'E2EE',

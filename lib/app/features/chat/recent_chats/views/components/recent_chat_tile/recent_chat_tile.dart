@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -59,59 +60,64 @@ class RecentChatTile extends HookConsumerWidget {
         }
       },
       behavior: HitTestBehavior.opaque,
-      child: Row(
+      child: Column(
         children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: isEditMode ? 40.0.s : 0,
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.0.s),
-              child: selectedConversationsIds.contains(uuid)
-                  ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
-                  : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
-            ),
-          ),
-          Flexible(
-            child: Row(
-              children: [
-                Avatar(
-                  imageUrl: avatarUrl,
-                  size: 40.0.s,
+          Row(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: isEditMode ? 40.0.s : 0,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 10.0.s),
+                  child: selectedConversationsIds.contains(uuid)
+                      ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
+                      : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
                 ),
-                SizedBox(width: 12.0.s),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+              ),
+              Flexible(
+                child: Row(
+                  children: [
+                    Avatar(
+                      imageUrl: avatarUrl,
+                      size: 40.0.s,
+                    ),
+                    SizedBox(width: 12.0.s),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            name,
-                            style: context.theme.appTextThemes.subtitle3.copyWith(
-                              color: context.theme.appColors.primaryText,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                name,
+                                style: context.theme.appTextThemes.subtitle3.copyWith(
+                                  color: context.theme.appColors.primaryText,
+                                ),
+                              ),
+                              ChatTimestamp(lastMessageAt),
+                            ],
                           ),
-                          ChatTimestamp(lastMessageAt),
+                          SizedBox(height: 2.0.s),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: ChatPreview(content: lastMessageContent),
+                              ),
+                              UnreadCountBadge(unreadCount: unreadMessagesCount),
+                            ],
+                          ),
                         ],
                       ),
-                      SizedBox(height: 2.0.s),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: ChatPreview(content: lastMessageContent),
-                          ),
-                          UnreadCountBadge(unreadCount: unreadMessagesCount),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+          const RecentChatSeparator(),
         ],
       ),
     );

@@ -22,9 +22,9 @@ class ChatMainPage extends HookConsumerWidget {
     useOnInit(
       () {
         ref
-          ..read(fetchConversationsProvider)
           ..read(communityJoinRequestsProvider)
-          ..read(fetchCommunityMessagesProvider);
+          ..read(fetchCommunityMessagesProvider)
+          ..read(fetchConversationsProvider);
       },
     );
 

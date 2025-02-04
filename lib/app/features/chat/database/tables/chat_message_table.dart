@@ -6,5 +6,14 @@ class ChatMessageTable extends Table {
   late final conversationId = text().references(ConversationTable, #uuid)();
   late final eventMessageId = text().references(EventMessageTable, #id)();
 
+  late final readStatus = intEnum<DeliveryStatus>().withDefault(const Constant(0))();
+
   late final isDeleted = boolean().withDefault(const Constant(false))();
+}
+
+enum DeliveryStatus {
+  none,
+  isSent,
+  isReceived,
+  isRead,
 }
