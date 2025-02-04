@@ -51,11 +51,7 @@ class NftsTab extends ConsumerWidget {
                 childAspectRatio: aspectRatio,
               ),
               delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return NftGridItem(
-                    nftData: nfts[index],
-                  );
-                },
+                (context, index) => NftGridItem(nftData: nfts[index]),
                 childCount: nfts.length,
               ),
             ),
@@ -69,21 +65,15 @@ class NftsTab extends ConsumerWidget {
       slivers: [
         SliverList.separated(
           itemCount: nfts.length,
-          separatorBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: 12.0.s,
-            );
-          },
-          itemBuilder: (BuildContext context, int index) {
-            return ScreenSideOffset.small(
-              child: NftListItem(
-                nftData: nfts[index],
-                onTap: () {
-                  NftDetailsRoute($extra: nfts[index]).push<void>(context);
-                },
-              ),
-            );
-          },
+          separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
+          itemBuilder: (context, index) => ScreenSideOffset.small(
+            child: NftListItem(
+              nftData: nfts[index],
+              onTap: () {
+                NftDetailsRoute($extra: nfts[index]).push<void>(context);
+              },
+            ),
+          ),
         ),
         const NftsTabFooter(),
       ],
