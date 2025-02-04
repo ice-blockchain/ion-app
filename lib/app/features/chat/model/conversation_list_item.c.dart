@@ -9,6 +9,7 @@ class ConversationListItem with _$ConversationListItem {
   const factory ConversationListItem({
     required String uuid,
     required ConversationType type,
+    required DateTime joinedAt,
     required bool isArchived,
     EventMessage? latestMessage,
   }) = _ConversationListItem;

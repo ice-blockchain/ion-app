@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -253,12 +254,31 @@ EntitiesDataSource _buildPostsDataSource({
     },
     requestFilters: [
       RequestFilter(
-        kinds: const [
-          PostEntity.kind,
-          ModifiablePostEntity.kind,
-          RepostEntity.kind,
-        ],
-        search: search,
+        kinds: const [ModifiablePostEntity.kind, GenericRepostEntity.kind],
+        search: SearchExtensions.withCounters(
+          [
+            ReferencesSearchExtension(contain: false),
+            ExpirationSearchExtension(expiration: false),
+            TagMarkerSearchExtension(
+              tagName: RelatedReplaceableEvent.tagName,
+              marker: RelatedEventMarker.reply.toShortString(),
+              negative: true,
+            ),
+            GenericIncludeSearchExtension(
+              forKind: ModifiablePostEntity.kind,
+              includeKind: UserMetadataEntity.kind,
+            ),
+            GenericIncludeSearchExtension(
+              forKind: ModifiablePostEntity.kind,
+              includeKind: BlockListEntity.kind,
+            ),
+            TagSearchExtension(
+              tagName: CommunityIdentifierTag.tagName,
+              contain: false,
+            ),
+          ],
+          currentPubkey: currentPubkey,
+        ).toString(),
         authors: authors,
         limit: 20,
       ),

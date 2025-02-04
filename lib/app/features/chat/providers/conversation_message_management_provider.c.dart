@@ -26,6 +26,7 @@ import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -78,6 +79,7 @@ class ConversationMessageManagementService {
     required String conversationId,
     required List<String> participantsMasterkeys,
     String? subject,
+    String? conversationUuid,
     List<MediaFile> mediaFiles = const [],
   }) async {
     if (eventSigner == null) {
@@ -86,8 +88,8 @@ class ConversationMessageManagementService {
 
     final conversationTags = _generateConversationTags(
       subject: subject,
-      conversationId: conversationId,
-      masterPubkeys: participantsMasterkeys,
+      pubkeys: participantsPubkeys,
+      conversationUuid: conversationUuid,
     );
 
     final participantsKeysMap =
@@ -223,11 +225,12 @@ class ConversationMessageManagementService {
     required String conversationId,
     required List<String> masterPubkeys,
     String? subject,
+    String? conversationUuid,
   }) {
     final tags = [
-      if (subject != null && masterPubkeys.length > 1) ['subject', subject],
-      ...masterPubkeys.map((pubkey) => ['p', pubkey]),
-      [CommunityIdentifierTag.tagName, conversationId],
+      if (subject != null && pubkeys.length > 1) ['subject', subject],
+      ...pubkeys.map((pubkey) => ['p', pubkey]),
+      CommunityIdentifierTag(value: conversationUuid ?? generateUuid()).toTag(),
     ];
 
     return tags;

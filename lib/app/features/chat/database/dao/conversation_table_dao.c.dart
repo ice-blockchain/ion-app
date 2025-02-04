@@ -39,17 +39,30 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
         eventMessageTable,
         eventMessageTable.id.equalsExp(chatMessageTable.eventMessageId),
       ),
-    ]);
+    ])
+      ..groupBy([
+        conversationTable.uuid,
+      ])
+      ..distinct;
 
     return query.watch().map((rows) {
-      return rows.map((row) {
+      final sortedRows = rows
+          .sortedBy(
+        (e) =>
+            e.readTableOrNull(eventMessageTable)?.createdAt ??
+            e.readTable(conversationTable).joinedAt,
+      )
+          .map((row) {
         return ConversationListItem(
           uuid: row.readTable(conversationTable).uuid,
           type: row.readTable(conversationTable).type,
           isArchived: row.readTable(conversationTable).isArchived,
+          joinedAt: row.readTable(conversationTable).joinedAt,
           latestMessage: row.readTableOrNull(eventMessageTable)?.toEventMessage(),
         );
       }).toList();
+
+      return sortedRows.reversed.toList();
     });
   }
 
@@ -63,19 +76,32 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
         eventMessageTable,
         eventMessageTable.id.equalsExp(chatMessageTable.eventMessageId),
       ),
-    ]);
+    ])
+      ..groupBy([
+        conversationTable.uuid,
+      ])
+      ..distinct;
 
     return query.get().then((rows) {
-      return rows.map((row) {
+      final sortedRows = rows
+          .sortedBy(
+        (e) =>
+            e.readTableOrNull(eventMessageTable)?.createdAt ??
+            e.readTable(conversationTable).joinedAt,
+      )
+          .map((row) {
         final conversation = row.readTable(conversationTable);
         final message = row.readTableOrNull(eventMessageTable);
         return ConversationListItem(
           uuid: conversation.uuid,
           type: conversation.type,
           isArchived: conversation.isArchived,
+          joinedAt: conversation.joinedAt,
           latestMessage: message?.toEventMessage(),
         );
       }).toList();
+
+      return sortedRows.reversed.toList();
     });
   }
 }

@@ -42,6 +42,7 @@ class ConversationDbRepository {
         return ConversationTableCompanion(
           uuid: Value(communityIdentifierValue),
           type: Value(conversationType),
+          joinedAt: Value(event.createdAt),
         );
       },
     ).toList();

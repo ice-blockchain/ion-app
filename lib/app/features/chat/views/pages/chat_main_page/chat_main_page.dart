@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
+import 'package:ion/app/features/chat/community/providers/fetch_community_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/providers/fetch_conversation_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
@@ -22,9 +23,12 @@ class ChatMainPage extends HookConsumerWidget {
       () {
         ref
           ..read(fetchConversationsProvider)
-          ..read(communityJoinRequestsProvider);
+          ..read(communityJoinRequestsProvider)
+          ..read(fetchCommunityMessagesProvider);
       },
     );
+
+    ref.watch(fetchConversationsProvider);
 
     final conversations = ref.watch(conversationsProvider);
 

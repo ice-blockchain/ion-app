@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/components/messaging_header/messaging_head
 import 'package:ion/app/features/chat/messages/providers/chat_messages_provider.c.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
+import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
@@ -87,9 +88,56 @@ class MessagesPage extends HookConsumerWidget {
                 Expanded(
                   child: ChatMessagesList(messages),
                 ),
-              MessagingBottomBar(conversation: conversation),
-            ],
-          ),
+              ,,,,),
+            ,,,else
+              Expanded(
+                child: ChatMessagesList(messages),
+              ),
+            MessagingBottomBar(
+              onSubmitted: (content) async {
+                final service = await ref.read(conversationMessageManagementServiceProvider.future);
+                await service.sentMessage(
+                  content: content ?? '',
+                  participantsPubkeys: _conversation.participants,
+                );
+
+                // Future<String?> lookupConversation() async {
+                //   return ref
+                //       .read(conversationsDBServiceProvider)
+                //       .lookupConversationByPubkeys(e2eeConversation!.participants.join(','));
+                // }
+
+                // Future<void> createConversation() async {
+                //   final ee2eGroupConversationService = ref.watch(e2eeConversationManagementProvider.notifier);
+
+                //   if (e2eeConversation!.type == ChatType.chat) {
+                //     await ee2eGroupConversationService
+                //         .createOneOnOneConversation(e2eeConversation!.participants);
+                //   } else if (e2eeConversation!.type == ChatType.group && e2eeConversation!.imageUrl != null) {
+                //     await ee2eGroupConversationService.createGroup(
+                //       subject: e2eeConversation!.name,
+                //       groupImage: MediaFile(
+                //         mimeType: 'image/webp',
+                //         path: e2eeConversation!.imageUrl!,
+                //         width: e2eeConversation!.imageWidth,
+                //         height: e2eeConversation!.imageHeight,
+                //       ),
+                //       participantsPubkeys: e2eeConversation!.participants,
+                //     );
+                //   }
+                // }
+
+                // Future<void> sendMessage() async {
+                //   ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                //   await (await ref.read(conversationMessageManagementServiceProvider.future)).sentMessage(
+                //     content: controller.text,
+                //     participantsPubkeys: e2eeConversation!.participants,
+                //     subject: e2eeConversation!.type == ChatType.group ? e2eeConversation!.name : null,
+                //   );
+                // }
+              },
+            ),
+          ],
         ),
       ),
     );

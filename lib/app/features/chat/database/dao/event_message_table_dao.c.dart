@@ -8,14 +8,18 @@ EventMessageTableDao eventMessageTableDao(Ref ref) =>
 class EventMessageTableDao extends DatabaseAccessor<ChatDatabase> with _$EventMessageTableDaoMixin {
   EventMessageTableDao(super.db);
 
-  Future<void> add(List<EventMessage> events) async {
-    await batch((batch) {
-      batch.insertAll(
-        db.eventMessageTable,
-        events.map(EventMessageRowClass.fromEventMessage),
-        mode: InsertMode.insertOrReplace,
-      );
-    });
+  Future<void> add(EventMessage event) async {
+    await into(db.eventMessageTable).insert(EventMessageRowClass.fromEventMessage(event));
+
+    final conversationId =
+        event.tags.firstWhere((tag) => tag[0] == CommunityIdentifierTag.tagName).last;
+
+    await into(db.chatMessageTable).insert(
+      ChatMessageTableCompanion(
+        conversationId: Value(conversationId),
+        eventMessageId: Value(event.id),
+      ),
+    );
   }
 
   // Future<EventMessageRowClass?> getLatestOfCommunity(String communityId) async {

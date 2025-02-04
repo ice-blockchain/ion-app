@@ -15,8 +15,9 @@ import 'package:ion/app/features/chat/community/providers/join_community_provide
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -84,14 +85,16 @@ class ChannelPage extends HookConsumerWidget {
             ),
             if (isJoined)
               if (canPost)
-                // TODO (kreios): Replace mock with implementation
                 MessagingBottomBar(
-                  conversation: ConversationEntity(
-                    id: '',
-                    name: '',
-                    participantsMasterkeys: [],
-                    type: ChatType.channel,
-                  ),
+                  onSubmitted: (content) async {
+                    await ref
+                        .read(createPostNotifierProvider(CreatePostOption.plain).notifier)
+                        .create(
+                          content: content ?? '',
+                          communityUuid: uuid,
+                          whoCanReply: WhoCanReplySettingsOption.everyone,
+                        );
+                  },
                 )
               else
                 ScreenSideOffset.large(

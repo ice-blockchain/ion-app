@@ -4,6 +4,7 @@ class ConversationTable extends Table {
   late final uuid = text()();
   late final type = intEnum<ConversationType>()();
 
+  late final joinedAt = dateTime()();
   late final isArchived = boolean().withDefault(const Constant(false))();
   late final isDeleted = boolean().withDefault(const Constant(false))();
 

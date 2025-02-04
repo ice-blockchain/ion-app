@@ -47,7 +47,7 @@ class RecentChatTile extends HookConsumerWidget {
         if (isEditMode) {
           ref.read(selectedConversationsIdsProvider.notifier).toggle(uuid);
         } else {
-          ChannelDetailRoute(uuid: uuid).push<void>(context);
+          ChannelRoute(uuid: uuid).push<void>(context);
           // MessagesRoute(
           //   id: conversationData.id,
           //   name: conversationData.name,
