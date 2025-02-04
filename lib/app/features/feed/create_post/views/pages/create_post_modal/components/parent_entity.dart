@@ -6,6 +6,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
+import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
@@ -60,7 +64,12 @@ class ParentEntity extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  PostBody(entity: parentEntity),
+                  switch (parentEntity) {
+                    PostEntity() || ModifiablePostEntity() => PostBody(entity: parentEntity),
+                    ArticleEntity() =>
+                      Article(eventReference: eventReference, header: const SizedBox.shrink()),
+                    _ => const SizedBox.shrink(),
+                  },
                   SizedBox(height: 12.0.s),
                   ReplyingTo(name: userMetadata.data.name),
                   SizedBox(height: 16.0.s),

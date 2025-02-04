@@ -7,6 +7,7 @@ import 'package:ion/app/components/counter_items_footer/counter_items_footer.dar
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
@@ -52,13 +53,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
     return Scaffold(
       appBar: NavigationAppBar.screen(
         actions: [
-          IconButton(
-            icon: Assets.svg.iconBookmarks.icon(
-              size: NavigationAppBar.actionButtonSide,
-              color: context.theme.appColors.primaryText,
-            ),
-            onPressed: () {},
-          ),
+          BookmarkButton(eventReference: eventReference),
         ],
       ),
       body: Column(

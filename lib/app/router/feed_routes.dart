@@ -9,6 +9,7 @@ class FeedRoutes {
     TypedGoRoute<PostDetailsRoute>(path: 'post/:eventReference'),
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:eventReference'),
+    TypedGoRoute<ArticleRepliesRoute>(path: 'article/:eventReference/replies'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
@@ -42,6 +43,17 @@ class ArticleDetailsRoute extends BaseRouteData {
   ArticleDetailsRoute({required this.eventReference})
       : super(
           child: ArticleDetailsPage(
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
+        );
+
+  final String eventReference;
+}
+
+class ArticleRepliesRoute extends BaseRouteData {
+  ArticleRepliesRoute({required this.eventReference})
+      : super(
+          child: ArticleRepliesPage(
             eventReference: EventReference.fromEncoded(eventReference),
           ),
         );

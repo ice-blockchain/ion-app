@@ -1,23 +1,18 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_input_field.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
-import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/reply_list/reply_list.dart';
-import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
-class PostDetailsPage extends ConsumerWidget {
-  const PostDetailsPage({
+class ArticleRepliesPage extends HookConsumerWidget {
+  const ArticleRepliesPage({
     required this.eventReference,
     super.key,
   });
@@ -30,32 +25,16 @@ class PostDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
-        title: Text(context.i18n.post_page_title),
+        title: Text(context.i18n.common_comments),
         actions: [
           BookmarkButton(eventReference: eventReference),
         ],
       ),
       body: Column(
         children: [
+          const HorizontalSeparator(),
           Flexible(
-            child: ReplyList(
-              eventReference: eventReference,
-              headers: [
-                SliverToBoxAdapter(
-                  child: ScreenSideOffset.small(
-                    child: Post(
-                      eventReference: eventReference,
-                      timeFormat: TimestampFormat.detailed,
-                      onDelete: () {
-                        context.pop();
-                      },
-                      isTextSelectable: true,
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(child: FeedListSeparator()),
-              ],
-            ),
+            child: ReplyList(eventReference: eventReference),
           ),
           if (canReply) ...[
             const HorizontalSeparator(),
