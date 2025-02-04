@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
@@ -11,7 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class TwoFaEditNewValueInputStep extends HookConsumerWidget {
+class TwoFaEditNewValueInputStep extends HookWidget {
   const TwoFaEditNewValueInputStep({
     required this.onNext,
     required this.inputFieldIcon,
@@ -28,7 +27,7 @@ class TwoFaEditNewValueInputStep extends HookConsumerWidget {
   final String? Function(String?)? validator;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final locale = context.i18n;
     final formKey = useRef(GlobalKey<FormState>());
     final valueController = useTextEditingController.fromValue(TextEditingValue.empty);
