@@ -110,7 +110,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       relay: relayUrl,
     );
 
-    return sign(authEvent);
+    return sign(authEvent, includeMasterPubkey: false);
   }
 
   Future<List<IonConnectEntity>?> sendEntitiesData(
@@ -208,7 +208,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return entities.isNotEmpty ? entities.first as T : null;
   }
 
-  Future<EventMessage> sign(EventSerializable entityData) async {
+  Future<EventMessage> sign(EventSerializable entityData, {bool includeMasterPubkey = true}) async {
     final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
 
@@ -223,7 +223,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return entityData.toEventMessage(
       eventSigner,
       tags: [
-        ['b', mainWallet.signingKey.publicKey],
+        if (includeMasterPubkey) ['b', mainWallet.signingKey.publicKey],
       ],
     );
   }
