@@ -10,8 +10,13 @@ import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class ReplyList extends ConsumerWidget {
-  const ReplyList({required this.eventReference, super.key});
+  const ReplyList({
+    required this.headers,
+    required this.eventReference,
+    super.key,
+  });
 
+  final List<Widget> headers;
   final EventReference eventReference;
 
   @override
@@ -21,17 +26,22 @@ class ReplyList extends ConsumerWidget {
     final hasMoreReplies =
         ref.watch(repliesProvider(eventReference).select((state) => (state?.hasMore).falseOrValue));
 
-    if (entities == null) {
-      return const EntitiesListSkeleton();
-    }
-
-    return LoadMoreBuilder.sliver(
+    return LoadMoreBuilder(
       hasMore: hasMoreReplies,
       onLoadMore: () => ref.read(repliesProvider(eventReference).notifier).loadMore(eventReference),
-      sliver: EntitiesList(
-        entities: entities.toList(),
-        separatorHeight: 1.0.s,
-        hideBlocked: false,
+      slivers: [
+        ...headers,
+        if (entities == null)
+          const EntitiesListSkeleton()
+        else
+          EntitiesList(
+            entities: entities.toList(),
+            separatorHeight: 1.0.s,
+            hideBlocked: false,
+          ),
+      ],
+      builder: (context, slivers) => CustomScrollView(
+        slivers: slivers,
       ),
     );
   }
