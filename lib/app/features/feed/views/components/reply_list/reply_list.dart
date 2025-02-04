@@ -13,12 +13,12 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ReplyList extends ConsumerWidget {
   const ReplyList({
-    required this.headers,
     required this.eventReference,
+    this.headers,
     super.key,
   });
 
-  final List<Widget> headers;
+  final List<Widget>? headers;
   final EventReference eventReference;
 
   @override
@@ -32,7 +32,7 @@ class ReplyList extends ConsumerWidget {
       hasMore: hasMoreReplies,
       onLoadMore: () => ref.read(repliesProvider(eventReference).notifier).loadMore(eventReference),
       slivers: [
-        ...headers,
+        if (headers != null) ...headers!,
         if (entities == null)
           const EntitiesListSkeleton()
         else if (entities.isEmpty)

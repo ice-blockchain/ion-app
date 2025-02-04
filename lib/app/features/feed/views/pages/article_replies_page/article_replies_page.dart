@@ -34,11 +34,7 @@ class ArticleRepliesPage extends HookConsumerWidget {
         children: [
           const HorizontalSeparator(),
           Flexible(
-            child: CustomScrollView(
-              slivers: [
-                ReplyList(eventReference: eventReference),
-              ],
-            ),
+            child: ReplyList(eventReference: eventReference),
           ),
           if (canReply) ...[
             const HorizontalSeparator(),
