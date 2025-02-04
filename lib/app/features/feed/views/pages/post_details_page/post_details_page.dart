@@ -38,8 +38,9 @@ class PostDetailsPage extends ConsumerWidget {
       body: Column(
         children: [
           Flexible(
-            child: CustomScrollView(
-              slivers: [
+            child: ReplyList(
+              eventReference: eventReference,
+              headers: [
                 SliverToBoxAdapter(
                   child: ScreenSideOffset.small(
                     child: Post(
@@ -53,7 +54,6 @@ class PostDetailsPage extends ConsumerWidget {
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),
-                ReplyList(eventReference: eventReference),
               ],
             ),
           ),
