@@ -8,7 +8,7 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   FutureOr<List<ConversationListItem>> build() async {
-    final stream = ref.watch(conversationDbRepositoryProvider).watchConversations().listen((event) {
+    final stream = ref.watch(conversationDbRepositoryProvider).watchAll().listen((event) {
       state = AsyncValue.data(event);
     });
 

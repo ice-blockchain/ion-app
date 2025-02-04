@@ -50,16 +50,8 @@ class ConversationDbRepository {
     await conversationTableDao.add(companions);
   }
 
-  Stream<List<ConversationListItem>> watchConversations() {
+  Stream<List<ConversationListItem>> watchAll() {
     return conversationTableDao.watchAll();
-    // .asyncMap((conversations) async {
-    //   final results = <(ConversationTableData, EventMessageRowClass?)>[];
-    //   for (final conversation in conversations) {
-    //     final message = await eventMessageTableDao.getLatestOfCommunity(conversation.uuid);
-    //     results.add((conversation, message));
-    //   }
-    //   return results;
-    // });
   }
 
   Future<List<ConversationListItem>> getAll() async {

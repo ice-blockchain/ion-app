@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/conversation_list_item.c.dart';
@@ -113,7 +114,13 @@ class E2eeRecentChatTile extends ConsumerWidget {
     final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
     // bool isOneOnOne = entity.relatedSubject == null;
 
-    final receiver = entity.relatedPubkeys!.last;
+    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+
+    final receiver = entity.relatedPubkeys?.firstWhere((p) => p.value != currentUserPubkey);
+
+    if (receiver == null) {
+      return const SizedBox.shrink();
+    }
 
     final userMetadata = ref.watch(userMetadataProvider(receiver.value)).valueOrNull;
 
