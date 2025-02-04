@@ -76,7 +76,7 @@ class VideoPreview extends HookConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _VideoDurationLabel(duration: controller.value.duration),
+                _VideoDurationLabel(controller: controller),
                 _MuteButton(
                   isMuted: isMuted.value,
                   onToggle: () {
@@ -94,26 +94,31 @@ class VideoPreview extends HookConsumerWidget {
 }
 
 class _VideoDurationLabel extends StatelessWidget {
-  const _VideoDurationLabel({
-    required this.duration,
-  });
+  const _VideoDurationLabel({required this.controller});
 
-  final Duration duration;
+  final VideoPlayerController controller;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 1.0.s),
-      decoration: BoxDecoration(
-        color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
-        borderRadius: BorderRadius.circular(6.0.s),
-      ),
-      child: Text(
-        formatDuration(duration),
-        style: context.theme.appTextThemes.caption.copyWith(
-          color: context.theme.appColors.secondaryBackground,
-        ),
-      ),
+    return ValueListenableBuilder(
+      valueListenable: controller,
+      builder: (context, value, child) {
+        final remaining = controller.value.duration - value.position;
+
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 4.0.s, vertical: 1.0.s),
+          decoration: BoxDecoration(
+            color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
+            borderRadius: BorderRadius.circular(6.0.s),
+          ),
+          child: Text(
+            formatDuration(remaining),
+            style: context.theme.appTextThemes.caption.copyWith(
+              color: context.theme.appColors.secondaryBackground,
+            ),
+          ),
+        );
+      },
     );
   }
 }
