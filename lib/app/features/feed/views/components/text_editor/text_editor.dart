@@ -19,6 +19,8 @@ class TextEditor extends ConsumerStatefulWidget {
     this.autoFocus = true,
   });
 
+  static final textEditorKey = GlobalKey<TextEditorState>();
+
   final QuillController controller;
   final String? placeholder;
   final FocusNode? focusNode;
@@ -31,6 +33,8 @@ class TextEditor extends ConsumerStatefulWidget {
 class TextEditorState extends ConsumerState<TextEditor> {
   late MentionsHashtagsHandler _mentionsHashtagsHandler;
   late final FocusNode _focusNode = widget.focusNode ?? FocusNode();
+
+  MentionsHashtagsHandler get mentionsHashtagsHandler => _mentionsHashtagsHandler;
 
   @override
   void initState() {

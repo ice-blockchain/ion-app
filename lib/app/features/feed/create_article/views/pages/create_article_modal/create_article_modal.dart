@@ -140,6 +140,7 @@ class CreateArticleModal extends HookConsumerWidget {
                           valueListenable: articleState.editorFocusNotifier,
                           builder: (context, isFocused, child) {
                             return TextEditor(
+                              key: TextEditor.textEditorKey,
                               autoFocus: isFocused,
                               articleState.textEditorController,
                               placeholder: context.i18n.create_article_story_placeholder,
@@ -164,7 +165,8 @@ class CreateArticleModal extends HookConsumerWidget {
                     taggingCharacter: suggestionsState.taggingCharacter,
                     suggestions: suggestionsState.suggestions,
                     onSuggestionSelected: (suggestion) {
-                      ref.read(suggestionsNotifierProvider.notifier).clear();
+                      final textEditorState = TextEditor.textEditorKey.currentState;
+                      textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(suggestion);
                     },
                   ),
                 const HorizontalSeparator(),
