@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
-import 'package:ion/app/features/user/providers/has_friends_selector_provider.c.dart';
+import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
@@ -46,7 +46,7 @@ class WalletPage extends HookConsumerWidget {
       return const NftsTab();
     }
 
-    final hasFriends = ref.watch(hasFriendsSelectorProvider).valueOrNull ?? true;
+    final showFriends = ref.watch(shouldShowFriendsSelectorProvider).valueOrNull ?? true;
 
     return Scaffold(
       body: CustomScrollView(
@@ -60,8 +60,10 @@ class WalletPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Balance(),
-                const Delimiter(),
-                if (hasFriends) const ContactsList(),
+                if (showFriends) ...[
+                  const Delimiter(),
+                  const ContactsList(),
+                ],
                 const Delimiter(),
                 WalletTabsHeader(
                   activeTab: activeTab.value,
