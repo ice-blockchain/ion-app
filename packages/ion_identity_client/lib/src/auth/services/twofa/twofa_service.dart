@@ -28,6 +28,7 @@ class TwoFAService {
     required String? signature,
     required Map<String, String>? verificationCodes,
     String? recoveryIdentityKeyName,
+    String? twoFaValueToReplace,
   }) async {
     if (recoveryIdentityKeyName != null) {
       await _dataSource.requestTwoFACode(
@@ -48,6 +49,7 @@ class TwoFAService {
       verificationCodes: verificationCodes,
       email: twoFAType.emailOrNull,
       phoneNumber: twoFAType.phoneNumberOrNull,
+      replace: twoFaValueToReplace,
     );
 
     return _extractCodeFromResponse(response);

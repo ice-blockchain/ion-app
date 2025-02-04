@@ -10,8 +10,8 @@ import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_option_selector.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 
-class DeleteTwoFASelectOptionStep extends ConsumerWidget {
-  const DeleteTwoFASelectOptionStep({
+class TwoFASelectOptionStep extends ConsumerWidget {
+  const TwoFASelectOptionStep({
     required this.formKey,
     required this.twoFaType,
     required this.onConfirm,

@@ -36,6 +36,7 @@ class TwoFADataSource {
     String? signature,
     String? email,
     String? phoneNumber,
+    String? replace,
   }) async {
     try {
       final token = tokenStorage.getToken(username: username)?.token;
@@ -47,6 +48,7 @@ class TwoFADataSource {
         verificationCodes: verificationCodes,
         email: email,
         phoneNumber: phoneNumber,
+        replace: replace,
       );
 
       return await networkClient.put(

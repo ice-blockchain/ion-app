@@ -131,12 +131,14 @@ class IONIdentityAuth {
     required String? signature,
     Map<String, String>? verificationCodes,
     String? recoveryIdentityKeyName,
+    String? twoFaValueToReplace,
   }) =>
       twoFAService.requestTwoFACode(
         twoFAType: twoFAType,
         signature: signature,
         verificationCodes: verificationCodes,
         recoveryIdentityKeyName: recoveryIdentityKeyName,
+        twoFaValueToReplace: twoFaValueToReplace,
       );
 
   Future<void> verifyTwoFA(TwoFAType twoFAType) => twoFAService.verifyTwoFA(twoFAType);

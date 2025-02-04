@@ -3,22 +3,22 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ion/app/features/protect_account/components/delete_twofa_initial_scaffold.dart';
+import 'package:ion/app/features/protect_account/components/twofa_initial_scaffold.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteAuthenticatorInitialStep extends StatelessWidget {
   const DeleteAuthenticatorInitialStep({
-    required this.onButtonPressed,
+    required this.onNext,
     super.key,
   });
 
-  final VoidCallback onButtonPressed;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
     final locale = context.i18n;
 
-    return DeleteTwoFaInitialScaffold(
+    return TwoFaInitialScaffold(
       headerIcon: AuthHeaderIcon(
         icon: Assets.svg.icon2faAuthsetup.icon(size: 36.0.s),
       ),
@@ -37,7 +37,7 @@ class DeleteAuthenticatorInitialStep extends StatelessWidget {
         ],
       ),
       buttonLabel: locale.button_delete,
-      onButtonPressed: onButtonPressed,
+      onButtonPressed: onNext,
     );
   }
 }

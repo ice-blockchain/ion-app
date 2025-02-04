@@ -81,14 +81,28 @@ extension ListenResultExtension on WidgetRef {
     ProviderListenable<AsyncValue<T>> provider,
     ValueChanged<T?> onSuccess,
   ) {
-    listen(provider, (prev, next) {
-      if (prev?.isLoading != true || next.isLoading == true || !context.isCurrentRoute) {
-        return;
-      }
+    listen(provider, (prev, next) => _handleOnSuccess(provider, prev, next, onSuccess));
+  }
 
-      if (next is AsyncData) {
-        onSuccess(next.value);
-      }
-    });
+  void listenSuccessManual<T>(
+    ProviderListenable<AsyncValue<T>> provider,
+    ValueChanged<T?> onSuccess,
+  ) {
+    listenManual(provider, (prev, next) => _handleOnSuccess(provider, prev, next, onSuccess));
+  }
+
+  void _handleOnSuccess<T>(
+    ProviderListenable<AsyncValue<T>> provider,
+    AsyncValue<T>? prev,
+    AsyncValue<T> next,
+    ValueChanged<T?> onSuccess,
+  ) {
+    if (prev?.isLoading != true || next.isLoading == true || !context.isCurrentRoute) {
+      return;
+    }
+
+    if (next is AsyncData) {
+      onSuccess(next.value);
+    }
   }
 }

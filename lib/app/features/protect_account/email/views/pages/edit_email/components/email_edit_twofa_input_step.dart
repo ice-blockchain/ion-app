@@ -8,18 +8,22 @@ import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/compon
 import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
 import 'package:ion/app/features/protect_account/components/twofa_input_step.dart';
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
+import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
-class DeleteAuthenticatorInputStep extends ConsumerWidget {
-  const DeleteAuthenticatorInputStep({
+class EmailEditTwoFaInputStep extends ConsumerWidget {
+  const EmailEditTwoFaInputStep({
+    required this.email,
     required this.onNext,
     required this.onPrevious,
     super.key,
   });
 
+  final String email;
   final VoidCallback onNext;
   final VoidCallback onPrevious;
 
@@ -27,14 +31,11 @@ class DeleteAuthenticatorInputStep extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
 
-    _listenDeleteTwoFAResult(ref);
-
     return TwoFAStepScaffold(
-      headerTitle: locale.authenticator_delete_title,
-      headerDescription: locale.authenticator_delete_description,
-      headerIcon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
+      headerTitle: locale.two_fa_edit_email_title,
+      headerDescription: locale.two_fa_edit_email_options_description,
+      headerIcon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       onBackPress: onPrevious,
-      contentPadding: 8.0.s,
       child: TwoFAInputStep(
         onConfirm: (controllers) => _onConfirm(ref, controllers),
         twoFaTypes: ref.watch(selectedTwoFaOptionsProvider).toList(),
@@ -46,17 +47,20 @@ class DeleteAuthenticatorInputStep extends ConsumerWidget {
     WidgetRef ref,
     Map<TwoFaType, String> controllers,
   ) async {
-    await ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
-      TwoFaTypeAdapter(TwoFaType.auth).twoFAType,
-      [
-        for (final controller in controllers.entries)
-          TwoFaTypeAdapter(controller.key, controller.value).twoFAType,
-      ],
-    );
+    _listenRequestTwoFAResult(ref);
+    final linkedEmail = await ref.read(linkedEmailProvider.future);
+    await ref.read(requestTwoFaCodeNotifierProvider.notifier).requestEditTwoFaCode(
+          TwoFAType.email(email),
+          verificationCodes: [
+            for (final controller in controllers.entries)
+              TwoFaTypeAdapter(controller.key, controller.value).twoFAType,
+          ],
+          oldTwoFaValue: linkedEmail,
+        );
   }
 
-  void _listenDeleteTwoFAResult(WidgetRef ref) {
-    ref.listen(deleteTwoFANotifierProvider, (prev, next) {
+  void _listenRequestTwoFAResult(WidgetRef ref) {
+    ref.listenManual(requestTwoFaCodeNotifierProvider, (prev, next) {
       if (prev?.isLoading != true) {
         return;
       }

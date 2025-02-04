@@ -9,13 +9,14 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class DeleteTwoFAStepScaffold extends ConsumerWidget {
-  const DeleteTwoFAStepScaffold({
+class TwoFAStepScaffold extends ConsumerWidget {
+  const TwoFAStepScaffold({
     required this.headerTitle,
     required this.headerDescription,
     required this.headerIcon,
     required this.child,
     this.contentPadding,
+    this.onBackPress,
     super.key,
   });
 
@@ -24,6 +25,7 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
   final Widget headerIcon;
   final Widget child;
   final double? contentPadding;
+  final VoidCallback? onBackPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,6 +39,7 @@ class DeleteTwoFAStepScaffold extends ConsumerWidget {
               actions: const [
                 NavigationCloseButton(),
               ],
+              onBackPress: onBackPress,
             ),
             toolbarHeight: NavigationAppBar.modalHeaderHeight,
             automaticallyImplyLeading: false,

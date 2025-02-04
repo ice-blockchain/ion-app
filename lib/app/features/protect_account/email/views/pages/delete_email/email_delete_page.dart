@@ -8,6 +8,7 @@ import 'package:ion/app/features/protect_account/email/views/pages/delete_email/
 import 'package:ion/app/features/protect_account/email/views/pages/delete_email/components/delete_email_select_options_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/delete_twofa_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class EmailDeletePage extends HookWidget {
   const EmailDeletePage({
@@ -24,12 +25,16 @@ class EmailDeletePage extends HookWidget {
       ],
       child: switch (step.value) {
         DeleteTwoFAStep.initial => DeleteEmailInitialStep(
-            onButtonPressed: () => step.value = DeleteTwoFAStep.selectOptions,
+            onNext: () => step.value = DeleteTwoFAStep.selectOptions,
           ),
         DeleteTwoFAStep.selectOptions => DeleteEmailSelectOptionsStep(
-            onButtonPressed: () => step.value = DeleteTwoFAStep.input,
+            onNext: () => step.value = DeleteTwoFAStep.input,
+            onPrevious: () => step.value = DeleteTwoFAStep.initial,
           ),
-        DeleteTwoFAStep.input => const DeleteEmailInputStep(),
+        DeleteTwoFAStep.input => DeleteEmailInputStep(
+            onNext: () => EmailDeleteSuccessRoute().push<void>(context),
+            onPrevious: () => step.value = DeleteTwoFAStep.selectOptions,
+          ),
       },
     );
   }

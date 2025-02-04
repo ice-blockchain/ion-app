@@ -5,29 +5,22 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/card/warning_card.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
-import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
-import 'package:ion/app/features/protect_account/authenticator/data/adapter/twofa_type_adapter.dart';
-import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
-import 'package:ion/app/features/protect_account/email/providers/linked_phone_provider.c.dart';
-import 'package:ion/app/features/protect_account/secure_account/providers/delete_twofa_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
-class DeleteTwoFAInputStep extends HookConsumerWidget {
-  const DeleteTwoFAInputStep({
-    required this.twoFaToDelete,
+class TwoFAInputStep extends HookConsumerWidget {
+  const TwoFAInputStep({
     required this.twoFaTypes,
-    required this.onDeleteSuccess,
+    required this.onConfirm,
     super.key,
   });
 
-  final TwoFaType twoFaToDelete;
   final List<TwoFaType> twoFaTypes;
-  final VoidCallback onDeleteSuccess;
+  final void Function(Map<TwoFaType, String> values) onConfirm;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,8 +36,6 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
       for (final type in twoFaTypes)
         type: useTextEditingController.fromValue(TextEditingValue.empty),
     };
-
-    _listenDeleteTwoFAResult(ref);
 
     return ScreenSideOffset.large(
       child: Form(
@@ -83,17 +74,22 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
                     SizedBox(
                       height: 24.0.s,
                     ),
-                    Button(
-                      mainAxisSize: MainAxisSize.max,
-                      label: Text(context.i18n.button_confirm),
-                      onPressed: () {
-                        if (formKey.value.currentState!.validate()) {
-                          _onConfirm(ref, controllers);
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 48.0.s,
+                    ScreenBottomOffset(
+                      margin: 48.0.s,
+                      child: Button(
+                        mainAxisSize: MainAxisSize.max,
+                        label: Text(context.i18n.button_confirm),
+                        onPressed: () {
+                          if (formKey.value.currentState!.validate()) {
+                            onConfirm(
+                              {
+                                for (final controller in controllers.entries)
+                                  controller.key: controller.value.text,
+                              },
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -103,49 +99,5 @@ class DeleteTwoFAInputStep extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _onConfirm(
-    WidgetRef ref,
-    Map<TwoFaType, TextEditingController> controllers,
-  ) async {
-    final twoFaValue = await _getTwoFaValue(ref, twoFaToDelete);
-    await ref.read(deleteTwoFANotifierProvider.notifier).deleteTwoFa(
-      TwoFaTypeAdapter(twoFaToDelete, twoFaValue).twoFAType,
-      [
-        for (final controller in controllers.entries)
-          TwoFaTypeAdapter(controller.key, controller.value.text).twoFAType,
-      ],
-    );
-  }
-
-  void _listenDeleteTwoFAResult(WidgetRef ref) {
-    ref.listen(deleteTwoFANotifierProvider, (prev, next) {
-      if (prev?.isLoading != true) {
-        return;
-      }
-
-      if (next.hasError) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showSimpleBottomSheet<void>(
-            context: ref.context,
-            child: const TwoFaTryAgainPage(),
-          );
-        });
-        return;
-      }
-
-      if (next.hasValue) {
-        onDeleteSuccess();
-      }
-    });
-  }
-
-  Future<String?> _getTwoFaValue(WidgetRef ref, TwoFaType type) async {
-    return switch (type) {
-      TwoFaType.email => ref.read(linkedEmailProvider.future),
-      TwoFaType.sms => ref.read(linkedPhoneProvider.future),
-      TwoFaType.auth => null,
-    };
   }
 }

@@ -5,21 +5,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header_icon.dart';
-import 'package:ion/app/features/protect_account/components/delete_twofa_initial_scaffold.dart';
+import 'package:ion/app/features/protect_account/components/twofa_initial_scaffold.dart';
 import 'package:ion/app/features/protect_account/email/providers/linked_email_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeleteEmailInitialStep extends StatelessWidget {
-  const DeleteEmailInitialStep({required this.onButtonPressed, super.key});
+  const DeleteEmailInitialStep({required this.onNext, super.key});
 
-  final VoidCallback onButtonPressed;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
     final locale = context.i18n;
 
-    return DeleteTwoFaInitialScaffold(
+    return TwoFaInitialScaffold(
       headerIcon: AuthHeaderIcon(
         icon: Assets.svg.icon2faEmailauth.icon(size: 36.0.s),
       ),
@@ -34,7 +35,7 @@ class DeleteEmailInitialStep extends StatelessWidget {
         ],
       ),
       buttonLabel: locale.two_fa_delete_email_button,
-      onButtonPressed: onButtonPressed,
+      onButtonPressed: onNext,
     );
   }
 }
@@ -84,7 +85,7 @@ class _EditEmailButton extends StatelessWidget {
       minimumSize: Size(0.0.s, 44.0.s),
       leadingIcon: Assets.svg.iconEditLink.icon(size: 24.0.s),
       borderColor: colors.onTerararyFill,
-      onPressed: () {},
+      onPressed: () => EmailEditRoute().push<void>(context),
     );
   }
 }

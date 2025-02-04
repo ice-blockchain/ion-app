@@ -12,6 +12,7 @@ class InitTwoFARequest with _$InitTwoFARequest {
     Map<String, String>? verificationCodes,
     @JsonKey(includeIfNull: false) String? email,
     @JsonKey(includeIfNull: false) String? phoneNumber,
+    @JsonKey(includeIfNull: false) String? replace,
   }) = _InitTwoFARequest;
 
   factory InitTwoFARequest.fromJson(Map<String, dynamic> json) => _$InitTwoFARequestFromJson(json);

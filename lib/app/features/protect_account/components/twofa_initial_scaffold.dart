@@ -10,8 +10,8 @@ import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_h
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class DeleteTwoFaInitialScaffold extends StatelessWidget {
-  const DeleteTwoFaInitialScaffold({
+class TwoFaInitialScaffold extends StatelessWidget {
+  const TwoFaInitialScaffold({
     required this.headerIcon,
     required this.headerTitle,
     required this.prompt,

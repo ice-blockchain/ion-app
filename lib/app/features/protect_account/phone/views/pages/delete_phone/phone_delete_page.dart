@@ -8,6 +8,7 @@ import 'package:ion/app/features/protect_account/phone/views/pages/delete_phone/
 import 'package:ion/app/features/protect_account/phone/views/pages/delete_phone/components/delete_phone_select_options_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/data/models/delete_twofa_step.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class PhoneDeletePage extends HookWidget {
   const PhoneDeletePage({super.key});
@@ -22,12 +23,16 @@ class PhoneDeletePage extends HookWidget {
       ],
       child: switch (step.value) {
         DeleteTwoFAStep.initial => DeletePhoneInitialStep(
-            onButtonPressed: () => step.value = DeleteTwoFAStep.selectOptions,
+            onNext: () => step.value = DeleteTwoFAStep.selectOptions,
           ),
         DeleteTwoFAStep.selectOptions => DeletePhoneSelectOptionsStep(
-            onButtonPressed: () => step.value = DeleteTwoFAStep.input,
+            onNext: () => step.value = DeleteTwoFAStep.input,
+            onPrevious: () => step.value = DeleteTwoFAStep.initial,
           ),
-        DeleteTwoFAStep.input => const DeletePhoneInputStep(),
+        DeleteTwoFAStep.input => DeletePhoneInputStep(
+            onNext: () => PhoneDeleteSuccessRoute().push<void>(context),
+            onPrevious: () => step.value = DeleteTwoFAStep.selectOptions,
+          ),
       },
     );
   }
