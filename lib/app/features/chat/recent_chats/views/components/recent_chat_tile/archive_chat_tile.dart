@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -65,7 +65,12 @@ class ArchiveChatTile extends ConsumerWidget {
                               color: context.theme.appColors.primaryText,
                             ),
                           ),
-                          ChatTimestamp(conversations.map((c) => c.lastMessageAt).nonNulls.max),
+                          ChatTimestamp(
+                            conversations
+                                .map((c) => c.latestMessage?.createdAt ?? c.joinedAt)
+                                .nonNulls
+                                .max,
+                          ),
                         ],
                       ),
                       SizedBox(height: 2.0.s),
@@ -74,14 +79,13 @@ class ArchiveChatTile extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: ChatPreview(
-                              content: conversations.map((c) => c.name).join(', '),
+                              content:
+                                  conversations.map((c) => c.latestMessage?.content).join(', '),
                               maxLines: 1,
                             ),
                           ),
                           UnreadCountBadge(
-                            unreadCount: conversations
-                                .map((c) => c.unreadMessagesCount)
-                                .reduce((a, b) => a + b),
+                            unreadCount: conversations.map((c) => 10).reduce((a, b) => a + b),
                           ),
                         ],
                       ),

@@ -4,17 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
-import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
@@ -26,7 +23,6 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -49,7 +45,7 @@ class CreateGroupModal extends HookConsumerWidget {
           ]
         : <String>[];
 
-    final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
+    // final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
 
     useEffect(
       () {
@@ -172,18 +168,18 @@ class CreateGroupModal extends HookConsumerWidget {
             margin: 32.0.s,
             child: ScreenSideOffset.large(
               child: Button(
-                disabled: e2EEConversationManagement.maybeWhen(
-                  loading: () => true,
-                  orElse: () => false,
-                ),
+                // disabled: e2EEConversationManagement.maybeWhen(
+                //   loading: () => true,
+                //   orElse: () => false,
+                // ),
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: e2EEConversationManagement.maybeWhen(
-                  loading: () => const IONLoadingIndicator(),
-                  orElse: () => Assets.svg.iconPlusCreatechannel.icon(
-                    color: context.theme.appColors.onPrimaryAccent,
-                  ),
-                ),
+                // leadingIcon: e2EEConversationManagement.maybeWhen(
+                //   loading: () => const IONLoadingIndicator(),
+                //   orElse: () => Assets.svg.iconPlusCreatechannel.icon(
+                //     color: context.theme.appColors.onPrimaryAccent,
+                //   ),
+                // ),
                 label: Text(context.i18n.group_create_create_button),
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
@@ -196,30 +192,14 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      if (groupPicture == null) {
-                        return;
-                      }
-
-                      final conversationId = generateUuid();
-
-                      await ref.read(e2eeConversationManagementProvider.notifier).createGroup(
-                            groupImage: groupPicture,
-                            conversationId: conversationId,
-                            subject: createGroupForm.name!,
-                            participantsMasterkeys: participantsMasterkeys,
-                          );
-
-                      if (context.mounted) {
-                        Navigator.maybeOf(context, rootNavigator: true)?.pop();
-
-                        await MessagesRoute(
-                          id: conversationId,
-                          chatType: ChatType.group,
-                          name: createGroupForm.name!,
-                          imageUrl: groupPicture.path,
-                          participantsMasterkeys: participantsMasterkeys,
-                        ).push<void>(context);
-                      }
+                      // MessagesRoute(
+                      //   participants: members,
+                      //   chatType: ChatType.group,
+                      //   name: createGroupForm.name!,
+                      //   imageUrl: groupPicture!.path,
+                      //   imageWidth: groupPicture.width,
+                      //   imageHeight: groupPicture.height,
+                      // ).push<void>(context);
                     } else {
                       throw UnimplementedError();
                     }

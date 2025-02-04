@@ -5,6 +5,7 @@ import 'package:ion/app/features/chat/community/models/entities/community_join_d
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,13 +32,17 @@ class ConversationDbRepository {
   Future<void> addConversation(List<EventMessage> events) async {
     final companions = events.map(
       (event) {
-        final conversationType = event.kind == CommunityJoinEntity.kind
-            ? ConversationType.community
-            : ConversationType.e2ee;
         //extract it from tags by CommunityIdentifierTag
         final tags = groupBy(event.tags, (tag) => tag[0]);
         final communityIdentifierValue =
             tags[CommunityIdentifierTag.tagName]!.map(CommunityIdentifierTag.fromTag).first.value;
+        final subject = tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).firstOrNull;
+
+        final conversationType = event.kind == CommunityJoinEntity.kind
+            ? ConversationType.community
+            : subject == null
+                ? ConversationType.oneToOne
+                : ConversationType.encryptedGroup;
 
         return ConversationTableCompanion(
           uuid: Value(communityIdentifierValue),

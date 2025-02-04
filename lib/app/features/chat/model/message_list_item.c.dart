@@ -28,7 +28,7 @@ sealed class MessageListItem with _$MessageListItem {
     required MessageAuthor author,
     required String text,
     required DateTime time,
-    RepliedMessage? repliedMessage,
+    // RepliedMessage? repliedMessage,
   }) = TextItem;
 
   @Implements<MessageWithAuthor>()

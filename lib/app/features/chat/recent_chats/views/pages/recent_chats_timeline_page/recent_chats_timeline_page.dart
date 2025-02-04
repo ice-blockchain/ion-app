@@ -62,7 +62,12 @@ class RecentChatsTimelinePage extends ConsumerWidget {
                       conversation: conversation,
                       key: ValueKey(conversation.uuid),
                     )
-                  else if (conversation.type == ConversationType.e2ee)
+                  else if (conversation.type == ConversationType.oneToOne)
+                    E2eeRecentChatTile(
+                      conversation: conversation,
+                      key: ValueKey(conversation.uuid),
+                    )
+                  else if (conversation.type == ConversationType.encryptedGroup)
                     E2eeRecentChatTile(
                       conversation: conversation,
                       key: ValueKey(conversation.uuid),
@@ -137,5 +142,16 @@ class E2eeRecentChatTile extends ConsumerWidget {
       lastMessageContent: conversation.latestMessage?.content ?? 'E2EE',
       unreadMessagesCount: 0,
     );
+  }
+}
+
+class EncryptedGroupRecentChatTile extends ConsumerWidget {
+  const EncryptedGroupRecentChatTile({required this.conversation, super.key});
+
+  final ConversationListItem conversation;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const Text('Encrypted Group');
   }
 }

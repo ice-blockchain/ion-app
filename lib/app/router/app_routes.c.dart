@@ -21,7 +21,6 @@ import 'package:ion/app/features/chat/community/channel/views/pages/create_chann
 import 'package:ion/app/features/chat/community/channel/views/pages/edit_channel_page/edit_channel_page.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
@@ -334,32 +333,15 @@ class WalletMainModalRoute extends BaseRouteData {
 @TypedGoRoute<MessagesRoute>(path: '/messages')
 class MessagesRoute extends BaseRouteData {
   MessagesRoute({
-    required this.id,
-    required this.name,
-    required this.chatType,
-    this.nickname,
-    this.imageUrl,
-    this.participantsMasterkeys = const [],
+    required this.uuid,
   }) : super(
           child: MessagesPage(
-            ConversationEntity(
-              id: id,
-              name: name,
-              type: chatType,
-              imageUrl: imageUrl,
-              nickname: nickname ?? '',
-              participantsMasterkeys: participantsMasterkeys,
-            ),
+            uuid: uuid,
           ),
           type: IceRouteType.single,
         );
 
-  final String id;
-  final String name;
-  final String? nickname;
-  final ChatType chatType;
-  final String? imageUrl;
-  final List<String> participantsMasterkeys;
+  final String uuid;
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

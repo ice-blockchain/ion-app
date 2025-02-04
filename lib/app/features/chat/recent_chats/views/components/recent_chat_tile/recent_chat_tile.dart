@@ -6,7 +6,6 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/avatar/default_avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/providers/mock.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
@@ -199,42 +198,42 @@ class ChatPreview extends StatelessWidget {
   }
 }
 
-class RecentChatMessageIcon extends StatelessWidget {
-  const RecentChatMessageIcon({required this.message, this.color, super.key});
+// class RecentChatMessageIcon extends StatelessWidget {
+//   const RecentChatMessageIcon({required this.message, this.color, super.key});
 
-  final RecentChatMessage message;
-  final Color? color;
+//   final RecentChatMessage message;
+//   final Color? color;
 
-  @override
-  Widget build(BuildContext context) {
-    final messageIconPath = _getMessageIcon();
+//   @override
+//   Widget build(BuildContext context) {
+//     final messageIconPath = _getMessageIcon();
 
-    if (messageIconPath != null) {
-      return Padding(
-        padding: EdgeInsets.only(right: 2.0.s),
-        child: messageIconPath.icon(
-          size: 16.0.s,
-          color: color ?? context.theme.appColors.onTertararyBackground,
-        ),
-      );
-    }
-    return const SizedBox.shrink();
-  }
+//     if (messageIconPath != null) {
+//       return Padding(
+//         padding: EdgeInsets.only(right: 2.0.s),
+//         child: messageIconPath.icon(
+//           size: 16.0.s,
+//           color: color ?? context.theme.appColors.onTertararyBackground,
+//         ),
+//       );
+//     }
+//     return const SizedBox.shrink();
+//   }
 
-  String? _getMessageIcon() => switch (message) {
-        TextRecentChatMessage _ => null,
-        SystemRecentChatMessage _ => null,
-        VideoRecentChatMessage _ => Assets.svg.iconFeedVideos,
-        DocumentRecentChatMessage _ => Assets.svg.iconChatFile,
-        LinkRecentChatMessage _ => Assets.svg.iconArticleLink,
-        ProfileShareRecentChatMessage _ => Assets.svg.iconProfileUsertab,
-        PollRecentChatMessage _ => Assets.svg.iconPostPoll,
-        MoneyRequestRecentChatMessage _ => Assets.svg.iconProfileTips,
-        PhotoRecentChatMessage _ => Assets.svg.iconLoginCamera,
-        VoiceRecentChatMessage _ => Assets.svg.iconChatVoicemessage,
-        ReplayRecentChatMessage _ => Assets.svg.iconChatReplymessage,
-      };
-}
+//   String? _getMessageIcon() => switch (message) {
+//         TextRecentChatMessage _ => null,
+//         SystemRecentChatMessage _ => null,
+//         VideoRecentChatMessage _ => Assets.svg.iconFeedVideos,
+//         DocumentRecentChatMessage _ => Assets.svg.iconChatFile,
+//         LinkRecentChatMessage _ => Assets.svg.iconArticleLink,
+//         ProfileShareRecentChatMessage _ => Assets.svg.iconProfileUsertab,
+//         PollRecentChatMessage _ => Assets.svg.iconPostPoll,
+//         MoneyRequestRecentChatMessage _ => Assets.svg.iconProfileTips,
+//         PhotoRecentChatMessage _ => Assets.svg.iconLoginCamera,
+//         VoiceRecentChatMessage _ => Assets.svg.iconChatVoicemessage,
+//         ReplayRecentChatMessage _ => Assets.svg.iconChatReplymessage,
+//       };
+// }
 
 class UnreadCountBadge extends StatelessWidget {
   const UnreadCountBadge({required this.unreadCount, super.key});

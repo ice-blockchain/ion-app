@@ -26,6 +26,7 @@ Future<List<EntitiesDataSource>> searchUsersDataSource(Ref ref) async {
           search: SearchExtensions(
             [
               QuerySearchExtension(searchQuery: searchText),
+              QuerySearchExtension(searchQuery: '"#t":""'),
             ],
           ).toString(),
           limit: 20,

@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/database/repositories/conversation_db_repository.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
@@ -34,10 +33,12 @@ class FetchConversations extends _$FetchConversations {
       throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate =
-        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final pubkey = eventSigner.publicKey;
 
-    final sinceDate = lastMessageDate?.add(const Duration(days: -2));
+    // final lastMessageDate =
+    //     await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+
+    // final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
     final requestFilter = RequestFilter(
       kinds: const [IonConnectGiftWrapServiceImpl.kind],
@@ -48,7 +49,7 @@ class FetchConversations extends _$FetchConversations {
         ],
         '#p': [masterPubkey],
       },
-      since: sinceDate,
+      // since: sinceDate,
     );
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);

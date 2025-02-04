@@ -1,274 +1,271 @@
-// SPDX-License-Identifier: ice License 1.0
+// // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
-import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+// import 'dart:convert';
 
-part 'e2ee_conversation_management_provider.c.g.dart';
+// import 'package:collection/collection.dart';
+// import 'package:ion/app/exceptions/exceptions.dart';
+// import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+// import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
+// import 'package:ion/app/features/chat/model/chat_type.dart';
+// import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
+// import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+// import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
+// import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
+// import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
+// import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
+// import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+// import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+// import 'package:ion/app/services/media_service/media_service.c.dart';
+// import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-@riverpod
-class E2eeConversationManagement extends _$E2eeConversationManagement {
-  @override
-  FutureOr<void> build() async {}
+// part 'e2ee_conversation_management_provider.c.g.dart';
 
-  Future<void> createGroup({
-    required String subject,
-    required MediaFile groupImage,
-    required String conversationId,
-    required List<String> participantsMasterkeys,
-  }) async {
-    state = const AsyncLoading();
+// @riverpod
+// class E2eeConversationManagement extends _$E2eeConversationManagement {
+//   @override
+//   FutureOr<void> build() async {}
 
-    state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+//   Future<void> createOneOnOneConversation(
+//     List<String> participantsPubkeys,
+//   ) async {
+//     final conversationMessageManagementService =
+//         await ref.read(conversationMessageManagementServiceProvider.future);
 
-      await conversationMessageManagementService.sendMessage(
-        content: '',
-        subject: subject,
-        mediaFiles: [groupImage],
-        conversationId: conversationId,
-        participantsMasterkeys: participantsMasterkeys,
-      );
-    });
-  }
+//     await conversationMessageManagementService.sentMessage(
+//       content: '',
+//       participantsPubkeys: participantsPubkeys,
+//     );
+//   }
 
-  Future<void> addParticipant(
-    String conversationSubject,
-    String participantPubkey,
-  ) async {
-    assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
-    assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
-    /*
-    //TODO: Update archived bookmark
+//   Future<void> createGroup({
+//     required String subject,
+//     required MediaFile groupImage,
+//     required List<String> participantsPubkeys,
+//   }) async {
+//     state = const AsyncLoading();
 
-    state = const AsyncLoading();
+//     state = await AsyncValue.guard(() async {
+//       final conversationMessageManagementService =
+//           await ref.read(conversationMessageManagementServiceProvider.future);
 
-    state = await AsyncValue.guard(() async {
-      final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
+//       await conversationMessageManagementService.sentMessage(
+//         content: '',
+//         subject: subject,
+//         mediaFiles: [groupImage],
+//         participantsPubkeys: participantsPubkeys,
+//       );
+//     });
+//   }
 
-      final conversationsEntities = await databaseService.getAllConversations();
+//   Future<void> addParticipant(
+//     String conversationSubject,
+//     String participantPubkey,
+//   ) async {
+//     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
+//     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-      final pubkeys = conversationsEntities
-              .singleWhere(
-                (e) => e.data.relatedSubject?.value == conversationSubject,
-                orElse: () => throw ConversationNotFoundException(),
-              )
-              .data
-              .relatedPubkeys
-              ?.map((e) => e.value)
-              .toList() ??
-          [];
+//     //TODO: Update archived bookmark
 
-      await conversationMessageManagementService.sentMessage(
-        content: '',
-        subject: conversationSubject,
-        participants: pubkeys..add(participantPubkey),
-      );
-    });
-    */
-  }
+//     state = const AsyncLoading();
 
-  Future<void> removeParticipant(
-    String conversationSubject,
-    String participantPubkey,
-  ) async {
-    assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
-    assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
-    /*
-    //TODO: Update archived bookmark
+//     state = await AsyncValue.guard(() async {
+//       final databaseService = ref.read(conversationsDBServiceProvider);
+//       final conversationMessageManagementService =
+//           await ref.read(conversationMessageManagementServiceProvider.future);
 
-    state = const AsyncLoading();
+//       final conversationsEntities = await databaseService.getAllConversations();
 
-    state = await AsyncValue.guard(() async {
-      final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
+//       final pubkeys = conversationsEntities
+//               .singleWhere(
+//                 (e) => e.data.relatedSubject?.value == conversationSubject,
+//                 orElse: () => throw ConversationNotFoundException(),
+//               )
+//               .data
+//               .relatedPubkeys
+//               ?.map((e) => e.value)
+//               .toList() ??
+//           [];
 
-      final conversationsEventMessages = await databaseService.getAllConversations();
+//       await conversationMessageManagementService.sentMessage(
+//         content: '',
+//         subject: conversationSubject,
+//         participantsPubkeys: pubkeys..add(participantPubkey),
+//       );
+//     });
+//   }
 
-      final pubkeys = conversationsEventMessages
-              .singleWhere(
-                (e) => e.data.relatedSubject?.value == conversationSubject,
-                orElse: () => throw ConversationNotFoundException(),
-              )
-              .data
-              .relatedPubkeys
-              ?.map((e) => e.value)
-              .toList() ??
-          [];
+//   Future<void> removeParticipant(
+//     String conversationSubject,
+//     String participantPubkey,
+//   ) async {
+//     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
+//     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
 
-      if (!pubkeys.contains(participantPubkey)) {
-        throw ParticipantNotFoundException();
-      }
+//     //TODO: Update archived bookmark
 
-      await conversationMessageManagementService.sentMessage(
-        content: '',
-        subject: conversationSubject,
-        participants: pubkeys..remove(participantPubkey),
-      );
-    });
-    */
-  }
+//     state = const AsyncLoading();
 
-  Future<void> changeSubject(
-    String currentSubject,
-    String newSubject,
-  ) async {
-    assert(currentSubject.isNotEmpty, 'Current conversation subject is empty');
-    assert(newSubject.isNotEmpty, 'New conversation subject is empty');
-    /*
-    //TODO: Update archived bookmark
+//     state = await AsyncValue.guard(() async {
+//       final databaseService = ref.read(conversationsDBServiceProvider);
+//       final conversationMessageManagementService =
+//           await ref.read(conversationMessageManagementServiceProvider.future);
 
-    state = const AsyncLoading();
+//       final conversationsEventMessages = await databaseService.getAllConversations();
 
-    state = await AsyncValue.guard(() async {
-      final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
+//       final pubkeys = conversationsEventMessages
+//               .singleWhere(
+//                 (e) => e.data.relatedSubject?.value == conversationSubject,
+//                 orElse: () => throw ConversationNotFoundException(),
+//               )
+//               .data
+//               .relatedPubkeys
+//               ?.map((e) => e.value)
+//               .toList() ??
+//           [];
 
-      final conversationsEventMessages = await databaseService.getAllConversations();
+//       if (!pubkeys.contains(participantPubkey)) {
+//         throw ParticipantNotFoundException();
+//       }
 
-      final pubkeys = conversationsEventMessages
-              .singleWhere(
-                (e) => e.data.relatedSubject?.value == currentSubject,
-                orElse: () => throw ConversationNotFoundException(),
-              )
-              .data
-              .relatedPubkeys
-              ?.map((e) => e.value)
-              .toList() ??
-          [];
+//       await conversationMessageManagementService.sentMessage(
+//         content: '',
+//         subject: conversationSubject,
+//         participantsPubkeys: pubkeys..remove(participantPubkey),
+//       );
+//     });
+//   }
 
-      await conversationMessageManagementService.sentMessage(
-        content: '',
-        subject: newSubject,
-        participants: pubkeys,
-      );
-    });
-    */
-  }
+//   Future<void> changeSubject(
+//     String currentSubject,
+//     String newSubject,
+//   ) async {
+//     assert(currentSubject.isNotEmpty, 'Current conversation subject is empty');
+//     assert(newSubject.isNotEmpty, 'New conversation subject is empty');
 
-  Future<void> deleteConversations(List<String> conversationIds) async {
-    final databaseService = ref.read(conversationsDBServiceProvider);
-    final masterPubkey = await ref.read(currentPubkeySelectorProvider.future);
+//     //TODO: Update archived bookmark
 
-    if (masterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
+//     state = const AsyncLoading();
 
-    for (final conversationId in conversationIds) {
-      await databaseService.deleteConversation(
-        conversationId: conversationId,
-        masterPubkey: masterPubkey,
-      );
-    }
-  }
+//     state = await AsyncValue.guard(() async {
+//       final databaseService = ref.read(conversationsDBServiceProvider);
+//       final conversationMessageManagementService =
+//           await ref.read(conversationMessageManagementServiceProvider.future);
 
-  Future<void> toggleArchivedConversations(List<ConversationEntity> conversations) async {
-    /*
-    state = const AsyncValue.loading();
+//       final conversationsEventMessages = await databaseService.getAllConversations();
 
-    state = await AsyncValue.guard(() async {
-      final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
-      final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
-      final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
+//       final pubkeys = conversationsEventMessages
+//               .singleWhere(
+//                 (e) => e.data.relatedSubject?.value == currentSubject,
+//                 orElse: () => throw ConversationNotFoundException(),
+//               )
+//               .data
+//               .relatedPubkeys
+//               ?.map((e) => e.value)
+//               .toList() ??
+//           [];
 
-      if (currentUserPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
+//       await conversationMessageManagementService.sentMessage(
+//         content: '',
+//         subject: newSubject,
+//         participantsPubkeys: pubkeys,
+//       );
+//     });
+//   }
 
-      final archivedConversationBookmarksSet = bookmarksMap[BookmarksSetType.chats];
-      final allBookmarksSetsData = bookmarksMap.map((key, value) => MapEntry(key, value?.data));
+//   Future<void> deleteConversations(List<String> ids) async {
+//     final databaseService = ref.read(conversationsDBServiceProvider);
 
-      var existingArchiveBookmarks = <List<String>>[];
+//     for (final id in ids) {
+//       await databaseService.deleteConversation(id);
+//     }
+//   }
 
-      if (archivedConversationBookmarksSet != null) {
-        final decryptedBookmarkSetContent = await e2eeService.decryptMessage(
-          archivedConversationBookmarksSet.data.content,
-        );
+//   Future<void> toggleArchivedConversations(List<E2eeConversationEntity> conversations) async {
+//     state = const AsyncValue.loading();
 
-        existingArchiveBookmarks = (jsonDecode(decryptedBookmarkSetContent) as List<dynamic>)
-            .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
-            .toList();
-      }
+//     state = await AsyncValue.guard(() async {
+//       final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
+//       final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+//       final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
 
-      final newArchiveBookmarks = List<List<String>>.from(existingArchiveBookmarks);
+//       if (currentUserPubkey == null) {
+//         throw UserMasterPubkeyNotFoundException();
+//       }
 
-      for (final conversation in conversations) {
-        if (conversation.type == ChatType.chat) {
-          final conversationBookmark = ['p', conversation.participants[0]];
-          if (!existingArchiveBookmarks.any((e) => e.equals(conversationBookmark))) {
-            newArchiveBookmarks.add(conversationBookmark);
-          } else {
-            newArchiveBookmarks.removeWhere((e) => e.equals(conversationBookmark));
-          }
-        } else if (conversation.type == ChatType.group) {
-          final participantsSorted = List<String>.from(conversation.participants)..sort();
-          final conversationBookmark = [
-            'subject',
-            conversation.name,
-            ...participantsSorted,
-          ];
+//       final archivedConversationBookmarksSet = bookmarksMap[BookmarksSetType.chats];
+//       final allBookmarksSetsData = bookmarksMap.map((key, value) => MapEntry(key, value?.data));
 
-          if (!existingArchiveBookmarks.any((e) => e.equals(conversationBookmark))) {
-            newArchiveBookmarks.add(conversationBookmark);
-          } else {
-            newArchiveBookmarks.removeWhere((e) => e.equals(conversationBookmark));
-          }
-        }
-      }
+//       var existingArchiveBookmarks = <List<String>>[];
 
-      final encodedContent = jsonEncode(newArchiveBookmarks);
+//       if (archivedConversationBookmarksSet != null) {
+//         final decryptedBookmarkSetContent = await e2eeService.decryptMessage(
+//           archivedConversationBookmarksSet.data.content,
+//         );
 
-      final encryptedContent = await e2eeService.encryptMessage(encodedContent);
+//         existingArchiveBookmarks = (jsonDecode(decryptedBookmarkSetContent) as List<dynamic>)
+//             .map((e) => (e as List<dynamic>).map((e) => e as String).toList())
+//             .toList();
+//       }
 
-      final newSingleBookmarksSetData = BookmarksSetData(
-        postsRefs: [],
-        articlesRefs: [],
-        content: encryptedContent,
-        type: BookmarksSetType.chats,
-        communitiesIds: archivedConversationBookmarksSet?.data.communitiesIds ?? [],
-      );
+//       final newArchiveBookmarks = List<List<String>>.from(existingArchiveBookmarks);
 
-      final bookmarksData = BookmarksData(
-        ids: [],
-        bookmarksSetRefs: allBookmarksSetsData.values
-            .map((data) => data?.toReplaceableEventReference(currentUserPubkey))
-            .nonNulls
-            .toList(),
-      );
+//       for (final conversation in conversations) {
+//         if (conversation.type == ChatType.chat) {
+//           final conversationBookmark = ['p', conversation.participants[0]];
+//           if (!existingArchiveBookmarks.any((e) => e.equals(conversationBookmark))) {
+//             newArchiveBookmarks.add(conversationBookmark);
+//           } else {
+//             newArchiveBookmarks.removeWhere((e) => e.equals(conversationBookmark));
+//           }
+//         } else if (conversation.type == ChatType.group) {
+//           final participantsSorted = List<String>.from(conversation.participants)..sort();
+//           final conversationBookmark = [
+//             'subject',
+//             conversation.name,
+//             ...participantsSorted,
+//           ];
 
-      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
+//           if (!existingArchiveBookmarks.any((e) => e.equals(conversationBookmark))) {
+//             newArchiveBookmarks.add(conversationBookmark);
+//           } else {
+//             newArchiveBookmarks.removeWhere((e) => e.equals(conversationBookmark));
+//           }
+//         }
+//       }
 
-      await ref.read(conversationsProvider.notifier).getConversations();
-    });
-    */
-  }
+//       final encodedContent = jsonEncode(newArchiveBookmarks);
 
-  Future<void> readConversations(List<String> conversationIds) async {
-    final masterPubkey = await ref.read(currentPubkeySelectorProvider.future);
+//       final encryptedContent = await e2eeService.encryptMessage(encodedContent);
 
-    if (masterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
+//       final newSingleBookmarksSetData = BookmarksSetData(
+//         postsRefs: [],
+//         articlesRefs: [],
+//         content: encryptedContent,
+//         type: BookmarksSetType.chats,
+//         communitiesIds: archivedConversationBookmarksSet?.data.communitiesIds ?? [],
+//       );
 
-    await ref.read(conversationsDBServiceProvider).markConversationsAsRead(
-          masterPubkey: masterPubkey,
-          conversationIds: conversationIds,
-        );
-  }
+//       final bookmarksData = BookmarksData(
+//         ids: [],
+//         bookmarksSetRefs: allBookmarksSetsData.values
+//             .map((data) => data?.toReplaceableEventReference(currentUserPubkey))
+//             .nonNulls
+//             .toList(),
+//       );
 
-  Future<void> readAllConversations() async {
-    final masterPubkey = await ref.read(currentPubkeySelectorProvider.future);
+//       await ref
+//           .read(ionConnectNotifierProvider.notifier)
+//           .sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
 
-    if (masterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
+//       await ref.read(conversationsProvider.notifier).getConversations();
+//     });
+//   }
 
-    await ref.read(conversationsDBServiceProvider).markAllConversationsAsRead(masterPubkey);
-  }
-}
+//   Future<void> readConversations(List<String> conversationIds) async {
+//     await ref.read(conversationsDBServiceProvider).markConversationsAsRead(conversationIds);
+//   }
+
+//   Future<void> readAllConversations() async {
+//     await ref.read(conversationsDBServiceProvider).markAllConversationsAsRead();
+//   }
+// }

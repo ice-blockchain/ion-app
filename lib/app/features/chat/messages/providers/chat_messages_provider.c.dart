@@ -1,68 +1,69 @@
-// SPDX-License-Identifier: ice License 1.0
+// // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
-import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+// import 'package:ion/app/exceptions/exceptions.dart';
+// import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
+// import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+// import 'package:ion/app/features/chat/model/message_author.c.dart';
+// import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+// import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+// import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+// import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'chat_messages_provider.c.g.dart';
+// part 'chat_messages_provider.c.g.dart';
 
-@riverpod
-class ChatMessages extends _$ChatMessages {
-  @override
-  Future<List<MessageListItem>> build(ConversationEntity conversation) async {
-    final messagesSubscription = ref
-        .watch(conversationsDBServiceProvider)
-        .watchConversationMessages(conversation.id)
-        .listen((messages) async {
-      final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+// @riverpod
+// class ChatMessages extends _$ChatMessages {
+//   @override
+//   Future<List<MessageListItem>> build(E2eeConversationEntity conversation) async {
+//     final messagesSubscription = ref
+//         .watch(conversationsDBServiceProvider)
+//         .watchConversationMessages(conversation)
+//         .listen((messages) async {
+//       final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
-      if (eventSigner == null) {
-        throw EventSignerNotFoundException();
-      }
-      final conversationMessageItems =
-          messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();
+//       if (eventSigner == null) {
+//         throw EventSignerNotFoundException();
+//       }
+//       final conversationMessageItems =
+//           messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();
 
-      state = AsyncValue.data(conversationMessageItems);
-    });
+//       state = AsyncValue.data(conversationMessageItems);
+//     });
 
-    ref.onDispose(messagesSubscription.cancel);
+//     ref.onDispose(messagesSubscription.cancel);
 
-    state = const AsyncValue.loading();
+//     state = const AsyncValue.loading();
 
-    final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+//     final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
+//     if (eventSigner == null) {
+//       throw EventSignerNotFoundException();
+//     }
 
-    final messages =
-        await ref.watch(conversationsDBServiceProvider).getConversationMessages(conversation.id);
+//     final messages =
+//         await ref.watch(conversationsDBServiceProvider).getConversationMessages(conversation);
 
-    final conversationMessageItems =
-        messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();
+//     final conversationMessageItems =
+//         messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();
 
-    return conversationMessageItems;
-  }
+//     return conversationMessageItems;
+//   }
 
-  MessageListItem? _mapMessage(
-    PrivateDirectMessageEntity message,
-    String devicePubkey,
-  ) {
-    if (message.data.content.map((e) => e.text).join().isEmpty) {
-      return null;
-    }
-    return MessageListItem.text(
-      time: message.createdAt,
-      text: message.data.content.map((e) => e.text).join(),
-      author: MessageAuthor(
-        name: conversation.name,
-        isCurrentUser: message.pubkey == devicePubkey,
-      ),
-    );
-  }
-}
+//   MessageListItem? _mapMessage(
+//     PrivateDirectMessageEntity message,
+//     String devicePubkey,
+//   ) {
+//     if (message.data.content.map((e) => e.text).join().isEmpty) {
+//       return null;
+//     }
+//     return MessageListItem.text(
+//       time: message.createdAt,
+//       text: message.data.content.map((e) => e.text).join(),
+//       author: MessageAuthor(
+//         name: conversation.name,
+//         imageUrl: conversation.imageUrl!,
+//         isCurrentUser: message.pubkey == devicePubkey,
+//       ),
+//     );
+//   }
+// }

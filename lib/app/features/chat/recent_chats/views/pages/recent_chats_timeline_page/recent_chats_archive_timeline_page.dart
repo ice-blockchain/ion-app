@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -39,11 +40,16 @@ class RecentChatsArchiveTimelinePage extends ConsumerWidget {
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
               final conversation = conversations[index];
+
               return Column(
                 children: [
                   if (index == 0) const RecentChatSeparator(),
                   // RecentChatTile(conversation),
                   const RecentChatSeparator(),
+                  if (conversation.type == ConversationType.oneToOne) const Text('One to One'),
+                  if (conversation.type == ConversationType.encryptedGroup)
+                    const Text('Encrypted Group'),
+                  if (conversation.type == ConversationType.community) const Text('Community'),
                 ],
               );
             },

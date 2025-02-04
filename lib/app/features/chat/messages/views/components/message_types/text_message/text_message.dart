@@ -6,10 +6,8 @@ import 'package:ion/app/features/chat/messages/views/components/message_author/m
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
-import 'package:ion/app/features/chat/messages/views/components/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
-import 'package:ion/app/features/chat/model/replied_message.c.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({
@@ -19,7 +17,7 @@ class TextMessage extends StatelessWidget {
     this.isLastMessageFromAuthor = true,
     this.reactions = const [],
     this.author,
-    this.repliedMessage,
+    // this.repliedMessage,
     super.key,
   });
 
@@ -28,7 +26,7 @@ class TextMessage extends StatelessWidget {
   final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
-  final RepliedMessage? repliedMessage;
+  // final RepliedMessage? repliedMessage;
   final List<MessageReactionGroup> reactions;
 
   @override
@@ -45,12 +43,12 @@ class TextMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MessageAuthorNameWidget(author: author),
-            if (repliedMessage case final RepliedMessage replied)
-              RepliedMessageInfo(
-                isMe: isMe,
-                sender: replied.author,
-                message: replied.message,
-              ),
+            // if (repliedMessage case final RepliedMessage replied)
+            //   RepliedMessageInfo(
+            //     isMe: isMe,
+            //     sender: replied.author,
+            //     message: replied.message,
+            //   ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,

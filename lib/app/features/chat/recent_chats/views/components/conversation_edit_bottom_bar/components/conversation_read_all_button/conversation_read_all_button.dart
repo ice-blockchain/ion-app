@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -20,11 +19,11 @@ class ConversationReadAllButton extends ConsumerWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        selectedConversations.isEmpty
-            ? await ref.read(e2eeConversationManagementProvider.notifier).readAllConversations()
-            : await ref
-                .read(e2eeConversationManagementProvider.notifier)
-                .readConversations(selectedConversations);
+        // selectedConversations.isEmpty
+        //     ? await ref.read(e2eeConversationManagementProvider.notifier).readAllConversations()
+        //     : await ref
+        //         .read(e2eeConversationManagementProvider.notifier)
+        //         .readConversations(selectedConversations);
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
         ref.read(selectedConversationsIdsProvider.notifier).clear();
       },

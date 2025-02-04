@@ -13,6 +13,7 @@ class ConversationTable extends Table {
 }
 
 enum ConversationType {
-  e2ee,
+  oneToOne,
   community,
+  encryptedGroup,
 }
