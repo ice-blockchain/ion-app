@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
@@ -48,6 +49,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
       () => markdownToDelta(articleEntity.data.content),
       [articleEntity.data.content],
     );
+    final topics = articleEntity.data.topics;
 
     return Scaffold(
       appBar: NavigationAppBar.screen(
@@ -68,7 +70,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: ArticleDetailsDateTopics(
                         publishedAt: articleEntity.data.publishedAt.value,
-                        topics: articleEntity.data.topics,
+                        topics: topics,
                       ),
                     ),
                     SizedBox(height: 16.0.s),
@@ -82,21 +84,18 @@ class ArticleDetailsPage extends HookConsumerWidget {
                         media: articleEntity.data.media,
                       ),
                     ),
-                    const ArticleDetailsDateTopics(),
                     ScreenSideOffset.small(
                       child: CounterItemsFooter(
                         eventReference: eventReference,
                         bottomPadding: 10.0.s,
                       ),
                     ),
-                    Container(color: context.theme.appColors.primaryBackground, height: 8.0.s),
+                    FeedListSeparator(height: 8.0.s),
                     SizedBox(height: 20.0.s),
                     ScreenSideOffset.small(
                       child: UserBiography(eventReference: eventReference),
                     ),
-                    SizedBox(height: 4.0.s),
-                    const ArticleDetailsTopics(),
-                    SizedBox(height: 4.0.s),
+                    if (topics != null && topics.isNotEmpty) ArticleDetailsTopics(topics: topics),
                     ScreenSideOffset.small(
                       child: ArticleDetailsSectionHeader(
                         title: context.i18n.article_page_from_author('Alicia Twen'),

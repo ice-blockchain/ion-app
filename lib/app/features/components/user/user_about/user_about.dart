@@ -10,10 +10,13 @@ import 'package:ion/app/services/text_parser/text_parser.dart';
 class UserAbout extends HookConsumerWidget {
   const UserAbout({
     required this.pubkey,
+    this.padding = EdgeInsets.zero,
     super.key,
   });
 
   final String pubkey;
+
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,14 +28,17 @@ class UserAbout extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return SizedBox(
-      width: double.infinity,
-      child: Text.rich(
-        useTextSpanBuilder(context).build(
-          TextParser.allMatchers().parse(text),
-          onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
+    return Padding(
+      padding: padding,
+      child: SizedBox(
+        width: double.infinity,
+        child: Text.rich(
+          useTextSpanBuilder(context).build(
+            TextParser.allMatchers().parse(text),
+            onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
+          ),
+          textScaler: MediaQuery.textScalerOf(context),
         ),
-        textScaler: MediaQuery.textScalerOf(context),
       ),
     );
   }

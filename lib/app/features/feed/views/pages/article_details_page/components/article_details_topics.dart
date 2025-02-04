@@ -8,25 +8,27 @@ import 'package:ion/app/features/feed/views/components/topics_carousel/topics_ca
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 
 class ArticleDetailsTopics extends StatelessWidget {
-  const ArticleDetailsTopics({super.key});
+  const ArticleDetailsTopics({required this.topics, super.key});
+
+  final List<ArticleTopic> topics;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 16.0.s),
+        SizedBox(height: 20.0.s),
         ScreenSideOffset.small(
           child: ArticleDetailsSectionHeader(
             title: context.i18n.topics_title,
-            count: ArticleTopic.values.length,
+            count: topics.length,
           ),
         ),
         SizedBox(height: 16.0.s),
         TopicsCarousel(
-          topics: ArticleTopic.values,
+          topics: topics,
           padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
         ),
-        SizedBox(height: 16.0.s),
+        SizedBox(height: 20.0.s),
       ],
     );
   }
