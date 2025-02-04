@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -33,6 +34,25 @@ class CreateArticleModal extends HookConsumerWidget {
     final suggestionsState = ref.watch(suggestionsNotifierProvider);
     final showMentionsSuggestions =
         ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showMentionsSuggestions);
+
+    // Add listener for suggestions visibility changes
+    useEffect(
+      () {
+        if (suggestionsState.isVisible) {
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            if (scrollController.hasClients) {
+              scrollController.animateTo(
+                scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+              );
+            }
+          });
+        }
+        return null;
+      },
+      [suggestionsState.isVisible],
+    );
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
       return showSimpleBottomSheet<bool>(
