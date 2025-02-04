@@ -386,6 +386,7 @@
   "sorting_price_asc": "Price: low to high",
   "sorting_price_desc": "Price: high to low",
   "wallet_sorting_title": "Sorting the list",
+  "wallet_modal_title": "Create transaction",
   "friends_title": "Friends",
   "friends_modal_title": "Select friend",
   "contacts_select_title": "Select contact",
