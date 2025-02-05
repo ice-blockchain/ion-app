@@ -316,8 +316,8 @@ class UserPubkeyNotFoundException extends IONException {
         );
 }
 
-class SenderDevicePubkeyNotFoundException extends IONException {
-  SenderDevicePubkeyNotFoundException(String eventId)
+class ReceiverDevicePubkeyNotFoundException extends IONException {
+  ReceiverDevicePubkeyNotFoundException(String eventId)
       : super(
           10065,
           'Sender device pubkey not found in event: $eventId',

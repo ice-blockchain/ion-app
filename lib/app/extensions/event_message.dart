@@ -14,14 +14,4 @@ extension MasterKeyExtensions on EventMessage {
 
     return masterPubkey;
   }
-
-  String get receiverDevicePubkey {
-    final senderPubkey = tags.firstWhereOrNull((tags) => tags[0] == 'p')?.elementAtOrNull(3);
-
-    if (senderPubkey == null) {
-      throw SenderDevicePubkeyNotFoundException(id);
-    }
-
-    return senderPubkey;
-  }
 }

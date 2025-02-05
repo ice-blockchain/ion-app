@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -73,7 +74,7 @@ class FetchConversations extends _$FetchConversations {
     final dbProvider = ref.watch(conversationsDBServiceProvider);
 
     await for (final giftwrap in wrapEvents) {
-      if (eventSigner.publicKey != giftwrap.receiverDevicePubkey) {
+      if (eventSigner.publicKey != _receiverDevicePubkey(giftwrap)) {
         continue;
       }
 
@@ -92,6 +93,16 @@ class FetchConversations extends _$FetchConversations {
         continue;
       }
     }
+  }
+
+  String _receiverDevicePubkey(EventMessage wrap) {
+    final senderPubkey = wrap.tags.firstWhereOrNull((tags) => tags[0] == 'p')?.elementAtOrNull(3);
+
+    if (senderPubkey == null) {
+      throw ReceiverDevicePubkeyNotFoundException(wrap.id);
+    }
+
+    return senderPubkey;
   }
 
   Future<EventMessage?> _unwrapGift({
