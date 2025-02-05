@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/community/providers/community_metadata_pro
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/providers-v2/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
@@ -92,19 +93,22 @@ class CommunityRecentChatTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final community = ref.watch(communityMetadataProvider(conversation.uuid)).valueOrNull;
 
-    const unreadMessagesCount = 10;
+    final unreadMessagesCount = ref.watch(unreadMessageCountProviderProvider(conversation.uuid));
     if (community == null) {
       return const SizedBox.shrink();
     }
 
     return RecentChatTile(
-      uuid: conversation.uuid,
+      conversationUUID: conversation.uuid,
       name: community.data.name,
       avatarUrl: community.data.avatar?.url,
       defaultAvatar: Assets.svg.iconContactList,
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: conversation.latestMessage?.content ?? 'Community is created',
-      unreadMessagesCount: unreadMessagesCount,
+      unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
+      onTap: () {
+        ChannelRoute(uuid: conversation.uuid).push<void>(context);
+      },
     );
   }
 }
@@ -116,31 +120,44 @@ class E2eeRecentChatTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (conversation.latestMessage == null) {
+      return const SizedBox.shrink();
+    }
+
     final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
     // bool isOneOnOne = entity.relatedSubject == null;
 
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
-    final receiver = entity.relatedPubkeys?.firstWhere((p) => p.value != currentUserPubkey);
+    final receiverPukeyKey =
+        entity.relatedPubkeys?.firstWhere((p) => p.value != currentUserPubkey).value;
 
-    if (receiver == null) {
+    if (receiverPukeyKey == null) {
       return const SizedBox.shrink();
     }
 
-    final userMetadata = ref.watch(userMetadataProvider(receiver.value)).valueOrNull;
+    final userMetadata = ref.watch(userMetadataProvider(receiverPukeyKey)).valueOrNull;
 
     if (userMetadata == null) {
       return const SizedBox.shrink();
     }
 
+    final unreadMessagesCount = ref.watch(unreadMessageCountProviderProvider(conversation.uuid));
+
     return RecentChatTile(
-      uuid: conversation.uuid,
+      conversationUUID: conversation.uuid,
       name: userMetadata.data.name,
       avatarUrl: userMetadata.data.picture,
       defaultAvatar: Assets.svg.iconContactList,
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
-      lastMessageContent: conversation.latestMessage?.content ?? 'E2EE',
-      unreadMessagesCount: 0,
+      lastMessageContent: conversation.latestMessage?.content ?? '',
+      unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
+      onTap: () {
+        MessagesRoute(
+          uuid: conversation.uuid,
+          receiverPubKey: receiverPukeyKey,
+        ).push<void>(context);
+      },
     );
   }
 }

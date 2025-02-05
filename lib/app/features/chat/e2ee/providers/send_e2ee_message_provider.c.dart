@@ -4,6 +4,7 @@ import 'dart:isolate';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/related_subject.c.dart';
@@ -47,14 +48,11 @@ class SendE2eeMessageNotifier extends _$SendE2eeMessageNotifier {
 
     final currentUserPubkey = eventSigner.publicKey;
 
-    final participants = [receiver, currentUserPubkey];
-    const subject = '';
-
     await _send(
       conversationUUID: conversationUUID,
       message: message,
-      participants: participants,
-      subject: subject,
+      participants: [receiver, currentUserPubkey],
+      subject: '',
       mediaFiles: mediaFiles,
     );
   }
@@ -68,6 +66,12 @@ class SendE2eeMessageNotifier extends _$SendE2eeMessageNotifier {
   }) async {
     final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
+    final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+
+    if (currentUserPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
     // final participants =
     //     await ref.read(conversationTableDaoProvider).getParticipants(conversationUUID);
     // final subject = await ref.read(conversationTableDaoProvider).getSubject(conversationUUID);
@@ -76,6 +80,7 @@ class SendE2eeMessageNotifier extends _$SendE2eeMessageNotifier {
       subject: subject,
       pubkeys: participants,
       conversationUuid: conversationUUID,
+      currentUserPubkey: currentUserPubkey,
     );
 
     if (mediaFiles != null && mediaFiles.isNotEmpty) {
@@ -183,11 +188,13 @@ class SendE2eeMessageNotifier extends _$SendE2eeMessageNotifier {
     required String? subject,
     required List<String> pubkeys,
     required String conversationUuid,
+    required String currentUserPubkey,
   }) {
     return [
       CommunityIdentifierTag(value: conversationUuid).toTag(),
       if (subject != null && subject.isNotEmpty) RelatedSubject(value: subject).toTag(),
       ...pubkeys.map((pubkey) => ['p', pubkey]),
+      // ['b', currentUserPubkey],
     ];
   }
 

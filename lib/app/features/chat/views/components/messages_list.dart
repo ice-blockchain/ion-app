@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/messages/views/components/chat_date_header_text/chat_date_header_text.dart';
+import 'package:ion/app/features/chat/messages/views/components/message_types/text_message/text_message.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
 class ChatMessagesList extends HookConsumerWidget {
@@ -15,7 +18,7 @@ class ChatMessagesList extends HookConsumerWidget {
   });
 
   final bool displayAuthorsIncomingMessages;
-  final List<MessageListItem> messages;
+  final Map<DateTime, List<EventMessage>> messages;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,21 +32,45 @@ class ChatMessagesList extends HookConsumerWidget {
 
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
-      child: ListView.separated(
-        itemCount: messages.length,
-        controller: scrollController,
-        padding: EdgeInsets.symmetric(vertical: 12.0.s),
-        itemBuilder: (context, index) {
-          return SizedBox(height: 12.0.s);
-        },
-        separatorBuilder: (context, index) {
-          return SizedBox(height: 12.0.s);
-        },
+      child: ScreenSideOffset.small(
+        child: ListView.builder(
+          controller: scrollController,
+          itemCount: messages.entries.length,
+          itemBuilder: (context, index) {
+            final date = messages.entries.toList()[index].key;
+            final messagesForDate = messages.entries.toList()[index].value;
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0.s),
+                  child: ChatDateHeaderText(date: date),
+                ),
+
+                // 📌 List of Messages for that Date
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(), // Prevents nested scrolling issues
+                  itemCount: messagesForDate.length,
+                  separatorBuilder: (context, index) => SizedBox(height: 8.0.s),
+                  itemBuilder: (context, msgIndex) {
+                    final message = messagesForDate[msgIndex];
+
+                    return TextMessage(
+                      eventMessage: message,
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
 }
-          // final isLastMessage = index == (messages.length - 1);
+
           // final author =
           //     message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
 

@@ -21,31 +21,29 @@ class MessagingEmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ColoredBox(
-        color: context.theme.appColors.primaryBackground,
-        child: ScreenSideOffset.large(
-          child: Column(
-            children: [
-              if (leading != null) leading!,
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    EmptyList(
-                      title: title,
-                      asset: asset,
-                      color: context.theme.appColors.onTertararyBackground,
-                    ),
-                    if (trailing != null) ...[
-                      SizedBox(height: 10.0.s),
-                      trailing!,
-                    ],
+    return ColoredBox(
+      color: context.theme.appColors.primaryBackground,
+      child: ScreenSideOffset.large(
+        child: Column(
+          children: [
+            if (leading != null) leading!,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  EmptyList(
+                    title: title,
+                    asset: asset,
+                    color: context.theme.appColors.onTertararyBackground,
+                  ),
+                  if (trailing != null) ...[
+                    SizedBox(height: 10.0.s),
+                    trailing!,
                   ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

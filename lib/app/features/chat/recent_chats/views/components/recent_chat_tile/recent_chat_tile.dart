@@ -9,29 +9,30 @@ import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends HookConsumerWidget {
   const RecentChatTile({
-    required this.uuid,
+    required this.conversationUUID,
     required this.name,
     required this.avatarUrl,
     required this.defaultAvatar,
     required this.lastMessageAt,
     required this.lastMessageContent,
     required this.unreadMessagesCount,
+    required this.onTap,
     super.key,
   });
 
-  final String uuid;
+  final String conversationUUID;
   final String name;
   final String? avatarUrl;
   final String? defaultAvatar;
   final DateTime lastMessageAt;
   final String lastMessageContent;
   final int unreadMessagesCount;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,9 +46,10 @@ class RecentChatTile extends HookConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isEditMode) {
-          ref.read(selectedConversationsIdsProvider.notifier).toggle(uuid);
+          ref.read(selectedConversationsIdsProvider.notifier).toggle(conversationUUID);
         } else {
-          ChannelRoute(uuid: uuid).push<void>(context);
+          onTap?.call();
+          // ChannelRoute(uuid: conversationUUID).push<void>(context);
           // MessagesRoute(
           //   id: conversationData.id,
           //   name: conversationData.name,
@@ -68,7 +70,7 @@ class RecentChatTile extends HookConsumerWidget {
                 width: isEditMode ? 40.0.s : 0,
                 child: Padding(
                   padding: EdgeInsets.only(right: 10.0.s),
-                  child: selectedConversationsIds.contains(uuid)
+                  child: selectedConversationsIds.contains(conversationUUID)
                       ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                       : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
                 ),

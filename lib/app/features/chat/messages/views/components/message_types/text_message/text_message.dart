@@ -1,36 +1,35 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
+import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 
-class TextMessage extends StatelessWidget {
+class TextMessage extends HookConsumerWidget {
   const TextMessage({
-    required this.isMe,
-    required this.message,
-    required this.createdAt,
+    required this.eventMessage,
     this.isLastMessageFromAuthor = true,
-    this.reactions = const [],
-    this.author,
-    // this.repliedMessage,
     super.key,
   });
 
-  final bool isMe;
-  final String message;
-  final DateTime createdAt;
-  final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   // final RepliedMessage? repliedMessage;
-  final List<MessageReactionGroup> reactions;
+  final EventMessage eventMessage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUserPubkey =
+        ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
+
+    final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
+
+    final isMe = eventMessage.pubkey == currentUserPubkey;
+
     return MessageItemWrapper(
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
@@ -42,7 +41,7 @@ class TextMessage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MessageAuthorNameWidget(author: author),
+            // MessageAuthorNameWidget(author: author),
             // if (repliedMessage case final RepliedMessage replied)
             //   RepliedMessageInfo(
             //     isMe: isMe,
@@ -58,18 +57,21 @@ class TextMessage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        message,
+                        entity.data.content.map((e) => e.text).join(),
                         style: context.theme.appTextThemes.body2.copyWith(
                           color: isMe
                               ? context.theme.appColors.onPrimaryAccent
                               : context.theme.appColors.primaryText,
                         ),
                       ),
-                      if (reactions.isNotEmpty) MessageReactions(reactions: reactions),
+                      // if (reactions.isNotEmpty) MessageReactions(reactions: reactions),
                     ],
                   ),
                 ),
-                MessageMetaData(isMe: isMe, createdAt: createdAt),
+                MessageMetaData(
+                  isMe: isMe,
+                  createdAt: eventMessage.createdAt,
+                ),
               ],
             ),
           ],

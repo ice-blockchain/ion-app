@@ -14,6 +14,7 @@ import 'package:ion/app/features/chat/community/providers/community_metadata_pro
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_provider.c.dart';
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
@@ -41,6 +42,8 @@ class ChannelPage extends HookConsumerWidget {
       uuid,
     ]);
 
+    final messages = ref.watch(e2eeMessagesNotifierProvider(uuid));
+
     final canPost = useCanPostToChannel(channel: channel, currentPubkey: currentPubkey);
 
     if (channel == null) {
@@ -65,22 +68,35 @@ class ChannelPage extends HookConsumerWidget {
                 community: channel,
               ),
             ),
-            MessagingEmptyView(
-              title: context.i18n.common_invitation_link,
-              asset: Assets.svg.iconChatEmptystate,
-              trailing: EmptyStateCopyLink(link: channel.data.defaultInvitationLink),
-              leading: Column(
-                children: [
-                  SizedBox(height: 12.0.s),
-                  const ChatDateHeaderText(),
-                  SizedBox(height: 12.0.s),
-                  Text(
-                    context.i18n.channel_created_message,
-                    style: context.theme.appTextThemes.caption2.copyWith(
-                      color: context.theme.appColors.tertararyText,
-                    ),
-                  ),
-                ],
+            Expanded(
+              child: messages.when(
+                data: (messages) {
+                  if (messages.isEmpty) {
+                    return MessagingEmptyView(
+                      title: context.i18n.common_invitation_link,
+                      asset: Assets.svg.iconChatEmptystate,
+                      trailing: EmptyStateCopyLink(link: channel.data.defaultInvitationLink),
+                      leading: Column(
+                        children: [
+                          SizedBox(height: 12.0.s),
+                          Text(
+                            context.i18n.channel_created_message,
+                            style: context.theme.appTextThemes.caption2.copyWith(
+                              color: context.theme.appColors.tertararyText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+                error: (error, stack) {
+                  return const SizedBox.shrink();
+                },
+                loading: () {
+                  return const SizedBox.shrink();
+                },
               ),
             ),
             if (isJoined)

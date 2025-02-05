@@ -148,4 +148,41 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
 
     return row.readTable(conversationTable).uuid;
   }
+
+  //get commuunity's event messages byb grouping to the day
+  Stream<Map<DateTime, List<EventMessage>>> getMessages(String uuid) {
+    final query = select(conversationTable).join([
+      innerJoin(
+        chatMessageTable,
+        chatMessageTable.conversationId.equalsExp(conversationTable.uuid),
+      ),
+      innerJoin(
+        eventMessageTable,
+        eventMessageTable.id.equalsExp(chatMessageTable.eventMessageId),
+      ),
+    ])
+      ..where(conversationTable.uuid.equals(uuid))
+      ..where(chatMessageTable.isDeleted.equals(false));
+
+    return query.watch().map((rows) {
+      // Group messages by date
+      final groupedMessages = <DateTime, List<EventMessage>>{};
+
+      for (final row in rows) {
+        final eventMessage = row.readTable(eventMessageTable).toEventMessage();
+
+        // Extract only the date part (ignoring time)
+        final dateKey = DateTime(
+          eventMessage.createdAt.year,
+          eventMessage.createdAt.month,
+          eventMessage.createdAt.day,
+        );
+
+        // Add message to corresponding date group
+        groupedMessages.putIfAbsent(dateKey, () => []).add(eventMessage);
+      }
+
+      return groupedMessages;
+    });
+  }
 }

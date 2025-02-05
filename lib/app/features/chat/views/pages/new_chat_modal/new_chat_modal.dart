@@ -13,6 +13,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NewChatModal extends HookConsumerWidget {
@@ -28,7 +29,7 @@ class NewChatModal extends HookConsumerWidget {
         if (context.mounted) {
           context.replace(
             MessagesRoute(
-              uuid: existConversationUUID,
+              uuid: existConversationUUID ?? generateUuid(),
               receiverPubKey: user.pubkey,
             ).location,
           );

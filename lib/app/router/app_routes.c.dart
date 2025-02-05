@@ -341,7 +341,7 @@ class MessagesRoute extends BaseRouteData {
           ),
         );
 
-  final String? uuid;
+  final String uuid;
   final String receiverPubKey;
 }
 

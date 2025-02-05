@@ -6,8 +6,10 @@ import 'package:ion/app/extensions/extensions.dart';
 
 class ChatDateHeaderText extends StatelessWidget {
   const ChatDateHeaderText({
+    required this.date,
     super.key,
   });
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class ChatDateHeaderText extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       child: Text(
-        DateFormat.MMMMd().format(DateTime.now()),
+        DateFormat.MMMMd().format(date),
         style: context.theme.appTextThemes.caption3.copyWith(
           color: context.theme.appColors.onTertararyBackground,
         ),

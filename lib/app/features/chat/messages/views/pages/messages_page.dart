@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_empty_view/messaging_empty_view.dart';
+import 'package:ion/app/features/chat/views/components/messages_list.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -20,7 +21,7 @@ class MessagesPage extends HookConsumerWidget {
     super.key,
   });
 
-  final String? uuid;
+  final String uuid;
   final String receiverPubKey;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +29,7 @@ class MessagesPage extends HookConsumerWidget {
 
     final receiver = ref.watch(userMetadataProvider(receiverPubKey)).valueOrNull;
 
-    final messages = <String>[];
+    final messages = ref.watch(e2eeMessagesNotifierProvider(uuid));
 
     if (receiver == null) {
       return const SizedBox.shrink();
@@ -53,30 +54,39 @@ class MessagesPage extends HookConsumerWidget {
                 ),
               ),
             ),
-            if (messages.isEmpty)
-              MessagingEmptyView(
-                title: context.i18n.messaging_empty_description,
-                asset: Assets.svg.walletChatEmptystate,
-                trailing: GestureDetector(
-                  onTap: () {
-                    ChatLearnMoreModalRoute().push<void>(context);
-                  },
-                  child: Text(
-                    context.i18n.button_learn_more,
-                    style: context.theme.appTextThemes.caption.copyWith(
-                      color: context.theme.appColors.primaryAccent,
-                    ),
-                  ),
+            Expanded(
+              child: messages.when(
+                data: (messages) {
+                  if (messages.isEmpty) {
+                    return MessagingEmptyView(
+                      title: context.i18n.messaging_empty_description,
+                      asset: Assets.svg.walletChatEmptystate,
+                      trailing: GestureDetector(
+                        onTap: () {
+                          ChatLearnMoreModalRoute().push<void>(context);
+                        },
+                        child: Text(
+                          context.i18n.button_learn_more,
+                          style: context.theme.appTextThemes.caption.copyWith(
+                            color: context.theme.appColors.primaryAccent,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ChatMessagesList(messages);
+                },
+                loading: () => const Center(
+                  child: CircularProgressIndicator.adaptive(),
                 ),
+                error: (_, __) => const SizedBox.shrink(),
               ),
-            // else
-            //   Expanded(
-            //     child: ChatMessagesList(messages),
-            //   ),
+            ),
             MessagingBottomBar(
               onSubmitted: (content) async {
                 await ref.read(sendE2eeMessageNotifierProvider.notifier).sendOneToOneMessage(
-                      uuid ?? generateUuid(),
+                      uuid,
                       content ?? '',
                       receiverPubKey,
                       null,
