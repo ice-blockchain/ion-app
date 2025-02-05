@@ -66,7 +66,6 @@ class TabEntitiesList extends ConsumerWidget {
       ],
       onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
       hasMore: entitiesPagedData?.hasMore ?? false,
-      builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
   }
 }

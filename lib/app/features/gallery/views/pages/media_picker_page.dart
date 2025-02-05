@@ -96,7 +96,6 @@ class MediaPickerPage extends HookConsumerWidget {
       slivers: slivers,
       hasMore: galleryState.value?.hasMore ?? false,
       onLoadMore: () => ref.read(galleryNotifierProvider(type: type).notifier).fetchNextPage(),
-      builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
 
     return isBottomSheet

@@ -10,6 +10,8 @@ class FeedRoutes {
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:eventReference'),
     TypedGoRoute<ArticleRepliesRoute>(path: 'article/:eventReference/replies'),
+    TypedGoRoute<ArticlesFromTopicRoute>(path: 'articles/:topic'),
+    TypedGoRoute<ArticlesFromAuthorRoute>(path: 'articles/:pubkey'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedShellRoute<ModalShellRouteData>(
@@ -59,6 +61,28 @@ class ArticleRepliesRoute extends BaseRouteData {
         );
 
   final String eventReference;
+}
+
+class ArticlesFromTopicRoute extends BaseRouteData {
+  ArticlesFromTopicRoute({required this.topic})
+      : super(
+          child: ArticlesFromTopicPage(
+            topic: EnumExtensions.fromShortString(ArticleTopic.values, topic),
+          ),
+        );
+
+  final String topic;
+}
+
+class ArticlesFromAuthorRoute extends BaseRouteData {
+  ArticlesFromAuthorRoute({required this.pubkey})
+      : super(
+          child: const ArticlesFromTopicPage(
+            topic: ArticleTopic.blockchain,
+          ),
+        );
+
+  final String pubkey;
 }
 
 class PostDetailsRoute extends BaseRouteData {

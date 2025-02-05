@@ -9,6 +9,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MoreArticlesFromTopic extends ConsumerWidget {
@@ -43,7 +44,7 @@ class MoreArticlesFromTopic extends ConsumerWidget {
             title: topic.getTitle(context),
             count: articles.length,
             trailing: GestureDetector(
-              onTap: () {},
+              onTap: () => ArticlesFromTopicRoute(topic: topic.toShortString()).push<void>(context),
               child: Assets.svg.iconButtonNext.icon(),
             ),
           ),

@@ -46,7 +46,6 @@ class FollowersList extends ConsumerWidget {
       slivers: slivers,
       hasMore: entitiesPagedData?.hasMore ?? false,
       onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-      builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
   }
 }

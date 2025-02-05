@@ -5,14 +5,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
 class LoadMoreBuilder extends HookWidget {
-  const LoadMoreBuilder({
-    required this.builder,
+  LoadMoreBuilder({
     required this.slivers,
     required this.onLoadMore,
     required this.hasMore,
+    Widget Function(BuildContext context, List<Widget> slivers)? builder,
     this.loadMoreOffset,
     super.key,
-  });
+  }) : builder = builder ??
+            ((BuildContext context, List<Widget> slivers) => CustomScrollView(slivers: slivers));
 
   final Widget Function(BuildContext context, List<Widget> slivers) builder;
 
