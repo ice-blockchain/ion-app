@@ -22,10 +22,4 @@ class WalletsNotifier extends _$WalletsNotifier {
       state = AsyncData([...currentWallets, wallet]);
     }
   }
-
-  Future<void> refresh() async {
-    state = const AsyncLoading();
-    final ionIdentity = await ref.read(ionIdentityClientProvider.future);
-    state = AsyncData(await ionIdentity.wallets.getWallets());
-  }
 }
