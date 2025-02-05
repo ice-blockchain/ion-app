@@ -31,7 +31,8 @@ class FetchConversations extends _$FetchConversations {
       throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate = await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final lastMessageDate =
+        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
