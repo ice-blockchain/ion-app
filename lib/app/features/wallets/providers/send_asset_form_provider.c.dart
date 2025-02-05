@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -18,11 +16,11 @@ class SendAssetFormController extends _$SendAssetFormController {
   // TODO: make async
   @override
   CryptoAssetData build({CryptoAssetType type = CryptoAssetType.coin}) {
-    final wallet = ref.watch(currentWalletViewDataProvider).valueOrNull;
+    final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
 
     return CryptoAssetData(
       selectedNetwork: Network.ion, // TODO: Not implemented
-      wallet: wallet!,
+      wallet: walletView,
       address: 'Not implemented', // TODO (1) not implemented
       arrivalTime: 15,
       arrivalDateTime: DateTime.now(),

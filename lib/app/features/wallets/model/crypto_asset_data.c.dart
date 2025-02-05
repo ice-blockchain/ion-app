@@ -32,7 +32,7 @@ class CryptoAssetData with _$CryptoAssetData {
   String get networkName {
     // if (selectedCoin != null) return selectedCoin!.coin.network.displayName; // TODO: Not implemented
     if (selectedCoin != null) return 'Not implemented';
-    if (selectedNft != null) return selectedNft!.network;
+    if (selectedNft != null) return selectedNft!.network.displayName;
     return '';
   }
 }

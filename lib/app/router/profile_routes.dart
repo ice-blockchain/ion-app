@@ -124,38 +124,38 @@ class SelectNetworkRoute extends BaseRouteData {
 
 class SendCoinsFormRoute extends BaseRouteData {
   SendCoinsFormRoute({
-    required this.networkType,
+    required this.network,
     required this.coinAbbreviation,
     required this.pubkey,
   }) : super(
           child: SendCoinFormModal(
             pubkey: pubkey,
             coinAbbreviation: coinAbbreviation,
-            networkType: networkType,
+            network: network,
           ),
           type: IceRouteType.bottomSheet,
         );
 
-  final NetworkType networkType;
+  final Network network;
   final String coinAbbreviation;
   final String pubkey;
 }
 
 class RequestCoinsFormRoute extends BaseRouteData {
   RequestCoinsFormRoute({
-    required this.networkType,
+    required this.network,
     required this.coinId,
     required this.pubkey,
   }) : super(
           child: RequestCoinsFormModal(
             pubkey: pubkey,
-            coinAbbreviation: coinId,
-            networkType: networkType,
+            coinAbbreviation: coinAbbreviation,
+            network: network,
           ),
           type: IceRouteType.bottomSheet,
         );
 
-  final NetworkType networkType;
+  final Network network;
   final String coinId;
   final String pubkey;
 }

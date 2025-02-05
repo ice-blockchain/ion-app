@@ -3,21 +3,21 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header_item.dart';
 
 class TransactionListHeader extends StatelessWidget {
   const TransactionListHeader({
-    required this.selectedNetworkType,
+    required this.selectedNetwork,
     required this.onNetworkTypeSelect,
     super.key,
   });
 
-  final NetworkType selectedNetworkType;
-  final void Function(NetworkType) onNetworkTypeSelect;
+  final Network selectedNetwork;
+  final void Function(Network) onNetworkTypeSelect;
 
-  static const List<NetworkType> networkTypeValues = NetworkType.values;
+  static const List<Network> networkTypeValues = Network.values;
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,11 @@ class TransactionListHeader extends StatelessWidget {
           return SizedBox(width: 6.0.s);
         },
         itemBuilder: (BuildContext context, int index) {
-          final networkType = networkTypeValues[index];
+          final network = networkTypeValues[index];
           return TransactionListHeaderItem(
-            isSelected: networkType == selectedNetworkType,
-            networkType: networkType,
-            onPress: () => onNetworkTypeSelect(networkType),
+            isSelected: network == selectedNetwork,
+            network: network,
+            onPress: () => onNetworkTypeSelect(network),
           );
         },
       ),

@@ -12,7 +12,7 @@ import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_id_button.dart';
@@ -26,14 +26,14 @@ import 'package:ion/generated/assets.gen.dart';
 class SendCoinFormModal extends HookConsumerWidget {
   const SendCoinFormModal({
     required this.pubkey,
+    required this.network,
     required this.coinAbbreviation,
-    required this.networkType,
     super.key,
   });
 
   final String pubkey;
+  final Network network;
   final String coinAbbreviation;
-  final NetworkType networkType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,7 @@ class SendCoinFormModal extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final selectedNetworkType = useState(networkType);
+    final selectedNetworkType = useState(network);
     final selectedCoinAbbreviation = useState(coinAbbreviation);
     final arrivalTimeInMinutes = useState(0);
 
@@ -88,14 +88,14 @@ class SendCoinFormModal extends HookConsumerWidget {
                       NetworkButton(
                         networkType: selectedNetworkType.value,
                         onTap: () async {
-                          final newNetworkType = await SelectNetworkRoute(
+                          final newNetwork = await SelectNetworkRoute(
                             paymentType: PaymentType.send,
                             pubkey: pubkey,
                             coinAbbreviation: selectedCoinAbbreviation.value,
                             selectNetworkModalType: SelectNetworkModalType.update,
-                          ).push<NetworkType>(context);
-                          if (newNetworkType != null && context.mounted) {
-                            selectedNetworkType.value = newNetworkType;
+                          ).push<Network>(context);
+                          if (newNetwork != null && context.mounted) {
+                            selectedNetworkType.value = newNetwork;
                           }
                         },
                       ),

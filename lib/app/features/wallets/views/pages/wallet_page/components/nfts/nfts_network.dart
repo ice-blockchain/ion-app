@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
@@ -22,10 +23,10 @@ class NftNetwork extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Avatar(size: 12.0.s, imageWidget: nftData.networkType.iconAsset.image()),
+        Avatar(size: 12.0.s, imageWidget: nftData.network.svgIconAsset.icon()),
         SizedBox(width: 5.0.s),
         Text(
-          nftData.networkType.name.toUpperCase(),
+          nftData.network.name.toUpperCase(),
           style: context.theme.appTextThemes.caption3
               .copyWith(color: context.theme.appColors.quaternaryText),
         ),

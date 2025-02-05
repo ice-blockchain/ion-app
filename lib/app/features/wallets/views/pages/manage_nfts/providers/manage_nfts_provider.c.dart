@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/model/manage_nft_network_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/providers/mock_data/manage_nfts_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,32 +17,39 @@ class ManageNftNetworksNotifier extends _$ManageNftNetworksNotifier {
 
   void selectNetwork({
     required bool isSelected,
-    required NetworkType networkType,
+    required Network network,
   }) {
     final currentSet = state.value ?? {};
 
-    if (networkType == NetworkType.all &&
-        isSelected &&
-        currentSet.any((nftNetworkData) => !nftNetworkData.isSelected)) {
+    // TODO: All Networks item is not implemented
+    if (isSelected && currentSet.any((nftNetworkData) => !nftNetworkData.isSelected)) {
       return;
     }
 
-    final updatedNftsNetworksSet = networkType == NetworkType.all
-        ? currentSet.map((nftNetworkData) {
-            if (nftNetworkData.networkType == NetworkType.all) {
-              return nftNetworkData.copyWith(isSelected: !isSelected);
-            }
-            return nftNetworkData.copyWith(isSelected: false);
-          }).toSet()
-        : currentSet.map((nftNetworkData) {
-            if (nftNetworkData.networkType == NetworkType.all) {
-              return nftNetworkData.copyWith(isSelected: false);
-            } else if (nftNetworkData.networkType == networkType) {
-              return nftNetworkData.copyWith(isSelected: !isSelected);
-            }
+    final updatedNftsNetworksSet = currentSet.map((nftNetworkData) {
+      if (nftNetworkData.network == network) {
+        return nftNetworkData.copyWith(isSelected: !isSelected);
+      }
 
-            return nftNetworkData;
-          }).toSet();
+      return nftNetworkData;
+    }).toSet();
+    // TODO: Recheck logic when All Networks item is implemented
+    // final updatedNftsNetworksSet = networkType == NetworkType.all
+    //     ? currentSet.map((nftNetworkData) {
+    //         if (nftNetworkData.networkType == NetworkType.all) {
+    //           return nftNetworkData.copyWith(isSelected: !isSelected);
+    //         }
+    //         return nftNetworkData.copyWith(isSelected: false);
+    //       }).toSet()
+    //     : currentSet.map((nftNetworkData) {
+    //         if (nftNetworkData.networkType == NetworkType.all) {
+    //           return nftNetworkData.copyWith(isSelected: false);
+    //         } else if (nftNetworkData.networkType == networkType) {
+    //           return nftNetworkData.copyWith(isSelected: !isSelected);
+    //         }
+    //
+    //         return nftNetworkData;
+    //       }).toSet();
 
     state = AsyncData<Set<ManageNftNetworkData>>(updatedNftsNetworksSet);
   }
@@ -73,7 +80,7 @@ class FilteredNftsNetworkNotifier extends _$FilteredNftsNetworkNotifier {
 
         final filteredNetworks = allNetworks
             .where(
-              (network) => network.networkType.name.toLowerCase().contains(query),
+              (network) => network.network.serverName.toLowerCase().contains(query),
             )
             .toSet();
 

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
@@ -48,10 +49,7 @@ class FeaturedCollection extends ConsumerWidget {
                     left: 12.0.s,
                     child: Row(
                       children: [
-                        Image.asset(
-                          featuredApps[index].iconImage,
-                          width: 30.0.s,
-                        ),
+                        featuredApps[index].iconImage.icon(size: 30.0.s),
                         SizedBox(width: 8.0.s),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

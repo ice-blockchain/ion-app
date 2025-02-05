@@ -39,7 +39,7 @@ Future<List<CoinsGroup>> filteredCoins(Ref ref) async {
   return _filterCoins(coins, searchQuery);
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class FilteredCoinsNotifier extends _$FilteredCoinsNotifier {
   ProviderSubscription<String>? _searchQueryListener;
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/mock_data/transactions_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +19,7 @@ class CoinTransactionsNotifier extends _$CoinTransactionsNotifier {
   Future<void> fetch({
     required String walletId,
     required String coinId,
-    required NetworkType networkType,
+    required Network network,
   }) async {
     state = const AsyncLoading<List<CoinTransactionData>>().copyWithPrevious(state);
 
@@ -29,8 +29,7 @@ class CoinTransactionsNotifier extends _$CoinTransactionsNotifier {
     state = AsyncData<List<CoinTransactionData>>(
       List<CoinTransactionData>.unmodifiable(
         mockedCoinTransactionData.where(
-          (CoinTransactionData data) =>
-              networkType == NetworkType.all || data.networkType == networkType,
+          (CoinTransactionData data) => data.network == network,
         ),
       ),
     );
