@@ -28,9 +28,7 @@ class ConversationMetadata extends _$ConversationMetadata {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final masterPubkey = conversation.participantsMasterkeys
-          .where((key) => key != currentMasterPubkey)
-          .singleOrNull;
+      final masterPubkey = conversation.participantsMasterkeys.firstWhereOrNull((key) => key != currentMasterPubkey);
 
       if (masterPubkey == null) {
         throw UserMetadataNotFoundException(masterPubkey ?? '?');
@@ -51,9 +49,7 @@ class ConversationMetadata extends _$ConversationMetadata {
         nickname: nickname,
         imageUrl: imageUrl,
         unreadMessagesCount: unreadMessagesCount,
-        participantsMasterkeys: List.from(conversation.participantsMasterkeys)
-          ..sortBy<String>((e) => e),
-        //
+        participantsMasterkeys: conversation.participantsMasterkeys,
         id: conversation.id,
         type: conversation.type,
         isArchived: conversation.isArchived,
@@ -65,8 +61,7 @@ class ConversationMetadata extends _$ConversationMetadata {
       // If the image is not available, download it from the server and update conversation messages
       if (conversation.imageUrl == null) {
         final conversationMessages = await database.getConversationMessages(conversation.id);
-        final latestMessageWithIMetaTag =
-            conversationMessages.firstWhereOrNull((m) => m.data.primaryMedia != null);
+        final latestMessageWithIMetaTag = conversationMessages.firstWhereOrNull((m) => m.data.primaryMedia != null);
 
         final conversationMessageManagementService =
             await ref.read(conversationMessageManagementServiceProvider.future);
@@ -87,7 +82,6 @@ class ConversationMetadata extends _$ConversationMetadata {
       return ConversationEntity(
         imageUrl: imageUrl,
         unreadMessagesCount: unreadMessagesCount,
-        //
         id: conversation.id,
         name: conversation.name,
         type: conversation.type,

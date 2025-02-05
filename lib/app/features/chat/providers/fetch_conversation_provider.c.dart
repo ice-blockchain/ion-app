@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
@@ -31,8 +32,7 @@ class FetchConversations extends _$FetchConversations {
       throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate =
-        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final lastMessageDate = await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
@@ -72,14 +72,23 @@ class FetchConversations extends _$FetchConversations {
     final dbProvider = ref.watch(conversationsDBServiceProvider);
 
     await for (final giftwrap in wrapEvents) {
-      final rumor = await _unwrapGift(
-        giftWrap: giftwrap,
-        sealService: sealService,
-        giftWrapService: giftWrapService,
-        privateKey: eventSigner.privateKey,
-      );
-      if (rumor != null) {
-        await dbProvider.insertEventMessage(rumor);
+      if (eventSigner.publicKey != giftwrap.receiverDevicePubkey) {
+        continue;
+      }
+
+      try {
+        final rumor = await _unwrapGift(
+          giftWrap: giftwrap,
+          sealService: sealService,
+          giftWrapService: giftWrapService,
+          privateKey: eventSigner.privateKey,
+        );
+        if (rumor != null) {
+          await dbProvider.insertEventMessage(rumor);
+        }
+      } catch (e) {
+        Logger.log('Failed to unwrap gift', error: e);
+        continue;
       }
     }
   }

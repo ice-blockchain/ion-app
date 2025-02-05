@@ -26,12 +26,14 @@ void main() {
 
   group('IonConnectGiftWrapService', () {
     test('creates wrap from event', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
+
+      const masterPubkey = '0';
 
       final wrap = await giftWrapService.createWrap(
         event: event,
-        receiverMasterkey: '0',
+        receiverMasterkey: masterPubkey,
         receiverPubkey: receiverSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );
@@ -41,14 +43,15 @@ void main() {
       expect(wrap.content, isNot(equals(event.content)));
       expect(wrap.tags, hasLength(2));
       expect(wrap.tags[0][0], equals('p'));
+      expect(wrap.tags[0][1], equals(masterPubkey));
       expect(wrap.tags[0][3], equals(receiverSigner.publicKey));
       expect(wrap.tags[1][0], equals('k'));
       expect(wrap.tags[1][1], equals('14'));
     });
 
     test('decodes wrap back to original event on senders side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event: event,
@@ -69,8 +72,8 @@ void main() {
     });
 
     test('decodes wrap back to original event on receivers side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
         event: event,

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,15 +23,16 @@ class ConversationPubkeys extends _$ConversationPubkeys {
   }
 
   Future<List<UserMetadataEntity>> _fetchUsersMetadata(List<String> masterPubkeys) async {
-    final result = <UserMetadataEntity>[];
-
-    for (final masterPubkey in masterPubkeys) {
-      final userMetadata = await ref.watch(userMetadataProvider(masterPubkey).future);
-
-      if (userMetadata != null) {
-        result.add(userMetadata);
-      }
-    }
+    final result = await Future.wait<UserMetadataEntity>(
+      masterPubkeys.map((masterPubkey) async {
+        final userMetadata = await ref.watch(userMetadataProvider(masterPubkey).future);
+        if (userMetadata != null) {
+          return userMetadata;
+        } else {
+          throw UserMetadataNotFoundException(masterPubkey);
+        }
+      }),
+    );
 
     return result;
   }

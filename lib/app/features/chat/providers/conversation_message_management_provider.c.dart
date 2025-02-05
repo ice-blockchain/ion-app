@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversation_pubkeys_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -97,11 +97,11 @@ class ConversationMessageManagementService {
       final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
 
       await Future.wait(
-        participantsMasterkeys.map((masterkey) async {
-          final pubkey = participantsKeysMap[masterkey];
+        participantsMasterkeys.map((masterPubkey) async {
+          final pubkey = participantsKeysMap[masterPubkey];
 
           if (pubkey == null) {
-            throw UserPubkeyNotFoundException(masterkey);
+            throw UserPubkeyNotFoundException(masterPubkey);
           }
 
           final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
@@ -136,10 +136,10 @@ class ConversationMessageManagementService {
             content: content,
             signer: eventSigner!,
             receiverPubkey: pubkey,
-            receiverMasterkey: masterkey,
+            receiverMasterkey: masterPubkey,
           );
 
-          return _sendGiftWrap(giftWrap, masterPubkey: masterkey);
+          return _sendGiftWrap(giftWrap, masterPubkey: masterPubkey);
         }),
       );
 
@@ -150,11 +150,11 @@ class ConversationMessageManagementService {
     } else {
       // Send copy of the message to each participant
       await Future.wait(
-        participantsMasterkeys.map((masterkey) async {
-          final pubkey = participantsKeysMap[masterkey];
+        participantsMasterkeys.map((masterPubkey) async {
+          final pubkey = participantsKeysMap[masterPubkey];
 
           if (pubkey == null) {
-            throw UserPubkeyNotFoundException(masterkey);
+            throw UserPubkeyNotFoundException(masterPubkey);
           }
 
           final giftWrap = await _createGiftWrap(
@@ -162,10 +162,10 @@ class ConversationMessageManagementService {
             signer: eventSigner!,
             tags: conversationTags,
             receiverPubkey: pubkey,
-            receiverMasterkey: masterkey,
+            receiverMasterkey: masterPubkey,
           );
 
-          return _sendGiftWrap(giftWrap, masterPubkey: masterkey);
+          return _sendGiftWrap(giftWrap, masterPubkey: masterPubkey);
         }).toList(),
       );
     }

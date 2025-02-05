@@ -330,6 +330,7 @@ class WalletMainModalRoute extends BaseRouteData {
         );
 }
 
+// TODO: Try to refactor to accept only id
 @TypedGoRoute<MessagesRoute>(path: '/messages')
 class MessagesRoute extends BaseRouteData {
   MessagesRoute({
