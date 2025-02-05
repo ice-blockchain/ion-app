@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 
 part 'manage_nft_network_data.c.freezed.dart';
 
@@ -9,6 +9,6 @@ part 'manage_nft_network_data.c.freezed.dart';
 class ManageNftNetworkData with _$ManageNftNetworkData {
   const factory ManageNftNetworkData({
     required bool isSelected,
-    required NetworkType networkType,
+    required Network network,
   }) = _ManageNftNetworkData;
 }

@@ -163,7 +163,6 @@ flutter:
     - assets/svg/networks/
     - assets/svg/logo/
     - assets/images/
-    - assets/images/wallet/
     - assets/images/bg/
     - assets/images/qr_code/
     - assets/images/notifications/

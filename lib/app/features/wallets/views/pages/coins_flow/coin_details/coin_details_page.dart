@@ -9,7 +9,7 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
@@ -38,7 +38,7 @@ class CoinDetailsPage extends HookConsumerWidget {
     final isLoading = ref.watch(
       coinTransactionsNotifierProvider.select((data) => data.isLoading),
     );
-    final activeNetworkType = useState<NetworkType>(NetworkType.all);
+    final activeNetwork = useState<Network>(Network.ethereum);
 
     useOnInit(
       () {
@@ -46,11 +46,11 @@ class CoinDetailsPage extends HookConsumerWidget {
           ref.read(coinTransactionsNotifierProvider.notifier).fetch(
                 walletId: walletId,
                 coinId: coinsGroup.symbolGroup,
-                networkType: activeNetworkType.value,
+                network: Network.ethereum,
               );
         }
       },
-      <Object?>[walletId, coinsGroup?.symbolGroup, activeNetworkType.value],
+      <Object?>[walletId, coinsGroup?.symbolGroup, activeNetwork.value],
     );
 
     // TODO: add proper loading and error handling
@@ -83,7 +83,7 @@ class CoinDetailsPage extends HookConsumerWidget {
                 const Delimiter(),
                 Balance(
                   coinsGroup: coinsGroup,
-                  networkType: activeNetworkType.value,
+                  network: activeNetwork.value,
                 ),
                 const Delimiter(),
               ],
@@ -91,9 +91,8 @@ class CoinDetailsPage extends HookConsumerWidget {
           ),
           SliverToBoxAdapter(
             child: TransactionListHeader(
-              selectedNetworkType: activeNetworkType.value,
-              onNetworkTypeSelect: (NetworkType newNetworkType) =>
-                  activeNetworkType.value = newNetworkType,
+              selectedNetwork: activeNetwork.value,
+              onNetworkTypeSelect: (Network newNetwork) => activeNetwork.value = newNetwork,
             ),
           ),
           if (coinTransactionsMap.isEmpty && !isLoading) const EmptyState(),

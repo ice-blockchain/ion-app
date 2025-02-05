@@ -8,7 +8,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -25,12 +25,11 @@ class CoinNetworksListView extends StatelessWidget {
     super.key,
   });
 
-  final void Function(NetworkType networkType) onItemTap;
+  final void Function(Network network) onItemTap;
   final String coinId;
   final String title;
 
-  static final List<NetworkType> networkTypeValues =
-      NetworkType.values.where((type) => type != NetworkType.all).toList();
+  static const List<Network> networkTypeValues = Network.values;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,7 @@ class CoinNetworksListView extends StatelessWidget {
             return ScreenSideOffset.small(
               child: _CoinNetworkItem(
                 coinId: coinId,
-                networkType: networkTypeValues[index],
+                network: networkTypeValues[index],
                 onTap: () => onItemTap(networkTypeValues[index]),
               ),
             );

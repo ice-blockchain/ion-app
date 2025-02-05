@@ -5,12 +5,12 @@ part of 'coin_networks_list_view.dart';
 class _CoinNetworkItem extends ConsumerWidget {
   const _CoinNetworkItem({
     required this.coinId,
-    required this.networkType,
+    required this.network,
     required this.onTap,
   });
 
   final String coinId;
-  final NetworkType networkType;
+  final Network network;
   final VoidCallback onTap;
 
   @override
@@ -40,7 +40,7 @@ class _CoinNetworkItem extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16.0.s),
                 ),
                 child: Text(
-                  networkType.getDisplayName(context),
+                  network.displayName,
                   style: context.theme.appTextThemes.caption3.copyWith(
                     color: context.theme.appColors.quaternaryText,
                   ),
@@ -60,7 +60,7 @@ class _CoinNetworkItem extends ConsumerWidget {
               Positioned(
                 bottom: -3.0.s,
                 right: -3.0.s,
-                child: networkType.iconAsset.icon(size: 16.0.s),
+                child: network.svgIconAsset.icon(size: 16.0.s),
               ),
             ],
           ),

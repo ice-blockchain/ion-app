@@ -9,7 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
@@ -24,7 +24,7 @@ class TransactionResultSheet extends ConsumerWidget {
 
   final CryptoAssetType type;
 
-  static const networkTypeValues = NetworkType.values;
+  static const networkTypeValues = Network.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

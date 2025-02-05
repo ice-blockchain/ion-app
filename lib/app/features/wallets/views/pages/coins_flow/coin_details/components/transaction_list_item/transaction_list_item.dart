@@ -33,7 +33,7 @@ class TransactionListItem extends StatelessWidget {
       title: Text(transactionData.transactionType.getDisplayName(context)),
       subtitle: Row(
         children: [
-          transactionData.networkType.iconAsset.icon(size: 16.0.s),
+          transactionData.network.svgIconAsset.icon(size: 16.0.s),
           SizedBox(
             width: 4.0.s,
           ),

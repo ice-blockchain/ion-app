@@ -9,7 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
@@ -25,7 +25,7 @@ import 'package:ion/generated/assets.gen.dart';
 class ConfirmationSheet extends ConsumerWidget {
   const ConfirmationSheet({super.key});
 
-  static const networkTypeValues = NetworkType.values;
+  static const networkTypeValues = Network.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

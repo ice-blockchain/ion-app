@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/components/coin_networks_list/coin_networks_list_view.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -33,7 +33,7 @@ class SelectNetworkModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return SheetContent(
       body: CoinNetworksListView(
-        onItemTap: (NetworkType networkType) {
+        onItemTap: (Network network) {
           switch (type) {
             case SelectNetworkModalType.select:
               switch (paymentType) {
@@ -41,17 +41,17 @@ class SelectNetworkModal extends StatelessWidget {
                   SendCoinsFormRoute(
                     pubkey: pubkey,
                     coinId: coinId,
-                    networkType: networkType,
+                    network: network,
                   ).replace(context);
                 case PaymentType.receive:
                   RequestCoinsFormRoute(
                     pubkey: pubkey,
                     coinId: coinId,
-                    networkType: networkType,
+                    network: network,
                   ).replace(context);
               }
             case SelectNetworkModalType.update:
-              context.pop(networkType);
+              context.pop(network);
           }
         },
         coinId: coinId,
