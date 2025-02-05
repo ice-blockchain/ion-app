@@ -73,10 +73,10 @@ class MentionsHashtagsHandler {
             controller.addListener(_editorListener);
           }
 
-          ref.read(suggestionsNotifierProvider.notifier).updateSuggestions('', taggingCharacter);
+          ref.invalidate(suggestionsNotifierProvider);
         } else if (char == ' ' || char == '\n') {
           _applyTagIfNeeded(cursorIndex);
-          ref.read(suggestionsNotifierProvider.notifier).clear();
+          ref.invalidate(suggestionsNotifierProvider);
         } else if (lastTagIndex != -1) {
           final currentTagText = text.substring(lastTagIndex, cursorIndex);
           ref
@@ -107,7 +107,7 @@ class MentionsHashtagsHandler {
         if (remainingText == '#' || remainingText == '@' || remainingText == r'$') {
           lastTagIndex = -1;
           taggingCharacter = '';
-          ref.read(suggestionsNotifierProvider.notifier).clear();
+          ref.invalidate(suggestionsNotifierProvider);
         }
       }
     });
@@ -151,7 +151,7 @@ class MentionsHashtagsHandler {
     } finally {
       controller.addListener(_editorListener);
     }
-    ref.read(suggestionsNotifierProvider.notifier).clear();
+    ref.invalidate(suggestionsNotifierProvider);
   }
 
   void _applyTagIfNeeded(int cursorIndex) {
@@ -175,7 +175,7 @@ class MentionsHashtagsHandler {
 
   void _focusListener() {
     if (!focusNode.hasFocus) {
-      ref.read(suggestionsNotifierProvider.notifier).clear();
+      ref.invalidate(suggestionsNotifierProvider);
     }
   }
 

@@ -29,7 +29,7 @@ class SuggestionsNotifier extends _$SuggestionsNotifier {
 
   Future<void> updateSuggestions(String query, String taggingCharacter) async {
     if (query.isEmpty) {
-      state = const SuggestionsState();
+      ref.invalidate(suggestionsNotifierProvider);
       return;
     }
 
@@ -50,9 +50,5 @@ class SuggestionsNotifier extends _$SuggestionsNotifier {
       Logger.log('Error fetching suggestions: $error');
       state = const SuggestionsState();
     }
-  }
-
-  void clear() {
-    state = const SuggestionsState();
   }
 }
