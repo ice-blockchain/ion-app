@@ -19,16 +19,22 @@ CredentialRequestData _$CredentialRequestDataFromJson(
     );
 
 Map<String, dynamic> _$CredentialRequestDataToJson(
-        CredentialRequestData instance) =>
-    <String, dynamic>{
-      if (instance.challengeIdentifier case final value?)
-        'challengeIdentifier': value,
-      if (instance.credentialName case final value?) 'credentialName': value,
-      if (instance.encryptedPrivateKey case final value?)
-        'encryptedPrivateKey': value,
-      'credentialKind': _$CredentialKindEnumMap[instance.credentialKind]!,
-      'credentialInfo': instance.credentialInfo.toJson(),
-    };
+    CredentialRequestData instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('challengeIdentifier', instance.challengeIdentifier);
+  writeNotNull('credentialName', instance.credentialName);
+  writeNotNull('encryptedPrivateKey', instance.encryptedPrivateKey);
+  val['credentialKind'] = _$CredentialKindEnumMap[instance.credentialKind]!;
+  val['credentialInfo'] = instance.credentialInfo.toJson();
+  return val;
+}
 
 const _$CredentialKindEnumMap = {
   CredentialKind.Fido2: 'Fido2',

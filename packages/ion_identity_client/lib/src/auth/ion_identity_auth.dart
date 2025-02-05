@@ -5,6 +5,7 @@ import 'package:ion_identity_client/src/auth/services/credentials/create_new_cre
 import 'package:ion_identity_client/src/auth/services/credentials/create_recovery_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/credentials/get_credentials_service.dart';
 import 'package:ion_identity_client/src/auth/services/delegated_login/delegated_login_service.dart';
+import 'package:ion_identity_client/src/auth/services/delete/delete_service.dart';
 import 'package:ion_identity_client/src/auth/services/login/login_service.dart';
 import 'package:ion_identity_client/src/auth/services/logout/logout_service.dart';
 import 'package:ion_identity_client/src/auth/services/recover_user/recover_user_service.dart';
@@ -30,6 +31,7 @@ class IONIdentityAuth {
     required this.registerService,
     required this.loginService,
     required this.logoutService,
+    required this.deleteService,
     required this.privateKeyStorage,
     required this.biometricsStateStorage,
     required this.createRecoveryCredentialsService,
@@ -44,6 +46,7 @@ class IONIdentityAuth {
   final IdentitySigner identitySigner;
   final LoginService loginService;
   final LogoutService logoutService;
+  final DeleteService deleteService;
   final CreateRecoveryCredentialsService createRecoveryCredentialsService;
   final GetCredentialsService getCredentialsService;
   final CreateNewCredentialsService createNewCredentialsService;
@@ -74,6 +77,9 @@ class IONIdentityAuth {
       );
 
   Future<void> logOut() => logoutService.logOut();
+
+  Future<void> deleteUser({required String base64Kind5Event}) =>
+      deleteService.deleteUser(base64Kind5Event: base64Kind5Event);
 
   String? getUserPrivateKey() =>
       privateKeyStorage.getPrivateKey(username: username)?.hexEncodedPrivateKeyBytes;
