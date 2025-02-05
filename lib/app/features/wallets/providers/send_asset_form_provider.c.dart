@@ -15,43 +15,33 @@ enum CryptoAssetType { coin, nft }
 class SendAssetFormController extends _$SendAssetFormController {
   // TODO: make async
   @override
-  CryptoAssetData build({
-    CryptoAssetType type = CryptoAssetType.coin,
-    CoinsGroup? coin,
-    NftData? nft,
-  }) {
-    assert(
-      (type == CryptoAssetType.coin && coin != null) ||
-          (type == CryptoAssetType.nft && nft != null),
-      'Coin or NFT must be provided based on type',
-    );
-
+  CryptoAssetData build({CryptoAssetType type = CryptoAssetType.coin}) {
     final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
-
     return CryptoAssetData(
-      selectedNetwork: switch (type) {
-        CryptoAssetType.coin => coin!.coins.first.coin.network,
-        CryptoAssetType.nft => Network.ion // Not implemented
-      },
       wallet: walletView,
-      address: 'Not implemented',
-      // TODO (1) not implemented
-      arrivalTime: 15,
+      // TODO: What to do with next values?
+      arrivalTime: 0,
       arrivalDateTime: DateTime.now(),
-      selectedCoin: coin,
-      selectedNft: nft,
+      network: Network.ion,
+      address: '',
     );
   }
 
-  void setNft(NftData nft) => state = state.copyWith(selectedNft: nft);
+  void setNft(NftData nft) => state = state.copyWith(nft: nft);
 
-  void setCoin(CoinsGroup coin) => state = state.copyWith(selectedCoin: coin);
+  void setCoin(CoinsGroup coin) {
+    final defaultCoin = coin.coins.first.coin;
+
+    state = state.copyWith(
+      coin: coin,
+      network: defaultCoin.network,
+    );
+  }
 
   void setContact(String? pubkey) =>
-      state = state.copyWith(selectedContactPubkey: pubkey);
+      state = state.copyWith(contactPubkey: pubkey);
 
-  void setNetwork(Network network) =>
-      state = state.copyWith(selectedNetwork: network);
+  void setNetwork(Network network) => state = state.copyWith(network: network);
 
   void updateAmount(String amount) {
     // TODO: Not implemented
