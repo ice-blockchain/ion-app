@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_provider.c.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.
 import 'package:ion/app/features/chat/messages/views/components/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/messages/views/components/messaging_empty_view/messaging_empty_view.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -85,11 +87,19 @@ class MessagesPage extends HookConsumerWidget {
             ),
             MessagingBottomBar(
               onSubmitted: (content) async {
-                await ref.read(sendE2eeMessageNotifierProvider.notifier).sendOneToOneMessage(
-                      uuid,
-                      content ?? '',
-                      receiverPubKey,
-                      null,
+                final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+
+                if (eventSigner == null) {
+                  throw EventSignerNotFoundException();
+                }
+
+                final currentUserPubkey = eventSigner.publicKey;
+
+                await ref.read(sendE2eeMessageNotifierProvider.notifier).send(
+                      conversationUUID: uuid,
+                      message: content ?? '',
+                      participants: [currentUserPubkey, receiverPubKey],
+                      subject: null,
                     );
                 // final service = await ref.read(conversationMessageManagementServiceProvider.future);
                 // await service.sentMessage(

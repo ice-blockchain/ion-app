@@ -34,116 +34,116 @@ class SendE2eeMessageNotifier extends _$SendE2eeMessageNotifier {
     return;
   }
 
-  Future<void> sendOneToOneMessage(
-    String conversationUUID,
-    String message,
-    String receiver,
-    List<MediaFile>? mediaFiles,
-  ) async {
-    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+  // Future<void> sendOneToOneMessage(
+  //   String conversationUUID,
+  //   String message,
+  //   String receiver,
+  //   List<MediaFile>? mediaFiles,
+  // ) async {
+  //   final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
+  //   if (eventSigner == null) {
+  //     throw EventSignerNotFoundException();
+  //   }
 
-    final currentUserPubkey = eventSigner.publicKey;
+  //   final currentUserPubkey = eventSigner.publicKey;
 
-    await _send(
-      conversationUUID: conversationUUID,
-      message: message,
-      participants: [receiver, currentUserPubkey],
-      subject: '',
-      mediaFiles: mediaFiles,
-    );
-  }
+  //   await _send(
+  //     conversationUUID: conversationUUID,
+  //     message: message,
+  //     participants: [receiver, currentUserPubkey],
+  //     subject: '',
+  //     mediaFiles: mediaFiles,
+  //   );
+  // }
 
-  Future<void> _send({
+  Future<void> send({
     required String conversationUUID,
     required String message,
     required List<String> participants,
     required String? subject,
     List<MediaFile>? mediaFiles,
   }) async {
-    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
-    final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+      final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
 
-    if (currentUserPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    // final participants =
-    //     await ref.read(conversationTableDaoProvider).getParticipants(conversationUUID);
-    // final subject = await ref.read(conversationTableDaoProvider).getSubject(conversationUUID);
-
-    final conversationTags = _generateConversationTags(
-      subject: subject,
-      pubkeys: participants,
-      conversationUuid: conversationUUID,
-      currentUserPubkey: currentUserPubkey,
-    );
-
-    if (mediaFiles != null && mediaFiles.isNotEmpty) {
-      final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
-
-      await Future.wait(
-        participants.map((participantPubkey) async {
-          final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
-
-          final uploadedMediaFilesWithKeys = await Future.wait(
-            encryptedMediaFiles.map((encryptedMediaFile) async {
-              final mediaFile = encryptedMediaFile.$1;
-              final secretKey = encryptedMediaFile.$2;
-              final nonce = encryptedMediaFile.$3;
-              final mac = encryptedMediaFile.$4;
-
-              final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
-                    mediaFile,
-                    alt: FileAlt.message,
-                  );
-
-              return (uploadResult, secretKey, nonce, mac);
-            }),
-          );
-
-          for (final mediaFile in encryptedMediaFiles) {
-            final file = File(mediaFile.$1.path);
-            await file.delete();
-          }
-
-          final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
-
-          final tags = conversationTags..addAll(imetaTags);
-
-          final giftWrap = await _createGiftWrap(
-            tags: tags,
-            content: message,
-            signer: eventSigner!,
-            receiverPubkey: participantPubkey,
-          );
-
-          return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
-        }),
-      );
-
-      for (final mediaFile in compressedMediaFiles) {
-        final file = File(mediaFile.path);
-        await file.delete();
+      if (currentUserPubkey == null) {
+        throw UserMasterPubkeyNotFoundException();
       }
-    } else {
-      await Future.wait(
-        participants.map((participantPubkey) async {
-          final giftWrap = await _createGiftWrap(
-            content: message,
-            signer: eventSigner!,
-            tags: conversationTags,
-            receiverPubkey: participantPubkey,
-          );
 
-          return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
-        }).toList(),
+      final conversationTags = _generateConversationTags(
+        subject: subject,
+        pubkeys: participants,
+        conversationUuid: conversationUUID,
+        currentUserPubkey: currentUserPubkey,
       );
-    }
+
+      if (mediaFiles != null && mediaFiles.isNotEmpty) {
+        final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
+
+        await Future.wait(
+          participants.map((participantPubkey) async {
+            final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
+
+            final uploadedMediaFilesWithKeys = await Future.wait(
+              encryptedMediaFiles.map((encryptedMediaFile) async {
+                final mediaFile = encryptedMediaFile.$1;
+                final secretKey = encryptedMediaFile.$2;
+                final nonce = encryptedMediaFile.$3;
+                final mac = encryptedMediaFile.$4;
+
+                final uploadResult =
+                    await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
+                          mediaFile,
+                          alt: FileAlt.message,
+                        );
+
+                return (uploadResult, secretKey, nonce, mac);
+              }),
+            );
+
+            for (final mediaFile in encryptedMediaFiles) {
+              final file = File(mediaFile.$1.path);
+              await file.delete();
+            }
+
+            final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
+
+            final tags = conversationTags..addAll(imetaTags);
+
+            final giftWrap = await _createGiftWrap(
+              tags: tags,
+              content: message,
+              signer: eventSigner!,
+              receiverPubkey: participantPubkey,
+            );
+
+            return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
+          }),
+        );
+
+        for (final mediaFile in compressedMediaFiles) {
+          final file = File(mediaFile.path);
+          await file.delete();
+        }
+      } else {
+        await Future.wait(
+          participants.map((participantPubkey) async {
+            final giftWrap = await _createGiftWrap(
+              content: message,
+              signer: eventSigner!,
+              tags: conversationTags,
+              receiverPubkey: participantPubkey,
+            );
+
+            return _sendGiftWrap(giftWrap, pubkey: participantPubkey);
+          }).toList(),
+        );
+      }
+    });
   }
 
   Future<List<MediaFile>> _compressMediaFiles(
