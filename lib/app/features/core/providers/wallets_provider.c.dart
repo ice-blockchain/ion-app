@@ -8,7 +8,32 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'wallets_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<Wallet>> wallets(Ref ref) async {
-  final ionIdentity = await ref.watch(ionIdentityClientProvider.future);
-  return ionIdentity.wallets.getWallets();
+class WalletsNotifier extends _$WalletsNotifier {
+  @override
+  Future<List<Wallet>> build() async {
+    final ionIdentity = await ref.watch(ionIdentityClientProvider.future);
+    return ionIdentity.wallets.getWallets();
+  }
+
+  Future<void> addWallet(Wallet wallet) async {
+    final currentWallets = state.valueOrNull ?? [];
+    
+    // Only add if not already present
+    if (!currentWallets.any((w) => w.id == wallet.id)) {
+      state = AsyncData([...currentWallets, wallet]);
+    }
+  }
+
+  Future<void> removeWallet(String walletId) async {
+    final currentWallets = state.valueOrNull ?? [];
+    state = AsyncData(
+      currentWallets.where((wallet) => wallet.id != walletId).toList(),
+    );
+  }
+
+  Future<void> refresh() async {
+    state = const AsyncLoading();
+    final ionIdentity = await ref.read(ionIdentityClientProvider.future);
+    state = AsyncData(await ionIdentity.wallets.getWallets());
+  }
 }
