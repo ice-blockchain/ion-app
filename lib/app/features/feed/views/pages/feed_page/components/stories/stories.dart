@@ -49,7 +49,7 @@ class Stories extends ConsumerWidget {
             },
           ),
         SizedBox(height: 16.0.s),
-        FeedListSeparator(height: 16.0.s),
+        FeedListSeparator(height: 12.0.s),
       ],
     );
   }
