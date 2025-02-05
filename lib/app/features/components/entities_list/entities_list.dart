@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/async_value_listener.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/article_list_item.dart';
 import 'package:ion/app/features/components/entities_list/components/post_list_item.dart';
@@ -16,7 +18,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
-class EntitiesList extends StatelessWidget {
+class EntitiesList extends HookWidget {
   const EntitiesList({
     required this.entities,
     this.framedEventType = FramedEventType.quoted,
@@ -32,6 +34,8 @@ class EntitiesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final blockedEntitiesIds = useState(<String, bool>{});
+
     return SliverList.builder(
       itemCount: entities.length,
       itemBuilder: (BuildContext context, int index) {
@@ -40,34 +44,44 @@ class EntitiesList extends StatelessWidget {
           framedEventType: framedEventType,
           separatorHeight: separatorHeight,
           hideBlocked: hideBlocked,
+          blockedIds: blockedEntitiesIds,
         );
       },
     );
   }
 }
 
-class _EntityListItem extends HookConsumerWidget {
+class _EntityListItem extends ConsumerWidget {
   const _EntityListItem({
     required this.entity,
     required this.separatorHeight,
     required this.framedEventType,
     required this.hideBlocked,
+    required this.blockedIds,
   });
 
   final IonConnectEntity entity;
   final double? separatorHeight;
   final FramedEventType framedEventType;
   final bool hideBlocked;
+  final ValueNotifier<Map<String, bool>> blockedIds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadata =
         ref.watch(userMetadataProvider(entity.masterPubkey, network: false)).valueOrNull;
 
-    final blocked =
-        ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: true)).valueOrNull ?? true;
+    ref.listenAsyncValue(
+      isEntityBlockedOrBlockingProvider(entity, cacheOnly: true),
+      onSuccess: (blocked) {
+        if (blocked != null && blockedIds.value[entity.id] != blocked) {
+          blockedIds.value = {...blockedIds.value, entity.id: blocked};
+        }
+      },
+    );
+    final isBlockedOrBlocking = blockedIds.value[entity.id] ?? true;
 
-    if (userMetadata == null || (blocked && hideBlocked)) {
+    if (userMetadata == null || (isBlockedOrBlocking && hideBlocked)) {
       /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
       /// we don't need to fetch the user metadata or block list explicitly - it is returned as a side effect to the
       /// main request.
