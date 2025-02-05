@@ -90,8 +90,7 @@ class ConversationMessageManagementService {
       masterPubkeys: participantsMasterkeys,
     );
 
-    final participantsKeysMap =
-        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterkeys);
+    final participantsKeysMap = await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterkeys);
 
     if (mediaFiles.isNotEmpty) {
       final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
@@ -139,7 +138,7 @@ class ConversationMessageManagementService {
             receiverMasterkey: masterkey,
           );
 
-          return _sendGiftWrap(giftWrap, pubkey: masterkey);
+          return _sendGiftWrap(giftWrap, masterPubkey: masterkey);
         }),
       );
 
@@ -165,7 +164,7 @@ class ConversationMessageManagementService {
             receiverMasterkey: masterkey,
           );
 
-          return _sendGiftWrap(giftWrap, pubkey: masterkey);
+          return _sendGiftWrap(giftWrap, masterPubkey: masterkey);
         }).toList(),
       );
     }
@@ -176,9 +175,7 @@ class ConversationMessageManagementService {
     final decryptedDecompressedFiles = <File>[];
 
     for (final attachment in mediaAttachments) {
-      if (attachment.encryptionKey != null &&
-          attachment.encryptionNonce != null &&
-          attachment.encryptionMac != null) {
+      if (attachment.encryptionKey != null && attachment.encryptionNonce != null && attachment.encryptionMac != null) {
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
@@ -284,12 +281,12 @@ class ConversationMessageManagementService {
     return wrap;
   }
 
-  Future<void> _sendGiftWrap(EventMessage giftWrap, {required String pubkey}) async {
-    await ionConnectNotifier.sendEvent(
-      giftWrap,
-      cache: false,
-      actionSource: ActionSourceUserChat(pubkey, anonymous: true),
-    );
+  Future<void> _sendGiftWrap(EventMessage giftWrap, {required String masterPubkey}) async {
+      await ionConnectNotifier.sendEvent(
+        giftWrap,
+        cache: false,
+        actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+      );
   }
 
   Future<List<MediaFile>> _compressMediaFiles(
@@ -350,8 +347,7 @@ class ConversationMessageManagementService {
           final nonceString = base64Encode(nonceBytes);
           final macString = base64Encode(secretBox.mac.bytes);
 
-          final compressedEncryptedFile =
-              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+          final compressedEncryptedFile = File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
 
           await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
 

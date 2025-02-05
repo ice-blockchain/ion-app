@@ -194,7 +194,7 @@ class AuthChallengeIsEmptyException extends IONException {
 }
 
 class DecodeE2EMessageException extends IONException {
-  DecodeE2EMessageException() : super(10042, 'Failed to decode E2E message');
+  DecodeE2EMessageException(String id) : super(10042, 'Failed to decode E2E message id: $id');
 }
 
 class ConversationNotFoundException extends IONException {

@@ -14,8 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_connect_gift_wrap_service.c.g.dart';
 
 @riverpod
-Future<IonConnectGiftWrapService> ionConnectGiftWrapService(Ref ref) async =>
-    IonConnectGiftWrapServiceImpl(
+Future<IonConnectGiftWrapService> ionConnectGiftWrapService(Ref ref) async => IonConnectGiftWrapServiceImpl(
       e2eeService: await ref.read(ionConnectE2eeServiceProvider.future),
     );
 
@@ -69,7 +68,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       signer: oneTimeSigner,
       content: encryptedEvent,
       tags: [
-        [RelatedPubkey.tagName, receiverMasterkey, '', oneTimeSigner.publicKey],
+        [RelatedPubkey.tagName, receiverMasterkey, '', receiverPubkey],
         ['k', contentKind.toString()],
         if (expirationTag != null) expirationTag,
       ],

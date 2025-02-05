@@ -31,6 +31,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
+        receiverMasterkey: '0',
         receiverPubkey: receiverSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );
@@ -40,7 +41,7 @@ void main() {
       expect(wrap.content, isNot(equals(event.content)));
       expect(wrap.tags, hasLength(2));
       expect(wrap.tags[0][0], equals('p'));
-      expect(wrap.tags[0][1], equals(receiverSigner.publicKey));
+      expect(wrap.tags[0][3], equals(receiverSigner.publicKey));
       expect(wrap.tags[1][0], equals('k'));
       expect(wrap.tags[1][1], equals('14'));
     });
@@ -51,6 +52,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
+        receiverMasterkey: "Doesn't matter",
         receiverPubkey: senderSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );
@@ -72,6 +74,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
+        receiverMasterkey: "Doesn't matter",
         receiverPubkey: receiverSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );

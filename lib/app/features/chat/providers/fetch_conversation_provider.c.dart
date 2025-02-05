@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:developer';
-
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
@@ -45,7 +42,7 @@ class FetchConversations extends _$FetchConversations {
           PrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
         ],
-        '#p': [eventSigner.publicKey],
+        '#p': [masterPubkey],
       },
       since: sinceDate,
     );
@@ -74,7 +71,6 @@ class FetchConversations extends _$FetchConversations {
     final dbProvider = ref.watch(conversationsDBServiceProvider);
 
     await for (final giftwrap in wrapEvents) {
-      log(giftwrap.toString());
       final rumor = await _unwrapGift(
         giftWrap: giftwrap,
         sealService: sealService,
@@ -97,7 +93,7 @@ class FetchConversations extends _$FetchConversations {
       final seal = await giftWrapService.decodeWrap(
         privateKey: privateKey,
         content: giftWrap.content,
-        senderPubkey: giftWrap.senderDevicePubkey,
+        senderPubkey: giftWrap.pubkey,
       );
 
       return await sealService.decodeSeal(
@@ -105,9 +101,8 @@ class FetchConversations extends _$FetchConversations {
         seal.pubkey,
         privateKey,
       );
-    } catch (error, stackTrace) {
-      Logger.log(DecodeE2EMessageException().toString(), error: error, stackTrace: stackTrace);
+    } catch (e) {
+      throw DecodeE2EMessageException(giftWrap.id);
     }
-    return null;
   }
 }
