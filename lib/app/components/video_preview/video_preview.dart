@@ -34,22 +34,45 @@ class VideoPreview extends HookConsumerWidget {
           ),
         )!;
 
+    ref.listen(
+      activeVideoProvider.select((activeId) => activeId == controller.dataSource),
+      (_, isActive) {
+        if (!isActive && controller.value.isPlaying) {
+          controller.pause();
+        }
+      },
+    );
+
     final isMuted = useState(true);
 
-    return VisibilityDetector(
-      key: ValueKey(controller.dataSource),
-      onVisibilityChanged: (info) {
+    final handleVisibilityChanged = useCallback(
+      (VisibilityInfo info) {
         if (!context.mounted || !controller.value.isInitialized) return;
 
-        if (info.visibleFraction == 0) {
+        final currentActive = ref.read(activeVideoProvider);
+
+        final isFullyVisible = info.visibleFraction == 1;
+        final isCurrentlyActive = currentActive == controller.dataSource;
+        final shouldBeActive = isFullyVisible && !isCurrentlyActive;
+        final shouldBePaused = !isFullyVisible && isCurrentlyActive;
+
+        if (shouldBeActive) {
+          ref.read(activeVideoProvider.notifier).activeVideo = controller.dataSource;
+          controller.play();
+        } else if (shouldBePaused) {
+          ref.read(activeVideoProvider.notifier).activeVideo = null;
           controller
             ..pause()
             ..setVolume(0);
           isMuted.value = true;
-        } else {
-          controller.play();
         }
       },
+      [controller, isMuted],
+    );
+
+    return VisibilityDetector(
+      key: ValueKey(controller.dataSource),
+      onVisibilityChanged: handleVisibilityChanged,
       child: Stack(
         children: [
           if (thumbnailUrl != null)
