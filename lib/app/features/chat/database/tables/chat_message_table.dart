@@ -12,7 +12,6 @@ class ChatMessageTable extends Table {
 }
 
 enum DeliveryStatus {
-  none,
   isSent,
   isReceived,
   isRead,

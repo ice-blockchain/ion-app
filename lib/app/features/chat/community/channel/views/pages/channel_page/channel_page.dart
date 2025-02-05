@@ -18,7 +18,9 @@ import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_provider.c.da
 import 'package:ion/app/features/chat/messages/views/components/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -88,8 +90,40 @@ class ChannelPage extends HookConsumerWidget {
                         ],
                       ),
                     );
+                  } else {
+                    return ListView.builder(
+                      itemCount: messages.entries.length,
+                      itemBuilder: (context, index) {
+                        final date = messages.entries.toList()[index].key;
+                        final messagesForDate = messages.entries.toList()[index].value;
+
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12.0.s),
+                              child: ChatDateHeaderText(date: date),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: messagesForDate.length,
+                              separatorBuilder: (context, index) => SizedBox(height: 8.0.s),
+                              itemBuilder: (context, msgIndex) {
+                                final message = messagesForDate[msgIndex];
+
+                                final post = ModifiablePostEntity.fromEventMessage(message);
+
+                                return PostBody(
+                                  postEntity: post,
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }
-                  return const SizedBox.shrink();
                 },
                 error: (error, stack) {
                   return const SizedBox.shrink();

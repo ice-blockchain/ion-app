@@ -18,6 +18,7 @@ class EventMessageTableDao extends DatabaseAccessor<ChatDatabase> with _$EventMe
       ChatMessageTableCompanion(
         conversationId: Value(conversationId),
         eventMessageId: Value(event.id),
+        readStatus: const Value(DeliveryStatus.isReceived),
       ),
     );
   }
