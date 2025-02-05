@@ -42,9 +42,8 @@ class MentionsHashtagsHandler {
   void _editorListener() {
     final cursorIndex = controller.selection.baseOffset;
     final text = controller.document.toPlainText();
-    final isBackspace = previousText != null && text.length < previousText!.length;
 
-    if (previousText == text) return;
+    final isBackspace = previousText != null && text.length < previousText!.length;
 
     previousText = text;
 
@@ -54,6 +53,8 @@ class MentionsHashtagsHandler {
         final char = text.substring(cursorIndex - 1, cursorIndex);
 
         if (char == '#' || char == '@' || char == r'$') {
+          _resetState();
+
           taggingCharacter = char;
           lastTagIndex = cursorIndex - 1;
 
@@ -71,9 +72,8 @@ class MentionsHashtagsHandler {
           } finally {
             controller.addListener(_editorListener);
           }
-          ref
-              .read(suggestionsNotifierProvider.notifier)
-              .updateSuggestions(taggingCharacter, taggingCharacter);
+
+          ref.read(suggestionsNotifierProvider.notifier).updateSuggestions('', taggingCharacter);
         } else if (char == ' ' || char == '\n') {
           _applyTagIfNeeded(cursorIndex);
           ref.read(suggestionsNotifierProvider.notifier).clear();
@@ -106,8 +106,8 @@ class MentionsHashtagsHandler {
         final remainingText = text.substring(lastTagIndex, cursorIndex);
         if (remainingText == '#' || remainingText == '@' || remainingText == r'$') {
           lastTagIndex = -1;
-          lastTagIndex = cursorIndex - 1;
-          ref.read(suggestionsNotifierProvider.notifier).updateSuggestions('', taggingCharacter);
+          taggingCharacter = '';
+          ref.read(suggestionsNotifierProvider.notifier).clear();
         }
       }
     });
@@ -147,8 +147,7 @@ class MentionsHashtagsHandler {
         ChangeSource.local,
       );
 
-      lastTagIndex = -1;
-      taggingCharacter = '';
+      _resetState();
     } finally {
       controller.addListener(_editorListener);
     }
@@ -178,5 +177,15 @@ class MentionsHashtagsHandler {
     if (!focusNode.hasFocus) {
       ref.read(suggestionsNotifierProvider.notifier).clear();
     }
+  }
+
+  void triggerListener() {
+    _editorListener();
+  }
+
+  void _resetState() {
+    lastTagIndex = -1;
+    taggingCharacter = '';
+    previousText = null;
   }
 }
