@@ -34,6 +34,8 @@ class EntitiesList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Keeping blocked id's here to get rid of the glitches during the scroll up
+    // https://github.com/ice-blockchain/ion-app/pull/601
     final blockedEntitiesIds = useState(<String, bool>{});
 
     return SliverList.builder(
