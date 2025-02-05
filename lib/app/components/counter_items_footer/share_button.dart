@@ -25,12 +25,18 @@ class ShareButton extends StatelessWidget {
         HapticFeedback.lightImpact();
         SharePostModalRoute(eventReference: eventReference.encode()).push<void>(context);
       },
-      child: TextActionButton(
-        icon: Assets.svg.iconBlockShare.icon(
-          size: 16.0.s,
-          color: color ?? context.theme.appColors.onTertararyBackground,
+      behavior: HitTestBehavior.opaque,
+      child: Center(
+        child: Padding(
+          padding: EdgeInsetsDirectional.only(start: 8.0.s),
+          child: TextActionButton(
+            icon: Assets.svg.iconBlockShare.icon(
+              size: 16.0.s,
+              color: color ?? context.theme.appColors.onTertararyBackground,
+            ),
+            textColor: color ?? context.theme.appColors.onTertararyBackground,
+          ),
         ),
-        textColor: color ?? context.theme.appColors.onTertararyBackground,
       ),
     );
   }
