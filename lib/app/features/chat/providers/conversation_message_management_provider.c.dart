@@ -9,8 +9,8 @@ import 'package:cryptography/cryptography.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
-import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -31,7 +31,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversation_message_management_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<ConversationMessageManagementService> conversationMessageManagementService(
   Ref ref,
 ) async {
@@ -46,6 +46,7 @@ Future<ConversationMessageManagementService> conversationMessageManagementServic
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
     wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
     ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
+    conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
   );
 }
 
@@ -55,10 +56,11 @@ class ConversationMessageManagementService {
     required this.wrapService,
     required this.sealService,
     required this.eventSigner,
-    required this.ionConnectNotifier,
     required this.fileCacheService,
-    required this.ionConnectUploadNotifier,
+    required this.ionConnectNotifier,
     required this.compressionService,
+    required this.ionConnectUploadNotifier,
+    required this.conversationPubkeysNotifier,
   });
 
   final Env env;
@@ -69,11 +71,12 @@ class ConversationMessageManagementService {
   final IonConnectGiftWrapService wrapService;
   final CompressionService compressionService;
   final IonConnectUploadNotifier ionConnectUploadNotifier;
+  final ConversationPubkeys conversationPubkeysNotifier;
 
   Future<void> sendMessage({
     required String content,
     required String conversationId,
-    required List<ChatParticipantData> participants,
+    required List<String> participantsMasterkeys,
     String? subject,
     List<MediaFile> mediaFiles = const [],
   }) async {
@@ -81,22 +84,24 @@ class ConversationMessageManagementService {
       throw EventSignerNotFoundException();
     }
 
-    final participantsMasterkeys =
-        participants.map((participant) => participant.masterPubkey).toList();
-
     final conversationTags = _generateConversationTags(
       subject: subject,
       conversationId: conversationId,
       masterPubkeys: participantsMasterkeys,
     );
 
+    final participantsKeysMap =
+        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterkeys);
+
     if (mediaFiles.isNotEmpty) {
       final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
 
       await Future.wait(
-        participants.map((participant) async {
-          if (participant.pubkey == null || participant.pubkey!.isEmpty) {
-            throw UserPubkeyNotFoundException(participant.masterPubkey);
+        participantsMasterkeys.map((masterkey) async {
+          final pubkey = participantsKeysMap[masterkey];
+
+          if (pubkey == null) {
+            throw UserPubkeyNotFoundException(masterkey);
           }
 
           final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
@@ -130,10 +135,11 @@ class ConversationMessageManagementService {
             tags: tags,
             content: content,
             signer: eventSigner!,
-            receiverPubkey: participant.pubkey!,
+            receiverPubkey: pubkey,
+            receiverMasterkey: masterkey,
           );
 
-          return _sendGiftWrap(giftWrap, pubkey: participant.pubkey!);
+          return _sendGiftWrap(giftWrap, pubkey: masterkey);
         }),
       );
 
@@ -144,18 +150,22 @@ class ConversationMessageManagementService {
     } else {
       // Send copy of the message to each participant
       await Future.wait(
-        participants.map((participant) async {
-          if (participant.pubkey == null || participant.pubkey!.isEmpty) {
-            throw UserPubkeyNotFoundException(participant.masterPubkey);
+        participantsMasterkeys.map((masterkey) async {
+          final pubkey = participantsKeysMap[masterkey];
+
+          if (pubkey == null) {
+            throw UserPubkeyNotFoundException(masterkey);
           }
+
           final giftWrap = await _createGiftWrap(
             content: content,
             signer: eventSigner!,
             tags: conversationTags,
-            receiverPubkey: participant.pubkey!,
+            receiverPubkey: pubkey,
+            receiverMasterkey: masterkey,
           );
 
-          return _sendGiftWrap(giftWrap, pubkey: participant.pubkey!);
+          return _sendGiftWrap(giftWrap, pubkey: masterkey);
         }).toList(),
       );
     }
@@ -226,6 +236,7 @@ class ConversationMessageManagementService {
   Future<EventMessage> _createGiftWrap({
     required String content,
     required String receiverPubkey,
+    required String receiverMasterkey,
     required EventSigner signer,
     required List<List<String>> tags,
   }) async {
@@ -263,9 +274,10 @@ class ConversationMessageManagementService {
     );
 
     final wrap = await wrapService.createWrap(
-      seal,
-      receiverPubkey,
-      PrivateDirectMessageEntity.kind,
+      event: seal,
+      receiverPubkey: receiverPubkey,
+      receiverMasterkey: receiverMasterkey,
+      contentKind: PrivateDirectMessageEntity.kind,
       expirationTag: expirationTag,
     );
 

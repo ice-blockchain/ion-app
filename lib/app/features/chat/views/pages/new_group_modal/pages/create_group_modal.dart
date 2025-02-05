@@ -11,7 +11,6 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
-import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
@@ -20,7 +19,6 @@ import 'package:ion/app/features/chat/views/components/general_selection_button.
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -39,25 +37,17 @@ class CreateGroupModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final currentMasterPubkey = ref.watch(currentPubkeySelectorProvider).value;
-    final currentPubkey = ref.watch(currentUserIonConnectEventSignerProvider).value?.publicKey;
 
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
 
-    final currentUserAsParticipant = currentPubkey != null && currentMasterPubkey != null
-        ? ChatParticipantData(
-            pubkey: currentPubkey,
-            masterPubkey: currentMasterPubkey,
-          )
-        : null;
-
-    final participants = currentUserAsParticipant != null
+    final participantsMasterkeys = currentMasterPubkey != null
         ? [
-            ...createGroupForm.members,
-            currentUserAsParticipant,
+            ...createGroupForm.participantsMasterkeys,
+            currentMasterPubkey,
           ]
-        : <ChatParticipantData>[];
+        : <String>[];
 
     final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
 
@@ -137,7 +127,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         Assets.svg.iconCategoriesFollowing.icon(size: 16.0.s),
                         SizedBox(width: 6.0.s),
                         Text(
-                          context.i18n.group_create_members_number(participants.length),
+                          context.i18n.group_create_members_number(participantsMasterkeys.length),
                         ),
                         const Spacer(),
                         TextButton(
@@ -156,16 +146,16 @@ class CreateGroupModal extends HookConsumerWidget {
                     SizedBox(height: 20.0.s),
                     Expanded(
                       child: ListView.separated(
-                        itemCount: participants.length,
+                        itemCount: participantsMasterkeys.length,
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (_, int i) {
-                          final participant = participants[i];
+                          final participantMasterkey = participantsMasterkeys[i];
 
                           return GroupPariticipantsListItem(
-                            participant: participant,
-                            isCurrentUser: participant == currentUserAsParticipant,
+                            participantMasterkey: participantMasterkey,
+                            isCurrentUser: participantMasterkey == currentMasterPubkey,
                             onRemove: () {
-                              createGroupFormNotifier.toggleMember(participant);
+                              createGroupFormNotifier.toggleMember(participantMasterkey);
                             },
                           );
                         },
@@ -214,9 +204,9 @@ class CreateGroupModal extends HookConsumerWidget {
 
                       await ref.read(e2eeConversationManagementProvider.notifier).createGroup(
                             groupImage: groupPicture,
-                            participants: participants,
                             conversationId: conversationId,
                             subject: createGroupForm.name!,
+                            participantsMasterkeys: participantsMasterkeys,
                           );
 
                       if (context.mounted) {
@@ -227,7 +217,7 @@ class CreateGroupModal extends HookConsumerWidget {
                           chatType: ChatType.group,
                           name: createGroupForm.name!,
                           imageUrl: groupPicture.path,
-                          participantsMasterkeys: participants.map((e) => e.masterPubkey).toList(),
+                          participantsMasterkeys: participantsMasterkeys,
                         ).push<void>(context);
                       }
                     } else {

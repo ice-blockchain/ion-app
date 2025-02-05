@@ -29,64 +29,67 @@ class MessagesPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      body: SafeArea(
-        minimum: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
-        ),
-        bottom: false,
-        child: Column(
-          children: [
-            MessagingHeader(
-              name: conversation.name,
-              imageUrl: conversation.type == ChatType.oneOnOne ? conversation.imageUrl : null,
-              imageWidget: conversation.type == ChatType.group
-                  ? Image.asset(
-                      conversation.imageUrl ?? '',
-                      errorBuilder: (_, __, ___) => DefaultAvatar(size: 36.0.s),
-                    )
-                  : null,
-              subtitle: conversation.type == ChatType.oneOnOne
-                  ? Text(
-                      conversation.nickname,
-                      style: context.theme.appTextThemes.caption.copyWith(
-                        color: context.theme.appColors.quaternaryText,
-                      ),
-                    )
-                  : Row(
-                      children: [
-                        Assets.svg.iconChannelMembers.icon(size: 10.0.s),
-                        SizedBox(width: 4.0.s),
-                        Text(
-                          conversation.participants.length.toString(),
-                          style: context.theme.appTextThemes.caption.copyWith(
-                            color: context.theme.appColors.quaternaryText,
-                          ),
+      body: GestureDetector(
+        onTap: FocusScope.of(context).unfocus,
+        child: SafeArea(
+          minimum: EdgeInsets.only(
+            bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
+          ),
+          bottom: false,
+          child: Column(
+            children: [
+              MessagingHeader(
+                name: conversation.name,
+                imageUrl: conversation.type == ChatType.oneOnOne ? conversation.imageUrl : null,
+                imageWidget: conversation.type == ChatType.group
+                    ? Image.asset(
+                        conversation.imageUrl!,
+                        errorBuilder: (_, __, ___) => DefaultAvatar(size: 36.0.s),
+                      )
+                    : null,
+                subtitle: conversation.type == ChatType.oneOnOne
+                    ? Text(
+                        conversation.nickname,
+                        style: context.theme.appTextThemes.caption.copyWith(
+                          color: context.theme.appColors.quaternaryText,
                         ),
-                      ],
-                    ),
-            ),
-            if (messages.isEmpty)
-              MessagingEmptyView(
-                title: context.i18n.messaging_empty_description,
-                asset: Assets.svg.walletChatEmptystate,
-                trailing: GestureDetector(
-                  onTap: () {
-                    ChatLearnMoreModalRoute().push<void>(context);
-                  },
-                  child: Text(
-                    context.i18n.button_learn_more,
-                    style: context.theme.appTextThemes.caption.copyWith(
-                      color: context.theme.appColors.primaryAccent,
+                      )
+                    : Row(
+                        children: [
+                          Assets.svg.iconChannelMembers.icon(size: 10.0.s),
+                          SizedBox(width: 4.0.s),
+                          Text(
+                            conversation.participantsMasterkeys.length.toString(),
+                            style: context.theme.appTextThemes.caption.copyWith(
+                              color: context.theme.appColors.quaternaryText,
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+              if (messages.isEmpty)
+                MessagingEmptyView(
+                  title: context.i18n.messaging_empty_description,
+                  asset: Assets.svg.walletChatEmptystate,
+                  trailing: GestureDetector(
+                    onTap: () {
+                      ChatLearnMoreModalRoute().push<void>(context);
+                    },
+                    child: Text(
+                      context.i18n.button_learn_more,
+                      style: context.theme.appTextThemes.caption.copyWith(
+                        color: context.theme.appColors.primaryAccent,
+                      ),
                     ),
                   ),
+                )
+              else
+                Expanded(
+                  child: ChatMessagesList(messages),
                 ),
-              )
-            else
-              Expanded(
-                child: ChatMessagesList(messages),
-              ),
-            MessagingBottomBar(conversation: conversation),
-          ],
+              MessagingBottomBar(conversation: conversation),
+            ],
+          ),
         ),
       ),
     );

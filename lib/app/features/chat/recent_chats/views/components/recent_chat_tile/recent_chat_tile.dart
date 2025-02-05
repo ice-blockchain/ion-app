@@ -103,15 +103,12 @@ class RecentChatTile extends ConsumerWidget {
         if (isEditMode) {
           ref.read(selectedConversationsIdsProvider.notifier).toggle([conversationWithMetadata]);
         } else {
-          final participantsMasterpubkeys =
-              conversationWithMetadata.participants.map((e) => e.masterPubkey).toList();
-
           MessagesRoute(
             id: conversationWithMetadata.id,
             name: conversationWithMetadata.name,
             chatType: conversationWithMetadata.type,
             imageUrl: conversationWithMetadata.imageUrl,
-            participantsMasterkeys: participantsMasterpubkeys,
+            participantsMasterkeys: conversationWithMetadata.participantsMasterkeys,
             nickname: prefixUsername(username: conversationWithMetadata.nickname, context: context),
           ).push<void>(context);
         }

@@ -91,7 +91,6 @@ class BottomBarInitialView extends HookConsumerWidget {
               SizedBox(width: 6.0.s),
               Expanded(
                 child: TextField(
-                  onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
                   controller: controller,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: context.theme.appColors.primaryText,

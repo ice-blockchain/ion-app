@@ -26,13 +26,13 @@ void main() {
 
   group('IonConnectGiftWrapService', () {
     test('creates wrap from event', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
-        event,
-        receiverSigner.publicKey,
-        PrivateDirectMessageEntity.kind,
+        event: event,
+        receiverPubkey: receiverSigner.publicKey,
+        contentKind: PrivateDirectMessageEntity.kind,
       );
 
       expect(wrap.kind, equals(1059));
@@ -46,19 +46,19 @@ void main() {
     });
 
     test('decodes wrap back to original event on senders side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
-        event,
-        senderSigner.publicKey,
-        PrivateDirectMessageEntity.kind,
+        event: event,
+        receiverPubkey: senderSigner.publicKey,
+        contentKind: PrivateDirectMessageEntity.kind,
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
-        wrap.content,
-        wrap.pubkey,
-        senderSigner.privateKey,
+        content: wrap.content,
+        senderPubkey: wrap.pubkey,
+        privateKey: senderSigner.privateKey,
       );
 
       expect(decodedWrap.kind, equals(14));
@@ -67,19 +67,19 @@ void main() {
     });
 
     test('decodes wrap back to original event on receivers side', () async {
-      final event = await PrivateDirectMessageData.fromRawContent('test')
-          .toEventMessage(pubkey: senderSigner.publicKey);
+      final event =
+          await PrivateDirectMessageData.fromRawContent('test').toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
-        event,
-        receiverSigner.publicKey,
-        PrivateDirectMessageEntity.kind,
+        event: event,
+        receiverPubkey: receiverSigner.publicKey,
+        contentKind: PrivateDirectMessageEntity.kind,
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
-        wrap.content,
-        wrap.pubkey,
-        receiverSigner.privateKey,
+        content: wrap.content,
+        senderPubkey: wrap.pubkey,
+        privateKey: receiverSigner.privateKey,
       );
 
       expect(decodedWrap.kind, equals(14));

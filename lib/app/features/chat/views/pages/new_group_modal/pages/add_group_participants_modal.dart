@@ -7,7 +7,6 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -30,14 +29,9 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
         selectable: true,
         initialUserListType: UserListType.follower,
         key: const Key('add-group-participants-modal'),
-        selectedPubkeys: createGroupForm.members.map((e) => e.masterPubkey).toList(),
+        selectedPubkeys: createGroupForm.participantsMasterkeys.toList(),
         onUserSelected: (user) {
-          createGroupFormNotifier.toggleMember(
-            ChatParticipantData(
-              pubkey: user.pubkey,
-              masterPubkey: user.masterPubkey,
-            ),
-          );
+          createGroupFormNotifier.toggleMember(user.masterPubkey);
         },
         navigationBar: NavigationAppBar.modal(
           title: Text(context.i18n.group_create_title),

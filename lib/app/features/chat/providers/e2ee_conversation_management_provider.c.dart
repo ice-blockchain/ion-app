@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
-import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -18,7 +17,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     required String subject,
     required MediaFile groupImage,
     required String conversationId,
-    required List<ChatParticipantData> participants,
+    required List<String> participantsMasterkeys,
   }) async {
     state = const AsyncLoading();
 
@@ -30,8 +29,8 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
         content: '',
         subject: subject,
         mediaFiles: [groupImage],
-        participants: participants,
         conversationId: conversationId,
+        participantsMasterkeys: participantsMasterkeys,
       );
     });
   }

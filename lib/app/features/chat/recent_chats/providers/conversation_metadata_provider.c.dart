@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
-import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
@@ -16,32 +15,22 @@ part 'conversation_metadata_provider.c.g.dart';
 @riverpod
 class ConversationMetadata extends _$ConversationMetadata {
   @override
-  Future<ConversationEntity> build(
-    ConversationEntity conversation, {
-    bool loadPubkeys = false,
-  }) async {
+  Future<ConversationEntity> build(ConversationEntity conversation) async {
     state = const AsyncValue.loading();
 
-    var updatedConversation = conversation;
-
     final database = ref.read(conversationsDBServiceProvider);
-    final unreadMessagesCount = await database.getUnreadMessagesCount(updatedConversation.id);
+    final unreadMessagesCount = await database.getUnreadMessagesCount(conversation.id);
 
-    if (loadPubkeys) {
-      updatedConversation = await _getParticipantsWithPubkeys();
-    }
-
-    if (updatedConversation.type == ChatType.oneOnOne) {
-      final participantsMasterPubkeys =
-          updatedConversation.participants.map((p) => p.masterPubkey).toList();
+    if (conversation.type == ChatType.oneOnOne) {
       final currentMasterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
 
       if (currentMasterPubkey == null) {
         throw UserMasterPubkeyNotFoundException();
       }
 
-      final masterPubkey =
-          participantsMasterPubkeys.where((key) => key != currentMasterPubkey).singleOrNull;
+      final masterPubkey = conversation.participantsMasterkeys
+          .where((key) => key != currentMasterPubkey)
+          .singleOrNull;
 
       if (masterPubkey == null) {
         throw UserMetadataNotFoundException(masterPubkey ?? '?');
@@ -62,20 +51,20 @@ class ConversationMetadata extends _$ConversationMetadata {
         nickname: nickname,
         imageUrl: imageUrl,
         unreadMessagesCount: unreadMessagesCount,
-        participants: List.from(updatedConversation.participants)
-          ..sortBy<String>((e) => e.masterPubkey),
+        participantsMasterkeys: List.from(conversation.participantsMasterkeys)
+          ..sortBy<String>((e) => e),
         //
-        id: updatedConversation.id,
-        type: updatedConversation.type,
-        isArchived: updatedConversation.isArchived,
-        lastMessageAt: updatedConversation.lastMessageAt,
-        lastMessageContent: updatedConversation.lastMessageContent,
+        id: conversation.id,
+        type: conversation.type,
+        isArchived: conversation.isArchived,
+        lastMessageAt: conversation.lastMessageAt,
+        lastMessageContent: conversation.lastMessageContent,
       );
     } else {
-      var imageUrl = updatedConversation.imageUrl;
+      var imageUrl = conversation.imageUrl;
       // If the image is not available, download it from the server and update conversation messages
-      if (updatedConversation.imageUrl == null) {
-        final conversationMessages = await database.getConversationMessages(updatedConversation.id);
+      if (conversation.imageUrl == null) {
+        final conversationMessages = await database.getConversationMessages(conversation.id);
         final latestMessageWithIMetaTag =
             conversationMessages.firstWhereOrNull((m) => m.data.primaryMedia != null);
 
@@ -90,7 +79,7 @@ class ConversationMetadata extends _$ConversationMetadata {
 
           await database.updateGroupConversationImage(
             groupImagePath: imageUrl,
-            conversationId: updatedConversation.id,
+            conversationId: conversation.id,
           );
         }
       }
@@ -99,35 +88,14 @@ class ConversationMetadata extends _$ConversationMetadata {
         imageUrl: imageUrl,
         unreadMessagesCount: unreadMessagesCount,
         //
-        id: updatedConversation.id,
-        name: updatedConversation.name,
-        type: updatedConversation.type,
-        isArchived: updatedConversation.isArchived,
-        participants: updatedConversation.participants,
-        lastMessageAt: updatedConversation.lastMessageAt,
-        lastMessageContent: updatedConversation.lastMessageContent,
+        id: conversation.id,
+        name: conversation.name,
+        type: conversation.type,
+        isArchived: conversation.isArchived,
+        participantsMasterkeys: conversation.participantsMasterkeys,
+        lastMessageAt: conversation.lastMessageAt,
+        lastMessageContent: conversation.lastMessageContent,
       );
     }
-  }
-
-  Future<ConversationEntity> _getParticipantsWithPubkeys() async {
-    final participantsMasterPubkeys = conversation.participants.map((p) => p.masterPubkey);
-
-    final participantsWithPubkeys = await Future.wait(
-      participantsMasterPubkeys.map((masterPubkey) async {
-        final userMetadata = await ref.watch(userMetadataProvider(masterPubkey).future);
-
-        if (userMetadata == null) {
-          throw UserMetadataNotFoundException(masterPubkey);
-        }
-
-        return ChatParticipantData(
-          pubkey: userMetadata.pubkey,
-          masterPubkey: userMetadata.masterPubkey,
-        );
-      }),
-    );
-
-    return conversation.copyWith(participants: participantsWithPubkeys);
   }
 }

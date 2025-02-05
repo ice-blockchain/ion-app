@@ -11,7 +11,6 @@ import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversation_metadata_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
@@ -31,28 +30,18 @@ class ActionButton extends HookConsumerWidget {
     final paddingBottom = useState<double>(0);
     final sendButtonDisabled = useState<bool>(false);
 
-    final conversationMetadata =
-        ref.watch(conversationMetadataProvider(conversation, loadPubkeys: true)).value;
-
-    final pubkeysLoaded =
-        conversationMetadata?.participants.every((p) => p.pubkey.isNotEmpty) ?? false;
-
-    ref.displayErrors(conversationMetadataProvider(conversation));
-
     Future<void> sendMessage() async {
       try {
         ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
         final conversationMessageManagementService =
             await ref.read(conversationMessageManagementServiceProvider.future);
 
-        if (conversationMetadata?.participants != null) {
-          await conversationMessageManagementService.sendMessage(
-            content: controller.text,
-            conversationId: conversation.id,
-            participants: conversationMetadata!.participants,
-            subject: conversation.type == ChatType.group ? conversation.name : null,
-          );
-        }
+        await conversationMessageManagementService.sendMessage(
+          content: controller.text,
+          conversationId: conversation.id,
+          participantsMasterkeys: conversation.participantsMasterkeys,
+          subject: conversation.type == ChatType.group ? conversation.name : null,
+        );
       } catch (e) {
         if (context.mounted) {
           await showSimpleBottomSheet<void>(
@@ -73,7 +62,6 @@ class ActionButton extends HookConsumerWidget {
 
         sendButtonDisabled.value = false;
       },
-      [pubkeysLoaded],
     );
 
     Widget subButton() {
@@ -82,7 +70,7 @@ class ActionButton extends HookConsumerWidget {
         case MessagingBottomBarState.voicePaused:
           return SendButton(
             onSend: onSend,
-            disabled: sendButtonDisabled.value || !pubkeysLoaded,
+            disabled: sendButtonDisabled.value,
           );
         case MessagingBottomBarState.voice:
         case MessagingBottomBarState.voiceLocked:

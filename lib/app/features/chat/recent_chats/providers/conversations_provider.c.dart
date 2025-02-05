@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
-import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
@@ -86,9 +85,7 @@ class Conversations extends _$Conversations {
       isArchived: isArchived,
       lastMessageAt: lastMessageAt,
       lastMessageContent: lastMessageContent,
-      participants: participantsMasterkeys
-          .map((k) => ChatParticipantData(masterPubkey: k, pubkey: ''))
-          .toList(),
+      participantsMasterkeys: participantsMasterkeys,
     );
   }
 

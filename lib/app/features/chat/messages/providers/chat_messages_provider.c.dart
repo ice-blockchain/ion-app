@@ -61,7 +61,6 @@ class ChatMessages extends _$ChatMessages {
       text: message.data.content.map((e) => e.text).join(),
       author: MessageAuthor(
         name: conversation.name,
-        imageUrl: conversation.imageUrl ?? '',
         isCurrentUser: message.pubkey == devicePubkey,
       ),
     );

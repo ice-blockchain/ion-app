@@ -20,7 +20,6 @@ import 'package:ion/app/features/chat/community/channel/views/pages/channel_page
 import 'package:ion/app/features/chat/community/channel/views/pages/create_channel_modal/create_channel_modal.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/edit_channel_page/edit_channel_page.dart';
 import 'package:ion/app/features/chat/messages/views/pages/messages_page.dart';
-import 'package:ion/app/features/chat/model/chat_participant_data.c.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
@@ -331,10 +330,7 @@ class WalletMainModalRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<MessagesRoute>(
-  path: '/messages',
-  routes: [],
-)
+@TypedGoRoute<MessagesRoute>(path: '/messages')
 class MessagesRoute extends BaseRouteData {
   MessagesRoute({
     required this.id,
@@ -351,17 +347,10 @@ class MessagesRoute extends BaseRouteData {
               type: chatType,
               imageUrl: imageUrl,
               nickname: nickname ?? '',
-              participants: participantsMasterkeys
-                  .map(
-                    (masterPubkey) => ChatParticipantData(
-                      pubkey: '',
-                      masterPubkey: masterPubkey,
-                    ),
-                  )
-                  .toList(),
+              participantsMasterkeys: participantsMasterkeys,
             ),
           ),
-          type: IceRouteType.fade,
+          type: IceRouteType.single,
         );
 
   final String id;

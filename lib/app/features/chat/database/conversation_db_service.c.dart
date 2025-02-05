@@ -390,12 +390,4 @@ class ConversationsDBService {
       },
     );
   }
-
-  Future<void> signOut() async {
-    final tables = _db.allTables.toList();
-
-    for (final table in tables) {
-      await table.deleteAll();
-    }
-  }
 }

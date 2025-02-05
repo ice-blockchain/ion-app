@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:developer';
+
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
@@ -19,16 +23,18 @@ part 'fetch_conversation_provider.c.g.dart';
 class FetchConversations extends _$FetchConversations {
   @override
   Future<void> build() async {
-    final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+    final masterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+
+    if (masterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
 
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
     }
 
-    final pubkey = eventSigner.publicKey;
-
-    final lastMessageDate =
-        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final lastMessageDate = await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
@@ -39,7 +45,7 @@ class FetchConversations extends _$FetchConversations {
           PrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
         ],
-        '#p': [pubkey],
+        '#p': [eventSigner.publicKey],
       },
       since: sinceDate,
     );
@@ -67,9 +73,10 @@ class FetchConversations extends _$FetchConversations {
 
     final dbProvider = ref.watch(conversationsDBServiceProvider);
 
-    await for (final wrap in wrapEvents) {
+    await for (final giftwrap in wrapEvents) {
+      log(giftwrap.toString());
       final rumor = await _unwrapGift(
-        wrap,
+        giftWrap: giftwrap,
         sealService: sealService,
         giftWrapService: giftWrapService,
         privateKey: eventSigner.privateKey,
@@ -80,17 +87,17 @@ class FetchConversations extends _$FetchConversations {
     }
   }
 
-  Future<EventMessage?> _unwrapGift(
-    EventMessage giftWrap, {
+  Future<EventMessage?> _unwrapGift({
+    required EventMessage giftWrap,
     required String privateKey,
     required IonConnectSealService sealService,
     required IonConnectGiftWrapService giftWrapService,
   }) async {
     try {
       final seal = await giftWrapService.decodeWrap(
-        giftWrap.content,
-        giftWrap.pubkey,
-        privateKey,
+        privateKey: privateKey,
+        content: giftWrap.content,
+        senderPubkey: giftWrap.senderDevicePubkey,
       );
 
       return await sealService.decodeSeal(
