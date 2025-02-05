@@ -24,7 +24,7 @@ part 'wallet_views_service.c.g.dart';
 Future<WalletViewsService> walletViewsService(Ref ref) async {
   return WalletViewsService(
     await ref.watch(ionIdentityClientProvider.future),
-    await ref.watch(walletsProvider.future),
+    await ref.watch(walletsNotifierProvider.future),
     await ref.watch(mainWalletProvider.future),
   );
 }

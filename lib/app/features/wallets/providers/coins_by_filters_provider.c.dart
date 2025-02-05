@@ -7,15 +7,21 @@ import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'coins_by_symbol_group_provider.c.g.dart';
+part 'coins_by_filters_provider.c.g.dart';
 
 @riverpod
-Future<List<CoinInWalletData>> coinsBySymbolGroup(
+Future<List<CoinInWalletData>> coinsByFilters(
   Ref ref, {
-  required String symbolGroup,
+  String? symbolGroup,
+  String? symbol,
 }) async {
+  assert(
+    symbolGroup != null || symbol != null,
+    'Either symbolGroup or symbol must be provided.',
+  );
+
   final service = await ref.watch(coinsServiceProvider.future);
-  final allCoins = await service.getCoinsBySymbolGroup(symbolGroup);
+  final allCoins = await service.getCoinsByFilters(symbolGroup: symbolGroup, symbol: symbol);
   final walletViewCoins =
       await ref.watch(currentWalletViewDataProvider.future).then((walletView) => walletView.coins);
   final result = <CoinInWalletData>[];

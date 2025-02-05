@@ -25,9 +25,12 @@ class CoinsService {
     return _coinsRepository.watchCoins(coinIds).map((coins) => coins.map(CoinData.fromDB));
   }
 
-  Future<Iterable<CoinData>> getCoinsBySymbolGroup(String symbolGroup) async {
+  Future<Iterable<CoinData>> getCoinsByFilters({
+    String? symbolGroup,
+    String? symbol,
+  }) async {
     return _coinsRepository
-        .getCoinsBySymbolGroup(symbolGroup)
+        .getCoinsByFilters(symbolGroup: symbolGroup, symbol: symbol)
         .then((result) => result.map(CoinData.fromDB));
   }
 }

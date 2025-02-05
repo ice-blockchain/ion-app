@@ -11,7 +11,7 @@ part 'main_wallet_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Wallet> mainWallet(Ref ref) async {
-  final wallets = await ref.watch(walletsProvider.future);
+  final wallets = await ref.watch(walletsNotifierProvider.future);
   final mainWallet = wallets.firstWhereOrNull((wallet) => wallet.name == 'main');
 
   if (mainWallet == null) {

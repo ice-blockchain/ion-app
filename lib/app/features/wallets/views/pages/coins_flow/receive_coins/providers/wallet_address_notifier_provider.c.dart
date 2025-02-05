@@ -32,11 +32,11 @@ class WalletAddressNotifier extends _$WalletAddressNotifier {
         walletViewId: walletView.id,
         onVerifyIdentity: onVerifyIdentity,
       );
+
+      await ref.read(walletsNotifierProvider.notifier).addWallet(result);
+
       walletAddress = result.address;
     });
-
-    // TODO: Improve the walletsProvider to be able to add a wallet to the already loaded list.
-    ref.invalidate(walletsProvider);
 
     return walletAddress;
   }
@@ -53,7 +53,7 @@ class WalletAddressNotifier extends _$WalletAddressNotifier {
 
     // Attempt to get address from existed wallets
     if (address == null && coin?.walletId != null) {
-      final wallets = await ref.read(walletsProvider.future);
+      final wallets = await ref.read(walletsNotifierProvider.future);
       address = wallets.firstWhereOrNull((wallet) => wallet.id == coin?.walletId)?.address;
     }
 
