@@ -5,8 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/chat_date_header_text/chat_date_header_text.dart';
-import 'package:ion/app/features/chat/messages/views/components/message_types/text_message/text_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/chat_date_header_text/chat_date_header_text.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 

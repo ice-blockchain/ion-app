@@ -15,7 +15,7 @@ import 'package:ion/app/features/chat/community/providers/join_community_provide
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_provider.c.dart';
-import 'package:ion/app/features/chat/messages/views/components/components.dart';
+import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';

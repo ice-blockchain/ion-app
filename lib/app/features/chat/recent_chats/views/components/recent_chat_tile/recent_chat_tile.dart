@@ -5,10 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/avatar/default_avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -128,27 +128,34 @@ class RecentChatTile extends HookConsumerWidget {
   }
 }
 
-class SenderSummary extends StatelessWidget {
-  const SenderSummary({required this.sender, this.textColor, super.key});
+class SenderSummary extends ConsumerWidget {
+  const SenderSummary({required this.pubkey, this.textColor, super.key});
 
-  final MessageAuthor sender;
+  final String pubkey;
+
   final Color? textColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data;
+
+    if (user == null) {
+      return const SizedBox.shrink();
+    }
+
     return Row(
       children: [
         Text(
-          sender.name,
+          user.name,
           style: context.theme.appTextThemes.subtitle3.copyWith(
             color: textColor ?? context.theme.appColors.primaryText,
           ),
         ),
-        if (sender.isIceUser)
-          Padding(
-            padding: EdgeInsets.only(left: 4.0.s),
-            child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
-          ),
+        // if (sender.isIceUser)
+        //   Padding(
+        //     padding: EdgeInsets.only(left: 4.0.s),
+        //     child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
+        //   ),
       ],
     );
   }

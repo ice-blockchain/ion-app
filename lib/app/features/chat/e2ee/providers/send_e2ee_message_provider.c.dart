@@ -6,7 +6,7 @@ import 'package:cryptography/cryptography.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
-import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -33,29 +33,6 @@ class SendE2eeMessageNotifier extends _$SendE2eeMessageNotifier {
   FutureOr<void> build() async {
     return;
   }
-
-  // Future<void> sendOneToOneMessage(
-  //   String conversationUUID,
-  //   String message,
-  //   String receiver,
-  //   List<MediaFile>? mediaFiles,
-  // ) async {
-  //   final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-
-  //   if (eventSigner == null) {
-  //     throw EventSignerNotFoundException();
-  //   }
-
-  //   final currentUserPubkey = eventSigner.publicKey;
-
-  //   await _send(
-  //     conversationUUID: conversationUUID,
-  //     message: message,
-  //     participants: [receiver, currentUserPubkey],
-  //     subject: '',
-  //     mediaFiles: mediaFiles,
-  //   );
-  // }
 
   Future<void> send({
     required String conversationUUID,
@@ -194,7 +171,6 @@ class SendE2eeMessageNotifier extends _$SendE2eeMessageNotifier {
       CommunityIdentifierTag(value: conversationUuid).toTag(),
       if (subject != null && subject.isNotEmpty) RelatedSubject(value: subject).toTag(),
       ...pubkeys.map((pubkey) => ['p', pubkey]),
-      // ['b', currentUserPubkey],
     ];
   }
 
