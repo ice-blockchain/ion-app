@@ -715,6 +715,7 @@
   "article_preview_title": "Article preview",
   "article_page_title": "Article",
   "article_page_from_author": "from {name}",
+  "article_page_in_topic": "in {name}",
   "update_update_title": "Please update",
   "update_update_desc": "You are using an old app version and need to update it in order to use it further",
   "update_update_action": "Update now",
