@@ -8,8 +8,8 @@ import 'package:ion/app/features/feed/providers/feed_stories_data_source_provide
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_skeleton.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/user_story_list_item.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 
 class Stories extends ConsumerWidget {
@@ -40,7 +40,7 @@ class Stories extends ConsumerWidget {
             onLoadMore: () => _onLoadMore(ref),
             builder: (context, slivers) {
               return SizedBox(
-                height: StoryListItem.height,
+                height: UserStoryListItem.height,
                 child: CustomScrollView(
                   scrollDirection: Axis.horizontal,
                   slivers: slivers,
