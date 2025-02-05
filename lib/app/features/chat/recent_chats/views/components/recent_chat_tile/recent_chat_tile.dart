@@ -16,24 +16,25 @@ class RecentChatTile extends HookConsumerWidget {
   const RecentChatTile({
     required this.conversationUUID,
     required this.name,
-    required this.avatarUrl,
     required this.defaultAvatar,
     required this.lastMessageAt,
     required this.lastMessageContent,
     required this.unreadMessagesCount,
     required this.onTap,
+    this.avatarUrl,
+    this.avatarWidget,
     super.key,
   });
 
   final String conversationUUID;
   final String name;
   final String? avatarUrl;
-  final String? defaultAvatar;
+  final Widget? defaultAvatar;
   final DateTime lastMessageAt;
   final String lastMessageContent;
   final int unreadMessagesCount;
   final VoidCallback? onTap;
-
+  final Widget? avatarWidget;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
@@ -80,6 +81,8 @@ class RecentChatTile extends HookConsumerWidget {
                   children: [
                     Avatar(
                       imageUrl: avatarUrl,
+                      imageWidget: avatarWidget,
+                      defaultAvatar: defaultAvatar,
                       size: 40.0.s,
                     ),
                     SizedBox(width: 12.0.s),

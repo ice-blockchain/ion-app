@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
@@ -15,6 +17,7 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsTimelinePage extends ConsumerWidget {
@@ -69,7 +72,7 @@ class RecentChatsTimelinePage extends ConsumerWidget {
                       key: ValueKey(conversation.uuid),
                     )
                   else if (conversation.type == ConversationType.encryptedGroup)
-                    E2eeRecentChatTile(
+                    EncryptedGroupRecentChatTile(
                       conversation: conversation,
                       key: ValueKey(conversation.uuid),
                     ),
@@ -102,7 +105,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
       conversationUUID: conversation.uuid,
       name: community.data.name,
       avatarUrl: community.data.avatar?.url,
-      defaultAvatar: Assets.svg.iconContactList,
+      defaultAvatar: Assets.svg.iconContactList.icon(),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: conversation.latestMessage?.content ?? 'Community is created',
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
@@ -148,7 +151,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       conversationUUID: conversation.uuid,
       name: userMetadata.data.name,
       avatarUrl: userMetadata.data.picture,
-      defaultAvatar: Assets.svg.iconContactList,
+      defaultAvatar: Assets.svg.iconContactList.icon(),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: conversation.latestMessage?.content ?? '',
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
@@ -162,13 +165,43 @@ class E2eeRecentChatTile extends ConsumerWidget {
   }
 }
 
-class EncryptedGroupRecentChatTile extends ConsumerWidget {
+class EncryptedGroupRecentChatTile extends HookConsumerWidget {
   const EncryptedGroupRecentChatTile({required this.conversation, super.key});
 
   final ConversationListItem conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Text('Encrypted Group');
+    if (conversation.latestMessage == null) {
+      return const SizedBox.shrink();
+    }
+
+    final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+
+    final name = entity.relatedSubject?.value ?? '';
+
+    final unreadMessagesCount = ref.watch(unreadMessageCountProviderProvider(conversation.uuid));
+
+    final mediaService = useFuture(
+      ref.watch(mediaServiceProvider).retreiveEncryptedMedia([
+        entity.primaryMedia!,
+      ]),
+    );
+
+    return RecentChatTile(
+      conversationUUID: conversation.uuid,
+      name: name,
+      avatarWidget:
+          mediaService.data?.isNotEmpty ?? false ? Image.file(mediaService.data!.first) : null,
+      defaultAvatar: Assets.svg.iconContactList.icon(),
+      lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
+      lastMessageContent: entity.content.isEmpty
+          ? 'Community is created'
+          : entity.content.map((e) => e.text).join(),
+      unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
+      onTap: () {
+        ChannelRoute(uuid: conversation.uuid).push<void>(context);
+      },
+    );
   }
 }
