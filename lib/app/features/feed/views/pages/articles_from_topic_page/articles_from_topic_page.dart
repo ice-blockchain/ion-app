@@ -37,6 +37,7 @@ class ArticlesFromTopicPage extends HookConsumerWidget {
           else
             EntitiesList(
               entities: entities.toList(),
+              hideBlocked: false,
             ),
         ],
       ),
