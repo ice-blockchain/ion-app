@@ -15,15 +15,31 @@ enum CryptoAssetType { coin, nft }
 class SendAssetFormController extends _$SendAssetFormController {
   // TODO: make async
   @override
-  CryptoAssetData build({CryptoAssetType type = CryptoAssetType.coin}) {
+  CryptoAssetData build({
+    CryptoAssetType type = CryptoAssetType.coin,
+    CoinsGroup? coin,
+    NftData? nft,
+  }) {
+    assert(
+      (type == CryptoAssetType.coin && coin != null) ||
+          (type == CryptoAssetType.nft && nft != null),
+      'Coin or NFT must be provided based on type',
+    );
+
     final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
 
     return CryptoAssetData(
-      selectedNetwork: Network.ion, // TODO: Not implemented
+      selectedNetwork: switch (type) {
+        CryptoAssetType.coin => coin!.coins.first.coin.network,
+        CryptoAssetType.nft => Network.ion // Not implemented
+      },
       wallet: walletView,
-      address: 'Not implemented', // TODO (1) not implemented
+      address: 'Not implemented',
+      // TODO (1) not implemented
       arrivalTime: 15,
       arrivalDateTime: DateTime.now(),
+      selectedCoin: coin,
+      selectedNft: nft,
     );
   }
 
@@ -31,9 +47,11 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   void setCoin(CoinsGroup coin) => state = state.copyWith(selectedCoin: coin);
 
-  void setContact(String? pubkey) => state = state.copyWith(selectedContactPubkey: pubkey);
+  void setContact(String? pubkey) =>
+      state = state.copyWith(selectedContactPubkey: pubkey);
 
-  void setNetwork(Network network) => state = state.copyWith(selectedNetwork: network);
+  void setNetwork(Network network) =>
+      state = state.copyWith(selectedNetwork: network);
 
   void updateAmount(String amount) {
     // TODO: Not implemented
@@ -45,5 +63,6 @@ class SendAssetFormController extends _$SendAssetFormController {
     // );
   }
 
-  void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
+  void updateArrivalTime(int arrivalTime) =>
+      state = state.copyWith(arrivalTime: arrivalTime);
 }

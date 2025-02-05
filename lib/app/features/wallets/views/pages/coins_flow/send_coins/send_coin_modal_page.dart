@@ -16,13 +16,14 @@ class SendCoinModalPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coinsResult = ref.watch(filteredCoinsNotifierProvider);
 
-    ref.watch(sendAssetFormControllerProvider());
+    // ref.watch(sendAssetFormControllerProvider());
 
     return SheetContent(
       body: CoinsListView(
         coinsResult: coinsResult,
         onItemTap: (group) {
-          ref.read(sendAssetFormControllerProvider().notifier).setCoin(group);
+          ref.read(sendAssetFormControllerProvider(coin: group));
+          // ref.read(sendAssetFormControllerProvider().notifier).setCoin(group);
           NetworkSelectSendRoute().push<void>(context);
         },
         title: context.i18n.wallet_send_coins,
