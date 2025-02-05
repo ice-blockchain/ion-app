@@ -10,6 +10,10 @@ import 'package:ion/app/features/feed/providers/counters/replied_events_provider
 import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
+import 'package:ion/app/features/feed/providers/user_articles_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/user_replies_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -17,10 +21,6 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/providers/user_articles_data_source_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_posts_data_source_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_replies_data_source_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_videos_data_source_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'delete_entity_provider.c.g.dart';

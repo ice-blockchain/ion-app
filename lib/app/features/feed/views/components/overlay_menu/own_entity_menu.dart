@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -36,7 +37,7 @@ class OwnEntityMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-    if (entity == null || entity is! ModifiablePostEntity) {
+    if (entity == null || (entity is! ModifiablePostEntity && entity is! ArticleEntity)) {
       return const SizedBox.shrink();
     }
 
@@ -46,7 +47,7 @@ class OwnEntityMenu extends ConsumerWidget {
           OverlayMenuContainer(
             child: Column(
               children: [
-                if (_isEntityEditable(entity)) ...[
+                if (entity is ModifiablePostEntity && _isEntityEditable(entity)) ...[
                   OverlayMenuItem(
                     minWidth: 75.0.s,
                     label: context.i18n.button_edit,

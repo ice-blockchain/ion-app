@@ -62,13 +62,6 @@ EntitiesDataSource _buildArticlesDataSource({
 }) {
   final search = SearchExtensions.withCounters(
     [
-      ReferencesSearchExtension(contain: false),
-      ExpirationSearchExtension(expiration: false),
-      TagMarkerSearchExtension(
-        tagName: RelatedReplaceableEvent.tagName,
-        marker: RelatedEventMarker.reply.toShortString(),
-        negative: true,
-      ),
       GenericIncludeSearchExtension(
         forKind: ArticleEntity.kind,
         includeKind: UserMetadataEntity.kind,

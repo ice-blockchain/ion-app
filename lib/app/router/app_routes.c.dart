@@ -47,12 +47,15 @@ import 'package:ion/app/features/feed/create_article/views/pages/create_article_
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/create_article_preview_modal.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/compress_test_page.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
+import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/share/story_share_modal.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_record_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/article_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/article_replies_page/article_replies_page.dart';
+import 'package:ion/app/features/feed/views/pages/articles_from_author_page/articles_from_author_page.dart';
+import 'package:ion/app/features/feed/views/pages/articles_from_topic_page/articles_from_topic_page.dart';
 import 'package:ion/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/notifications_history_page.dart';
