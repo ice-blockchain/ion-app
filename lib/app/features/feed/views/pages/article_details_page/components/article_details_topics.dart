@@ -16,7 +16,6 @@ class ArticleDetailsTopics extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 20.0.s),
         ScreenSideOffset.small(
           child: ArticleDetailsSectionHeader(
             title: context.i18n.topics_title,
@@ -28,7 +27,6 @@ class ArticleDetailsTopics extends StatelessWidget {
           topics: topics,
           padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
         ),
-        SizedBox(height: 20.0.s),
       ],
     );
   }

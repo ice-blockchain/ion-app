@@ -4,27 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
-import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_progress_indicator.dart';
-import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_section_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_topics.dart';
-import 'package:ion/app/features/feed/views/pages/article_details_page/components/articles_carousel.dart';
+import 'package:ion/app/features/feed/views/pages/article_details_page/components/more_articles_from_author.dart';
+import 'package:ion/app/features/feed/views/pages/article_details_page/components/more_articles_from_topic.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/services/markdown/quill.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class ArticleDetailsPage extends HookConsumerWidget {
   const ArticleDetailsPage({
@@ -95,48 +94,14 @@ class ArticleDetailsPage extends HookConsumerWidget {
                     ScreenSideOffset.small(
                       child: UserBiography(eventReference: eventReference),
                     ),
-                    if (topics != null && topics.isNotEmpty) ArticleDetailsTopics(topics: topics),
-                    ScreenSideOffset.small(
-                      child: ArticleDetailsSectionHeader(
-                        title: context.i18n.article_page_from_author('Alicia Twen'),
-                        count: 10,
-                        trailing: GestureDetector(
-                          onTap: () {},
-                          child: Assets.svg.iconButtonNext.icon(),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                      child: const ArticlesCarousel(
-                        articleIds: [
-                          'fdsfds',
-                          'fdsfdsfsdfsd',
-                          'fdsfdsfsd',
-                        ],
-                      ),
-                    ),
-                    ScreenSideOffset.small(
-                      child: ArticleDetailsSectionHeader(
-                        title: ArticleTopic
-                            .values[0].name, // TODO: replace with first topic from articleEntity
-                        count: 3,
-                        trailing: GestureDetector(
-                          onTap: () {},
-                          child: Assets.svg.iconButtonNext.icon(),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                      child: const ArticlesCarousel(
-                        articleIds: [
-                          'fdsfds',
-                          'fdsfdsfsdfsd',
-                          'fdsfdsfsd',
-                        ],
-                      ),
-                    ),
+                    if (topics != null && topics.isNotEmpty) ...[
+                      SizedBox(height: 20.0.s),
+                      ArticleDetailsTopics(topics: topics),
+                    ],
+                    MoreArticlesFromAuthor(eventReference: eventReference),
+                    if (topics != null && topics.isNotEmpty)
+                      MoreArticlesFromTopic(eventReference: eventReference, topic: topics.first),
+                    ScreenBottomOffset(),
                   ]),
                 ),
               ],
