@@ -38,11 +38,7 @@ class GridItem extends HookWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12.0.s),
             ),
-            child: Image.asset(
-              dAppData.iconImage,
-              width: 48.0.s,
-              fit: BoxFit.contain,
-            ),
+            child: dAppData.iconImage.icon(size: 48.0.s),
           ),
           SizedBox(width: 10.0.s),
           Expanded(
