@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/database/repositories/conversation_db_repository.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -85,7 +84,10 @@ class FetchConversations extends _$FetchConversations {
       );
       if (rumor != null) {
         if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName)) {
-          await ref.watch(conversationDbRepositoryProvider).addConversation([rumor]);
+          if (rumor.kind == PrivateDirectMessageEntity.kind) {
+            await ref.watch(conversationTableDaoProvider).add([rumor]);
+          }
+
           await ref.watch(eventMessageTableDaoProvider).add(rumor);
         }
       }

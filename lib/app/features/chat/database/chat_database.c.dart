@@ -4,14 +4,17 @@ import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_database.c.g.dart';
 part 'dao/chat_message_table_dao.c.dart';
-part 'dao/conversation_table_dao.c.dart';
+part 'dao/conversations_dao.c.dart';
 part 'dao/event_message_table_dao.c.dart';
 part 'tables/chat_message_table.dart';
 part 'tables/conversation_table.dart';

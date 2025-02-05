@@ -5,7 +5,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_join_requests_state.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
-import 'package:ion/app/features/chat/database/repositories/conversation_db_repository.c.dart';
+import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -57,7 +57,7 @@ FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
     }
   }
 
-  await ref.watch(conversationDbRepositoryProvider).addConversation(acceptedEvents);
+  await ref.watch(conversationTableDaoProvider).add(acceptedEvents);
 
   return CommunityJoinRequestsState(accepted: accepted, waitingApproval: waitingApproval);
 }
