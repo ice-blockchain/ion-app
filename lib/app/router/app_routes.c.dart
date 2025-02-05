@@ -108,7 +108,6 @@ import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/model/user_category_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/profile_edit_page.dart';
-import 'package:ion/app/features/user/pages/profile_main_modal/profile_main_modal_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/payment_selection_modal/payment_selection_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/request_coins_form_modal/request_coins_form_modal.dart';
@@ -146,7 +145,7 @@ import 'package:ion/app/features/wallets/views/pages/send_nft_confirm.dart';
 import 'package:ion/app/features/wallets/views/pages/send_nft_form.dart';
 import 'package:ion/app/features/wallets/views/pages/transaction_details/explore_transaction_details_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/transaction_details/transaction_details.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_main_modal_page.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_main_modal/wallet_main_modal_page.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_scan_modal_page.dart';
 import 'package:ion/app/features/wallets/views/pages/wallets_modal.dart';
@@ -211,7 +210,6 @@ final transitionObserver = NavigationSheetTransitionObserver();
           path: '/self-profile',
           routes: [
             ...ProfileRoutes.routes,
-            TypedGoRoute<ProfileMainModalRoute>(path: 'main-modal'),
           ],
         ),
       ],
@@ -316,14 +314,6 @@ class ChatMainModalRoute extends BaseRouteData {
   ChatMainModalRoute()
       : super(
           child: const ChatMainModalPage(),
-          type: IceRouteType.mainModalSheet,
-        );
-}
-
-class ProfileMainModalRoute extends BaseRouteData {
-  ProfileMainModalRoute()
-      : super(
-          child: const ProfileMainModalPage(),
           type: IceRouteType.mainModalSheet,
         );
 }

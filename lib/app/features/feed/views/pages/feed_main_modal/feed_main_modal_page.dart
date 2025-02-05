@@ -101,9 +101,7 @@ class FeedMainModalPage extends StatelessWidget {
                 item: type,
                 onTap: () {
                   final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
-                  context
-                    ..go(GoRouterState.of(context).currentTab.baseRouteLocation)
-                    ..go(createFlowRouteLocation);
+                  context.pushReplacement(createFlowRouteLocation);
                 },
               );
             },

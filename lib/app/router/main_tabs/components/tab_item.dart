@@ -51,10 +51,9 @@ enum TabItem {
       };
 
   String get mainModalLocation => switch (this) {
-        TabItem.feed => FeedMainModalRoute().location,
+        TabItem.feed || TabItem.profile => FeedMainModalRoute().location,
         TabItem.chat => ChatMainModalRoute().location,
         TabItem.wallet => WalletMainModalRoute().location,
-        TabItem.profile => ProfileMainModalRoute().location,
         TabItem.main => '/',
       };
 }

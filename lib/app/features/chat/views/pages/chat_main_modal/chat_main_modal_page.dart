@@ -37,11 +37,7 @@ class ChatMainModalPage extends StatelessWidget {
               final createFlowRouteLocation = _getSubRouteLocation(type);
               return MainModalItem(
                 item: type,
-                onTap: () {
-                  context
-                    ..go(GoRouterState.of(context).currentTab.baseRouteLocation)
-                    ..go(createFlowRouteLocation);
-                },
+                onTap: () => context.pushReplacement(createFlowRouteLocation),
               );
             },
           ),
