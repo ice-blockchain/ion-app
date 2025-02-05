@@ -67,7 +67,8 @@ class Post extends ConsumerWidget {
         header ??
             UserInfo(
               pubkey: eventReference.pubkey,
-              createdAt: entity.createdAt,
+              createdAt:
+                  entity is ModifiablePostEntity ? entity.data.publishedAt.value : entity.createdAt,
               timeFormat: timeFormat,
               trailing: isOwnedByCurrentUser
                   ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
@@ -156,7 +157,9 @@ final class _QuotedPost extends ConsumerWidget {
             framedEventType: FramedEventType.none,
             header: UserInfo(
               pubkey: eventReference.pubkey,
-              createdAt: postEntity?.createdAt,
+              createdAt: postEntity is ModifiablePostEntity
+                  ? postEntity.data.publishedAt.value
+                  : postEntity?.createdAt,
             ),
             footer: const SizedBox.shrink(),
           ),

@@ -43,7 +43,7 @@ class VideoPostInfo extends HookConsumerWidget {
               // TODO: fix route issue, route to another route tree
               UserInfo(
                 pubkey: videoPost.masterPubkey,
-                createdAt: videoPost.createdAt,
+                createdAt: videoPost.data.publishedAt.value,
                 timeFormat: TimestampFormat.detailed,
                 trailing: UserInfoMenu(
                   pubkey: videoPost.masterPubkey,
