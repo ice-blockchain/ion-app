@@ -35,7 +35,6 @@ class CreateArticleModal extends HookConsumerWidget {
     final showMentionsSuggestions =
         ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showMentionsSuggestions);
 
-    // Add listener for suggestions visibility changes
     useEffect(
       () {
         if (suggestionsState.isVisible) {
@@ -52,6 +51,31 @@ class CreateArticleModal extends HookConsumerWidget {
         return null;
       },
       [suggestionsState.isVisible],
+    );
+
+    useEffect(
+      () {
+        void onTextChange() {
+          if (scrollController.hasClients) {
+            final editorContext = TextEditor.textEditorKey.currentContext;
+            if (editorContext != null) {
+              Scrollable.ensureVisible(
+                editorContext,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+              );
+            }
+          }
+        }
+
+        articleState.textEditorController.addListener(onTextChange);
+
+        return () {
+          articleState.textEditorController.removeListener(onTextChange);
+        };
+      },
+      [],
     );
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
