@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/user/pages/components/user_name_tile/user_name_tile.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/decorations.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/components/profile_details/profile_details_cell.dart';
@@ -20,7 +21,9 @@ class ProfileDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '';
     final userMetadataValue = ref.watch(currentUserMetadataProvider).valueOrNull;
-    final followersCount = ref.watch(followersCountProvider(currentPubkey)).valueOrNull;
+    final followersCount = ref
+        .watch(followersCountProvider(pubkey: currentPubkey, type: EventCountResultType.followers))
+        .valueOrNull;
     final followList = ref.watch(followListProvider(currentPubkey));
 
     return Container(
