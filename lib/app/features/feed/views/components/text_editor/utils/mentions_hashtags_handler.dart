@@ -115,6 +115,7 @@ class MentionsHashtagsHandler {
 
   void onSuggestionSelected(String suggestion) {
     final cursorIndex = controller.selection.baseOffset;
+
     final attribute = switch (taggingCharacter) {
       '@' => MentionAttribute.withValue(suggestion),
       '#' => HashtagAttribute.withValue(suggestion),
@@ -125,13 +126,13 @@ class MentionsHashtagsHandler {
     try {
       controller
         ..removeListener(_editorListener)
-        ..formatText(lastTagIndex, suggestion.length, attribute)
         ..replaceText(
           lastTagIndex,
           cursorIndex - lastTagIndex,
           suggestion,
           null,
         )
+        ..formatText(lastTagIndex, suggestion.length, attribute)
         ..replaceText(
           lastTagIndex + suggestion.length,
           0,
@@ -140,6 +141,7 @@ class MentionsHashtagsHandler {
         );
 
       final newCursorIndex = lastTagIndex + suggestion.length + 1;
+
       controller.updateSelection(
         TextSelection.collapsed(offset: newCursorIndex),
         ChangeSource.local,
