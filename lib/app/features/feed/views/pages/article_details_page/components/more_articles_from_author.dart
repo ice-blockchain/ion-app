@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -9,6 +11,7 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MoreArticlesFromAuthor extends ConsumerWidget {
@@ -44,7 +47,8 @@ class MoreArticlesFromAuthor extends ConsumerWidget {
             title: context.i18n.article_page_from_author(authorDisplayName),
             count: articles.length,
             trailing: GestureDetector(
-              onTap: () {},
+              onTap: () =>
+                  ArticlesFromAuthorRoute(pubkey: eventReference.pubkey).push<void>(context),
               child: Assets.svg.iconButtonNext.icon(),
             ),
           ),
