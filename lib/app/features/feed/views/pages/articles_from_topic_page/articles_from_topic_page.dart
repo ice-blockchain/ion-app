@@ -35,10 +35,7 @@ class ArticlesFromTopicPage extends ConsumerWidget {
           if (entities == null)
             const EntitiesListSkeleton()
           else
-            EntitiesList(
-              entities: entities.toList(),
-              hideBlocked: false,
-            ),
+            EntitiesList(entities: entities.toList()),
         ],
       ),
     );
