@@ -15,6 +15,7 @@ class FollowAppBar extends StatelessWidget {
       primary: false,
       flexibleSpace: NavigationAppBar.modal(
         actions: const [NavigationCloseButton()],
+        showBackButton: false,
         title: Text(title),
       ),
       automaticallyImplyLeading: false,

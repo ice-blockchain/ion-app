@@ -39,7 +39,6 @@ class ReceiveCoinModalPage extends HookConsumerWidget {
           NetworkSelectReceiveRoute().push<void>(context);
         },
         title: context.i18n.wallet_receive_coins,
-        showBackButton: true,
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,
     );

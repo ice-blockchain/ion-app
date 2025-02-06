@@ -47,6 +47,7 @@ class CoinReceiveModal extends HookConsumerWidget {
                 onPressed: Navigator.of(context, rootNavigator: true).pop,
               ),
             ],
+            showBackButton: false,
           ),
           // TODO: (1) check nullability here
           if (receiveCoinState.selectedCoin != null)

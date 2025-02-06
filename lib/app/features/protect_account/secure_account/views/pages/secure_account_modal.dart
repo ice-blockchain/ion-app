@@ -25,6 +25,7 @@ class SecureAccountModal extends ConsumerWidget {
         children: [
           NavigationAppBar.modal(
             title: Text(locale.protect_account_header_security),
+            showBackButton: false,
             actions: const [
               NavigationCloseButton(),
             ],

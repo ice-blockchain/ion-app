@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_column.dart';
@@ -67,8 +68,8 @@ class _Skeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Skeleton(
       child: OverflowBox(
-        maxHeight: double.infinity,
         alignment: Alignment.topCenter,
+        fit: OverflowBoxFit.deferToChild,
         child: SeparatedColumn(
           separator: SizedBox(
             height: separatorHeight ?? 16.0.s,

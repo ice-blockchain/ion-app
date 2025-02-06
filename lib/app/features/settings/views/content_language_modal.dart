@@ -7,6 +7,8 @@ import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart'
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
 class ContentLanguageModal extends HookConsumerWidget {
   const ContentLanguageModal({super.key});
@@ -24,6 +26,9 @@ class ContentLanguageModal extends HookConsumerWidget {
       description: context.i18n.content_language_description,
       toggleLanguageSelection: toggleLanguageSelection,
       selectedLanguages: selectedLanguages,
+      appBar: NavigationAppBar.modal(
+        actions: const [NavigationCloseButton()],
+      ),
     );
   }
 }

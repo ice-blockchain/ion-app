@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/language_selector_page.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 
 class AppLanguageModal extends ConsumerWidget {
   const AppLanguageModal({super.key});
@@ -20,6 +22,9 @@ class AppLanguageModal extends ConsumerWidget {
         ref.read(appLocaleProvider.notifier).locale = Locale(languageCode);
       },
       selectedLanguages: [locale.languageCode.toLowerCase()],
+      appBar: NavigationAppBar.modal(
+        actions: const [NavigationCloseButton()],
+      ),
     );
   }
 }
