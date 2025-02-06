@@ -204,4 +204,16 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
         );
     });
   }
+
+  //get latest date of event message
+  Future<DateTime?> getLatestEventMessageDate(int kind) async {
+    final query = select(eventMessageTable)
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+      ..where((t) => t.kind.equals(kind))
+      ..limit(1);
+
+    final row = await query.getSingleOrNull();
+
+    return row?.createdAt;
+  }
 }

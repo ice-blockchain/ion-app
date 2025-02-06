@@ -50,7 +50,7 @@ class EncryptedDirectMessagesPage extends HookConsumerWidget {
                 imageUrl: receiver.data.picture,
                 name: receiver.data.displayName,
                 subtitle: Text(
-                  receiver.data.name.formatUsername(context: context),
+                  prefixUsername(username: receiver.data.name, context: context),
                   style: context.theme.appTextThemes.caption.copyWith(
                     color: context.theme.appColors.quaternaryText,
                   ),

@@ -16,12 +16,3 @@ String prefixUsername({
     return lUsername;
   }
 }
-
-//create extension for String prefixUsername
-extension UsernamePrefix on String {
-  String formatUsername({
-    required BuildContext context,
-  }) {
-    return prefixUsername(username: this, context: context);
-  }
-}
