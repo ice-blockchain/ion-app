@@ -52,12 +52,12 @@ class TransactionListHeaderItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              networkType.iconAsset.icon(size: 16.0.s),
+              networkType.smallIconAsset.icon(size: 16.0.s),
               SizedBox(
                 width: 6.0.s,
               ),
               Text(
-                networkType.getDisplayName(context),
+                networkType.getDisplayNameSmall(context),
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: _getTextColor(context),
                 ),

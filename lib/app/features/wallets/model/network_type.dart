@@ -27,6 +27,13 @@ enum NetworkType {
     };
   }
 
+  String getDisplayNameSmall(BuildContext context) {
+    return switch (this) {
+      NetworkType.all => context.i18n.core_all,
+      _ => getDisplayName(context),
+    };
+  }
+
   AssetGenImage get iconAsset {
     return switch (this) {
       NetworkType.all => Assets.images.wallet.walletAllnetwork,
@@ -37,6 +44,13 @@ enum NetworkType {
       NetworkType.tron => Assets.images.wallet.walletTron,
       NetworkType.matic => Assets.images.wallet.walletMatic,
       NetworkType.solana => Assets.images.wallet.walletSolana,
+    };
+  }
+
+  AssetGenImage get smallIconAsset {
+    return switch (this) {
+      NetworkType.all => Assets.images.wallet.walletInfinite,
+      _ => iconAsset,
     };
   }
 }
