@@ -20,18 +20,19 @@ Future<IonConnectGiftWrapService> ionConnectGiftWrapService(Ref ref) async =>
     );
 
 abstract class IonConnectGiftWrapService {
-  Future<EventMessage> createWrap(
-    EventMessage event,
-    String receiverPubkey,
-    int contentKind, {
+  Future<EventMessage> createWrap({
+    required EventMessage event,
+    required String receiverPubkey,
+    required String receiverMasterkey,
+    required int contentKind,
     List<String>? expirationTag,
   });
 
-  Future<EventMessage> decodeWrap(
-    String content,
-    String senderPubkey,
-    String privateKey,
-  );
+  Future<EventMessage> decodeWrap({
+    required String content,
+    required String senderPubkey,
+    required String privateKey,
+  });
 }
 
 class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
@@ -43,10 +44,11 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   final IonConnectE2eeService _e2eeService;
 
   @override
-  Future<EventMessage> createWrap(
-    EventMessage event,
-    String receiverPubkey,
-    int contentKind, {
+  Future<EventMessage> createWrap({
+    required EventMessage event,
+    required String receiverPubkey,
+    required String receiverMasterkey,
+    required int contentKind,
     List<String>? expirationTag,
   }) async {
     final oneTimeSigner = await Ed25519KeyStore.generate();
@@ -67,7 +69,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       signer: oneTimeSigner,
       content: encryptedEvent,
       tags: [
-        [RelatedPubkey.tagName, receiverPubkey],
+        [RelatedPubkey.tagName, receiverMasterkey, '', receiverPubkey],
         ['k', contentKind.toString()],
         if (expirationTag != null) expirationTag,
       ],
@@ -75,11 +77,11 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   }
 
   @override
-  Future<EventMessage> decodeWrap(
-    String content,
-    String senderPubkey,
-    String privateKey,
-  ) async {
+  Future<EventMessage> decodeWrap({
+    required String content,
+    required String senderPubkey,
+    required String privateKey,
+  }) async {
     final decryptedContent = await _e2eeService.decryptMessage(
       content,
       publicKey: senderPubkey,

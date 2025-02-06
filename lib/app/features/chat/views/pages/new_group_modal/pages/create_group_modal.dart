@@ -9,6 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/model/group_type.dart';
@@ -18,7 +19,6 @@ import 'package:ion/app/features/chat/views/components/general_selection_button.
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
 import 'package:ion/app/features/components/avatar_picker/avatar_picker.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -26,6 +26,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -35,13 +36,18 @@ class CreateGroupModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
-    final currentPubkey = ref.watch(currentUserIonConnectEventSignerProvider).value?.publicKey;
+    final currentMasterPubkey = ref.watch(currentPubkeySelectorProvider).value;
+
     final createGroupForm = ref.watch(createGroupFormControllerProvider);
     final createGroupFormNotifier = ref.watch(createGroupFormControllerProvider.notifier);
     final nameController = useTextEditingController(text: createGroupForm.name);
 
-    final members =
-        currentPubkey != null ? [...createGroupForm.members, currentPubkey] : <String>[];
+    final participantsMasterkeys = currentMasterPubkey != null
+        ? [
+            ...createGroupForm.participantsMasterkeys,
+            currentMasterPubkey,
+          ]
+        : <String>[];
 
     final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
 
@@ -121,7 +127,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         Assets.svg.iconCategoriesFollowing.icon(size: 16.0.s),
                         SizedBox(width: 6.0.s),
                         Text(
-                          context.i18n.group_create_members_number(members.length),
+                          context.i18n.group_create_members_number(participantsMasterkeys.length),
                         ),
                         const Spacer(),
                         TextButton(
@@ -140,17 +146,17 @@ class CreateGroupModal extends HookConsumerWidget {
                     SizedBox(height: 20.0.s),
                     Expanded(
                       child: ListView.separated(
-                        itemCount: members.length,
+                        itemCount: participantsMasterkeys.length,
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (_, int i) {
-                          final member = members[i];
+                          final participantMasterkey = participantsMasterkeys[i];
 
-                          return GroupMemberListItem(
-                            isCurrentPubkey: member == currentPubkey,
+                          return GroupPariticipantsListItem(
+                            participantMasterkey: participantMasterkey,
+                            isCurrentUser: participantMasterkey == currentMasterPubkey,
                             onRemove: () {
-                              createGroupFormNotifier.toggleMember(member);
+                              createGroupFormNotifier.toggleMember(participantMasterkey);
                             },
-                            pubkey: member,
                           );
                         },
                       ),
@@ -179,7 +185,7 @@ class CreateGroupModal extends HookConsumerWidget {
                   ),
                 ),
                 label: Text(context.i18n.group_create_create_button),
-                onPressed: () {
+                onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     if (createGroupForm.type == GroupType.encrypted) {
                       final avatarProcessorState =
@@ -190,14 +196,30 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      MessagesRoute(
-                        participants: members,
-                        chatType: ChatType.group,
-                        name: createGroupForm.name!,
-                        imageUrl: groupPicture!.path,
-                        imageWidth: groupPicture.width,
-                        imageHeight: groupPicture.height,
-                      ).push<void>(context);
+                      if (groupPicture == null) {
+                        return;
+                      }
+
+                      final conversationId = generateUuid();
+
+                      await ref.read(e2eeConversationManagementProvider.notifier).createGroup(
+                            groupImage: groupPicture,
+                            conversationId: conversationId,
+                            subject: createGroupForm.name!,
+                            participantsMasterkeys: participantsMasterkeys,
+                          );
+
+                      if (context.mounted) {
+                        Navigator.maybeOf(context, rootNavigator: true)?.pop();
+
+                        await MessagesRoute(
+                          id: conversationId,
+                          chatType: ChatType.group,
+                          name: createGroupForm.name!,
+                          imageUrl: groupPicture.path,
+                          participantsMasterkeys: participantsMasterkeys,
+                        ).push<void>(context);
+                      }
                     } else {
                       throw UnimplementedError();
                     }

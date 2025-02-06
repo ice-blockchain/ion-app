@@ -15,12 +15,15 @@ class CreateGroupFormController extends _$CreateGroupFormController {
 
   set title(String value) => state = state.copyWith(name: value);
 
-  set members(Iterable<String> value) => state = state.copyWith(members: value.toSet());
+  set members(Iterable<String> value) =>
+      state = state.copyWith(participantsMasterkeys: value.toSet());
 
-  void toggleMember(String pubkey) {
-    final updatedMembers = state.members.toSet();
-    updatedMembers.contains(pubkey) ? updatedMembers.remove(pubkey) : updatedMembers.add(pubkey);
+  void toggleMember(String pariticipant) {
+    final updatedMembers = state.participantsMasterkeys.toSet();
+    updatedMembers.contains(pariticipant)
+        ? updatedMembers.remove(pariticipant)
+        : updatedMembers.add(pariticipant);
 
-    state = state.copyWith(members: updatedMembers);
+    state = state.copyWith(participantsMasterkeys: updatedMembers);
   }
 }

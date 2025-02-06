@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
@@ -68,8 +69,9 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     required Map<String, MediaAttachment> media,
     String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
-    List<RelatedPubkey>? relatedPubkeys,
     List<RelatedEvent>? relatedEvents,
+    List<RelatedPubkey>? relatedPubkeys,
+    CommunityIdentifierTag? relatedConversationId,
   }) = _PrivateDirectMessageData;
 
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
@@ -83,6 +85,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedReplaceableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      relatedConversationId:
+          tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).singleOrNull,
     );
   }
 

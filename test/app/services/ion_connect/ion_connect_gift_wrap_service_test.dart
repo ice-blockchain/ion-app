@@ -29,10 +29,13 @@ void main() {
       final event = await PrivateDirectMessageData.fromRawContent('test')
           .toEventMessage(pubkey: senderSigner.publicKey);
 
+      const masterPubkey = '0';
+
       final wrap = await giftWrapService.createWrap(
-        event,
-        receiverSigner.publicKey,
-        PrivateDirectMessageEntity.kind,
+        event: event,
+        receiverMasterkey: masterPubkey,
+        receiverPubkey: receiverSigner.publicKey,
+        contentKind: PrivateDirectMessageEntity.kind,
       );
 
       expect(wrap.kind, equals(1059));
@@ -40,7 +43,8 @@ void main() {
       expect(wrap.content, isNot(equals(event.content)));
       expect(wrap.tags, hasLength(2));
       expect(wrap.tags[0][0], equals('p'));
-      expect(wrap.tags[0][1], equals(receiverSigner.publicKey));
+      expect(wrap.tags[0][1], equals(masterPubkey));
+      expect(wrap.tags[0][3], equals(receiverSigner.publicKey));
       expect(wrap.tags[1][0], equals('k'));
       expect(wrap.tags[1][1], equals('14'));
     });
@@ -50,15 +54,16 @@ void main() {
           .toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
-        event,
-        senderSigner.publicKey,
-        PrivateDirectMessageEntity.kind,
+        event: event,
+        receiverMasterkey: "Doesn't matter",
+        receiverPubkey: senderSigner.publicKey,
+        contentKind: PrivateDirectMessageEntity.kind,
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
-        wrap.content,
-        wrap.pubkey,
-        senderSigner.privateKey,
+        content: wrap.content,
+        senderPubkey: wrap.pubkey,
+        privateKey: senderSigner.privateKey,
       );
 
       expect(decodedWrap.kind, equals(14));
@@ -71,15 +76,16 @@ void main() {
           .toEventMessage(pubkey: senderSigner.publicKey);
 
       final wrap = await giftWrapService.createWrap(
-        event,
-        receiverSigner.publicKey,
-        PrivateDirectMessageEntity.kind,
+        event: event,
+        receiverMasterkey: "Doesn't matter",
+        receiverPubkey: receiverSigner.publicKey,
+        contentKind: PrivateDirectMessageEntity.kind,
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
-        wrap.content,
-        wrap.pubkey,
-        receiverSigner.privateKey,
+        content: wrap.content,
+        senderPubkey: wrap.pubkey,
+        privateKey: receiverSigner.privateKey,
       );
 
       expect(decodedWrap.kind, equals(14));

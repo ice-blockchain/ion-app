@@ -118,6 +118,7 @@ class ConversationMessageActionsService {
     required String eventId,
     required String reaction,
     required String receiverPubkey,
+    required String receiverMasterkey,
   }) async {
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
@@ -127,6 +128,7 @@ class ConversationMessageActionsService {
       content: reaction,
       signer: eventSigner!,
       receiverPubkey: receiverPubkey,
+      receiverMasterkey: receiverMasterkey,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
         ['k', PrivateDirectMessageEntity.kind.toString()],
@@ -139,6 +141,7 @@ class ConversationMessageActionsService {
   Future<void> sendMessageReceivedStatus({
     required String eventId,
     required String receiverPubkey,
+    required String receiverMasterkey,
   }) async {
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
@@ -148,6 +151,7 @@ class ConversationMessageActionsService {
       signer: eventSigner!,
       content: 'received',
       receiverPubkey: receiverPubkey,
+      receiverMasterkey: receiverMasterkey,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
         ['k', PrivateDirectMessageEntity.kind.toString()],
@@ -160,6 +164,7 @@ class ConversationMessageActionsService {
   Future<void> sendMessageReadStatus({
     required String lastMessageId,
     required String receiverPubkey,
+    required String receiverMasterkey,
   }) async {
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
@@ -169,6 +174,7 @@ class ConversationMessageActionsService {
       signer: eventSigner!,
       content: 'read',
       receiverPubkey: receiverPubkey,
+      receiverMasterkey: receiverMasterkey,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
         ['k', PrivateDirectMessageEntity.kind.toString()],
@@ -182,6 +188,7 @@ class ConversationMessageActionsService {
     required String content,
     required EventSigner signer,
     required String receiverPubkey,
+    required String receiverMasterkey,
     required List<List<String>> tags,
     int? kind,
   }) async {
@@ -218,9 +225,10 @@ class ConversationMessageActionsService {
     ).toTag();
 
     final wrap = await wrapService.createWrap(
-      seal,
-      receiverPubkey,
-      PrivateMessageReactionEntity.kind,
+      event: seal,
+      receiverPubkey: receiverPubkey,
+      receiverMasterkey: receiverMasterkey,
+      contentKind: PrivateMessageReactionEntity.kind,
       expirationTag: expirationTag,
     );
 

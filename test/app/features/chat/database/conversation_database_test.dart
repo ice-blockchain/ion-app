@@ -36,7 +36,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: '',
           sig: null,
@@ -60,7 +62,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: '',
           sig: null,
@@ -74,7 +78,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'First message',
           sig: null,
@@ -103,6 +109,7 @@ void main() {
           tags: const [
             ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: '',
           sig: null,
@@ -118,6 +125,7 @@ void main() {
           tags: const [
             ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'First message',
           sig: null,
@@ -133,6 +141,7 @@ void main() {
           tags: const [
             ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'Reply to the first message',
           sig: null,
@@ -156,8 +165,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey1'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: '',
@@ -185,8 +195,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: '',
@@ -201,8 +212,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: 'First message',
@@ -226,8 +238,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: '',
@@ -242,8 +255,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: 'First message',
@@ -254,12 +268,13 @@ void main() {
       await conversationsService.insertEventMessage(
         EventMessage(
           id: '2',
-          pubkey: 'pubkey2',
+          pubkey: 'pubkey1',
           createdAt: DateTime.now().add(const Duration(seconds: 3)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
             ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: 'Reply to first message',
@@ -283,8 +298,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: '',
@@ -299,8 +315,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: 'First message',
@@ -315,8 +332,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 3)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject changed'],
           ],
           content: '',
@@ -337,8 +355,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: '',
@@ -353,8 +372,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
-            ['p', 'pubkey2'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: 'First message',
@@ -369,9 +389,10 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 3)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
-            ['p', 'pubkey3'],
             ['p', 'pubkey2'],
             ['p', 'pubkey1'],
+            ['p', 'pubkey0'],
+            ['h', '0'],
             ['subject', 'Group subject'],
           ],
           content: '',
@@ -395,7 +416,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: '',
           sig: null,
@@ -409,7 +432,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'First message',
           sig: null,
@@ -439,7 +464,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: '',
           sig: null,
@@ -453,7 +480,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'First message',
           sig: null,
@@ -499,7 +528,9 @@ void main() {
           createdAt: DateTime.now(),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: '',
           sig: null,
@@ -513,7 +544,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 1)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'First received message',
           sig: null,
@@ -527,7 +560,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 2)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'Second not received message',
           sig: null,
@@ -541,7 +576,9 @@ void main() {
           createdAt: DateTime.now().add(const Duration(seconds: 3)),
           kind: PrivateDirectMessageEntity.kind,
           tags: const [
+            ['p', 'pubkey0'],
             ['p', 'pubkey1'],
+            ['h', '0'],
           ],
           content: 'Third received message marked as read',
           sig: null,

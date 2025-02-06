@@ -6,9 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/database/conversation_database.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'conversation_db_service.c.g.dart';
@@ -100,80 +99,15 @@ class ConversationsDBService {
     if (eventMessage.kind != PrivateDirectMessageEntity.kind) return;
 
     final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final conversationId = conversationMessage.data.relatedConversationId?.value;
 
-    final conversationIdByPubkeys =
-        await lookupConversationByPubkeys(conversationMessage.allPubkeysMask);
-
-    if (conversationIdByPubkeys != null) {
+    if (conversationId != null) {
       // Existing conversation (one-to-one or group)
       await _insertConversationData(
         eventMessage: eventMessage,
-        conversationId: conversationIdByPubkeys,
+        conversationId: conversationId,
       );
-    } else {
-      // Existing group conversation (change of participants)
-      final conversationIdBySubject =
-          await lookupConversationBySubject(conversationMessage.data.relatedSubject?.value);
-
-      if (conversationIdBySubject != null) {
-        await _insertConversationData(
-          eventMessage: eventMessage,
-          conversationId: conversationIdBySubject,
-        );
-      } else {
-        // New conversation
-        final uuid = generateUuid();
-        await _insertConversationData(
-          eventMessage: eventMessage,
-          conversationId: uuid,
-        );
-      }
     }
-  }
-
-  // Check if there are conversations with the same pubkeys
-  Future<String?> lookupConversationByEventMessageId(String eventMessageId) async {
-    final conversationMessage = await (_db.select(_db.conversationMessagesTable)
-          ..where(
-            (table) => table.eventMessageId.equals(eventMessageId),
-          )
-          ..limit(1))
-        .getSingle();
-
-    return conversationMessage.conversationId;
-  }
-
-  // Check if there are conversations with the same pubkeys
-  Future<String?> lookupConversationByPubkeys(String allPubkeysMask) async {
-    final conversationsWithSameParticipants = await (_db.select(_db.conversationMessagesTable)
-          ..where(
-            (table) => table.pubKeys.equals(allPubkeysMask),
-          )
-          ..limit(1))
-        .get();
-
-    if (conversationsWithSameParticipants.isNotEmpty) {
-      return conversationsWithSameParticipants.first.conversationId;
-    }
-
-    return null;
-  }
-
-  // Check if there are conversations with the same subject but different pubkeys
-  // (this means that amount of participants in conversation was changed)
-  Future<String?> lookupConversationBySubject(String? subject) async {
-    if (subject == null) return null;
-
-    final conversationWithChangedParticipants = await (_db.select(_db.conversationMessagesTable)
-          ..where((table) => table.subject.equals(subject))
-          ..limit(1))
-        .get();
-
-    if (conversationWithChangedParticipants.isNotEmpty) {
-      return conversationWithChangedParticipants.first.conversationId;
-    }
-
-    return null;
   }
 
   // Call when "OK" is received from relay to mark message as sent (one tick)
@@ -308,29 +242,15 @@ class ConversationsDBService {
     return lastConversationMessages;
   }
 
-  Future<List<PrivateDirectMessageEntity>> getConversationMessages(
-    E2eeConversationEntity conversation,
-  ) async {
-    late JoinedSelectStatement<HasResultSet, dynamic> query;
-    if (conversation.id != null) {
-      query = _db.select(_db.conversationMessagesTable).join([
-        innerJoin(
-          _db.eventMessagesTable,
-          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
-        ),
-      ])
-        ..where(_db.conversationMessagesTable.conversationId.equals(conversation.id!))
-        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
-    } else {
-      query = _db.select(_db.conversationMessagesTable).join([
-        innerJoin(
-          _db.eventMessagesTable,
-          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
-        ),
-      ])
-        ..where(_db.conversationMessagesTable.pubKeys.equals(conversation.participants.join(',')))
-        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
-    }
+  Future<List<PrivateDirectMessageEntity>> getConversationMessages(String id) async {
+    final query = _db.select(_db.conversationMessagesTable).join([
+      innerJoin(
+        _db.eventMessagesTable,
+        _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+      ),
+    ])
+      ..where(_db.conversationMessagesTable.conversationId.equals(id))
+      ..where(_db.conversationMessagesTable.isDeleted.equals(false));
 
     final data = await query.get();
 
@@ -361,35 +281,25 @@ class ConversationsDBService {
   }
 
   Stream<List<PrivateDirectMessageEntity>> watchConversationMessages(
-    E2eeConversationEntity conversation,
+    ConversationEntity conversation,
   ) {
-    late JoinedSelectStatement<HasResultSet, dynamic> query;
-
-    if (conversation.id != null) {
-      query = _db.select(_db.conversationMessagesTable).join([
-        innerJoin(
-          _db.eventMessagesTable,
-          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
-        ),
-      ])
-        ..where(_db.conversationMessagesTable.conversationId.equals(conversation.id!))
-        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
-    } else {
-      query = _db.select(_db.conversationMessagesTable).join([
-        innerJoin(
-          _db.eventMessagesTable,
-          _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
-        ),
-      ])
-        ..where(_db.conversationMessagesTable.pubKeys.equals(conversation.participants.join(',')))
-        ..where(_db.conversationMessagesTable.isDeleted.equals(false));
-    }
+    final query = _db.select(_db.conversationMessagesTable).join([
+      innerJoin(
+        _db.eventMessagesTable,
+        _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+      ),
+    ])
+      ..where(_db.conversationMessagesTable.conversationId.equals(conversation.id))
+      ..where(_db.conversationMessagesTable.isDeleted.equals(false));
 
     return query.watch().map((rows) {
-      return rows.map((row) {
-        final eventMessage = row.readTable(_db.eventMessagesTable);
-        return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
-      }).toList();
+      return rows
+          .map((row) {
+            final eventMessage = row.readTable(_db.eventMessagesTable);
+            return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
+          })
+          .toList()
+          .sortedBy<DateTime>((e) => e.createdAt);
     });
   }
 

@@ -1,20 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
-import 'package:collection/collection.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/ee2e_conversation_data.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks.c.dart';
-import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
-import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,22 +13,11 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
   @override
   FutureOr<void> build() async {}
 
-  Future<void> createOneOnOneConversation(
-    List<String> participantsPubkeys,
-  ) async {
-    final conversationMessageManagementService =
-        await ref.read(conversationMessageManagementServiceProvider.future);
-
-    await conversationMessageManagementService.sentMessage(
-      content: '',
-      participantsPubkeys: participantsPubkeys,
-    );
-  }
-
   Future<void> createGroup({
     required String subject,
     required MediaFile groupImage,
-    required List<String> participantsPubkeys,
+    required String conversationId,
+    required List<String> participantsMasterkeys,
   }) async {
     state = const AsyncLoading();
 
@@ -48,11 +25,12 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
       final conversationMessageManagementService =
           await ref.read(conversationMessageManagementServiceProvider.future);
 
-      await conversationMessageManagementService.sentMessage(
+      await conversationMessageManagementService.sendMessage(
         content: '',
         subject: subject,
         mediaFiles: [groupImage],
-        participantsPubkeys: participantsPubkeys,
+        conversationId: conversationId,
+        participantsMasterkeys: participantsMasterkeys,
       );
     });
   }
@@ -63,15 +41,14 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
   ) async {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
-
+    /*
     //TODO: Update archived bookmark
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
       final conversationsEntities = await databaseService.getAllConversations();
 
@@ -89,9 +66,10 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
       await conversationMessageManagementService.sentMessage(
         content: '',
         subject: conversationSubject,
-        participantsPubkeys: pubkeys..add(participantPubkey),
+        participants: pubkeys..add(participantPubkey),
       );
     });
+    */
   }
 
   Future<void> removeParticipant(
@@ -100,15 +78,14 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
   ) async {
     assert(conversationSubject.isNotEmpty, 'Conversation subject is empty');
     assert(participantPubkey.isNotEmpty, 'Participant pubkey is empty');
-
+    /*
     //TODO: Update archived bookmark
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -130,9 +107,10 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
       await conversationMessageManagementService.sentMessage(
         content: '',
         subject: conversationSubject,
-        participantsPubkeys: pubkeys..remove(participantPubkey),
+        participants: pubkeys..remove(participantPubkey),
       );
     });
+    */
   }
 
   Future<void> changeSubject(
@@ -141,15 +119,14 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
   ) async {
     assert(currentSubject.isNotEmpty, 'Current conversation subject is empty');
     assert(newSubject.isNotEmpty, 'New conversation subject is empty');
-
+    /*
     //TODO: Update archived bookmark
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
       final databaseService = ref.read(conversationsDBServiceProvider);
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
       final conversationsEventMessages = await databaseService.getAllConversations();
 
@@ -167,9 +144,10 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
       await conversationMessageManagementService.sentMessage(
         content: '',
         subject: newSubject,
-        participantsPubkeys: pubkeys,
+        participants: pubkeys,
       );
     });
+    */
   }
 
   Future<void> deleteConversations(List<String> ids) async {
@@ -180,7 +158,8 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     }
   }
 
-  Future<void> toggleArchivedConversations(List<E2eeConversationEntity> conversations) async {
+  Future<void> toggleArchivedConversations(List<ConversationEntity> conversations) async {
+    /*
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
@@ -253,12 +232,11 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
             .toList(),
       );
 
-      await ref
-          .read(ionConnectNotifierProvider.notifier)
-          .sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
+      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([newSingleBookmarksSetData, bookmarksData]);
 
       await ref.read(conversationsProvider.notifier).getConversations();
     });
+    */
   }
 
   Future<void> readConversations(List<String> conversationIds) async {

@@ -21,7 +21,11 @@ class EventSignerNotFoundException extends IONException {
 }
 
 class UserRelaysNotFoundException extends IONException {
-  UserRelaysNotFoundException() : super(10004, 'User relays not found');
+  UserRelaysNotFoundException([String? pubkey])
+      : super(
+          10004,
+          pubkey != null ? 'User relays not found for $pubkey' : 'User relays not found',
+        );
 }
 
 class UserIndexersNotFoundException extends IONException {
@@ -162,7 +166,8 @@ class DecompressBrotliException extends IONException {
 }
 
 class ConversationIsNotFoundException extends IONException {
-  ConversationIsNotFoundException() : super(10035, 'Failed to find conversation');
+  ConversationIsNotFoundException(String id)
+      : super(10035, 'Failed to find conversation for message: $id');
 }
 
 class VerifyIdentityException extends IONException {
@@ -199,7 +204,7 @@ class AuthChallengeIsEmptyException extends IONException {
 }
 
 class DecodeE2EMessageException extends IONException {
-  DecodeE2EMessageException() : super(10042, 'Failed to decode E2E message');
+  DecodeE2EMessageException(String id) : super(10042, 'Failed to decode E2E message id: $id');
 }
 
 class ConversationNotFoundException extends IONException {
@@ -292,5 +297,29 @@ class UpdateWalletViewRequestNoUserWalletsException extends IONException {
       : super(
           10062,
           'To build request from coins list user wallets should be provided',
+        );
+}
+
+class UserMetadataNotFoundException extends IONException {
+  UserMetadataNotFoundException(String masterPubkey)
+      : super(
+          10063,
+          'User metadata not found $masterPubkey',
+        );
+}
+
+class UserPubkeyNotFoundException extends IONException {
+  UserPubkeyNotFoundException(String masterPubkey)
+      : super(
+          10064,
+          'User pubkey not found, master pubkey: $masterPubkey',
+        );
+}
+
+class ReceiverDevicePubkeyNotFoundException extends IONException {
+  ReceiverDevicePubkeyNotFoundException(String eventId)
+      : super(
+          10065,
+          'Sender device pubkey not found in event: $eventId',
         );
 }

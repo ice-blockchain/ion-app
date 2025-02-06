@@ -11,7 +11,7 @@ class MessageAuthor with _$MessageAuthor {
     // TODO: Should be pubkey, but commented since unnecessary for now
     // required String id,
     required String name,
-    required String imageUrl,
+    String? imageUrl,
     @Default(false) bool isApproved,
     @Default(false) bool isIceUser,
     @Default(false) bool isCurrentUser,
