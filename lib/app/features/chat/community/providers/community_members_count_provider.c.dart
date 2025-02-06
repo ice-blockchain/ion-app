@@ -52,7 +52,7 @@ FutureOr<int?> communityMembersCount(
     );
   }
 
-  return ref.watch(
+  return await ref.watch(
     countProvider(
       key: community.data.uuid,
       relay: relay,

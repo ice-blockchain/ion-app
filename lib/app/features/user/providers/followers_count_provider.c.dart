@@ -36,7 +36,7 @@ FutureOr<int?> followersCount(
   final relayUrl = userRelays.data.list.random.url;
   final relay = await ref.read(relayProvider(relayUrl).future);
 
-  return ref.watch(
+  return await ref.watch(
     countProvider(
       key: pubkey,
       relay: relay,
