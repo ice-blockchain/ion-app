@@ -121,7 +121,7 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
     return entity.data.relatedSubject?.value ?? '';
   }
 
-  Future<String?> getExistingOneToOneConversation(String receiverPubKey) async {
+  Future<String?> getExistingOneToOneConversation(String receiverMasterPubkey) async {
     final query = select(conversationTable).join([
       innerJoin(
         chatMessageTable,
@@ -133,7 +133,7 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
       ),
     ])
       ..where(
-        eventMessageTable.tags.contains(receiverPubKey),
+        eventMessageTable.tags.contains(receiverMasterPubkey),
       )
       ..where(eventMessageTable.kind.equals(PrivateDirectMessageEntity.kind))
       ..where(conversationTable.type.equals(ConversationType.oneToOne.index))

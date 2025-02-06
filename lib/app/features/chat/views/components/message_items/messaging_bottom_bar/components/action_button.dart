@@ -26,10 +26,16 @@ class ActionButton extends HookConsumerWidget {
     final sendButtonDisabled = useState<bool>(false);
 
     final onSend = useCallback(() async {
-      ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-      sendButtonDisabled.value = true;
-      await onSubmitted?.call();
-      sendButtonDisabled.value = false;
+      try {
+        ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+        sendButtonDisabled.value = true;
+        await onSubmitted?.call();
+        sendButtonDisabled.value = false;
+      } catch (e) {
+        rethrow;
+      } finally {
+        sendButtonDisabled.value = false;
+      }
     });
 
     Widget subButton() {

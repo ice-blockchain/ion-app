@@ -49,8 +49,8 @@ class CreateGroupModal extends HookConsumerWidget {
           ]
         : <String>[];
 
-    final sendE2eeMessageNotifier = ref.watch(sendE2eeMessageNotifierProvider);
-    ref.displayErrors(sendE2eeMessageNotifierProvider);
+    final sendE2eeMessageNotifier = ref.watch(conversationMessageManagementServiceProvider);
+    ref.displayErrors(conversationMessageManagementServiceProvider);
 
     useEffect(
       () {
@@ -197,10 +197,13 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      await ref.read(sendE2eeMessageNotifierProvider.notifier).send(
-                        conversationUUID: generateUuid(),
-                        message: '',
-                        participantMasterPubkeys: participantsMasterkeys,
+                      final conversationMessageManagementService =
+                          await ref.read(conversationMessageManagementServiceProvider.future);
+
+                      await conversationMessageManagementService.sendMessage(
+                        conversationId: generateUuid(),
+                        content: '',
+                        participantsMasterkeys: participantsMasterkeys,
                         subject: createGroupForm.name,
                         mediaFiles: [groupPicture!],
                       );
@@ -208,15 +211,6 @@ class CreateGroupModal extends HookConsumerWidget {
                       if (context.mounted) {
                         context.pop();
                       }
-
-                      // MessagesRoute(
-                      //   participants: members,
-                      //   chatType: ChatType.group,
-                      //   name: createGroupForm.name!,
-                      //   imageUrl: groupPicture!.path,
-                      //   imageWidth: groupPicture.width,
-                      //   imageHeight: groupPicture.height,
-                      // ).push<void>(context);
                     } else {
                       throw UnimplementedError();
                     }
