@@ -41,11 +41,12 @@ class CreateWalletService {
           Wallet.fromJson,
         );
       },
-      onBiometricsFlow: ({required String localisedReason}) {
+      onBiometricsFlow: ({required String localisedReason, required String localisedCancel}) {
         return _userActionSigner.signWithBiometrics(
           request,
           Wallet.fromJson,
           localisedReason,
+          localisedCancel,
         );
       },
     );

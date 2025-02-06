@@ -17,6 +17,7 @@ AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
   required OnPasskeyFlow<T> onPasskeyFlow,
   required OnBiometricsFlow<T> onBiometricsFlow,
   required String localisedReasonForBiometricsDialog,
+  required String localisedCancelForBiometricsDialog,
   String? identityKeyName,
 }) {
   return FutureProvider.autoDispose<T>((ref) async {
@@ -28,7 +29,10 @@ AutoDisposeFutureProvider<T> verifyUserIdentityProvider<T>({
     if (isPasswordFlowUser) {
       if (biometricsState == BiometricsState.enabled) {
         try {
-          return await onBiometricsFlow(localisedReason: localisedReasonForBiometricsDialog);
+          return await onBiometricsFlow(
+            localisedReason: localisedReasonForBiometricsDialog,
+            localisedCancel: localisedCancelForBiometricsDialog,
+          );
           // If biometrics flow fails then fallback to password flow
         } catch (_) {}
       }

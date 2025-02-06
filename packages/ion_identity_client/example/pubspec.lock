@@ -581,6 +581,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.46"
+  local_auth_crypto:
+    dependency: transitive
+    description:
+      name: local_auth_crypto
+      sha256: "3523683bea6e531178c672e8b60a2c1d1e8043f25ddcf961db4ea11745f6be10"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   local_auth_darwin:
     dependency: transitive
     description:

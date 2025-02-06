@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -34,25 +33,12 @@ class IonConnectEventSigner extends _$IonConnectEventSigner {
       return currentUserIonConnectEventSigner;
     }
 
-    final ionIdentityClient =
-        (await ref.read(ionIdentityProvider.future))(username: identityKeyName);
-    final privateKey = ionIdentityClient.auth.getUserPrivateKey();
-    if (privateKey != null) {
-      // Private key was generated during the auth flow (password), reuse it
-      return _generateFromPrivate(privateKey);
-    }
-
     // Generate a new event signer
     return _generate();
   }
 
   Future<EventSigner> _generate() async {
     final keyStore = await Ed25519KeyStore.generate();
-    return _setEventSigner(keyStore);
-  }
-
-  Future<EventSigner> _generateFromPrivate(String privateKey) async {
-    final keyStore = await Ed25519KeyStore.fromPrivate(privateKey);
     return _setEventSigner(keyStore);
   }
 

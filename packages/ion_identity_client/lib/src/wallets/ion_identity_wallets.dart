@@ -137,11 +137,12 @@ class IONIdentityWallets {
           hash: hash,
         );
       },
-      onBiometricsFlow: ({required String localisedReason}) {
+      onBiometricsFlow: ({required String localisedReason, required String localisedCancel}) {
         return _generateSignatureService.generateHashSignatureWithBiometrics(
           walletId: walletId,
           hash: hash,
           localisedReason: localisedReason,
+          localisedCancel: localisedCancel,
         );
       },
     );

@@ -55,6 +55,7 @@ class GenerateSignatureService {
     required String walletId,
     required String hash,
     required String localisedReason,
+    required String localisedCancel,
     String? externalId,
   }) async {
     return _generateSignature(
@@ -65,6 +66,7 @@ class GenerateSignatureService {
         request,
         GenerateSignatureResponse.fromJson,
         localisedReason,
+        localisedCancel,
       ),
     );
   }

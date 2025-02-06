@@ -61,16 +61,20 @@ class IdentitySigner {
   Future<AssertionRequestData> signWithBiometrics({
     required String username,
     required String localisedReason,
+    required String localisedCancel,
+    required String encryptedPrivateKey,
     required String challenge,
     required String credentialId,
     required CredentialKind credentialKind,
   }) async {
     return passwordSigner.signWithBiometrics(
       username: username,
+      encryptedPrivateKey: encryptedPrivateKey,
       localisedReason: localisedReason,
       challenge: challenge,
       credentialKind: credentialKind,
       credentialId: credentialId,
+      localisedCancel: localisedCancel,
     );
   }
 
@@ -84,10 +88,12 @@ class IdentitySigner {
 
   Future<void> enrollToUseBiometrics({
     required String username,
+    required String password,
     required String localisedReason,
   }) {
     return passwordSigner.enrollToUseBiometrics(
       username: username,
+      password: password,
       localisedReason: localisedReason,
     );
   }

@@ -8,10 +8,11 @@ part of 'private_key_data.c.dart';
 
 PrivateKeyData _$PrivateKeyDataFromJson(Map<String, dynamic> json) =>
     PrivateKeyData(
-      hexEncodedPrivateKeyBytes: json['hexEncodedPrivateKeyBytes'] as String?,
+      biometricsEncryptedPassword:
+          json['biometricsEncryptedPassword'] as String?,
     );
 
 Map<String, dynamic> _$PrivateKeyDataToJson(PrivateKeyData instance) =>
     <String, dynamic>{
-      'hexEncodedPrivateKeyBytes': instance.hexEncodedPrivateKeyBytes,
+      'biometricsEncryptedPassword': instance.biometricsEncryptedPassword,
     };
