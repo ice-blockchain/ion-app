@@ -9,10 +9,11 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class TopicSelectModal extends HookConsumerWidget {
-  const TopicSelectModal({
+class SelectArticleTopicModal extends HookConsumerWidget {
+  const SelectArticleTopicModal({
     super.key,
   });
 
@@ -43,20 +44,17 @@ class TopicSelectModal extends HookConsumerWidget {
       }
     }
 
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.sizeOf(context).height * 0.9,
-      ),
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            primary: false,
-            flexibleSpace: NavigationAppBar.modal(
-              onBackPress: () => Navigator.pop(context, false),
-              actions: [
-                if (selectedTopics.isNotEmpty)
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context, false),
+    return SheetContent(
+      body: Column(
+        children: [
+          NavigationAppBar.modal(
+            onBackPress: () => Navigator.pop(context, false),
+            actions: [
+              if (selectedTopics.isNotEmpty)
+                GestureDetector(
+                  onTap: () => Navigator.pop(context, false),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0.s),
                     child: Text(
                       '${context.i18n.topics_add} (${selectedTopics.length})',
                       style: context.theme.appTextThemes.body.copyWith(
@@ -64,56 +62,33 @@ class TopicSelectModal extends HookConsumerWidget {
                       ),
                     ),
                   ),
-              ],
-              title: Text(
-                context.i18n.topics_title,
-                style: context.theme.appTextThemes.subtitle,
-              ),
-            ),
-            automaticallyImplyLeading: false,
-            toolbarHeight: NavigationAppBar.modalHeaderHeight,
-            pinned: true,
+                ),
+            ],
+            title: Text(context.i18n.topics_title),
           ),
-          PinnedHeaderSliver(
-            child: ColoredBox(
-              color: context.theme.appColors.onPrimaryAccent,
-              child: Column(
-                children: [
-                  SizedBox(height: 16.0.s),
-                  ScreenSideOffset.small(
-                    child: SearchInput(
-                      onTextChanged: (String value) {
-                        searchValue.value = value;
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 16.0.s),
-                ],
-              ),
+          ScreenSideOffset.small(
+            child: SearchInput(
+              onTextChanged: (String value) {
+                searchValue.value = value;
+              },
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+          SizedBox(height: 12.0.s),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredTopics.length,
+              itemBuilder: (BuildContext context, int index) {
                 final topic = filteredTopics[index];
                 final isSelected = selectedTopics.contains(topic);
 
                 return MenuItemButton(
                   onPressed: () => toggleTopicSelection(topic),
                   trailingIcon: isSelected
-                      ? Assets.svg.iconBlockCheckboxOnblue.icon(
-                          color: colors.success,
-                        )
-                      : Assets.svg.iconBlockCheckboxOff.icon(
-                          color: colors.tertararyText,
-                        ),
-                  child: Text(
-                    topic.getTitle(context),
-                    style: textStyles.body,
-                  ),
+                      ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
+                      : Assets.svg.iconBlockCheckboxOff.icon(color: colors.tertararyText),
+                  child: Text(topic.getTitle(context), style: textStyles.body),
                 );
               },
-              childCount: filteredTopics.length,
             ),
           ),
         ],

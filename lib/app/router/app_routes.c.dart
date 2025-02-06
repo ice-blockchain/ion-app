@@ -43,8 +43,8 @@ import 'package:ion/app/features/dapps/views/pages/dapp_details/dapp_details_mod
 import 'package:ion/app/features/dapps/views/pages/dapps.dart';
 import 'package:ion/app/features/dapps/views/pages/dapps_list/dapps_list.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/create_article_modal.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/create_article_topics.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/create_article_preview_modal.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/select_artcile_topics_modal/select_artcile_topics_modal.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/compress_test_page.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';

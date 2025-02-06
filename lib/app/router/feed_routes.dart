@@ -35,7 +35,7 @@ class FeedRoutes {
         TypedGoRoute<FeedSearchLanguagesRoute>(path: 'feed-search-languages'),
         TypedGoRoute<StoryContactsShareRoute>(path: 'story-contacts-share'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
-        TypedGoRoute<AddTopicsRoute>(path: 'add-topics'),
+        TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
       ],
     ),
   ];
@@ -50,6 +50,14 @@ class ArticleDetailsRoute extends BaseRouteData {
         );
 
   final String eventReference;
+}
+
+class SelectArticleTopicsRoute extends BaseRouteData {
+  SelectArticleTopicsRoute()
+      : super(
+          child: const SelectArticleTopicModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class ArticleRepliesRoute extends BaseRouteData {
@@ -248,14 +256,6 @@ class ArticlePreviewRoute extends BaseRouteData {
   ArticlePreviewRoute()
       : super(
           child: const CreateArticlePreviewModal(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class AddTopicsRoute extends BaseRouteData {
-  AddTopicsRoute()
-      : super(
-          child: const CreateArticleTopics(),
           type: IceRouteType.bottomSheet,
         );
 }
