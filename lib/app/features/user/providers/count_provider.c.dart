@@ -19,7 +19,7 @@ class Count extends _$Count {
   // TODO: Generics available in riverpod, but this requires using the 3.0 dev release,
   // so we need to wait for the stable release to use it.
   @override
-  Future<int> build({
+  Future<dynamic> build({
     required String key,
     required NostrRelay relay,
     required EventCountResultType type,
@@ -45,7 +45,7 @@ class Count extends _$Count {
     return _fetchCount(key: key, relay: relay, filters: filters);
   }
 
-  Future<int> _fetchCount({
+  Future<dynamic> _fetchCount({
     required String key,
     required NostrRelay relay,
     required List<RequestFilter> filters,
@@ -98,7 +98,7 @@ class Count extends _$Count {
           EventCountResultEntity.fromEventMessage(responseMessage, key: key);
       ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
-      return eventCountResultEntity.data.content as int;
+      return eventCountResultEntity.data.content;
     } catch (e) {
       throw EventCountException('An unexpected error occurred: $e');
     } finally {
