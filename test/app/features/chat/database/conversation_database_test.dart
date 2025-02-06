@@ -10,7 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart'
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 void main() {
-  final masterPubkey = '';
+  const masterPubkey = '';
   late ConversationDatabase database;
   late ConversationsDBService conversationsService;
 
