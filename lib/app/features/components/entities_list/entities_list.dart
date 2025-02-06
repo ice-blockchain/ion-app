@@ -23,14 +23,12 @@ class EntitiesList extends HookWidget {
     required this.entities,
     this.framedEventType = FramedEventType.quoted,
     this.separatorHeight,
-    this.hideBlocked = true,
     super.key,
   });
 
   final List<IonConnectEntity> entities;
   final double? separatorHeight;
   final FramedEventType framedEventType;
-  final bool hideBlocked;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +43,6 @@ class EntitiesList extends HookWidget {
           entity: entities[index],
           framedEventType: framedEventType,
           separatorHeight: separatorHeight,
-          hideBlocked: hideBlocked,
           blockedIds: blockedEntitiesIds,
         );
       },
@@ -58,14 +55,12 @@ class _EntityListItem extends ConsumerWidget {
     required this.entity,
     required this.separatorHeight,
     required this.framedEventType,
-    required this.hideBlocked,
     required this.blockedIds,
   });
 
   final IonConnectEntity entity;
   final double? separatorHeight;
   final FramedEventType framedEventType;
-  final bool hideBlocked;
   final ValueNotifier<Map<String, bool>> blockedIds;
 
   @override
@@ -81,9 +76,14 @@ class _EntityListItem extends ConsumerWidget {
         }
       },
     );
-    final isBlockedOrBlocking = blockedIds.value[entity.id] ?? true;
 
-    if (userMetadata == null || (isBlockedOrBlocking && hideBlocked)) {
+    /// We use `true` as a default value to avoid a case when a cell would be shown,
+    /// but then after provider is loaded it turns out it should be blocked and hides.
+    final isBlockedOrBlocking = ref.watch(isEntityBlockedOrBlockingProvider(entity)).valueOrNull ??
+        blockedIds.value[entity.id] ??
+        true;
+
+    if (userMetadata == null || isBlockedOrBlocking) {
       /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
       /// we don't need to fetch the user metadata or block list explicitly - it is returned as a side effect to the
       /// main request.
