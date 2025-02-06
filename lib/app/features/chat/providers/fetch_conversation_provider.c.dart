@@ -2,6 +2,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
@@ -21,13 +22,16 @@ part 'fetch_conversation_provider.c.g.dart';
 class FetchConversations extends _$FetchConversations {
   @override
   Stream<void> build() async* {
+    final masterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
     final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+
+    if (masterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
 
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
     }
-
-    final pubkey = eventSigner.publicKey;
 
     // final lastMessageDate =
     //     await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
@@ -66,8 +70,12 @@ class FetchConversations extends _$FetchConversations {
         return subscription.messages;
       },
     ).listen((wrap) async {
+      if (eventSigner.publicKey != _receiverDevicePubkey(wrap)) {
+        return;
+      }
+
       final rumor = await _unwrapGift(
-        wrap,
+        giftWrap: wrap,
         sealService: sealService,
         giftWrapService: giftWrapService,
         privateKey: eventSigner.privateKey,

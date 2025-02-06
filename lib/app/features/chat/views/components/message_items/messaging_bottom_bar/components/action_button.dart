@@ -16,7 +16,6 @@ class ActionButton extends HookConsumerWidget {
     super.key,
   });
 
-  final ConversationEntity conversation;
   final TextEditingController controller;
   final Future<void> Function()? onSubmitted;
 

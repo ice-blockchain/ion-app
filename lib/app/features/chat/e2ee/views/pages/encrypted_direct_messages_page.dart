@@ -101,7 +101,7 @@ class EncryptedDirectMessagesPage extends HookConsumerWidget {
                   await ref.read(sendE2eeMessageNotifierProvider.notifier).send(
                         conversationUUID: uuid,
                         message: content ?? '',
-                        participants: [currentUserPubkey, receiverPubKey],
+                        participantMasterPubkeys: [currentUserPubkey, receiverPubKey],
                         subject: null,
                       );
                 },

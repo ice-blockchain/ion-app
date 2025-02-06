@@ -115,7 +115,7 @@ class ChannelPage extends HookConsumerWidget {
                                 final post = ModifiablePostEntity.fromEventMessage(message);
 
                                 return PostBody(
-                                  postEntity: post,
+                                  entity: post,
                                 );
                               },
                             ),

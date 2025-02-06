@@ -200,7 +200,7 @@ class CreateGroupModal extends HookConsumerWidget {
                       await ref.read(sendE2eeMessageNotifierProvider.notifier).send(
                         conversationUUID: generateUuid(),
                         message: '',
-                        participants: members,
+                        participantMasterPubkeys: participantsMasterkeys,
                         subject: createGroupForm.name,
                         mediaFiles: [groupPicture!],
                       );
