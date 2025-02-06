@@ -8,32 +8,47 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'suggestions_notifier_provider.c.g.dart';
 
+class SuggestionsState {
+  const SuggestionsState({
+    this.suggestions = const [],
+    this.taggingCharacter = '',
+    this.isVisible = false,
+  });
+
+  final List<String> suggestions;
+  final String taggingCharacter;
+  final bool isVisible;
+}
+
 @riverpod
 class SuggestionsNotifier extends _$SuggestionsNotifier {
   @override
-  List<String> build() {
-    return [];
+  SuggestionsState build() {
+    return const SuggestionsState();
   }
 
   Future<void> updateSuggestions(String query, String taggingCharacter) async {
-    var newSuggestions = <String>[];
-
     if (query.isEmpty) {
-      state = [];
-    } else {
-      try {
-        if (taggingCharacter == '#') {
-          newSuggestions = await ref.read(hashtagSuggestionsProvider(query).future);
-        } else if (taggingCharacter == '@') {
-          newSuggestions = await ref.read(mentionSuggestionsProvider(query).future);
-        } else if (taggingCharacter == r'$') {
-          newSuggestions = await ref.read(cashtagSuggestionsProvider(query).future);
-        }
-      } catch (error) {
-        Logger.log('Error fetching suggestions: $error');
-      }
+      ref.invalidate(suggestionsNotifierProvider);
+      return;
+    }
 
-      state = newSuggestions;
+    try {
+      final suggestions = switch (taggingCharacter) {
+        '#' => await ref.read(hashtagSuggestionsProvider(query).future),
+        '@' => await ref.read(mentionSuggestionsProvider(query).future),
+        r'$' => await ref.read(cashtagSuggestionsProvider(query).future),
+        _ => <String>[],
+      };
+
+      state = SuggestionsState(
+        suggestions: suggestions,
+        taggingCharacter: taggingCharacter,
+        isVisible: true,
+      );
+    } catch (error) {
+      Logger.log('Error fetching suggestions: $error');
+      state = const SuggestionsState();
     }
   }
 }

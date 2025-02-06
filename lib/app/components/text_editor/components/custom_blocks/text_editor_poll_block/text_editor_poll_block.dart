@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:ion/app/components/text_editor/utils/remove_block.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/components/poll/poll.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/remove_block.dart';
 
 const textEditorPollKey = 'text-editor-poll';
 

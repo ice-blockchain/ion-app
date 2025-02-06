@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/code_types.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/code_types.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CodeBlockTypeItem extends StatelessWidget {

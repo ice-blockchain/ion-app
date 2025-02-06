@@ -3,22 +3,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/mentions_hashtags_handler.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/quill.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_poll_block/text_editor_poll_block.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
+import 'package:ion/app/components/text_editor/utils/mentions_hashtags_handler.dart';
+import 'package:ion/app/components/text_editor/utils/quill.dart';
 
 class TextEditor extends ConsumerStatefulWidget {
-  const TextEditor(
+  TextEditor(
     this.controller, {
-    super.key,
+    Key? key,
     this.placeholder,
     this.focusNode,
     this.autoFocus = true,
-  });
+  }) : super(key: key ?? textEditorKey);
+
+  static final textEditorKey = GlobalKey<TextEditorState>();
+
   final QuillController controller;
   final String? placeholder;
   final FocusNode? focusNode;
@@ -31,6 +33,8 @@ class TextEditor extends ConsumerStatefulWidget {
 class TextEditorState extends ConsumerState<TextEditor> {
   late MentionsHashtagsHandler _mentionsHashtagsHandler;
   late final FocusNode _focusNode = widget.focusNode ?? FocusNode();
+
+  MentionsHashtagsHandler get mentionsHashtagsHandler => _mentionsHashtagsHandler;
 
   @override
   void initState() {
@@ -52,13 +56,6 @@ class TextEditorState extends ConsumerState<TextEditor> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(suggestionsNotifierProvider, (_, next) {
-      if (next.isNotEmpty) {
-        _mentionsHashtagsHandler.showOverlay();
-      } else {
-        _mentionsHashtagsHandler.removeOverlay();
-      }
-    });
     return QuillEditor.basic(
       controller: widget.controller,
       focusNode: _focusNode,

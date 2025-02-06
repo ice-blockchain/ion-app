@@ -8,11 +8,12 @@ import 'package:ion/app/components/back_hardware_button_interceptor/back_hardwar
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
+import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_add_image.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_toolbar.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/hooks/use_create_article.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -130,6 +131,7 @@ class CreateArticleModal extends HookConsumerWidget {
             ),
             Column(
               children: [
+                SuggestionsContainer(scrollController: scrollController),
                 const HorizontalSeparator(),
                 ScreenSideOffset.small(
                   child: CreateArticleToolbar(
