@@ -11,22 +11,26 @@ import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/archived_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class RecentChatsTimelinePage extends ConsumerWidget {
+class RecentChatsTimelinePage extends HookConsumerWidget {
   const RecentChatsTimelinePage({required this.conversations, super.key});
 
   final List<ConversationListItem> conversations;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showArchive = conversations.any((c) => c.isArchived);
+    useOnInit(() {
+      ref.read(toggleArchivedConversationsProvider);
+    });
 
     return CustomScrollView(
       slivers: [
@@ -43,40 +47,38 @@ class RecentChatsTimelinePage extends ConsumerWidget {
           ),
           toolbarHeight: SearchInput.height,
         ),
-        if (showArchive) const SliverToBoxAdapter(child: RecentChatSeparator(isAtTop: true)),
-        if (showArchive) const SliverToBoxAdapter(child: ArchiveChatTile()),
-        if (showArchive) const SliverToBoxAdapter(child: RecentChatSeparator()),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              final conversation = conversations[index];
-              if (conversation.isArchived) {
-                return const SizedBox.shrink();
-              }
-              return Column(
-                children: [
-                  if (index == 0 && !showArchive) const RecentChatSeparator(isAtTop: true),
-                  if (conversation.type == ConversationType.community)
-                    CommunityRecentChatTile(
-                      conversation: conversation,
-                      key: ValueKey(conversation.uuid),
-                    )
-                  else if (conversation.type == ConversationType.oneToOne)
-                    E2eeRecentChatTile(
-                      conversation: conversation,
-                      key: ValueKey(conversation.uuid),
-                    )
-                  else if (conversation.type == ConversationType.encryptedGroup)
-                    EncryptedGroupRecentChatTile(
-                      conversation: conversation,
-                      key: ValueKey(conversation.uuid),
-                    ),
-                ],
-              );
-            },
-            childCount: conversations.length,
-          ),
+        const SliverToBoxAdapter(child: RecentChatSeparator(isAtTop: true)),
+        const SliverToBoxAdapter(child: ArchiveChatTile()),
+        SliverList.separated(
+          itemBuilder: (BuildContext context, int index) {
+            final conversation = conversations.where((c) => !c.isArchived).toList()[index];
+            return Column(
+              children: [
+                if (index == 0) const RecentChatSeparator(isAtTop: true),
+                if (conversation.type == ConversationType.community)
+                  CommunityRecentChatTile(
+                    conversation: conversation,
+                    key: ValueKey(conversation.uuid),
+                  )
+                else if (conversation.type == ConversationType.oneToOne)
+                  E2eeRecentChatTile(
+                    conversation: conversation,
+                    key: ValueKey(conversation.uuid),
+                  )
+                else if (conversation.type == ConversationType.encryptedGroup)
+                  EncryptedGroupRecentChatTile(
+                    conversation: conversation,
+                    key: ValueKey(conversation.uuid),
+                  ),
+              ],
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const RecentChatSeparator();
+          },
+          itemCount: conversations.where((c) => !c.isArchived).length,
         ),
+        const SliverToBoxAdapter(child: RecentChatSeparator()),
       ],
     );
   }
@@ -123,7 +125,6 @@ class E2eeRecentChatTile extends ConsumerWidget {
     }
 
     final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
-    // bool isOneOnOne = entity.relatedSubject == null;
 
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 

@@ -1,31 +1,83 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
+import 'package:ion/app/features/chat/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ArchiveChatTile extends ConsumerWidget {
+class ArchiveChatTile extends HookConsumerWidget {
   const ArchiveChatTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
     final selectedConversations = ref.watch(selectedConversationsProvider);
-    final conversations =
-        ref.watch(conversationsProvider).valueOrNull?.where((c) => c.isArchived).toList() ?? [];
+    final conversations = ref.watch(archivedConversationsProvider).valueOrNull ?? [];
+
+    final isSelected = useMemoized(
+      () => selectedConversations.toSet().containsAll(conversations),
+      [selectedConversations, conversations],
+    );
+
+    final combinedConversationNames = useFuture(
+      useMemoized(
+        () async {
+          final names = <String>[];
+          for (final conversation in conversations) {
+            if (conversation.type == ConversationType.oneToOne) {
+              final latestMessageEntity =
+                  PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+              final receiver = latestMessageEntity.relatedPubkeys!.last.value;
+              final userMetadata = await ref.read(userMetadataProvider(receiver).future);
+              if (userMetadata != null) {
+                names.add(userMetadata.data.displayName);
+              }
+            } else if (conversation.type == ConversationType.community) {
+              final community = await ref.read(communityMetadataProvider(conversation.uuid).future);
+              names.add(community.data.name);
+            } else {
+              final latestMessageEntity =
+                  PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
+              names.add(latestMessageEntity.relatedSubject?.value ?? '');
+            }
+          }
+
+          return names.join(', ');
+        },
+        [conversations],
+      ),
+    );
+
+    final latestMessageAt = useMemoized(
+      () => conversations.isEmpty
+          ? null
+          : conversations
+              .map((c) => c.latestMessage?.createdAt ?? c.joinedAt)
+              .reduce((a, b) => a.isAfter(b) ? a : b),
+      [conversations],
+    );
+
+    if (conversations.isEmpty ||
+        combinedConversationNames.data == null ||
+        combinedConversationNames.data!.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return GestureDetector(
       onTap: () {
         if (isEditMode) {
-          // ref.read(selectedConversationsIdsProvider.notifier).toggle(conversations);
+          ref.read(selectedConversationsProvider.notifier).toggleAll(conversations);
         } else {
           ArchivedChatsMainRoute().push<void>(context);
         }
@@ -38,7 +90,7 @@ class ArchiveChatTile extends ConsumerWidget {
             width: isEditMode ? 40.0.s : 0,
             child: Padding(
               padding: EdgeInsets.only(right: 10.0.s),
-              child: selectedConversations.toSet().containsAll(conversations)
+              child: isSelected
                   ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                   : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
             ),
@@ -65,12 +117,10 @@ class ArchiveChatTile extends ConsumerWidget {
                               color: context.theme.appColors.primaryText,
                             ),
                           ),
-                          ChatTimestamp(
-                            conversations
-                                .map((c) => c.latestMessage?.createdAt ?? c.joinedAt)
-                                .nonNulls
-                                .max,
-                          ),
+                          if (latestMessageAt != null)
+                            ChatTimestamp(
+                              latestMessageAt,
+                            ),
                         ],
                       ),
                       SizedBox(height: 2.0.s),
@@ -79,13 +129,12 @@ class ArchiveChatTile extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: ChatPreview(
-                              content:
-                                  conversations.map((c) => c.latestMessage?.content).join(', '),
+                              content: combinedConversationNames.data ?? '',
                               maxLines: 1,
                             ),
                           ),
-                          UnreadCountBadge(
-                            unreadCount: conversations.map((c) => 10).reduce((a, b) => a + b),
+                          const UnreadCountBadge(
+                            unreadCount: 30,
                           ),
                         ],
                       ),

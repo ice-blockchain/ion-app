@@ -38,7 +38,7 @@ class FetchCommunityMessages extends _$FetchCommunityMessages {
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-    final messagesStream = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
+    ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,
       subscriptionBuilder: (requestMessage, relay) {
         final subscription = relay.subscribe(requestMessage);
@@ -51,10 +51,12 @@ class FetchCommunityMessages extends _$FetchCommunityMessages {
         });
         return subscription.messages;
       },
-    );
+    ).listen((event) {
+      if (event.kind == ModifiablePostEntity.kind) {
+        ref.watch(eventMessageTableDaoProvider).add(event);
+      }
+    });
 
-    await for (final message in messagesStream) {
-      await ref.watch(eventMessageTableDaoProvider).add(message);
-    }
+    yield null;
   }
 }

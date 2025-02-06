@@ -20,6 +20,12 @@ class SelectedConversations extends _$SelectedConversations {
     }
   }
 
+  void toggleAll(List<ConversationListItem> conversations) {
+    for (final conversation in conversations) {
+      toggle(conversation);
+    }
+  }
+
   void clear() {
     state = [];
   }

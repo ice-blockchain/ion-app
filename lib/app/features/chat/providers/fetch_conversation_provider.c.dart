@@ -51,7 +51,7 @@ class FetchConversations extends _$FetchConversations {
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
 
-    final wrapEvents = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
+    ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,
       actionSource: const ActionSourceCurrentUserChat(),
       subscriptionBuilder: (requestMessage, relay) {
@@ -65,12 +65,7 @@ class FetchConversations extends _$FetchConversations {
         });
         return subscription.messages;
       },
-    );
-
-    await for (final wrap in wrapEvents) {
-      if (eventSigner.publicKey != _receiverDevicePubkey(wrap)) {
-        continue;
-      }
+    ).listen((wrap) async {
       final rumor = await _unwrapGift(
         wrap,
         sealService: sealService,
@@ -82,11 +77,12 @@ class FetchConversations extends _$FetchConversations {
           if (rumor.kind == PrivateDirectMessageEntity.kind) {
             await ref.watch(conversationTableDaoProvider).add([rumor]);
           }
-
           await ref.watch(eventMessageTableDaoProvider).add(rumor);
         }
       }
-    }
+    });
+
+    yield null;
   }
 
   String _receiverDevicePubkey(EventMessage wrap) {

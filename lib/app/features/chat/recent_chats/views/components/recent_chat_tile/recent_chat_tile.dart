@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -47,15 +46,6 @@ class RecentChatTile extends HookConsumerWidget {
           ref.read(selectedConversationsProvider.notifier).toggle(conversation);
         } else {
           onTap?.call();
-          // ChannelRoute(uuid: conversationUUID).push<void>(context);
-          // MessagesRoute(
-          //   id: conversationData.id,
-          //   name: conversationData.name,
-          //   chatType: conversationData.type,
-          //   imageUrl: conversationData.imageUrl,
-          //   participants: conversationData.participants,
-          //   nickname: prefixUsername(username: conversationData.nickname, context: context),
-          // ).push<void>(context);
         }
       },
       behavior: HitTestBehavior.opaque,
@@ -118,7 +108,6 @@ class RecentChatTile extends HookConsumerWidget {
               ),
             ],
           ),
-          const RecentChatSeparator(),
         ],
       ),
     );

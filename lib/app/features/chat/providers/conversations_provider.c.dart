@@ -11,3 +11,13 @@ class Conversations extends _$Conversations {
     return ref.watch(conversationTableDaoProvider).watch();
   }
 }
+
+@riverpod
+class ArchivedConversations extends _$ArchivedConversations {
+  @override
+  Future<List<ConversationListItem>> build() async {
+    final data = await ref
+        .watch(conversationsProvider.selectAsync((t) => t.where((c) => c.isArchived).toList()));
+    return data;
+  }
+}

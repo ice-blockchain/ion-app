@@ -34,7 +34,7 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
       b.insertAll(
         conversationTable,
         companions,
-        mode: InsertMode.insertOrReplace,
+        mode: InsertMode.insertOrIgnore,
       );
     });
   }
@@ -186,19 +186,20 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
     });
   }
 
-  // Future<void> archive(List<String> archivedConversationIds) async {
-  //   await batch((b) {
-  //     for (final id in archivedConversationIds) {
-  //       b.update(
-  //         conversationTable,
-  //         ConversationTableCompanion.custom(
-  //           uuid: id,
-  //           type: ConversationType.community,
-  //           isArchived: const Value(true),
-  //         ),
-  //         where: (t) => t.uuid.equals(id),
-  //       );
-  //     }
-  //   });
-  // }
+  //this function takes archived conversation ids, check whole convertation table and update if is in list true or false
+  Future<void> updateArchivedConversations(List<String> archivedConversationIds) async {
+    await batch((b) {
+      b
+        ..update(
+          conversationTable,
+          const ConversationTableCompanion(isArchived: Value(true)),
+          where: (t) => t.uuid.isIn(archivedConversationIds),
+        )
+        ..update(
+          conversationTable,
+          const ConversationTableCompanion(isArchived: Value(false)),
+          where: (t) => t.uuid.isNotIn(archivedConversationIds),
+        );
+    });
+  }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
@@ -17,16 +18,53 @@ part 'archived_conversations_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   @override
-  List<String> build() {
-    final bookmarsMap = ref.watch(currentUserBookmarksProvider).valueOrNull;
+  Future<List<String>> build() async {
+    final archivedConversationBookmarksSet = await ref.watch(
+      currentUserBookmarksProvider.selectAsync((t) => t[BookmarksSetType.chats]),
+    );
 
-    if (bookmarsMap == null) {
-      return [];
+    final archivedConversationBookmarksSetData = archivedConversationBookmarksSet?.data ??
+        const BookmarksSetData(
+          type: BookmarksSetType.chats,
+          postsRefs: [],
+          articlesRefs: [],
+        );
+
+    final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+
+    if (currentUserPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
     }
 
-    final archivedConversationBookmarksSet = bookmarsMap[BookmarksSetType.chats];
+    final content = archivedConversationBookmarksSetData.content;
 
-    return archivedConversationBookmarksSet?.data.communitiesIds ?? [];
+    final decryptedContent = content.isNotEmpty
+        ? await e2eeService.decryptMessage(
+            archivedConversationBookmarksSetData.content,
+          )
+        : archivedConversationBookmarksSetData.content;
+
+    final encrpytedConversationCommunityIds = decryptedContent.isNotEmpty
+        ? (jsonDecode(decryptedContent) as List<dynamic>)
+            .map(
+              (e) => CommunityIdentifierTag.fromTag(
+                (e as List<dynamic>).map((s) => s.toString()).toList(),
+              ).value,
+            )
+            .toList()
+        : null;
+
+    final archivedConversations = [
+      ...archivedConversationBookmarksSetData.communitiesIds,
+      if (encrpytedConversationCommunityIds != null) ...encrpytedConversationCommunityIds,
+    ];
+
+    await ref
+        .watch(conversationTableDaoProvider)
+        .updateArchivedConversations(archivedConversations);
+
+    return archivedConversations;
   }
 
   Future<void> toogleConversation(List<ConversationListItem> conversations) async {
@@ -114,5 +152,7 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
     await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
           updatedBookmarksSet..toReplaceableEventReference(currentUserPubkey),
         );
+
+    ref.invalidateSelf();
   }
 }
