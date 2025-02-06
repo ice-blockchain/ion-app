@@ -35,6 +35,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
   late final FocusNode _focusNode = widget.focusNode ?? FocusNode();
 
   MentionsHashtagsHandler get mentionsHashtagsHandler => _mentionsHashtagsHandler;
+  QuillController get quillController => widget.controller;
 
   @override
   void initState() {

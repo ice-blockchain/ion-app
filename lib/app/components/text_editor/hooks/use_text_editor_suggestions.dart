@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
 
 class TextEditorSuggestionsState {
@@ -20,48 +20,60 @@ class TextEditorSuggestionsState {
 
 TextEditorSuggestionsState useTextEditorSuggestions({
   required ScrollController scrollController,
-  required GlobalKey<State<StatefulWidget>> editorKey,
+  required GlobalKey<TextEditorState> editorKey,
   required WidgetRef ref,
 }) {
   final suggestionsState = ref.watch(suggestionsNotifierProvider);
+  final isScrolling = useRef(false);
 
-  useEffect(
-    () {
-      if (suggestionsState.isVisible) {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          if (scrollController.hasClients) {
-            scrollController.animateTo(
-              scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-            );
-          }
-        });
-      }
-      return null;
-    },
-    [suggestionsState.isVisible],
-  );
+  final quillController = editorKey.currentState?.quillController;
 
   useEffect(
     () {
       void onTextChange() {
-        if (scrollController.hasClients) {
-          final editorContext = editorKey.currentContext;
-          if (editorContext != null) {
-            Scrollable.ensureVisible(
-              editorContext,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-              alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
-            );
-          }
+        if (isScrolling.value) return;
+
+        final editorContext = editorKey.currentContext;
+        if (editorContext != null && scrollController.hasClients) {
+          isScrolling.value = true;
+
+          Scrollable.ensureVisible(
+            editorContext,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+          ).then((_) {
+            isScrolling.value = false;
+          });
         }
       }
 
-      return onTextChange;
+      quillController?.addListener(onTextChange);
+      return () => quillController?.removeListener(onTextChange);
     },
-    [],
+    [quillController],
+  );
+
+  useEffect(
+    () {
+      if (suggestionsState.isVisible && !isScrolling.value) {
+        if (scrollController.hasClients) {
+          isScrolling.value = true;
+
+          scrollController
+              .animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          )
+              .then((_) {
+            isScrolling.value = false;
+          });
+        }
+      }
+      return null;
+    },
+    [suggestionsState.isVisible],
   );
 
   return TextEditorSuggestionsState(
