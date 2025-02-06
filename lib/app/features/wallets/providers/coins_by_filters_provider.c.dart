@@ -17,7 +17,7 @@ Future<List<CoinInWalletData>> coinsByFilters(
 }) async {
   assert(
     symbolGroup != null || symbol != null,
-    'Either symbolGroup or symbol must be provided.',
+    'At least one of symbolGroup or symbol must be provided.',
   );
 
   final service = await ref.watch(coinsServiceProvider.future);
