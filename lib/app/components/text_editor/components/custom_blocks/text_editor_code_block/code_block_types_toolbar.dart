@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_type_item.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/code_types.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_type_item.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_code_block/code_types.dart';
 
 class CodeBlockTypesToolbar extends HookWidget {
   const CodeBlockTypesToolbar({

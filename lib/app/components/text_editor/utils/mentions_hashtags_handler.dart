@@ -5,8 +5,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/attributes.dart';
 
 const maxMentionsLength = 3;
 const maxHashtagsLength = 5;

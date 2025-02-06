@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/mention_item.dart';
+import 'package:ion/app/components/text_editor/components/mention_item.dart';
 
 const double mentionContainerPadding = 4;
 const double mentionItemSize = 51;

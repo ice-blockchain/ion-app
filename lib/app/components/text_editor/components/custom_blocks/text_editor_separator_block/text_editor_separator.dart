@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_close.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_dot.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_close.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_dot.dart';
 
 class TextEditorSeparator extends HookWidget {
   const TextEditorSeparator({

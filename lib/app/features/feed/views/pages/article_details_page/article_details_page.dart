@@ -7,11 +7,11 @@ import 'package:ion/app/components/counter_items_footer/counter_items_footer.dar
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_progress_indicator.dart';

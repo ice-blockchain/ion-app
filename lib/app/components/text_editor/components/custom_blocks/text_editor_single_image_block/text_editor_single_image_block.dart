@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_local_image.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_local_image.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_network_image.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 const textEditorSingleImageKey = 'text-editor-single-image';

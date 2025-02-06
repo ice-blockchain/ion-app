@@ -9,6 +9,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/text_editor/hooks/use_quill_controller.dart';
+import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -18,8 +20,6 @@ import 'package:ion/app/features/feed/create_post/views/components/post_submit_b
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_author_header.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/hooks/use_quill_controller.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_image_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';

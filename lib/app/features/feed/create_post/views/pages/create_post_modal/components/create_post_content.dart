@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
@@ -11,7 +12,6 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/text_editor.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 

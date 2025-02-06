@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/views/components/text_editor/utils/extract_image_ids.dart';
+import 'package:ion/app/components/text_editor/utils/extract_image_ids.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/color.dart';
 import 'package:palette_generator/palette_generator.dart';
