@@ -14,10 +14,12 @@ import 'package:ion/generated/assets.gen.dart';
 class SuggestToAddBiometricsPopup extends ConsumerWidget {
   const SuggestToAddBiometricsPopup({
     required this.username,
+    required this.password,
     super.key,
   });
 
   final String username;
+  final String password;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,6 +71,7 @@ class SuggestToAddBiometricsPopup extends ConsumerWidget {
                         .read(biometricsActionsNotifierProvider.notifier)
                         .enrollToUseBiometrics(
                           username: username,
+                          password: password,
                           localisedReason: context.i18n.biometrics_suggestion_title,
                         );
                     if (context.mounted) {

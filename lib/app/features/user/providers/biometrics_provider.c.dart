@@ -38,12 +38,14 @@ class BiometricsActionsNotifier extends _$BiometricsActionsNotifier {
 
   Future<void> enrollToUseBiometrics({
     required String username,
+    required String password,
     required String localisedReason,
   }) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
       await ionIdentity(username: username).auth.enrollToUseBiometrics(
+            password: password,
             localisedReason: localisedReason,
           );
     });

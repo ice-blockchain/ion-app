@@ -81,9 +81,6 @@ class IONIdentityAuth {
   Future<void> deleteUser({required String base64Kind5Event}) =>
       deleteService.deleteUser(base64Kind5Event: base64Kind5Event);
 
-  String? getUserPrivateKey() =>
-      privateKeyStorage.getPrivateKey(username: username)?.hexEncodedPrivateKeyBytes;
-
   Future<bool> isPasskeyAvailable() => identitySigner.isPasskeyAvailable();
 
   bool isPasswordFlowUser() => privateKeyStorage.getPrivateKey(username: username) != null;
@@ -93,8 +90,9 @@ class IONIdentityAuth {
 
   Future<void> rejectToUseBiometrics() => identitySigner.rejectToUseBiometrics(username);
 
-  Future<void> enrollToUseBiometrics({required String localisedReason}) =>
+  Future<void> enrollToUseBiometrics({required String localisedReason, required String password}) =>
       identitySigner.enrollToUseBiometrics(
+        password: password,
         username: username,
         localisedReason: localisedReason,
       );

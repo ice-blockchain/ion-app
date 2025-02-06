@@ -29,8 +29,6 @@ class LogoutService {
     await Future.wait([
       dataSource.logOut(username: username, token: token.token),
       tokenStorage.removeToken(username: username),
-      privateKeyStorage.removePrivateKey(username: username),
-      biometricsStateStorage.removeBiometricsState(username: username),
     ]);
   }
 }

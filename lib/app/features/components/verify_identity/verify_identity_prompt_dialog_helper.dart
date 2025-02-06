@@ -63,6 +63,7 @@ class RiverpodVerifyIdentityRequestBuilder<T, P> extends HookConsumerWidget {
               onPasskeyFlow: onPasskeyFlow,
               onBiometricsFlow: onBiometricsFlow,
               localisedReasonForBiometricsDialog: context.i18n.verify_with_biometrics_title,
+              localisedCancelForBiometricsDialog: context.i18n.button_cancel,
               identityKeyName: identityKeyName,
             ).future,
           );
@@ -103,6 +104,7 @@ class HookVerifyIdentityRequestBuilder<P> extends HookConsumerWidget {
                 onPasskeyFlow: onPasskeyFlow,
                 onBiometricsFlow: onBiometricsFlow,
                 localisedReasonForBiometricsDialog: context.i18n.verify_with_biometrics_title,
+                localisedCancelForBiometricsDialog: context.i18n.button_cancel,
               ).future,
             );
           } finally {

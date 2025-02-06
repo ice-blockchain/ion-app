@@ -140,6 +140,9 @@ PODS:
     - Flutter
   - ion_screenshot_detector (0.0.1):
     - Flutter
+  - local_auth_crypto (1.0.0):
+    - Flutter
+    - SecureBiometricSwift (~> 0.0.2)
   - local_auth_darwin (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -165,6 +168,7 @@ PODS:
   - SDWebImage (5.20.0):
     - SDWebImage/Core (= 5.20.0)
   - SDWebImage/Core (5.20.0)
+  - SecureBiometricSwift (0.0.2)
   - shake_gesture_ios (0.0.1):
     - Flutter
   - share_plus (0.0.1):
@@ -241,6 +245,7 @@ DEPENDENCIES:
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - ion_screenshot_detector (from `.symlinks/plugins/ion_screenshot_detector/ios`)
+  - local_auth_crypto (from `.symlinks/plugins/local_auth_crypto/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - passkeys_ios (from `.symlinks/plugins/passkeys_ios/ios`)
@@ -283,6 +288,7 @@ SPEC REPOS:
     - MTBBarcodeScanner
     - OrderedSet
     - SDWebImage
+    - SecureBiometricSwift
     - sqlite3
     - SwiftyGif
     - TOCropViewController
@@ -330,6 +336,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   ion_screenshot_detector:
     :path: ".symlinks/plugins/ion_screenshot_detector/ios"
+  local_auth_crypto:
+    :path: ".symlinks/plugins/local_auth_crypto/ios"
   local_auth_darwin:
     :path: ".symlinks/plugins/local_auth_darwin/darwin"
   package_info_plus:
@@ -406,6 +414,7 @@ SPEC CHECKSUMS:
   image_cropper: 37d40f62177c101ff4c164906d259ea2c3aa70cf
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
   ion_screenshot_detector: bd85296e1347b5bf5acf71407a6d9b7933bfe604
+  local_auth_crypto: 3ee858ca5d40c9da56dcd1fe8d814e92438a9371
   local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
@@ -417,6 +426,7 @@ SPEC CHECKSUMS:
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   quill_native_bridge: e5afa7d49c08cf68c52a5e23bc272eba6925c622
   SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
+  SecureBiometricSwift: f8a373c07fb46c9ca1b2b53be51a485d2828a3d8
   shake_gesture_ios: 64f1f579f314c58445761992a123111b3d7b3492
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78

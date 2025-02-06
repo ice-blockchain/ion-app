@@ -11,8 +11,8 @@ dependencies:
   asn1lib: ^1.5.4
   bdk_flutter:
     git:
-        url: https://github.com/ice-tychon/bdk-flutter.git
-        ref: chore/update-flutter-rust-bridge
+      url: https://github.com/ice-tychon/bdk-flutter.git
+      ref: chore/update-flutter-rust-bridge
   collection: ^1.18.0
   convert: ^3.1.1
   crypto: ^3.0.5
@@ -26,6 +26,7 @@ dependencies:
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   local_auth: ^2.3.0
+  local_auth_crypto: ^1.1.1
   passkeys: ^2.1.0
   pointycastle: ^3.9.1
   rxdart: ^0.28.0

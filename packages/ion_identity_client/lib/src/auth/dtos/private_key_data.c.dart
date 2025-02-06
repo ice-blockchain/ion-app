@@ -7,12 +7,12 @@ part 'private_key_data.c.g.dart';
 @JsonSerializable()
 class PrivateKeyData {
   PrivateKeyData({
-    this.hexEncodedPrivateKeyBytes,
+    this.biometricsEncryptedPassword,
   });
 
   factory PrivateKeyData.fromJson(Map<String, dynamic> json) => _$PrivateKeyDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$PrivateKeyDataToJson(this);
 
-  final String? hexEncodedPrivateKeyBytes;
+  final String? biometricsEncryptedPassword;
 }

@@ -63,11 +63,12 @@ class CreateRecoveryCredentialsService {
           CredentialResponse.fromJson,
         );
       },
-      onBiometricsFlow: ({required String localisedReason}) {
+      onBiometricsFlow: ({required String localisedReason, required String localisedCancel}) {
         return userActionSigner.signWithBiometrics(
           credentialRequest,
           CredentialResponse.fromJson,
           localisedReason,
+          localisedCancel,
         );
       },
     );

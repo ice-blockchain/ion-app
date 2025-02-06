@@ -12,6 +12,7 @@ import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.da
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/signer/dtos/dtos.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_crypto/local_auth_crypto.dart';
 
 enum SignatureEncryption { hex, base64Url }
 
@@ -74,9 +75,7 @@ class PasswordSigner {
       await Future.wait([
         privateKeyStorage.setPrivateKey(
           username: username,
-          privateKeyData: PrivateKeyData(
-            hexEncodedPrivateKeyBytes: hex.encode(keyPair.privateKeyBytes),
-          ),
+          privateKeyData: PrivateKeyData(),
         ),
         _updateStateToCanSuggest(username),
       ]);
@@ -117,29 +116,39 @@ class PasswordSigner {
   Future<AssertionRequestData> signWithBiometrics({
     required String challenge,
     required String credentialId,
+    required String encryptedPrivateKey,
     required String username,
     required String localisedReason,
+    required String localisedCancel,
     required CredentialKind credentialKind,
   }) async {
     final biometricsState = biometricsStateStorage.getBiometricsState(username: username);
     if (biometricsState != BiometricsState.enabled) {
       throw const BiometricsValidationException();
     }
-    final privateKey = privateKeyStorage
+    final biometricsEncryptedPassword = privateKeyStorage
         .getPrivateKey(
           username: username,
         )
-        ?.hexEncodedPrivateKeyBytes;
-    if (privateKey == null) {
+        ?.biometricsEncryptedPassword;
+    if (biometricsEncryptedPassword == null) {
       throw const BiometricsValidationException();
     }
 
-    final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
-    if (didAuthenticate == false) {
+    final localAuthCrypto = LocalAuthCrypto.instance;
+    final password = await localAuthCrypto.authenticate(
+      BiometricPromptInfo(
+        title: localisedReason,
+        negativeButton: 'cancel',
+      ),
+      biometricsEncryptedPassword,
+    );
+    if (password == null) {
       throw const BiometricsValidationException();
     }
 
-    final keyPair = await keyService.reconstructKeyPairFromPrivateKeyBytes(privateKey);
+    final keyPair =
+        await keyService.reconstructKeyPairFromEncryptedPrivateKey(encryptedPrivateKey, password);
     return _createCredentialAssertion(
       keyPair: keyPair,
       challenge: challenge,
@@ -157,12 +166,22 @@ class PasswordSigner {
 
   Future<void> enrollToUseBiometrics({
     required String username,
+    required String password,
     required String localisedReason,
   }) async {
     final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
     await biometricsStateStorage.updateBiometricsState(
       username: username,
       biometricsState: didAuthenticate ? BiometricsState.enabled : BiometricsState.failed,
+    );
+    final localAuthCrypto = LocalAuthCrypto.instance;
+    final biometricsEncryptedPassword = await localAuthCrypto.encrypt(password);
+    if (biometricsEncryptedPassword == null) {
+      throw const BiometricsValidationException();
+    }
+    await privateKeyStorage.setPrivateKey(
+      username: username,
+      privateKeyData: PrivateKeyData(biometricsEncryptedPassword: biometricsEncryptedPassword),
     );
   }
 

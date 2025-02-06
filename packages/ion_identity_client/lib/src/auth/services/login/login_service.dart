@@ -106,14 +106,16 @@ class LoginService {
           password: password,
         );
       },
-      onBiometricsFlow: ({required String localisedReason}) {
+      onBiometricsFlow: ({required String localisedReason, required String localisedCancel}) {
         final credentialDescriptor = identitySigner.extractPasswordProtectedCredentials(challenge);
         return identitySigner.signWithBiometrics(
           challenge: challenge.challenge,
           username: username,
+          encryptedPrivateKey: credentialDescriptor.encryptedPrivateKey!,
           credentialId: credentialDescriptor.id,
           credentialKind: CredentialKind.PasswordProtectedKey,
           localisedReason: localisedReason,
+          localisedCancel: localisedCancel,
         );
       },
     );

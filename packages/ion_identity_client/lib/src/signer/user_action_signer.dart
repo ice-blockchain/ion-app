@@ -68,6 +68,7 @@ class UserActionSigner {
     UserActionSigningRequest request,
     T Function(JsonObject) responseDecoder,
     String localisedReason,
+    String localisedCancel,
   ) async {
     return _sign(
       request: request,
@@ -78,9 +79,11 @@ class UserActionSigner {
         return identitySigner.signWithBiometrics(
           challenge: challenge.challenge,
           username: request.username,
+          encryptedPrivateKey: credentialDescriptor.encryptedPrivateKey!,
           credentialId: credentialDescriptor.id,
           credentialKind: CredentialKind.PasswordProtectedKey,
           localisedReason: localisedReason,
+          localisedCancel: localisedCancel,
         );
       },
     );

@@ -52,7 +52,7 @@ class CreateNewCredentialsService {
           ),
         );
       },
-      onBiometricsFlow: ({required String localisedReason}) {
+      onBiometricsFlow: ({required String localisedReason, required String localisedCancel}) {
         throw UnimplementedError('Cannot register with biometrics');
       },
     );
