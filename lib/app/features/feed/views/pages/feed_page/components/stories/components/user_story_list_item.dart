@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -11,8 +10,9 @@ class UserStoryListItem extends HookConsumerWidget {
   const UserStoryListItem({
     required this.imageUrl,
     required this.name,
-    required this.gradient,
     required this.onTap,
+    this.gradient,
+    this.isViewed = false,
     this.child,
     super.key,
   });
@@ -21,6 +21,7 @@ class UserStoryListItem extends HookConsumerWidget {
   final String name;
   final Gradient? gradient;
   final VoidCallback onTap;
+  final bool isViewed;
   final Widget? child;
 
   static double get width => 65.0.s;
@@ -29,8 +30,6 @@ class UserStoryListItem extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final viewed = useState(false);
-
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -47,7 +46,8 @@ class UserStoryListItem extends HookConsumerWidget {
                   StoryColoredBorder(
                     size: width,
                     color: context.theme.appColors.strokeElements,
-                    gradient: viewed.value ? null : gradient,
+                    gradient: gradient,
+                    isViewed: isViewed,
                     child: StoryColoredBorder(
                       size: width - borderSize * 2,
                       color: context.theme.appColors.secondaryBackground,

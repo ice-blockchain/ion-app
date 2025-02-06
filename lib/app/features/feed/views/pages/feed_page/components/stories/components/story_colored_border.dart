@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/shapes/hexagon_path.dart';
 import 'package:ion/app/components/shapes/shape.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class StoryColoredBorder extends StatelessWidget {
   const StoryColoredBorder({
@@ -11,6 +12,7 @@ class StoryColoredBorder extends StatelessWidget {
     this.hexagon = false,
     this.color,
     this.gradient,
+    this.isViewed = false,
     this.child,
   });
 
@@ -22,10 +24,15 @@ class StoryColoredBorder extends StatelessWidget {
 
   final Gradient? gradient;
 
+  final bool isViewed;
+
   final Widget? child;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveColor = isViewed ? context.theme.appColors.sheetLine : color;
+    final effectiveGradient = isViewed ? null : gradient;
+
     return SizedBox.square(
       dimension: size,
       child: hexagon
@@ -33,8 +40,8 @@ class StoryColoredBorder extends StatelessWidget {
               size: Size.square(size),
               painter: ShapePainter(
                 HexagonShapeBuilder(),
-                color: color,
-                shader: gradient?.createShader(
+                color: effectiveColor,
+                shader: effectiveGradient?.createShader(
                   Rect.fromCircle(center: Offset(size / 2, size / 2), radius: size / 2),
                 ),
               ),
@@ -44,9 +51,9 @@ class StoryColoredBorder extends StatelessWidget {
               width: size,
               height: size,
               decoration: BoxDecoration(
-                gradient: gradient,
+                gradient: effectiveGradient,
                 borderRadius: BorderRadius.circular(size * 0.3),
-                color: color,
+                color: effectiveColor,
               ),
               child: Center(child: child),
             ),

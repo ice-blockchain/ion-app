@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -35,6 +36,17 @@ class StoryViewerPage extends HookConsumerWidget {
     useRoutePresence(
       onBecameInactive: () => ref.read(storyPauseControllerProvider.notifier).paused = true,
       onBecameActive: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
+    );
+
+    final currentStory = storyState.currentStory;
+
+    useOnInit(
+      () {
+        if (currentStory != null) {
+          ref.read(viewedStoriesControllerProvider.notifier).markStoryAsViewed(currentStory.id);
+        }
+      },
+      [currentStory?.id],
     );
 
     final drag = usePageDismiss(context);

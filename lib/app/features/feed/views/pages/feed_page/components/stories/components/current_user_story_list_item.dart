@@ -7,6 +7,7 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/user_story_list_item.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -27,7 +28,12 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUserMetadata = ref.watch(currentUserMetadataProvider);
-    final hasStories = ref.watch(filteredStoriesByPubkeyProvider(pubkey)).isNotEmpty;
+    final userStories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
+    final hasStories = userStories.isNotEmpty;
+    final viewedStories = ref.watch(viewedStoriesControllerProvider);
+
+    final allStoriesViewed =
+        hasStories && userStories.first.stories.every((story) => viewedStories.contains(story.id));
 
     return currentUserMetadata.maybeWhen(
       data: (userMetadata) {
@@ -49,6 +55,7 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
                   imageUrl: userMetadata.data.picture,
                   name: context.i18n.common_you,
                   gradient: hasStories ? gradient : null,
+                  isViewed: allStoriesViewed,
                   onTap: onPressed,
                   child: !hasStories
                       ? Positioned(
