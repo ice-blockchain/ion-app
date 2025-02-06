@@ -26,6 +26,7 @@ class WalletsModal extends StatelessWidget {
           children: [
             NavigationAppBar.modal(
               title: Text(context.i18n.wallet_wallets),
+              showBackButton: false,
               actions: const [
                 NavigationCloseButton(),
               ],

@@ -21,12 +21,14 @@ class LanguageSelectorPage extends HookConsumerWidget {
     required this.description,
     required this.selectedLanguages,
     required this.toggleLanguageSelection,
+    this.appBar,
     this.continueButton,
     super.key,
   });
 
   final String title;
   final String description;
+  final Widget? appBar;
   final Widget? continueButton;
   final List<String> selectedLanguages;
   final void Function(String) toggleLanguageSelection;
@@ -41,7 +43,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
     return SheetContent(
       body: Column(
         children: [
-          NavigationAppBar.modal(),
+          appBar ?? NavigationAppBar.modal(),
           AuthHeader(
             title: title,
             description: description,

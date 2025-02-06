@@ -66,21 +66,17 @@ class _Skeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Skeleton(
-      child: OverflowBox(
-        maxHeight: double.infinity,
-        alignment: Alignment.topCenter,
-        child: SeparatedColumn(
-          separator: SizedBox(
-            height: separatorHeight ?? 16.0.s,
-          ),
-          children: List.generate(
-            itemsCount ?? 11,
-            (_) => ItemLoadingState(
-              paddingHorizontal: ScreenSideOffset.defaultSmallMargin,
-              itemHeight: itemHeight,
-            ),
-          ).toList(),
+      child: SeparatedColumn(
+        separator: SizedBox(
+          height: separatorHeight ?? 16.0.s,
         ),
+        children: List.generate(
+          itemsCount ?? 11,
+          (_) => ItemLoadingState(
+            paddingHorizontal: ScreenSideOffset.defaultSmallMargin,
+            itemHeight: itemHeight,
+          ),
+        ).toList(),
       ),
     );
   }
