@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -17,9 +19,11 @@ part 'count_provider.c.g.dart';
 
 @riverpod
 class Count extends _$Count {
+  // TODO: Generics available in riverpod, but this requires using the 3.0 dev release,
+  // so we need to wait for the stable release to use it.
   @override
   Future<int> build({
-    required String pubkey,
+    required String key,
     required EventCountResultType type,
     required List<RequestFilter> filters,
   }) async {
@@ -27,7 +31,7 @@ class Count extends _$Count {
       ionConnectCacheProvider.select(
         cacheSelector<EventCountResultEntity>(
           EventCountResultEntity.cacheKeyBuilder(
-            key: pubkey,
+            key: key,
             type: type,
           ),
         ),
@@ -38,12 +42,11 @@ class Count extends _$Count {
       return countEntity.data.content as int;
     }
 
-    return _fetchCount(pubkey, type, filters);
+    return _fetchCount(key, filters);
   }
 
   Future<int> _fetchCount(
-    String pubkey,
-    EventCountResultType type,
+    String key,
     List<RequestFilter> filters,
   ) async {
     final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
@@ -75,14 +78,29 @@ class Count extends _$Count {
           );
 
       responseMessage = await subscription.messages
-          .firstWhere((message) => message is EventMessage)
-          .timeout(const Duration(seconds: 10)) as EventMessage;
+          .where((message) => message is EventMessage)
+          .map((message) => message as EventMessage)
+          .firstWhere((message) {
+        try {
+          final entity = EventCountResultEntity.fromEventMessage(message, key: key);
+          return entity.data.requestEventId == requestEvent.id;
+        } catch (_) {
+          return false;
+        }
+      }).timeout(const Duration(seconds: 10));
+
+      if (responseMessage.kind == 7000) {
+        final errorContent = responseMessage.content;
+        throw EventCountException(errorContent);
+      }
 
       final eventCountResultEntity =
-          EventCountResultEntity.fromEventMessage(responseMessage, key: pubkey);
+          EventCountResultEntity.fromEventMessage(responseMessage, key: key);
       ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
 
       return eventCountResultEntity.data.content as int;
+    } catch (e) {
+      throw EventCountException('An unexpected error occurred: $e');
     } finally {
       relay.unsubscribe(subscription.id);
     }

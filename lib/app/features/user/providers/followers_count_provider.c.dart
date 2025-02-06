@@ -24,11 +24,11 @@ Future<int> followersCount(
     ),
   ];
 
-  return ref.watch(
+  return await ref.watch(
     countProvider(
-      pubkey: pubkey,
+      key: pubkey,
       type: type,
       filters: filters,
     ).future,
-  );
+  ) as int;
 }
