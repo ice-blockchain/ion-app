@@ -41,7 +41,6 @@ class ReplyList extends ConsumerWidget {
           EntitiesList(
             entities: entities.toList(),
             separatorHeight: 1.0.s,
-            hideBlocked: false,
           ),
       ],
       builder: (context, slivers) => CustomScrollView(
