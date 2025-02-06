@@ -17,7 +17,11 @@ class CommunityMemberCountTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(communityMembersCountProvider(community)).valueOrNull;
+    final count = ref
+        .watch(
+          communityMembersCountProvider(community: community),
+        )
+        .valueOrNull;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

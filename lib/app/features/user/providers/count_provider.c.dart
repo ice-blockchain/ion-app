@@ -3,15 +3,12 @@
 import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/relays_provider.c.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,8 +21,10 @@ class Count extends _$Count {
   @override
   Future<int> build({
     required String key,
+    required NostrRelay relay,
     required EventCountResultType type,
     required List<RequestFilter> filters,
+    Duration? cacheExpirationDuration,
   }) async {
     final countEntity = ref.watch(
       ionConnectCacheProvider.select(
@@ -34,6 +33,7 @@ class Count extends _$Count {
             key: key,
             type: type,
           ),
+          expirationDuration: cacheExpirationDuration,
         ),
       ),
     );
@@ -42,19 +42,19 @@ class Count extends _$Count {
       return countEntity.data.content as int;
     }
 
-    return _fetchCount(key, filters);
+    return _fetchCount(key: key, relay: relay, filters: filters);
   }
 
-  Future<int> _fetchCount(
-    String key,
-    List<RequestFilter> filters,
-  ) async {
+  Future<int> _fetchCount({
+    required String key,
+    required NostrRelay relay,
+    required List<RequestFilter> filters,
+  }) async {
     final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
     if (currentPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
 
-    final relay = await _getRandomUserRelay();
     final requestEvent = await _buildRequestEvent(relayUrl: relay.url, filters: filters);
 
     final subscriptionMessage = RequestMessage()
@@ -104,16 +104,6 @@ class Count extends _$Count {
     } finally {
       relay.unsubscribe(subscription.id);
     }
-  }
-
-  Future<NostrRelay> _getRandomUserRelay() async {
-    final userRelays = await ref.read(currentUserRelayProvider.future);
-    if (userRelays == null) {
-      throw UserRelaysNotFoundException();
-    }
-
-    final relayUrl = userRelays.data.list.random.url;
-    return await ref.read(relayProvider(relayUrl).future);
   }
 
   Future<EventMessage> _buildRequestEvent({
