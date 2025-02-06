@@ -19,6 +19,7 @@ ConversationDatabase conversationDatabase(Ref ref) => ConversationDatabase();
   tables: [
     EventMessagesTable,
     ConversationMessagesTable,
+    ConversationMessageStatusTable,
     ConversationReactionsTable,
   ],
 )
@@ -29,7 +30,7 @@ class ConversationDatabase extends _$ConversationDatabase {
   ConversationDatabase.test(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(name: 'conversation_database');
@@ -51,7 +52,7 @@ class EventMessagesTable extends Table {
   Set<Column<Object>> get primaryKey => {id};
 }
 
-enum DeliveryStatus { none, isSent, isReceived, isRead }
+enum DeliveryStatus { created, sent, received, read, deleted, failed }
 
 // Table for conversations (is automatically updated when
 // [EventMessagesTable] is updated with new records)
@@ -61,9 +62,17 @@ class ConversationMessagesTable extends Table {
   TextColumn get eventMessageId => text()();
   DateTimeColumn get createdAt => dateTime()();
   TextColumn get subject => text().nullable()();
-  IntColumn get status => intEnum<DeliveryStatus>()();
   TextColumn get groupImagePath => text().nullable()();
-  BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column<Object>> get primaryKey => {eventMessageId};
+}
+
+// Table for delivery statuses of conversation message
+class ConversationMessageStatusTable extends Table {
+  TextColumn get eventMessageId => text()();
+  TextColumn get masterPubkey => text().nullable()();
+  IntColumn get status => intEnum<DeliveryStatus>()();
 
   @override
   Set<Column<Object>> get primaryKey => {eventMessageId};

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_message_management_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
@@ -22,8 +24,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService =
-          await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
 
       await conversationMessageManagementService.sendMessage(
         content: '',
@@ -150,11 +151,16 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     */
   }
 
-  Future<void> deleteConversations(List<String> ids) async {
+  Future<void> deleteConversations(List<String> conversationIds) async {
     final databaseService = ref.read(conversationsDBServiceProvider);
+    final masterPubkey = await ref.read(currentPubkeySelectorProvider.future);
 
-    for (final id in ids) {
-      await databaseService.deleteConversation(id);
+    if (masterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    for (final conversationId in conversationIds) {
+      await databaseService.deleteConversation(conversationId: conversationId, masterPubkey: masterPubkey);
     }
   }
 
@@ -240,10 +246,25 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
   }
 
   Future<void> readConversations(List<String> conversationIds) async {
-    await ref.read(conversationsDBServiceProvider).markConversationsAsRead(conversationIds);
+    final masterPubkey = await ref.read(currentPubkeySelectorProvider.future);
+
+    if (masterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    await ref.read(conversationsDBServiceProvider).markConversationsAsRead(
+          masterPubkey: masterPubkey,
+          conversationIds: conversationIds,
+        );
   }
 
   Future<void> readAllConversations() async {
-    await ref.read(conversationsDBServiceProvider).markAllConversationsAsRead();
+    final masterPubkey = await ref.read(currentPubkeySelectorProvider.future);
+
+    if (masterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    await ref.read(conversationsDBServiceProvider).markAllConversationsAsRead(masterPubkey);
   }
 }

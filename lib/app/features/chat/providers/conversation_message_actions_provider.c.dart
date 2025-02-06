@@ -29,8 +29,7 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
   Ref ref,
 ) async {
   final databaseService = ref.watch(conversationsDBServiceProvider);
-  final conversationMessageManagementService =
-      await ref.watch(conversationMessageManagementServiceProvider.future);
+  final conversationMessageManagementService = await ref.watch(conversationMessageManagementServiceProvider.future);
 
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
@@ -38,7 +37,7 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
     eventSigner: eventSigner,
     databaseService: databaseService,
     env: ref.watch(envProvider.notifier),
-    userPubkey: await ref.watch(currentPubkeySelectorProvider.future),
+    userMasterPubkey: await ref.watch(currentPubkeySelectorProvider.future),
     sealService: await ref.watch(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
     wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
@@ -49,17 +48,17 @@ Raw<Future<ConversationMessageActionsService>> conversationMessageActionsService
 class ConversationMessageActionsService {
   ConversationMessageActionsService({
     required this.env,
-    required this.userPubkey,
     required this.wrapService,
     required this.sealService,
     required this.eventSigner,
+    required this.userMasterPubkey,
     required this.ionConnectNotifier,
     required this.databaseService,
     required this.conversationMessageManagementService,
   });
 
   final Env env;
-  final String? userPubkey;
+  final String? userMasterPubkey;
   final EventSigner? eventSigner;
   final IonConnectNotifier ionConnectNotifier;
   final IonConnectSealService sealService;
@@ -67,8 +66,15 @@ class ConversationMessageActionsService {
   final ConversationsDBService databaseService;
   final ConversationMessageManagementService conversationMessageManagementService;
 
-  Future<void> deleteMessage(String id) async {
-    await databaseService.markConversationMessageAsDeleted(id);
+  Future<void> deleteMessage(String messageId) async {
+    if (userMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    await databaseService.deleteMessage(
+      messageId: messageId,
+      masterPubkey: userMasterPubkey!,
+    );
   }
 
   Future<void> bookmarkMessage(List<String> ids, String receiverPubkey) async {

@@ -15,10 +15,8 @@ part 'chat_messages_provider.c.g.dart';
 class ChatMessages extends _$ChatMessages {
   @override
   Future<List<MessageListItem>> build(ConversationEntity conversation) async {
-    final messagesSubscription = ref
-        .watch(conversationsDBServiceProvider)
-        .watchConversationMessages(conversation)
-        .listen((messages) async {
+    final messagesSubscription =
+        ref.watch(conversationsDBServiceProvider).watchConversationMessages(conversation.id).listen((messages) async {
       final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
       if (eventSigner == null) {
@@ -40,8 +38,7 @@ class ChatMessages extends _$ChatMessages {
       throw EventSignerNotFoundException();
     }
 
-    final messages =
-        await ref.watch(conversationsDBServiceProvider).getConversationMessages(conversation.id);
+    final messages = await ref.watch(conversationsDBServiceProvider).getConversationMessages(conversation.id);
 
     final conversationMessageItems =
         messages.map((message) => _mapMessage(message, eventSigner.publicKey)).nonNulls.toList();

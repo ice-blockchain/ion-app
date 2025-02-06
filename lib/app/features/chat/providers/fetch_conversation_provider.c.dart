@@ -32,8 +32,7 @@ class FetchConversations extends _$FetchConversations {
       throw EventSignerNotFoundException();
     }
 
-    final lastMessageDate =
-        await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final lastMessageDate = await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
 
     final sinceDate = lastMessageDate?.add(const Duration(days: -2));
 
@@ -85,7 +84,7 @@ class FetchConversations extends _$FetchConversations {
           privateKey: eventSigner.privateKey,
         );
         if (rumor != null) {
-          await dbProvider.insertEventMessage(rumor);
+          await dbProvider.insertEventMessage(eventMessage: rumor, masterPubkey: masterPubkey);
         }
       } catch (e) {
         Logger.log('Failed to unwrap gift', error: e);

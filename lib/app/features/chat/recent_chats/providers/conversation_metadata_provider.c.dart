@@ -18,18 +18,20 @@ class ConversationMetadata extends _$ConversationMetadata {
   Future<ConversationEntity> build(ConversationEntity conversation) async {
     state = const AsyncValue.loading();
 
+    final currentMasterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+
+    if (currentMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
     final database = ref.read(conversationsDBServiceProvider);
-    final unreadMessagesCount = await database.getUnreadMessagesCount(conversation.id);
+    final unreadMessagesCount = await database.unreadMessagesCount(
+      conversationId: conversation.id,
+      masterPubkey: currentMasterPubkey,
+    );
 
     if (conversation.type == ChatType.oneOnOne) {
-      final currentMasterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
-
-      if (currentMasterPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
-
-      final masterPubkey =
-          conversation.participantsMasterkeys.firstWhereOrNull((key) => key != currentMasterPubkey);
+      final masterPubkey = conversation.participantsMasterkeys.firstWhereOrNull((key) => key != currentMasterPubkey);
 
       if (masterPubkey == null) {
         throw UserMetadataNotFoundException(masterPubkey ?? '?');
@@ -62,8 +64,7 @@ class ConversationMetadata extends _$ConversationMetadata {
       // If the image is not available, download it from the server and update conversation messages
       if (conversation.imageUrl == null) {
         final conversationMessages = await database.getConversationMessages(conversation.id);
-        final latestMessageWithIMetaTag =
-            conversationMessages.firstWhereOrNull((m) => m.data.primaryMedia != null);
+        final latestMessageWithIMetaTag = conversationMessages.firstWhereOrNull((m) => m.data.primaryMedia != null);
 
         final conversationMessageManagementService =
             await ref.read(conversationMessageManagementServiceProvider.future);
