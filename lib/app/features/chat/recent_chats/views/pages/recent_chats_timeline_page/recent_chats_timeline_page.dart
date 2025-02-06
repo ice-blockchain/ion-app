@@ -49,12 +49,11 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
         ),
         const SliverToBoxAdapter(child: RecentChatSeparator(isAtTop: true)),
         const SliverToBoxAdapter(child: ArchiveChatTile()),
-        SliverList.separated(
+        SliverList.builder(
           itemBuilder: (BuildContext context, int index) {
             final conversation = conversations.where((c) => !c.isArchived).toList()[index];
             return Column(
               children: [
-                if (index == 0) const RecentChatSeparator(isAtTop: true),
                 if (conversation.type == ConversationType.community)
                   CommunityRecentChatTile(
                     conversation: conversation,
@@ -73,12 +72,8 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
               ],
             );
           },
-          separatorBuilder: (BuildContext context, int index) {
-            return const RecentChatSeparator();
-          },
           itemCount: conversations.where((c) => !c.isArchived).length,
         ),
-        const SliverToBoxAdapter(child: RecentChatSeparator()),
       ],
     );
   }
