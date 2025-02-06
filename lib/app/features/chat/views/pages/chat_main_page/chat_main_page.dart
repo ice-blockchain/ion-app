@@ -12,43 +12,36 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empty_page/recent_chats_empty_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/components/chat_main_appbar/chat_main_appbar.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 
 class ChatMainPage extends HookConsumerWidget {
   const ChatMainPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useOnInit(
-      () {
-        ref
-          ..read(communityJoinRequestsProvider)
-          ..read(fetchCommunityMessagesProvider)
-          ..read(fetchConversationsProvider);
-      },
-    );
-
-    ref.watch(fetchConversationsProvider);
-
+    final fetchConversations = ref.watch(fetchConversationsProvider);
+    final fetchCommunityMessages = ref.watch(fetchCommunityMessagesProvider);
+    final communityJoinRequests = ref.watch(communityJoinRequestsProvider);
     final conversations = ref.watch(conversationsProvider);
+
+    final isLoading = fetchConversations.isLoading ||
+        fetchCommunityMessages.isLoading ||
+        communityJoinRequests.isLoading;
 
     return Scaffold(
       appBar: const ChatMainAppBar(),
       body: ScreenSideOffset.small(
-        child: conversations.when(
-          data: (data) {
-            if (data.isEmpty) {
-              return const RecentChatsEmptyPage();
-            }
-            return const RecentChatsTimelinePage();
-          },
-          loading: () {
-            return const RecentChatSkeleton();
-          },
-          error: (_, __) {
-            return const SizedBox.shrink();
-          },
-        ),
+        child: isLoading
+            ? const RecentChatSkeleton()
+            : conversations.when(
+                data: (data) {
+                  if (data.isEmpty) {
+                    return const RecentChatsEmptyPage();
+                  }
+                  return RecentChatsTimelinePage(conversations: data);
+                },
+                error: (error, stackTrace) => const SizedBox(),
+                loading: () => const RecentChatSkeleton(),
+              ),
       ),
     );
   }

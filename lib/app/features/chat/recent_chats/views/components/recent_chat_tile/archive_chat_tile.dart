@@ -18,7 +18,7 @@ class ArchiveChatTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
-    final selectedConversationsIds = ref.watch(selectedConversationsIdsProvider);
+    final selectedConversations = ref.watch(selectedConversationsProvider);
     final conversations =
         ref.watch(conversationsProvider).valueOrNull?.where((c) => c.isArchived).toList() ?? [];
 
@@ -38,7 +38,7 @@ class ArchiveChatTile extends ConsumerWidget {
             width: isEditMode ? 40.0.s : 0,
             child: Padding(
               padding: EdgeInsets.only(right: 10.0.s),
-              child: selectedConversationsIds.toSet().containsAll(conversations)
+              child: selectedConversations.toSet().containsAll(conversations)
                   ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                   : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
             ),

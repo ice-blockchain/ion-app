@@ -9,7 +9,6 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
@@ -21,16 +20,12 @@ import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsTimelinePage extends ConsumerWidget {
-  const RecentChatsTimelinePage({super.key});
+  const RecentChatsTimelinePage({required this.conversations, super.key});
+
+  final List<ConversationListItem> conversations;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final conversations = ref.watch(conversationsProvider).valueOrNull;
-
-    if (conversations == null) {
-      return const SizedBox.shrink();
-    }
-
     final showArchive = conversations.any((c) => c.isArchived);
 
     return CustomScrollView(
@@ -102,7 +97,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
     }
 
     return RecentChatTile(
-      conversationUUID: conversation.uuid,
+      conversation: conversation,
       name: community.data.name,
       avatarUrl: community.data.avatar?.url,
       defaultAvatar: Assets.svg.iconContactList.icon(),
@@ -148,8 +143,8 @@ class E2eeRecentChatTile extends ConsumerWidget {
     final unreadMessagesCount = ref.watch(unreadMessageCountProviderProvider(conversation.uuid));
 
     return RecentChatTile(
-      conversationUUID: conversation.uuid,
-      name: userMetadata.data.name,
+      conversation: conversation,
+      name: userMetadata.data.displayName,
       avatarUrl: userMetadata.data.picture,
       defaultAvatar: Assets.svg.iconContactList.icon(),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
@@ -189,7 +184,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
     );
 
     return RecentChatTile(
-      conversationUUID: conversation.uuid,
+      conversation: conversation,
       name: name,
       avatarWidget:
           mediaService.data?.isNotEmpty ?? false ? Image.file(mediaService.data!.first) : null,

@@ -14,18 +14,14 @@ class ConversationReadAllButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedConversations = ref.watch(selectedConversationsIdsProvider);
+    final selectedConversations = ref.watch(selectedConversationsProvider);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        // selectedConversations.isEmpty
-        //     ? await ref.read(e2eeConversationManagementProvider.notifier).readAllConversations()
-        //     : await ref
-        //         .read(e2eeConversationManagementProvider.notifier)
-        //         .readConversations(selectedConversations);
+        //TODO: when flow is ready to support for e2ee and non e2ee conversations
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
-        ref.read(selectedConversationsIdsProvider.notifier).clear();
+        ref.read(selectedConversationsProvider.notifier).clear();
       },
       child: Row(
         children: [

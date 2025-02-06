@@ -204,5 +204,3 @@ class ChatMessagesList extends HookConsumerWidget {
 
         //   return SizedBox(height: separatorHeight);
         // },
-
-       

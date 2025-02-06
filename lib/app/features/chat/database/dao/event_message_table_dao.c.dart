@@ -4,15 +4,19 @@ part of '../chat_database.c.dart';
 EventMessageTableDao eventMessageTableDao(Ref ref) =>
     EventMessageTableDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [EventMessageTable])
+@DriftAccessor(tables: [EventMessageTable, ChatMessageTable])
 class EventMessageTableDao extends DatabaseAccessor<ChatDatabase> with _$EventMessageTableDaoMixin {
   EventMessageTableDao(super.db);
 
   Future<void> add(EventMessage event) async {
-    await into(db.eventMessageTable).insert(EventMessageRowClass.fromEventMessage(event));
-
     final conversationId =
-        event.tags.firstWhere((tag) => tag[0] == CommunityIdentifierTag.tagName).last;
+        event.tags.firstWhere((tag) => tag[0] == CommunityIdentifierTag.tagName).lastOrNull;
+
+    if (conversationId == null) {
+      return;
+    }
+
+    await into(db.eventMessageTable).insert(EventMessageRowClass.fromEventMessage(event));
 
     await into(db.chatMessageTable).insert(
       ChatMessageTableCompanion(
@@ -22,15 +26,4 @@ class EventMessageTableDao extends DatabaseAccessor<ChatDatabase> with _$EventMe
       ),
     );
   }
-
-  // Future<EventMessageRowClass?> getLatestOfCommunity(String communityId) async {
-  //   final result = await (select(db.eventMessageTable)
-  //         ..where(
-  //           (tbl) => tbl.tags.contains([CommunityIdentifierTag.tagName, communityId] as String),
-  //         )
-  //         ..orderBy([(tbl) => OrderingTerm.desc(tbl.createdAt)]))
-  //       .getSingleOrNull();
-
-  //   return result;
-  // }
 }

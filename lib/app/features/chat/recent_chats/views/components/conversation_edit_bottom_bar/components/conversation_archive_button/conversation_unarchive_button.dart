@@ -15,7 +15,7 @@ class ConversationUnarchiveButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedConversations = ref.watch(selectedConversationsIdsProvider);
+    final selectedConversations = ref.watch(selectedConversationsProvider);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -25,7 +25,7 @@ class ConversationUnarchiveButton extends ConsumerWidget {
           //     .read(e2eeConversationManagementProvider.notifier)
           //     .toggleArchivedConversations(selectedConversations);
           ref.read(conversationsEditModeProvider.notifier).editMode = false;
-          ref.read(selectedConversationsIdsProvider.notifier).clear();
+          ref.read(selectedConversationsProvider.notifier).clear();
           if (context.mounted && context.canPop()) {
             context.pop();
           }

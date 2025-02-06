@@ -20,13 +20,8 @@ part 'fetch_conversation_provider.c.g.dart';
 @riverpod
 class FetchConversations extends _$FetchConversations {
   @override
-  Future<void> build() async {
-    final masterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
-    final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-
-    if (masterPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
+  Stream<void> build() async* {
+    final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
     if (eventSigner == null) {
       throw EventSignerNotFoundException();

@@ -29,16 +29,15 @@ class CommunityMemberCountTile extends HookConsumerWidget {
             color: context.theme.appColors.quaternaryText,
           ),
         ),
-        if (count != null)
-          Padding(
-            padding: EdgeInsets.only(left: 3.0.s),
-            child: Text(
-              count.toString(),
-              style: context.theme.appTextThemes.caption.copyWith(
-                color: context.theme.appColors.quaternaryText,
-              ),
+        Padding(
+          padding: EdgeInsets.only(left: 3.0.s),
+          child: Text(
+            count?.toString() ?? '',
+            style: context.theme.appTextThemes.caption.copyWith(
+              color: context.theme.appColors.quaternaryText,
             ),
           ),
+        ),
       ],
     );
   }

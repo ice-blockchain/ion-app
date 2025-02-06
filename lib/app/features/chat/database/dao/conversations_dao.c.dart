@@ -185,4 +185,20 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
       return groupedMessages;
     });
   }
+
+  // Future<void> archive(List<String> archivedConversationIds) async {
+  //   await batch((b) {
+  //     for (final id in archivedConversationIds) {
+  //       b.update(
+  //         conversationTable,
+  //         ConversationTableCompanion.custom(
+  //           uuid: id,
+  //           type: ConversationType.community,
+  //           isArchived: const Value(true),
+  //         ),
+  //         where: (t) => t.uuid.equals(id),
+  //       );
+  //     }
+  //   });
+  // }
 }

@@ -29,7 +29,7 @@ class ArchivedChatsMainPage extends HookConsumerWidget {
       appBar: NavigationAppBar.screen(
         onBackPress: () {
           ref.read(conversationsEditModeProvider.notifier).editMode = false;
-          ref.read(selectedConversationsIdsProvider.notifier).clear();
+          ref.read(selectedConversationsProvider.notifier).clear();
           context.pop();
         },
         title: Text(context.i18n.common_archive),
@@ -39,7 +39,7 @@ class ArchivedChatsMainPage extends HookConsumerWidget {
             textStyle: context.theme.appTextThemes.subtitle2,
             onPressed: () {
               ref.read(conversationsEditModeProvider.notifier).editMode = !editMode;
-              ref.read(selectedConversationsIdsProvider.notifier).clear();
+              ref.read(selectedConversationsProvider.notifier).clear();
             },
           ),
         ],

@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/avatar/default_avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
@@ -14,7 +15,7 @@ import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatTile extends HookConsumerWidget {
   const RecentChatTile({
-    required this.conversationUUID,
+    required this.conversation,
     required this.name,
     required this.defaultAvatar,
     required this.lastMessageAt,
@@ -26,7 +27,7 @@ class RecentChatTile extends HookConsumerWidget {
     super.key,
   });
 
-  final String conversationUUID;
+  final ConversationListItem conversation;
   final String name;
   final String? avatarUrl;
   final Widget? defaultAvatar;
@@ -38,16 +39,12 @@ class RecentChatTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
-    final selectedConversationsIds = ref.watch(selectedConversationsIdsProvider);
-    final conversationWithMetadata =
-        ref.watch(conversationMetadataProvider(conversation)).value ?? conversation;
-
-    ref.displayErrors(conversationMetadataProvider(conversation));
+    final selectedConversations = ref.watch(selectedConversationsProvider);
 
     return GestureDetector(
       onTap: () {
         if (isEditMode) {
-          ref.read(selectedConversationsIdsProvider.notifier).toggle(conversationUUID);
+          ref.read(selectedConversationsProvider.notifier).toggle(conversation);
         } else {
           onTap?.call();
           // ChannelRoute(uuid: conversationUUID).push<void>(context);
@@ -71,7 +68,7 @@ class RecentChatTile extends HookConsumerWidget {
                 width: isEditMode ? 40.0.s : 0,
                 child: Padding(
                   padding: EdgeInsets.only(right: 10.0.s),
-                  child: selectedConversationsIds.contains(conversationUUID)
+                  child: selectedConversations.contains(conversation)
                       ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                       : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
                 ),
