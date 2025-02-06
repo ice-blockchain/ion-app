@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
@@ -41,69 +42,76 @@ class RecoveryCredsStep extends HookConsumerWidget {
 
     return SheetContent(
       topPadding: 0,
-      body: AuthScrollContainer(
-        title: context.i18n.restore_identity_title,
-        description: context.i18n.restore_identity_creds_description,
-        icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
-        titleStyle: context.theme.appTextThemes.headline2,
-        descriptionStyle: context.theme.appTextThemes.body2.copyWith(
-          color: context.theme.appColors.tertararyText,
-        ),
-        children: [
-          Expanded(
-            child: ScreenSideOffset.large(
-              child: Form(
-                key: formKey.value,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 16.0.s),
-                    ...RecoveryKeyProperty.values.map(
-                      (key) => Padding(
-                        padding: EdgeInsets.only(bottom: 16.0.s),
-                        child: RecoveryKeyInput(
-                          controller: controllers[key]!,
-                          labelText: key.getDisplayName(context),
-                          prefixIcon:
-                              key.iconAsset.icon(color: context.theme.appColors.secondaryText),
-                          validator: (value) => value == null || value.isEmpty ? '' : null,
-                          textInputAction: key == RecoveryKeyProperty.recoveryCode
-                              ? TextInputAction.done
-                              : TextInputAction.next,
+      body: KeyboardDismissOnTap(
+        child: AuthScrollContainer(
+          title: context.i18n.restore_identity_title,
+          description: context.i18n.restore_identity_creds_description,
+          icon: Assets.svg.iconLoginRestorekey.icon(size: 36.0.s),
+          titleStyle: context.theme.appTextThemes.headline2,
+          descriptionStyle: context.theme.appTextThemes.body2.copyWith(
+            color: context.theme.appColors.tertararyText,
+          ),
+          children: [
+            Expanded(
+              child: ScreenSideOffset.large(
+                child: Form(
+                  key: formKey.value,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 16.0.s),
+                      ...RecoveryKeyProperty.values.map(
+                        (key) => Padding(
+                          padding: EdgeInsets.only(bottom: 16.0.s),
+                          child: RecoveryKeyInput(
+                            controller: controllers[key]!,
+                            labelText: key.getDisplayName(context),
+                            prefixIcon:
+                                key.iconAsset.icon(color: context.theme.appColors.secondaryText),
+                            validator: (value) => value == null || value.isEmpty ? '' : null,
+                            textInputAction: key == RecoveryKeyProperty.recoveryCode
+                                ? TextInputAction.done
+                                : TextInputAction.next,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 16.0.s),
-                    Button(
-                      label: Text(context.i18n.button_restore),
-                      mainAxisSize: MainAxisSize.max,
-                      disabled: isInitLoading || isCompleteLoading,
-                      trailingIcon: isInitLoading ? const IONLoadingIndicator() : null,
-                      onPressed: () {
-                        if (formKey.value.currentState!.validate()) {
-                          onContinuePressed(
-                            controllers[RecoveryKeyProperty.identityKeyName]!.text,
-                            controllers[RecoveryKeyProperty.recoveryKeyId]!.text,
-                            controllers[RecoveryKeyProperty.recoveryCode]!.text,
-                          );
-                        } else {
-                          showSimpleBottomSheet<void>(
-                            context: context,
-                            child: const RecoverInvalidCredentialsErrorAlert(),
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                      SizedBox(height: 16.0.s),
+                      Button(
+                        label: Text(context.i18n.button_restore),
+                        mainAxisSize: MainAxisSize.max,
+                        disabled: isInitLoading || isCompleteLoading,
+                        trailingIcon: isInitLoading ? const IONLoadingIndicator() : null,
+                        onPressed: () {
+                          if (formKey.value.currentState!.validate()) {
+                            onContinuePressed(
+                              controllers[RecoveryKeyProperty.identityKeyName]!.text,
+                              controllers[RecoveryKeyProperty.recoveryKeyId]!.text,
+                              controllers[RecoveryKeyProperty.recoveryCode]!.text,
+                            );
+                          } else {
+                            showSimpleBottomSheet<void>(
+                              context: context,
+                              child: const RecoverInvalidCredentialsErrorAlert(),
+                            );
+                          }
+                        },
+                      ),
+                      Expanded(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: 63.0.s),
+                        ),
+                      ),
+                      ScreenBottomOffset(
+                        margin: 28.0.s,
+                        child: const AuthFooter(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          ScreenBottomOffset(
-            margin: 28.0.s,
-            child: const AuthFooter(),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
