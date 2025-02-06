@@ -53,64 +53,55 @@ class MentionsHashtagsHandler {
         final char = text.substring(cursorIndex - 1, cursorIndex);
 
         if (char == '#' || char == '@' || char == r'$') {
-          _resetState();
-
           taggingCharacter = char;
           lastTagIndex = cursorIndex - 1;
-
-          controller.removeListener(_editorListener);
-          try {
-            final attribute = switch (taggingCharacter) {
-              '@' => MentionAttribute.withValue(taggingCharacter),
-              '#' => HashtagAttribute.withValue(taggingCharacter),
-              r'$' => CashtagAttribute.withValue(taggingCharacter),
-              _ => null,
-            };
-            if (attribute != null) {
-              controller.formatText(lastTagIndex, 1, attribute);
-            }
-          } finally {
-            controller.addListener(_editorListener);
-          }
-
+          _applyFormatting(lastTagIndex, 1, taggingCharacter);
           ref.invalidate(suggestionsNotifierProvider);
         } else if (char == ' ' || char == '\n') {
-          _applyTagIfNeeded(cursorIndex);
-          ref.invalidate(suggestionsNotifierProvider);
+          if (lastTagIndex != -1) {
+            _applyTagIfNeeded(cursorIndex);
+            ref.invalidate(suggestionsNotifierProvider);
+            _resetState();
+          }
         } else if (lastTagIndex != -1) {
           final currentTagText = text.substring(lastTagIndex, cursorIndex);
           ref
               .read(suggestionsNotifierProvider.notifier)
               .updateSuggestions(currentTagText, taggingCharacter);
 
-          if (lastTagIndex >= 0 && cursorIndex > lastTagIndex) {
-            controller.removeListener(_editorListener);
-            try {
-              final attribute = switch (taggingCharacter) {
-                '@' => MentionAttribute.withValue(currentTagText),
-                '#' => HashtagAttribute.withValue(currentTagText),
-                r'$' => CashtagAttribute.withValue(currentTagText),
-                _ => null,
-              };
-              if (attribute != null) {
-                controller.formatText(lastTagIndex, cursorIndex - lastTagIndex, attribute);
-              }
-            } finally {
-              controller.addListener(_editorListener);
-            }
-          }
+          _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentTagText);
         }
       }
 
       if (isBackspace && lastTagIndex != -1) {
-        final remainingText = text.substring(lastTagIndex, cursorIndex);
-        if (remainingText == '#' || remainingText == '@' || remainingText == r'$') {
-          lastTagIndex = -1;
-          taggingCharacter = '';
+        if (cursorIndex <= lastTagIndex) {
+          _resetState();
           ref.invalidate(suggestionsNotifierProvider);
+        } else {
+          final remainingText = text.substring(lastTagIndex, cursorIndex);
+          if (remainingText.isNotEmpty) {
+            _applyFormatting(lastTagIndex, remainingText.length, remainingText);
+          }
         }
       }
     });
+  }
+
+  void _applyFormatting(int index, int length, String text) {
+    controller.removeListener(_editorListener);
+    try {
+      final attribute = switch (taggingCharacter) {
+        '@' => MentionAttribute.withValue(text),
+        '#' => HashtagAttribute.withValue(text),
+        r'$' => CashtagAttribute.withValue(text),
+        _ => null,
+      };
+      if (attribute != null) {
+        controller.formatText(index, length, attribute);
+      }
+    } finally {
+      controller.addListener(_editorListener);
+    }
   }
 
   void onSuggestionSelected(String suggestion) {
