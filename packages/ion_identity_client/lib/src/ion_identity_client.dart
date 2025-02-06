@@ -2,6 +2,7 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/coins/ion_identity_coins.dart';
+import 'package:ion_identity_client/src/networks/ion_identity_networks.dart';
 import 'package:ion_identity_client/src/users/ion_identity_users.dart';
 import 'package:ion_identity_client/src/wallets/ion_identity_wallets.dart';
 
@@ -16,6 +17,7 @@ final class IONIdentityClient {
     required this.wallets,
     required this.users,
     required this.coins,
+    required this.networks,
   });
 
   /// Provides access to authentication-related operations for the user, such as registering
@@ -31,4 +33,7 @@ final class IONIdentityClient {
 
   /// Provides access to coins-related operations, such as getting coins information.
   final IONIdentityCoins coins;
+
+  /// Provides access to networks-related operations, such as getting estimate transaction fees.
+  final IONIdentityNetworks networks;
 }

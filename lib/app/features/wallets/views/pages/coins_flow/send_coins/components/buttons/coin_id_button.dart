@@ -21,14 +21,16 @@ class CoinIdButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coinDataResult = ref.watch(coinInWalletByIdProvider(coinId: coinId));
 
-    return coinDataResult.maybeWhen(
-      data: (coinInWallet) => CoinButton(
-        coinInWallet: coinInWallet!,
-        onTap: onTap,
-      ),
-      orElse: () => ItemLoadingState(
-        itemHeight: 60.0.s,
-      ),
-    );
+    // TODO: Not implemented
+    return const SizedBox.shrink();
+    // return coinDataResult.maybeWhen(
+    //   data: (coinInWallet) => CoinButton(
+    //     coinInWallet: coinInWallet!,
+    //     onTap: onTap,
+    //   ),
+    //   orElse: () => ItemLoadingState(
+    //     itemHeight: 60.0.s,
+    //   ),
+    // );
   }
 }

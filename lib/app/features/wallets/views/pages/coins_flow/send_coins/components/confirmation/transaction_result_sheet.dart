@@ -8,7 +8,6 @@ import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
@@ -59,25 +58,46 @@ class TransactionResultSheet extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 24.0.s),
-                if (type == CryptoAssetType.nft)
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 52.0.s,
-                    ),
-                    child: NftItem(
-                      nftData: formData.selectedNft!,
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
-                if (formData.selectedCoin case final CoinInWalletData coinInWallet)
-                  TransactionAmountSummary(
-                    amount: coinInWallet.amount,
-                    currency: coinInWallet.coin.abbreviation,
-                    usdAmount: coinInWallet.balanceUSD,
-                    icon: CoinIconWidget(
-                      imageUrl: coinInWallet.coin.iconUrl,
-                    ),
-                  ),
+                formData.assetData?.map(
+                      coin: (coin) => TransactionAmountSummary(
+                        amount: coin.amount,
+                        currency: coin.coin.abbreviation,
+                        // usdAmount: coin.balanceUSD, // TODO: Not implemented
+                        usdAmount: 0,
+                        icon: CoinIconWidget(
+                          imageUrl: coin.coin.iconUrl,
+                        ),
+                      ),
+                      nft: (nft) => Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 52.0.s,
+                        ),
+                        child: NftItem(
+                          nftData: nft.nft,
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ),
+                    ) ??
+                    const SizedBox.shrink(),
+                // if (type == CryptoAssetType.nft)
+                //   Padding(
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 52.0.s,
+                //     ),
+                //     child: NftItem(
+                //       nftData: formData.nft!,
+                //       backgroundColor: Colors.transparent,
+                //     ),
+                //   ),
+                // if (formData.coin case final CoinInWalletData coinInWallet)
+                //   TransactionAmountSummary(
+                //     amount: coinInWallet.amount,
+                //     currency: coinInWallet.coin.abbreviation,
+                //     usdAmount: coinInWallet.balanceUSD,
+                //     icon: CoinIconWidget(
+                //       imageUrl: coinInWallet.coin.iconUrl,
+                //     ),
+                //   ),
                 SizedBox(height: 24.0.s),
                 Row(
                   children: [

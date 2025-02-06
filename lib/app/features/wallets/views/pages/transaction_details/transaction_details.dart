@@ -9,8 +9,6 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/timeline_item_data.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
@@ -50,25 +48,26 @@ class TransactionDetailsPage extends ConsumerWidget {
                 padding: EdgeInsets.only(top: 10.0.s),
                 child: Column(
                   children: [
-                    if (type == CryptoAssetType.nft)
-                      Padding(
+                    formData.assetData!.map(
+                      coin: (coin) => TransactionAmountSummary(
+                        amount: coin.amount,
+                        currency: coin.coin.abbreviation,
+                        // usdAmount: coin.usdAmount, // TODO: Not implemented
+                        usdAmount: 0,
+                        icon: CoinIconWidget(
+                          imageUrl: coin.coin.iconUrl,
+                        ),
+                      ),
+                      nft: (nft) => Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 52.0.s,
                         ),
                         child: NftItem(
-                          nftData: formData.selectedNft!,
+                          nftData: nft.nft,
                           backgroundColor: Colors.transparent,
                         ),
                       ),
-                    if (formData.selectedCoin case final CoinInWalletData coinInWallet)
-                      TransactionAmountSummary(
-                        amount: coinInWallet.amount,
-                        currency: coinInWallet.coin.abbreviation,
-                        usdAmount: coinInWallet.balanceUSD,
-                        icon: CoinIconWidget(
-                          imageUrl: coinInWallet.coin.iconUrl,
-                        ),
-                      ),
+                    ),
                     SizedBox(height: 12.0.s),
                     Timeline(
                       items: [
@@ -80,7 +79,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                     SizedBox(height: 16.0.s),
                     SendToRecipient(
                       address: formData.address,
-                      pubkey: formData.selectedContactPubkey,
+                      pubkey: formData.contactPubkey,
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
@@ -98,22 +97,26 @@ class TransactionDetailsPage extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    if (formData.selectedCoin case final CoinData coin) ...[
-                      SizedBox(height: 16.0.s),
-                      ListItem.textWithIcon(
-                        title: Text(locale.wallet_asset),
-                        value: coin.name,
-                        icon: CoinIconWidget(
-                          imageUrl: coin.iconUrl,
-                          size: ScreenSideOffset.defaultSmallMargin,
-                        ),
-                      ),
-                    ],
+                    ...formData.assetData?.maybeMap(
+                          coin: (coin) => [
+                            SizedBox(height: 16.0.s),
+                            ListItem.textWithIcon(
+                              title: Text(locale.wallet_asset),
+                              value: coin.coin.name,
+                              icon: CoinIconWidget(
+                                imageUrl: coin.coin.iconUrl,
+                                size: ScreenSideOffset.defaultSmallMargin,
+                              ),
+                            ),
+                          ],
+                          orElse: () => const [SizedBox.shrink()],
+                        ) ??
+                        const [SizedBox.shrink()],
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
-                      value: formData.networkName,
-                      icon: formData.selectedNetwork.svgIconAsset.icon(size: 16.0.s),
+                      value: formData.network.displayName,
+                      icon: formData.network.svgIconAsset.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItemArrivalTime(
