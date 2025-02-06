@@ -64,10 +64,7 @@ class SelectArticleTopicModal extends HookConsumerWidget {
                   ),
                 ),
             ],
-            title: Text(
-              context.i18n.topics_title,
-              style: context.theme.appTextThemes.subtitle,
-            ),
+            title: Text(context.i18n.topics_title),
           ),
           ScreenSideOffset.small(
             child: SearchInput(
