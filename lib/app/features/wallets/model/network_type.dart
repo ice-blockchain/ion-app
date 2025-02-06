@@ -29,7 +29,7 @@ enum NetworkType {
 
   String getDisplayNameSmall(BuildContext context) {
     return switch (this) {
-      NetworkType.all => context.i18n.all_chains_item_small,
+      NetworkType.all => context.i18n.core_all,
       _ => getDisplayName(context),
     };
   }
