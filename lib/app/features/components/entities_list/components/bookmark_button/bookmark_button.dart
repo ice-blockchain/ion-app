@@ -11,10 +11,14 @@ import 'package:ion/generated/assets.gen.dart';
 class BookmarkButton extends ConsumerWidget {
   const BookmarkButton({
     required this.eventReference,
+    this.size,
+    this.color,
     super.key,
   });
 
   final EventReference? eventReference;
+  final double? size;
+  final Color? color;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +30,6 @@ class BookmarkButton extends ConsumerWidget {
 
     ref.displayErrors(bookmarksNotifierProvider);
 
-    final color = context.theme.appColors.onTertararyBackground;
     return GestureDetector(
       onTap: () => ref.read(bookmarksNotifierProvider.notifier).toggleBookmark(eventReference!),
       behavior: HitTestBehavior.opaque,
@@ -36,9 +39,9 @@ class BookmarkButton extends ConsumerWidget {
         child: Center(
           child: TextActionButton(
             icon: isBookmarked
-                ? Assets.svg.iconBookmarksOn.icon(size: 16.0.s)
-                : Assets.svg.iconBookmarks.icon(size: 16.0.s, color: color),
-            textColor: color,
+                ? Assets.svg.iconBookmarksOn.icon(size: size)
+                : Assets.svg.iconBookmarks.icon(size: size, color: color),
+            textColor: color ?? context.theme.appColors.onTertararyBackground,
           ),
         ),
       ),
