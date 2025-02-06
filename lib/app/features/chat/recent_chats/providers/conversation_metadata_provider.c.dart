@@ -31,7 +31,8 @@ class ConversationMetadata extends _$ConversationMetadata {
     );
 
     if (conversation.type == ChatType.oneOnOne) {
-      final masterPubkey = conversation.participantsMasterkeys.firstWhereOrNull((key) => key != currentMasterPubkey);
+      final masterPubkey =
+          conversation.participantsMasterkeys.firstWhereOrNull((key) => key != currentMasterPubkey);
 
       if (masterPubkey == null) {
         throw UserMetadataNotFoundException(masterPubkey ?? '?');
@@ -64,7 +65,8 @@ class ConversationMetadata extends _$ConversationMetadata {
       // If the image is not available, download it from the server and update conversation messages
       if (conversation.imageUrl == null) {
         final conversationMessages = await database.getConversationMessages(conversation.id);
-        final latestMessageWithIMetaTag = conversationMessages.firstWhereOrNull((m) => m.data.primaryMedia != null);
+        final latestMessageWithIMetaTag =
+            conversationMessages.firstWhereOrNull((m) => m.data.primaryMedia != null);
 
         final conversationMessageManagementService =
             await ref.read(conversationMessageManagementServiceProvider.future);

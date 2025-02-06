@@ -24,7 +24,8 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     state = const AsyncLoading();
 
     state = await AsyncValue.guard(() async {
-      final conversationMessageManagementService = await ref.read(conversationMessageManagementServiceProvider.future);
+      final conversationMessageManagementService =
+          await ref.read(conversationMessageManagementServiceProvider.future);
 
       await conversationMessageManagementService.sendMessage(
         content: '',
@@ -160,7 +161,8 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     }
 
     for (final conversationId in conversationIds) {
-      await databaseService.deleteConversation(conversationId: conversationId, masterPubkey: masterPubkey);
+      await databaseService.deleteConversation(
+          conversationId: conversationId, masterPubkey: masterPubkey);
     }
   }
 
