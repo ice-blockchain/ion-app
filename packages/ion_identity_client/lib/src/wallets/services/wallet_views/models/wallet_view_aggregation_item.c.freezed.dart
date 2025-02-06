@@ -24,7 +24,7 @@ mixin _$WalletViewAggregationItem {
   @JsonKey(defaultValue: [])
   List<WalletViewAggregationWallet> get wallets =>
       throw _privateConstructorUsedError;
-  @TotalBalanceConverter()
+  @NumberToStringConverter()
   String get totalBalance => throw _privateConstructorUsedError;
 
   /// Serializes this WalletViewAggregationItem to a JSON map.
@@ -45,7 +45,7 @@ abstract class $WalletViewAggregationItemCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(defaultValue: []) List<WalletViewAggregationWallet> wallets,
-      @TotalBalanceConverter() String totalBalance});
+      @NumberToStringConverter() String totalBalance});
 }
 
 /// @nodoc
@@ -91,7 +91,7 @@ abstract class _$$WalletViewAggregationItemImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(defaultValue: []) List<WalletViewAggregationWallet> wallets,
-      @TotalBalanceConverter() String totalBalance});
+      @NumberToStringConverter() String totalBalance});
 }
 
 /// @nodoc
@@ -131,7 +131,7 @@ class _$WalletViewAggregationItemImpl implements _WalletViewAggregationItem {
   const _$WalletViewAggregationItemImpl(
       {@JsonKey(defaultValue: [])
       required final List<WalletViewAggregationWallet> wallets,
-      @TotalBalanceConverter() required this.totalBalance})
+      @NumberToStringConverter() required this.totalBalance})
       : _wallets = wallets;
 
   factory _$WalletViewAggregationItemImpl.fromJson(Map<String, dynamic> json) =>
@@ -147,7 +147,7 @@ class _$WalletViewAggregationItemImpl implements _WalletViewAggregationItem {
   }
 
   @override
-  @TotalBalanceConverter()
+  @NumberToStringConverter()
   final String totalBalance;
 
   @override
@@ -191,7 +191,7 @@ abstract class _WalletViewAggregationItem implements WalletViewAggregationItem {
   const factory _WalletViewAggregationItem(
           {@JsonKey(defaultValue: [])
           required final List<WalletViewAggregationWallet> wallets,
-          @TotalBalanceConverter() required final String totalBalance}) =
+          @NumberToStringConverter() required final String totalBalance}) =
       _$WalletViewAggregationItemImpl;
 
   factory _WalletViewAggregationItem.fromJson(Map<String, dynamic> json) =
@@ -201,7 +201,7 @@ abstract class _WalletViewAggregationItem implements WalletViewAggregationItem {
   @JsonKey(defaultValue: [])
   List<WalletViewAggregationWallet> get wallets;
   @override
-  @TotalBalanceConverter()
+  @NumberToStringConverter()
   String get totalBalance;
 
   /// Create a copy of WalletViewAggregationItem

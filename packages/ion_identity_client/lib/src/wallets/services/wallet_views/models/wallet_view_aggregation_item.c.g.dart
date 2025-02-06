@@ -15,7 +15,7 @@ _$WalletViewAggregationItemImpl _$$WalletViewAggregationItemImplFromJson(
               .toList() ??
           [],
       totalBalance:
-          const TotalBalanceConverter().fromJson(json['totalBalance']),
+          const NumberToStringConverter().fromJson(json['totalBalance']),
     );
 
 Map<String, dynamic> _$$WalletViewAggregationItemImplToJson(
@@ -23,5 +23,5 @@ Map<String, dynamic> _$$WalletViewAggregationItemImplToJson(
     <String, dynamic>{
       'wallets': instance.wallets.map((e) => e.toJson()).toList(),
       'totalBalance':
-          const TotalBalanceConverter().toJson(instance.totalBalance),
+          const NumberToStringConverter().toJson(instance.totalBalance),
     };

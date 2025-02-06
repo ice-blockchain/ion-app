@@ -7,10 +7,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/object.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -31,7 +35,8 @@ class SendCoinsForm extends HookConsumerWidget {
 
     final formController = ref.watch(sendAssetFormControllerProvider());
     final notifier = ref.watch(sendAssetFormControllerProvider().notifier);
-    final selectedContactPubkey = formController.selectedContactPubkey;
+    final selectedContactPubkey = formController.contactPubkey;
+    final coin = formController.assetData!.as<CoinAssetData>()!;
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
@@ -57,13 +62,12 @@ class SendCoinsForm extends HookConsumerWidget {
               ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    if (formController.selectedCoin != null)
-                      CoinButton(
-                        coinInWallet: formController.selectedCoin!,
-                        onTap: () {
-                          CoinSendRoute().push<void>(context);
-                        },
-                      ),
+                    CoinButton(
+                      coin: coin,
+                      onTap: () {
+                        CoinSendRoute().push<void>(context);
+                      },
+                    ),
                     SizedBox(height: 12.0.s),
                     NetworkButton(
                       networkType: formController.selectedNetwork,
@@ -112,7 +116,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       onPressed: () {
                         ref
                             .read(sendAssetFormControllerProvider().notifier)
-                            .updateAmount(amountController.text);
+                            .setCoinsAmount(amountController.text);
                         CoinsSendFormConfirmationRoute().push<void>(context);
                       },
                     ),

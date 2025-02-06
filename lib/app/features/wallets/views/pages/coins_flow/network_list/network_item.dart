@@ -29,7 +29,12 @@ class NetworkItem extends ConsumerWidget {
     return ListItem(
       title: Row(
         children: [
-          Text(coinInWallet.coin.name),
+          Expanded(
+            child: Text(
+              coinInWallet.coin.name,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           SizedBox(width: 5.0.s),
           _NetworkLabel(network: network),
         ],
