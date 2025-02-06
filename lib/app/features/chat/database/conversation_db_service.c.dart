@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/database/conversation_database.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -24,21 +22,18 @@ class ConversationsDBService {
   Future<int> _insertConversationData({
     required String conversationId,
     required EventMessage eventMessage,
-    bool isDeleted = false,
   }) async {
     String? groupImagePath;
 
     final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     return _db.into(_db.conversationMessagesTable).insert(
           ConversationMessagesTableData(
-            isDeleted: isDeleted,
             groupImagePath: groupImagePath,
             conversationId: conversationId,
             eventMessageId: conversationMessage.id,
             createdAt: conversationMessage.createdAt,
             pubKeys: conversationMessage.allPubkeysMask,
             subject: conversationMessage.data.relatedSubject?.value,
-            status: DeliveryStatus.none,
           ),
           mode: InsertMode.insertOrReplace,
         );
@@ -73,7 +68,10 @@ class ConversationsDBService {
 
   // TODO: Try to implement in a single transaction
   //https://drift.simonbinder.eu/dart_api/transactions/?h=transa
-  Future<void> insertEventMessage(EventMessage eventMessage) async {
+  Future<void> insertEventMessage({
+    required EventMessage eventMessage,
+    required String masterPubkey,
+  }) async {
     await _db.into(_db.eventMessagesTable).insert(
           EventMessageTableData.fromEventMessage(eventMessage),
           mode: InsertMode.insertOrReplace,
@@ -84,9 +82,15 @@ class ConversationsDBService {
     } else if (eventMessage.kind == PrivateMessageReactionEntity.kind) {
       switch (eventMessage.content) {
         case 'received':
-          await _updateConversationMessageAsReceived(eventMessage);
+          await _updateConversationMessageAsReceived(
+            eventMessage: eventMessage,
+            masterPubkey: masterPubkey,
+          );
         case 'read':
-          await _updateConversationMessagesAsRead(eventMessage);
+          await _updateConversationMessagesAsRead(
+            eventMessage: eventMessage,
+            masterPubkey: masterPubkey,
+          );
         default:
           await _insertConversationReactionsTableData(eventMessage);
       }
@@ -110,124 +114,8 @@ class ConversationsDBService {
     }
   }
 
-  // Call when "OK" is received from relay to mark message as sent (one tick)
-  Future<void> markConversationMessageAsSent(String id) async {
-    final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
-          ..where((table) => table.eventMessageId.equals(id)))
-        .getSingle();
-
-    final sentConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(status: DeliveryStatus.isSent);
-
-    await _db.update(_db.conversationMessagesTable).replace(sentConversationMessagesTableData);
-  }
-
-  Future<void> markConversationMessageAsDeleted(String id) async {
-    final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
-          ..where((table) => table.eventMessageId.equals(id)))
-        .getSingle();
-
-    final deleteConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(isDeleted: true);
-
-    await _db.update(_db.conversationMessagesTable).replace(deleteConversationMessagesTableData);
-  }
-
-  // Call when kind 7 is received from relay with "received" content
-  Future<void> _updateConversationMessageAsReceived(
-    EventMessage eventMessage,
-  ) async {
-    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
-
-    final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
-          ..where(
-            (table) => table.eventMessageId.equals(reactionEntity.data.eventId),
-          ))
-        .getSingle();
-
-    final receivedConversationMessagesTableData =
-        conversationMessagesTableData.copyWith(status: DeliveryStatus.isReceived);
-
-    await _db.update(_db.conversationMessagesTable).replace(receivedConversationMessagesTableData);
-  }
-
-  // Call when kind 7 is received from relay with "read" content
-  Future<void> _updateConversationMessagesAsRead(
-    EventMessage eventMessage,
-  ) async {
-    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
-
-    final latestConversationMessageTableData = await (_db.select(_db.conversationMessagesTable)
-          ..where(
-            (table) => table.eventMessageId.equals(reactionEntity.data.eventId),
-          ))
-        .getSingle();
-
-    final allPreviousReceivedMessages = await (_db.select(_db.conversationMessagesTable)
-          ..where(
-            (table) =>
-                table.conversationId.equals(latestConversationMessageTableData.conversationId),
-          )
-          ..where(
-            (table) => table.status.equals(DeliveryStatus.isReceived.index),
-          )
-          ..where(
-            (table) => table.createdAt.isSmallerOrEqualValue(
-              latestConversationMessageTableData.createdAt,
-            ),
-          ))
-        .get();
-
-    await _db.batch(
-      (b) {
-        b.replaceAll(
-          _db.conversationMessagesTable,
-          allPreviousReceivedMessages
-              .map(
-                (previousMessage) => previousMessage.copyWith(status: DeliveryStatus.isRead),
-              )
-              .toList(),
-        );
-      },
-    );
-  }
-
-  Future<int> getUnreadMessagesCount(String conversationId) {
-    return (_db.select(_db.conversationMessagesTable)
-          ..where((table) => table.conversationId.equals(conversationId))
-          ..where((table) => table.status.equals(DeliveryStatus.isReceived.index)))
-        .get()
-        .then((value) => value.length);
-  }
-
-  Future<void> markConversationsAsRead(List<String> conversationIds) async {
-    return _db.batch(
-      (b) {
-        b.update(
-          _db.conversationMessagesTable,
-          const ConversationMessagesTableCompanion(status: Value(DeliveryStatus.isRead)),
-          where: (table) =>
-              table.conversationId.isIn(conversationIds) &
-              table.status.equals(DeliveryStatus.isReceived.index),
-        );
-      },
-    );
-  }
-
-  Future<void> markAllConversationsAsRead() async {
-    return _db.batch(
-      (b) {
-        b.update(
-          _db.conversationMessagesTable,
-          const ConversationMessagesTableCompanion(status: Value(DeliveryStatus.isRead)),
-          where: (table) => table.status.equals(DeliveryStatus.isReceived.index),
-        );
-      },
-    );
-  }
-
   final _allConversationsLatestMessageQuery =
-      'SELECT * FROM (SELECT * FROM conversation_messages_table WHERE is_deleted = 0 ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
+      'SELECT * FROM (SELECT * FROM conversation_messages_table ORDER BY created_at DESC) AS sub GROUP BY conversation_id';
 
   Future<List<PrivateDirectMessageEntity>> getAllConversations() async {
     // Select last message of each conversation
@@ -240,28 +128,6 @@ class ConversationsDBService {
         await _selectLastMessageOfEachConversation(uniqueConversationRows);
 
     return lastConversationMessages;
-  }
-
-  Future<List<PrivateDirectMessageEntity>> getConversationMessages(String id) async {
-    final query = _db.select(_db.conversationMessagesTable).join([
-      innerJoin(
-        _db.eventMessagesTable,
-        _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
-      ),
-    ])
-      ..where(_db.conversationMessagesTable.conversationId.equals(id))
-      ..where(_db.conversationMessagesTable.isDeleted.equals(false));
-
-    final data = await query.get();
-
-    final conversationMessages = data.map((row) {
-      final eventMessage = row.readTable(_db.eventMessagesTable);
-      return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
-    }).toList();
-
-    final sortedConversationMessages = conversationMessages.sortedBy<DateTime>((e) => e.createdAt);
-
-    return sortedConversationMessages;
   }
 
   Stream<List<PrivateDirectMessageEntity>> watchConversations() {
@@ -278,29 +144,6 @@ class ConversationsDBService {
 
           return lastConversationEventMessages;
         });
-  }
-
-  Stream<List<PrivateDirectMessageEntity>> watchConversationMessages(
-    ConversationEntity conversation,
-  ) {
-    final query = _db.select(_db.conversationMessagesTable).join([
-      innerJoin(
-        _db.eventMessagesTable,
-        _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
-      ),
-    ])
-      ..where(_db.conversationMessagesTable.conversationId.equals(conversation.id))
-      ..where(_db.conversationMessagesTable.isDeleted.equals(false));
-
-    return query.watch().map((rows) {
-      return rows
-          .map((row) {
-            final eventMessage = row.readTable(_db.eventMessagesTable);
-            return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
-          })
-          .toList()
-          .sortedBy<DateTime>((e) => e.createdAt);
-    });
   }
 
   FutureOr<List<PrivateDirectMessageEntity>> _selectLastMessageOfEachConversation(
@@ -364,7 +207,210 @@ class ConversationsDBService {
     return reactions;
   }
 
-  // Get last createdAt date from conversation_messages_table
+  Future<List<PrivateDirectMessageEntity>> getConversationMessages(String conversationId) async {
+    final query = _db.select(_db.conversationMessagesTable).join([
+      innerJoin(
+        _db.eventMessagesTable,
+        _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+      ),
+    ])
+      ..where(_db.conversationMessagesTable.conversationId.equals(conversationId))
+      ..orderBy([OrderingTerm.asc(_db.conversationMessagesTable.createdAt)]);
+
+    final data = await query.get();
+
+    return data.map((row) {
+      final eventMessage = row.readTable(_db.eventMessagesTable);
+      return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
+    }).toList();
+  }
+
+  Stream<List<PrivateDirectMessageEntity>> watchConversationMessages(String conversationId) {
+    final query = _db.select(_db.conversationMessagesTable).join([
+      innerJoin(
+        _db.eventMessagesTable,
+        _db.eventMessagesTable.id.equalsExp(_db.conversationMessagesTable.eventMessageId),
+      ),
+    ])
+      ..where(_db.conversationMessagesTable.conversationId.equals(conversationId))
+      ..orderBy([OrderingTerm.asc(_db.conversationMessagesTable.createdAt)]);
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        final eventMessage = row.readTable(_db.eventMessagesTable);
+        return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
+      }).toList();
+    });
+  }
+
+  // "OK" received from relay to update message status to "sent"
+  Future<void> updateConversationMessageAsSent({
+    required String messageId,
+    required String masterPubkey,
+  }) async {
+    final conversationMessageStatusTableData = await (_db.select(_db.conversationMessageStatusTable)
+          ..where((table) => table.eventMessageId.equals(messageId))
+          ..where((table) => table.masterPubkey.equals(masterPubkey)))
+        .getSingleOrNull();
+
+    if (conversationMessageStatusTableData == null) return;
+
+    final sentConversationMessageStatusTableData = conversationMessageStatusTableData.copyWith(
+      status: DeliveryStatus.sent,
+    );
+
+    await _db
+        .update(_db.conversationMessageStatusTable)
+        .replace(sentConversationMessageStatusTableData);
+  }
+
+  // Kind 7 is received from relay with "received" status
+  Future<void> _updateConversationMessageAsReceived({
+    required EventMessage eventMessage,
+    required String masterPubkey,
+  }) async {
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+
+    final conversationMessageStatusTableData = await (_db.select(_db.conversationMessageStatusTable)
+          ..where((table) => table.eventMessageId.equals(reactionEntity.data.eventId))
+          ..where((table) => table.masterPubkey.equals(masterPubkey)))
+        .getSingleOrNull();
+
+    if (conversationMessageStatusTableData == null) return;
+
+    final receivedConversationMessageStatusTableData = conversationMessageStatusTableData.copyWith(
+      status: DeliveryStatus.received,
+    );
+    await _db
+        .update(_db.conversationMessageStatusTable)
+        .replace(receivedConversationMessageStatusTableData);
+  }
+
+  // Kind 7 reaction is received from relay with "read" status
+  Future<void> _updateConversationMessagesAsRead({
+    required EventMessage eventMessage,
+    required String masterPubkey,
+  }) async {
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+
+    final latestMessageWithReadStatusTableData = await (_db.select(_db.conversationMessagesTable)
+          ..where(
+            (table) => table.eventMessageId.equals(reactionEntity.data.eventId),
+          ))
+        .getSingleOrNull();
+
+    if (latestMessageWithReadStatusTableData == null) return;
+
+    final previousMessagesWithReceivedStatus =
+        await (_db.select(_db.conversationMessageStatusTable).join([
+      innerJoin(
+        _db.conversationMessagesTable,
+        _db.conversationMessagesTable.eventMessageId
+            .equalsExp(_db.conversationMessageStatusTable.eventMessageId),
+      ),
+    ])
+              ..where(
+                _db.conversationMessagesTable.conversationId
+                    .equals(latestMessageWithReadStatusTableData.conversationId),
+              )
+              ..where(
+                _db.conversationMessagesTable.createdAt.isSmallerOrEqualValue(
+                  latestMessageWithReadStatusTableData.createdAt,
+                ),
+              )
+              ..where(
+                _db.conversationMessageStatusTable.status.equals(DeliveryStatus.received.index),
+              )
+              ..where(
+                _db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey),
+              ))
+            .get();
+
+    final updatedStatuses = previousMessagesWithReceivedStatus.map((messageStatus) {
+      final conversationMessageStatus = messageStatus.readTable(_db.conversationMessageStatusTable);
+      return conversationMessageStatus.copyWith(status: DeliveryStatus.read);
+    }).toList();
+
+    await _db.batch(
+      (b) {
+        b.replaceAll(_db.conversationMessageStatusTable, updatedStatuses);
+      },
+    );
+  }
+
+  // Get unread messages for the current user or any other masterPubkey
+  Future<int> unreadMessagesCount({
+    required String conversationId,
+    required String masterPubkey,
+  }) async {
+    final messageStatusesTableData = await (_db.select(_db.conversationMessagesTable).join([
+      leftOuterJoin(
+        _db.conversationMessageStatusTable,
+        _db.conversationMessageStatusTable.eventMessageId
+            .equalsExp(_db.conversationMessagesTable.eventMessageId),
+      ),
+    ])
+          ..where(
+            _db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey),
+          )
+          ..where(
+            _db.conversationMessageStatusTable.status.equals(DeliveryStatus.read.index),
+          )
+          ..where(
+            _db.conversationMessagesTable.conversationId.equals(conversationId),
+          ))
+        .get();
+
+    return messageStatusesTableData.length;
+  }
+
+  // Mark all messages in specified conversations for masterPubkey as read
+  Future<void> markConversationsAsRead({
+    required List<String> conversationIds,
+    required String masterPubkey,
+  }) async {
+    final messageStatusesTableData = await (_db.select(_db.conversationMessagesTable).join([
+      leftOuterJoin(
+        _db.conversationMessageStatusTable,
+        _db.conversationMessageStatusTable.eventMessageId
+            .equalsExp(_db.conversationMessagesTable.eventMessageId),
+      ),
+    ])
+          ..where(_db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey))
+          ..where(_db.conversationMessagesTable.conversationId.isIn(conversationIds))
+          ..where(_db.conversationMessageStatusTable.status.equals(DeliveryStatus.received.index)))
+        .get();
+
+    if (messageStatusesTableData.isEmpty) return;
+
+    final updatedStatuses = messageStatusesTableData.map((messageStatus) {
+      final conversationMessageStatus = messageStatus.readTable(_db.conversationMessageStatusTable);
+      return conversationMessageStatus.copyWith(status: DeliveryStatus.read);
+    }).toList();
+
+    await _db.batch((batch) {
+      batch.replaceAll(_db.conversationMessageStatusTable, updatedStatuses);
+    });
+  }
+
+  Future<void> markAllConversationsAsRead(String masterPubkey) async {
+    final receivedMessages = await (_db.select(_db.conversationMessageStatusTable)
+          ..where((table) => table.masterPubkey.equals(masterPubkey))
+          ..where((table) => table.status.equals(DeliveryStatus.received.index)))
+        .get();
+
+    if (receivedMessages.isEmpty) return;
+
+    final updatedStatuses = receivedMessages.map((messageStatus) {
+      return messageStatus.copyWith(status: DeliveryStatus.read);
+    }).toList();
+
+    await _db.batch((batch) {
+      batch.replaceAll(_db.conversationMessageStatusTable, updatedStatuses);
+    });
+  }
+
+  // Get the most recent createdAt date from conversation_messages_table
   Future<DateTime?> getLastConversationMessageCreatedAt() async {
     final lastConversationMessage = await (_db.select(_db.conversationMessagesTable)
           ..orderBy([(table) => OrderingTerm.desc(table.createdAt)])
@@ -374,19 +420,60 @@ class ConversationsDBService {
     return lastConversationMessage?.createdAt;
   }
 
-  // Mark conversation as removed and all its messages prior to last message as
-  // deleted
-  Future<void> deleteConversation(String conversationId) async {
-    final conversationMessagesTableData = await (_db.select(_db.conversationMessagesTable)
-          ..where((table) => table.conversationId.equals(conversationId)))
+  // Call when message is deleted on user local device
+  Future<void> deleteMessage({
+    required String messageId,
+    required String masterPubkey,
+  }) async {
+    await _db.transaction(() async {
+      final conversationMessageStatusTableData =
+          await (_db.select(_db.conversationMessageStatusTable)
+                ..where((table) => table.eventMessageId.equals(messageId))
+                ..where((table) => table.masterPubkey.equals(masterPubkey)))
+              .getSingleOrNull();
+
+      if (conversationMessageStatusTableData != null) {
+        final updatedConversationMessageStatusTableData =
+            conversationMessageStatusTableData.copyWith(
+          status: DeliveryStatus.deleted,
+        );
+
+        await _db
+            .update(_db.conversationMessageStatusTable)
+            .replace(updatedConversationMessageStatusTableData);
+      }
+    });
+  }
+
+  // Mark all conversation messages prior to the current time as deleted
+  Future<void> deleteConversation({
+    required String masterPubkey,
+    required String conversationId,
+  }) async {
+    final messageStatusesTableData = await (_db.select(_db.conversationMessagesTable).join([
+      leftOuterJoin(
+        _db.conversationMessageStatusTable,
+        _db.conversationMessageStatusTable.eventMessageId
+            .equalsExp(_db.conversationMessagesTable.eventMessageId),
+      ),
+    ])
+          ..where(
+            _db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey),
+          )
+          ..where(
+            _db.conversationMessagesTable.conversationId.equals(conversationId),
+          ))
         .get();
 
-    final deleteConversationMessagesTableData =
-        conversationMessagesTableData.map((e) => e.copyWith(isDeleted: true)).toList();
+    final conversationMessagesStatusTableData = messageStatusesTableData.map((messageStatus) {
+      final conversationMessageStatus = messageStatus.readTable(_db.conversationMessageStatusTable);
+
+      return conversationMessageStatus.copyWith(status: DeliveryStatus.deleted);
+    });
 
     await _db.batch(
       (b) {
-        b.replaceAll(_db.conversationMessagesTable, deleteConversationMessagesTableData);
+        b.replaceAll(_db.conversationMessageStatusTable, conversationMessagesStatusTableData);
       },
     );
   }

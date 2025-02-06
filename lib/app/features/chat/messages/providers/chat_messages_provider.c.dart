@@ -17,7 +17,7 @@ class ChatMessages extends _$ChatMessages {
   Future<List<MessageListItem>> build(ConversationEntity conversation) async {
     final messagesSubscription = ref
         .watch(conversationsDBServiceProvider)
-        .watchConversationMessages(conversation)
+        .watchConversationMessages(conversation.id)
         .listen((messages) async {
       final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 

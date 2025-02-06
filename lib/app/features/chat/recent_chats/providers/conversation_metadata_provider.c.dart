@@ -18,16 +18,19 @@ class ConversationMetadata extends _$ConversationMetadata {
   Future<ConversationEntity> build(ConversationEntity conversation) async {
     state = const AsyncValue.loading();
 
+    final currentMasterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+
+    if (currentMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
     final database = ref.read(conversationsDBServiceProvider);
-    final unreadMessagesCount = await database.getUnreadMessagesCount(conversation.id);
+    final unreadMessagesCount = await database.unreadMessagesCount(
+      conversationId: conversation.id,
+      masterPubkey: currentMasterPubkey,
+    );
 
     if (conversation.type == ChatType.oneOnOne) {
-      final currentMasterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
-
-      if (currentMasterPubkey == null) {
-        throw UserMasterPubkeyNotFoundException();
-      }
-
       final masterPubkey =
           conversation.participantsMasterkeys.firstWhereOrNull((key) => key != currentMasterPubkey);
 
