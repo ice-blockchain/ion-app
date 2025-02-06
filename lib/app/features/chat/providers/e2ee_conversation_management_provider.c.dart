@@ -162,7 +162,9 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
 
     for (final conversationId in conversationIds) {
       await databaseService.deleteConversation(
-          conversationId: conversationId, masterPubkey: masterPubkey);
+        conversationId: conversationId,
+        masterPubkey: masterPubkey,
+      );
     }
   }
 
