@@ -9,7 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
-import 'package:ion/app/features/wallets/providers/coins_by_symbol_group_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -32,7 +32,12 @@ class NetworkListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coinsGroup = ref.watch(receiveCoinsFormControllerProvider).selectedCoin!;
-    final coinsState = ref.watch(coinsBySymbolGroupProvider(symbolGroup: coinsGroup.symbolGroup));
+    final coinsState = ref.watch(
+      coinsByFiltersProvider(
+        symbol: coinsGroup.abbreviation,
+        symbolGroup: coinsGroup.symbolGroup,
+      ),
+    );
 
     void onTap(Network network) {
       if (onSelectReturnType) {

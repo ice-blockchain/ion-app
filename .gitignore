@@ -62,3 +62,4 @@ fastlane/keys
 
 assets/ion_identity/coins.json
 assets/ion_identity/coins_version.txt
+.aider*

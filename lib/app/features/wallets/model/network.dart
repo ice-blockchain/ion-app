@@ -4,6 +4,7 @@ import 'package:ion/generated/assets.gen.dart';
 
 enum Network {
   ion,
+  ionTestnet,
   algorand,
   algorandTestnet,
   aptos,
@@ -53,6 +54,7 @@ enum Network {
 
   static const Map<Network, String> _serverNames = {
     Network.ion: 'ION',
+    Network.ionTestnet: 'IONTestnet',
     Network.algorand: 'Algorand',
     Network.algorandTestnet: 'AlgorandTestnet',
     Network.aptos: 'Aptos',
@@ -103,7 +105,7 @@ enum Network {
 
   String get svgIconAsset {
     return switch (this) {
-      Network.ion => Assets.svg.networks.walletIce,
+      Network.ion || Network.ionTestnet => Assets.svg.networks.walletIce,
       Network.algorand || Network.algorandTestnet => Assets.svg.networks.walletAlgorand,
       Network.aptos || Network.aptosTetnet => Assets.svg.networks.walletAptos,
       Network.arbitrumOne || Network.arbitrumSepolia => Assets.svg.networks.walletArbitrumone,
