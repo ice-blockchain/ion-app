@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // dart format width=80
 // GENERATED CODE, DO NOT EDIT BY HAND.
 // ignore_for_file: type=lint

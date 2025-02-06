@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:nostr_dart/nostr_dart.dart';

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // import 'package:drift/drift.dart';
 // import 'package:hooks_riverpod/hooks_riverpod.dart';
 // import 'package:ion/app/features/chat/database/conversation_database.c.dart';
