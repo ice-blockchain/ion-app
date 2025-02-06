@@ -9,6 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SuggestToAddBiometricsPopup extends ConsumerWidget {
@@ -67,15 +68,25 @@ class SuggestToAddBiometricsPopup extends ConsumerWidget {
                       ? const IONLoadingIndicator()
                       : const SizedBox.shrink(),
                   onPressed: () async {
-                    await ref
-                        .read(biometricsActionsNotifierProvider.notifier)
-                        .enrollToUseBiometrics(
-                          username: username,
-                          password: password,
-                          localisedReason: context.i18n.biometrics_suggestion_title,
-                        );
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
+                    try {
+                      await ref
+                          .read(biometricsActionsNotifierProvider.notifier)
+                          .enrollToUseBiometrics(
+                            username: username,
+                            password: password,
+                            localisedReason: context.i18n.biometrics_suggestion_title,
+                          );
+                    } catch (error, stackTrace) {
+                      // intentionally ignore exceptions
+                      Logger.log(
+                        'Error during biometrics enrolment',
+                        error: error,
+                        stackTrace: stackTrace,
+                      );
+                    } finally {
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
                     }
                   },
                 ),

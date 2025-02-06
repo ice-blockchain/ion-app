@@ -15,9 +15,7 @@ import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class ConfirmDeleteModal extends HookConsumerWidget {
-  const ConfirmDeleteModal({required this.pubkey, super.key});
-
-  final String pubkey;
+  const ConfirmDeleteModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

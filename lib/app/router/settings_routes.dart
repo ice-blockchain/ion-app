@@ -84,11 +84,9 @@ class ConfirmLogoutRoute extends BaseRouteData {
 }
 
 class ConfirmDeleteRoute extends BaseRouteData {
-  ConfirmDeleteRoute({required this.pubkey})
+  ConfirmDeleteRoute()
       : super(
-          child: ConfirmDeleteModal(pubkey: pubkey),
+          child: const ConfirmDeleteModal(),
           type: IceRouteType.bottomSheet,
         );
-
-  final String pubkey;
 }

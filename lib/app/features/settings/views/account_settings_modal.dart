@@ -93,6 +93,13 @@ class AccountSettingsModal extends ConsumerWidget {
                     ContentLanguagesRoute().push<void>(context);
                   },
                 ),
+                ModalActionButton(
+                  icon: Assets.svg.iconBlockDelete.icon(
+                    color: context.theme.appColors.attentionRed,
+                  ),
+                  label: context.i18n.settings_delete,
+                  onTap: () => ConfirmDeleteRoute().push<void>(context),
+                ),
               ],
             ),
           ),

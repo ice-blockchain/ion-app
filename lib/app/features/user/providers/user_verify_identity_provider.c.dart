@@ -5,6 +5,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/user/model/verify_identity_type.dart';
 import 'package:ion/app/features/user/providers/biometrics_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -75,6 +76,12 @@ Future<bool> isPasswordFlowUser(Ref ref) async {
 
 @riverpod
 Future<bool> isPasskeyAvailable(Ref ref) async {
-  final ionIdentity = await ref.read(ionIdentityProvider.future);
-  return ionIdentity(username: '').auth.isPasskeyAvailable();
+  try {
+    final ionIdentity = await ref.read(ionIdentityProvider.future);
+    return ionIdentity(username: '').auth.isPasskeyAvailable();
+  } catch (error, stackTrace) {
+    // intentionally ignore exceptions
+    Logger.log('Passkey check exception', error: error, stackTrace: stackTrace);
+    return false;
+  }
 }
