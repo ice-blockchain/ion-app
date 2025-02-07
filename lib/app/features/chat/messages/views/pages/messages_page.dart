@@ -59,7 +59,7 @@ class MessagesPage extends HookConsumerWidget {
                           Assets.svg.iconChannelMembers.icon(size: 10.0.s),
                           SizedBox(width: 4.0.s),
                           Text(
-                            conversation.participantsMasterkeys.length.toString(),
+                            conversation.participantsMasterPubkeys.length.toString(),
                             style: context.theme.appTextThemes.caption.copyWith(
                               color: context.theme.appColors.quaternaryText,
                             ),

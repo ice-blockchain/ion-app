@@ -108,7 +108,7 @@ class RecentChatTile extends ConsumerWidget {
             name: conversationWithMetadata.name,
             chatType: conversationWithMetadata.type,
             imageUrl: conversationWithMetadata.imageUrl,
-            participantsMasterkeys: conversationWithMetadata.participantsMasterkeys,
+            participantsMasterPubkeys: conversationWithMetadata.participantsMasterPubkeys,
             nickname: prefixUsername(username: conversationWithMetadata.nickname, context: context),
           ).push<void>(context);
         }

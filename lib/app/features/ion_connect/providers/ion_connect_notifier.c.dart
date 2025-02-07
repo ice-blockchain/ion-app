@@ -113,7 +113,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       relay: relayUrl,
     );
 
-    return sign(authEvent, includeMasterPubkey: false);
+    return sign(authEvent, includeMasterPubkey: true);
   }
 
   Future<List<IonConnectEntity>?> sendEntitiesData(

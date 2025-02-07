@@ -8,10 +8,12 @@ class PollResultMessage extends StatelessWidget {
     required this.createdAt,
     super.key,
     this.reactions,
+    this.deliveryStatus = MessageDeliveryStatus.created,
   });
   final bool isMe;
   final DateTime createdAt;
   final List<MessageReactionGroup>? reactions;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,11 @@ class PollResultMessage extends StatelessWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe, createdAt: createdAt),
+              MessageMetaData(
+                isMe: isMe,
+                createdAt: createdAt,
+                deliveryStatus: deliveryStatus,
+              ),
             ],
           ),
         ],

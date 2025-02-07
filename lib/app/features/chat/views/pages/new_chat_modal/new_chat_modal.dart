@@ -46,7 +46,7 @@ class NewChatModal extends HookConsumerWidget {
             chatType: ChatType.oneOnOne,
             name: user.data.displayName,
             imageUrl: user.data.picture ?? '',
-            participantsMasterkeys: [user.masterPubkey, currentMasterPubkey],
+            participantsMasterPubkeys: [user.masterPubkey, currentMasterPubkey],
             nickname: prefixUsername(username: user.data.name, context: context),
           ).push<void>(context);
         }

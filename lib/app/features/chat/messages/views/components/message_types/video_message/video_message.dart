@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/messages/views/components/components.dart'
 import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 
@@ -23,6 +24,7 @@ class VideoMessage extends HookConsumerWidget {
     this.author,
     this.message,
     this.reactions,
+    this.deliveryStatus = MessageDeliveryStatus.created,
     super.key,
   });
 
@@ -33,6 +35,7 @@ class VideoMessage extends HookConsumerWidget {
   final bool isLastMessageFromAuthor;
   final MessageAuthor? author;
   final List<MessageReactionGroup>? reactions;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,6 +92,7 @@ class VideoMessage extends HookConsumerWidget {
               message: message ?? '',
               reactions: reactions,
               createdAt: createdAt,
+              deliveryStatus: deliveryStatus,
             ),
           ],
         ),

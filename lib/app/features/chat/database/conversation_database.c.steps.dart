@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 // dart format width=80
 import 'package:drift/internal/versioned_schema.dart' as i0;
 import 'package:drift/drift.dart' as i1;
@@ -46,10 +44,9 @@ final class Schema2 extends i0.VersionedSchema {
         columns: [
           _column_7,
           _column_8,
-          _column_9,
           _column_6,
+          _column_9,
           _column_10,
-          _column_11,
         ],
         attachedDatabase: database,
       ),
@@ -59,11 +56,10 @@ final class Schema2 extends i0.VersionedSchema {
         entityName: 'conversation_message_status_table',
         withoutRowId: false,
         isStrict: false,
-        tableConstraints: [
-          'PRIMARY KEY(event_message_id)',
-        ],
+        tableConstraints: [],
         columns: [
-          _column_9,
+          _column_11,
+          _column_8,
           _column_12,
           _column_13,
         ],
@@ -118,8 +114,6 @@ i1.GeneratedColumn<DateTime> _column_6(String aliasedName) =>
 
 class Shape1 extends i0.VersionedTable {
   Shape1({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get pubKeys =>
-      columnsByName['pub_keys']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get conversationId =>
       columnsByName['conversation_id']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get eventMessageId =>
@@ -132,19 +126,18 @@ class Shape1 extends i0.VersionedTable {
 }
 
 i1.GeneratedColumn<String> _column_7(String aliasedName) =>
-    i1.GeneratedColumn<String>('pub_keys', aliasedName, false, type: i1.DriftSqlType.string);
-i1.GeneratedColumn<String> _column_8(String aliasedName) =>
     i1.GeneratedColumn<String>('conversation_id', aliasedName, false, type: i1.DriftSqlType.string);
-i1.GeneratedColumn<String> _column_9(String aliasedName) =>
+i1.GeneratedColumn<String> _column_8(String aliasedName) =>
     i1.GeneratedColumn<String>('event_message_id', aliasedName, false,
         type: i1.DriftSqlType.string);
-i1.GeneratedColumn<String> _column_10(String aliasedName) =>
+i1.GeneratedColumn<String> _column_9(String aliasedName) =>
     i1.GeneratedColumn<String>('subject', aliasedName, true, type: i1.DriftSqlType.string);
-i1.GeneratedColumn<String> _column_11(String aliasedName) =>
+i1.GeneratedColumn<String> _column_10(String aliasedName) =>
     i1.GeneratedColumn<String>('group_image_path', aliasedName, true, type: i1.DriftSqlType.string);
 
 class Shape2 extends i0.VersionedTable {
   Shape2({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id => columnsByName['id']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get eventMessageId =>
       columnsByName['event_message_id']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get masterPubkey =>
@@ -152,6 +145,11 @@ class Shape2 extends i0.VersionedTable {
   i1.GeneratedColumn<int> get status => columnsByName['status']! as i1.GeneratedColumn<int>;
 }
 
+i1.GeneratedColumn<int> _column_11(String aliasedName) =>
+    i1.GeneratedColumn<int>('id', aliasedName, false,
+        hasAutoIncrement: true,
+        type: i1.DriftSqlType.int,
+        defaultConstraints: i1.GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
 i1.GeneratedColumn<String> _column_12(String aliasedName) =>
     i1.GeneratedColumn<String>('master_pubkey', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<int> _column_13(String aliasedName) =>

@@ -33,7 +33,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
-        receiverMasterkey: masterPubkey,
+        receiverMasterpubkey: masterPubkey,
         receiverPubkey: receiverSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );
@@ -55,7 +55,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
-        receiverMasterkey: "Doesn't matter",
+        receiverMasterpubkey: "Doesn't matter",
         receiverPubkey: senderSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );
@@ -77,7 +77,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
-        receiverMasterkey: "Doesn't matter",
+        receiverMasterpubkey: "Doesn't matter",
         receiverPubkey: receiverSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );

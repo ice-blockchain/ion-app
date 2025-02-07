@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_item_wra
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/utils/num.dart';
@@ -25,9 +26,10 @@ class MoneyMessage extends HookWidget {
     required this.equivalentUsd,
     required this.chain,
     required this.createdAt,
-    this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
+    this.isLastMessageFromAuthor = true,
+    this.deliveryStatus = MessageDeliveryStatus.created,
     super.key,
   });
 
@@ -40,6 +42,7 @@ class MoneyMessage extends HookWidget {
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +135,11 @@ class MoneyMessage extends HookWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe, createdAt: createdAt),
+              MessageMetaData(
+                isMe: isMe,
+                createdAt: createdAt,
+                deliveryStatus: deliveryStatus,
+              ),
             ],
           ),
         ],

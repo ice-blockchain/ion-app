@@ -89,7 +89,7 @@ class ChannelPage extends HookConsumerWidget {
                   conversation: ConversationEntity(
                     id: '',
                     name: '',
-                    participantsMasterkeys: [],
+                    participantsMasterPubkeys: [],
                     type: ChatType.channel,
                   ),
                 )

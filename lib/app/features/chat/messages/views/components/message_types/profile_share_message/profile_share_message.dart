@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/messages/views/components/components.dart'
 import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/utils/username.dart';
 
@@ -18,6 +19,7 @@ class ProfileShareMessage extends StatelessWidget {
     this.isLastMessageFromAuthor = true,
     this.reactions,
     this.author,
+    this.deliveryStatus = MessageDeliveryStatus.created,
     super.key,
   });
 
@@ -26,6 +28,7 @@ class ProfileShareMessage extends StatelessWidget {
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,11 @@ class ProfileShareMessage extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16.0.s),
-            MessageMetaData(isMe: isMe, createdAt: createdAt),
+            MessageMetaData(
+              isMe: isMe,
+              createdAt: createdAt,
+              deliveryStatus: deliveryStatus,
+            ),
           ],
         ),
       ),

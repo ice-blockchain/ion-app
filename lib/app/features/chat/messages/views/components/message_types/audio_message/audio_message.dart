@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_item_wra
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
@@ -29,19 +30,20 @@ class AudioMessage extends HookConsumerWidget {
     required this.audioUrl,
     required this.isMe,
     required this.createdAt,
+    this.deliveryStatus = MessageDeliveryStatus.created,
     this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
     super.key,
   });
 
-  final bool isMe;
   final String id;
-
+  final bool isMe;
   final String audioUrl;
   final DateTime createdAt;
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
+  final MessageDeliveryStatus deliveryStatus;
   final List<MessageReactionGroup>? reactions;
 
   @override
@@ -136,9 +138,10 @@ class AudioMessage extends HookConsumerWidget {
               ],
             ),
             MessageMetaData(
-              key: metadataKey,
               isMe: isMe,
+              key: metadataKey,
               createdAt: createdAt,
+              deliveryStatus: deliveryStatus,
             ),
           ],
         ),

@@ -19,7 +19,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
     required String subject,
     required MediaFile groupImage,
     required String conversationId,
-    required List<String> participantsMasterkeys,
+    required List<String> participantsMasterPubkeys,
   }) async {
     state = const AsyncLoading();
 
@@ -32,7 +32,7 @@ class E2eeConversationManagement extends _$E2eeConversationManagement {
         subject: subject,
         mediaFiles: [groupImage],
         conversationId: conversationId,
-        participantsMasterkeys: participantsMasterkeys,
+        participantsMasterPubkeys: participantsMasterPubkeys,
       );
     });
   }

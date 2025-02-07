@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/database/conversation_database.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +20,7 @@ class ConversationsDBService {
 
   final ConversationDatabase _db;
 
-  Future<int> _insertConversationData({
+  Future<int> _insertConversationMessageData({
     required String conversationId,
     required EventMessage eventMessage,
   }) async {
@@ -32,8 +33,47 @@ class ConversationsDBService {
             conversationId: conversationId,
             eventMessageId: conversationMessage.id,
             createdAt: conversationMessage.createdAt,
-            pubKeys: conversationMessage.allPubkeysMask,
             subject: conversationMessage.data.relatedSubject?.value,
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+  }
+
+  Future<void> updateConversationMessageStatusData({
+    required String masterPubkey,
+    required String eventMessageId,
+    required MessageDeliveryStatus status,
+  }) async {
+    final existingRow = await (_db.select(_db.conversationMessageStatusTable)
+          ..where((table) => table.masterPubkey.equals(masterPubkey))
+          ..where((table) => table.eventMessageId.equals(eventMessageId)))
+        .getSingleOrNull();
+
+    if (existingRow != null) {
+      await _db
+          .update(_db.conversationMessageStatusTable)
+          .replace(existingRow.copyWith(status: status));
+    } else {
+      await _db.into(_db.conversationMessageStatusTable).insert(
+            ConversationMessageStatusTableCompanion(
+              status: Value(status),
+              masterPubkey: Value(masterPubkey),
+              eventMessageId: Value(eventMessageId),
+            ),
+            mode: InsertMode.insertOrReplace,
+          );
+    }
+  }
+
+  Future<int> _insertConversationReactionsTableData(EventMessage eventMessage) {
+    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
+
+    return _db.into(_db.conversationReactionsTable).insert(
+          ConversationReactionsTableData(
+            reactionEventId: reactionEntity.id,
+            createdAt: reactionEntity.createdAt,
+            content: reactionEntity.data.content,
+            messageId: reactionEntity.data.eventId,
           ),
           mode: InsertMode.insertOrReplace,
         );
@@ -50,20 +90,6 @@ class ConversationsDBService {
         groupImagePath: Value(groupImagePath),
       ),
     );
-  }
-
-  Future<int> _insertConversationReactionsTableData(EventMessage eventMessage) {
-    final reactionEntity = PrivateMessageReactionEntity.fromEventMessage(eventMessage);
-
-    return _db.into(_db.conversationReactionsTable).insert(
-          ConversationReactionsTableData(
-            reactionEventId: reactionEntity.id,
-            createdAt: reactionEntity.createdAt,
-            content: reactionEntity.data.content,
-            messageId: reactionEntity.data.eventId,
-          ),
-          mode: InsertMode.insertOrReplace,
-        );
   }
 
   // TODO: Try to implement in a single transaction
@@ -97,16 +123,14 @@ class ConversationsDBService {
     }
   }
 
-  Future<void> _updateConversationMessagesTable(
-    EventMessage eventMessage,
-  ) async {
+  Future<void> _updateConversationMessagesTable(EventMessage eventMessage) async {
     if (eventMessage.kind != PrivateDirectMessageEntity.kind) return;
 
     final conversationMessage = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
     final conversationId = conversationMessage.data.relatedConversationId?.value;
 
     if (conversationId != null) {
-      await _insertConversationData(
+      await _insertConversationMessageData(
         eventMessage: eventMessage,
         conversationId: conversationId,
       );
@@ -220,6 +244,7 @@ class ConversationsDBService {
 
     return data.map((row) {
       final eventMessage = row.readTable(_db.eventMessagesTable);
+
       return PrivateDirectMessageEntity.fromEventMessage(eventMessage.toEventMessage());
     }).toList();
   }
@@ -242,25 +267,25 @@ class ConversationsDBService {
     });
   }
 
-  // "OK" received from relay to update message status to "sent"
-  Future<void> updateConversationMessageAsSent({
-    required String messageId,
-    required String masterPubkey,
-  }) async {
-    final conversationMessageStatusTableData = await (_db.select(_db.conversationMessageStatusTable)
-          ..where((table) => table.eventMessageId.equals(messageId))
-          ..where((table) => table.masterPubkey.equals(masterPubkey)))
-        .getSingleOrNull();
+  Future<Map<String, MessageDeliveryStatus>> getMessageDeliveryStatuses(
+      String eventMessageId) async {
+    final messageStatusesTableData = await (_db.select(_db.conversationMessageStatusTable)
+          ..where((table) => table.eventMessageId.equals(eventMessageId)))
+        .get();
 
-    if (conversationMessageStatusTableData == null) return;
+    return messageStatusesTableData
+        .asMap()
+        .map((index, messageStatus) => MapEntry(messageStatus.masterPubkey!, messageStatus.status));
+  }
 
-    final sentConversationMessageStatusTableData = conversationMessageStatusTableData.copyWith(
-      status: DeliveryStatus.sent,
-    );
-
-    await _db
-        .update(_db.conversationMessageStatusTable)
-        .replace(sentConversationMessageStatusTableData);
+  Stream<Map<String, MessageDeliveryStatus>> watchMessageDeliveryStatus(String eventMessageId) {
+    return (_db.select(_db.conversationMessageStatusTable)
+          ..where((table) => table.eventMessageId.equals(eventMessageId)))
+        .watch()
+        .map(
+          (rows) => rows.asMap().map((index, messageStatus) =>
+              MapEntry(messageStatus.masterPubkey!, messageStatus.status)),
+        );
   }
 
   // Kind 7 is received from relay with "received" status
@@ -278,7 +303,7 @@ class ConversationsDBService {
     if (conversationMessageStatusTableData == null) return;
 
     final receivedConversationMessageStatusTableData = conversationMessageStatusTableData.copyWith(
-      status: DeliveryStatus.received,
+      status: MessageDeliveryStatus.received,
     );
     await _db
         .update(_db.conversationMessageStatusTable)
@@ -318,7 +343,8 @@ class ConversationsDBService {
                 ),
               )
               ..where(
-                _db.conversationMessageStatusTable.status.equals(DeliveryStatus.received.index),
+                _db.conversationMessageStatusTable.status
+                    .equals(MessageDeliveryStatus.received.index),
               )
               ..where(
                 _db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey),
@@ -327,7 +353,7 @@ class ConversationsDBService {
 
     final updatedStatuses = previousMessagesWithReceivedStatus.map((messageStatus) {
       final conversationMessageStatus = messageStatus.readTable(_db.conversationMessageStatusTable);
-      return conversationMessageStatus.copyWith(status: DeliveryStatus.read);
+      return conversationMessageStatus.copyWith(status: MessageDeliveryStatus.read);
     }).toList();
 
     await _db.batch(
@@ -353,7 +379,7 @@ class ConversationsDBService {
             _db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey),
           )
           ..where(
-            _db.conversationMessageStatusTable.status.equals(DeliveryStatus.read.index),
+            _db.conversationMessageStatusTable.status.equals(MessageDeliveryStatus.read.index),
           )
           ..where(
             _db.conversationMessagesTable.conversationId.equals(conversationId),
@@ -377,14 +403,15 @@ class ConversationsDBService {
     ])
           ..where(_db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey))
           ..where(_db.conversationMessagesTable.conversationId.isIn(conversationIds))
-          ..where(_db.conversationMessageStatusTable.status.equals(DeliveryStatus.received.index)))
+          ..where(_db.conversationMessageStatusTable.status
+              .equals(MessageDeliveryStatus.received.index)))
         .get();
 
     if (messageStatusesTableData.isEmpty) return;
 
     final updatedStatuses = messageStatusesTableData.map((messageStatus) {
       final conversationMessageStatus = messageStatus.readTable(_db.conversationMessageStatusTable);
-      return conversationMessageStatus.copyWith(status: DeliveryStatus.read);
+      return conversationMessageStatus.copyWith(status: MessageDeliveryStatus.read);
     }).toList();
 
     await _db.batch((batch) {
@@ -395,13 +422,13 @@ class ConversationsDBService {
   Future<void> markAllConversationsAsRead(String masterPubkey) async {
     final receivedMessages = await (_db.select(_db.conversationMessageStatusTable)
           ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where((table) => table.status.equals(DeliveryStatus.received.index)))
+          ..where((table) => table.status.equals(MessageDeliveryStatus.received.index)))
         .get();
 
     if (receivedMessages.isEmpty) return;
 
     final updatedStatuses = receivedMessages.map((messageStatus) {
-      return messageStatus.copyWith(status: DeliveryStatus.read);
+      return messageStatus.copyWith(status: MessageDeliveryStatus.read);
     }).toList();
 
     await _db.batch((batch) {
@@ -434,7 +461,7 @@ class ConversationsDBService {
       if (conversationMessageStatusTableData != null) {
         final updatedConversationMessageStatusTableData =
             conversationMessageStatusTableData.copyWith(
-          status: DeliveryStatus.deleted,
+          status: MessageDeliveryStatus.deleted,
         );
 
         await _db
@@ -467,7 +494,7 @@ class ConversationsDBService {
     final conversationMessagesStatusTableData = messageStatusesTableData.map((messageStatus) {
       final conversationMessageStatus = messageStatus.readTable(_db.conversationMessageStatusTable);
 
-      return conversationMessageStatus.copyWith(status: DeliveryStatus.deleted);
+      return conversationMessageStatus.copyWith(status: MessageDeliveryStatus.deleted);
     });
 
     await _db.batch(

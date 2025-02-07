@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/messages/views/components/components.dart'
 import 'package:ion/app/features/chat/messages/views/components/message_author/message_author.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
@@ -22,6 +23,7 @@ class UrlPreviewMessage extends HookWidget {
     this.author,
     this.reactions,
     this.isLastMessageFromAuthor = true,
+    this.deliveryStatus = MessageDeliveryStatus.created,
     super.key,
   });
 
@@ -31,6 +33,7 @@ class UrlPreviewMessage extends HookWidget {
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,11 @@ class UrlPreviewMessage extends HookWidget {
                 children: [
                   MessageReactions(reactions: reactions),
                   const Spacer(),
-                  MessageMetaData(isMe: isMe, createdAt: createdAt),
+                  MessageMetaData(
+                    isMe: isMe,
+                    createdAt: createdAt,
+                    deliveryStatus: deliveryStatus,
+                  ),
                 ],
               ),
             ],

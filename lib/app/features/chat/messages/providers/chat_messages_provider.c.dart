@@ -57,6 +57,7 @@ class ChatMessages extends _$ChatMessages {
       return null;
     }
     return MessageListItem.text(
+      id: message.id,
       time: message.createdAt,
       text: message.data.content.map((e) => e.text).join(),
       author: MessageAuthor(
