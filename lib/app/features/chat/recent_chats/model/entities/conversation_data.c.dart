@@ -11,7 +11,7 @@ class ConversationEntity with _$ConversationEntity {
     required String id,
     required String name,
     required ChatType type,
-    required List<String> participantsMasterkeys,
+    required List<String> participantsMasterPubkeys,
     String? imageUrl,
     DateTime? lastMessageAt,
     @Default('') String nickname,

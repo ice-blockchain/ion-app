@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_item_wra
 import 'package:ion/app/features/chat/messages/views/components/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 
 class EmojiMessage extends StatelessWidget {
@@ -19,6 +20,7 @@ class EmojiMessage extends StatelessWidget {
     this.reactions,
     this.hasForwardedMessage = false,
     this.isLastMessageFromAuthor = true,
+    this.deliveryStatus = MessageDeliveryStatus.created,
     super.key,
   });
   final bool isMe;
@@ -28,6 +30,7 @@ class EmojiMessage extends StatelessWidget {
   final bool isLastMessageFromAuthor;
   final bool hasForwardedMessage;
   final MessageAuthor? author;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,11 @@ class EmojiMessage extends StatelessWidget {
                   MessageReactions(reactions: reactions),
                 ],
               ),
-              MessageMetaData(isMe: isMe, createdAt: createdAt),
+              MessageMetaData(
+                isMe: isMe,
+                createdAt: createdAt,
+                deliveryStatus: deliveryStatus,
+              ),
             ],
           ),
         ],

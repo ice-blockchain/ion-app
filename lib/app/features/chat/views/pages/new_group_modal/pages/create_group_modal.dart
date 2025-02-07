@@ -149,13 +149,13 @@ class CreateGroupModal extends HookConsumerWidget {
                         itemCount: participantsMasterkeys.length,
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (_, int i) {
-                          final participantMasterkey = participantsMasterkeys[i];
+                          final participantMasterPubkey = participantsMasterkeys[i];
 
                           return GroupPariticipantsListItem(
-                            participantMasterkey: participantMasterkey,
-                            isCurrentUser: participantMasterkey == currentMasterPubkey,
+                            participantMasterpubkey: participantMasterPubkey,
+                            isCurrentUser: participantMasterPubkey == currentMasterPubkey,
                             onRemove: () {
-                              createGroupFormNotifier.toggleMember(participantMasterkey);
+                              createGroupFormNotifier.toggleMember(participantMasterPubkey);
                             },
                           );
                         },
@@ -206,7 +206,7 @@ class CreateGroupModal extends HookConsumerWidget {
                             groupImage: groupPicture,
                             conversationId: conversationId,
                             subject: createGroupForm.name!,
-                            participantsMasterkeys: participantsMasterkeys,
+                            participantsMasterPubkeys: participantsMasterkeys,
                           );
 
                       if (context.mounted) {
@@ -217,7 +217,7 @@ class CreateGroupModal extends HookConsumerWidget {
                           chatType: ChatType.group,
                           name: createGroupForm.name!,
                           imageUrl: groupPicture.path,
-                          participantsMasterkeys: participantsMasterkeys,
+                          participantsMasterPubkeys: participantsMasterkeys,
                         ).push<void>(context);
                       }
                     } else {
