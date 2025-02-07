@@ -28,6 +28,9 @@ class ViewedStoriesController extends _$ViewedStoriesController {
     }
   }
 
+  /// Synchronizes the local viewed stories list with currently available stories.
+  /// Removes any story IDs that are no longer present in [validIds], so we don't keep track of
+  /// viewed status for stories that have expired.
   Future<void> syncAvailableStories(List<String> validIds) async {
     final validSet = validIds.toSet();
     final newState = state.intersection(validSet);

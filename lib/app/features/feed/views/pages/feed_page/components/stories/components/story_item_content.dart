@@ -6,8 +6,8 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_colored_border.dart';
 
-class StoryItemView extends HookConsumerWidget {
-  const StoryItemView({
+class StoryItemContent extends HookConsumerWidget {
+  const StoryItemContent({
     required this.imageUrl,
     required this.name,
     required this.onTap,
