@@ -24,8 +24,12 @@ part 'article_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class ArticleEntity
-    with IonConnectEntity, CacheableEntity, SoftDeletableEntity, _$ArticleEntity
-    implements ReplaceableEntity {
+    with
+        IonConnectEntity,
+        CacheableEntity,
+        ReplaceableEntity,
+        SoftDeletableEntity<ArticleData>,
+        _$ArticleEntity {
   const factory ArticleEntity({
     required String id,
     required String pubkey,
@@ -50,11 +54,6 @@ class ArticleEntity
       createdAt: eventMessage.createdAt,
       data: ArticleData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const kind = 30023;

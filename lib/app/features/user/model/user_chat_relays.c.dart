@@ -16,8 +16,7 @@ part 'user_chat_relays.c.freezed.dart';
 
 @Freezed(equal: false)
 class UserChatRelaysEntity
-    with _$UserChatRelaysEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserChatRelaysEntity {
   const factory UserChatRelaysEntity({
     required String id,
     required String pubkey,
@@ -43,11 +42,6 @@ class UserChatRelaysEntity
       createdAt: eventMessage.createdAt,
       data: UserChatRelaysData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   List<String> get urls => data.list.map((relay) => relay.url).toList();

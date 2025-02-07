@@ -32,8 +32,7 @@ part 'modifiable_post_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class ModifiablePostEntity
-    with _$ModifiablePostEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$ModifiablePostEntity {
   const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
@@ -61,21 +60,16 @@ class ModifiablePostEntity
     );
   }
 
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
-  }
-
   static const kind = 30175;
 }
 
 @freezed
 class ModifiablePostData
     with
-        _$ModifiablePostData,
         EntityDataWithMediaContent,
         EntityDataWithSettings,
-        EntityDataWithRelatedEvents
+        EntityDataWithRelatedEvents,
+        _$ModifiablePostData
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
     required List<TextMatch> content,
