@@ -49,32 +49,43 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
         ),
         const SliverToBoxAdapter(child: RecentChatSeparator(isAtTop: true)),
         const SliverToBoxAdapter(child: ArchiveChatTile()),
-        SliverList.builder(
-          itemBuilder: (BuildContext context, int index) {
-            final conversation = conversations.where((c) => !c.isArchived).toList()[index];
-            return Column(
-              children: [
-                if (conversation.type == ConversationType.community)
-                  CommunityRecentChatTile(
-                    conversation: conversation,
-                    key: ValueKey(conversation.uuid),
-                  )
-                else if (conversation.type == ConversationType.oneToOne)
-                  E2eeRecentChatTile(
-                    conversation: conversation,
-                    key: ValueKey(conversation.uuid),
-                  )
-                else if (conversation.type == ConversationType.encryptedGroup)
-                  EncryptedGroupRecentChatTile(
-                    conversation: conversation,
-                    key: ValueKey(conversation.uuid),
-                  ),
-              ],
-            );
-          },
-          itemCount: conversations.where((c) => !c.isArchived).length,
-        ),
+        ConversationList(conversations: conversations.where((c) => !c.isArchived).toList()),
       ],
+    );
+  }
+}
+
+class ConversationList extends ConsumerWidget {
+  const ConversationList({required this.conversations, super.key});
+
+  final List<ConversationListItem> conversations;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SliverList.builder(
+      itemBuilder: (BuildContext context, int index) {
+        final conversation = conversations[index];
+        return Column(
+          children: [
+            if (conversation.type == ConversationType.community)
+              CommunityRecentChatTile(
+                conversation: conversation,
+                key: ValueKey(conversation.uuid),
+              )
+            else if (conversation.type == ConversationType.oneToOne)
+              E2eeRecentChatTile(
+                conversation: conversation,
+                key: ValueKey(conversation.uuid),
+              )
+            else if (conversation.type == ConversationType.encryptedGroup)
+              EncryptedGroupRecentChatTile(
+                conversation: conversation,
+                key: ValueKey(conversation.uuid),
+              ),
+          ],
+        );
+      },
+      itemCount: conversations.length,
     );
   }
 }

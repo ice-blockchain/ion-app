@@ -193,7 +193,6 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
     });
   }
 
-  //this function takes archived conversation ids, check whole convertation table and update if is in list true or false
   Future<void> updateArchivedConversations(List<String> archivedConversationIds) async {
     await batch((b) {
       b
@@ -210,7 +209,6 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
     });
   }
 
-  //get latest date of event message
   Future<DateTime?> getLatestEventMessageDate(int kind) async {
     final query = select(eventMessageTable)
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
