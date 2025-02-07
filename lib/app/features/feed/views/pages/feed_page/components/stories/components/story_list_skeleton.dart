@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separated_row.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_item_content.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item_skeleton.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_separator.dart';
 
@@ -18,7 +18,7 @@ class StoryListSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: StoryListItem.height,
+      height: StoryItemContent.height,
       child: Skeleton(
         child: OverflowBox(
           maxWidth: double.infinity,

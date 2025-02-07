@@ -6,18 +6,29 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_item_content.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_item.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_list_skeleton.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
-class Stories extends ConsumerWidget {
+class Stories extends HookConsumerWidget {
   const Stories({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stories = ref.watch(storiesProvider);
+
+    useOnInit(() {
+      if (stories != null) {
+        final allIds =
+            stories.expand((userStory) => userStory.stories).map((story) => story.id).toSet();
+
+        ref.read(viewedStoriesControllerProvider.notifier).syncAvailableStories(allIds.toList());
+      }
+    });
 
     final storyHasMore = ref.watch(
       entitiesPagedDataProvider(ref.watch(feedStoriesDataSourceProvider))
@@ -40,7 +51,7 @@ class Stories extends ConsumerWidget {
             onLoadMore: () => _onLoadMore(ref),
             builder: (context, slivers) {
               return SizedBox(
-                height: StoryListItem.height,
+                height: StoryItemContent.height,
                 child: CustomScrollView(
                   scrollDirection: Axis.horizontal,
                   slivers: slivers,
