@@ -406,8 +406,9 @@ class ConversationsDBService {
     ])
           ..where(_db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey))
           ..where(_db.conversationMessagesTable.conversationId.isIn(conversationIds))
-          ..where(_db.conversationMessageStatusTable.status
-              .equals(MessageDeliveryStatus.received.index)))
+          ..where(
+            _db.conversationMessageStatusTable.status.equals(MessageDeliveryStatus.received.index),
+          ))
         .get();
 
     if (messageStatusesTableData.isEmpty) return;
