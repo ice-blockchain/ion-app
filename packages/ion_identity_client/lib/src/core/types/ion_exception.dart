@@ -34,6 +34,10 @@ class BiometricsValidationException extends IONIdentityException {
   const BiometricsValidationException() : super('Biometrics validation failed');
 }
 
+class BiometricsEnrollmentException extends IONIdentityException {
+  const BiometricsEnrollmentException() : super('Biometrics enrollment failed');
+}
+
 class InvalidPasswordException extends IONIdentityException {
   const InvalidPasswordException() : super('Invalid Password');
 }

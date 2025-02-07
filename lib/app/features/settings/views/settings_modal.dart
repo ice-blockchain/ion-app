@@ -35,7 +35,6 @@ class SettingsModal extends ConsumerWidget {
         SettingsAction.privacyPolicy => () => openUrlInAppBrowser(Links.privacy),
         SettingsAction.termsConditions => () => openUrlInAppBrowser(Links.terms),
         SettingsAction.logout => () => ConfirmLogoutRoute(pubkey: pubkey).push<void>(context),
-        SettingsAction.delete => () => ConfirmDeleteRoute(pubkey: pubkey).push<void>(context),
       };
     }
 

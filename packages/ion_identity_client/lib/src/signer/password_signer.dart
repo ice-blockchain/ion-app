@@ -139,7 +139,7 @@ class PasswordSigner {
     final password = await localAuthCrypto.authenticate(
       BiometricPromptInfo(
         title: localisedReason,
-        negativeButton: 'cancel',
+        negativeButton: localisedCancel,
       ),
       biometricsEncryptedPassword,
     );
@@ -169,20 +169,31 @@ class PasswordSigner {
     required String password,
     required String localisedReason,
   }) async {
-    final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
-    await biometricsStateStorage.updateBiometricsState(
-      username: username,
-      biometricsState: didAuthenticate ? BiometricsState.enabled : BiometricsState.failed,
-    );
-    final localAuthCrypto = LocalAuthCrypto.instance;
-    final biometricsEncryptedPassword = await localAuthCrypto.encrypt(password);
-    if (biometricsEncryptedPassword == null) {
-      throw const BiometricsValidationException();
+    try {
+      final didAuthenticate = await _authWithBiometrics(localisedReason: localisedReason);
+      if (didAuthenticate == false) {
+        throw const BiometricsEnrollmentException();
+      }
+      final localAuthCrypto = LocalAuthCrypto.instance;
+      final biometricsEncryptedPassword = await localAuthCrypto.encrypt(password);
+      if (biometricsEncryptedPassword == null) {
+        throw const BiometricsEnrollmentException();
+      }
+      await privateKeyStorage.setPrivateKey(
+        username: username,
+        privateKeyData: PrivateKeyData(biometricsEncryptedPassword: biometricsEncryptedPassword),
+      );
+      await biometricsStateStorage.updateBiometricsState(
+        username: username,
+        biometricsState: BiometricsState.enabled,
+      );
+    } catch (e) {
+      await biometricsStateStorage.updateBiometricsState(
+        username: username,
+        biometricsState: BiometricsState.failed,
+      );
+      rethrow;
     }
-    await privateKeyStorage.setPrivateKey(
-      username: username,
-      privateKeyData: PrivateKeyData(biometricsEncryptedPassword: biometricsEncryptedPassword),
-    );
   }
 
   Future<bool> _authWithBiometrics({
