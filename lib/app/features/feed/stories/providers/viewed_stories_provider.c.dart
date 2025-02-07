@@ -28,7 +28,7 @@ class ViewedStoriesController extends _$ViewedStoriesController {
     }
   }
 
-  Future<void> filterBy(List<String> validIds) async {
+  Future<void> syncAvailableStories(List<String> validIds) async {
     final validSet = validIds.toSet();
     final newState = state.intersection(validSet);
     if (newState.length != state.length) {

@@ -26,7 +26,7 @@ class Stories extends HookConsumerWidget {
         final allIds =
             stories.expand((userStory) => userStory.stories).map((story) => story.id).toSet();
 
-        ref.read(viewedStoriesControllerProvider.notifier).filterBy(allIds.toList());
+        ref.read(viewedStoriesControllerProvider.notifier).syncAvailableStories(allIds.toList());
       }
     });
 
