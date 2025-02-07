@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_error_entity.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -60,7 +61,7 @@ class Count extends _$Count {
     final subscriptionMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
-          kinds: const [EventCountResultEntity.kind, 7000],
+          kinds: const [EventCountResultEntity.kind, EventCountErrorEntity.kind],
           tags: {
             '#p': [currentPubkey],
           },
@@ -68,7 +69,6 @@ class Count extends _$Count {
       );
 
     final subscription = relay.subscribe(subscriptionMessage);
-    EventMessage? responseMessage;
 
     try {
       await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
@@ -77,30 +77,37 @@ class Count extends _$Count {
             cache: false,
           );
 
-      responseMessage = await subscription.messages
+      final responseEntity = await subscription.messages
           .where((message) => message is EventMessage)
-          .map((message) => message as EventMessage)
-          .firstWhere((message) {
-        try {
-          final entity = EventCountResultEntity.fromEventMessage(message, key: key);
-          return entity.data.requestEventId == requestEvent.id;
-        } catch (_) {
-          return false;
+          .cast<EventMessage>()
+          .map<dynamic>((message) {
+            return switch (message.kind) {
+              EventCountResultEntity.kind =>
+                EventCountResultEntity.fromEventMessage(message, key: key),
+              EventCountErrorEntity.kind => EventCountErrorEntity.fromEventMessage(message),
+              _ => throw IncorrectEventKindException(message, kind: message.kind),
+            };
+          })
+          .firstWhere(
+            (entity) => switch (entity) {
+              EventCountResultEntity() => entity.data.requestEventId == requestEvent.id,
+              EventCountErrorEntity() => entity.data.requestEventId == requestEvent.id,
+              _ => false,
+            },
+          )
+          .timeout(const Duration(seconds: 10));
+
+      if (responseEntity is EventCountErrorEntity) {
+        final errorContent = responseEntity.data.content;
+        if (errorContent is String) {
+          throw EventCountException(errorContent);
+        } else {
+          throw EventCountException('Unexpected error content type');
         }
-      }).timeout(const Duration(seconds: 10));
-
-      if (responseMessage.kind == 7000) {
-        final errorContent = responseMessage.content;
-        throw EventCountException(errorContent);
+      } else if (responseEntity is EventCountResultEntity) {
+        ref.read(ionConnectCacheProvider.notifier).cache(responseEntity);
+        return responseEntity.data.content;
       }
-
-      final eventCountResultEntity =
-          EventCountResultEntity.fromEventMessage(responseMessage, key: key);
-      ref.read(ionConnectCacheProvider.notifier).cache(eventCountResultEntity);
-
-      return eventCountResultEntity.data.content;
-    } catch (e) {
-      throw EventCountException('An unexpected error occurred: $e');
     } finally {
       relay.unsubscribe(subscription.id);
     }
