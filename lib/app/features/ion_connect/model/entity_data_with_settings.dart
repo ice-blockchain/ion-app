@@ -7,11 +7,11 @@ import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 mixin EntityDataWithSettings {
   List<EventSetting>? get settings;
 
-  WhoCanReplySettingsOption? get whoCanReplySetting {
+  WhoCanReplySettingsOption get whoCanReplySetting {
     final whoCanReplySetting =
         settings?.firstWhereOrNull((setting) => setting is WhoCanReplyEventSetting)
             as WhoCanReplyEventSetting?;
-    return whoCanReplySetting?.values.firstOrNull;
+    return whoCanReplySetting?.values.firstOrNull ?? WhoCanReplySettingsOption.everyone;
   }
 
   static List<EventSetting>? build({required WhoCanReplySettingsOption whoCanReply}) {
