@@ -323,3 +323,11 @@ class ReceiverDevicePubkeyNotFoundException extends IONException {
           'Sender device pubkey not found in event: $eventId',
         );
 }
+
+class EventCountException extends IONException {
+  EventCountException([String? message])
+      : super(
+          10066,
+          message ?? 'An unexpected error occurred',
+        );
+}

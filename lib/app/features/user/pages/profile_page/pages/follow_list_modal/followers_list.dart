@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_app_bar.dart';
@@ -21,7 +22,9 @@ class FollowersList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final followersCount = ref.watch(followersCountProvider(pubkey)).valueOrNull;
+    final followersCount = ref
+        .watch(followersCountProvider(pubkey: pubkey, type: EventCountResultType.followers))
+        .valueOrNull;
     final dataSource = ref.watch(followersDataSourceProvider(pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items?.toList();
