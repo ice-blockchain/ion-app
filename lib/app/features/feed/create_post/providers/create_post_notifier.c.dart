@@ -122,15 +122,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final deletedEntity =
+      final entity =
           await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
-      if (deletedEntity is! ModifiablePostEntity) {
+      if (entity is! ModifiablePostEntity) {
         throw UnsupportedEventReference(eventReference);
       }
 
-      final postData = deletedEntity.data.copyWith(
+      final postData = entity.data.copyWith(
         content: [const TextMatch('')],
         relatedHashtags: [],
+        media: {},
       );
 
       await _sendPostEntities([postData]);
