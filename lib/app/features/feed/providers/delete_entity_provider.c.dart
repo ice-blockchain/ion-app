@@ -2,7 +2,10 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
@@ -30,14 +33,18 @@ Future<void> deleteEntity(
   }
 
   switch (entity) {
-    case GenericRepostEntity() || RepostEntity():
+    case GenericRepostEntity() || RepostEntity() || PostEntity():
       {
         await _deleteFromServer(ref, entity);
         _deleteFromDataSources(ref, entity);
         _deleteFromCache(ref, entity);
       }
     case ModifiablePostEntity():
-      {}
+      {
+        await ref
+            .read(createPostNotifierProvider(CreatePostOption.modify).notifier)
+            .softDelete(eventReference: eventReference);
+      }
     default:
       {
         throw DeleteEntityUnsupportedTypeException();

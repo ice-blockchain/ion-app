@@ -73,26 +73,42 @@ class PostSubmitButton extends HookConsumerWidget {
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
         final operations = textEditorController.document.toDelta().operations;
-        final convertedMediaFiles = await ref
-            .read(mediaServiceProvider)
-            .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
+        final content = Document.fromDelta(Delta.fromOperations(operations)).toPlainText();
 
-        unawaited(
-          ref
-              .read(
-                createPostNotifierProvider(
-                  createOption,
-                ).notifier,
-              )
-              .create(
-                content: Document.fromDelta(Delta.fromOperations(operations)).toPlainText(),
-                parentEvent: parentEvent,
-                quotedEvent: quotedEvent,
-                modifiedEvent: modifiedEvent,
-                mediaFiles: convertedMediaFiles,
-                whoCanReply: whoCanReply,
-              ),
-        );
+        if (modifiedEvent != null) {
+          unawaited(
+            ref
+                .read(
+                  createPostNotifierProvider(
+                    createOption,
+                  ).notifier,
+                )
+                .modify(
+                  content: content,
+                  eventReference: modifiedEvent!,
+                  whoCanReply: whoCanReply,
+                ),
+          );
+        } else {
+          final convertedMediaFiles = await ref
+              .read(mediaServiceProvider)
+              .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
+          unawaited(
+            ref
+                .read(
+                  createPostNotifierProvider(
+                    createOption,
+                  ).notifier,
+                )
+                .create(
+                  content: content,
+                  parentEvent: parentEvent,
+                  quotedEvent: quotedEvent,
+                  mediaFiles: convertedMediaFiles,
+                  whoCanReply: whoCanReply,
+                ),
+          );
+        }
 
         if (onSubmitted != null) {
           onSubmitted!();
