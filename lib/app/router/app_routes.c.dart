@@ -140,6 +140,8 @@ import 'package:ion/app/features/wallets/views/pages/create_new_wallet_modal.dar
 import 'package:ion/app/features/wallets/views/pages/delete_wallet_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/edit_wallet_modal.dart';
 import 'package:ion/app/features/wallets/views/pages/friends_modal.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/components/select_network_list.dart';
+import 'package:ion/app/features/wallets/views/pages/import_token_page/import_token_page.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/manage_coins_page.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/manage_nfts_page.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_wallets_modal.dart';

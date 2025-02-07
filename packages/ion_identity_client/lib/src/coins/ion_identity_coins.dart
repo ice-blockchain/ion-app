@@ -3,18 +3,22 @@
 import 'package:ion_identity_client/src/auth/services/extract_user_id/extract_user_id_service.dart';
 import 'package:ion_identity_client/src/coins/models/coin.c.dart';
 import 'package:ion_identity_client/src/coins/models/coins_response.c.dart';
-import 'package:ion_identity_client/src/coins/services/get_coins_service.dart';
+import 'package:ion_identity_client/src/coins/services/get_coin_data/get_coin_data_service.dart';
+import 'package:ion_identity_client/src/coins/services/get_coins/get_coins_service.dart';
 
 class IONIdentityCoins {
   IONIdentityCoins({
     required this.username,
     required GetCoinsService getCoinsService,
+    required GetCoinDataService getCoinDataService,
     required ExtractUserIdService extractUserIdService,
   })  : _getCoinsService = getCoinsService,
+        _getCoinDataService = getCoinDataService,
         _extractUserIdService = extractUserIdService;
 
   final String username;
   final GetCoinsService _getCoinsService;
+  final GetCoinDataService _getCoinDataService;
   final ExtractUserIdService _extractUserIdService;
 
   Future<CoinsResponse> getCoins({
@@ -25,6 +29,16 @@ class IONIdentityCoins {
       username: username,
       userId: userId,
       currentVersion: currentVersion,
+    );
+  }
+
+  Future<Coin> getCoinData({
+    required String contractAddress,
+    required String network,
+  }) {
+    return _getCoinDataService.getCoinData(
+      contractAddress: contractAddress,
+      network: network,
     );
   }
 
