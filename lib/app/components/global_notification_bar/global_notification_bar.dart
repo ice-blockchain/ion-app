@@ -94,7 +94,6 @@ class GlobalNotificationBar extends HookConsumerWidget {
   void _setupListeners(WidgetRef ref) {
     ref
       ..listen(createPostNotifierProvider(CreatePostOption.plain), (_, next) {
-        //TODO: do not show notification if post is in community
         _handleNotification(ref, notifier: next, type: NotificationContentType.post);
       })
       ..listen(createPostNotifierProvider(CreatePostOption.quote), (_, next) {

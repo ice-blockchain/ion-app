@@ -112,8 +112,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       challenge: challenge,
       relay: relayUrl,
     );
-
-    return sign(authEvent, includeMasterPubkey: false);
+    // TODO:remove when proper auth is implemented
+    final auth = await ref.read(authProvider.future);
+    return sign(authEvent, includeMasterPubkey: auth.isAuthenticated);
   }
 
   Future<List<IonConnectEntity>?> sendEntitiesData(

@@ -139,7 +139,7 @@ class ChannelPage extends HookConsumerWidget {
                   MessagingBottomBar(
                     onSubmitted: (content) async {
                       await ref
-                          .read(createPostNotifierProvider(CreatePostOption.plain).notifier)
+                          .read(createPostNotifierProvider(CreatePostOption.community).notifier)
                           .create(
                             content: content ?? '',
                             communityUuid: uuid,

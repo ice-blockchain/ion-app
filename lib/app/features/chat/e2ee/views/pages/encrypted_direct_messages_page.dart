@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
@@ -87,12 +89,17 @@ class EncryptedDirectMessagesPage extends HookConsumerWidget {
               ),
               MessagingBottomBar(
                 onSubmitted: (content) async {
+                  final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+                  if (currentPubkey == null) {
+                    throw UserMasterPubkeyNotFoundException();
+                  }
+
                   final conversationMessageManagementService =
                       await ref.read(conversationMessageManagementServiceProvider.future);
                   await conversationMessageManagementService.sendMessage(
                     conversationId: uuid,
                     content: content ?? '',
-                    participantsMasterkeys: [receiverPubKey],
+                    participantsMasterkeys: [currentPubkey, receiverPubKey],
                   );
                 },
               ),

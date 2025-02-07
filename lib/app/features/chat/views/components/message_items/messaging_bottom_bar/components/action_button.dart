@@ -30,11 +30,16 @@ class ActionButton extends HookConsumerWidget {
         ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
         sendButtonDisabled.value = true;
         await onSubmitted?.call();
-        sendButtonDisabled.value = false;
+
+        if (context.mounted) {
+          sendButtonDisabled.value = false;
+        }
       } catch (e) {
         rethrow;
       } finally {
-        sendButtonDisabled.value = false;
+        if (context.mounted) {
+          sendButtonDisabled.value = false;
+        }
       }
     });
 

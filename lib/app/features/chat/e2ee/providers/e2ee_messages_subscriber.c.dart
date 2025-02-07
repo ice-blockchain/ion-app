@@ -24,7 +24,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
   Stream<void> build() async* {
     final masterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
     final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
-
     if (masterPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
@@ -46,11 +45,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           PrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
         ],
-        '#p': [masterPubkey],
+        '#p': [
+          masterPubkey,
+        ],
       },
       since: sinceDate,
     );
-
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
