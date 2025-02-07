@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
@@ -24,8 +25,11 @@ class StoryListItem extends HookConsumerWidget {
     final userStories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
     final viewedStories = ref.watch(viewedStoriesControllerProvider);
 
-    final allStoriesViewed = userStories.first.stories.every(
-      (story) => viewedStories.contains(story.id),
+    final allStoriesViewed = useMemoized(
+      () => userStories.first.stories.every(
+        (story) => viewedStories.contains(story.id),
+      ),
+      [userStories, viewedStories],
     );
 
     return userMetadataAsync.maybeWhen(
