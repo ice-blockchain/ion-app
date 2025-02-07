@@ -42,7 +42,7 @@ Future<void> deleteEntity(
     case ModifiablePostEntity():
       {
         await ref
-            .read(createPostNotifierProvider(CreatePostOption.modify).notifier)
+            .read(createPostNotifierProvider(CreatePostOption.delete).notifier)
             .softDelete(eventReference: eventReference);
       }
     default:
