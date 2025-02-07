@@ -50,7 +50,9 @@ class ConversationsDBService {
         .getSingleOrNull();
 
     if (existingRow != null) {
-      await _db.update(_db.conversationMessageStatusTable).replace(existingRow.copyWith(status: status));
+      await _db
+          .update(_db.conversationMessageStatusTable)
+          .replace(existingRow.copyWith(status: status));
     } else {
       await _db.into(_db.conversationMessageStatusTable).insert(
             ConversationMessageStatusTableCompanion(
@@ -81,7 +83,8 @@ class ConversationsDBService {
     required String conversationId,
     required String groupImagePath,
   }) async {
-    return (_db.update(_db.conversationMessagesTable)..where((table) => table.conversationId.equals(conversationId)))
+    return (_db.update(_db.conversationMessagesTable)
+          ..where((table) => table.conversationId.equals(conversationId)))
         .write(
       ConversationMessagesTableCompanion(
         groupImagePath: Value(groupImagePath),
@@ -144,7 +147,8 @@ class ConversationsDBService {
       readsFrom: {_db.conversationMessagesTable},
     ).get();
 
-    final lastConversationMessages = await _selectLastMessageOfEachConversation(uniqueConversationRows);
+    final lastConversationMessages =
+        await _selectLastMessageOfEachConversation(uniqueConversationRows);
 
     return lastConversationMessages;
   }
@@ -178,10 +182,12 @@ class ConversationsDBService {
       return groupImagePath;
     }).toList();
 
-    final lastConversationEventMessagesTableData =
-        await (_db.select(_db.eventMessagesTable)..where((table) => table.id.isIn(lastConversationMessagesId))).get();
+    final lastConversationEventMessagesTableData = await (_db.select(_db.eventMessagesTable)
+          ..where((table) => table.id.isIn(lastConversationMessagesId)))
+        .get();
 
-    final lastConversationEventMessages = lastConversationEventMessagesTableData.map((e) => e.toEventMessage());
+    final lastConversationEventMessages =
+        lastConversationEventMessagesTableData.map((e) => e.toEventMessage());
 
     final lastConversationMessages =
         lastConversationEventMessages.map(PrivateDirectMessageEntity.fromEventMessage).toList();
@@ -203,13 +209,15 @@ class ConversationsDBService {
   Future<List<PrivateMessageReactionEntity>> getMessageReactions(
     String messageId,
   ) async {
-    final reactionsEventMessagesIds =
-        (await (_db.select(_db.conversationReactionsTable)..where((table) => table.messageId.equals(messageId))).get())
-            .map((reactionsTableData) => reactionsTableData.reactionEventId)
-            .toList();
+    final reactionsEventMessagesIds = (await (_db.select(_db.conversationReactionsTable)
+              ..where((table) => table.messageId.equals(messageId)))
+            .get())
+        .map((reactionsTableData) => reactionsTableData.reactionEventId)
+        .toList();
 
-    final reactionsEventMessages =
-        await (_db.select(_db.eventMessagesTable)..where((table) => table.id.isIn(reactionsEventMessagesIds))).get();
+    final reactionsEventMessages = await (_db.select(_db.eventMessagesTable)
+          ..where((table) => table.id.isIn(reactionsEventMessagesIds)))
+        .get();
 
     final reactions = reactionsEventMessages
         .map(
@@ -277,7 +285,8 @@ class ConversationsDBService {
         .watch()
         .map(
           (rows) => rows.asMap().map(
-                (index, messageStatus) => MapEntry(messageStatus.masterPubkey!, messageStatus.status),
+                (index, messageStatus) =>
+                    MapEntry(messageStatus.masterPubkey!, messageStatus.status),
               ),
         );
   }
@@ -299,7 +308,9 @@ class ConversationsDBService {
     final receivedConversationMessageStatusTableData = conversationMessageStatusTableData.copyWith(
       status: MessageDeliveryStatus.received,
     );
-    await _db.update(_db.conversationMessageStatusTable).replace(receivedConversationMessageStatusTableData);
+    await _db
+        .update(_db.conversationMessageStatusTable)
+        .replace(receivedConversationMessageStatusTableData);
   }
 
   // Kind 7 reaction is received from relay with "read" status
@@ -317,27 +328,31 @@ class ConversationsDBService {
 
     if (latestMessageWithReadStatusTableData == null) return;
 
-    final previousMessagesWithReceivedStatus = await (_db.select(_db.conversationMessageStatusTable).join([
+    final previousMessagesWithReceivedStatus =
+        await (_db.select(_db.conversationMessageStatusTable).join([
       innerJoin(
         _db.conversationMessagesTable,
-        _db.conversationMessagesTable.eventMessageId.equalsExp(_db.conversationMessageStatusTable.eventMessageId),
+        _db.conversationMessagesTable.eventMessageId
+            .equalsExp(_db.conversationMessageStatusTable.eventMessageId),
       ),
     ])
-          ..where(
-            _db.conversationMessagesTable.conversationId.equals(latestMessageWithReadStatusTableData.conversationId),
-          )
-          ..where(
-            _db.conversationMessagesTable.createdAt.isSmallerOrEqualValue(
-              latestMessageWithReadStatusTableData.createdAt,
-            ),
-          )
-          ..where(
-            _db.conversationMessageStatusTable.status.equals(MessageDeliveryStatus.received.index),
-          )
-          ..where(
-            _db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey),
-          ))
-        .get();
+              ..where(
+                _db.conversationMessagesTable.conversationId
+                    .equals(latestMessageWithReadStatusTableData.conversationId),
+              )
+              ..where(
+                _db.conversationMessagesTable.createdAt.isSmallerOrEqualValue(
+                  latestMessageWithReadStatusTableData.createdAt,
+                ),
+              )
+              ..where(
+                _db.conversationMessageStatusTable.status
+                    .equals(MessageDeliveryStatus.received.index),
+              )
+              ..where(
+                _db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey),
+              ))
+            .get();
 
     final updatedStatuses = previousMessagesWithReceivedStatus.map((messageStatus) {
       final conversationMessageStatus = messageStatus.readTable(_db.conversationMessageStatusTable);
@@ -359,7 +374,8 @@ class ConversationsDBService {
     final messageStatusesTableData = await (_db.select(_db.conversationMessagesTable).join([
       leftOuterJoin(
         _db.conversationMessageStatusTable,
-        _db.conversationMessageStatusTable.eventMessageId.equalsExp(_db.conversationMessagesTable.eventMessageId),
+        _db.conversationMessageStatusTable.eventMessageId
+            .equalsExp(_db.conversationMessagesTable.eventMessageId),
       ),
     ])
           ..where(
@@ -384,12 +400,14 @@ class ConversationsDBService {
     final messageStatusesTableData = await (_db.select(_db.conversationMessagesTable).join([
       leftOuterJoin(
         _db.conversationMessageStatusTable,
-        _db.conversationMessageStatusTable.eventMessageId.equalsExp(_db.conversationMessagesTable.eventMessageId),
+        _db.conversationMessageStatusTable.eventMessageId
+            .equalsExp(_db.conversationMessagesTable.eventMessageId),
       ),
     ])
           ..where(_db.conversationMessageStatusTable.masterPubkey.equals(masterPubkey))
           ..where(_db.conversationMessagesTable.conversationId.isIn(conversationIds))
-          ..where(_db.conversationMessageStatusTable.status.equals(MessageDeliveryStatus.received.index)))
+          ..where(_db.conversationMessageStatusTable.status
+              .equals(MessageDeliveryStatus.received.index)))
         .get();
 
     if (messageStatusesTableData.isEmpty) return;
@@ -437,17 +455,21 @@ class ConversationsDBService {
     required String masterPubkey,
   }) async {
     await _db.transaction(() async {
-      final conversationMessageStatusTableData = await (_db.select(_db.conversationMessageStatusTable)
-            ..where((table) => table.eventMessageId.equals(messageId))
-            ..where((table) => table.masterPubkey.equals(masterPubkey)))
-          .getSingleOrNull();
+      final conversationMessageStatusTableData =
+          await (_db.select(_db.conversationMessageStatusTable)
+                ..where((table) => table.eventMessageId.equals(messageId))
+                ..where((table) => table.masterPubkey.equals(masterPubkey)))
+              .getSingleOrNull();
 
       if (conversationMessageStatusTableData != null) {
-        final updatedConversationMessageStatusTableData = conversationMessageStatusTableData.copyWith(
+        final updatedConversationMessageStatusTableData =
+            conversationMessageStatusTableData.copyWith(
           status: MessageDeliveryStatus.deleted,
         );
 
-        await _db.update(_db.conversationMessageStatusTable).replace(updatedConversationMessageStatusTableData);
+        await _db
+            .update(_db.conversationMessageStatusTable)
+            .replace(updatedConversationMessageStatusTableData);
       }
     });
   }
@@ -460,7 +482,8 @@ class ConversationsDBService {
     final messageStatusesTableData = await (_db.select(_db.conversationMessagesTable).join([
       leftOuterJoin(
         _db.conversationMessageStatusTable,
-        _db.conversationMessageStatusTable.eventMessageId.equalsExp(_db.conversationMessagesTable.eventMessageId),
+        _db.conversationMessageStatusTable.eventMessageId
+            .equalsExp(_db.conversationMessagesTable.eventMessageId),
       ),
     ])
           ..where(
