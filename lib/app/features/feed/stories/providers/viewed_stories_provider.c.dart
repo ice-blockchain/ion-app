@@ -1,18 +1,20 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'viewed_stories_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class ViewedStoriesController extends _$ViewedStoriesController {
-  static const _key = 'StoriesState:viewedStories';
+  static const _key = 'viewedStories';
 
   @override
   Set<String> build() {
-    final localStorage = ref.watch(localStorageProvider);
-    final viewedList = localStorage.getStringList(_key) ?? [];
+    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider) ?? '';
+    final prefs = ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
+    final viewedList = prefs.getValue<List<String>>(_key) ?? [];
 
     return viewedList.toSet();
   }
@@ -37,7 +39,8 @@ class ViewedStoriesController extends _$ViewedStoriesController {
   }
 
   Future<void> _saveToPrefs(Set<String> stories) async {
-    final localStorage = ref.read(localStorageProvider);
-    await localStorage.setStringList(_key, stories.toList());
+    final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
+    final prefs = ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName));
+    await prefs.setValue<List<String>>(_key, stories.toList());
   }
 }
