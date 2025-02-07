@@ -112,8 +112,11 @@ class InvalidTwoFaCodeException extends IONIdentityException {
     try {
       if (responseData is Map<String, dynamic>) {
         final responseCode = responseData['code'] as String?;
-        final responseMessage = responseData['error']['message'] as String?;
-        final invalidCodes = ['2FA_INVALID_CODE', '2FA_EXPIRED_CODE'];
+        final responseErrorData = responseData['error'];
+        final responseMessage = responseErrorData is Map<String, dynamic>
+            ? responseErrorData['message'] as String?
+            : null;
+        final invalidCodes = {'2FA_INVALID_CODE', '2FA_EXPIRED_CODE'};
         return invalidCodes.contains(responseCode) || invalidCodes.contains(responseMessage);
       }
       return false;
@@ -148,7 +151,9 @@ class InvalidRecoveryCredentialsException extends IONIdentityException {
 
     try {
       if (responseData is Map<String, dynamic>) {
-        final errorMessage = responseData['error']['message'] as String?;
+        final errorData = responseData['error'];
+        final errorMessage =
+            errorData is Map<String, dynamic> ? errorData['message'] as String? : null;
         final recoveryKeyNotFound = errorMessage == 'Recovery key not found.';
         final userNotFound = errorMessage == 'USER_NOT_FOUND';
         return recoveryKeyNotFound || userNotFound;
