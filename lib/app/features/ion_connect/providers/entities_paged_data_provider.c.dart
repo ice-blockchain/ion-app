@@ -75,7 +75,7 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     );
   }
 
-  Future<void> deleteEntity(IonConnectEntity postEntity) async {
+  void deleteEntity(IonConnectEntity postEntity) {
     final currentState = state;
     if (currentState == null) return;
 
