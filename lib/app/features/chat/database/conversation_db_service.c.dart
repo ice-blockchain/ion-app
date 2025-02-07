@@ -268,7 +268,8 @@ class ConversationsDBService {
   }
 
   Future<Map<String, MessageDeliveryStatus>> getMessageDeliveryStatuses(
-      String eventMessageId) async {
+    String eventMessageId,
+  ) async {
     final messageStatusesTableData = await (_db.select(_db.conversationMessageStatusTable)
           ..where((table) => table.eventMessageId.equals(eventMessageId)))
         .get();
@@ -420,7 +421,9 @@ class ConversationsDBService {
   }
 
   Future<void> markAllConversationsAsRead(String masterPubkey) async {
-    final receivedMessages = await (_db.select(_db.conversationMessageStatusTable)
+    final receivedMessages = await (_db.select(
+      _db.conversationMessageStatusTable,
+    )
           ..where((table) => table.masterPubkey.equals(masterPubkey))
           ..where((table) => table.status.equals(MessageDeliveryStatus.received.index)))
         .get();
