@@ -21,7 +21,19 @@ class StoryViewerState with _$StoryViewerState {
   bool get hasNextUser => currentUserIndex < userStories.length - 1;
   bool get hasPreviousUser => currentUserIndex > 0;
 
-  ModifiablePostEntity? get currentStory =>
-      userStories[currentUserIndex].stories[currentStoryIndex];
+  ModifiablePostEntity? get currentStory {
+    if (userStories.isEmpty) return null;
+
+    final currentUserStories = userStories[currentUserIndex];
+
+    if (currentUserStories.stories.isEmpty ||
+        currentStoryIndex < 0 ||
+        currentStoryIndex >= currentUserStories.stories.length) {
+      return null;
+    }
+
+    return currentUserStories.stories[currentStoryIndex];
+  }
+
   UserStories? get currentUser => userStories[currentUserIndex];
 }
