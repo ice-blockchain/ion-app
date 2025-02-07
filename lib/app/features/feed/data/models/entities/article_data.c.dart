@@ -17,13 +17,14 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'article_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class ArticleEntity
-    with _$ArticleEntity, IonConnectEntity, CacheableEntity
+    with IonConnectEntity, CacheableEntity, SoftDeletableEntity, _$ArticleEntity
     implements ReplaceableEntity {
   const factory ArticleEntity({
     required String id,
@@ -61,7 +62,7 @@ class ArticleEntity
 
 @freezed
 class ArticleData
-    with _$ArticleData, EntityDataWithSettings
+    with _$ArticleData, EntityDataWithSettings, SoftDeletableEntityData
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
     required String content,
