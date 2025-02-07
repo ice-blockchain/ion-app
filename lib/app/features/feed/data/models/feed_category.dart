@@ -34,4 +34,10 @@ enum FeedCategory {
 
     return icon.icon(color: color ?? defaultColor);
   }
+
+  String getPostsNames(BuildContext context) => switch (this) {
+        FeedCategory.feed => context.i18n.feed_post_type_posts,
+        FeedCategory.videos => context.i18n.feed_post_type_videos,
+        FeedCategory.articles => context.i18n.feed_post_type_articles,
+      };
 }

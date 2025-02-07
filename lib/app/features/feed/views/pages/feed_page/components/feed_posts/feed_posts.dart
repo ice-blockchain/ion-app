@@ -6,6 +6,7 @@ import 'package:ion/app/components/empty_list/empty_list.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
+import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
@@ -37,16 +38,18 @@ class FeedPosts extends ConsumerWidget {
   }
 }
 
-class _EmptyState extends StatelessWidget {
+class _EmptyState extends ConsumerWidget {
   const _EmptyState();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
+    final postsTypes = feedCategory.getPostsNames(context);
     return SliverFillRemaining(
       hasScrollBody: false,
       child: EmptyList(
         asset: Assets.svg.walletIconProfileEmptyposts,
-        title: context.i18n.feed_posts_empty,
+        title: context.i18n.feed_posts_empty(postsTypes),
       ),
     );
   }
