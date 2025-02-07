@@ -468,7 +468,7 @@
   "feed_advanced_search_category_groups": "Groups",
   "feed_advanced_search_category_channels": "Channels",
   "feed_replies_empty": "There are no replies at the moment",
-  "feed_posts_empty": "There are no posts at the moment",
+  "feed_posts_empty": "There are no {postType} at the moment",
   "video_not_found": "Video not found",
   "turn_notifications_title": "Turn on notifications",
   "turn_notifications_description": "Receive notifications when you transfer and receive funds",
