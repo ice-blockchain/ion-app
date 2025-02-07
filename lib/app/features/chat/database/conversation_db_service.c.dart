@@ -106,7 +106,6 @@ class ConversationsDBService {
     final conversationId = conversationMessage.data.relatedConversationId?.value;
 
     if (conversationId != null) {
-      // Existing conversation (one-to-one or group)
       await _insertConversationData(
         eventMessage: eventMessage,
         conversationId: conversationId,
