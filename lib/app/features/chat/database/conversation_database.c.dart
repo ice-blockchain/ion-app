@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/database/conversation_database.c.steps.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,6 +29,19 @@ class ConversationDatabase extends _$ConversationDatabase {
 
   // For testing executor
   ConversationDatabase.test(super.e);
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onUpgrade: stepByStep(
+        from1To2: (m, schema) async {
+          await m.dropColumn(schema.conversationMessagesTable, 'status');
+          await m.dropColumn(schema.conversationMessagesTable, 'is_deleted');
+          await m.createTable(schema.conversationMessageStatusTable);
+        },
+      ),
+    );
+  }
 
   @override
   int get schemaVersion => 2;
