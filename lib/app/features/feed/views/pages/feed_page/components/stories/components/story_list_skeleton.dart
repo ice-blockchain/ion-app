@@ -18,7 +18,7 @@ class StoryListSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: UserStoryListItem.height,
+      height: StoryItemView.height,
       child: Skeleton(
         child: OverflowBox(
           maxWidth: double.infinity,

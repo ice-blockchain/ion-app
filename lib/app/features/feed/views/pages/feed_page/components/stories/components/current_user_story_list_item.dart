@@ -56,7 +56,7 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
               tag: 'story-$pubkey',
               child: Material(
                 color: Colors.transparent,
-                child: UserStoryListItem(
+                child: StoryItemView(
                   imageUrl: userMetadata.data.picture,
                   name: context.i18n.common_you,
                   gradient: hasStories ? gradient : null,

@@ -40,7 +40,7 @@ class StoryListItem extends HookConsumerWidget {
           tag: 'story-$pubkey',
           child: Material(
             color: Colors.transparent,
-            child: UserStoryListItem(
+            child: StoryItemView(
               imageUrl: userMetadata.data.picture,
               name: userMetadata.data.name,
               gradient: gradient,

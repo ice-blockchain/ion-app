@@ -23,12 +23,8 @@ class Stories extends HookConsumerWidget {
 
     useOnInit(() {
       if (stories != null) {
-        final allIds = <String>{};
-        for (final userStory in stories) {
-          for (final story in userStory.stories) {
-            allIds.add(story.id);
-          }
-        }
+        final allIds =
+            stories.expand((userStory) => userStory.stories).map((story) => story.id).toSet();
 
         ref.read(viewedStoriesControllerProvider.notifier).filterBy(allIds.toList());
       }
@@ -55,7 +51,7 @@ class Stories extends HookConsumerWidget {
             onLoadMore: () => _onLoadMore(ref),
             builder: (context, slivers) {
               return SizedBox(
-                height: UserStoryListItem.height,
+                height: StoryItemView.height,
                 child: CustomScrollView(
                   scrollDirection: Axis.horizontal,
                   slivers: slivers,

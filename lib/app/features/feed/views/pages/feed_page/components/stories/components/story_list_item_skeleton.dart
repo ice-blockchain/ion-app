@@ -14,14 +14,14 @@ class StoryListItemSkeleton extends StatelessWidget {
     final textStyle = context.theme.appTextThemes.caption3;
 
     return SizedBox(
-      width: UserStoryListItem.width,
-      height: UserStoryListItem.height,
+      width: StoryItemView.width,
+      height: StoryItemView.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: UserStoryListItem.width,
-            height: UserStoryListItem.width,
+            width: StoryItemView.width,
+            height: StoryItemView.width,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(19.5.s),
@@ -32,7 +32,7 @@ class StoryListItemSkeleton extends StatelessWidget {
             alignment: Alignment.center,
             child: Container(
               height: textStyle.fontSize,
-              width: UserStoryListItem.width * 0.8,
+              width: StoryItemView.width * 0.8,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(textStyle.fontSize! / 2),
