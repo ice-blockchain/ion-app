@@ -5,8 +5,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
-import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_empty_view/messaging_empty_view.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
@@ -30,7 +30,7 @@ class EncryptedDirectMessagesPage extends HookConsumerWidget {
 
     final receiver = ref.watch(userMetadataProvider(receiverPubKey)).valueOrNull;
 
-    final messages = ref.watch(e2eeMessagesNotifierProvider(uuid));
+    final messages = ref.watch(conversationMessagesProvider(uuid));
 
     if (receiver == null) {
       return const SizedBox.shrink();

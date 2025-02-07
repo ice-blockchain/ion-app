@@ -24,14 +24,16 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
         .watch(conversationTableDaoProvider)
         .getLatestEventMessageDate(ModifiablePostEntity.kind);
 
+    final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
+
     for (final communityId in communityIds) {
-      await _fetchCommunityMessages(communityId, latestEventMessageDate);
+      await _fetchCommunityMessages(communityId, sinceDate);
     }
 
     yield null;
   }
 
-  Future<void> _fetchCommunityMessages(String communityId, DateTime? latestEventMessageDate) async {
+  Future<void> _fetchCommunityMessages(String communityId, DateTime? sinceDate) async {
     final ownerPubkey = await ref
         .watch(communityMetadataProvider(communityId).selectAsync((data) => data.ownerPubkey));
 
@@ -40,7 +42,7 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       tags: {
         '#h': [communityId],
       },
-      since: latestEventMessageDate,
+      since: sinceDate,
     );
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);

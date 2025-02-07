@@ -16,10 +16,10 @@ import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'fetch_conversation_provider.c.g.dart';
+part 'e2ee_messages_subscriber.c.g.dart';
 
 @riverpod
-class FetchConversations extends _$FetchConversations {
+class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
   @override
   Stream<void> build() async* {
     final masterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
@@ -33,10 +33,11 @@ class FetchConversations extends _$FetchConversations {
       throw EventSignerNotFoundException();
     }
 
-    // final lastMessageDate =
-    //     await ref.watch(conversationsDBServiceProvider).getLastConversationMessageCreatedAt();
+    final latestEventMessageDate = await ref
+        .watch(conversationTableDaoProvider)
+        .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
 
-    // final sinceDate = lastMessageDate?.add(const Duration(days: -2));
+    final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
 
     final requestFilter = RequestFilter(
       kinds: const [IonConnectGiftWrapServiceImpl.kind],
@@ -47,7 +48,7 @@ class FetchConversations extends _$FetchConversations {
         ],
         '#p': [masterPubkey],
       },
-      // since: sinceDate,
+      since: sinceDate,
     );
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);

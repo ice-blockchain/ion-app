@@ -14,7 +14,7 @@ import 'package:ion/app/features/chat/community/providers/community_metadata_pro
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
-import 'package:ion/app/features/chat/e2ee/providers/e2ee_messages_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
@@ -44,7 +44,7 @@ class ChannelPage extends HookConsumerWidget {
       uuid,
     ]);
 
-    final messages = ref.watch(e2eeMessagesNotifierProvider(uuid));
+    final messages = ref.watch(conversationMessagesProvider(uuid));
 
     final canPost = useCanPostToChannel(channel: channel, currentPubkey: currentPubkey);
 
@@ -133,47 +133,48 @@ class ChannelPage extends HookConsumerWidget {
                 },
               ),
             ),
-            if (isJoined)
-              if (canPost)
-                MessagingBottomBar(
-                  onSubmitted: (content) async {
-                    await ref
-                        .read(createPostNotifierProvider(CreatePostOption.plain).notifier)
-                        .create(
-                          content: content ?? '',
-                          communityUuid: uuid,
-                          whoCanReply: WhoCanReplySettingsOption.everyone,
-                        );
-                  },
-                )
+            if (communities != null)
+              if (isJoined)
+                if (canPost)
+                  MessagingBottomBar(
+                    onSubmitted: (content) async {
+                      await ref
+                          .read(createPostNotifierProvider(CreatePostOption.plain).notifier)
+                          .create(
+                            content: content ?? '',
+                            communityUuid: uuid,
+                            whoCanReply: WhoCanReplySettingsOption.everyone,
+                          );
+                    },
+                  )
+                else
+                  ScreenSideOffset.large(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0.s),
+                      child: Button(
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {},
+                        label: Text(context.i18n.button_unmute),
+                      ),
+                    ),
+                  )
               else
                 ScreenSideOffset.large(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0.s),
                     child: Button(
                       mainAxisSize: MainAxisSize.max,
-                      onPressed: () {},
-                      label: Text(context.i18n.button_unmute),
-                    ),
-                  ),
-                )
-            else
-              ScreenSideOffset.large(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                  child: Button(
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(uuid);
-                    },
-                    label: Text(context.i18n.channel_join),
-                    leadingIcon: Assets.svg.iconMenuLogout.icon(
-                      color: context.theme.appColors.onPrimaryAccent,
-                      size: 24.0.s,
+                      onPressed: () {
+                        ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(uuid);
+                      },
+                      label: Text(context.i18n.channel_join),
+                      leadingIcon: Assets.svg.iconMenuLogout.icon(
+                        color: context.theme.appColors.onPrimaryAccent,
+                        size: 24.0.s,
+                      ),
                     ),
                   ),
                 ),
-              ),
           ],
         ),
       ),
