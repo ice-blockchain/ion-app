@@ -19,6 +19,20 @@ class TransactionCreatorFactory {
         return BtcTransactionCreator(network: Network.testnet);
       case 'ethereum':
       case 'ethereumsepolia':
+      case 'arbitrumone':
+      case 'arbitrumsepolia':
+      case 'avalanchec':
+      case 'avalanchecfuji':
+      case 'base':
+      case 'basesepolia':
+      case 'bsc':
+      case 'bsctestnet':
+      case 'fantomopera':
+      case 'fantomtestnet':
+      case 'optimism':
+      case 'optimismsepolia':
+      case 'polygon':
+      case 'polygonamoy':
         return ethCreator;
       case 'ton':
         return TonTransactionCreator(endpoint: 'https://toncenter.com/api/v2/jsonRPC');
