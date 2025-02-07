@@ -2,8 +2,10 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
@@ -44,6 +46,10 @@ Future<void> deleteEntity(
         await ref
             .read(createPostNotifierProvider(CreatePostOption.delete).notifier)
             .softDelete(eventReference: eventReference);
+      }
+    case ArticleEntity():
+      {
+        await ref.read(createArticleProvider.notifier).softDelete(eventReference: eventReference);
       }
     default:
       {
