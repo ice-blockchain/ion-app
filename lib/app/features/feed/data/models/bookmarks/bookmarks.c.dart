@@ -15,9 +15,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'bookmarks.c.freezed.dart';
 
 @Freezed(equal: false)
-class BookmarksEntity
-    with _$BookmarksEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+class BookmarksEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$BookmarksEntity {
   const factory BookmarksEntity({
     required String id,
     required String pubkey,
@@ -43,11 +41,6 @@ class BookmarksEntity
       createdAt: eventMessage.createdAt,
       data: BookmarksData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const int kind = 10003;

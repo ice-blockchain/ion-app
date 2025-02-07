@@ -15,9 +15,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 part 'interests.c.freezed.dart';
 
 @Freezed(equal: false)
-class InterestsEntity
-    with _$InterestsEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+class InterestsEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$InterestsEntity {
   const factory InterestsEntity({
     required String id,
     required String pubkey,
@@ -43,11 +41,6 @@ class InterestsEntity
       createdAt: eventMessage.createdAt,
       data: InterestsData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const int kind = 10015;

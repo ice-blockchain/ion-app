@@ -14,8 +14,7 @@ enum DelegationStatus { active, inactive, revoked }
 
 @Freezed(equal: false)
 class UserDelegationEntity
-    with _$UserDelegationEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserDelegationEntity {
   const factory UserDelegationEntity({
     required String id,
     required String pubkey,
@@ -41,11 +40,6 @@ class UserDelegationEntity
       createdAt: eventMessage.createdAt,
       data: UserDelegationData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const int kind = 10100;

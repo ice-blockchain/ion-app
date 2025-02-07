@@ -31,8 +31,7 @@ enum BookmarksSetType {
 
 @Freezed(equal: false)
 class BookmarksSetEntity
-    with _$BookmarksSetEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$BookmarksSetEntity {
   const factory BookmarksSetEntity({
     required String id,
     required String pubkey,
@@ -58,11 +57,6 @@ class BookmarksSetEntity
       createdAt: eventMessage.createdAt,
       data: BookmarksSetData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const int kind = 30003;

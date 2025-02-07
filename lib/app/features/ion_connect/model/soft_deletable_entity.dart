@@ -2,8 +2,8 @@
 
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 
-mixin SoftDeletableEntity {
-  SoftDeletableEntityData get data;
+mixin SoftDeletableEntity<T extends SoftDeletableEntityData> {
+  T get data;
   DateTime get createdAt;
 
   bool get isDeleted => data.content.isEmpty && createdAt != data.publishedAt.value;
