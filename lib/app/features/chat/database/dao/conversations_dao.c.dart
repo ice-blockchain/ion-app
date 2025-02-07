@@ -81,6 +81,11 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
     });
   }
 
+  Future<void> markAsArchived(String uuid, {bool isArchived = true}) async {
+    await (update(conversationTable)..where((t) => t.uuid.equals(uuid)))
+        .write(ConversationTableCompanion(isArchived: Value(isArchived)));
+  }
+
   Future<List<String>> getParticipants(String uuid) async {
     final query = select(chatMessageTable).join([
       innerJoin(

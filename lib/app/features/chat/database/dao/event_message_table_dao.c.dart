@@ -18,7 +18,8 @@ class EventMessageTableDao extends DatabaseAccessor<ChatDatabase> with _$EventMe
       return;
     }
 
-    await into(db.eventMessageTable).insert(EventMessageRowClass.fromEventMessage(event));
+    await into(db.eventMessageTable)
+        .insert(EventMessageRowClass.fromEventMessage(event), mode: InsertMode.insertOrReplace);
 
     await into(db.chatMessageTable).insert(
       ChatMessageTableCompanion(
@@ -26,6 +27,7 @@ class EventMessageTableDao extends DatabaseAccessor<ChatDatabase> with _$EventMe
         eventMessageId: Value(event.id),
         readStatus: const Value(DeliveryStatus.isReceived),
       ),
+      mode: InsertMode.insertOrIgnore,
     );
   }
 }

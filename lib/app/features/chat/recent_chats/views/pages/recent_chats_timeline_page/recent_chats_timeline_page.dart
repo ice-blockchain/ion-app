@@ -29,7 +29,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() {
-      ref.read(toggleArchivedConversationsProvider);
+      ref.read(archivedConversationsProvider.notifier);
     });
 
     return CustomScrollView(
