@@ -91,7 +91,7 @@ class Count extends _$Count {
           .firstWhere(
             (entity) => switch (entity) {
               EventCountResultEntity() => entity.data.requestEventId == requestEvent.id,
-              EventCountErrorEntity() => entity.data.requestEventId == requestEvent.id,
+              EventCountErrorEntity() => entity.data.eventReference.toString() == requestEvent.id,
               _ => false,
             },
           )
