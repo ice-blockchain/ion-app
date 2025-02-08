@@ -61,7 +61,6 @@ class NewChatModal extends HookConsumerWidget {
           title: Text(context.i18n.new_chat_modal_title),
           actions: const [NavigationCloseButton()],
         ),
-        initialUserListType: UserListType.follower,
         onUserSelected: onUserSelected,
         header: Row(
           children: [

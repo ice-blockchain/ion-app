@@ -756,5 +756,6 @@
   "biometrics_suggestion_desc": "Do you want to use your device biometric data for a faster authentication?",
   "members_count": "{count, plural, =1 {{count} member} other {{count} members}}",
   "all_chains_item": "All chains",
-  "suggestions_empty_description": "Type for further selection from the list"
+  "suggestions_empty_description": "Type for further selection from the list",
+  "empty_message_history": "The message history is empty"
 }
