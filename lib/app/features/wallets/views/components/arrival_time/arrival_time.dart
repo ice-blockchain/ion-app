@@ -3,15 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/arrival_time_indicator.dart';
 
 class ArrivalTime extends StatelessWidget {
   const ArrivalTime({
-    required this.arrivalTimeInMinutes,
+    required this.option,
     super.key,
   });
 
-  final int arrivalTimeInMinutes;
+  final NetworkFeeOption option;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ArrivalTime extends StatelessWidget {
           style: context.theme.appTextThemes.body,
         ),
         const Spacer(),
-        ArrivalTimeIndicator(arrivalTimeInMinutes: arrivalTimeInMinutes),
+        ArrivalTimeIndicator(option: option),
       ],
     );
   }

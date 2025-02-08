@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:math';
+
+import 'package:collection/collection.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/model/network_fee_type.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
@@ -27,13 +32,15 @@ class SendAssetFormController extends _$SendAssetFormController {
     );
   }
 
-  void setNft(NftData nft) => state = state.copyWith(assetData: CryptoAssetData.nft(nft: nft));
+  void setNft(NftData nft) {
+    // state = state.copyWith(assetData: CryptoAssetData.nft(nft: nft));
+  }
 
   void setCoin(CoinsGroup coin) {
     final defaultCoin = coin.coins.first.coin;
     state = state.copyWith(
       network: defaultCoin.network,
-      assetData: CryptoAssetData.coin(coin: coin),
+      assetData: CryptoAssetData.coin(coinsGroup: coin),
     );
   }
 
@@ -41,30 +48,81 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   void setNetwork(Network network) {
     state = state.copyWith(network: network);
+
+    if (state.assetData case final CoinAssetData coin) {
+      state = state.copyWith(
+        assetData: coin.copyWith(
+          selectedOption: coin.coinsGroup.coins.firstWhere(
+            (e) => e.coin.network == network,
+          ),
+        ),
+      );
+    }
+
     _loadFeesInfo();
   }
 
   Future<void> _loadFeesInfo() async {
     final client = await ref.read(ionIdentityClientProvider.future);
     final result = await client.networks.getEstimateFees(network: state.network.serverName);
+
+    if (state.assetData case final CoinAssetData coin) {
+      final walletId = coin.selectedOption?.walletId;
+      if (walletId != null) {
+        final asset = await client.wallets.getWalletAssets(walletId).then(
+              (result) => result.assets.firstWhereOrNull((asset) => asset.isNative),
+            );
+
+        double calculateAmount(String maxFeePerGas) =>
+            double.parse(maxFeePerGas) / pow(10, asset!.decimals);
+
+        final options = [
+          if (result.slow != null && asset != null)
+            NetworkFeeOption(
+              amount: calculateAmount(result.slow!.maxFeePerGas),
+              symbol: asset.symbol,
+              arrivalTime: result.slow?.waitTime,
+              type: NetworkFeeType.slow,
+            ),
+          if (result.standard != null && asset != null)
+            NetworkFeeOption(
+              amount: calculateAmount(result.standard!.maxFeePerGas),
+              symbol: asset.symbol,
+              arrivalTime: result.standard?.waitTime,
+              type: NetworkFeeType.standard,
+            ),
+          if (result.fast != null && asset != null)
+            NetworkFeeOption(
+              amount: calculateAmount(result.fast!.maxFeePerGas),
+              symbol: asset.symbol,
+              arrivalTime: result.fast?.waitTime,
+              type: NetworkFeeType.fast,
+            ),
+        ];
+        state = state.copyWith(
+          networkFeeOptions: options,
+          selectedNetworkFeeOption: options.firstOrNull,
+        );
+      }
+    }
   }
 
   void setCoinsAmount(String amount) {
-    final parsedAmount = double.tryParse(amount) ?? 0.0;
-
     if (state.assetData case final CoinAssetData coin) {
-      final amount = switch (parsedAmount) {
-        final double value when value <= 0.0 => 0.0,
-        final double value when value > coin.maxAmount => coin.maxAmount,
-        _ => parsedAmount,
-      };
+      final parsedAmount = double.tryParse(amount) ?? 0.0;
       state = state.copyWith(
         assetData: coin.copyWith(
-          amount: amount,
+          amount: parsedAmount,
         ),
       );
     }
   }
 
   void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
+
+  void selectNetworkFeeOption(NetworkFeeOption selectedOption) {
+    state = state.copyWith(
+      selectedNetworkFeeOption: selectedOption,
+    );
+  }
 }

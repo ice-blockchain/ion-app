@@ -30,7 +30,7 @@ class ConfirmationSheet extends ConsumerWidget {
     final locale = context.i18n;
 
     final formData = ref.watch(sendAssetFormControllerProvider());
-    final coin = formData.assetData?.as<CoinAssetData>()!.coin;
+    final coin = formData.assetData?.as<CoinAssetData>()!.coinsGroup;
 
     return SheetContent(
       body: SingleChildScrollView(

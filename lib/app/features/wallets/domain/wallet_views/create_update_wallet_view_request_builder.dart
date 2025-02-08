@@ -20,7 +20,7 @@ class _CreateUpdateRequestBuilder {
     }
 
     final (symbolGroups, items) = switch (coinsList) {
-      final List<CoinData> coins => _getRequestDataFromCoinsList(coins, userWallets!),
+      final List<CoinData> coins => _getRequestDataFromCoinsList(coins, userWallets!, walletView),
       null when walletView != null => _getRequestDataFromWalletView(walletView),
       _ => (const <String>{}, const <WalletViewCoinData>[]),
     };
@@ -57,16 +57,20 @@ class _CreateUpdateRequestBuilder {
   _RequestParams _getRequestDataFromCoinsList(
     List<CoinData> coins,
     List<Wallet> userWallets,
+    WalletViewData? walletView,
   ) {
     final symbolGroups = <String>{};
     final walletViewItems = <WalletViewCoinData>[];
 
-    final networkWithWallet = {
-      for (final wallet in userWallets) wallet.network.toLowerCase(): wallet,
-    };
+    final networkWithWallet = <String, List<Wallet>>{};
+    for (final wallet in userWallets) {
+      final network = wallet.network.toLowerCase();
+      networkWithWallet.putIfAbsent(network, () => []).add(wallet);
+    }
 
     for (final coin in coins) {
-      final walletId = networkWithWallet[coin.network.serverName.toLowerCase()]?.id;
+      final wallets = networkWithWallet[coin.network.serverName.toLowerCase()];
+      final walletId = wallets?.firstWhereOrNull((wallet) => wallet.name == walletView?.id)?.id;
       symbolGroups.add(coin.symbolGroup);
       walletViewItems.add(
         WalletViewCoinData(
