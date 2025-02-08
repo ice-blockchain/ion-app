@@ -106,26 +106,6 @@ class ConversationTableDao extends DatabaseAccessor<ChatDatabase> with _$Convers
     return entity.allPubkeys;
   }
 
-  Future<String> getSubject(String uuid) async {
-    final query = select(chatMessageTable).join([
-      innerJoin(
-        eventMessageTable,
-        eventMessageTable.id.equalsExp(chatMessageTable.eventMessageId),
-      ),
-    ])
-      ..where(chatMessageTable.conversationId.equals(uuid))
-      ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
-      ..limit(1);
-
-    final row = await query.getSingle();
-
-    final eventMessage = row.readTable(eventMessageTable).toEventMessage();
-
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-
-    return entity.data.relatedSubject?.value ?? '';
-  }
-
   Future<String?> getExistingOneToOneConversation(String receiverMasterPubkey) async {
     final query = select(conversationTable).join([
       innerJoin(

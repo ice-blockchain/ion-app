@@ -2,7 +2,7 @@
 
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
-import 'package:ion/app/features/chat/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
