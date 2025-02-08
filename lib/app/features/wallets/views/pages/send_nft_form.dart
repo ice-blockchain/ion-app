@@ -73,12 +73,7 @@ class SendNftForm extends ConsumerWidget {
                       },
                     ),
                     SizedBox(height: 17.0.s),
-                    ArrivalTimeSelector(
-                      arrivalTimeInMinutes: formController.arrivalTime,
-                      onArrivalTimeChanged: (int value) => ref
-                          .read(sendAssetFormControllerProvider().notifier)
-                          .updateArrivalTime(value),
-                    ),
+                    const ArrivalTimeSelector(),
                     SizedBox(height: 45.0.s),
                     Button(
                       label: Text(

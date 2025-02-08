@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 
@@ -9,9 +10,10 @@ part 'crypto_asset_data.c.freezed.dart';
 @freezed
 sealed class CryptoAssetData with _$CryptoAssetData {
   const factory CryptoAssetData.coin({
-    required CoinsGroup coin,
+    required CoinsGroup coinsGroup,
+    // Cache selected option to avoid searching it via network each time
+    CoinInWalletData? selectedOption,
     @Default(0.0) double amount,
-    @Default(0.0) double maxAmount,
   }) = CoinAssetData;
 
   const factory CryptoAssetData.nft({

@@ -5,18 +5,18 @@ import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CoinButton extends StatelessWidget {
   const CoinButton({
-    required this.coin,
+    required this.coinInWallet,
     required this.onTap,
     super.key,
   });
 
-  final CoinAssetData coin;
+  final CoinInWalletData coinInWallet;
   final VoidCallback onTap;
 
   @override
@@ -36,16 +36,16 @@ class CoinButton extends StatelessWidget {
           right: 8.0.s,
         ),
         title: Text(
-          coin.coin.name,
+          coinInWallet.coin.name,
           style: textTheme.body,
         ),
         subtitle: Text(
-          coin.coin.abbreviation,
+          coinInWallet.coin.abbreviation,
           style: textTheme.caption3,
         ),
         backgroundColor: Colors.transparent,
         leading: CoinIconWidget(
-          imageUrl: coin.coin.iconUrl,
+          imageUrl: coinInWallet.coin.iconUrl,
           size: 36.0.s,
         ),
         onTap: onTap,
@@ -56,13 +56,11 @@ class CoinButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  formatDouble(coin.amount),
+                  formatDouble(coinInWallet.amount),
                   style: textTheme.body,
                 ),
                 Text(
-                  // TODO: Not implemented
-                  formatToCurrency(0),
-                  // formatToCurrency(coinInWallet.balanceUSD),
+                  formatToCurrency(coinInWallet.balanceUSD),
                   style: textTheme.caption3.copyWith(
                     color: colors.secondaryText,
                   ),

@@ -13,6 +13,8 @@ import 'package:ion/app/features/user/pages/profile_page/components/user_payment
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_id_button.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
@@ -44,6 +46,10 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     final selectedCoinAbbreviation = useState(coinAbbreviation);
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
+
+    // TODO: Remove the next 2 lines?
+    final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
+    final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -104,8 +110,8 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                       CoinAmountInput(
                         controller: amountController,
                         coinAbbreviation: selectedCoinAbbreviation.value,
-                        showApproximateInUsd: false,
-                        showMaxAction: false,
+                        abbreviation: coinInWallet?.coin.abbreviation,
+                        balanceUSD: walletBalance,
                       ),
                       SizedBox(height: 45.0.s),
                       Button(

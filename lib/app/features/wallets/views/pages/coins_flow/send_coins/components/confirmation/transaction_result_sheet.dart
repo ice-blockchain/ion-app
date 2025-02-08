@@ -61,11 +61,11 @@ class TransactionResultSheet extends ConsumerWidget {
                 formData.assetData?.map(
                       coin: (coin) => TransactionAmountSummary(
                         amount: coin.amount,
-                        currency: coin.coin.abbreviation,
+                        currency: coin.coinsGroup.abbreviation,
                         // usdAmount: coin.balanceUSD, // TODO: Not implemented
                         usdAmount: 0,
                         icon: CoinIconWidget(
-                          imageUrl: coin.coin.iconUrl,
+                          imageUrl: coin.coinsGroup.iconUrl,
                         ),
                       ),
                       nft: (nft) => Padding(

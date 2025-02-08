@@ -23,7 +23,6 @@ class AddressInputField extends StatelessWidget {
     return TextInput(
       maxLines: maxLines,
       labelText: context.i18n.wallet_enter_address,
-      initialValue: '0x93956a5688078e8f25df21ec0f24fd9fd7baf09545645645745',
       contentPadding: EdgeInsets.symmetric(
         vertical: 6.0.s,
         horizontal: 16.0.s,

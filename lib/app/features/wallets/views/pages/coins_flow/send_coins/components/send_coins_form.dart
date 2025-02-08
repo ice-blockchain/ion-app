@@ -36,12 +36,28 @@ class SendCoinsForm extends HookConsumerWidget {
     final formController = ref.watch(sendAssetFormControllerProvider());
     final notifier = ref.watch(sendAssetFormControllerProvider().notifier);
     final selectedContactPubkey = formController.contactPubkey;
-    final coin = formController.assetData!.as<CoinAssetData>()!;
+    final coin = formController.assetData.as<CoinAssetData>()!;
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
-        text: formatDouble(formController.selectedCoin?.amount ?? 0),
+        text: formatDouble(coin.amount),
       ),
+    );
+    useEffect(
+      () {
+        void listener() {
+          final maxValue = coin.selectedOption?.amount;
+          final numValue = double.tryParse(amountController.value.text);
+          if (numValue != null && maxValue != null && numValue > maxValue) {
+            amountController.text = maxValue.toString();
+          }
+        }
+
+        amountController.addListener(listener);
+
+        return () => amountController.removeListener(listener);
+      },
+      [],
     );
 
     return SheetContent(
@@ -62,15 +78,16 @@ class SendCoinsForm extends HookConsumerWidget {
               ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    CoinButton(
-                      coin: coin,
-                      onTap: () {
-                        CoinSendRoute().push<void>(context);
-                      },
-                    ),
+                    if (coin.selectedOption != null)
+                      CoinButton(
+                        coinInWallet: coin.selectedOption!,
+                        onTap: () {
+                          CoinSendRoute().push<void>(context);
+                        },
+                      ),
                     SizedBox(height: 12.0.s),
                     NetworkButton(
-                      networkType: formController.selectedNetwork,
+                      networkType: formController.network,
                       onTap: () {
                         NetworkSelectSendRoute().push<void>(context);
                       },
@@ -90,16 +107,11 @@ class SendCoinsForm extends HookConsumerWidget {
                     SizedBox(height: 12.0.s),
                     CoinAmountInput(
                       controller: amountController,
-                      coinAbbreviation: formController.selectedCoin!.coin.abbreviation,
-                      showApproximateInUsd: false,
+                      abbreviation: coin.coinsGroup.abbreviation,
+                      maxValue: coin.selectedOption!.amount,
                     ),
                     SizedBox(height: 17.0.s),
-                    ArrivalTimeSelector(
-                      arrivalTimeInMinutes: formController.arrivalTime,
-                      onArrivalTimeChanged: (int value) => ref
-                          .read(sendAssetFormControllerProvider().notifier)
-                          .updateArrivalTime(value),
-                    ),
+                    const ArrivalTimeSelector(),
                     SizedBox(height: 45.0.s),
                     Button(
                       label: Text(

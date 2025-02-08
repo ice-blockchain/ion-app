@@ -51,11 +51,11 @@ class TransactionDetailsPage extends ConsumerWidget {
                     formData.assetData!.map(
                       coin: (coin) => TransactionAmountSummary(
                         amount: coin.amount,
-                        currency: coin.coin.abbreviation,
+                        currency: coin.coinsGroup.abbreviation,
                         // usdAmount: coin.usdAmount, // TODO: Not implemented
                         usdAmount: 0,
                         icon: CoinIconWidget(
-                          imageUrl: coin.coin.iconUrl,
+                          imageUrl: coin.coinsGroup.iconUrl,
                         ),
                       ),
                       nft: (nft) => Padding(
@@ -102,9 +102,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                             SizedBox(height: 16.0.s),
                             ListItem.textWithIcon(
                               title: Text(locale.wallet_asset),
-                              value: coin.coin.name,
+                              value: coin.coinsGroup.name,
                               icon: CoinIconWidget(
-                                imageUrl: coin.coin.iconUrl,
+                                imageUrl: coin.coinsGroup.iconUrl,
                                 size: ScreenSideOffset.defaultSmallMargin,
                               ),
                             ),
