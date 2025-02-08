@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/messages/views/components/messages_context_menu/messages_context_menu.dart';
+import 'package:ion/app/features/chat/views/components/message_items/messages_context_menu/messages_context_menu.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessagingHeader extends StatelessWidget {

@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -75,9 +74,9 @@ class DeleteConversationModal extends ConsumerWidget {
                       context.i18n.button_delete,
                     ),
                     onPressed: () async {
-                      await ref
-                          .read(e2eeConversationManagementProvider.notifier)
-                          .deleteConversations(conversationIds);
+                      // await ref
+                      //     .read(e2eeConversationManagementProvider.notifier)
+                      //     .deleteConversations(conversationIds);
                       if (context.mounted) {
                         context.pop();
                       }

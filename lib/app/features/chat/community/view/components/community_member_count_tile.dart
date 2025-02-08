@@ -17,11 +17,7 @@ class CommunityMemberCountTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref
-        .watch(
-          communityMembersCountProvider(community: community),
-        )
-        .valueOrNull;
+    final count = ref.watch(communityMembersCountProvider(community)).valueOrNull;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -33,16 +29,15 @@ class CommunityMemberCountTile extends HookConsumerWidget {
             color: context.theme.appColors.quaternaryText,
           ),
         ),
-        if (count != null)
-          Padding(
-            padding: EdgeInsets.only(left: 3.0.s),
-            child: Text(
-              count.toString(),
-              style: context.theme.appTextThemes.caption.copyWith(
-                color: context.theme.appColors.quaternaryText,
-              ),
+        Padding(
+          padding: EdgeInsets.only(left: 3.0.s),
+          child: Text(
+            count?.toString() ?? '',
+            style: context.theme.appTextThemes.caption.copyWith(
+              color: context.theme.appColors.quaternaryText,
             ),
           ),
+        ),
       ],
     );
   }

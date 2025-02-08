@@ -5,6 +5,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_join_requests_state.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
+import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -37,23 +38,26 @@ FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
     ],
   );
 
-  final eventsStream =
-      ref.watch(ionConnectNotifierProvider.notifier).requestEntities(requestMessage);
+  final eventsStream = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(requestMessage);
 
   final accepted = <CommunityJoinEntity>[];
+  final acceptedEvents = <EventMessage>[];
   final waitingApproval = <CommunityJoinEntity>[];
 
-  await for (final entity in eventsStream) {
-    if (entity is CommunityJoinEntity) {
-      if (entity.masterPubkey == currentPubkey) {
-        accepted.add(entity);
-      } else {
-        if (entity.data.expiration != null && entity.data.expiration!.isAfter(DateTime.now())) {
-          waitingApproval.add(entity);
-        }
+  await for (final event in eventsStream) {
+    final entity = CommunityJoinEntity.fromEventMessage(event);
+
+    if (entity.masterPubkey == currentPubkey) {
+      accepted.add(entity);
+      acceptedEvents.add(event);
+    } else {
+      if (entity.data.expiration != null && entity.data.expiration!.isAfter(DateTime.now())) {
+        waitingApproval.add(entity);
       }
     }
   }
+
+  await ref.watch(conversationTableDaoProvider).add(acceptedEvents);
 
   return CommunityJoinRequestsState(accepted: accepted, waitingApproval: waitingApproval);
 }
