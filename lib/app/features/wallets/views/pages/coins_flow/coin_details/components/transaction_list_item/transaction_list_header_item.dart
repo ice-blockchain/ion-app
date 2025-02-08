@@ -2,18 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
 
 class TransactionListHeaderItem extends StatelessWidget {
   const TransactionListHeaderItem({
-    required this.networkType,
+    required this.network,
     required this.isSelected,
     required this.onPress,
     super.key,
   });
 
-  final NetworkType networkType;
+  final Network network;
   final bool isSelected;
   final VoidCallback onPress;
 
@@ -52,12 +52,12 @@ class TransactionListHeaderItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              networkType.smallIconAsset.icon(size: 16.0.s),
+              network.svgIconAsset.icon(size: 16.0.s),
               SizedBox(
                 width: 6.0.s,
               ),
               Text(
-                networkType.getDisplayNameSmall(context),
+                network.displayName,
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: _getTextColor(context),
                 ),

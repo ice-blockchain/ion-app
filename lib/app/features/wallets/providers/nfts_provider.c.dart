@@ -2,7 +2,7 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,12 +26,11 @@ Future<List<NftData>> nftsData(Ref ref) async {
       collectionName: 'COLLECTION NULL',
       identifier: 0,
       price: 0,
+      network: Network.ethereum,
       currency: 'CURRENCY NULL',
       iconUrl: 'ICONURL NULL',
-      networkType: NetworkType.all,
       currencyIconUrl: 'CURRENCYICONURL NULL',
       description: 'DESCRIPTION NULL',
-      network: 'NETWORK NULL',
       tokenStandard: 'TOKENSTANDARD NULL',
       contractAddress: 'CONTRACTADDRESS NULL',
       rank: 0,
