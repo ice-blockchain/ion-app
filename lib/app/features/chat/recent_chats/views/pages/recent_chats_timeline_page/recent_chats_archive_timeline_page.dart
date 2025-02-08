@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
-import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_timeline_page/recent_chats_timeline_page.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class RecentChatsArchiveTimelinePage extends ConsumerWidget {
@@ -13,10 +13,9 @@ class RecentChatsArchiveTimelinePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final conversations =
-        ref.watch(conversationsProvider).valueOrNull?.where((c) => c.isArchived).toList() ?? [];
+    final conversations = ref.watch(archivedConversationsProvider).valueOrNull;
 
-    if (conversations.isEmpty) {
+    if (conversations == null) {
       return const SizedBox.shrink();
     }
 
@@ -36,21 +35,12 @@ class RecentChatsArchiveTimelinePage extends ConsumerWidget {
           ),
           toolbarHeight: SearchInput.height,
         ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              final conversation = conversations[index];
-              return Column(
-                children: [
-                  if (index == 0) const RecentChatSeparator(),
-                  RecentChatTile(conversation),
-                  const RecentChatSeparator(),
-                ],
-              );
-            },
-            childCount: conversations.length,
+        const SliverToBoxAdapter(
+          child: RecentChatSeparator(
+            isAtTop: true,
           ),
         ),
+        ConversationList(conversations: conversations),
       ],
     );
   }

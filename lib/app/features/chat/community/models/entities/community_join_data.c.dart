@@ -79,7 +79,7 @@ class CommunityJoinData with _$CommunityJoinData implements EventSerializable {
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),
         if (pubkey != null) PubkeyTag(value: pubkey).toTag(),
-        if (auth != null) ['authorization', auth!],
+        if (auth != null) AuthorizationTag(value: auth!).toTag(),
         if (expiration != null) EntityExpiration(value: expiration!).toTag(),
       ],
       content: '',

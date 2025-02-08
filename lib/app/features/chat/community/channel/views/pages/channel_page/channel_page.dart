@@ -14,9 +14,13 @@ import 'package:ion/app/features/chat/community/providers/community_metadata_pro
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
-import 'package:ion/app/features/chat/messages/views/components/components.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/recent_chats/model/entities/conversation_data.c.dart';
+import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
+import 'package:ion/app/features/chat/views/components/message_items/components.dart';
+import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
+import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -39,6 +43,8 @@ class ChannelPage extends HookConsumerWidget {
       communities,
       uuid,
     ]);
+
+    final messages = ref.watch(conversationMessagesProvider(uuid));
 
     final canPost = useCanPostToChannel(channel: channel, currentPubkey: currentPubkey);
 
@@ -64,63 +70,111 @@ class ChannelPage extends HookConsumerWidget {
                 community: channel,
               ),
             ),
-            MessagingEmptyView(
-              title: context.i18n.common_invitation_link,
-              asset: Assets.svg.iconChatEmptystate,
-              trailing: EmptyStateCopyLink(link: channel.data.defaultInvitationLink),
-              leading: Column(
-                children: [
-                  SizedBox(height: 12.0.s),
-                  const ChatDateHeaderText(),
-                  SizedBox(height: 12.0.s),
-                  Text(
-                    context.i18n.channel_created_message,
-                    style: context.theme.appTextThemes.caption2.copyWith(
-                      color: context.theme.appColors.tertararyText,
-                    ),
-                  ),
-                ],
+            Expanded(
+              child: messages.when(
+                data: (messages) {
+                  if (messages.isEmpty) {
+                    return MessagingEmptyView(
+                      title: context.i18n.common_invitation_link,
+                      asset: Assets.svg.iconChatEmptystate,
+                      trailing: EmptyStateCopyLink(link: channel.data.defaultInvitationLink),
+                      leading: Column(
+                        children: [
+                          SizedBox(height: 12.0.s),
+                          Text(
+                            context.i18n.channel_created_message,
+                            style: context.theme.appTextThemes.caption2.copyWith(
+                              color: context.theme.appColors.tertararyText,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: messages.entries.length,
+                      itemBuilder: (context, index) {
+                        final date = messages.entries.toList()[index].key;
+                        final messagesForDate = messages.entries.toList()[index].value;
+
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12.0.s),
+                              child: ChatDateHeaderText(date: date),
+                            ),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: messagesForDate.length,
+                              separatorBuilder: (context, index) => SizedBox(height: 8.0.s),
+                              itemBuilder: (context, msgIndex) {
+                                final message = messagesForDate[msgIndex];
+
+                                final post = ModifiablePostEntity.fromEventMessage(message);
+
+                                return PostBody(
+                                  entity: post,
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                error: (error, stack) {
+                  return const SizedBox.shrink();
+                },
+                loading: () {
+                  return const SizedBox.shrink();
+                },
               ),
             ),
-            if (isJoined)
-              if (canPost)
-                // TODO (kreios): Replace mock with implementation
-                MessagingBottomBar(
-                  conversation: ConversationEntity(
-                    id: '',
-                    name: '',
-                    participantsMasterPubkeys: [],
-                    type: ChatType.channel,
-                  ),
-                )
+            if (communities != null)
+              if (isJoined)
+                if (canPost)
+                  MessagingBottomBar(
+                    onSubmitted: (content) async {
+                      await ref
+                          .read(createPostNotifierProvider(CreatePostOption.community).notifier)
+                          .create(
+                            content: content ?? '',
+                            communtiyId: uuid,
+                            whoCanReply: WhoCanReplySettingsOption.everyone,
+                          );
+                    },
+                  )
+                else
+                  ScreenSideOffset.large(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0.s),
+                      child: Button(
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {},
+                        label: Text(context.i18n.button_unmute),
+                      ),
+                    ),
+                  )
               else
                 ScreenSideOffset.large(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 16.0.s),
                     child: Button(
                       mainAxisSize: MainAxisSize.max,
-                      onPressed: () {},
-                      label: Text(context.i18n.button_unmute),
-                    ),
-                  ),
-                )
-            else
-              ScreenSideOffset.large(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                  child: Button(
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(uuid);
-                    },
-                    label: Text(context.i18n.channel_join),
-                    leadingIcon: Assets.svg.iconMenuLogout.icon(
-                      color: context.theme.appColors.onPrimaryAccent,
-                      size: 24.0.s,
+                      onPressed: () {
+                        ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(uuid);
+                      },
+                      label: Text(context.i18n.channel_join),
+                      leadingIcon: Assets.svg.iconMenuLogout.icon(
+                        color: context.theme.appColors.onPrimaryAccent,
+                        size: 24.0.s,
+                      ),
                     ),
                   ),
                 ),
-              ),
           ],
         ),
       ),

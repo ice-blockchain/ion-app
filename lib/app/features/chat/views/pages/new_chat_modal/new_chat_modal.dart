@@ -5,11 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/chat/database/chat_database.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -17,7 +14,6 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
-import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NewChatModal extends HookConsumerWidget {
@@ -25,30 +21,18 @@ class NewChatModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onUserSelected = useMemoized(
-      () => (UserMetadataEntity user) async {
-        final currentMasterPubkey = await ref.read(currentPubkeySelectorProvider.future);
-        final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-
-        if (eventSigner == null) {
-          throw EventSignerNotFoundException();
-        }
-
-        if (currentMasterPubkey == null) {
-          throw UserMasterPubkeyNotFoundException();
-        }
-
+    final onUserSelected = useCallback(
+      (UserMetadataEntity user) async {
+        final existConversationUUID = await ref
+            .read(conversationTableDaoProvider)
+            .getExistingOneToOneConversation(user.masterPubkey);
         if (context.mounted) {
-          context.pop();
-
-          return MessagesRoute(
-            id: generateUuid(),
-            chatType: ChatType.oneOnOne,
-            name: user.data.displayName,
-            imageUrl: user.data.picture ?? '',
-            participantsMasterPubkeys: [user.masterPubkey, currentMasterPubkey],
-            nickname: prefixUsername(username: user.data.name, context: context),
-          ).push<void>(context);
+          context.replace(
+            OneToOneMessagesRoute(
+              uuid: existConversationUUID ?? generateUuid(),
+              receiverPubKey: user.masterPubkey,
+            ).location,
+          );
         }
       },
     );

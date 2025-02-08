@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
@@ -11,10 +12,9 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
-import 'package:ion/app/features/chat/model/chat_type.dart';
-import 'package:ion/app/features/chat/model/group_type.dart';
+import 'package:ion/app/features/chat/community/models/group_type.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
-import 'package:ion/app/features/chat/providers/e2ee_conversation_management_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
 import 'package:ion/app/features/chat/views/components/type_selection_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/componentes/group_participant_list_item.dart';
@@ -49,7 +49,8 @@ class CreateGroupModal extends HookConsumerWidget {
           ]
         : <String>[];
 
-    final e2EEConversationManagement = ref.watch(e2eeConversationManagementProvider);
+    final sendE2eeMessageNotifier = ref.watch(conversationMessageManagementServiceProvider);
+    ref.displayErrors(conversationMessageManagementServiceProvider);
 
     useEffect(
       () {
@@ -149,13 +150,13 @@ class CreateGroupModal extends HookConsumerWidget {
                         itemCount: participantsMasterkeys.length,
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
                         itemBuilder: (_, int i) {
-                          final participantMasterPubkey = participantsMasterkeys[i];
+                          final participantMasterkey = participantsMasterkeys[i];
 
                           return GroupPariticipantsListItem(
-                            participantMasterpubkey: participantMasterPubkey,
-                            isCurrentUser: participantMasterPubkey == currentMasterPubkey,
+                            participantMasterkey: participantMasterkey,
+                            isCurrentUser: participantMasterkey == currentMasterPubkey,
                             onRemove: () {
-                              createGroupFormNotifier.toggleMember(participantMasterPubkey);
+                              createGroupFormNotifier.toggleMember(participantMasterkey);
                             },
                           );
                         },
@@ -172,13 +173,13 @@ class CreateGroupModal extends HookConsumerWidget {
             margin: 32.0.s,
             child: ScreenSideOffset.large(
               child: Button(
-                disabled: e2EEConversationManagement.maybeWhen(
+                disabled: sendE2eeMessageNotifier.maybeWhen(
                   loading: () => true,
                   orElse: () => false,
                 ),
                 mainAxisSize: MainAxisSize.max,
                 minimumSize: Size(56.0.s, 56.0.s),
-                leadingIcon: e2EEConversationManagement.maybeWhen(
+                leadingIcon: sendE2eeMessageNotifier.maybeWhen(
                   loading: () => const IONLoadingIndicator(),
                   orElse: () => Assets.svg.iconPlusCreatechannel.icon(
                     color: context.theme.appColors.onPrimaryAccent,
@@ -196,29 +197,19 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      if (groupPicture == null) {
-                        return;
-                      }
+                      final conversationMessageManagementService =
+                          await ref.read(conversationMessageManagementServiceProvider.future);
 
-                      final conversationId = generateUuid();
-
-                      await ref.read(e2eeConversationManagementProvider.notifier).createGroup(
-                            groupImage: groupPicture,
-                            conversationId: conversationId,
-                            subject: createGroupForm.name!,
-                            participantsMasterPubkeys: participantsMasterkeys,
-                          );
+                      await conversationMessageManagementService.sendMessage(
+                        conversationId: generateUuid(),
+                        content: '',
+                        participantsMasterkeys: participantsMasterkeys,
+                        subject: createGroupForm.name,
+                        mediaFiles: [groupPicture!],
+                      );
 
                       if (context.mounted) {
-                        Navigator.maybeOf(context, rootNavigator: true)?.pop();
-
-                        await MessagesRoute(
-                          id: conversationId,
-                          chatType: ChatType.group,
-                          name: createGroupForm.name!,
-                          imageUrl: groupPicture.path,
-                          participantsMasterPubkeys: participantsMasterkeys,
-                        ).push<void>(context);
+                        context.pop();
                       }
                     } else {
                       throw UnimplementedError();

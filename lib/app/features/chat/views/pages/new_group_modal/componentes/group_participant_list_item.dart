@@ -11,18 +11,18 @@ import 'package:ion/generated/assets.gen.dart';
 class GroupPariticipantsListItem extends ConsumerWidget {
   const GroupPariticipantsListItem({
     required this.onRemove,
-    required this.participantMasterpubkey,
+    required this.participantMasterkey,
     required this.isCurrentUser,
     super.key,
   });
 
   final bool isCurrentUser;
   final VoidCallback onRemove;
-  final String participantMasterpubkey;
+  final String participantMasterkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadataResult = ref.watch(userMetadataProvider(participantMasterpubkey));
+    final userMetadataResult = ref.watch(userMetadataProvider(participantMasterkey));
 
     return userMetadataResult.maybeWhen(
       data: (userMetadata) {

@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/fetch_conversation_provider.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_skeleton/recent_chat_skeleton.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chats_empty_page/recent_chats_empty_page.dart';
@@ -20,8 +19,6 @@ class ArchivedChatsMainPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(fetchConversationsProvider);
-
     final conversations = ref.watch(conversationsProvider);
     final editMode = ref.watch(conversationsEditModeProvider);
 
@@ -29,7 +26,7 @@ class ArchivedChatsMainPage extends HookConsumerWidget {
       appBar: NavigationAppBar.screen(
         onBackPress: () {
           ref.read(conversationsEditModeProvider.notifier).editMode = false;
-          ref.read(selectedConversationsIdsProvider.notifier).clear();
+          ref.read(selectedConversationsProvider.notifier).clear();
           context.pop();
         },
         title: Text(context.i18n.common_archive),
@@ -39,7 +36,7 @@ class ArchivedChatsMainPage extends HookConsumerWidget {
             textStyle: context.theme.appTextThemes.subtitle2,
             onPressed: () {
               ref.read(conversationsEditModeProvider.notifier).editMode = !editMode;
-              ref.read(selectedConversationsIdsProvider.notifier).clear();
+              ref.read(selectedConversationsProvider.notifier).clear();
             },
           ),
         ],
