@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -12,8 +14,12 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:photo_manager/photo_manager.dart';
@@ -44,6 +50,13 @@ class MediaFile with _$MediaFile {
 typedef CropImageUiSettings = List<PlatformUiSettings>;
 
 class MediaService {
+  MediaService({
+    required this.fileCacheService,
+    required this.compressionService,
+  });
+
+  final FileCacheService fileCacheService;
+  final CompressionService compressionService;
   Future<MediaFile?> captureImageFromCamera({bool saveToGallery = false}) async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
 
@@ -228,7 +241,57 @@ class MediaService {
       }),
     );
   }
+
+  Future<List<File>> retreiveEncryptedMedia(List<MediaAttachment> mediaAttachments) async {
+    final decryptedDecompressedFiles = <File>[];
+
+    for (final attachment in mediaAttachments) {
+      if (attachment.encryptionKey != null &&
+          attachment.encryptionNonce != null &&
+          attachment.encryptionMac != null) {
+        final mac = base64Decode(attachment.encryptionMac!);
+        final nonce = base64Decode(attachment.encryptionNonce!);
+        final secretKey = base64Decode(attachment.encryptionKey!);
+
+        final file = await fileCacheService.getFile(attachment.url);
+
+        final fileBytes = await file.readAsBytes();
+
+        final secretBox = SecretBox(
+          fileBytes,
+          nonce: nonce,
+          mac: Mac(mac),
+        );
+        // Wrong Mac authentication error described here
+        // https://github.com/dint-dev/cryptography/issues/147
+        final decryptedFileBytesList = await AesGcm.with256bits().decrypt(
+          secretBox,
+          secretKey: SecretKey(secretKey),
+        );
+
+        final decryptedFileBytes = Uint8List.fromList(decryptedFileBytesList);
+
+        final decryptedFile = await fileCacheService.putFile(
+          url: file.path,
+          bytes: decryptedFileBytes,
+          fileExtension: attachment.mimeType.split('/').last,
+        );
+
+        if (attachment.mediaType == MediaType.unknown) {
+          final decompressedFile = await compressionService.decompressBrotli(file);
+
+          decryptedDecompressedFiles.add(decompressedFile);
+        } else {
+          decryptedDecompressedFiles.add(decryptedFile);
+        }
+      }
+    }
+    return decryptedDecompressedFiles;
+  }
 }
 
 @riverpod
-MediaService mediaService(Ref ref) => MediaService();
+MediaService mediaService(Ref ref) => MediaService(
+      fileCacheService: ref.read(fileCacheServiceProvider),
+      compressionService: ref.read(compressServiceProvider),
+    );

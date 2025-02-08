@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/database/conversation_database.c.steps.dart';
 import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -13,7 +14,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'conversation_database.c.g.dart';
 
 @Riverpod(keepAlive: true)
-ConversationDatabase conversationDatabase(Ref ref) => ConversationDatabase();
+ConversationDatabase conversationDatabase(Ref ref) {
+  final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+
+  if (pubkey == null) {
+    throw Exception('Pubkey is null');
+  }
+
+  return ConversationDatabase(pubkey);
+}
 
 // DO NOT create or use database directly, use proxy notifier
 // [IONDatabaseNotifier] methods instead
@@ -26,10 +35,12 @@ ConversationDatabase conversationDatabase(Ref ref) => ConversationDatabase();
   ],
 )
 class ConversationDatabase extends _$ConversationDatabase {
-  ConversationDatabase() : super(_openConnection());
+  ConversationDatabase(this.pubkey) : super(_openConnection(pubkey));
 
   // For testing executor
-  ConversationDatabase.test(super.e);
+  ConversationDatabase.test(super.e) : pubkey = 'test';
+
+  final String pubkey;
 
   @override
   MigrationStrategy get migration {
@@ -48,8 +59,8 @@ class ConversationDatabase extends _$ConversationDatabase {
   @override
   int get schemaVersion => 2;
 
-  static QueryExecutor _openConnection() {
-    return driftDatabase(name: 'conversation_database');
+  static QueryExecutor _openConnection(String pubkey) {
+    return driftDatabase(name: 'conversation_database_$pubkey');
   }
 }
 
