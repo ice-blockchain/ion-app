@@ -62,15 +62,13 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
         final isArchived = bookmarkSet.communitiesIds.contains(conversation.uuid);
 
         if (isArchived) {
-          await ref
-              .read(conversationTableDaoProvider)
-              .markAsArchived(conversation.uuid, isArchived: false);
+          await ref.read(conversationDaoProvider).setArchived(conversation.uuid, isArchived: false);
           bookmarkSet = bookmarkSet.copyWith(
             communitiesIds:
                 bookmarkSet.communitiesIds.where((id) => id != conversation.uuid).toList(),
           );
         } else {
-          await ref.read(conversationTableDaoProvider).markAsArchived(conversation.uuid);
+          await ref.read(conversationDaoProvider).setArchived(conversation.uuid);
           bookmarkSet = bookmarkSet.copyWith(
             communitiesIds: [
               ...bookmarkSet.communitiesIds,
@@ -82,7 +80,7 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
         final encryptedGroupIds = CommunityIdentifierTag(value: conversation.uuid).toTag();
 
         if (parsedContent == null) {
-          await ref.read(conversationTableDaoProvider).markAsArchived(conversation.uuid);
+          await ref.read(conversationDaoProvider).setArchived(conversation.uuid);
           parsedContent = [
             encryptedGroupIds,
           ];
@@ -90,12 +88,12 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
           final existItem = parsedContent
               .firstWhereOrNull((element) => element.toString() == encryptedGroupIds.toString());
           if (existItem == null) {
-            await ref.read(conversationTableDaoProvider).markAsArchived(conversation.uuid);
+            await ref.read(conversationDaoProvider).setArchived(conversation.uuid);
             parsedContent.add(encryptedGroupIds);
           } else {
             await ref
-                .read(conversationTableDaoProvider)
-                .markAsArchived(conversation.uuid, isArchived: false);
+                .read(conversationDaoProvider)
+                .setArchived(conversation.uuid, isArchived: false);
             parsedContent.remove(existItem);
           }
         }

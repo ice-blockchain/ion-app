@@ -77,7 +77,7 @@ class ConversationList extends ConsumerWidget {
                 conversation: conversation,
                 key: ValueKey(conversation.uuid),
               )
-            else if (conversation.type == ConversationType.encryptedGroup)
+            else if (conversation.type == ConversationType.group)
               EncryptedGroupRecentChatTile(
                 conversation: conversation,
                 key: ValueKey(conversation.uuid),

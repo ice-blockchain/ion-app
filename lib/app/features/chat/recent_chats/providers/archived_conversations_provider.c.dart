@@ -62,9 +62,7 @@ class ArchivedConversations extends _$ArchivedConversations {
       if (encrpytedConversationCommunityIds != null) ...encrpytedConversationCommunityIds,
     ];
 
-    await ref
-        .watch(conversationTableDaoProvider)
-        .updateArchivedConversations(archivedConversations);
+    await ref.watch(conversationDaoProvider).updateArchivedConversations(archivedConversations);
 
     return archivedConversations;
   }

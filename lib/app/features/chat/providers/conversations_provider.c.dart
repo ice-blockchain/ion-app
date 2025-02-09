@@ -10,7 +10,7 @@ part 'conversations_provider.c.g.dart';
 class Conversations extends _$Conversations {
   @override
   Stream<List<ConversationListItem>> build() {
-    return ref.watch(conversationTableDaoProvider).watch();
+    return ref.watch(conversationDaoProvider).watch();
   }
 }
 

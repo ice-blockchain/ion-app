@@ -57,7 +57,7 @@ FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
     }
   }
 
-  await ref.watch(conversationTableDaoProvider).add(acceptedEvents);
+  await ref.watch(conversationDaoProvider).add(acceptedEvents);
 
   return CommunityJoinRequestsState(accepted: accepted, waitingApproval: waitingApproval);
 }

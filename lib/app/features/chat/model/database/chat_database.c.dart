@@ -18,9 +18,9 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_database.c.g.dart';
-part 'dao/chat_message_table_dao.c.dart';
-part 'dao/conversations_dao.c.dart';
-part 'dao/event_message_table_dao.c.dart';
+part 'dao/conversation_dao.c.dart';
+part 'dao/conversation_event_message_dao.c.dart';
+part 'dao/conversation_message_dao.c.dart';
 part 'tables/chat_message_table.dart';
 part 'tables/conversation_table.dart';
 part 'tables/event_message_table.dart';
@@ -38,7 +38,9 @@ ChatDatabase chatDatabase(Ref ref) {
   return ChatDatabase(pubkey);
 }
 
-@DriftDatabase(tables: [ConversationTable, EventMessageTable, ChatMessageTable, MessageStatusTable])
+@DriftDatabase(
+  tables: [ConversationTable, EventMessageTable, ConversationMessageTable, MessageStatusTable],
+)
 class ChatDatabase extends _$ChatDatabase {
   ChatDatabase(this.pubkey) : super(_openConnection(pubkey));
 
