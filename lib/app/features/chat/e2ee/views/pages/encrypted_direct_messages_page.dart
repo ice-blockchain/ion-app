@@ -19,12 +19,12 @@ import 'package:ion/generated/assets.gen.dart';
 
 class EncryptedDirectMessagesPage extends HookConsumerWidget {
   const EncryptedDirectMessagesPage({
-    required this.uuid,
+    required this.conversationId,
     required this.receiverPubKey,
     super.key,
   });
 
-  final String uuid;
+  final String conversationId;
   final String receiverPubKey;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,7 +32,7 @@ class EncryptedDirectMessagesPage extends HookConsumerWidget {
 
     final receiver = ref.watch(userMetadataProvider(receiverPubKey)).valueOrNull;
 
-    final messages = ref.watch(conversationMessagesProvider(uuid));
+    final messages = ref.watch(conversationMessagesProvider(conversationId));
 
     if (receiver == null) {
       return const SizedBox.shrink();
@@ -98,7 +98,7 @@ class EncryptedDirectMessagesPage extends HookConsumerWidget {
                       await ref.read(conversationMessageManagementServiceProvider.future);
 
                   await conversationMessageManagementService.sendMessage(
-                    conversationId: uuid,
+                    conversationId: conversationId,
                     content: content ?? '',
                     participantsMasterkeys: [receiverPubKey, currentPubkey],
                   );

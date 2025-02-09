@@ -90,7 +90,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       )
           .map((row) {
         return ConversationListItem(
-          uuid: row.readTable(conversationTable).id,
+          conversationId: row.readTable(conversationTable).id,
           type: row.readTable(conversationTable).type,
           isArchived: row.readTable(conversationTable).isArchived,
           joinedAt: row.readTable(conversationTable).joinedAt,

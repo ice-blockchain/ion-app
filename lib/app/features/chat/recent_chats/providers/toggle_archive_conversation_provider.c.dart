@@ -59,28 +59,32 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
 
     for (final conversation in conversations) {
       if (conversation.type == ConversationType.community) {
-        final isArchived = bookmarkSet.communitiesIds.contains(conversation.uuid);
+        final isArchived = bookmarkSet.communitiesIds.contains(conversation.conversationId);
 
         if (isArchived) {
-          await ref.read(conversationDaoProvider).setArchived(conversation.uuid, isArchived: false);
+          await ref
+              .read(conversationDaoProvider)
+              .setArchived(conversation.conversationId, isArchived: false);
           bookmarkSet = bookmarkSet.copyWith(
-            communitiesIds:
-                bookmarkSet.communitiesIds.where((id) => id != conversation.uuid).toList(),
+            communitiesIds: bookmarkSet.communitiesIds
+                .where((id) => id != conversation.conversationId)
+                .toList(),
           );
         } else {
-          await ref.read(conversationDaoProvider).setArchived(conversation.uuid);
+          await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
           bookmarkSet = bookmarkSet.copyWith(
             communitiesIds: [
               ...bookmarkSet.communitiesIds,
-              conversation.uuid,
+              conversation.conversationId,
             ],
           );
         }
       } else {
-        final encryptedGroupIds = CommunityIdentifierTag(value: conversation.uuid).toTag();
+        final encryptedGroupIds =
+            CommunityIdentifierTag(value: conversation.conversationId).toTag();
 
         if (parsedContent == null) {
-          await ref.read(conversationDaoProvider).setArchived(conversation.uuid);
+          await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
           parsedContent = [
             encryptedGroupIds,
           ];
@@ -88,12 +92,12 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
           final existItem = parsedContent
               .firstWhereOrNull((element) => element.toString() == encryptedGroupIds.toString());
           if (existItem == null) {
-            await ref.read(conversationDaoProvider).setArchived(conversation.uuid);
+            await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
             parsedContent.add(encryptedGroupIds);
           } else {
             await ref
                 .read(conversationDaoProvider)
-                .setArchived(conversation.uuid, isArchived: false);
+                .setArchived(conversation.conversationId, isArchived: false);
             parsedContent.remove(existItem);
           }
         }
