@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/chat_date_header_text/chat_date_header_text.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 
 class ChatMessagesList extends HookConsumerWidget {
   const ChatMessagesList(
@@ -24,7 +23,19 @@ class ChatMessagesList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
 
-    useOnInit(() => scrollController.jumpTo(scrollController.position.maxScrollExtent));
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        });
+        return null;
+      },
+      [messages],
+    );
 
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
