@@ -19,6 +19,7 @@ import 'package:ion/app/features/chat/community/channel/views/pages/channel_deta
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/channel_messaging_page.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/create_channel_modal/create_channel_modal.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/edit_channel_page/edit_channel_page.dart';
+import 'package:ion/app/features/chat/e2ee/views/pages/group_mesages_page.dart';
 import 'package:ion/app/features/chat/e2ee/views/pages/one_to_one_messages_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
@@ -344,6 +345,19 @@ class OneToOneMessagesRoute extends BaseRouteData {
 
   final String conversationId;
   final String receiverPubKey;
+}
+
+@TypedGoRoute<GroupMessagesRoute>(path: '/group-messages')
+class GroupMessagesRoute extends BaseRouteData {
+  GroupMessagesRoute({
+    required this.conversationId,
+  }) : super(
+          child: GroupMessagesPage(
+            conversationId: conversationId,
+          ),
+        );
+
+  final String conversationId;
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')
