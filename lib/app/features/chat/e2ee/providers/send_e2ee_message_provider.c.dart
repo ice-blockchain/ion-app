@@ -179,7 +179,7 @@ class ConversationMessageManagementService {
     String? subject,
   }) {
     final tags = [
-      if (subject != null && masterPubkeys.length > 1) ['subject', subject],
+      if (subject != null) ['subject', subject],
       ...masterPubkeys.map((pubkey) => ['p', pubkey]),
       [CommunityIdentifierTag.tagName, conversationId],
     ];
