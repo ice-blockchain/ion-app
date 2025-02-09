@@ -100,7 +100,7 @@ class EncryptedDirectMessagesPage extends HookConsumerWidget {
                   await conversationMessageManagementService.sendMessage(
                     conversationId: uuid,
                     content: content ?? '',
-                    participantsMasterkeys: [currentPubkey, receiverPubKey],
+                    participantsMasterkeys: [receiverPubKey, currentPubkey],
                   );
                 },
               ),
