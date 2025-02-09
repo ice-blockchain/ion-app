@@ -333,16 +333,16 @@ class WalletMainModalRoute extends BaseRouteData {
 @TypedGoRoute<OneToOneMessagesRoute>(path: '/one-to-one')
 class OneToOneMessagesRoute extends BaseRouteData {
   OneToOneMessagesRoute({
-    required this.uuid,
+    required this.conversationId,
     required this.receiverPubKey,
   }) : super(
           child: EncryptedDirectMessagesPage(
-            uuid: uuid,
+            conversationId: conversationId,
             receiverPubKey: receiverPubKey,
           ),
         );
 
-  final String uuid;
+  final String conversationId;
   final String receiverPubKey;
 }
 

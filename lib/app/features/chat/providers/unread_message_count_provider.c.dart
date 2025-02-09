@@ -8,7 +8,7 @@ part 'unread_message_count_provider.c.g.dart';
 @riverpod
 class UnreadMessageCountProvider extends _$UnreadMessageCountProvider {
   @override
-  Stream<int> build(String conversationUUID) {
-    return ref.watch(conversationMessageDaoProvider).getUnreadMessagesCount(conversationUUID);
+  Stream<int> build(String conversationId) {
+    return ref.watch(conversationMessageDaoProvider).getUnreadMessagesCount(conversationId);
   }
 }

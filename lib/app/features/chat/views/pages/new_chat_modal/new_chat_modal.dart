@@ -23,13 +23,13 @@ class NewChatModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final onUserSelected = useCallback(
       (UserMetadataEntity user) async {
-        final existConversationUUID = await ref
+        final conversationId = await ref
             .read(conversationDaoProvider)
             .getExistOnetOneConversationId(user.masterPubkey);
         if (context.mounted) {
           context.replace(
             OneToOneMessagesRoute(
-              uuid: existConversationUUID ?? generateUuid(),
+              conversationId: conversationId ?? generateUuid(),
               receiverPubKey: user.masterPubkey,
             ).location,
           );

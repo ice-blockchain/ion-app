@@ -9,7 +9,7 @@ part 'conversation_list_item.c.freezed.dart';
 @freezed
 class ConversationListItem with _$ConversationListItem {
   const factory ConversationListItem({
-    required String uuid,
+    required String conversationId,
     required ConversationType type,
     required DateTime joinedAt,
     required bool isArchived,

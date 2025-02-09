@@ -70,17 +70,17 @@ class ConversationList extends ConsumerWidget {
             if (conversation.type == ConversationType.community)
               CommunityRecentChatTile(
                 conversation: conversation,
-                key: ValueKey(conversation.uuid),
+                key: ValueKey(conversation.conversationId),
               )
             else if (conversation.type == ConversationType.oneToOne)
               E2eeRecentChatTile(
                 conversation: conversation,
-                key: ValueKey(conversation.uuid),
+                key: ValueKey(conversation.conversationId),
               )
             else if (conversation.type == ConversationType.group)
               EncryptedGroupRecentChatTile(
                 conversation: conversation,
-                key: ValueKey(conversation.uuid),
+                key: ValueKey(conversation.conversationId),
               ),
           ],
         );
@@ -97,9 +97,10 @@ class CommunityRecentChatTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final community = ref.watch(communityMetadataProvider(conversation.uuid)).valueOrNull;
+    final community = ref.watch(communityMetadataProvider(conversation.conversationId)).valueOrNull;
 
-    final unreadMessagesCount = ref.watch(unreadMessageCountProviderProvider(conversation.uuid));
+    final unreadMessagesCount =
+        ref.watch(unreadMessageCountProviderProvider(conversation.conversationId));
     if (community == null) {
       return const SizedBox.shrink();
     }
@@ -113,7 +114,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
       lastMessageContent: conversation.latestMessage?.content ?? context.i18n.empty_message_history,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
-        ChannelRoute(uuid: conversation.uuid).push<void>(context);
+        ChannelRoute(uuid: conversation.conversationId).push<void>(context);
       },
     );
   }
@@ -147,7 +148,8 @@ class E2eeRecentChatTile extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final unreadMessagesCount = ref.watch(unreadMessageCountProviderProvider(conversation.uuid));
+    final unreadMessagesCount =
+        ref.watch(unreadMessageCountProviderProvider(conversation.conversationId));
 
     return RecentChatTile(
       conversation: conversation,
@@ -159,7 +161,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
         OneToOneMessagesRoute(
-          uuid: conversation.uuid,
+          conversationId: conversation.conversationId,
           receiverPubKey: receiverPukeyKey,
         ).push<void>(context);
       },
@@ -182,7 +184,8 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
 
     final name = entity.relatedSubject?.value ?? '';
 
-    final unreadMessagesCount = ref.watch(unreadMessageCountProviderProvider(conversation.uuid));
+    final unreadMessagesCount =
+        ref.watch(unreadMessageCountProviderProvider(conversation.conversationId));
 
     final mediaService = useFuture(
       ref.watch(mediaServiceProvider).retreiveEncryptedMedia([
@@ -202,7 +205,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
           : entity.content.map((e) => e.text).join(),
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
-        ChannelRoute(uuid: conversation.uuid).push<void>(context);
+        ChannelRoute(uuid: conversation.conversationId).push<void>(context);
       },
     );
   }

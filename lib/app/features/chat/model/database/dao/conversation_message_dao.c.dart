@@ -13,14 +13,14 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
 
   /// Get a stream of the count of unread messages for a conversation
   ///
-  /// Takes a [conversationUUID] and returns a [Stream] of integers representing
+  /// Takes a [conversationId] and returns a [Stream] of integers representing
   /// the count of unread messages in that conversation.
   ///
   /// Only counts non-deleted messages in the specified conversation.
   /// TODO: integrate message_status table to properly track read/unread status
-  Stream<int> getUnreadMessagesCount(String conversationUUID) {
+  Stream<int> getUnreadMessagesCount(String conversationId) {
     final query = select(conversationMessageTable)
-      ..where((tbl) => tbl.conversationId.equals(conversationUUID))
+      ..where((tbl) => tbl.conversationId.equals(conversationId))
       ..where((tbl) => tbl.isDeleted.equals(false));
 
     return query.watch().map((rows) {
@@ -42,23 +42,23 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..where(conversationMessageTable.isDeleted.equals(false));
+      ..where(conversationMessageTable.isDeleted.equals(false))
+      ..orderBy([
+        OrderingTerm.asc(eventMessageTable.createdAt),
+      ]);
 
     return query.watch().map((rows) {
-      // Group messages by date
       final groupedMessages = <DateTime, List<EventMessage>>{};
 
       for (final row in rows) {
         final eventMessage = row.readTable(eventMessageTable).toEventMessage();
 
-        // Extract only the date part (ignoring time)
         final dateKey = DateTime(
           eventMessage.createdAt.year,
           eventMessage.createdAt.month,
           eventMessage.createdAt.day,
         );
 
-        // Add message to corresponding date group
         groupedMessages.putIfAbsent(dateKey, () => []).add(eventMessage);
       }
 

@@ -45,7 +45,8 @@ class ArchiveChatTile extends HookConsumerWidget {
                 names.add(userMetadata.data.displayName);
               }
             } else if (conversation.type == ConversationType.community) {
-              final community = await ref.read(communityMetadataProvider(conversation.uuid).future);
+              final community =
+                  await ref.read(communityMetadataProvider(conversation.conversationId).future);
               names.add(community.data.name);
             } else {
               final latestMessageEntity =
