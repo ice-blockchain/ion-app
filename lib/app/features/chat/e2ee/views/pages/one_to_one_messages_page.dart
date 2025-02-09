@@ -28,15 +28,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   final String receiverPubKey;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.displayErrors(conversationMessageManagementServiceProvider);
-
-    final receiver = ref.watch(userMetadataProvider(receiverPubKey)).valueOrNull;
-
-    final messages = ref.watch(conversationMessagesProvider(conversationId));
-
-    if (receiver == null) {
-      return const SizedBox.shrink();
-    }
+    ref.displayErrors(sendE2eeMessageServiceProvider);
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -48,45 +40,8 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           bottom: false,
           child: Column(
             children: [
-              MessagingHeader(
-                imageUrl: receiver.data.picture,
-                name: receiver.data.displayName,
-                subtitle: Text(
-                  prefixUsername(username: receiver.data.name, context: context),
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.quaternaryText,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: messages.when(
-                  data: (messages) {
-                    if (messages.isEmpty) {
-                      return MessagingEmptyView(
-                        title: context.i18n.messaging_empty_description,
-                        asset: Assets.svg.walletChatEmptystate,
-                        trailing: GestureDetector(
-                          onTap: () {
-                            ChatLearnMoreModalRoute().push<void>(context);
-                          },
-                          child: Text(
-                            context.i18n.button_learn_more,
-                            style: context.theme.appTextThemes.caption.copyWith(
-                              color: context.theme.appColors.primaryAccent,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-
-                    return ChatMessagesList(messages);
-                  },
-                  loading: () => const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
-              ),
+              _Header(receiverPubKey: receiverPubKey),
+              _MessagesList(conversationId: conversationId),
               MessagingBottomBar(
                 onSubmitted: (content) async {
                   final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
@@ -95,7 +50,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
                   }
 
                   final conversationMessageManagementService =
-                      await ref.read(conversationMessageManagementServiceProvider.future);
+                      await ref.read(sendE2eeMessageServiceProvider.future);
 
                   await conversationMessageManagementService.sendMessage(
                     conversationId: conversationId,
@@ -107,6 +62,70 @@ class OneToOneMessagesPage extends HookConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _Header extends HookConsumerWidget {
+  const _Header({required this.receiverPubKey});
+
+  final String receiverPubKey;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final receiver = ref.watch(userMetadataProvider(receiverPubKey)).valueOrNull;
+
+    if (receiver == null) {
+      return const SizedBox.shrink();
+    }
+
+    return MessagingHeader(
+      imageUrl: receiver.data.picture,
+      name: receiver.data.displayName,
+      subtitle: Text(
+        prefixUsername(username: receiver.data.name, context: context),
+        style: context.theme.appTextThemes.caption.copyWith(
+          color: context.theme.appColors.quaternaryText,
+        ),
+      ),
+    );
+  }
+}
+
+class _MessagesList extends HookConsumerWidget {
+  const _MessagesList({required this.conversationId});
+
+  final String conversationId;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final messages = ref.watch(conversationMessagesProvider(conversationId));
+    return Expanded(
+      child: messages.when(
+        data: (messages) {
+          if (messages.isEmpty) {
+            return MessagingEmptyView(
+              title: context.i18n.messaging_empty_description,
+              asset: Assets.svg.walletChatEmptystate,
+              trailing: GestureDetector(
+                onTap: () {
+                  ChatLearnMoreModalRoute().push<void>(context);
+                },
+                child: Text(
+                  context.i18n.button_learn_more,
+                  style: context.theme.appTextThemes.caption.copyWith(
+                    color: context.theme.appColors.primaryAccent,
+                  ),
+                ),
+              ),
+            );
+          }
+
+          return ChatMessagesList(messages);
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator.adaptive(),
+        ),
+        error: (_, __) => const SizedBox.shrink(),
       ),
     );
   }

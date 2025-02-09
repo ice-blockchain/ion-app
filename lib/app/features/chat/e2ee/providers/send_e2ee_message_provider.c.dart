@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 
-import 'package:cryptography/cryptography.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
@@ -24,18 +21,17 @@ import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_e2ee_message_provider.c.g.dart';
 
 @riverpod
-Future<ConversationMessageManagementService> conversationMessageManagementService(
+Future<SendE2eeMessageService> sendE2eeMessageService(
   Ref ref,
 ) async {
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
-  return ConversationMessageManagementService(
+  return SendE2eeMessageService(
     eventSigner: eventSigner,
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
@@ -45,11 +41,12 @@ Future<ConversationMessageManagementService> conversationMessageManagementServic
     wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
     ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
+    mediaService: ref.watch(mediaServiceProvider),
   );
 }
 
-class ConversationMessageManagementService {
-  ConversationMessageManagementService({
+class SendE2eeMessageService {
+  SendE2eeMessageService({
     required this.env,
     required this.wrapService,
     required this.sealService,
@@ -59,6 +56,7 @@ class ConversationMessageManagementService {
     required this.compressionService,
     required this.ionConnectUploadNotifier,
     required this.conversationPubkeysNotifier,
+    required this.mediaService,
   });
 
   final Env env;
@@ -70,7 +68,7 @@ class ConversationMessageManagementService {
   final CompressionService compressionService;
   final IonConnectUploadNotifier ionConnectUploadNotifier;
   final ConversationPubkeys conversationPubkeysNotifier;
-
+  final MediaService mediaService;
   Future<void> sendMessage({
     required String content,
     required String conversationId,
@@ -103,7 +101,7 @@ class ConversationMessageManagementService {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
 
-            final encryptedMediaFiles = await _encryptMediaFiles(compressedMediaFiles);
+            final encryptedMediaFiles = await mediaService.encryptMediaFiles(compressedMediaFiles);
 
             final uploadedMediaFilesWithKeys = await Future.wait(
               encryptedMediaFiles.map((encryptedMediaFile) async {
@@ -280,53 +278,6 @@ class ConversationMessageManagementService {
     );
 
     return compressedMediaFiles;
-  }
-
-  Future<List<(MediaFile, String, String, String)>> _encryptMediaFiles(
-    List<MediaFile> compressedMediaFiles,
-  ) async {
-    final documentsDir = await getApplicationDocumentsDirectory();
-    final encryptedMediaFiles = await Future.wait(
-      compressedMediaFiles.map(
-        (compressedMediaFile) => Isolate.run<(MediaFile, String, String, String)>(() async {
-          final secretKey = await AesGcm.with256bits().newSecretKey();
-          final secretKeyBytes = await secretKey.extractBytes();
-          final secretKeyString = base64Encode(secretKeyBytes);
-
-          final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
-
-          final secretBox = await AesGcm.with256bits().encrypt(
-            compressedMediaFileBytes,
-            secretKey: secretKey,
-          );
-
-          final nonceBytes = secretBox.nonce;
-          final nonceString = base64Encode(nonceBytes);
-          final macString = base64Encode(secretBox.mac.bytes);
-
-          final compressedEncryptedFile =
-              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
-
-          await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
-
-          final compressedEncryptedMediaFile = MediaFile(
-            path: compressedEncryptedFile.path,
-            width: compressedMediaFile.width,
-            height: compressedMediaFile.height,
-            mimeType: compressedMediaFile.mimeType,
-          );
-
-          return (
-            compressedEncryptedMediaFile,
-            secretKeyString,
-            nonceString,
-            macString,
-          );
-        }),
-      ),
-    );
-
-    return encryptedMediaFiles;
   }
 
   List<List<String>> _generateImetaTags(

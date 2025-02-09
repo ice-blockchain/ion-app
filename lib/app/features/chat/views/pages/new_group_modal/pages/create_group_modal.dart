@@ -49,8 +49,8 @@ class CreateGroupModal extends HookConsumerWidget {
           ]
         : <String>[];
 
-    final sendE2eeMessageNotifier = ref.watch(conversationMessageManagementServiceProvider);
-    ref.displayErrors(conversationMessageManagementServiceProvider);
+    final sendE2eeMessageNotifier = ref.watch(sendE2eeMessageServiceProvider);
+    ref.displayErrors(sendE2eeMessageServiceProvider);
 
     useEffect(
       () {
@@ -198,7 +198,7 @@ class CreateGroupModal extends HookConsumerWidget {
                       );
 
                       final conversationMessageManagementService =
-                          await ref.read(conversationMessageManagementServiceProvider.future);
+                          await ref.read(sendE2eeMessageServiceProvider.future);
 
                       await conversationMessageManagementService.sendMessage(
                         conversationId: generateUuid(),

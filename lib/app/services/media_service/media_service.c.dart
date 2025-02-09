@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:ui' as ui;
 
 import 'package:cryptography/cryptography.dart';
@@ -22,6 +23,7 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -287,6 +289,53 @@ class MediaService {
       }
     }
     return decryptedDecompressedFiles;
+  }
+
+  Future<List<(MediaFile, String, String, String)>> encryptMediaFiles(
+    List<MediaFile> compressedMediaFiles,
+  ) async {
+    final documentsDir = await getApplicationDocumentsDirectory();
+    final encryptedMediaFiles = await Future.wait(
+      compressedMediaFiles.map(
+        (compressedMediaFile) => Isolate.run<(MediaFile, String, String, String)>(() async {
+          final secretKey = await AesGcm.with256bits().newSecretKey();
+          final secretKeyBytes = await secretKey.extractBytes();
+          final secretKeyString = base64Encode(secretKeyBytes);
+
+          final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
+
+          final secretBox = await AesGcm.with256bits().encrypt(
+            compressedMediaFileBytes,
+            secretKey: secretKey,
+          );
+
+          final nonceBytes = secretBox.nonce;
+          final nonceString = base64Encode(nonceBytes);
+          final macString = base64Encode(secretBox.mac.bytes);
+
+          final compressedEncryptedFile =
+              File('${documentsDir.path}/${compressedMediaFileBytes.hashCode}.enc');
+
+          await compressedEncryptedFile.writeAsBytes(secretBox.cipherText);
+
+          final compressedEncryptedMediaFile = MediaFile(
+            path: compressedEncryptedFile.path,
+            width: compressedMediaFile.width,
+            height: compressedMediaFile.height,
+            mimeType: compressedMediaFile.mimeType,
+          );
+
+          return (
+            compressedEncryptedMediaFile,
+            secretKeyString,
+            nonceString,
+            macString,
+          );
+        }),
+      ),
+    );
+
+    return encryptedMediaFiles;
   }
 }
 
