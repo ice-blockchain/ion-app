@@ -9,6 +9,6 @@ part 'unread_message_count_provider.c.g.dart';
 class UnreadMessageCountProvider extends _$UnreadMessageCountProvider {
   @override
   Stream<int> build(String conversationUUID) {
-    return ref.watch(chatMessageTableDaoProvider).getUnreadMessagesCount(conversationUUID);
+    return ref.watch(conversationMessageDaoProvider).getUnreadMessagesCount(conversationUUID);
   }
 }

@@ -33,7 +33,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     }
 
     final latestEventMessageDate = await ref
-        .watch(conversationTableDaoProvider)
+        .watch(conversationEventMessageDaoProvider)
         .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
 
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
@@ -84,9 +84,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       if (rumor != null) {
         if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName)) {
           if (rumor.kind == PrivateDirectMessageEntity.kind) {
-            await ref.watch(conversationTableDaoProvider).add([rumor]);
+            await ref.watch(conversationDaoProvider).add([rumor]);
           }
-          await ref.watch(eventMessageTableDaoProvider).add(rumor);
+          await ref.watch(conversationEventMessageDaoProvider).add(rumor);
         }
       }
     });

@@ -10,6 +10,6 @@ part 'conversation_messages_provider.c.g.dart';
 class ConversationMessages extends _$ConversationMessages {
   @override
   Stream<Map<DateTime, List<EventMessage>>> build(String conversationId) {
-    return ref.watch(conversationTableDaoProvider).getMessages(conversationId);
+    return ref.watch(conversationMessageDaoProvider).getMessages(conversationId);
   }
 }

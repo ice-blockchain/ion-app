@@ -21,7 +21,7 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
     final communityIds = joinedCommunities.accepted.map((e) => e.data.uuid).toList();
 
     final latestEventMessageDate = await ref
-        .watch(conversationTableDaoProvider)
+        .watch(conversationEventMessageDaoProvider)
         .getLatestEventMessageDate(ModifiablePostEntity.kind);
 
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
@@ -63,7 +63,7 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
       },
     ).listen((event) {
       if (event.kind == ModifiablePostEntity.kind) {
-        ref.watch(eventMessageTableDaoProvider).add(event);
+        ref.watch(conversationEventMessageDaoProvider).add(event);
       }
     });
   }

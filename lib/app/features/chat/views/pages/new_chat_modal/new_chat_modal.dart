@@ -24,8 +24,8 @@ class NewChatModal extends HookConsumerWidget {
     final onUserSelected = useCallback(
       (UserMetadataEntity user) async {
         final existConversationUUID = await ref
-            .read(conversationTableDaoProvider)
-            .getExistingOneToOneConversation(user.masterPubkey);
+            .read(conversationDaoProvider)
+            .getExistOnetOneConversationId(user.masterPubkey);
         if (context.mounted) {
           context.replace(
             OneToOneMessagesRoute(
