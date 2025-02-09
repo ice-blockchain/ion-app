@@ -17,8 +17,8 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class EncryptedDirectMessagesPage extends HookConsumerWidget {
-  const EncryptedDirectMessagesPage({
+class OneToOneMessagesPage extends HookConsumerWidget {
+  const OneToOneMessagesPage({
     required this.conversationId,
     required this.receiverPubKey,
     super.key,
