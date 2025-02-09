@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -32,35 +31,33 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
-      body: KeyboardDismissOnTap(
-        child: SafeArea(
-          minimum: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
-          ),
-          bottom: false,
-          child: Column(
-            children: [
-              _Header(receiverMasterPubKey: receiverPubKey),
-              _MessagesList(conversationId: conversationId),
-              MessagingBottomBar(
-                onSubmitted: (content) async {
-                  final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
-                  if (currentPubkey == null) {
-                    throw UserMasterPubkeyNotFoundException();
-                  }
+      body: SafeArea(
+        minimum: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
+        ),
+        bottom: false,
+        child: Column(
+          children: [
+            _Header(receiverMasterPubKey: receiverPubKey),
+            _MessagesList(conversationId: conversationId),
+            MessagingBottomBar(
+              onSubmitted: (content) async {
+                final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+                if (currentPubkey == null) {
+                  throw UserMasterPubkeyNotFoundException();
+                }
 
-                  final conversationMessageManagementService =
-                      await ref.read(sendE2eeMessageServiceProvider.future);
+                final conversationMessageManagementService =
+                    await ref.read(sendE2eeMessageServiceProvider.future);
 
-                  await conversationMessageManagementService.sendMessage(
-                    conversationId: conversationId,
-                    content: content ?? '',
-                    participantsMasterkeys: [receiverPubKey, currentPubkey],
-                  );
-                },
-              ),
-            ],
-          ),
+                await conversationMessageManagementService.sendMessage(
+                  conversationId: conversationId,
+                  content: content ?? '',
+                  participantsMasterkeys: [receiverPubKey, currentPubkey],
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
