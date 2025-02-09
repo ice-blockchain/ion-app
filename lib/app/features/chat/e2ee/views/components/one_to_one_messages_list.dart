@@ -47,6 +47,9 @@ class OneToOneMessageList extends HookConsumerWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, msgIndex) {
                     final message = entry.value[msgIndex];
+                    if (message.content.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
                     final previousMessage = msgIndex > 0 ? entry.value[msgIndex - 1] : null;
                     final isLastMessage = msgIndex == entry.value.length - 1;
 

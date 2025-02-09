@@ -205,7 +205,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
           : entity.content.map((e) => e.text).join(),
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
-        ChannelRoute(uuid: conversation.conversationId).push<void>(context);
+        GroupMessagesRoute(conversationId: conversation.conversationId).push<void>(context);
       },
     );
   }

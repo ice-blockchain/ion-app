@@ -17,8 +17,22 @@ class CommunityMemberCountTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(communityMembersCountProvider(community)).valueOrNull;
+    final count = ref.watch(communityMembersCountProvider(community)).valueOrNull ?? 0;
 
+    return MemberCountTile(count: count);
+  }
+}
+
+class MemberCountTile extends HookConsumerWidget {
+  const MemberCountTile({
+    required this.count,
+    super.key,
+  });
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -32,7 +46,7 @@ class CommunityMemberCountTile extends HookConsumerWidget {
         Padding(
           padding: EdgeInsets.only(left: 3.0.s),
           child: Text(
-            count?.toString() ?? '',
+            count.toString(),
             style: context.theme.appTextThemes.caption.copyWith(
               color: context.theme.appColors.quaternaryText,
             ),
