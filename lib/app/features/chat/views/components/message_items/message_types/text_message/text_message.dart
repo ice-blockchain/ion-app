@@ -5,10 +5,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/providers/is_current_user_event_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 
 class TextMessage extends HookConsumerWidget {
   const TextMessage({
@@ -23,12 +23,9 @@ class TextMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserPubkey =
-        ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull?.publicKey;
-
     final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
 
-    final isMe = eventMessage.pubkey == currentUserPubkey;
+    final isMe = ref.watch(isCurrentUserEventProvider(eventMessage)).valueOrNull ?? false;
 
     return MessageItemWrapper(
       isLastMessageFromAuthor: isLastMessageFromAuthor,
@@ -68,10 +65,7 @@ class TextMessage extends HookConsumerWidget {
                     ],
                   ),
                 ),
-                MessageMetaData(
-                  isMe: isMe,
-                  createdAt: eventMessage.createdAt,
-                ),
+                MessageMetaData(eventMessage: eventMessage),
               ],
             ),
           ],

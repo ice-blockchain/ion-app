@@ -11,7 +11,6 @@ import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
@@ -134,11 +133,9 @@ class AudioMessage extends HookConsumerWidget {
                 ),
               ],
             ),
-            MessageMetaData(
-              key: metadataKey,
-              isMe: isMe,
-              createdAt: createdAt,
-            ),
+            // MessageMetaData(
+            //   eventMessage: eventMessage,
+            // ),
           ],
         ),
       ),

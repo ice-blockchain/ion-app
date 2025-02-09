@@ -51,7 +51,7 @@ class PollResultMessage extends StatelessWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe, createdAt: createdAt),
+              // MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),
         ],
