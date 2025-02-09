@@ -18,33 +18,33 @@ import 'package:ion/app/features/chat/providers/conversation_messages_provider.c
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
-import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ChannelPage extends HookConsumerWidget {
-  const ChannelPage({
-    required this.uuid,
+class ChannelMessagingPage extends HookConsumerWidget {
+  const ChannelMessagingPage({
+    required this.communityId,
     super.key,
   });
 
-  final String uuid;
+  final String communityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final channel = ref.watch(communityMetadataProvider(uuid)).valueOrNull;
-    final communities = ref.watch(communityJoinRequestsProvider).valueOrNull;
+    final channel = ref.watch(communityMetadataProvider(communityId)).valueOrNull;
+    final joinRequests = ref.watch(communityJoinRequestsProvider).valueOrNull;
     final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
     final isJoined = useMemoized(
-        () => communities?.accepted.any((community) => community.data.uuid == uuid) ?? false, [
-      communities,
-      uuid,
-    ]);
+        () =>
+            joinRequests?.accepted.any((community) => community.data.uuid == communityId) ?? false,
+        [
+          joinRequests,
+          communityId,
+        ]);
 
-    final messages = ref.watch(conversationMessagesProvider(uuid));
+    final messages = ref.watch(conversationMessagesProvider(communityId));
 
     final canPost = useCanPostToChannel(channel: channel, currentPubkey: currentPubkey);
 
@@ -62,7 +62,7 @@ class ChannelPage extends HookConsumerWidget {
         child: Column(
           children: [
             MessagingHeader(
-              onTap: () => ChannelDetailRoute(uuid: uuid).push<void>(context),
+              onTap: () => ChannelDetailRoute(uuid: communityId).push<void>(context),
               imageWidget:
                   channel.data.avatar?.url != null ? Image.network(channel.data.avatar!.url) : null,
               name: channel.data.name,
@@ -91,38 +91,7 @@ class ChannelPage extends HookConsumerWidget {
                       ),
                     );
                   } else {
-                    return ListView.builder(
-                      itemCount: messages.entries.length,
-                      itemBuilder: (context, index) {
-                        final date = messages.entries.toList()[index].key;
-                        final messagesForDate = messages.entries.toList()[index].value;
-
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 12.0.s),
-                              child: ChatDateHeaderText(date: date),
-                            ),
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: messagesForDate.length,
-                              separatorBuilder: (context, index) => SizedBox(height: 8.0.s),
-                              itemBuilder: (context, msgIndex) {
-                                final message = messagesForDate[msgIndex];
-
-                                final post = ModifiablePostEntity.fromEventMessage(message);
-
-                                return PostBody(
-                                  entity: post,
-                                );
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    return const SizedBox();
                   }
                 },
                 error: (error, stack) {
@@ -133,7 +102,7 @@ class ChannelPage extends HookConsumerWidget {
                 },
               ),
             ),
-            if (communities != null)
+            if (joinRequests != null)
               if (isJoined)
                 if (canPost)
                   MessagingBottomBar(
@@ -142,40 +111,62 @@ class ChannelPage extends HookConsumerWidget {
                           .read(createPostNotifierProvider(CreatePostOption.community).notifier)
                           .create(
                             content: content ?? '',
-                            communtiyId: uuid,
+                            communtiyId: communityId,
                             whoCanReply: WhoCanReplySettingsOption.everyone,
                           );
                     },
                   )
                 else
-                  ScreenSideOffset.large(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                      child: Button(
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () {},
-                        label: Text(context.i18n.button_unmute),
-                      ),
-                    ),
-                  )
+                  const _UnMuteButton()
               else
-                ScreenSideOffset.large(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0.s),
-                    child: Button(
-                      mainAxisSize: MainAxisSize.max,
-                      onPressed: () {
-                        ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(uuid);
-                      },
-                      label: Text(context.i18n.channel_join),
-                      leadingIcon: Assets.svg.iconMenuLogout.icon(
-                        color: context.theme.appColors.onPrimaryAccent,
-                        size: 24.0.s,
-                      ),
-                    ),
-                  ),
-                ),
+                _JoinButton(communityId: communityId),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _UnMuteButton extends HookConsumerWidget {
+  const _UnMuteButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ScreenSideOffset.large(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0.s),
+        child: Button(
+          mainAxisSize: MainAxisSize.max,
+          onPressed: () {},
+          label: Text(context.i18n.button_unmute),
+        ),
+      ),
+    );
+  }
+}
+
+class _JoinButton extends HookConsumerWidget {
+  const _JoinButton({
+    required this.communityId,
+  });
+
+  final String communityId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ScreenSideOffset.large(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 16.0.s),
+        child: Button(
+          mainAxisSize: MainAxisSize.max,
+          onPressed: () {
+            ref.read(joinCommunityNotifierProvider.notifier).joinCommunity(communityId);
+          },
+          label: Text(context.i18n.channel_join),
+          leadingIcon: Assets.svg.iconMenuLogout.icon(
+            color: context.theme.appColors.onPrimaryAccent,
+            size: 24.0.s,
+          ),
         ),
       ),
     );

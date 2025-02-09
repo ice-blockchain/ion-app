@@ -10,8 +10,8 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 
-class ChatMessagesList extends HookConsumerWidget {
-  const ChatMessagesList(
+class OneToOneMessageList extends HookConsumerWidget {
+  const OneToOneMessageList(
     this.messages, {
     super.key,
     this.displayAuthorsIncomingMessages = false,
@@ -47,8 +47,20 @@ class ChatMessagesList extends HookConsumerWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, msgIndex) {
                     final message = entry.value[msgIndex];
+                    final previousMessage = msgIndex > 0 ? entry.value[msgIndex - 1] : null;
+                    final isLastMessage = msgIndex == entry.value.length - 1;
+
+                    final isLastMessageFromAuthor =
+                        previousMessage == null || previousMessage.pubkey == message.pubkey;
+
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 8.0.s),
+                      padding: EdgeInsets.only(
+                        bottom: isLastMessage
+                            ? 20.0.s
+                            : isLastMessageFromAuthor
+                                ? 8.0.s
+                                : 12.0.s,
+                      ),
                       child: TextMessage(eventMessage: message),
                     );
                   },

@@ -12,8 +12,8 @@ part of 'app_routes.c.dart';
 class ChannelRoute extends BaseRouteData {
   ChannelRoute({required this.uuid})
       : super(
-          child: ChannelPage(
-            uuid: uuid,
+          child: ChannelMessagingPage(
+            communityId: uuid,
           ),
         );
 

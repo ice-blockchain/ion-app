@@ -53,15 +53,4 @@ class ChatDatabase extends _$ChatDatabase {
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'chat_database_$pubkey');
   }
-
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-        beforeOpen: (openingDetails) async {
-          final m = Migrator(this);
-          for (final table in allTables) {
-            await m.deleteTable(table.actualTableName);
-            await m.createTable(table);
-          }
-        },
-      );
 }
