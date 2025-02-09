@@ -40,7 +40,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           bottom: false,
           child: Column(
             children: [
-              _Header(receiverPubKey: receiverPubKey),
+              _Header(receiverMasterPubKey: receiverPubKey),
               _MessagesList(conversationId: conversationId),
               MessagingBottomBar(
                 onSubmitted: (content) async {
@@ -68,12 +68,12 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 }
 
 class _Header extends HookConsumerWidget {
-  const _Header({required this.receiverPubKey});
+  const _Header({required this.receiverMasterPubKey});
 
-  final String receiverPubKey;
+  final String receiverMasterPubKey;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final receiver = ref.watch(userMetadataProvider(receiverPubKey)).valueOrNull;
+    final receiver = ref.watch(userMetadataProvider(receiverMasterPubKey)).valueOrNull;
 
     if (receiver == null) {
       return const SizedBox.shrink();
@@ -103,29 +103,35 @@ class _MessagesList extends HookConsumerWidget {
       child: messages.when(
         data: (messages) {
           if (messages.isEmpty) {
-            return MessagingEmptyView(
-              title: context.i18n.messaging_empty_description,
-              asset: Assets.svg.walletChatEmptystate,
-              trailing: GestureDetector(
-                onTap: () {
-                  ChatLearnMoreModalRoute().push<void>(context);
-                },
-                child: Text(
-                  context.i18n.button_learn_more,
-                  style: context.theme.appTextThemes.caption.copyWith(
-                    color: context.theme.appColors.primaryAccent,
-                  ),
-                ),
-              ),
-            );
+            return const _EmptyView();
           }
-
           return ChatMessagesList(messages);
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
+        loading: () => const SizedBox.shrink(),
         error: (_, __) => const SizedBox.shrink(),
+      ),
+    );
+  }
+}
+
+class _EmptyView extends HookConsumerWidget {
+  const _EmptyView();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MessagingEmptyView(
+      title: context.i18n.messaging_empty_description,
+      asset: Assets.svg.walletChatEmptystate,
+      trailing: GestureDetector(
+        onTap: () {
+          ChatLearnMoreModalRoute().push<void>(context);
+        },
+        child: Text(
+          context.i18n.button_learn_more,
+          style: context.theme.appTextThemes.caption.copyWith(
+            color: context.theme.appColors.primaryAccent,
+          ),
+        ),
       ),
     );
   }

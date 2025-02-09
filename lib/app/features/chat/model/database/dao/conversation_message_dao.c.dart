@@ -43,6 +43,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
       ..where(conversationMessageTable.isDeleted.equals(false))
+      ..where(eventMessageTable.content.isNotValue(''))
       ..orderBy([
         OrderingTerm.asc(eventMessageTable.createdAt),
       ]);
