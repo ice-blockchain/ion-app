@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
+import 'package:ion/app/features/feed/views/components/post/components/deleted_post/deleted_post.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/quoted_entity_frame/quoted_entity_frame.dart';
@@ -53,6 +54,10 @@ class Post extends ConsumerWidget {
 
     if (entity == null) {
       return const Skeleton(child: PostSkeleton());
+    }
+
+    if (entity is ModifiablePostEntity && entity.isDeleted) {
+      return const DeletedPost();
     }
 
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
@@ -169,13 +174,13 @@ final class _QuotedPost extends ConsumerWidget {
   }
 }
 
-final class _QuotedArticle extends ConsumerWidget {
+final class _QuotedArticle extends StatelessWidget {
   const _QuotedArticle({required this.eventReference});
 
   final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return QuotedEntityFrame.article(
       child: GestureDetector(
         onTap: () {
