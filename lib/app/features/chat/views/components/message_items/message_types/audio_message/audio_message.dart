@@ -133,6 +133,7 @@ class AudioMessage extends HookConsumerWidget {
                 ),
               ],
             ),
+            //TODO: add metadata
             // MessageMetaData(
             //   eventMessage: eventMessage,
             // ),
