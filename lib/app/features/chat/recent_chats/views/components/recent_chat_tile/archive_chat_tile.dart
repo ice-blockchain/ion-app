@@ -5,15 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/hooks/use_combined_conversation_names.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
-import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -31,35 +28,7 @@ class ArchiveChatTile extends HookConsumerWidget {
       [selectedConversations, conversations],
     );
 
-    final combinedConversationNames = useFuture(
-      useMemoized(
-        () async {
-          final names = <String>[];
-          for (final conversation in conversations) {
-            if (conversation.type == ConversationType.oneToOne) {
-              final latestMessageEntity =
-                  PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
-              final receiver = latestMessageEntity.relatedPubkeys!.last.value;
-              final userMetadata = await ref.read(userMetadataProvider(receiver).future);
-              if (userMetadata != null) {
-                names.add(userMetadata.data.displayName);
-              }
-            } else if (conversation.type == ConversationType.community) {
-              final community =
-                  await ref.read(communityMetadataProvider(conversation.conversationId).future);
-              names.add(community.data.name);
-            } else {
-              final latestMessageEntity =
-                  PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
-              names.add(latestMessageEntity.relatedSubject?.value ?? '');
-            }
-          }
-
-          return names.join(', ');
-        },
-        [conversations],
-      ),
-    );
+    final combinedConversationNames = useCombinedConversationNames(conversations, ref);
 
     final latestMessageAt = useMemoized(
       () => conversations.isEmpty
@@ -70,9 +39,7 @@ class ArchiveChatTile extends HookConsumerWidget {
       [conversations],
     );
 
-    if (conversations.isEmpty ||
-        combinedConversationNames.data == null ||
-        combinedConversationNames.data!.isEmpty) {
+    if (conversations.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -133,7 +100,7 @@ class ArchiveChatTile extends HookConsumerWidget {
                             children: [
                               Expanded(
                                 child: ChatPreview(
-                                  content: combinedConversationNames.data ?? '',
+                                  content: combinedConversationNames,
                                   maxLines: 1,
                                 ),
                               ),
