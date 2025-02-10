@@ -91,7 +91,10 @@ class ChannelMessagingPage extends HookConsumerWidget {
                       ),
                     );
                   } else {
-                    return const SizedBox();
+                    return ColoredBox(
+                      color: context.theme.appColors.primaryBackground,
+                      child: const SizedBox.expand(),
+                    );
                   }
                 },
                 error: (error, stack) {
