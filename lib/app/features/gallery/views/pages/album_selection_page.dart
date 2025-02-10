@@ -14,63 +14,72 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class AlbumSelectionPage extends ConsumerWidget {
   const AlbumSelectionPage({
     required this.type,
+    this.isBottomSheet = false,
     super.key,
   });
 
   final MediaPickerType type;
+  final bool isBottomSheet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final albumsAsync = ref.watch(albumsProvider(type: type));
     final currentAlbum = ref.watch(galleryNotifierProvider(type: type)).valueOrNull?.selectedAlbum;
 
-    return SheetContent(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            primary: false,
-            flexibleSpace: NavigationAppBar.modal(
-              title: Text(
-                context.i18n.gallery_albums_select_title,
-                style: context.theme.appTextThemes.subtitle,
-              ),
-              onBackPress: () => context.pop(),
+    final content = CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          primary: false,
+          flexibleSpace: NavigationAppBar.modal(
+            title: Text(
+              context.i18n.gallery_albums_select_title,
+              style: context.theme.appTextThemes.subtitle,
             ),
-            automaticallyImplyLeading: false,
-            toolbarHeight: NavigationAppBar.modalHeaderHeight,
-            pinned: true,
+            onBackPress: () => context.pop(),
           ),
-          SliverPadding(padding: EdgeInsets.only(top: 12.0.s)),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              childCount: albumsAsync.valueOrNull?.length ?? 0,
-              (context, index) {
-                final albums = albumsAsync.valueOrNull;
-                if (albums == null) {
-                  return const SizedBox.shrink();
-                }
+          automaticallyImplyLeading: false,
+          toolbarHeight: NavigationAppBar.modalHeaderHeight,
+          pinned: true,
+        ),
+        SliverPadding(padding: EdgeInsets.only(top: 12.0.s)),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            childCount: albumsAsync.valueOrNull?.length ?? 0,
+            (context, index) {
+              final albums = albumsAsync.valueOrNull;
+              if (albums == null) {
+                return const SizedBox.shrink();
+              }
 
-                if (index >= albums.length) return null;
+              if (index >= albums.length) return null;
 
-                final album = albums[index];
-                final isSelected = (album.id == currentAlbum?.id);
+              final album = albums[index];
+              final isSelected = (album.id == currentAlbum?.id);
 
-                return AlbumItem(
-                  albumId: album.id,
-                  name: album.name,
-                  assetCount: album.assetCount,
-                  isAll: album.isAll,
-                  isSelected: isSelected,
-                  onTap: () {
-                    ref.read(galleryNotifierProvider(type: type).notifier).selectAlbum(album);
-                    context.pop();
-                  },
-                );
-              },
-            ),
+              return AlbumItem(
+                albumId: album.id,
+                name: album.name,
+                assetCount: album.assetCount,
+                isAll: album.isAll,
+                isSelected: isSelected,
+                onTap: () {
+                  ref.read(galleryNotifierProvider(type: type).notifier).selectAlbum(album);
+                  context.pop();
+                },
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
+
+    return isBottomSheet
+        ? SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.9,
+            child: content,
+          )
+        : SheetContent(
+            body: content,
+          );
   }
 }

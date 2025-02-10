@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class LoadMoreBuilder extends HookWidget {
   LoadMoreBuilder({
@@ -11,6 +12,7 @@ class LoadMoreBuilder extends HookWidget {
     required this.hasMore,
     Widget Function(BuildContext context, List<Widget> slivers)? builder,
     this.loadMoreOffset,
+    this.forceLoadMore = false,
     super.key,
   }) : builder = builder ??
             ((BuildContext context, List<Widget> slivers) => CustomScrollView(slivers: slivers));
@@ -25,12 +27,33 @@ class LoadMoreBuilder extends HookWidget {
 
   final bool hasMore;
 
+  final bool forceLoadMore;
+
   @override
   Widget build(BuildContext context) {
     final loading = useState(false);
 
+    final loadMore = useCallback(
+      () {
+        if (hasMore && !loading.value) {
+          loading.value = true;
+          onLoadMore().whenComplete(() => loading.value = false);
+        }
+      },
+      [hasMore, loading.value, onLoadMore],
+    );
+
+    useOnInit(
+      () {
+        if (forceLoadMore) {
+          loadMore();
+        }
+      },
+      [forceLoadMore, loadMore],
+    );
+
     return NotificationListener<ScrollNotification>(
-      onNotification: (notification) => _onMetricsChanged(notification, loading),
+      onNotification: (notification) => _onMetricsChanged(notification, loadMore),
       child: builder(
         context,
         loading.value
@@ -50,13 +73,12 @@ class LoadMoreBuilder extends HookWidget {
 
   bool _onMetricsChanged(
     ScrollNotification notification,
-    ValueNotifier<bool> loading,
+    void Function() loadMore,
   ) {
     final metrics = notification.metrics;
     final loadMoreOffset = this.loadMoreOffset ?? metrics.viewportDimension;
-    if (hasMore && !loading.value && metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
-      loading.value = true;
-      onLoadMore().whenComplete(() => loading.value = false);
+    if (metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
+      loadMore();
     }
     return true;
   }
