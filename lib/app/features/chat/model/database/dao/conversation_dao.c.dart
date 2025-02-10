@@ -54,6 +54,23 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     });
   }
 
+  ///
+  /// Adds a community conversation to the database
+  ///
+  /// Takes a [CommunityDefinitionData] and inserts a new conversation into the database
+  /// with the community's UUID as the ID, type set to [ConversationType.community],
+  /// and the current date as the joinedAt timestamp
+  ///
+  Future<void> addCommunityConversation(String communityId) async {
+    await into(conversationTable).insert(
+      ConversationTableCompanion(
+        id: Value(communityId),
+        type: const Value(ConversationType.community),
+        joinedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
   /// Watch the list of conversations sorted by latest activity
   ///
   /// Returns a stream of [ConversationListItem] sorted by:
