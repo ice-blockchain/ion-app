@@ -20,8 +20,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
   /// TODO: integrate message_status table to properly track read/unread status
   Stream<int> getUnreadMessagesCount(String conversationId) {
     final query = select(conversationMessageTable)
-      ..where((tbl) => tbl.conversationId.equals(conversationId))
-      ..where((tbl) => tbl.isDeleted.equals(false));
+      ..where((tbl) => tbl.conversationId.equals(conversationId));
 
     return query.watch().map((rows) {
       return rows.length;
@@ -42,7 +41,6 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..where(conversationMessageTable.isDeleted.equals(false))
       ..orderBy([
         OrderingTerm.asc(eventMessageTable.createdAt),
       ]);

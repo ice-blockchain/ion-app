@@ -138,7 +138,6 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
       ..where(conversationTable.isDeleted.equals(false))
       ..where(eventMessageTable.tags.contains(receiverMasterPubkey))
       ..where(eventMessageTable.kind.equals(PrivateDirectMessageEntity.kind))
-      ..where(conversationMessageTable.isDeleted.equals(false))
       ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
       ..limit(1);
 
