@@ -6,8 +6,6 @@ class ConversationMessageTable extends Table {
   late final conversationId = text().references(ConversationTable, #id)();
   late final eventMessageId = text().references(EventMessageTable, #id)();
 
-  late final isDeleted = boolean().withDefault(const Constant(false))();
-
   @override
   Set<Column<Object>> get primaryKey => {eventMessageId};
 }

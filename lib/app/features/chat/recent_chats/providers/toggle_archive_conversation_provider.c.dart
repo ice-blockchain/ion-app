@@ -136,9 +136,9 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
     return updatedBookmarkSet;
   }
 
-  Future<void> _updateBookmarks(BookmarksSetData bookmarkSet, String currentUserPubkey) async {
+  Future<void> _updateBookmarks(BookmarksSetData bookmarkSet, String masterPubkey) async {
     await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
-          bookmarkSet..toReplaceableEventReference(currentUserPubkey),
+          bookmarkSet..toReplaceableEventReference(masterPubkey),
         );
   }
 }
