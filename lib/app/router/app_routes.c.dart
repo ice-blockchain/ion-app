@@ -16,18 +16,15 @@ import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passke
 import 'package:ion/app/features/auth/views/pages/sign_up_password/sign_up_password.dart';
 import 'package:ion/app/features/auth/views/pages/turn_on_notifications/turn_on_notifications.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_detail_page/channel_detail_page.dart';
-import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/channel_messaging_page.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/create_channel_modal/create_channel_modal.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/edit_channel_page/edit_channel_page.dart';
-import 'package:ion/app/features/chat/e2ee/views/pages/group_mesages_page.dart';
-import 'package:ion/app/features/chat/e2ee/views/pages/one_to_one_messages_page.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/delete_conversation_modal/delete_conversation_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_add_poll_modal/chat_add_poll_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_learn_more_modal/chat_learn_more_modal.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_modal/chat_main_modal_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/arhived_chats_main_page.dart';
 import 'package:ion/app/features/chat/views/pages/chat_main_page/chat_main_page.dart';
-import 'package:ion/app/features/chat/views/pages/group_page/group_page.dart';
+import 'package:ion/app/features/chat/views/pages/conversation_page/conversation_page.dart';
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
@@ -161,7 +158,6 @@ import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.c.g.dart';
 part 'auth_routes.dart';
-part 'channel_routes.dart';
 part 'chat_routes.dart';
 part 'dapps_routes.dart';
 part 'feed_routes.dart';
@@ -329,35 +325,6 @@ class WalletMainModalRoute extends BaseRouteData {
           child: const WalletMainModalPage(),
           type: IceRouteType.mainModalSheet,
         );
-}
-
-@TypedGoRoute<OneToOneMessagesRoute>(path: '/one-to-one')
-class OneToOneMessagesRoute extends BaseRouteData {
-  OneToOneMessagesRoute({
-    required this.conversationId,
-    required this.receiverPubKey,
-  }) : super(
-          child: OneToOneMessagesPage(
-            conversationId: conversationId,
-            receiverPubKey: receiverPubKey,
-          ),
-        );
-
-  final String conversationId;
-  final String receiverPubKey;
-}
-
-@TypedGoRoute<GroupMessagesRoute>(path: '/group-messages')
-class GroupMessagesRoute extends BaseRouteData {
-  GroupMessagesRoute({
-    required this.conversationId,
-  }) : super(
-          child: GroupMessagesPage(
-            conversationId: conversationId,
-          ),
-        );
-
-  final String conversationId;
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

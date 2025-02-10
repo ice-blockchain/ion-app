@@ -6,14 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NewChatModal extends HookConsumerWidget {
@@ -23,15 +21,9 @@ class NewChatModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final onUserSelected = useCallback(
       (UserMetadataEntity user) async {
-        final conversationId = await ref
-            .read(conversationDaoProvider)
-            .getExistOnetOneConversationId(user.masterPubkey);
         if (context.mounted) {
           context.replace(
-            OneToOneMessagesRoute(
-              conversationId: conversationId ?? generateUuid(),
-              receiverPubKey: user.masterPubkey,
-            ).location,
+            ConversationRoute(receiverPubKey: user.masterPubkey).location,
           );
         }
       },

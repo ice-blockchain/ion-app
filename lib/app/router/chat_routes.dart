@@ -6,8 +6,10 @@ class ChatRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<AppTestRoute>(path: 'app-test'),
     TypedGoRoute<ChatSimpleSearchRoute>(path: 'simple-search'),
-    TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
     TypedGoRoute<ChatAdvancedSearchRoute>(path: 'feed-advanced-search'),
+    TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
+    TypedGoRoute<ChannelDetailRoute>(path: 'channel-detail'),
+    TypedGoRoute<EditChannelRoute>(path: 'edit-channel'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<DeleteConversationRoute>(path: 'delete'),
@@ -24,26 +26,24 @@ class ChatRoutes {
   ];
 }
 
+@TypedGoRoute<ConversationRoute>(path: '/conversation')
+class ConversationRoute extends BaseRouteData {
+  ConversationRoute({
+    this.conversationId,
+    this.receiverPubKey,
+  }) : super(
+          child: ConversationPage(
+            conversationId: conversationId,
+            receiverPubKey: receiverPubKey,
+          ),
+        );
+
+  final String? conversationId;
+  final String? receiverPubKey;
+}
+
 class AppTestRoute extends BaseRouteData {
   AppTestRoute() : super(child: const AppTestPage());
-}
-
-class ArchivedChatsMainRoute extends BaseRouteData {
-  ArchivedChatsMainRoute()
-      : super(
-          child: const ArchivedChatsMainPage(),
-          type: IceRouteType.slideFromLeft,
-        );
-}
-
-class DeleteConversationRoute extends BaseRouteData {
-  DeleteConversationRoute({required this.conversationIds})
-      : super(
-          child: DeleteConversationModal(conversationIds: conversationIds),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final List<String> conversationIds;
 }
 
 class ChatSimpleSearchRoute extends BaseRouteData {
@@ -64,6 +64,24 @@ class ChatAdvancedSearchRoute extends BaseRouteData {
         );
 
   final String query;
+}
+
+class ArchivedChatsMainRoute extends BaseRouteData {
+  ArchivedChatsMainRoute()
+      : super(
+          child: const ArchivedChatsMainPage(),
+          type: IceRouteType.slideFromLeft,
+        );
+}
+
+class DeleteConversationRoute extends BaseRouteData {
+  DeleteConversationRoute({required this.conversationIds})
+      : super(
+          child: DeleteConversationModal(conversationIds: conversationIds),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final List<String> conversationIds;
 }
 
 class NewChatModalRoute extends BaseRouteData {
@@ -122,12 +140,20 @@ class CreateGroupModalRoute extends BaseRouteData {
         );
 }
 
-@TypedGoRoute<GroupRoute>(path: '/group/:pubkey')
-class GroupRoute extends BaseRouteData {
-  GroupRoute({required this.pubkey})
+class ChannelDetailRoute extends BaseRouteData {
+  ChannelDetailRoute({required this.uuid})
       : super(
-          child: GroupPage(pubkey: pubkey),
+          child: ChannelDetailPage(uuid: uuid),
         );
 
-  final String pubkey;
+  final String uuid;
+}
+
+class EditChannelRoute extends BaseRouteData {
+  EditChannelRoute({required this.uuid})
+      : super(
+          child: EditChannelPage(uuid: uuid),
+        );
+
+  final String uuid;
 }
