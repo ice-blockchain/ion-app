@@ -40,7 +40,7 @@ class CopyBuilder extends HookWidget {
       (text) {
         isCopied.value = true;
         copyToClipboard(text);
-        delayed(() => isCopied.value = false, after: 3.seconds);
+        delayed(() => isCopied.value = false, after: 2.seconds);
       },
       CopyBuilderContent(
         icon: isCopied.value ? copiedIcon ?? Assets.svg.iconBlockCheckGreen.icon() : defaultIcon,

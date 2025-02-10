@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -26,6 +28,23 @@ class CreateRecoveryKeySuccessState extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final locale = context.i18n;
+    final disabledOptions = useState(<int>{});
+
+    useEffect(
+      () {
+        if (disabledOptions.value.isEmpty) {
+          return null;
+        }
+
+        final timer = Timer(
+          const Duration(seconds: 2),
+          () => disabledOptions.value = {},
+        );
+
+        return timer.cancel;
+      },
+      [disabledOptions.value],
+    );
 
     final showScreenshotSecurityAlert = useCallback(
       () => showSimpleBottomSheet<void>(
@@ -48,18 +67,24 @@ class CreateRecoveryKeySuccessState extends HookWidget {
             title: locale.common_identity_key_name,
             iconAsset: Assets.svg.iconIdentitykey,
             subtitle: recoveryData.identityKeyName,
+            onTap: () => _onOptionTap(0, disabledOptions),
+            enabled: !disabledOptions.value.contains(0),
           ),
           SizedBox(height: 12.0.s),
           RecoveryKeyOption(
             title: locale.restore_identity_creds_recovery_key,
             iconAsset: Assets.svg.iconChannelPrivate,
             subtitle: recoveryData.recoveryKeyId,
+            onTap: () => _onOptionTap(1, disabledOptions),
+            enabled: !disabledOptions.value.contains(1),
           ),
           SizedBox(height: 12.0.s),
           RecoveryKeyOption(
             title: locale.restore_identity_creds_recovery_code,
             iconAsset: Assets.svg.iconCode4,
             subtitle: recoveryData.recoveryCode,
+            onTap: () => _onOptionTap(2, disabledOptions),
+            enabled: !disabledOptions.value.contains(2),
           ),
           SizedBox(height: 20.0.s),
           const _StoringKeysWarning(),
@@ -76,6 +101,13 @@ class CreateRecoveryKeySuccessState extends HookWidget {
       ),
     );
   }
+
+  void _onOptionTap(
+    int index,
+    ValueNotifier<Set<int>> disabledOptions,
+  ) {
+    disabledOptions.value = {0, 1, 2}.difference({index});
+  }
 }
 
 class _StoringKeysWarning extends StatelessWidget {
@@ -86,9 +118,9 @@ class _StoringKeysWarning extends StatelessWidget {
     final locale = context.i18n;
 
     return RoundedCard.outlined(
-      padding: EdgeInsets.symmetric(horizontal: 10.0.s),
+      backgroundColor: context.theme.appColors.onTerararyFill,
       child: ListItem(
-        contentPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.symmetric(horizontal: 10.0.s),
         backgroundColor: context.theme.appColors.secondaryBackground,
         borderRadius: BorderRadius.all(
           Radius.circular(16.0.s),
