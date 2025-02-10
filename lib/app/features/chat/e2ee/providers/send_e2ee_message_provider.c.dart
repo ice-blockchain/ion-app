@@ -22,6 +22,7 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,7 +46,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '',
     eventMessageDao: ref.watch(conversationEventMessageDaoProvider),
-    mediaService: ref.watch(mediaServiceProvider),
+    mediaEncryptionService: ref.watch(mediaEncryptionServiceProvider),
     conversationMessageStatusDao: ref.watch(conversationMessageStatusDaoProvider),
   );
 }
@@ -61,7 +62,7 @@ class SendE2eeMessageService {
     required this.compressionService,
     required this.ionConnectUploadNotifier,
     required this.conversationPubkeysNotifier,
-    required this.mediaService,
+    required this.mediaEncryptionService,
     required this.currentUserMasterPubkey,
     required this.eventMessageDao,
     required this.conversationMessageStatusDao,
@@ -76,10 +77,11 @@ class SendE2eeMessageService {
   final CompressionService compressionService;
   final IonConnectUploadNotifier ionConnectUploadNotifier;
   final ConversationPubkeys conversationPubkeysNotifier;
-  final MediaService mediaService;
+  final MediaEncryptionService mediaEncryptionService;
   final String currentUserMasterPubkey;
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageStatusDao conversationMessageStatusDao;
+
   Future<void> sendMessage({
     required String content,
     required String conversationId,
@@ -112,7 +114,8 @@ class SendE2eeMessageService {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
 
-            final encryptedMediaFiles = await mediaService.encryptMediaFiles(compressedMediaFiles);
+            final encryptedMediaFiles =
+                await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
 
             final uploadedMediaFilesWithKeys = await Future.wait(
               encryptedMediaFiles.map((encryptedMediaFile) async {

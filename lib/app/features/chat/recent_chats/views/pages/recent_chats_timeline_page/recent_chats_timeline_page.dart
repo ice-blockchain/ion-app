@@ -18,7 +18,7 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatsTimelinePage extends HookConsumerWidget {
@@ -185,7 +185,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
         ref.watch(unreadMessageCountProviderProvider(conversation.conversationId));
 
     final mediaService = useFuture(
-      ref.watch(mediaServiceProvider).retreiveEncryptedMedia([
+      ref.watch(mediaEncryptionServiceProvider).retreiveEncryptedMedia([
         entity.primaryMedia!,
       ]),
     );
