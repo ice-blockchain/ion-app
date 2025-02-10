@@ -9,13 +9,11 @@ import 'package:ion/app/features/chat/community/view/components/community_member
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
-import 'package:ion/app/features/chat/views/components/message_items/messaging_empty_view/messaging_empty_view.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class GroupMessagesPage extends HookConsumerWidget {
   const GroupMessagesPage({
@@ -114,34 +112,11 @@ class _MessagesList extends HookConsumerWidget {
       child: messages.maybeWhen(
         data: (messages) {
           if (messages.isEmpty) {
-            return const _EmptyView();
+            return const E2eeConversationEmptyView();
           }
           return OneToOneMessageList(messages);
         },
         orElse: () => const SizedBox.expand(),
-      ),
-    );
-  }
-}
-
-class _EmptyView extends HookConsumerWidget {
-  const _EmptyView();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return MessagingEmptyView(
-      title: context.i18n.messaging_empty_description,
-      asset: Assets.svg.walletChatEmptystate,
-      trailing: GestureDetector(
-        onTap: () {
-          ChatLearnMoreModalRoute().push<void>(context);
-        },
-        child: Text(
-          context.i18n.button_learn_more,
-          style: context.theme.appTextThemes.caption.copyWith(
-            color: context.theme.appColors.primaryAccent,
-          ),
-        ),
       ),
     );
   }
