@@ -119,6 +119,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
+  blockchain_utils:
+    dependency: transitive
+    description:
+      name: blockchain_utils
+      sha256: b6cb335397685e7625bb74bbd4ff4f0dd0f6ce3e3f65a40da4aa5a3c54eaa78c
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -1539,6 +1547,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.4"
+  on_chain:
+    dependency: transitive
+    description:
+      name: on_chain
+      sha256: "145cc7bc25289f0dcfc5d0bab96f495c515c2f44494e59fa80dc817b98a378dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0"
   package_config:
     dependency: transitive
     description:
