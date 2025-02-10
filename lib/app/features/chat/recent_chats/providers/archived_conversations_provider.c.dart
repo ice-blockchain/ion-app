@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
@@ -14,56 +15,53 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'archived_conversations_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
-class ArchivedConversations extends _$ArchivedConversations {
-  @override
-  Future<List<String>> build() async {
-    final archivedConversationBookmarksSet = ref.watch(currentUserBookmarksProvider).valueOrNull;
+@riverpod
+Future<List<String>> archivedConversations(Ref ref) async {
+  final archivedConversationBookmarksSet = ref.watch(currentUserBookmarksProvider).valueOrNull;
 
-    if (archivedConversationBookmarksSet == null) {
-      return [];
-    }
-
-    final archivedConversationBookmarksSetData =
-        archivedConversationBookmarksSet[BookmarksSetType.chats]?.data ??
-            const BookmarksSetData(
-              type: BookmarksSetType.chats,
-              postsRefs: [],
-              articlesRefs: [],
-            );
-
-    final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
-    final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
-
-    if (currentUserPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
-    }
-
-    final content = archivedConversationBookmarksSetData.content;
-
-    final decryptedContent = content.isNotEmpty
-        ? await e2eeService.decryptMessage(
-            archivedConversationBookmarksSetData.content,
-          )
-        : archivedConversationBookmarksSetData.content;
-
-    final encrpytedConversationCommunityIds = decryptedContent.isNotEmpty
-        ? (jsonDecode(decryptedContent) as List<dynamic>)
-            .map(
-              (e) => CommunityIdentifierTag.fromTag(
-                (e as List<dynamic>).map((s) => s.toString()).toList(),
-              ).value,
-            )
-            .toList()
-        : null;
-
-    final archivedConversations = [
-      ...archivedConversationBookmarksSetData.communitiesIds,
-      if (encrpytedConversationCommunityIds != null) ...encrpytedConversationCommunityIds,
-    ];
-
-    await ref.watch(conversationDaoProvider).updateArchivedConversations(archivedConversations);
-
-    return archivedConversations;
+  if (archivedConversationBookmarksSet == null) {
+    return [];
   }
+
+  final archivedConversationBookmarksSetData =
+      archivedConversationBookmarksSet[BookmarksSetType.chats]?.data ??
+          const BookmarksSetData(
+            type: BookmarksSetType.chats,
+            postsRefs: [],
+            articlesRefs: [],
+          );
+
+  final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+  final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+
+  if (currentUserPubkey == null) {
+    throw UserMasterPubkeyNotFoundException();
+  }
+
+  final content = archivedConversationBookmarksSetData.content;
+
+  final decryptedContent = content.isNotEmpty
+      ? await e2eeService.decryptMessage(
+          archivedConversationBookmarksSetData.content,
+        )
+      : archivedConversationBookmarksSetData.content;
+
+  final encrpytedConversationCommunityIds = decryptedContent.isNotEmpty
+      ? (jsonDecode(decryptedContent) as List<dynamic>)
+          .map(
+            (e) => CommunityIdentifierTag.fromTag(
+              (e as List<dynamic>).map((s) => s.toString()).toList(),
+            ).value,
+          )
+          .toList()
+      : null;
+
+  final archivedConversations = [
+    ...archivedConversationBookmarksSetData.communitiesIds,
+    if (encrpytedConversationCommunityIds != null) ...encrpytedConversationCommunityIds,
+  ];
+
+  await ref.watch(conversationDaoProvider).updateArchivedConversations(archivedConversations);
+
+  return archivedConversations;
 }

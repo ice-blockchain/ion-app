@@ -17,7 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'toggle_archive_conversation_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   @override
   FutureOr<void> build() async {
