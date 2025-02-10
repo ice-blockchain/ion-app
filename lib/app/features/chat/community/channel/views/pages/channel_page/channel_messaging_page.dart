@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/channel/hooks/use_can_post_to_channel.dart';
 import 'package:ion/app/features/chat/community/channel/views/pages/channel_page/components/empty_state_copy_link.dart';
+import 'package:ion/app/features/chat/community/models/community_join_requests_state.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
@@ -71,7 +72,7 @@ class ChannelMessagingPage extends HookConsumerWidget {
               ),
             ),
             Expanded(
-              child: messages.when(
+              child: messages.maybeWhen(
                 data: (messages) {
                   if (messages.isEmpty) {
                     return MessagingEmptyView(
@@ -97,36 +98,62 @@ class ChannelMessagingPage extends HookConsumerWidget {
                     );
                   }
                 },
-                error: (error, stack) {
-                  return const SizedBox.shrink();
-                },
-                loading: () {
-                  return const SizedBox.shrink();
-                },
+                orElse: () => ColoredBox(
+                  color: context.theme.appColors.primaryBackground,
+                  child: const SizedBox.expand(),
+                ),
               ),
             ),
-            if (joinRequests != null)
-              if (isJoined)
-                if (canPost)
-                  MessagingBottomBar(
-                    onSubmitted: (content) async {
-                      await ref
-                          .read(createPostNotifierProvider(CreatePostOption.community).notifier)
-                          .create(
-                            content: content ?? '',
-                            communtiyId: communityId,
-                            whoCanReply: WhoCanReplySettingsOption.everyone,
-                          );
-                    },
-                  )
-                else
-                  const _UnMuteButton()
-              else
-                _JoinButton(communityId: communityId),
+            _ActionButton(
+              joinRequests: joinRequests,
+              isJoined: isJoined,
+              canPost: canPost,
+              communityId: communityId,
+            ),
           ],
         ),
       ),
     );
+  }
+}
+
+class _ActionButton extends HookConsumerWidget {
+  const _ActionButton({
+    required this.joinRequests,
+    required this.isJoined,
+    required this.canPost,
+    required this.communityId,
+  });
+
+  final CommunityJoinRequestsState? joinRequests;
+  final bool isJoined;
+  final bool canPost;
+  final String communityId;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (joinRequests == null) {
+      return const SizedBox.shrink();
+    }
+
+    if (!isJoined) {
+      return _JoinButton(
+        communityId: communityId,
+      );
+    }
+
+    if (canPost) {
+      return MessagingBottomBar(
+        onSubmitted: (content) async {
+          await ref.read(createPostNotifierProvider(CreatePostOption.community).notifier).create(
+                content: content ?? '',
+                communtiyId: communityId,
+                whoCanReply: WhoCanReplySettingsOption.everyone,
+              );
+        },
+      );
+    } else {
+      return const _UnMuteButton();
+    }
   }
 }
 
