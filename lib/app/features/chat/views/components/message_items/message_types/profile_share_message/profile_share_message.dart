@@ -70,6 +70,7 @@ class ProfileShareMessage extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16.0.s),
+            //TODO: add metadata
             // MessageMetaData(isMe: isMe, createdAt: createdAt),
           ],
         ),

@@ -42,6 +42,7 @@ class TextMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //TODO: show when group messages are implemented
             // MessageAuthorNameWidget(author: author),
             // if (repliedMessage case final RepliedMessage replied)
             //   RepliedMessageInfo(
@@ -65,6 +66,7 @@ class TextMessage extends HookConsumerWidget {
                               : context.theme.appColors.primaryText,
                         ),
                       ),
+                      //TODO: show when reactions are implemented
                       // if (reactions.isNotEmpty) MessageReactions(reactions: reactions),
                     ],
                   ),

@@ -161,6 +161,7 @@ class _MessageContent extends StatelessWidget {
             ],
           ),
         ),
+        //TODO: add metadata
         // MessageMetaData(isMe: isMe, createdAt: createdAt),
       ],
     );

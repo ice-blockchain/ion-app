@@ -28,7 +28,7 @@ class ConversationPage extends HookConsumerWidget {
 
     ref.displayErrors(conversationTypeProvider(conversationId, receiverPubKey));
 
-    return conversationType.when(
+    return conversationType.maybeWhen(
       data: (conversationType) {
         switch (conversationType) {
           case ConversationType.group:
@@ -41,8 +41,7 @@ class ConversationPage extends HookConsumerWidget {
             );
         }
       },
-      error: (error, stack) => const SizedBox.shrink(),
-      loading: () => const SizedBox.shrink(),
+      orElse: () => const SizedBox.shrink(),
     );
   }
 }

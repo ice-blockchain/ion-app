@@ -58,6 +58,7 @@ class EmojiMessage extends StatelessWidget {
                   MessageReactions(reactions: reactions),
                 ],
               ),
+              //TODO: add metadata
               // MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
           ),

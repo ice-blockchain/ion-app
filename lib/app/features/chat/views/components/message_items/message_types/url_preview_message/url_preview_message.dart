@@ -69,6 +69,7 @@ class UrlPreviewMessage extends HookWidget {
                 children: [
                   MessageReactions(reactions: reactions),
                   const Spacer(),
+                  //TODO: add metadata
                   // MessageMetaData(isMe: isMe, createdAt: createdAt),
                 ],
               ),

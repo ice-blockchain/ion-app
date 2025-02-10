@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
-
-// // SPDX-License-Identifier: ice License 1.0
+//TODO: use it when we list all group messages
 
 // import 'package:ion/app/features/chat/model/message_author.c.dart';
 // import 'package:ion/app/features/chat/model/message_list_item.c.dart';
