@@ -25,94 +25,118 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   }
 
   Future<void> toogleConversation(List<ConversationListItem> conversations) async {
-    final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
+    final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    if (currentUserPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
 
+    final bookmarkSet = await _getInitialBookmarkSet();
+    final updatedBookmarkSet = await _processConversations(conversations, bookmarkSet);
+
+    await _updateBookmarks(updatedBookmarkSet, currentUserPubkey);
+  }
+
+  Future<BookmarksSetData> _getInitialBookmarkSet() async {
+    final bookmarksMap = await ref.read(currentUserBookmarksProvider.future);
     final archivedConversationBookmarksSet = bookmarksMap[BookmarksSetType.chats];
 
-    var bookmarkSet = archivedConversationBookmarksSet?.data ??
+    return archivedConversationBookmarksSet?.data ??
         const BookmarksSetData(
           type: BookmarksSetType.chats,
           postsRefs: [],
           articlesRefs: [],
         );
+  }
 
-    final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+  Future<List<List<String>>?> _decryptContent(String content) async {
+    if (content.isEmpty) return null;
+
     final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+    final decryptedContent = await e2eeService.decryptMessage(content);
 
-    if (currentUserPubkey == null) {
-      throw UserMasterPubkeyNotFoundException();
+    if (decryptedContent.isEmpty) return null;
+
+    return (jsonDecode(decryptedContent) as List)
+        .map((e) => (e as List).map((s) => s.toString()).toList())
+        .toList();
+  }
+
+  Future<BookmarksSetData> _processCommunityConversation(
+    ConversationListItem conversation,
+    BookmarksSetData bookmarkSet,
+  ) async {
+    final isArchived = bookmarkSet.communitiesIds.contains(conversation.conversationId);
+    await ref
+        .read(conversationDaoProvider)
+        .setArchived(conversation.conversationId, isArchived: !isArchived);
+
+    if (isArchived) {
+      return bookmarkSet.copyWith(
+        communitiesIds:
+            bookmarkSet.communitiesIds.where((id) => id != conversation.conversationId).toList(),
+      );
+    } else {
+      return bookmarkSet.copyWith(
+        communitiesIds: [...bookmarkSet.communitiesIds, conversation.conversationId],
+      );
     }
+  }
 
-    final content = bookmarkSet.content;
+  Future<BookmarksSetData> _processPrivateConversation(
+    ConversationListItem conversation,
+    BookmarksSetData bookmarkSet,
+    List<List<String>>? parsedContent,
+  ) async {
+    final encryptedGroupIds = CommunityIdentifierTag(value: conversation.conversationId).toTag();
+    List<List<String>> updatedContent;
 
-    final decryptedContent = content.isNotEmpty
-        ? await e2eeService.decryptMessage(
-            bookmarkSet.content,
-          )
-        : bookmarkSet.content;
+    if (parsedContent == null) {
+      await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
+      updatedContent = [encryptedGroupIds];
+    } else {
+      final existItem = parsedContent
+          .firstWhereOrNull((element) => element.toString() == encryptedGroupIds.toString());
 
-    var parsedContent = decryptedContent.isNotEmpty
-        ? (jsonDecode(decryptedContent) as List)
-            .map((e) => (e as List).map((s) => s.toString()).toList())
-            .toList()
-        : null;
-
-    for (final conversation in conversations) {
-      if (conversation.type == ConversationType.community) {
-        final isArchived = bookmarkSet.communitiesIds.contains(conversation.conversationId);
-
-        if (isArchived) {
-          await ref
-              .read(conversationDaoProvider)
-              .setArchived(conversation.conversationId, isArchived: false);
-          bookmarkSet = bookmarkSet.copyWith(
-            communitiesIds: bookmarkSet.communitiesIds
-                .where((id) => id != conversation.conversationId)
-                .toList(),
-          );
-        } else {
-          await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
-          bookmarkSet = bookmarkSet.copyWith(
-            communitiesIds: [
-              ...bookmarkSet.communitiesIds,
-              conversation.conversationId,
-            ],
-          );
-        }
+      if (existItem == null) {
+        await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
+        updatedContent = [...parsedContent, encryptedGroupIds];
       } else {
-        final encryptedGroupIds =
-            CommunityIdentifierTag(value: conversation.conversationId).toTag();
-
-        if (parsedContent == null) {
-          await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
-          parsedContent = [
-            encryptedGroupIds,
-          ];
-        } else {
-          final existItem = parsedContent
-              .firstWhereOrNull((element) => element.toString() == encryptedGroupIds.toString());
-          if (existItem == null) {
-            await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
-            parsedContent.add(encryptedGroupIds);
-          } else {
-            await ref
-                .read(conversationDaoProvider)
-                .setArchived(conversation.conversationId, isArchived: false);
-            parsedContent.remove(existItem);
-          }
-        }
-
-        final encodedContent = parsedContent.isEmpty ? '' : jsonEncode(parsedContent);
-        final encryptedContent = encodedContent.isNotEmpty
-            ? await e2eeService.encryptMessage(encodedContent)
-            : encodedContent;
-
-        bookmarkSet = bookmarkSet.copyWith(
-          content: encryptedContent,
-        );
+        await ref
+            .read(conversationDaoProvider)
+            .setArchived(conversation.conversationId, isArchived: false);
+        updatedContent = parsedContent..remove(existItem);
       }
     }
 
+    final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+    final encodedContent = updatedContent.isEmpty ? '' : jsonEncode(updatedContent);
+    final encryptedContent = encodedContent.isNotEmpty
+        ? await e2eeService.encryptMessage(encodedContent)
+        : encodedContent;
+
+    return bookmarkSet.copyWith(content: encryptedContent);
+  }
+
+  Future<BookmarksSetData> _processConversations(
+    List<ConversationListItem> conversations,
+    BookmarksSetData bookmarkSet,
+  ) async {
+    var updatedBookmarkSet = bookmarkSet;
+    final parsedContent = await _decryptContent(bookmarkSet.content);
+
+    for (final conversation in conversations) {
+      if (conversation.type == ConversationType.community) {
+        updatedBookmarkSet = await _processCommunityConversation(conversation, updatedBookmarkSet);
+      } else {
+        updatedBookmarkSet =
+            await _processPrivateConversation(conversation, updatedBookmarkSet, parsedContent);
+      }
+    }
+
+    return updatedBookmarkSet;
+  }
+
+  Future<void> _updateBookmarks(BookmarksSetData bookmarkSet, String currentUserPubkey) async {
     await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
           bookmarkSet..toReplaceableEventReference(currentUserPubkey),
         );
