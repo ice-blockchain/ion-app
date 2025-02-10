@@ -15,6 +15,8 @@ class RecoveryKeyInput extends HookWidget {
     this.validator,
     this.textInputAction = TextInputAction.next,
     this.scrollPadding,
+    this.onChanged,
+    this.autoValidateMode,
     super.key,
   });
 
@@ -24,6 +26,8 @@ class RecoveryKeyInput extends HookWidget {
   final String? Function(String?)? validator;
   final TextInputAction textInputAction;
   final EdgeInsets? scrollPadding;
+  final VoidCallback? onChanged;
+  final AutovalidateMode? autoValidateMode;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +66,11 @@ class RecoveryKeyInput extends HookWidget {
       textInputAction: textInputAction,
       scrollPadding: scrollPadding ?? EdgeInsets.only(bottom: 200.0.s),
       verified: isValid.value,
-      onChanged: validate,
+      onChanged: (text) {
+        validate(text);
+        onChanged?.call();
+      },
+      autoValidateMode: autoValidateMode,
     );
   }
 }

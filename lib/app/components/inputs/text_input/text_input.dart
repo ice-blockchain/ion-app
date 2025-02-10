@@ -41,6 +41,7 @@ class TextInput extends HookWidget {
     this.fillColor,
     this.labelColor,
     this.floatingLabelColor,
+    this.autoValidateMode,
     EdgeInsets? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
   })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
@@ -87,6 +88,7 @@ class TextInput extends HookWidget {
   final Color? floatingLabelColor;
 
   final TapRegionCallback? onTapOutside;
+  final AutovalidateMode? autoValidateMode;
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +155,7 @@ class TextInput extends HookWidget {
       obscureText: obscureText,
       obscuringCharacter: '*',
       validator: validate,
+      autovalidateMode: autoValidateMode,
       decoration: TextInputDecoration(
         context: context,
         verified: verified,
