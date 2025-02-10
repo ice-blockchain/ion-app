@@ -116,9 +116,8 @@ class ModifiablePostData
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
-      communityId: tags[CommunityIdentifierTag.tagName]
-          ?.map((tag) => CommunityIdentifierTag.fromTag(tag).value)
-          .first,
+      communityId:
+          tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).first.value,
     );
   }
 
