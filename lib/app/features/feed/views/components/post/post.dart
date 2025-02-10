@@ -57,7 +57,7 @@ class Post extends ConsumerWidget {
     }
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
-      return const DeletedPost();
+      return DeletedPost();
     }
 
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
@@ -117,12 +117,16 @@ class _FramedEvent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionConnectEntity =
-        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+
+    if ((entity is ModifiablePostEntity && entity.isDeleted) ||
+        (entity is ArticleEntity && entity.isDeleted)) {
+      return DeletedPost(bottomPadding: 0);
+    }
 
     final quotedEntity = useMemoized(
       () {
-        switch (ionConnectEntity) {
+        switch (entity) {
           case ModifiablePostEntity() || PostEntity():
             return _QuotedPost(eventReference: eventReference);
           case ArticleEntity():
@@ -131,7 +135,7 @@ class _FramedEvent extends HookConsumerWidget {
             return const SizedBox.shrink();
         }
       },
-      [ionConnectEntity],
+      [entity],
     );
 
     return Padding(

@@ -51,15 +51,15 @@ class EntitiesList extends HookWidget {
 }
 
 class _EntityListItem extends ConsumerWidget {
-  const _EntityListItem({
+  _EntityListItem({
     required this.entity,
-    required this.separatorHeight,
     required this.framedEventType,
     required this.blockedIds,
-  });
+    double? separatorHeight,
+  }) : separatorHeight = separatorHeight ?? 12.0.s;
 
   final IonConnectEntity entity;
-  final double? separatorHeight;
+  final double separatorHeight;
   final FramedEventType framedEventType;
   final ValueNotifier<Map<String, bool>> blockedIds;
 
@@ -93,21 +93,23 @@ class _EntityListItem extends ConsumerWidget {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            width: separatorHeight ?? 12.0.s,
+            width: separatorHeight,
             color: context.theme.appColors.primaryBackground,
           ),
         ),
       ),
-      child: switch (entity) {
-        ModifiablePostEntity() ||
-        PostEntity() =>
-          PostListItem(eventReference: entity.toEventReference(), framedEventType: framedEventType),
-        final ArticleEntity article => ArticleListItem(article: article),
-        GenericRepostEntity() ||
-        RepostEntity() =>
-          RepostListItem(eventReference: entity.toEventReference()),
-        _ => const SizedBox.shrink()
-      },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: separatorHeight),
+        child: switch (entity) {
+          ModifiablePostEntity() || PostEntity() => PostListItem(
+              eventReference: entity.toEventReference(), framedEventType: framedEventType),
+          final ArticleEntity article => ArticleListItem(article: article),
+          GenericRepostEntity() ||
+          RepostEntity() =>
+            RepostListItem(eventReference: entity.toEventReference()),
+          _ => const SizedBox.shrink()
+        },
+      ),
     );
   }
 }

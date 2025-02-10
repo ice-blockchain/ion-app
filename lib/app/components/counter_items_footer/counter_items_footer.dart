@@ -18,7 +18,7 @@ class CounterItemsFooter extends HookConsumerWidget {
     double? topPadding,
     this.color,
     super.key,
-  })  : bottomPadding = bottomPadding ?? 16.0.s,
+  })  : bottomPadding = bottomPadding ?? 12.0.s,
         topPadding = topPadding ?? 10.0.s;
 
   final EventReference eventReference;

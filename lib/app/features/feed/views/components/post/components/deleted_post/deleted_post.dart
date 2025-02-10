@@ -3,12 +3,20 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DeletedPost extends StatelessWidget {
-  const DeletedPost({super.key});
+  DeletedPost({
+    super.key,
+    double? bottomPadding,
+    double? topPadding,
+  })  : topPadding = topPadding ?? 10.0,
+        bottomPadding = bottomPadding ?? 10.0.s;
+
+  final double topPadding;
+  final double bottomPadding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 10.0.s, bottom: 22.0.s),
+      padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0.s),
