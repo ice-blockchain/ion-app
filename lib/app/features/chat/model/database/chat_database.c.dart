@@ -39,7 +39,12 @@ ChatDatabase chatDatabase(Ref ref) {
 }
 
 @DriftDatabase(
-  tables: [ConversationTable, EventMessageTable, ConversationMessageTable, MessageStatusTable],
+  tables: [
+    ConversationTable,
+    EventMessageTable,
+    ConversationMessageTable,
+    MessageStatusTable,
+  ],
 )
 class ChatDatabase extends _$ChatDatabase {
   ChatDatabase(this.pubkey) : super(_openConnection(pubkey));
@@ -47,8 +52,16 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  // TODO: implement schemaVersion
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        beforeOpen: (_) async {
+          await customStatement('PRAGMA foreign_keys = ON');
+        },
+        onCreate: (migration) => migration.createAll(),
+        onUpgrade: (migration, from, to) async {},
+      );
 
   static QueryExecutor _openConnection(String pubkey) {
     return driftDatabase(name: 'chat_database_$pubkey');
