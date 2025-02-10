@@ -184,17 +184,16 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
     final unreadMessagesCount =
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
 
-    final mediaService = useFuture(
+    final groupImageFile = useFuture(
       ref.watch(mediaEncryptionServiceProvider).retreiveEncryptedMedia([
         entity.primaryMedia!,
       ]),
-    );
+    ).data?.firstOrNull;
 
     return RecentChatTile(
       conversation: conversation,
       name: name,
-      avatarWidget:
-          mediaService.data?.isNotEmpty ?? false ? Image.file(mediaService.data!.first) : null,
+      avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       defaultAvatar: Assets.svg.emptyChannel.icon(size: 40.0.s),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: entity.content.isEmpty

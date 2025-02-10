@@ -335,3 +335,7 @@ class EventCountException extends IONException {
 class ConversationTypeNotFoundException extends IONException {
   ConversationTypeNotFoundException() : super(10067, 'Conversation type not found');
 }
+
+class FailedToDecryptFileException extends IONException {
+  FailedToDecryptFileException() : super(10068, 'Failed to decrypt file');
+}
