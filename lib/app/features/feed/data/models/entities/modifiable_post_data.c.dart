@@ -24,6 +24,7 @@ import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
@@ -32,7 +33,12 @@ part 'modifiable_post_data.c.freezed.dart';
 
 @Freezed(equal: false)
 class ModifiablePostEntity
-    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$ModifiablePostEntity {
+    with
+        IonConnectEntity,
+        CacheableEntity,
+        ReplaceableEntity,
+        SoftDeletableEntity<ModifiablePostData>,
+        _$ModifiablePostEntity {
   const factory ModifiablePostEntity({
     required String id,
     required String pubkey,
@@ -66,6 +72,7 @@ class ModifiablePostEntity
 @freezed
 class ModifiablePostData
     with
+        SoftDeletableEntityData,
         EntityDataWithMediaContent,
         EntityDataWithSettings,
         EntityDataWithRelatedEvents,
