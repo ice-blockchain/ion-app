@@ -7,9 +7,9 @@ import 'package:ion/app/features/chat/community/models/community_admin_type.dart
 import 'package:ion/app/features/chat/community/models/community_visibility_type.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_admins_provider.c.dart';
-import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/invite_to_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_setting.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -81,7 +81,7 @@ class CreateCommunityNotifier extends _$CreateCommunityNotifier {
             ),
       );
 
-      ref.invalidate(communityJoinRequestsProvider);
+      await ref.read(conversationDaoProvider).addCommunityConversation(communityEntity.data.uuid);
 
       return communityEntity.data;
     });

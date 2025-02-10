@@ -20,7 +20,7 @@ class CreateChannelModal extends ConsumerWidget {
     ref
       ..listenSuccess(createCommunityNotifierProvider, (data) {
         if (data != null) {
-          ChannelRoute(uuid: data.id).pushReplacement(context);
+          ConversationRoute(conversationId: data.id).pushReplacement(context);
         }
       })
       ..displayErrors(createCommunityNotifierProvider);

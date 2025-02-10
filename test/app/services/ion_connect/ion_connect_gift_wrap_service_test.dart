@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
@@ -33,7 +33,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
-        receiverMasterkey: masterPubkey,
+        receiverMasterpubkey: masterPubkey,
         receiverPubkey: receiverSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );
@@ -55,7 +55,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
-        receiverMasterkey: "Doesn't matter",
+        receiverMasterpubkey: "Doesn't matter",
         receiverPubkey: senderSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );
@@ -77,7 +77,7 @@ void main() {
 
       final wrap = await giftWrapService.createWrap(
         event: event,
-        receiverMasterkey: "Doesn't matter",
+        receiverMasterpubkey: "Doesn't matter",
         receiverPubkey: receiverSigner.publicKey,
         contentKind: PrivateDirectMessageEntity.kind,
       );

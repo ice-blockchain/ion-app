@@ -23,7 +23,7 @@ class ChatMainAppBar extends ConsumerWidget implements PreferredSizeWidget {
         textStyle: context.theme.appTextThemes.subtitle2,
         onPressed: () {
           ref.read(conversationsEditModeProvider.notifier).editMode = !editMode;
-          ref.read(selectedConversationsIdsProvider.notifier).clear();
+          ref.read(selectedConversationsProvider.notifier).clear();
         },
       ),
       title: GestureDetector(
