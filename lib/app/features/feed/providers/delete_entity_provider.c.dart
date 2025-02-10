@@ -49,7 +49,9 @@ Future<void> deleteEntity(
       }
     case ArticleEntity():
       {
-        await ref.read(createArticleProvider.notifier).softDelete(eventReference: eventReference);
+        await ref
+            .read(createArticleProvider(CreateArticleOption.softDelete).notifier)
+            .softDelete(eventReference: eventReference);
       }
     default:
       {

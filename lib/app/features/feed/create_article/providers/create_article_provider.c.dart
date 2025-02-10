@@ -29,10 +29,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_provider.c.g.dart';
 
+enum CreateArticleOption {
+  plain,
+  softDelete;
+}
+
 @riverpod
 class CreateArticle extends _$CreateArticle {
   @override
-  FutureOr<void> build() {}
+  FutureOr<void> build(CreateArticleOption createOption) {}
 
   Future<void> create({
     required Delta content,
