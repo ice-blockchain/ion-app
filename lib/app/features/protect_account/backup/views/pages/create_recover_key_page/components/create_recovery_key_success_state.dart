@@ -10,7 +10,9 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/errors/screenshot_security_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/recovery_key_option.dart';
-import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/hooks/use_on_screenshot.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/hooks/use_screenshot_detector.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/hooks/use_route_presence.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -32,7 +34,12 @@ class CreateRecoveryKeySuccessState extends HookWidget {
       ),
     );
 
-    useOnScreenshot(showScreenshotSecurityAlert);
+    final screenshotDetector = useScreenshotDetector();
+    useOnInit(() => screenshotDetector.startListening((_) => showScreenshotSecurityAlert()));
+    useRoutePresence(
+      onBecameActive: () => screenshotDetector.startListening((_) => showScreenshotSecurityAlert()),
+      onBecameInactive: screenshotDetector.stopListening,
+    );
 
     return ScreenSideOffset.large(
       child: Column(
