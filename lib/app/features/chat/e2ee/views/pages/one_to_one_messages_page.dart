@@ -108,15 +108,14 @@ class _MessagesList extends HookConsumerWidget {
     final conversationId = ref.watch(existChatConversationIdProvider(receiverPubKey)).valueOrNull;
     final messages = ref.watch(conversationMessagesProvider(conversationId ?? ''));
     return Expanded(
-      child: messages.when(
+      child: messages.maybeWhen(
         data: (messages) {
           if (messages.isEmpty) {
             return const _EmptyView();
           }
           return OneToOneMessageList(messages);
         },
-        loading: () => const SizedBox.shrink(),
-        error: (_, __) => const SizedBox.shrink(),
+        orElse: () => const SizedBox.expand(),
       ),
     );
   }

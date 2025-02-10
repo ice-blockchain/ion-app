@@ -100,7 +100,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
     final community = ref.watch(communityMetadataProvider(conversation.conversationId)).valueOrNull;
 
     final unreadMessagesCount =
-        ref.watch(unreadMessageCountProviderProvider(conversation.conversationId));
+        ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
     if (community == null) {
       return const SizedBox.shrink();
     }
@@ -149,7 +149,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
     }
 
     final unreadMessagesCount =
-        ref.watch(unreadMessageCountProviderProvider(conversation.conversationId));
+        ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
 
     return RecentChatTile(
       conversation: conversation,
@@ -182,7 +182,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
     final name = entity.relatedSubject?.value ?? '';
 
     final unreadMessagesCount =
-        ref.watch(unreadMessageCountProviderProvider(conversation.conversationId));
+        ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
 
     final mediaService = useFuture(
       ref.watch(mediaEncryptionServiceProvider).retreiveEncryptedMedia([
