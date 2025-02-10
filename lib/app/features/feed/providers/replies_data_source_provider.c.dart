@@ -49,7 +49,7 @@ List<EntitiesDataSource>? repliesDataSource(
           (entity is PostEntity && entity.data.parentEvent?.eventReference == eventReference),
       requestFilters: [
         RequestFilter(
-          kinds: const [ModifiablePostEntity.kind, PostEntity.kind],
+          kinds: const [ModifiablePostEntity.kind],
           tags: Map.fromEntries([eventReference.toFilterEntry()]),
           search: SearchExtensions(
             [
@@ -72,6 +72,16 @@ List<EntitiesDataSource>? repliesDataSource(
                 currentPubkey: currentPubkey,
                 root: false,
               ).extensions,
+              ExpirationSearchExtension(expiration: false),
+            ],
+          ).toString(),
+          limit: 10,
+        ),
+        RequestFilter(
+          kinds: const [PostEntity.kind],
+          tags: Map.fromEntries([eventReference.toFilterEntry()]),
+          search: SearchExtensions(
+            [
               ...SearchExtensions.withCounters(
                 [
                   TagMarkerSearchExtension(
