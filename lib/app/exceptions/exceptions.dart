@@ -331,3 +331,7 @@ class EventCountException extends IONException {
           message ?? 'An unexpected error occurred',
         );
 }
+
+class ConversationTypeNotFoundException extends IONException {
+  ConversationTypeNotFoundException() : super(10067, 'Conversation type not found');
+}

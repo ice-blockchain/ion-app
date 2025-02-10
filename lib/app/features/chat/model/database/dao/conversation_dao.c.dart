@@ -165,4 +165,13 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
         );
     });
   }
+
+  ///
+  /// Get the type of a conversation
+  ///
+  Future<ConversationType?> getConversationType(String conversationId) async {
+    final query = select(conversationTable)..where((t) => t.id.equals(conversationId));
+    final row = await query.getSingleOrNull();
+    return row?.type;
+  }
 }

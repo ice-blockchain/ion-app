@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -9,26 +10,47 @@ import 'package:ion/app/features/chat/components/messaging_header/messaging_head
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
+import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_empty_view/messaging_empty_view.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {
   const OneToOneMessagesPage({
-    required this.conversationId,
     required this.receiverPubKey,
     super.key,
   });
 
-  final String conversationId;
   final String receiverPubKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(sendE2eeMessageServiceProvider);
+
+    final onSubmitted = useCallback(
+      (String? content) async {
+        final existConversationId =
+            await ref.watch(existChatConversationIdProvider(receiverPubKey).future);
+
+        final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+        if (currentPubkey == null) {
+          throw UserMasterPubkeyNotFoundException();
+        }
+        final conversationMessageManagementService =
+            await ref.read(sendE2eeMessageServiceProvider.future);
+
+        await conversationMessageManagementService.sendMessage(
+          conversationId: existConversationId ?? generateUuid(),
+          content: content ?? '',
+          participantsMasterkeys: [receiverPubKey, currentPubkey],
+        );
+      },
+      [receiverPubKey],
+    );
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,
@@ -40,23 +62,9 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         child: Column(
           children: [
             _Header(receiverMasterPubKey: receiverPubKey),
-            _MessagesList(conversationId: conversationId),
+            _MessagesList(receiverPubKey: receiverPubKey),
             MessagingBottomBar(
-              onSubmitted: (content) async {
-                final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
-                if (currentPubkey == null) {
-                  throw UserMasterPubkeyNotFoundException();
-                }
-
-                final conversationMessageManagementService =
-                    await ref.read(sendE2eeMessageServiceProvider.future);
-
-                await conversationMessageManagementService.sendMessage(
-                  conversationId: conversationId,
-                  content: content ?? '',
-                  participantsMasterkeys: [receiverPubKey, currentPubkey],
-                );
-              },
+              onSubmitted: onSubmitted,
             ),
           ],
         ),
@@ -91,12 +99,14 @@ class _Header extends HookConsumerWidget {
 }
 
 class _MessagesList extends HookConsumerWidget {
-  const _MessagesList({required this.conversationId});
+  const _MessagesList({required this.receiverPubKey});
 
-  final String conversationId;
+  final String receiverPubKey;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = ref.watch(conversationMessagesProvider(conversationId));
+    final conversationId = ref.watch(existChatConversationIdProvider(receiverPubKey)).valueOrNull;
+    final messages = ref.watch(conversationMessagesProvider(conversationId ?? ''));
     return Expanded(
       child: messages.when(
         data: (messages) {

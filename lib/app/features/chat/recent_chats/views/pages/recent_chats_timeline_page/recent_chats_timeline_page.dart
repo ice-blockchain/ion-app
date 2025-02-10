@@ -114,7 +114,7 @@ class CommunityRecentChatTile extends ConsumerWidget {
       lastMessageContent: conversation.latestMessage?.content ?? context.i18n.empty_message_history,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
-        ChannelRoute(uuid: conversation.conversationId).push<void>(context);
+        ConversationRoute(conversationId: conversation.conversationId).push<void>(context);
       },
     );
   }
@@ -160,10 +160,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       lastMessageContent: conversation.latestMessage?.content ?? '',
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
-        OneToOneMessagesRoute(
-          conversationId: conversation.conversationId,
-          receiverPubKey: receiverPukeyKey,
-        ).push<void>(context);
+        ConversationRoute(receiverPubKey: receiverPukeyKey).push<void>(context);
       },
     );
   }
@@ -205,7 +202,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
           : entity.content.map((e) => e.text).join(),
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
-        GroupMessagesRoute(conversationId: conversation.conversationId).push<void>(context);
+        ConversationRoute(conversationId: conversation.conversationId).push<void>(context);
       },
     );
   }
