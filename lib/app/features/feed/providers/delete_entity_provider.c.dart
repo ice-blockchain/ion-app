@@ -44,7 +44,7 @@ Future<void> deleteEntity(
     case ModifiablePostEntity():
       {
         await ref
-            .read(createPostNotifierProvider(CreatePostOption.delete).notifier)
+            .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
             .softDelete(eventReference: eventReference);
       }
     case ArticleEntity():

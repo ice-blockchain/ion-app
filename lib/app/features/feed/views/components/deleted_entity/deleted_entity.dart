@@ -1,15 +1,29 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class DeletedPost extends StatelessWidget {
-  DeletedPost({
+enum DeletedEntityType {
+  post,
+  article;
+
+  String getTitle(BuildContext context) => switch (this) {
+        DeletedEntityType.post => context.i18n.feed_post_deleted,
+        DeletedEntityType.article => context.i18n.feed_article_deleted,
+      };
+}
+
+class DeletedEntity extends StatelessWidget {
+  DeletedEntity({
+    required this.entityType,
     super.key,
     double? bottomPadding,
     double? topPadding,
   })  : topPadding = topPadding ?? 10.0,
         bottomPadding = bottomPadding ?? 10.0.s;
 
+  final DeletedEntityType entityType;
   final double topPadding;
   final double bottomPadding;
 
@@ -31,7 +45,7 @@ class DeletedPost extends StatelessWidget {
                   .icon(size: 20.0.s, color: context.theme.appColors.quaternaryText),
               SizedBox(width: 8.0.s),
               Text(
-                context.i18n.feed_post_deleted,
+                entityType.getTitle(context),
                 style: context.theme.appTextThemes.caption
                     .copyWith(color: context.theme.appColors.quaternaryText),
               ),

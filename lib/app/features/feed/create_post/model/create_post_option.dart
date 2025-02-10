@@ -10,7 +10,7 @@ enum CreatePostOption {
   story,
   video,
   modify,
-  delete;
+  softDelete;
 
   String getTitle(BuildContext context) {
     return switch (this) {
