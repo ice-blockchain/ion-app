@@ -84,10 +84,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                       ),
                     ),
                     ScreenSideOffset.small(
-                      child: CounterItemsFooter(
-                        eventReference: eventReference,
-                        bottomPadding: 10.0.s,
-                      ),
+                      child: CounterItemsFooter(eventReference: eventReference),
                     ),
                     FeedListSeparator(height: 8.0.s),
                     SizedBox(height: 20.0.s),
