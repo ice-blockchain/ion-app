@@ -130,7 +130,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       final postData = entity.data.copyWith(
         content: [const TextMatch('')],
+        editingEndedAt: null,
         relatedHashtags: [],
+        relatedPubkeys: [],
         media: {},
       );
 
