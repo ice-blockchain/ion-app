@@ -87,11 +87,6 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             await ref.watch(conversationDaoProvider).add([rumor]);
           }
           await ref.watch(conversationEventMessageDaoProvider).add(rumor);
-          await ref.watch(conversationMessageStatusDaoProvider).updateConversationMessageStatusData(
-                masterPubkey: masterPubkey,
-                status: MessageDeliveryStatus.received,
-                eventMessageId: rumor.id,
-              );
         }
       }
     });

@@ -37,14 +37,21 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     }
   }
 
-  Stream<MessageDeliveryStatus> getMessageStatus({
-    required String eventMessageId,
-  }) {
-    final existingRow = (select(messageStatusTable)
+  Stream<MessageDeliveryStatus> getMessageStatus(String eventMessageId) {
+    final existingRows = (select(messageStatusTable)
           ..where((table) => table.eventMessageId.equals(eventMessageId)))
-        .watchSingle();
+        .watch();
 
-    return existingRow.map((row) => row.status);
+    return existingRows.map((rows) {
+      if (rows.every((row) => row.status == MessageDeliveryStatus.sent)) {
+        return MessageDeliveryStatus.sent;
+      }
+      if (rows.any((row) => row.status == MessageDeliveryStatus.failed)) {
+        return MessageDeliveryStatus.failed;
+      }
+
+      return MessageDeliveryStatus.created;
+    });
   }
 }
 

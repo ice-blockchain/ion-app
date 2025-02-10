@@ -20,8 +20,9 @@ class MessageMetaData extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deliveryStatus = ref.watch(conversationMessageStatusDaoProvider).getMessageStatus(
-          eventMessageId: eventMessage.id,
+          eventMessage.id,
         );
+
     final isMe = ref.watch(isCurrentUserEventProvider(eventMessage)).valueOrNull ?? false;
 
     return Padding(
