@@ -18,24 +18,24 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   /// Skips events without community ID. Uses insertOrIgnore mode.
   ///
   Future<void> add(List<EventMessage> events) async {
-    final companions = events.map(
+    final companions = await _createConversationCompanions(events);
+    await _batchInsertConversations(companions);
+  }
+
+  Future<List<ConversationTableCompanion?>> _createConversationCompanions(
+    List<EventMessage> events,
+  ) async {
+    return events.map(
       (event) {
         final tags = groupBy(event.tags, (tag) => tag[0]);
-        final communityIdentifierValue = tags[CommunityIdentifierTag.tagName]
-            ?.map(CommunityIdentifierTag.fromTag)
-            .firstOrNull
-            ?.value;
-        final subject = tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).firstOrNull;
+        final communityIdentifierValue = _getCommunityIdentifier(tags);
 
         if (communityIdentifierValue == null) {
           return null;
         }
 
-        final conversationType = event.kind == CommunityJoinEntity.kind
-            ? ConversationType.community
-            : subject == null
-                ? ConversationType.oneToOne
-                : ConversationType.group;
+        final subject = _getSubject(tags);
+        final conversationType = _determineConversationType(event.kind, subject);
 
         return ConversationTableCompanion(
           id: Value(communityIdentifierValue),
@@ -44,7 +44,27 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
         );
       },
     ).toList();
+  }
 
+  String? _getCommunityIdentifier(Map<String, List<List<String>>> tags) {
+    return tags[CommunityIdentifierTag.tagName]
+        ?.map(CommunityIdentifierTag.fromTag)
+        .firstOrNull
+        ?.value;
+  }
+
+  RelatedSubject? _getSubject(Map<String, List<List<String>>> tags) {
+    return tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).firstOrNull;
+  }
+
+  ConversationType _determineConversationType(int kind, RelatedSubject? subject) {
+    if (kind == CommunityJoinEntity.kind) {
+      return ConversationType.community;
+    }
+    return subject == null ? ConversationType.oneToOne : ConversationType.group;
+  }
+
+  Future<void> _batchInsertConversations(List<ConversationTableCompanion?> companions) async {
     await batch((b) {
       b.insertAll(
         conversationTable,
