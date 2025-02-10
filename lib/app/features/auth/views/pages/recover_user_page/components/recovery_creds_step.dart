@@ -39,6 +39,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
     final controllers = {
       for (final key in RecoveryKeyProperty.values) key: useTextEditingController(),
     };
+    final validationMode = useState(AutovalidateMode.disabled);
 
     return SheetContent(
       topPadding: 0,
@@ -72,6 +73,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
                             textInputAction: key == RecoveryKeyProperty.recoveryCode
                                 ? TextInputAction.done
                                 : TextInputAction.next,
+                            autoValidateMode: validationMode.value,
                           ),
                         ),
                       ),
@@ -89,6 +91,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
                               controllers[RecoveryKeyProperty.recoveryCode]!.text,
                             );
                           } else {
+                            validationMode.value = AutovalidateMode.onUserInteraction;
                             showSimpleBottomSheet<void>(
                               context: context,
                               child: const RecoverInvalidCredentialsErrorAlert(),
