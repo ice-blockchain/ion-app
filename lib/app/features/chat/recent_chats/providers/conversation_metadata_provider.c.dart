@@ -31,8 +31,8 @@ class ConversationMetadata extends _$ConversationMetadata {
     );
 
     if (conversation.type == ChatType.oneOnOne) {
-      final masterPubkey =
-          conversation.participantsMasterkeys.firstWhereOrNull((key) => key != currentMasterPubkey);
+      final masterPubkey = conversation.participantsMasterPubkeys
+          .firstWhereOrNull((key) => key != currentMasterPubkey);
 
       if (masterPubkey == null) {
         throw UserMetadataNotFoundException(masterPubkey ?? '?');
@@ -53,7 +53,7 @@ class ConversationMetadata extends _$ConversationMetadata {
         nickname: nickname,
         imageUrl: imageUrl,
         unreadMessagesCount: unreadMessagesCount,
-        participantsMasterkeys: conversation.participantsMasterkeys,
+        participantsMasterPubkeys: conversation.participantsMasterPubkeys,
         id: conversation.id,
         type: conversation.type,
         isArchived: conversation.isArchived,
@@ -91,7 +91,7 @@ class ConversationMetadata extends _$ConversationMetadata {
         name: conversation.name,
         type: conversation.type,
         isArchived: conversation.isArchived,
-        participantsMasterkeys: conversation.participantsMasterkeys,
+        participantsMasterPubkeys: conversation.participantsMasterPubkeys,
         lastMessageAt: conversation.lastMessageAt,
         lastMessageContent: conversation.lastMessageContent,
       );

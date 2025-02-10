@@ -85,7 +85,7 @@ class Conversations extends _$Conversations {
       isArchived: isArchived,
       lastMessageAt: lastMessageAt,
       lastMessageContent: lastMessageContent,
-      participantsMasterkeys: participantsMasterkeys,
+      participantsMasterPubkeys: participantsMasterkeys,
     );
   }
 

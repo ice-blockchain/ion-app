@@ -17,7 +17,7 @@ class AuthorsToDisplayProvider extends _$AuthorsToDisplayProvider {
     if (index < 0 || index >= messages.length) return true;
 
     final message = messages[index];
-    if (message case final MessageWithAuthor messageWithAuthor) {
+    if (message case final ConversationMessage messageWithAuthor) {
       return currentAuthor != messageWithAuthor.author;
     }
     return true;
@@ -27,9 +27,9 @@ class AuthorsToDisplayProvider extends _$AuthorsToDisplayProvider {
     if (index < 0 || index >= messages.length) return null;
 
     final message = messages[index];
-    if (message is! MessageWithAuthor) return null;
+    if (message is! ConversationMessage) return null;
 
-    final currentAuthor = (message as MessageWithAuthor).author;
+    final currentAuthor = (message as ConversationMessage).author;
     final isFirstMessageFromSender =
         index == 0 || isMessageFromDifferentUser(index - 1, currentAuthor);
 

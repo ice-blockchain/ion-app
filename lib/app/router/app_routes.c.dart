@@ -341,7 +341,7 @@ class MessagesRoute extends BaseRouteData {
     required this.chatType,
     this.nickname,
     this.imageUrl,
-    this.participantsMasterkeys = const [],
+    this.participantsMasterPubkeys = const [],
   }) : super(
           child: MessagesPage(
             ConversationEntity(
@@ -350,7 +350,7 @@ class MessagesRoute extends BaseRouteData {
               type: chatType,
               imageUrl: imageUrl,
               nickname: nickname ?? '',
-              participantsMasterkeys: participantsMasterkeys,
+              participantsMasterPubkeys: participantsMasterPubkeys,
             ),
           ),
           type: IceRouteType.single,
@@ -361,7 +361,7 @@ class MessagesRoute extends BaseRouteData {
   final String? nickname;
   final ChatType chatType;
   final String? imageUrl;
-  final List<String> participantsMasterkeys;
+  final List<String> participantsMasterPubkeys;
 }
 
 @TypedGoRoute<CompressTestRoute>(path: '/compress-test')

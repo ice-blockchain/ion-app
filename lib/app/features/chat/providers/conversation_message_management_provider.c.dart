@@ -8,8 +8,11 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
+import 'package:ion/app/features/chat/database/conversation_db_service.c.dart';
 import 'package:ion/app/features/chat/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -42,11 +45,13 @@ Future<ConversationMessageManagementService> conversationMessageManagementServic
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
     compressionService: ref.watch(compressServiceProvider),
+    databaseService: await ref.watch(conversationsDBServiceProvider),
     sealService: await ref.watch(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
     wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
-    ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
+    currentUserMasterPubkey: await ref.watch(currentPubkeySelectorProvider.future),
+    ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
   );
 }
 
@@ -56,27 +61,31 @@ class ConversationMessageManagementService {
     required this.wrapService,
     required this.sealService,
     required this.eventSigner,
+    required this.databaseService,
     required this.fileCacheService,
     required this.ionConnectNotifier,
     required this.compressionService,
+    required this.currentUserMasterPubkey,
     required this.ionConnectUploadNotifier,
     required this.conversationPubkeysNotifier,
   });
 
   final Env env;
   final EventSigner? eventSigner;
+  final String? currentUserMasterPubkey;
   final IonConnectNotifier ionConnectNotifier;
   final FileCacheService fileCacheService;
   final IonConnectSealService sealService;
   final IonConnectGiftWrapService wrapService;
   final CompressionService compressionService;
+  final ConversationsDBService databaseService;
   final IonConnectUploadNotifier ionConnectUploadNotifier;
   final ConversationPubkeys conversationPubkeysNotifier;
 
   Future<void> sendMessage({
     required String content,
     required String conversationId,
-    required List<String> participantsMasterkeys,
+    required List<String> participantsMasterPubkeys,
     String? subject,
     List<MediaFile> mediaFiles = const [],
   }) async {
@@ -84,20 +93,24 @@ class ConversationMessageManagementService {
       throw EventSignerNotFoundException();
     }
 
+    if (currentUserMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
     final conversationTags = _generateConversationTags(
       subject: subject,
       conversationId: conversationId,
-      masterPubkeys: participantsMasterkeys,
+      masterPubkeys: participantsMasterPubkeys,
     );
 
     final participantsKeysMap =
-        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterkeys);
+        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
     if (mediaFiles.isNotEmpty) {
       final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
 
       await Future.wait(
-        participantsMasterkeys.map((masterPubkey) async {
+        participantsMasterPubkeys.map((masterPubkey) async {
           final pubkey = participantsKeysMap[masterPubkey];
 
           if (pubkey == null) {
@@ -129,17 +142,14 @@ class ConversationMessageManagementService {
 
           final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
 
-          final tags = conversationTags..addAll(imetaTags);
+          conversationTags.addAll(imetaTags);
 
-          final giftWrap = await _createGiftWrap(
-            tags: tags,
+          await _sendMessage(
             content: content,
-            signer: eventSigner!,
-            receiverPubkey: pubkey,
-            receiverMasterkey: masterPubkey,
+            pubkey: pubkey,
+            masterPubkey: masterPubkey,
+            conversationTags: conversationTags,
           );
-
-          return _sendGiftWrap(giftWrap, masterPubkey: masterPubkey);
         }),
       );
 
@@ -150,23 +160,73 @@ class ConversationMessageManagementService {
     } else {
       // Send copy of the message to each participant
       await Future.wait(
-        participantsMasterkeys.map((masterPubkey) async {
+        participantsMasterPubkeys.map((masterPubkey) async {
           final pubkey = participantsKeysMap[masterPubkey];
 
           if (pubkey == null) {
             throw UserPubkeyNotFoundException(masterPubkey);
           }
 
-          final giftWrap = await _createGiftWrap(
+          await _sendMessage(
+            pubkey: pubkey,
             content: content,
-            signer: eventSigner!,
-            tags: conversationTags,
-            receiverPubkey: pubkey,
-            receiverMasterkey: masterPubkey,
+            masterPubkey: masterPubkey,
+            conversationTags: conversationTags,
           );
-
-          return _sendGiftWrap(giftWrap, masterPubkey: masterPubkey);
         }).toList(),
+      );
+    }
+  }
+
+  Future<void> _sendMessage({
+    required String content,
+    required String pubkey,
+    required String masterPubkey,
+    required List<List<String>> conversationTags,
+  }) async {
+    final eventMessage = await _createKind14EventMessage(
+      content: content,
+      signer: eventSigner!,
+      tags: conversationTags,
+    );
+
+    try {
+      final giftWrap = await _createGiftWrap(
+        signer: eventSigner!,
+        receiverPubkey: pubkey,
+        eventMessage: eventMessage,
+        receiverMasterPubkey: masterPubkey,
+      );
+
+      if (masterPubkey == currentUserMasterPubkey) {
+        await databaseService.insertEventMessage(
+          eventMessage: eventMessage,
+          masterPubkey: masterPubkey,
+        );
+      }
+
+      await databaseService.updateConversationMessageStatusData(
+        masterPubkey: masterPubkey,
+        status: MessageDeliveryStatus.created,
+        eventMessageId: eventMessage.id,
+      );
+
+      await ionConnectNotifier.sendEvent(
+        giftWrap,
+        cache: false,
+        actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+      );
+
+      await databaseService.updateConversationMessageStatusData(
+        masterPubkey: masterPubkey,
+        status: MessageDeliveryStatus.sent,
+        eventMessageId: eventMessage.id,
+      );
+    } catch (e) {
+      await databaseService.updateConversationMessageStatusData(
+        masterPubkey: masterPubkey,
+        status: MessageDeliveryStatus.failed,
+        eventMessageId: eventMessage.id,
       );
     }
   }
@@ -233,10 +293,8 @@ class ConversationMessageManagementService {
     return tags;
   }
 
-  Future<EventMessage> _createGiftWrap({
+  Future<EventMessage> _createKind14EventMessage({
     required String content,
-    required String receiverPubkey,
-    required String receiverMasterkey,
     required EventSigner signer,
     required List<List<String>> tags,
   }) async {
@@ -260,6 +318,15 @@ class ConversationMessageManagementService {
       sig: null,
     );
 
+    return eventMessage;
+  }
+
+  Future<EventMessage> _createGiftWrap({
+    required String receiverPubkey,
+    required String receiverMasterPubkey,
+    required EventSigner signer,
+    required EventMessage eventMessage,
+  }) async {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
         // TODO:  Create GIFT_WRAP_EXPIRATION_TIME env variable
@@ -276,20 +343,12 @@ class ConversationMessageManagementService {
     final wrap = await wrapService.createWrap(
       event: seal,
       receiverPubkey: receiverPubkey,
-      receiverMasterkey: receiverMasterkey,
+      receiverMasterpubkey: receiverMasterPubkey,
       contentKind: PrivateDirectMessageEntity.kind,
       expirationTag: expirationTag,
     );
 
     return wrap;
-  }
-
-  Future<void> _sendGiftWrap(EventMessage giftWrap, {required String masterPubkey}) async {
-    await ionConnectNotifier.sendEvent(
-      giftWrap,
-      cache: false,
-      actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-    );
   }
 
   Future<List<MediaFile>> _compressMediaFiles(

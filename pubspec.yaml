@@ -23,8 +23,8 @@ dependencies:
   dio: ^5.7.0
   dlibphonenumber: ^1.1.26
   dotted_border: ^2.1.0
-  drift: ^2.22.1
-  drift_flutter: ^0.1.0
+  drift: ^2.24.0
+  drift_flutter: ^0.2.4
   email_validator: ^3.0.0
   es_compression: ^2.0.13
   extended_text: ^14.1.0

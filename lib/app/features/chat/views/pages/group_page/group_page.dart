@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/providers/group_messages_provider.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/messages_list.dart';
 
 class GroupPage extends ConsumerWidget {
@@ -16,7 +16,7 @@ class GroupPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = ref.watch(groupMessagesProvider).emptyOrValue;
+    final messages = <MessageListItem>[];
 
     return Scaffold(
       backgroundColor: context.theme.appColors.secondaryBackground,

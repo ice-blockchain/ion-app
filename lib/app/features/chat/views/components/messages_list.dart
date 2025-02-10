@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/messages/providers/chat_message_status_provider.c.dart';
 import 'package:ion/app/features/chat/messages/views/components/chat_date_header_text/chat_date_header_text.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/audio_message/audio_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/emoji_message/emoji_message.dart';
@@ -19,6 +20,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_types/sy
 import 'package:ion/app/features/chat/messages/views/components/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/url_preview_message/url_preview_message.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/video_message/video_message.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/providers/author_to_display_provider.c.dart';
@@ -54,7 +56,7 @@ class ChatMessagesList extends HookConsumerWidget {
           final message = messages[index];
           final isLastMessage = index == (messages.length - 1);
           final author =
-              message is MessageWithAuthor ? (message as MessageWithAuthor).author : null;
+              message is ConversationMessage ? (message as ConversationMessage).author : null;
 
           final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
@@ -67,18 +69,22 @@ class ChatMessagesList extends HookConsumerWidget {
               : null;
 
           final isMe = author?.isCurrentUser ?? false;
+          final deliveryStatus = ref.watch(chatMessageStatusProvider(message.id)).value;
 
           final messageWidget = messages[index].map(
             date: (date) => const Center(child: ChatDateHeaderText()),
             system: (message) => SystemMessage(message: message.text),
-            text: (message) => TextMessage(
-              message: message.text,
-              createdAt: message.time,
-              isMe: message.author.isCurrentUser,
-              repliedMessage: message.repliedMessage,
-              isLastMessageFromAuthor: isLastMessageFromAuthor,
-              author: authorToDisplay,
-            ),
+            text: (message) {
+              return TextMessage(
+                message: message.text,
+                createdAt: message.time,
+                author: authorToDisplay,
+                isMe: message.author.isCurrentUser,
+                repliedMessage: message.repliedMessage,
+                isLastMessageFromAuthor: isLastMessageFromAuthor,
+                deliveryStatus: deliveryStatus ?? MessageDeliveryStatus.created,
+              );
+            },
             photo: (message) => PhotoMessage(
               isMe: isMe,
               createdAt: message.time,
@@ -94,7 +100,6 @@ class ChatMessagesList extends HookConsumerWidget {
               reactions: mockReactionsSimple,
               isMe: isMe,
               isLastMessageFromAuthor: isLastMessageFromAuthor,
-              // TODO: Replace mocked implementation
               hasForwardedMessage: Random().nextBool(),
             ),
             audio: (message) => AudioMessage(
@@ -173,7 +178,7 @@ class ChatMessagesList extends HookConsumerWidget {
           final isLastMessageFromAuthor = isLastMessage ||
               authorToDisplayProvider.isMessageFromDifferentUser(
                 index + 1,
-                message is MessageWithAuthor ? (message as MessageWithAuthor).author : null,
+                message is ConversationMessage ? (message as ConversationMessage).author : null,
               );
 
           var separatorHeight = 8.0.s;

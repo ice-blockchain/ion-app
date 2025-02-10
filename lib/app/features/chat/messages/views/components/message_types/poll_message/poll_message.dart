@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_metadata
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/messages/views/components/message_types/poll_message/mock.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 
 part 'poll_result_message.dart';
@@ -22,6 +23,7 @@ class PollMessage extends HookWidget {
     this.reactions,
     this.author,
     this.isLastMessageFromAuthor = true,
+    this.deliveryStatus = MessageDeliveryStatus.created,
   });
 
   final bool isMe;
@@ -29,6 +31,7 @@ class PollMessage extends HookWidget {
   final MessageAuthor? author;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +90,11 @@ class PollMessage extends HookWidget {
             children: [
               MessageReactions(reactions: reactions),
               const Spacer(),
-              MessageMetaData(isMe: isMe, createdAt: createdAt),
+              MessageMetaData(
+                isMe: isMe,
+                createdAt: createdAt,
+                deliveryStatus: deliveryStatus,
+              ),
             ],
           ),
         ],

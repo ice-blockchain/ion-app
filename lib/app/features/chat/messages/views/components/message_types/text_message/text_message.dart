@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/messages/views/components/message_metadata
 import 'package:ion/app/features/chat/messages/views/components/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/messages/views/components/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_delivery_status.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/replied_message.c.dart';
 
@@ -16,10 +17,11 @@ class TextMessage extends StatelessWidget {
     required this.isMe,
     required this.message,
     required this.createdAt,
-    this.isLastMessageFromAuthor = true,
-    this.reactions = const [],
+    required this.deliveryStatus,
     this.author,
     this.repliedMessage,
+    this.reactions = const [],
+    this.isLastMessageFromAuthor = true,
     super.key,
   });
 
@@ -30,6 +32,7 @@ class TextMessage extends StatelessWidget {
   final bool isLastMessageFromAuthor;
   final RepliedMessage? repliedMessage;
   final List<MessageReactionGroup> reactions;
+  final MessageDeliveryStatus deliveryStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +74,11 @@ class TextMessage extends StatelessWidget {
                     ],
                   ),
                 ),
-                MessageMetaData(isMe: isMe, createdAt: createdAt),
+                MessageMetaData(
+                  isMe: isMe,
+                  createdAt: createdAt,
+                  deliveryStatus: deliveryStatus,
+                ),
               ],
             ),
           ],

@@ -39,7 +39,7 @@ class ActionButton extends HookConsumerWidget {
         await conversationMessageManagementService.sendMessage(
           content: controller.text,
           conversationId: conversation.id,
-          participantsMasterkeys: conversation.participantsMasterkeys,
+          participantsMasterPubkeys: conversation.participantsMasterPubkeys,
           subject: conversation.type == ChatType.group ? conversation.name : null,
         );
       } catch (e) {
