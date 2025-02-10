@@ -45,8 +45,14 @@ mixin ImmutableEntity on IonConnectEntity implements IonConnectEntityReferenceab
   }
 }
 
-mixin ReplaceableEntity on IonConnectEntity implements IonConnectEntityReferenceable {
+mixin ReplaceableEntity<T extends ReplaceableEntityData> on IonConnectEntity
+    implements IonConnectEntityReferenceable {
   ReplaceableEntityData get data;
+
+  @override
+  ReplaceableEventReference toEventReference() {
+    return data.toReplaceableEventReference(masterPubkey);
+  }
 }
 
 abstract class ReplaceableEntityData {

@@ -11,6 +11,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
+import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
@@ -53,6 +54,10 @@ class Post extends ConsumerWidget {
 
     if (entity == null) {
       return const Skeleton(child: PostSkeleton());
+    }
+
+    if (entity is ModifiablePostEntity && entity.isDeleted) {
+      return DeletedEntity(entityType: DeletedEntityType.post);
     }
 
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
@@ -112,12 +117,19 @@ class _FramedEvent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionConnectEntity =
-        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+
+    if (entity is ModifiablePostEntity && entity.isDeleted) {
+      return DeletedEntity(entityType: DeletedEntityType.post, bottomPadding: 0);
+    }
+
+    if (entity is ArticleEntity && entity.isDeleted) {
+      return DeletedEntity(entityType: DeletedEntityType.article, bottomPadding: 0);
+    }
 
     final quotedEntity = useMemoized(
       () {
-        switch (ionConnectEntity) {
+        switch (entity) {
           case ModifiablePostEntity() || PostEntity():
             return _QuotedPost(eventReference: eventReference);
           case ArticleEntity():
@@ -126,11 +138,11 @@ class _FramedEvent extends HookConsumerWidget {
             return const SizedBox.shrink();
         }
       },
-      [ionConnectEntity],
+      [entity],
     );
 
     return Padding(
-      padding: EdgeInsets.only(top: 6.0.s),
+      padding: EdgeInsets.only(top: 10.0.s),
       child: quotedEntity,
     );
   }
@@ -169,13 +181,13 @@ final class _QuotedPost extends ConsumerWidget {
   }
 }
 
-final class _QuotedArticle extends ConsumerWidget {
+final class _QuotedArticle extends StatelessWidget {
   const _QuotedArticle({required this.eventReference});
 
   final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return QuotedEntityFrame.article(
       child: GestureDetector(
         onTap: () {

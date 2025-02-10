@@ -87,11 +87,9 @@ class _WhoCanReplySection extends HookConsumerWidget {
 
     useOnInit(
       () async {
-        if (modifiableEntity != null &&
-            modifiableEntity is ModifiablePostEntity &&
-            modifiableEntity.data.whoCanReplySetting != null) {
+        if (modifiableEntity != null && modifiableEntity is ModifiablePostEntity) {
           ref.read(selectedWhoCanReplyOptionProvider.notifier).option =
-              modifiableEntity.data.whoCanReplySetting!;
+              modifiableEntity.data.whoCanReplySetting;
         }
       },
       [modifiableEntity],

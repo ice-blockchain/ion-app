@@ -57,9 +57,12 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverFillRemaining(
       hasScrollBody: false,
-      child: EmptyList(
-        asset: Assets.svg.walletIconProfileEmptyprofile,
-        title: context.i18n.feed_replies_empty,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 12.0.s),
+        child: EmptyList(
+          asset: Assets.svg.walletIconProfileEmptyprofile,
+          title: context.i18n.feed_replies_empty,
+        ),
       ),
     );
   }

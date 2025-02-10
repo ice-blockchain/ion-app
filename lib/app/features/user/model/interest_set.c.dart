@@ -19,8 +19,7 @@ enum InterestSetType { languages, unknown }
 
 @Freezed(equal: false)
 class InterestSetEntity
-    with _$InterestSetEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$InterestSetEntity {
   const factory InterestSetEntity({
     required String id,
     required String pubkey,
@@ -46,11 +45,6 @@ class InterestSetEntity
       createdAt: eventMessage.createdAt,
       data: InterestSetData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const int kind = 30015;

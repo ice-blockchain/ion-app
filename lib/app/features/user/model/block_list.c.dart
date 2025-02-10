@@ -14,9 +14,7 @@ import 'package:nostr_dart/nostr_dart.dart';
 part 'block_list.c.freezed.dart';
 
 @Freezed(equal: false)
-class BlockListEntity
-    with _$BlockListEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+class BlockListEntity with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$BlockListEntity {
   const factory BlockListEntity({
     required String id,
     required String pubkey,
@@ -42,11 +40,6 @@ class BlockListEntity
       createdAt: eventMessage.createdAt,
       data: BlockListData.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const int kind = 10000;

@@ -15,8 +15,7 @@ part 'user_relays.c.freezed.dart';
 
 @Freezed(equal: false)
 class UserRelaysEntity
-    with _$UserRelaysEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserRelaysEntity {
   const factory UserRelaysEntity({
     required String id,
     required String pubkey,
@@ -45,11 +44,6 @@ class UserRelaysEntity
   }
 
   List<String> get urls => data.list.map((relay) => relay.url).toList();
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
-  }
 
   static const int kind = 10002;
 }
