@@ -61,7 +61,7 @@ class ArticleEntity
 
 @freezed
 class ArticleData
-    with _$ArticleData, EntityDataWithSettings, SoftDeletableEntityData
+    with SoftDeletableEntityData, EntityDataWithSettings, _$ArticleData
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
     required String content,
