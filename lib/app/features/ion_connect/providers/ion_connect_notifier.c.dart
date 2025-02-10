@@ -16,6 +16,7 @@ import 'package:ion/app/features/ion_connect/providers/auth_challenge_provider.c
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/reauth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -28,7 +29,24 @@ part 'ion_connect_notifier.c.g.dart';
 @riverpod
 class IonConnectNotifier extends _$IonConnectNotifier {
   @override
-  FutureOr<void> build() {}
+  FutureOr<void> build() async {
+    ref.listen(
+      reauthProvider,
+      fireImmediately: false,
+      (previous, next) {
+        final prevDelegation = previous?.valueOrNull?.$1;
+        final nextDelegation = next.valueOrNull?.$1;
+        final nextRelays = next.valueOrNull?.$2;
+
+        if (prevDelegation == null &&
+            nextDelegation != null &&
+            nextRelays != null &&
+            nextRelays.isNotEmpty) {
+          reauthActiveRelays();
+        }
+      },
+    );
+  }
 
   Future<List<IonConnectEntity>?> sendEvents(
     List<EventMessage> events, {
@@ -44,19 +62,19 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayCreationProvider.notifier)
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
-        if (_isAuthRequired(error)) {
-          await sendAuthEvent(relay!);
+        if (isAuthRequired(error)) {
+          await _sendAuthEvent(relay!);
         }
 
         await relay!.sendEvents(events);
 
         if (cache) {
-          return events.map(_parseAndCache).toList();
+          return events.map(parseAndCache).toList();
         }
 
         return null;
       },
-      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
+      retryWhen: (error) => error is RelayRequestFailedException || isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -78,7 +96,31 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return result?.elementAtOrNull(0);
   }
 
-  Future<void> sendAuthEvent(IonConnectRelay relay) async {
+  Future<void> sendInitialAuthEvent(IonConnectRelay relay) async {
+    final signedAuthEvent = await createAuthEvent(
+      challenge: 'init',
+      relayUrl: Uri.parse(relay.url).toString(),
+    );
+
+    await sendEvent(
+      signedAuthEvent,
+      relay: relay,
+      cache: false,
+    );
+  }
+
+  Future<void> reauthActiveRelays() async {
+    for (final relay in await ref.read(relayCreationProvider.notifier).getActiveRelays()) {
+      try {
+        Logger.log('Send reauth');
+        await sendInitialAuthEvent(relay);
+      } catch (error, stackTrace) {
+        Logger.log('Send reauth exception', error: error, stackTrace: stackTrace);
+      }
+    }
+  }
+
+  Future<void> _sendAuthEvent(IonConnectRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
     if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
@@ -113,7 +155,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       relay: relayUrl,
     );
 
-    return sign(authEvent);
+    final (delegation, _) = await ref.read(reauthProvider.future);
+    return sign(authEvent, includeMasterPubkey: delegation != null);
   }
 
   Future<List<IonConnectEntity>?> sendEntitiesData(
@@ -149,10 +192,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayCreationProvider.notifier)
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
-        if (_isAuthRequired(error)) {
+        if (isAuthRequired(error)) {
           try {
             // TODO: handle multiple auth requests to one connectoon properly
-            await sendAuthEvent(relay!);
+            await _sendAuthEvent(relay!);
           } catch (error, stackTrace) {
             Logger.log('Send auth exception', error: error, stackTrace: stackTrace);
           }
@@ -173,7 +216,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
       },
-      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
+      retryWhen: (error) => error is RelayRequestFailedException || isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -195,7 +238,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }) async* {
     await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
       try {
-        yield _parseAndCache(event) as T;
+        yield parseAndCache(event) as T;
       } catch (error, stackTrace) {
         Logger.log('Failed to process event ${event.id}', error: error, stackTrace: stackTrace);
       }
@@ -279,7 +322,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
-  bool _isAuthRequired(Object? error) {
+  bool isAuthRequired(Object? error) {
     final isSubscriptionAuthRequired = error is RelayRequestFailedException &&
         error.event is ClosedMessage &&
         (error.event as ClosedMessage).message.startsWith('auth-required');
@@ -288,7 +331,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return isSubscriptionAuthRequired || isSendEventAuthRequired;
   }
 
-  IonConnectEntity _parseAndCache(EventMessage event) {
+  IonConnectEntity parseAndCache(EventMessage event) {
     final parser = ref.read(eventParserProvider);
     final entity = parser.parse(event);
     if (entity is CacheableEntity) {

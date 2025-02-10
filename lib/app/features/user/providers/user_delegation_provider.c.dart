@@ -15,16 +15,10 @@ part 'user_delegation_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
-  final userDelegation = ref.watch(
-    ionConnectCacheProvider.select(
-      cacheSelector<UserDelegationEntity>(
-        CacheableEntity.cacheKeyBuilder(
-          eventReference:
-              ReplaceableEventReference(pubkey: pubkey, kind: UserDelegationEntity.kind),
-        ),
-      ),
-    ),
+  final userDelegation = await ref.read(
+    cachedUserDelegationProvider(pubkey).future,
   );
+
   if (userDelegation != null) {
     return userDelegation;
   }
@@ -38,6 +32,24 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
         requestMessage,
         actionSource: const ActionSourceIndexers(),
       );
+}
+
+@Riverpod(keepAlive: true)
+Future<UserDelegationEntity?> cachedUserDelegation(Ref ref, String pubkey) async {
+  final userDelegation = ref.watch(
+    ionConnectCacheProvider.select(
+      cacheSelector<UserDelegationEntity>(
+        CacheableEntity.cacheKeyBuilder(
+          eventReference: ReplaceableEventReference(
+            pubkey: pubkey,
+            kind: UserDelegationEntity.kind,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  return userDelegation;
 }
 
 @Riverpod(keepAlive: true)
