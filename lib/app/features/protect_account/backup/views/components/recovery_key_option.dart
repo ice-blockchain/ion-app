@@ -12,12 +12,16 @@ class RecoveryKeyOption extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.iconAsset,
+    required this.onTap,
+    this.enabled = true,
     super.key,
   });
 
   final String title;
   final String subtitle;
   final String iconAsset;
+  final VoidCallback onTap;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -29,51 +33,60 @@ class RecoveryKeyOption extends StatelessWidget {
       ),
       copiedIcon: Assets.svg.iconBlockCheckGreen.icon(size: 16.0.s),
       defaultText: title,
+      defaultBorderColor: context.theme.appColors.onTerararyFill,
       builder: (context, onCopy, content) {
         return GestureDetector(
-          onTap: () => onCopy(subtitle),
+          onTap: enabled
+              ? () {
+                  onCopy(subtitle);
+                  onTap();
+                }
+              : null,
           child: RoundedCard.outlined(
             padding: EdgeInsets.symmetric(vertical: 20.0.s, horizontal: 16.0.s),
             borderColor: content.borderColor,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    content.icon,
-                    SizedBox(width: 6.0.s),
-                    Text(
-                      content.text,
-                      style: textTheme.caption2.copyWith(
-                        color: context.theme.appColors.onTertararyBackground,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.0.s),
-                LayoutBuilder(
-                  builder: (context, constraints) => Row(
+            child: Opacity(
+              opacity: enabled ? 1.0 : 0.5,
+              child: Column(
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: constraints.maxWidth - 20.0.s),
-                        child: ExtendedText(
-                          subtitle,
-                          style: textTheme.subtitle,
-                          maxLines: 1,
-                          overflowWidget: TextOverflowWidget(
-                            position: TextOverflowPosition.middle,
-                            align: TextOverflowAlign.center,
-                            child: Text('...', style: textTheme.subtitle),
-                          ),
+                      content.icon,
+                      SizedBox(width: 6.0.s),
+                      Text(
+                        content.text,
+                        style: textTheme.caption2.copyWith(
+                          color: context.theme.appColors.onTertararyBackground,
                         ),
                       ),
-                      SizedBox(width: 4.0.s),
-                      Assets.svg.iconBlockCopyBlue.icon(size: 16.0.s),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 10.0.s),
+                  LayoutBuilder(
+                    builder: (context, constraints) => Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: constraints.maxWidth - 20.0.s),
+                          child: ExtendedText(
+                            subtitle,
+                            style: textTheme.subtitle,
+                            maxLines: 1,
+                            overflowWidget: TextOverflowWidget(
+                              position: TextOverflowPosition.middle,
+                              align: TextOverflowAlign.center,
+                              child: Text('...', style: textTheme.subtitle),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 4.0.s),
+                        Assets.svg.iconBlockCopyBlue.icon(size: 16.0.s),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
