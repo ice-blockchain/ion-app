@@ -17,11 +17,16 @@ class IonScreenshotDetector {
   }
 
   void startListening(void Function(String event) onScreenshotTaken) {
+    stopListening();
     _streamSubscription = _onScreenshot.listen(onScreenshotTaken);
   }
 
-  void dispose() {
+  void stopListening() {
     _streamSubscription?.cancel();
     _screenshotStream = null;
+  }
+
+  void dispose() {
+    stopListening();
   }
 }
