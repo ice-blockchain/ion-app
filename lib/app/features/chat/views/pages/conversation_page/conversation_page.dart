@@ -14,10 +14,7 @@ class ConversationPage extends HookConsumerWidget {
     super.key,
     this.conversationId,
     this.receiverPubKey,
-  }) : assert(
-          conversationId != null || receiverPubKey != null,
-          'Either conversationId or receiverPubKey must be provided',
-        );
+  });
 
   final String? conversationId;
   final String? receiverPubKey;

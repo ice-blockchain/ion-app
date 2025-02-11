@@ -19,12 +19,14 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
   /// Only counts non-deleted messages in the specified conversation.
   /// TODO: integrate message_status table to properly track read/unread status
   Stream<int> getUnreadMessagesCount(String conversationId) {
-    final query = select(conversationMessageTable)
-      ..where((tbl) => tbl.conversationId.equals(conversationId));
+    // final query = select(conversationMessageTable)
+    //   ..where((tbl) => tbl.conversationId.equals(conversationId));
 
-    return query.watch().map((rows) {
-      return rows.length;
-    });
+    // return query.watch().map((rows) {
+    //   return rows.length;
+    // });
+    //TODO: implement with message_status table
+    return Stream.value(0);
   }
 
   /// Get a stream of messages for a conversation

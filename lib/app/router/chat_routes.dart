@@ -8,8 +8,6 @@ class ChatRoutes {
     TypedGoRoute<ChatSimpleSearchRoute>(path: 'simple-search'),
     TypedGoRoute<ChatAdvancedSearchRoute>(path: 'feed-advanced-search'),
     TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
-    TypedGoRoute<ChannelDetailRoute>(path: 'channel-detail'),
-    TypedGoRoute<EditChannelRoute>(path: 'edit-channel'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<DeleteConversationRoute>(path: 'delete'),
@@ -26,7 +24,13 @@ class ChatRoutes {
   ];
 }
 
-@TypedGoRoute<ConversationRoute>(path: '/conversation')
+@TypedGoRoute<ConversationRoute>(
+  path: '/conversation',
+  routes: [
+    TypedGoRoute<ChannelDetailRoute>(path: 'channel-detail'),
+    TypedGoRoute<EditChannelRoute>(path: 'edit-channel'),
+  ],
+)
 class ConversationRoute extends BaseRouteData {
   ConversationRoute({
     this.conversationId,
@@ -40,6 +44,24 @@ class ConversationRoute extends BaseRouteData {
 
   final String? conversationId;
   final String? receiverPubKey;
+}
+
+class ChannelDetailRoute extends BaseRouteData {
+  ChannelDetailRoute({required this.uuid})
+      : super(
+          child: ChannelDetailPage(uuid: uuid),
+        );
+
+  final String uuid;
+}
+
+class EditChannelRoute extends BaseRouteData {
+  EditChannelRoute({required this.uuid})
+      : super(
+          child: EditChannelPage(uuid: uuid),
+        );
+
+  final String uuid;
 }
 
 class AppTestRoute extends BaseRouteData {
@@ -138,22 +160,4 @@ class CreateGroupModalRoute extends BaseRouteData {
           child: const CreateGroupModal(),
           type: IceRouteType.bottomSheet,
         );
-}
-
-class ChannelDetailRoute extends BaseRouteData {
-  ChannelDetailRoute({required this.uuid})
-      : super(
-          child: ChannelDetailPage(uuid: uuid),
-        );
-
-  final String uuid;
-}
-
-class EditChannelRoute extends BaseRouteData {
-  EditChannelRoute({required this.uuid})
-      : super(
-          child: EditChannelPage(uuid: uuid),
-        );
-
-  final String uuid;
 }
