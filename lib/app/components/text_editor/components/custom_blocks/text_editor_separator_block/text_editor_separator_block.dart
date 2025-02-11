@@ -11,7 +11,7 @@ const textEditorSeparatorKey = 'text-editor-separator';
 /// Embeds a separator block in the text editor.
 ///
 class TextEditorSeparatorEmbed extends CustomBlockEmbed {
-  TextEditorSeparatorEmbed() : super(textEditorSeparatorKey, '');
+  TextEditorSeparatorEmbed() : super(textEditorSeparatorKey, '---');
 
   static BlockEmbed separatorBlock() => TextEditorSeparatorEmbed();
 }

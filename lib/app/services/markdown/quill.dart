@@ -52,18 +52,25 @@ final deltaToMd = DeltaToMarkdown(
       final imageUrl = embed.value.data;
       out.write('![image]($imageUrl)');
     },
+    'text-editor-separator': (embed, out) {
+      out.write('\n---\n');
+    },
   },
 );
 
 String deltaToMarkdown(Delta delta) {
   final processedDelta = Delta();
   for (final op in delta.toList()) {
-    if (op.key == 'insert' && (op.attributes?.containsKey('text-editor-single-image') ?? false)) {
-      processedDelta.insert({
-        'text-editor-single-image': op.attributes!['text-editor-single-image'],
-      });
-    } else {
-      processedDelta.insert(op.data, op.attributes);
+    if (op.key == 'insert') {
+      if (op.data is Map) {
+        processedDelta.insert(op.data);
+      } else if (op.attributes?.containsKey('text-editor-single-image') ?? false) {
+        processedDelta.insert({
+          'text-editor-single-image': op.attributes!['text-editor-single-image'],
+        });
+      } else {
+        processedDelta.insert(op.data, op.attributes);
+      }
     }
   }
 
@@ -81,6 +88,10 @@ Delta markdownToDelta(String markdown) {
         final imageUrl = data['image'] as String;
         processedDelta.insert({
           'text-editor-single-image': imageUrl,
+        });
+      } else if (data.containsKey('divider')) {
+        processedDelta.insert({
+          'text-editor-separator': '---',
         });
       } else {
         processedDelta.insert(op.data, op.attributes);
