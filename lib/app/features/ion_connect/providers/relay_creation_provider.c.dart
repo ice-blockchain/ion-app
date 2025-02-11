@@ -133,17 +133,6 @@ class RelayCreation extends _$RelayCreation {
     }
   }
 
-  Future<List<IonConnectRelay>> getActiveRelays() async {
-    final activeRelays = ref.watch(activeRelaysProvider);
-    if (activeRelays.isEmpty) return [];
-
-    return Future.wait(
-      activeRelays.map(
-        (relay) => ref.read(relayProvider(relay).future),
-      ),
-    );
-  }
-
   Future<IonConnectRelay?> _getLastUsedRelay(
     List<String> userRelays,
     Set<String> dislikedUrls,

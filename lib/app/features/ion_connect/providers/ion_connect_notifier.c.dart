@@ -16,8 +16,8 @@ import 'package:ion/app/features/ion_connect/providers/auth_challenge_provider.c
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/reauth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
@@ -29,24 +29,7 @@ part 'ion_connect_notifier.c.g.dart';
 @riverpod
 class IonConnectNotifier extends _$IonConnectNotifier {
   @override
-  FutureOr<void> build() async {
-    ref.listen(
-      reauthProvider,
-      fireImmediately: false,
-      (previous, next) {
-        final prevDelegation = previous?.valueOrNull?.$1;
-        final nextDelegation = next.valueOrNull?.$1;
-        final nextRelays = next.valueOrNull?.$2;
-
-        if (prevDelegation == null &&
-            nextDelegation != null &&
-            nextRelays != null &&
-            nextRelays.isNotEmpty) {
-          reauthActiveRelays();
-        }
-      },
-    );
-  }
+  FutureOr<void> build() async {}
 
   Future<List<IonConnectEntity>?> sendEvents(
     List<EventMessage> events, {
@@ -109,17 +92,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
-  Future<void> reauthActiveRelays() async {
-    for (final relay in await ref.read(relayCreationProvider.notifier).getActiveRelays()) {
-      try {
-        Logger.log('Send reauth');
-        await initRelayAuth(relay);
-      } catch (error, stackTrace) {
-        Logger.log('Send reauth exception', error: error, stackTrace: stackTrace);
-      }
-    }
-  }
-
   Future<void> _sendAuthEvent(IonConnectRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
     if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
@@ -155,7 +127,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       relay: relayUrl,
     );
 
-    final (delegation, _) = await ref.read(reauthProvider.future);
+    final mainWallet = await ref.read(mainWalletProvider.future);
+    final delegation =
+        await ref.read(cachedUserDelegationProvider(mainWallet.signingKey.publicKey).future);
     return sign(authEvent, includeMasterPubkey: delegation != null);
   }
 
