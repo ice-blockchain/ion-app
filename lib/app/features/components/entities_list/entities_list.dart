@@ -102,7 +102,9 @@ class _EntityListItem extends ConsumerWidget {
         padding: EdgeInsets.only(bottom: separatorHeight),
         child: switch (entity) {
           ModifiablePostEntity() || PostEntity() => PostListItem(
-              eventReference: entity.toEventReference(), framedEventType: framedEventType),
+              eventReference: entity.toEventReference(),
+              framedEventType: framedEventType,
+            ),
           final ArticleEntity article => ArticleListItem(article: article),
           GenericRepostEntity() ||
           RepostEntity() =>

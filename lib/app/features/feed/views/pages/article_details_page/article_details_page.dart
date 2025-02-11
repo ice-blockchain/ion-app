@@ -11,6 +11,7 @@ import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_header.dart';
@@ -50,6 +51,10 @@ class ArticleDetailsPage extends HookConsumerWidget {
     );
     final topics = articleEntity.data.topics;
 
+    if (articleEntity.isDeleted) {
+      DeletedEntity(entityType: DeletedEntityType.article);
+    }
+
     return Scaffold(
       appBar: NavigationAppBar.screen(
         actions: [
@@ -73,16 +78,22 @@ class ArticleDetailsPage extends HookConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 16.0.s),
-                    ArticleDetailsHeader(
-                      article: articleEntity,
-                    ),
-                    if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
-                    ScreenSideOffset.small(
-                      child: TextEditorPreview(
-                        content: content,
-                        media: articleEntity.data.media,
+                    if (articleEntity.isDeleted)
+                      ScreenSideOffset.small(
+                        child: DeletedEntity(entityType: DeletedEntityType.article),
+                      )
+                    else ...[
+                      ArticleDetailsHeader(
+                        article: articleEntity,
                       ),
-                    ),
+                      if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
+                      ScreenSideOffset.small(
+                        child: TextEditorPreview(
+                          content: content,
+                          media: articleEntity.data.media,
+                        ),
+                      ),
+                    ],
                     ScreenSideOffset.small(
                       child: CounterItemsFooter(eventReference: eventReference),
                     ),

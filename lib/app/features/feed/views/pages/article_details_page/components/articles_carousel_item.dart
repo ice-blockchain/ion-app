@@ -17,6 +17,10 @@ class ArticlesCarouselItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final topics = article.data.topics;
 
+    if (article.isDeleted) {
+      return const SizedBox.shrink();
+    }
+
     return GestureDetector(
       onTap: () => ArticleDetailsRoute(eventReference: article.toEventReference().encode())
           .push<void>(context),

@@ -11,7 +11,7 @@ enum CreatePostOption {
   video,
   modify,
   community,
-  delete;
+  softDelete;
 
   String getTitle(BuildContext context) {
     return switch (this) {
