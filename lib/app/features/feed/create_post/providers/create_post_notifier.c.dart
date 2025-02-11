@@ -134,6 +134,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedHashtags: [],
         relatedPubkeys: [],
         media: {},
+        settings: null,
       );
 
       await _sendPostEntities([postData]);

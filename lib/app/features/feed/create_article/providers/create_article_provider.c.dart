@@ -104,6 +104,7 @@ class CreateArticle extends _$CreateArticle {
         relatedHashtags: [],
         media: {},
         colorLabel: null,
+        settings: null,
       );
 
       await _sendArticleEntities([articleData]);
