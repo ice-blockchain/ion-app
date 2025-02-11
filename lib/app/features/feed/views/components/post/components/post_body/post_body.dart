@@ -2,15 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder.dart';
-import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
+import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
-import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_content_without_media.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -34,35 +33,25 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final textSpanBuilder = useTextSpanBuilder(
-      context,
-      defaultStyle: context.theme.appTextThemes.body2.copyWith(
-        color: context.theme.appColors.sharkText,
-      ),
-    );
-
-    final postText = textSpanBuilder.build(
-      postData.contentWithoutMedia,
-      onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
-    );
+    final content = useContentWithoutMedia(data: postData);
 
     final postMedia = postData.media.values.toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (postText.toPlainText().isNotEmpty)
-          isTextSelectable ? SelectableText.rich(postText) : Text.rich(postText),
+        if (content.isNotEmpty) TextEditorPreview(content: content),
         if (postMedia.isNotEmpty)
           Padding(
             padding: EdgeInsets.only(top: 10.0.s),
             child: PostMedia(media: postMedia),
           ),
-        if (postData.firstUrl != null)
-          Padding(
-            padding: EdgeInsets.only(top: 10.0.s),
-            child: UrlPreviewContent(url: postData.firstUrl!),
-          ),
+        //TODO::impl
+        // if (postData.firstUrl != null)
+        //   Padding(
+        //     padding: EdgeInsets.only(top: 10.0.s),
+        //     child: UrlPreviewContent(url: postData.firstUrl!),
+        //   ),
       ],
     );
   }

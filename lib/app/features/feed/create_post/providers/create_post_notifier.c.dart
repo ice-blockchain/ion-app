@@ -33,9 +33,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifi
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
-import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
@@ -56,18 +53,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final parsedContent = TextParser.allMatchers().parse(content.trim());
-
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
 
       final postData = ModifiablePostData(
-        content: _buildContentWithMediaLinks(content: parsedContent, media: media.values.toList()),
+        content: _buildContentWithMediaLinks(content: content, media: media.values.toList()),
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
         editingEndedAt: _buildEntityEditingEndedAt(),
-        relatedHashtags: _buildRelatedHashtags(parsedContent),
+        relatedHashtags: _buildRelatedHashtags(content),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
@@ -95,7 +90,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final parsedContent = TextParser.allMatchers().parse(content.trim());
       final modifiedEntity =
           await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
       if (modifiedEntity is! ModifiablePostEntity) {
@@ -104,10 +98,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       final postData = modifiedEntity.data.copyWith(
         content: _buildContentWithMediaLinks(
-          content: parsedContent,
+          content: content,
           media: modifiedEntity.data.media.values.toList(),
         ),
-        relatedHashtags: _buildRelatedHashtags(parsedContent),
+        relatedHashtags: _buildRelatedHashtags(content),
         settings: EntityDataWithSettings.build(
           whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
         ),
@@ -130,7 +124,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       }
 
       final postData = entity.data.copyWith(
-        content: [const TextMatch('')],
+        content: '',
         editingEndedAt: null,
         relatedHashtags: [],
         relatedPubkeys: [],
@@ -217,21 +211,24 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     };
   }
 
-  List<TextMatch> _buildContentWithMediaLinks({
-    required List<TextMatch> content,
+  String _buildContentWithMediaLinks({
+    required String content,
     required List<MediaAttachment> media,
   }) {
-    return [
-      if (media.isNotEmpty) TextMatch(media.map((attachment) => attachment.url).join(' ')),
-      if (media.isNotEmpty && content.isNotEmpty) const TextMatch(' '),
-      ...content,
-    ];
+    //TODO::impl Delta?
+    return content;
+    // return [
+    //   if (media.isNotEmpty) TextMatch(media.map((attachment) => attachment.url).join(' ')),
+    //   if (media.isNotEmpty && content.isNotEmpty) const TextMatch(' '),
+    //   ...content,
+    // ];
   }
 
-  List<RelatedHashtag> _buildRelatedHashtags(List<TextMatch> content) {
+  List<RelatedHashtag> _buildRelatedHashtags(String content) {
+    //TODO::impl Delta?
     return [
-      for (final match in content)
-        if (match.matcher is HashtagMatcher) RelatedHashtag(value: match.text),
+      // for (final match in content)
+      //   if (match.matcher is HashtagMatcher) RelatedHashtag(value: match.text),
     ];
   }
 
