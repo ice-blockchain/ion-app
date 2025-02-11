@@ -36,7 +36,6 @@ class TwoFaCodeInput extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final countDownInitially = useRef(countdownInitially);
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
@@ -55,12 +54,9 @@ class TwoFaCodeInput extends HookWidget {
           ? null
           : switch (twoFaType) {
               TwoFaType.email || TwoFaType.sms => SendButton(
-                  onRequestCode: () async {
-                    countDownInitially.value = false;
-                    await onRequestCode?.call();
-                  },
+                  onRequestCode: onRequestCode,
                   isSending: isSending,
-                  countdownInitially: countDownInitially.value,
+                  countdownInitially: countdownInitially,
                 ),
               TwoFaType.auth => null,
             },
