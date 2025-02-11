@@ -8,11 +8,13 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({
@@ -57,7 +59,13 @@ class MediaPickerPage extends HookConsumerWidget {
         flexibleSpace: NavigationAppBar.modal(
           title: Button.dropdown(
             onPressed: () {
-              AlbumSelectionRoute(mediaPickerType: type).push<void>(context);
+              showSimpleBottomSheet<List<MediaFile>>(
+                context: context,
+                child: AlbumSelectionPage(
+                  type: type,
+                  isBottomSheet: true,
+                ),
+              );
             },
             label: Text(
               isAll ? context.i18n.core_all : albumName,
