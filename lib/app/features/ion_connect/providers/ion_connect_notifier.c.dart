@@ -62,19 +62,19 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayCreationProvider.notifier)
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
-        if (isAuthRequired(error)) {
+        if (_isAuthRequired(error)) {
           await _sendAuthEvent(relay!);
         }
 
         await relay!.sendEvents(events);
 
         if (cache) {
-          return events.map(parseAndCache).toList();
+          return events.map(_parseAndCache).toList();
         }
 
         return null;
       },
-      retryWhen: (error) => error is RelayRequestFailedException || isAuthRequired(error),
+      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -192,9 +192,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayCreationProvider.notifier)
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
-        if (isAuthRequired(error)) {
+        if (_isAuthRequired(error)) {
           try {
-            // TODO: handle multiple auth requests to one connectoon properly
             await _sendAuthEvent(relay!);
           } catch (error, stackTrace) {
             Logger.log('Send auth exception', error: error, stackTrace: stackTrace);
@@ -216,7 +215,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
       },
-      retryWhen: (error) => error is RelayRequestFailedException || isAuthRequired(error),
+      retryWhen: (error) => error is RelayRequestFailedException || _isAuthRequired(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -238,7 +237,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }) async* {
     await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
       try {
-        yield parseAndCache(event) as T;
+        yield _parseAndCache(event) as T;
       } catch (error, stackTrace) {
         Logger.log('Failed to process event ${event.id}', error: error, stackTrace: stackTrace);
       }
@@ -322,7 +321,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     );
   }
 
-  bool isAuthRequired(Object? error) {
+  bool _isAuthRequired(Object? error) {
     final isSubscriptionAuthRequired = error is RelayRequestFailedException &&
         error.event is ClosedMessage &&
         (error.event as ClosedMessage).message.startsWith('auth-required');
@@ -331,7 +330,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return isSubscriptionAuthRequired || isSendEventAuthRequired;
   }
 
-  IonConnectEntity parseAndCache(EventMessage event) {
+  IonConnectEntity _parseAndCache(EventMessage event) {
     final parser = ref.read(eventParserProvider);
     final entity = parser.parse(event);
     if (entity is CacheableEntity) {
