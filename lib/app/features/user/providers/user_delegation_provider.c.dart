@@ -63,6 +63,17 @@ Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   }
 }
 
+@Riverpod(keepAlive: true)
+Future<UserDelegationEntity?> currentUserCachedDelegation(Ref ref) async {
+  final mainWallet = await ref.watch(mainWalletProvider.future);
+
+  try {
+    return await ref.watch(cachedUserDelegationProvider(mainWallet.signingKey.publicKey).future);
+  } on UserRelaysNotFoundException catch (_) {
+    return null;
+  }
+}
+
 @riverpod
 class UserDelegationManager extends _$UserDelegationManager {
   @override

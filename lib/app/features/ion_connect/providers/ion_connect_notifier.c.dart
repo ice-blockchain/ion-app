@@ -127,9 +127,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       relay: relayUrl,
     );
 
-    final mainWallet = await ref.read(mainWalletProvider.future);
-    final delegation =
-        await ref.read(cachedUserDelegationProvider(mainWallet.signingKey.publicKey).future);
+    final delegation = await ref.read(currentUserCachedDelegationProvider.future);
     return sign(authEvent, includeMasterPubkey: delegation != null);
   }
 
