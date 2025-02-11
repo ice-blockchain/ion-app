@@ -5,12 +5,9 @@ source 'https://github.com/sdk-banuba/banuba-sdk-podspecs.git'
 # Uncomment this line to define a global platform for your project
 platform :ios, '15.0'
 
-# Banuba Photo Editor SDK
-pod 'BanubaPhotoEditorSDK', '1.2.5'
-
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
-ENV['ENABLE_FACE_AR'] = 'true'
+
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
@@ -37,6 +34,17 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
+
+  video_editor_sdk_version = '1.40.0'
+  photo_editor_sdk_version = '1.2.5'
+
+  pod 'BanubaVideoEditorSDK', video_editor_sdk_version
+  pod 'BanubaSDKSimple', video_editor_sdk_version
+  pod 'BanubaSDK', video_editor_sdk_version
+  pod 'BanubaARCloudSDK', video_editor_sdk_version
+  pod 'BanubaAudioBrowserSDK', video_editor_sdk_version
+
+  pod 'BanubaPhotoEditorSDK', photo_editor_sdk_version
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end

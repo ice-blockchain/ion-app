@@ -12,8 +12,6 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uri_to_file/uri_to_file.dart';
-import 'package:ve_sdk_flutter/features_config.dart';
-import 'package:ve_sdk_flutter/ve_sdk_flutter.dart';
 
 part 'banuba_service.c.g.dart';
 
@@ -25,6 +23,12 @@ class BanubaService {
   static const methodInitPhotoEditor = 'initPhotoEditor';
   static const methodStartPhotoEditor = 'startPhotoEditor';
   static const argExportedPhotoFile = 'argExportedPhotoFilePath';
+
+  // For Video Editor
+  static const methodInitVideoEditor = 'initVideoEditor';
+  static const methodStartVideoEditor = 'startVideoEditor';
+  static const methodStartVideoEditorTrimmer = 'startVideoEditorTrimmer';
+  static const argExportedVideoFile = 'argExportedVideoFilePath';
 
   static const platformChannel = MethodChannel('banubaSdkChannel');
 
@@ -70,15 +74,28 @@ class BanubaService {
   }
 
   Future<String> editVideo(String filePath) async {
-    final config = FeaturesConfigBuilder().build();
-
-    final exportResult = await VeSdkFlutter().openTrimmerScreen(
+    await platformChannel.invokeMethod(
+      methodInitVideoEditor,
       env.get<String>(EnvVariable.BANUBA_TOKEN),
-      config,
-      [filePath],
     );
 
-    return exportResult?.videoSources.first ?? filePath;
+    final result = await platformChannel.invokeMethod(
+      methodStartVideoEditorTrimmer,
+      filePath,
+    );
+
+    print(result);
+
+    // // final config = FeaturesConfigBuilder().build();
+
+    // // final exportResult = await VeSdkFlutter().openTrimmerScreen(
+    // //   env.get<String>(EnvVariable.BANUBA_TOKEN),
+    // //   config,
+    // //   [filePath],
+    // // );
+
+    // return exportResult?.videoSources.first ?? filePath;
+    return filePath;
   }
 }
 
