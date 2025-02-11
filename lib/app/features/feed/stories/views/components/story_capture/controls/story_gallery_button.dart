@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
@@ -77,15 +78,26 @@ class StoryGalleryButton extends HookConsumerWidget {
       onGranted: () async {
         final mediaFiles = await MediaPickerRoute(maxSelection: 1).push<List<MediaFile>>(context);
         if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
-          await ref
-              .read(imageProcessorNotifierProvider(ImageProcessingType.story).notifier)
-              .process(
-                assetId: mediaFiles.first.path,
-                cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
-                  context,
-                  aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
-                ),
-              );
+          final selectedFile = mediaFiles.first;
+          final mediaType = MediaType.fromMimeType(selectedFile.mimeType ?? '');
+
+          if (mediaType == MediaType.video) {
+            final editedPath = await ref.read(editMediaProvider(selectedFile).future);
+            if (editedPath == selectedFile.path) {
+              if (context.mounted) {
+                await ref
+                    .read(imageProcessorNotifierProvider(ImageProcessingType.story).notifier)
+                    .process(
+                      assetId: mediaFiles.first.path,
+                      cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
+                        context,
+                        aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+                      ),
+                    );
+              }
+              return;
+            }
+          }
         }
       },
       requestDialog: const PermissionRequestSheet(
