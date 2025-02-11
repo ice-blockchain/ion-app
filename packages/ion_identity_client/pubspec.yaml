@@ -13,6 +13,7 @@ dependencies:
     git:
       url: https://github.com/ice-tychon/bdk-flutter.git
       ref: chore/update-flutter-rust-bridge
+  blockchain_utils: ^4.1.0
   collection: ^1.18.0
   convert: ^3.1.1
   crypto: ^3.0.5
@@ -24,9 +25,11 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   fpdart: ^1.1.0
   freezed_annotation: ^2.4.4
+  http: ^1.2.2
   json_annotation: ^4.9.0
   local_auth: ^2.3.0
   local_auth_crypto: ^1.1.1
+  on_chain: ^6.0.0
   passkeys: ^2.1.0
   pointycastle: ^3.9.1
   rxdart: ^0.28.0

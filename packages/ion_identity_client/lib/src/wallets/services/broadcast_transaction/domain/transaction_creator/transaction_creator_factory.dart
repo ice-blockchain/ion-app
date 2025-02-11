@@ -5,6 +5,7 @@ import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/d
 import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/domain/transaction_creator/evm_transaction_creator.dart';
 import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/domain/transaction_creator/ton_transaction_creator.dart';
 import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/domain/transaction_creator/transaction_creator.dart';
+import 'package:ion_identity_client/src/wallets/services/broadcast_transaction/domain/transaction_creator/tron_transaction_creator.dart';
 
 class TransactionCreatorFactory {
   TransactionCreatorFactory() : ethCreator = EvmTransactionCreator();
@@ -42,6 +43,10 @@ class TransactionCreatorFactory {
         return TonTransactionCreator(endpoint: 'https://api.mainnet.ice.io/http/v2/jsonRPC');
       case 'iontestnet':
         return TonTransactionCreator(endpoint: 'https://api.testnet.ice.io/http/v2/jsonRPC');
+      case 'tron':
+        return TronTransactionCreator(url: 'https://api.trongrid.io');
+      case 'tronnile':
+        return TronTransactionCreator(url: 'https://nile.trongrid.io');
       default:
         throw UnsupportedError('Unsupported network: $network');
     }
