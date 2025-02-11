@@ -21,7 +21,7 @@ class Relay extends _$Relay
     initializeRelayTimer(relay, ref);
 
     if (!anonymous) {
-      await initializeDelegationListener(relay, ref);
+      initializeDelegationListener(relay, ref);
       initializeAuthMessageListener(relay, ref);
       await initRelay(relay, ref);
     }
