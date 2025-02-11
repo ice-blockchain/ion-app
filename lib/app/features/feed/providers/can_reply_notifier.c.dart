@@ -34,21 +34,26 @@ class CanReply extends _$CanReply {
       return true;
     }
 
-    final ionConnectEntity = await ref.watch(
+    final entity = await ref.watch(
       ionConnectEntityProvider(eventReference: eventReference, cache: !_skipCache).future,
     );
-    if (ionConnectEntity == null) {
-      return true;
+    if (entity == null) {
+      return false;
     }
 
-    final authorPubkey = ionConnectEntity.masterPubkey;
+    if ((entity is ModifiablePostEntity && entity.isDeleted) ||
+        (entity is ArticleEntity && entity.isDeleted)) {
+      return false;
+    }
+
+    final authorPubkey = entity.masterPubkey;
     if (authorPubkey == currentPubkey) {
       return true;
     }
 
-    final whoCanReplySetting = switch (ionConnectEntity) {
-      ModifiablePostEntity() => ionConnectEntity.data.whoCanReplySetting,
-      ArticleEntity() => ionConnectEntity.data.whoCanReplySetting,
+    final whoCanReplySetting = switch (entity) {
+      ModifiablePostEntity() => entity.data.whoCanReplySetting,
+      ArticleEntity() => entity.data.whoCanReplySetting,
       _ => null,
     };
     if (whoCanReplySetting == null) {
@@ -66,7 +71,7 @@ class CanReply extends _$CanReply {
         }
         return followers.data.list.any((followee) => followee.pubkey == currentPubkey);
       case WhoCanReplySettingsOption.mentionedAccounts:
-        final mentions = switch (ionConnectEntity) {
+        final mentions = switch (entity) {
           // TODO: Add support for mentions inside posts and articles
           _ => <RelatedPubkey>[],
         };

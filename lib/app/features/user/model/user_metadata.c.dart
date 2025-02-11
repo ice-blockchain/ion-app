@@ -18,8 +18,7 @@ part 'user_metadata.c.g.dart';
 
 @Freezed(equal: false)
 class UserMetadataEntity
-    with _$UserMetadataEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$UserMetadataEntity {
   const factory UserMetadataEntity({
     required String id,
     required String pubkey,
@@ -45,11 +44,6 @@ class UserMetadataEntity
       createdAt: eventMessage.createdAt,
       data: UserMetadata.fromEventMessage(eventMessage),
     );
-  }
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
   }
 
   static const int kind = 0;

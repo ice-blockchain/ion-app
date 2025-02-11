@@ -9,6 +9,7 @@ import 'package:ion/app/features/components/entities_list/components/bookmark_bu
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
+import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
@@ -41,16 +42,20 @@ class Article extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleEntity = ref
-        .watch(ionConnectEntityProvider(eventReference: eventReference))
-        .valueOrNull as ArticleEntity?;
+    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-    if (articleEntity == null) {
+    if (entity is! ArticleEntity) {
       return const Skeleton(child: PostSkeleton());
     }
 
-    final isOwnedByCurrentUser =
-        ref.watch(isCurrentUserSelectorProvider(articleEntity.masterPubkey));
+    if (entity.isDeleted) {
+      return Padding(
+        padding: EdgeInsets.only(left: 16.0.s),
+        child: DeletedEntity(entityType: DeletedEntityType.article),
+      );
+    }
+
+    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
 
     return ColoredBox(
       color: context.theme.appColors.onPrimaryAccent,
@@ -61,8 +66,8 @@ class Article extends ConsumerWidget {
               clipBehavior: Clip.antiAlias,
               width: 4.0.s,
               decoration: BoxDecoration(
-                color: articleEntity.data.colorLabel != null
-                    ? fromHexColor(articleEntity.data.colorLabel!.value)
+                color: entity.data.colorLabel != null
+                    ? fromHexColor(entity.data.colorLabel!.value)
                     : context.theme.appColors.primaryAccent,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(4.0.s),
@@ -80,7 +85,7 @@ class Article extends ConsumerWidget {
                   else ...[
                     UserInfo(
                       pubkey: eventReference.pubkey,
-                      createdAt: articleEntity.data.publishedAt.value,
+                      createdAt: entity.data.publishedAt.value,
                       timeFormat: timeFormat,
                       trailing: showActionButtons
                           ? Row(
@@ -98,11 +103,11 @@ class Article extends ConsumerWidget {
                     SizedBox(height: 10.0.s),
                   ],
                   ArticleImage(
-                    imageUrl: articleEntity.data.image,
-                    minutesToRead: calculateReadingTime(articleEntity.data.content),
+                    imageUrl: entity.data.image,
+                    minutesToRead: calculateReadingTime(entity.data.content),
                   ),
                   SizedBox(height: 10.0.s),
-                  ArticleFooter(text: articleEntity.data.title ?? ''),
+                  ArticleFooter(text: entity.data.title ?? ''),
                 ],
               ),
             ),

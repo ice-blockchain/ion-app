@@ -14,7 +14,9 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 
@@ -40,7 +42,7 @@ class EntitiesList extends HookWidget {
       itemCount: entities.length,
       itemBuilder: (BuildContext context, int index) {
         return _EntityListItem(
-          entity: entities[index],
+          eventReference: entities[index].toEventReference(),
           framedEventType: framedEventType,
           separatorHeight: separatorHeight,
           blockedIds: blockedEntitiesIds,
@@ -51,23 +53,53 @@ class EntitiesList extends HookWidget {
 }
 
 class _EntityListItem extends ConsumerWidget {
-  const _EntityListItem({
-    required this.entity,
-    required this.separatorHeight,
+  _EntityListItem({
+    required this.eventReference,
     required this.framedEventType,
     required this.blockedIds,
-  });
+    double? separatorHeight,
+  }) : separatorHeight = separatorHeight ?? 12.0.s;
 
-  final IonConnectEntity entity;
-  final double? separatorHeight;
+  final EventReference eventReference;
+  final double separatorHeight;
   final FramedEventType framedEventType;
   final ValueNotifier<Map<String, bool>> blockedIds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata =
-        ref.watch(userMetadataProvider(entity.masterPubkey, network: false)).valueOrNull;
+    // Subscribing to the entity here instead of passing it as param to get the updates
+    // e.g. when the entity is deleted
+    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
+    if (entity == null ||
+        isBlockedOrBlocking(ref, entity) ||
+        isDeleted(ref, entity) ||
+        !hasMetadata(ref, entity)) {
+      return const SizedBox.shrink();
+    }
+
+    return _BottomSeparator(
+      height: separatorHeight,
+      child: switch (entity) {
+        ModifiablePostEntity() || PostEntity() => PostListItem(
+            eventReference: entity.toEventReference(),
+            framedEventType: framedEventType,
+          ),
+        final ArticleEntity article => ArticleListItem(article: article),
+        GenericRepostEntity() ||
+        RepostEntity() =>
+          RepostListItem(eventReference: entity.toEventReference()),
+        _ => const SizedBox.shrink()
+      },
+    );
+  }
+
+  bool isDeleted(WidgetRef ref, IonConnectEntity entity) {
+    return (entity is ModifiablePostEntity && entity.isDeleted) ||
+        (entity is ArticleEntity && entity.isDeleted);
+  }
+
+  bool isBlockedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
     ref.listenAsyncValue(
       isEntityBlockedOrBlockingProvider(entity, cacheOnly: true),
       onSuccess: (blocked) {
@@ -76,38 +108,45 @@ class _EntityListItem extends ConsumerWidget {
         }
       },
     );
-    final isBlockedOrBlocking = ref.watch(isEntityBlockedOrBlockingProvider(entity)).valueOrNull ??
+    return ref.watch(isEntityBlockedOrBlockingProvider(entity)).valueOrNull ??
         blockedIds.value[entity.id] ??
         true;
+  }
 
-    if (userMetadata == null || isBlockedOrBlocking) {
-      /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
-      /// we don't need to fetch the user metadata or block list explicitly - it is returned as a side effect to the
-      /// main request.
-      /// In such cases, we just have to wait until the metadata and block list appears
-      /// in cache and then show the post (or not, if author is blocked/blocking).
-      return const SizedBox.shrink();
-    }
+  /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
+  /// we don't need to fetch the user metadata or block list explicitly - it is returned as a side effect to the
+  /// main request.
+  /// In such cases, we just have to wait until the metadata and block list appears
+  /// in cache and then show the post (or not, if author is blocked/blocking).
+  bool hasMetadata(WidgetRef ref, IonConnectEntity entity) {
+    final userMetadata =
+        ref.watch(userMetadataProvider(entity.masterPubkey, network: false)).valueOrNull;
+    return userMetadata != null;
+  }
+}
 
+class _BottomSeparator extends StatelessWidget {
+  const _BottomSeparator({required this.height, required this.child});
+
+  final double height;
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            width: separatorHeight ?? 12.0.s,
+            width: height,
             color: context.theme.appColors.primaryBackground,
           ),
         ),
       ),
-      child: switch (entity) {
-        ModifiablePostEntity() ||
-        PostEntity() =>
-          PostListItem(eventReference: entity.toEventReference(), framedEventType: framedEventType),
-        final ArticleEntity article => ArticleListItem(article: article),
-        GenericRepostEntity() ||
-        RepostEntity() =>
-          RepostListItem(eventReference: entity.toEventReference()),
-        _ => const SizedBox.shrink()
-      },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: height),
+        child: child,
+      ),
     );
   }
 }

@@ -15,8 +15,7 @@ part 'follow_list.c.freezed.dart';
 
 @Freezed(equal: false)
 class FollowListEntity
-    with _$FollowListEntity, IonConnectEntity, CacheableEntity
-    implements ReplaceableEntity {
+    with IonConnectEntity, CacheableEntity, ReplaceableEntity, _$FollowListEntity {
   const factory FollowListEntity({
     required String id,
     required String pubkey,
@@ -45,11 +44,6 @@ class FollowListEntity
   }
 
   List<String> get pubkeys => data.list.map((followee) => followee.pubkey).toList();
-
-  @override
-  ReplaceableEventReference toEventReference() {
-    return data.toReplaceableEventReference(masterPubkey);
-  }
 
   static const int kind = 3;
 }

@@ -60,7 +60,7 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                       color: context.theme.appColors.onPrimaryAccent,
                     ),
                     onPressed: () {
-                      ref.read(createArticleProvider.notifier).create(
+                      ref.read(createArticleProvider(CreateArticleOption.plain).notifier).create(
                             title: title,
                             content: content,
                             topics: selectedTopics,
@@ -70,7 +70,8 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                             imageColor: imageColor,
                           );
 
-                      if (!ref.read(createArticleProvider).hasError && ref.context.mounted) {
+                      if (!ref.read(createArticleProvider(CreateArticleOption.plain)).hasError &&
+                          ref.context.mounted) {
                         final state = GoRouterState.of(ref.context);
                         ref.context.go(state.currentTab.baseRouteLocation);
                       }

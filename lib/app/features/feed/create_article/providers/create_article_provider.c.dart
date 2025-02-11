@@ -5,16 +5,21 @@ import 'dart:async';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
@@ -24,10 +29,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_provider.c.g.dart';
 
+enum CreateArticleOption {
+  plain,
+  softDelete;
+}
+
 @riverpod
 class CreateArticle extends _$CreateArticle {
   @override
-  FutureOr<void> build() {}
+  FutureOr<void> build(CreateArticleOption createOption) {}
 
   Future<void> create({
     required Delta content,
@@ -70,8 +80,39 @@ class CreateArticle extends _$CreateArticle {
         imageColor: imageColor,
       );
 
-      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, articleData]);
+      await _sendArticleEntities([...files, articleData]);
     });
+  }
+
+  Future<void> softDelete({
+    required EventReference eventReference,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final entity =
+          await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+      if (entity is! ArticleEntity) {
+        throw UnsupportedEventReference(eventReference);
+      }
+
+      final articleData = entity.data.copyWith(
+        title: null,
+        summary: null,
+        image: null,
+        content: '',
+        relatedHashtags: [],
+        media: {},
+        colorLabel: null,
+        settings: null,
+      );
+
+      await _sendArticleEntities([articleData]);
+    });
+  }
+
+  Future<List<IonConnectEntity>?> _sendArticleEntities(List<EventSerializable> entitiesData) async {
+    return ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(entitiesData);
   }
 
   Future<String?> _uploadCoverImage(

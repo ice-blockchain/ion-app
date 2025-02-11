@@ -16,6 +16,7 @@ import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dar
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -45,10 +46,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   Future<void> create({
     required String content,
-    required WhoCanReplySettingsOption whoCanReply,
+    WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
     EventReference? parentEvent,
     EventReference? quotedEvent,
-    EventReference? modifiedEvent,
     List<MediaFile>? mediaFiles,
     String? communtiyId,
   }) async {
@@ -58,21 +58,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final parsedContent = TextParser.allMatchers().parse(content.trim());
 
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
-      final modifiedEntity = modifiedEvent != null ? await _getModifiedEntity(modifiedEvent) : null;
-      final (:files, :media) =
-          await _buildMediaAttachments(mediaFiles: mediaFiles, modifiedEntity: modifiedEntity);
+      final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
 
       final postData = ModifiablePostData(
         content: _buildContentWithMediaLinks(content: parsedContent, media: media.values.toList()),
         media: media,
-        replaceableEventId: modifiedEntity != null
-            ? modifiedEntity.data.replaceableEventId
-            : ReplaceableEventIdentifier.generate(),
-        publishedAt:
-            modifiedEntity != null ? modifiedEntity.data.publishedAt : _buildEntityPublishedAt(),
-        editingEndedAt: modifiedEntity != null
-            ? modifiedEntity.data.editingEndedAt
-            : _buildEntityEditingEndedAt(),
+        replaceableEventId: ReplaceableEventIdentifier.generate(),
+        publishedAt: _buildEntityPublishedAt(),
+        editingEndedAt: _buildEntityEditingEndedAt(),
         relatedHashtags: _buildRelatedHashtags(parsedContent),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
@@ -82,8 +75,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         communityId: communtiyId,
       );
 
-      //TODO: check the event json according to notion when defined
-      await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, postData]);
+      await _sendPostEntities([...files, postData]);
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
@@ -92,6 +84,66 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ref.read(repliesCountProvider(parentEvent).notifier).addOne();
       }
     });
+  }
+
+  Future<void> modify({
+    required String content,
+    required EventReference eventReference,
+    WhoCanReplySettingsOption? whoCanReply,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final parsedContent = TextParser.allMatchers().parse(content.trim());
+      final modifiedEntity =
+          await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+      if (modifiedEntity is! ModifiablePostEntity) {
+        throw UnsupportedEventReference(eventReference);
+      }
+
+      final postData = modifiedEntity.data.copyWith(
+        content: _buildContentWithMediaLinks(
+          content: parsedContent,
+          media: modifiedEntity.data.media.values.toList(),
+        ),
+        relatedHashtags: _buildRelatedHashtags(parsedContent),
+        settings: EntityDataWithSettings.build(
+          whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
+        ),
+      );
+
+      await _sendPostEntities([postData]);
+    });
+  }
+
+  Future<void> softDelete({
+    required EventReference eventReference,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final entity =
+          await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+      if (entity is! ModifiablePostEntity) {
+        throw UnsupportedEventReference(eventReference);
+      }
+
+      final postData = entity.data.copyWith(
+        content: [const TextMatch('')],
+        editingEndedAt: null,
+        relatedHashtags: [],
+        relatedPubkeys: [],
+        media: {}, //TODO: consider removing media from the storage
+        settings: null,
+      );
+
+      await _sendPostEntities([postData]);
+    });
+  }
+
+  Future<List<IonConnectEntity>?> _sendPostEntities(List<EventSerializable> entitiesData) async {
+    //TODO: check the event json according to notion when defined
+    return ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(entitiesData);
   }
 
   EntityPublishedAt _buildEntityPublishedAt() {
@@ -121,33 +173,24 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return null;
   }
 
-  Future<({List<FileMetadata> files, Map<String, MediaAttachment> media})> _buildMediaAttachments({
+  Future<({List<FileMetadata> files, Map<String, MediaAttachment> media})> _uploadMediaFiles({
     List<MediaFile>? mediaFiles,
-    IonConnectEntity? modifiedEntity,
   }) async {
-    if (modifiedEntity != null) {
-      if (modifiedEntity is! ModifiablePostEntity) {
-        throw UnsupportedEventReference(modifiedEntity);
-      }
-      // Copy media from the modified entity because we don't allow to edit attachments
-      return (files: <FileMetadata>[], media: modifiedEntity.data.media);
-    } else {
-      final files = <FileMetadata>[];
-      final attachments = <MediaAttachment>[];
-      if (mediaFiles != null && mediaFiles.isNotEmpty) {
-        await Future.wait(
-          mediaFiles.map((mediaFile) async {
-            final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(mediaFile);
-            attachments.add(mediaAttachment);
-            files.addAll(fileMetadatas);
-          }),
-        );
-      }
-      return (
-        files: files,
-        media: {for (final attachment in attachments) attachment.url: attachment}
+    final files = <FileMetadata>[];
+    final attachments = <MediaAttachment>[];
+    if (mediaFiles != null && mediaFiles.isNotEmpty) {
+      await Future.wait(
+        mediaFiles.map((mediaFile) async {
+          final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(mediaFile);
+          attachments.add(mediaAttachment);
+          files.addAll(fileMetadatas);
+        }),
       );
     }
+    return (
+      files: files,
+      media: {for (final attachment in attachments) attachment.url: attachment}
+    );
   }
 
   Future<IonConnectEntity?> _getParentEntity(EventReference parentEventReference) async {
@@ -163,15 +206,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       throw UnsupportedParentEntity(parentEntity);
     }
     return parentEntity;
-  }
-
-  Future<ModifiablePostEntity> _getModifiedEntity(EventReference modifiedEventReference) async {
-    final modifiableEntity =
-        await ref.read(ionConnectEntityProvider(eventReference: modifiedEventReference).future);
-    if (modifiableEntity == null || modifiableEntity is! ModifiablePostEntity) {
-      throw UnsupportedEventReference(modifiedEventReference);
-    }
-    return modifiableEntity;
   }
 
   QuotedEvent _buildQuotedEvent(EventReference quotedEventReference) {
