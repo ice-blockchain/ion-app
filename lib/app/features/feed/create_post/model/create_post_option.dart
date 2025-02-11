@@ -10,7 +10,8 @@ enum CreatePostOption {
   story,
   video,
   modify,
-  community;
+  community,
+  delete;
 
   String getTitle(BuildContext context) {
     return switch (this) {
