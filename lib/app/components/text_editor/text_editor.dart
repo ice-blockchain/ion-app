@@ -8,7 +8,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/utils/mentions_hashtags_handler.dart';
-import 'package:ion/app/components/text_editor/utils/quill.dart';
+import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 
 class TextEditor extends ConsumerStatefulWidget {
   TextEditor(
@@ -71,7 +71,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
         ],
         autoFocus: widget.autoFocus,
         placeholder: widget.placeholder,
-        customStyles: getCustomStyles(context),
+        customStyles: textEditorStyles(context),
         floatingCursorDisabled: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
       ),

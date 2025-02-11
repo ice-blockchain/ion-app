@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
-import 'package:ion/app/features/ion_connect/views/hooks/use_content_without_media.dart';
+import 'package:ion/app/features/video/views/components/video_post_text.dart';
 
-class VideoPostInfo extends HookConsumerWidget {
+class VideoPostInfo extends StatelessWidget {
   const VideoPostInfo({
     required this.videoPost,
     super.key,
@@ -19,8 +17,7 @@ class VideoPostInfo extends HookConsumerWidget {
   final ModifiablePostEntity videoPost;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final content = useContentWithoutMedia(data: videoPost.data);
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -53,27 +50,12 @@ class VideoPostInfo extends HookConsumerWidget {
                   color: context.theme.appColors.secondaryBackground,
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.only(
                   top: 10.0.s,
                   bottom: 14.0.s,
                 ),
-                child: content.isNotEmpty
-                    ? TextEditorPreview(content: content)
-                    : const SizedBox.shrink(),
-                //TODO::impl!!!
-                // VideoTextPost(
-                //   textSpan: useTextSpanBuilder(
-                //     context,
-                //     defaultStyle: context.theme.appTextThemes.body2.copyWith(
-                //       color: context.theme.appColors.secondaryBackground,
-                //     ),
-                //   ).build(
-                //     videoPost.data.contentWithoutMedia,
-                //     onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
-                //   ),
-                // ),
+                child: VideoTextPost(entity: videoPost),
               ),
             ],
           ),

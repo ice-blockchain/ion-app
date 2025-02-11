@@ -2,48 +2,46 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:ion/app/components/text_editor/text_editor_preview.dart';
+import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_content_without_media.dart';
 
 class VideoTextPost extends HookWidget {
   const VideoTextPost({
-    required this.textSpan,
+    required this.entity,
     super.key,
   });
 
-  final TextSpan textSpan;
-
-  bool _isTextOneLine({
-    required TextSpan text,
-    required TextStyle style,
-    required double maxWidth,
-  }) {
-    final textPainter = TextPainter(
-      text: text,
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: maxWidth);
-
-    return !textPainter.didExceedMaxLines;
-  }
+  final ModifiablePostEntity entity;
 
   @override
   Widget build(BuildContext context) {
+    final content = useContentWithoutMedia(data: entity.data);
     final isTextExpanded = useState(false);
+    final style = context.theme.appTextThemes.body2.copyWith(
+      color: context.theme.appColors.secondaryBackground,
+    );
 
     final isOneLine = useMemoized(
       () {
         return _isTextOneLine(
-          text: textSpan,
-          style: context.theme.appTextThemes.body2.copyWith(color: Colors.white),
+          text: Document.fromDelta(content).toPlainText(),
+          style: style,
           maxWidth: MediaQuery.sizeOf(context).width,
         );
       },
       [
-        textSpan,
-        context.theme.appTextThemes.body2,
+        content,
         MediaQuery.sizeOf(context).width,
       ],
     );
+
+    if (content.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -64,20 +62,31 @@ class VideoTextPost extends HookWidget {
                 ),
               );
             },
-            child: isTextExpanded.value
-                ? Text.rich(
-                    textSpan,
-                    key: const ValueKey('expanded'),
-                  )
-                : Text.rich(
-                    textSpan,
-                    key: const ValueKey('collapsed'),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+            child: TextEditorPreview(
+              content: content,
+              maxHeight: isTextExpanded.value
+                  ? null
+                  : 20.0.s, //TODO:find a better way to collapse/expand quill
+              customStyles:
+                  textEditorStyles(context, color: context.theme.appColors.secondaryBackground),
+            ),
           ),
         ),
       ],
     );
+  }
+
+  bool _isTextOneLine({
+    required String text,
+    required TextStyle style,
+    required double maxWidth,
+  }) {
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: maxWidth);
+
+    return !textPainter.didExceedMaxLines;
   }
 }
