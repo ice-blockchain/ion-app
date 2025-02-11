@@ -19,7 +19,6 @@ import 'package:ion/app/features/chat/providers/conversation_messages_provider.c
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
-import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -147,7 +146,6 @@ class _ActionButton extends HookConsumerWidget {
           await ref.read(createPostNotifierProvider(CreatePostOption.community).notifier).create(
                 content: content ?? '',
                 communtiyId: communityId,
-                whoCanReply: WhoCanReplySettingsOption.everyone,
               );
         },
       );
