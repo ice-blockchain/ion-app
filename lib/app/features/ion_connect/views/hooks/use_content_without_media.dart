@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/services/markdown/quill.dart';
@@ -22,7 +24,14 @@ Delta contentWithoutMedia({
 
   if (media.isEmpty) return delta;
 
-  //TODO::impl
-
-  return delta;
+  return Delta.fromOperations(
+    delta.operations.whereNot(
+      (operation) {
+        final attributes = operation.attributes;
+        return attributes != null &&
+            attributes.containsKey(Attribute.link.key) &&
+            media.containsKey(attributes[Attribute.link.key]);
+      },
+    ).toList(),
+  );
 }
