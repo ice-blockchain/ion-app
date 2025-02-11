@@ -71,10 +71,10 @@ class GroupMessagesPage extends HookConsumerWidget {
                 await conversationMessageManagementService.sendMessage(
                   conversationId: conversationId,
                   content: content ?? '',
-                  subject: privateMesssageEntity.relatedSubject?.value,
-                  participantsMasterkeys:
-                      privateMesssageEntity.relatedPubkeys?.map((e) => e.value).toList() ?? [],
                   groupImageTag: groupImageTag,
+                  subject: privateMesssageEntity.relatedSubject?.value,
+                  participantsMasterPubkeys:
+                      privateMesssageEntity.relatedPubkeys?.map((e) => e.value).toList() ?? [],
                 );
               },
             ),

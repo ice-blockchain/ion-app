@@ -333,9 +333,25 @@ class EventCountException extends IONException {
 }
 
 class ConversationTypeNotFoundException extends IONException {
-  ConversationTypeNotFoundException() : super(10067, 'Conversation type not found');
+  ConversationTypeNotFoundException()
+      : super(
+          10067,
+          'Conversation type not found',
+        );
 }
 
 class FailedToDecryptFileException extends IONException {
-  FailedToDecryptFileException() : super(10068, 'Failed to decrypt file');
+  FailedToDecryptFileException()
+      : super(
+          10068,
+          'Failed to decrypt file',
+        );
+}
+
+class ParticipantsMasterPubkeysNotFoundException extends IONException {
+  ParticipantsMasterPubkeysNotFoundException(String id)
+      : super(
+          10069,
+          'Event id $id',
+        );
 }

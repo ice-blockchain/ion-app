@@ -6,7 +6,7 @@ part of '../chat_database.c.dart';
 ConversationMessageStatusDao conversationMessageStatusDao(Ref ref) =>
     ConversationMessageStatusDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [MessageStatusTable])
+@DriftAccessor(tables: [MessageStatusTable, EventMessageTable])
 class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageStatusDaoMixin {
   ConversationMessageStatusDao(super.db);
@@ -26,6 +26,14 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
         await update(messageStatusTable).replace(existingRow.copyWith(status: status));
       }
     } else {
+      final eventMessageExists = await (select(eventMessageTable)
+            ..where((table) => table.id.equals(eventMessageId)))
+          .getSingleOrNull();
+
+      if (eventMessageExists == null) {
+        return;
+      }
+
       await into(messageStatusTable).insert(
         MessageStatusTableCompanion(
           status: Value(status),
@@ -43,11 +51,17 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
         .watch();
 
     return existingRows.map((rows) {
-      if (rows.every((row) => row.status == MessageDeliveryStatus.sent)) {
-        return MessageDeliveryStatus.sent;
-      }
+      // First check if any of the rows are failed
       if (rows.any((row) => row.status == MessageDeliveryStatus.failed)) {
         return MessageDeliveryStatus.failed;
+      }
+      // Check if all rows are have delivery status
+      if (rows.every((row) => row.status == MessageDeliveryStatus.received)) {
+        return MessageDeliveryStatus.received;
+      }
+      // Check if all rows have delivery status or higher
+      if (rows.every((row) => row.status.index > MessageDeliveryStatus.created.index)) {
+        return MessageDeliveryStatus.sent;
       }
 
       return MessageDeliveryStatus.created;
@@ -55,4 +69,11 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
   }
 }
 
-enum MessageDeliveryStatus { created, sent, received, read, deleted, failed }
+enum MessageDeliveryStatus {
+  failed,
+  created,
+  sent,
+  received,
+  read,
+  deleted,
+}

@@ -6,7 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entites/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -15,6 +17,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -84,10 +87,11 @@ class SendE2eeMessageService {
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageStatusDao conversationMessageStatusDao;
   final ConversationDao conversationDao;
+
   Future<void> sendMessage({
     required String content,
     required String conversationId,
-    required List<String> participantsMasterkeys,
+    required List<String> participantsMasterPubkeys,
     String? subject,
     List<MediaFile> mediaFiles = const [],
     List<String>? groupImageTag,
@@ -99,19 +103,19 @@ class SendE2eeMessageService {
 
       final conversationTags = _generateConversationTags(
         subject: subject,
-        conversationId: conversationId,
-        masterPubkeys: participantsMasterkeys,
         groupImageTag: groupImageTag,
+        conversationId: conversationId,
+        masterPubkeys: participantsMasterPubkeys,
       );
 
       final participantsKeysMap =
-          await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterkeys);
+          await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
       if (mediaFiles.isNotEmpty) {
         final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
 
         await Future.wait(
-          participantsMasterkeys.map((masterPubkey) async {
+          participantsMasterPubkeys.map((masterPubkey) async {
             final pubkey = participantsKeysMap[masterPubkey];
 
             if (pubkey == null) {
@@ -162,7 +166,7 @@ class SendE2eeMessageService {
       } else {
         // Send copy of the message to each participant
         await Future.wait(
-          participantsMasterkeys.map((masterPubkey) async {
+          participantsMasterPubkeys.map((masterPubkey) async {
             final pubkey = participantsKeysMap[masterPubkey];
 
             if (pubkey == null) {
@@ -183,13 +187,63 @@ class SendE2eeMessageService {
     }
   }
 
+  Future<void> sendReceivedStatus(EventMessage kind14Rumor) async {
+    final eventMessage = await _createEventMessage(
+      content: 'received',
+      signer: eventSigner!,
+      kind: PrivateMessageReactionEntity.kind,
+      tags: [
+        ['k', PrivateDirectMessageEntity.kind.toString()],
+        [PubkeyTag.tagName, kind14Rumor.pubkey],
+        [RelatedImmutableEvent.tagName, kind14Rumor.id],
+        ['b', currentUserMasterPubkey],
+      ],
+    );
+
+    final privateDirectMessageEntity = PrivateDirectMessageData.fromEventMessage(kind14Rumor);
+
+    final participantsMasterPubkeys =
+        privateDirectMessageEntity.relatedPubkeys?.map((tag) => tag.value).toList();
+
+    if (participantsMasterPubkeys == null) {
+      throw ParticipantsMasterPubkeysNotFoundException(kind14Rumor.id);
+    }
+
+    final participantsKeysMap =
+        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+
+    await Future.wait(
+      participantsMasterPubkeys.map((masterPubkey) async {
+        final pubkey = participantsKeysMap[masterPubkey];
+
+        if (pubkey == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
+        final giftWrap = await _createGiftWrap(
+          signer: eventSigner!,
+          eventMessage: eventMessage,
+          receiverPubkey: kind14Rumor.pubkey,
+          receiverMasterPubkey: masterPubkey,
+          kind: PrivateMessageReactionEntity.kind,
+        );
+
+        await ionConnectNotifier.sendEvent(
+          giftWrap,
+          cache: false,
+          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+        );
+      }),
+    );
+  }
+
   Future<void> _sendMessage({
     required String content,
     required String pubkey,
     required String masterPubkey,
     required List<List<String>> conversationTags,
   }) async {
-    final eventMessage = await _createKind14EventMessage(
+    final eventMessage = await _createEventMessage(
       content: content,
       signer: eventSigner!,
       tags: conversationTags,
@@ -203,8 +257,10 @@ class SendE2eeMessageService {
         receiverMasterPubkey: masterPubkey,
       );
 
-      await conversationDao.add([eventMessage]);
-      await eventMessageDao.add(eventMessage);
+      if (masterPubkey == currentUserMasterPubkey) {
+        await conversationDao.add([eventMessage]);
+        await eventMessageDao.add(eventMessage);
+      }
 
       await conversationMessageStatusDao.updateConversationMessageStatusData(
         masterPubkey: masterPubkey,
@@ -243,33 +299,35 @@ class SendE2eeMessageService {
       ...masterPubkeys.map((pubkey) => ['p', pubkey]),
       [CommunityIdentifierTag.tagName, conversationId],
       if (groupImageTag != null) groupImageTag,
+      ['b', currentUserMasterPubkey],
     ];
 
     return tags;
   }
 
-  Future<EventMessage> _createKind14EventMessage({
+  Future<EventMessage> _createEventMessage({
     required String content,
     required EventSigner signer,
     required List<List<String>> tags,
+    int kind = PrivateDirectMessageEntity.kind,
   }) async {
     final createdAt = DateTime.now().toUtc();
 
     final id = EventMessage.calculateEventId(
       tags: tags,
+      kind: kind,
       content: content,
       createdAt: createdAt,
       publicKey: signer.publicKey,
-      kind: PrivateDirectMessageEntity.kind,
     );
 
     final eventMessage = EventMessage(
       id: id,
       tags: tags,
+      kind: kind,
       content: content,
       createdAt: createdAt,
       pubkey: signer.publicKey,
-      kind: PrivateDirectMessageEntity.kind,
       sig: null,
     );
 
@@ -281,6 +339,7 @@ class SendE2eeMessageService {
     required String receiverMasterPubkey,
     required EventSigner signer,
     required EventMessage eventMessage,
+    int kind = PrivateDirectMessageEntity.kind,
   }) async {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
@@ -297,9 +356,9 @@ class SendE2eeMessageService {
 
     final wrap = await wrapService.createWrap(
       event: seal,
+      contentKind: kind,
       receiverPubkey: receiverPubkey,
       receiverMasterpubkey: receiverMasterPubkey,
-      contentKind: PrivateDirectMessageEntity.kind,
       expirationTag: expirationTag,
     );
 
