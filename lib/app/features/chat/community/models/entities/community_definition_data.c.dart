@@ -157,6 +157,19 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
     );
   }
 
+  CommunityType get type {
+    if (roleRequiredForPosting != null) {
+      return CommunityType.channel;
+    }
+
+    return CommunityType.group;
+  }
+
   //TODO: remove this when we have a real invitation link
   String get defaultInvitationLink => 'https://ice.io/iceofficialchannel';
+}
+
+enum CommunityType {
+  channel,
+  group,
 }

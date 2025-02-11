@@ -50,6 +50,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? quotedEvent,
     EventReference? modifiedEvent,
     List<MediaFile>? mediaFiles,
+    String? communtiyId,
   }) async {
     state = const AsyncValue.loading();
 
@@ -78,6 +79,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
+        communityId: communtiyId,
       );
 
       //TODO: check the event json according to notion when defined
