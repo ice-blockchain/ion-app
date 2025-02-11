@@ -8,12 +8,13 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_clear_button.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
-import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/countries.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/phone/provider/country_provider.c.dart';
 import 'package:ion/app/features/protect_account/phone/views/components/countries/country_code_input.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/app/utils/validators.dart';
@@ -34,6 +35,8 @@ class PhoneInputStep extends HookConsumerWidget {
     final showClear = useState(false);
 
     final country = ref.watch(selectedCountryProvider);
+    final isRequestingCode =
+        ref.watch(requestTwoFaCodeNotifierProvider.select((state) => state.isLoading));
 
     useTextChanged(
       controller: phoneController,
@@ -85,25 +88,24 @@ class PhoneInputStep extends HookConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                ScreenBottomOffset(
-                  margin: 48.0.s,
-                  child: Button(
-                    mainAxisSize: MainAxisSize.max,
-                    label: Text(locale.button_next),
-                    onPressed: () async {
-                      final isFormValid = formKey.value.currentState?.validate() ?? false;
-                      if (!isFormValid) {
-                        return;
-                      }
+                Button(
+                  mainAxisSize: MainAxisSize.max,
+                  label: Text(locale.button_next),
+                  disabled: isRequestingCode,
+                  trailingIcon: isRequestingCode ? const IONLoadingIndicator() : null,
+                  onPressed: () async {
+                    final isFormValid = formKey.value.currentState?.validate() ?? false;
+                    if (!isFormValid) {
+                      return;
+                    }
 
-                      final phoneNumber = formatPhoneNumber(
-                        country.iddCode,
-                        phoneController.text.trim(),
-                      );
+                    final phoneNumber = formatPhoneNumber(
+                      country.iddCode,
+                      phoneController.text.trim(),
+                    );
 
-                      onNext(phoneNumber);
-                    },
-                  ),
+                    onNext(phoneNumber);
+                  },
                 ),
               ],
             ),

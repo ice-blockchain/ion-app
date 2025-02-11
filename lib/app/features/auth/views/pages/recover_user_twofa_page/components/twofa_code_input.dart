@@ -13,14 +13,17 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/app/hooks/use_countdown.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/utils/validators.dart';
 
-class TwoFaCodeInput extends StatelessWidget {
+class TwoFaCodeInput extends HookWidget {
   const TwoFaCodeInput({
     required this.controller,
     required this.twoFaType,
     this.onRequestCode,
     this.isSending = false,
+    this.prefixIcon,
+    this.countdownInitially = false,
     super.key,
   });
 
@@ -28,13 +31,16 @@ class TwoFaCodeInput extends StatelessWidget {
   final TwoFaType twoFaType;
   final Future<void> Function()? onRequestCode;
   final bool isSending;
+  final Widget? prefixIcon;
+  final bool countdownInitially;
 
   @override
   Widget build(BuildContext context) {
+    final countDownInitially = useRef(countdownInitially);
     return TextInput(
       prefixIcon: TextInputIcons(
         hasRightDivider: true,
-        icons: [twoFaType.iconAsset.icon()],
+        icons: [prefixIcon ?? twoFaType.iconAsset.icon()],
       ),
       labelText: twoFaType.getDisplayName(context),
       controller: controller,
@@ -49,8 +55,12 @@ class TwoFaCodeInput extends StatelessWidget {
           ? null
           : switch (twoFaType) {
               TwoFaType.email || TwoFaType.sms => SendButton(
-                  onRequestCode: onRequestCode,
+                  onRequestCode: () async {
+                    countDownInitially.value = false;
+                    await onRequestCode?.call();
+                  },
                   isSending: isSending,
+                  countdownInitially: countDownInitially.value,
                 ),
               TwoFaType.auth => null,
             },
@@ -62,20 +72,28 @@ class SendButton extends HookConsumerWidget {
   const SendButton({
     this.onRequestCode,
     this.isSending = false,
+    this.countdownInitially = false,
     super.key,
   });
 
   final Future<void> Function()? onRequestCode;
   final bool isSending;
+  final bool countdownInitially;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSent = useState(false);
+    final isSent = useState(countdownInitially);
     final countdownState = useCountdown(60);
     final countdown = countdownState.countdown;
     final startCountdown = countdownState.startCountdown;
 
     final isLightTheme = ref.watch(appThemeModeProvider) == ThemeMode.light;
+
+    useOnInit(() {
+      if (countdownInitially) {
+        startCountdown();
+      }
+    });
 
     return countdown.value > 0
         ? Padding(

@@ -9,14 +9,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
-import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/validators.dart';
-import 'package:ion_identity_client/ion_identity.dart';
 
 class EmailSetupInputPage extends HookConsumerWidget {
   const EmailSetupInputPage({super.key});
@@ -26,6 +26,23 @@ class EmailSetupInputPage extends HookConsumerWidget {
     final locale = context.i18n;
     final formKey = useRef(GlobalKey<FormState>());
     final emailController = useTextEditingController.fromValue(TextEditingValue.empty);
+    final isRequestingCode =
+        ref.watch(requestTwoFaCodeNotifierProvider.select((state) => state.isLoading));
+
+    ref
+      ..displayErrors(requestTwoFaCodeNotifierProvider)
+      ..listenSuccess(requestTwoFaCodeNotifierProvider, (_) {
+        if (!context.mounted) {
+          return;
+        }
+
+        unawaited(
+          EmailSetupRoute(
+            step: EmailSetupSteps.confirmation,
+            email: emailController.text,
+          ).push<void>(context),
+        );
+      });
 
     return Form(
       key: formKey.value,
@@ -56,24 +73,17 @@ class EmailSetupInputPage extends HookConsumerWidget {
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_next),
+                  disabled: isRequestingCode,
+                  trailingIcon: isRequestingCode ? const IONLoadingIndicator() : null,
                   onPressed: () async {
                     final isFormValid = formKey.value.currentState?.validate() ?? false;
                     if (!isFormValid) {
                       return;
                     }
 
-                    await requestTwoFACode(ref, TwoFAType.email(emailController.text));
-
-                    if (!context.mounted) {
-                      return;
-                    }
-
-                    unawaited(
-                      EmailSetupRoute(
-                        step: EmailSetupSteps.confirmation,
-                        email: emailController.text,
-                      ).push<void>(context),
-                    );
+                    await ref
+                        .read(requestTwoFaCodeNotifierProvider.notifier)
+                        .requestTwoFaCode(TwoFaType.email, value: emailController.text);
                   },
                 ),
               ],

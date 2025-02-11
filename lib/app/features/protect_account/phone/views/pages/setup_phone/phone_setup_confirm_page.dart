@@ -7,17 +7,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
-import 'package:ion/app/components/inputs/text_input/text_input.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
-import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/phone/models/phone_steps.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/validate_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -32,10 +31,21 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
     final theme = context.theme;
     final formKey = useRef(GlobalKey<FormState>());
     final codeController = useTextEditingController.fromValue(TextEditingValue.empty);
+    final isRequestingCode =
+        ref.watch(requestTwoFaCodeNotifierProvider.select((state) => state.isLoading));
+    final isValidatingCode =
+        ref.watch(validateTwoFaCodeNotifierProvider.select((state) => state.isLoading));
 
     ref
       ..displayErrors(validateTwoFaCodeNotifierProvider)
+      ..displayErrors(requestTwoFaCodeNotifierProvider)
       ..listenSuccess(validateTwoFaCodeNotifierProvider, (_) => _onSuccess(context, ref));
+
+    final requestTwoFaCode = useCallback(
+      () => ref
+          .read(requestTwoFaCodeNotifierProvider.notifier)
+          .requestTwoFaCode(TwoFaType.sms, value: phone),
+    );
 
     return Form(
       key: formKey.value,
@@ -54,29 +64,21 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
                 const Spacer(),
                 Padding(
                   padding: EdgeInsets.only(bottom: 22.0.s),
-                  child: TextInput(
-                    prefixIcon: TextInputIcons(
-                      hasRightDivider: true,
-                      icons: [Assets.svg.iconFieldPhone.icon()],
-                    ),
-                    labelText: locale.two_fa_sms,
+                  child: TwoFaCodeInput(
                     controller: codeController,
-                    validator: (String? value) {
-                      if (Validators.isEmpty(value)) return '';
-                      return null;
-                    },
-                    textInputAction: TextInputAction.next,
-                    scrollPadding: EdgeInsets.only(bottom: 200.0.s),
-                    keyboardType: TextInputType.number,
-                    suffixIcon: SendButton(
-                      onRequestCode: () => requestTwoFACode(ref, TwoFAType.sms(phone)),
-                    ),
+                    twoFaType: TwoFaType.sms,
+                    prefixIcon: Assets.svg.iconFieldPhone.icon(),
+                    onRequestCode: requestTwoFaCode,
+                    isSending: isRequestingCode,
+                    countdownInitially: true,
                   ),
                 ),
                 const Spacer(),
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_confirm),
+                  disabled: isValidatingCode,
+                  trailingIcon: isValidatingCode ? const IONLoadingIndicator() : null,
                   onPressed: () => _validateAndProceed(
                     context,
                     ref,
