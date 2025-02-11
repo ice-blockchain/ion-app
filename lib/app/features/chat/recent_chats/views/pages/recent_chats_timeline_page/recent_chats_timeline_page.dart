@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart'
+    hide archivedConversationsProvider;
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/archived_conversations_provider.c.dart';
@@ -32,7 +35,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
       ref.read(archivedConversationsProvider);
     });
 
-    return CustomScrollView(
+    return PullToRefreshBuilder(
       slivers: [
         SliverAppBar(
           backgroundColor: Colors.transparent,
@@ -51,6 +54,10 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
         const SliverToBoxAdapter(child: ArchiveChatTile()),
         ConversationList(conversations: conversations.where((c) => !c.isArchived).toList()),
       ],
+      onRefresh: () async => ref.invalidate(conversationsProvider),
+      builder: (context, slivers) => CustomScrollView(
+        slivers: slivers,
+      ),
     );
   }
 }

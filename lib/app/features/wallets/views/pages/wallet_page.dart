@@ -3,11 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/nfts_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_header.dart';
@@ -49,39 +54,51 @@ class WalletPage extends HookConsumerWidget {
     final showFriends = ref.watch(shouldShowFriendsSelectorProvider).valueOrNull ?? true;
 
     return Scaffold(
-      body: CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          CollapsingAppBar(
-            height: FeedControls.height,
-            child: const Header(),
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const Balance(),
-                if (showFriends) ...[
-                  const Delimiter(),
-                  const ContactsList(),
-                ],
-                const Delimiter(),
-                WalletTabsHeader(
-                  activeTab: activeTab.value,
-                  onTabSwitch: (WalletTabType newTab) {
-                    if (newTab != activeTab.value) {
-                      activeTab.value = newTab;
-                    }
-                  },
-                ),
-              ],
+      body: SafeArea(
+        child: PullToRefreshBuilder(
+          slivers: [
+            CollapsingAppBar(
+              height: FeedControls.height,
+              child: const Header(),
             ),
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const Balance(),
+                  if (showFriends) ...[
+                    const Delimiter(),
+                    const ContactsList(),
+                  ],
+                  const Delimiter(),
+                  WalletTabsHeader(
+                    activeTab: activeTab.value,
+                    onTabSwitch: (WalletTabType newTab) {
+                      if (newTab != activeTab.value) {
+                        activeTab.value = newTab;
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            if (activeTab.value == WalletTabType.nfts)
+              const NftsTabHeader()
+            else
+              const CoinsTabHeader(),
+            getActiveTabContent(),
+          ],
+          onRefresh: () async {
+            ref
+              ..invalidate(walletViewsDataNotifierProvider)
+              ..invalidate(currentUserFollowListProvider)
+              ..invalidate(coinsInWalletProvider)
+              ..invalidate(nftsDataProvider);
+          },
+          builder: (context, slivers) => CustomScrollView(
+            controller: scrollController,
+            slivers: slivers,
           ),
-          if (activeTab.value == WalletTabType.nfts)
-            const NftsTabHeader()
-          else
-            const CoinsTabHeader(),
-          getActiveTabContent(),
-        ],
+        ),
       ),
     );
   }
