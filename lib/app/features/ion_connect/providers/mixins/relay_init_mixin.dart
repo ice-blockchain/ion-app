@@ -21,7 +21,7 @@ mixin RelayInitMixin {
     _initCompleters[relay.url] = completer;
 
     try {
-      await ref.read(ionConnectNotifierProvider.notifier).sendInitialAuthEvent(relay);
+      await ref.read(ionConnectNotifierProvider.notifier).initRelayAuth(relay);
 
       _subscriptions[relay.url] = relay.onClose.listen(
         (url) {

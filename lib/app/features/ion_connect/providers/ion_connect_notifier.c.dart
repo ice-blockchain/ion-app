@@ -96,7 +96,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return result?.elementAtOrNull(0);
   }
 
-  Future<void> sendInitialAuthEvent(IonConnectRelay relay) async {
+  Future<void> initRelayAuth(IonConnectRelay relay) async {
     final signedAuthEvent = await createAuthEvent(
       challenge: 'init',
       relayUrl: Uri.parse(relay.url).toString(),
@@ -113,7 +113,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     for (final relay in await ref.read(relayCreationProvider.notifier).getActiveRelays()) {
       try {
         Logger.log('Send reauth');
-        await sendInitialAuthEvent(relay);
+        await initRelayAuth(relay);
       } catch (error, stackTrace) {
         Logger.log('Send reauth exception', error: error, stackTrace: stackTrace);
       }
