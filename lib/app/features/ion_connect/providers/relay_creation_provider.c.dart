@@ -134,7 +134,7 @@ class RelayCreation extends _$RelayCreation {
   }
 
   Future<List<IonConnectRelay>> getActiveRelays() async {
-    final activeRelays = ref.read(activeRelaysProvider);
+    final activeRelays = ref.watch(activeRelaysProvider);
     if (activeRelays.isEmpty) return [];
 
     return Future.wait(

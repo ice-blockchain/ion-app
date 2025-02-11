@@ -11,7 +11,7 @@ part 'reauth_provider.c.g.dart';
 
 @riverpod
 Future<(UserDelegationEntity?, Set<String>)> reauth(Ref ref) async {
-  final mainWallet = await ref.read(mainWalletProvider.future);
+  final mainWallet = await ref.watch(mainWalletProvider.future);
   final delegation =
       await ref.watch(cachedUserDelegationProvider(mainWallet.signingKey.publicKey).future);
 
