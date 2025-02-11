@@ -15,16 +15,10 @@ part 'user_delegation_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
-  final userDelegation = ref.watch(
-    ionConnectCacheProvider.select(
-      cacheSelector<UserDelegationEntity>(
-        CacheableEntity.cacheKeyBuilder(
-          eventReference:
-              ReplaceableEventReference(pubkey: pubkey, kind: UserDelegationEntity.kind),
-        ),
-      ),
-    ),
+  final userDelegation = await ref.watch(
+    cachedUserDelegationProvider(pubkey).future,
   );
+
   if (userDelegation != null) {
     return userDelegation;
   }
@@ -41,11 +35,40 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
 }
 
 @Riverpod(keepAlive: true)
+Future<UserDelegationEntity?> cachedUserDelegation(Ref ref, String pubkey) async {
+  final userDelegation = ref.watch(
+    ionConnectCacheProvider.select(
+      cacheSelector<UserDelegationEntity>(
+        CacheableEntity.cacheKeyBuilder(
+          eventReference: ReplaceableEventReference(
+            pubkey: pubkey,
+            kind: UserDelegationEntity.kind,
+          ),
+        ),
+      ),
+    ),
+  );
+
+  return userDelegation;
+}
+
+@Riverpod(keepAlive: true)
 Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
 
   try {
     return await ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
+  } on UserRelaysNotFoundException catch (_) {
+    return null;
+  }
+}
+
+@Riverpod(keepAlive: true)
+Future<UserDelegationEntity?> currentUserCachedDelegation(Ref ref) async {
+  final mainWallet = await ref.watch(mainWalletProvider.future);
+
+  try {
+    return await ref.watch(cachedUserDelegationProvider(mainWallet.signingKey.publicKey).future);
   } on UserRelaysNotFoundException catch (_) {
     return null;
   }

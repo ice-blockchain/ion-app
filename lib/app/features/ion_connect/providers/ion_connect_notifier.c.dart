@@ -17,6 +17,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
@@ -45,7 +46,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
-          await sendAuthEvent(relay!);
+          await _sendAuthEvent(relay!);
         }
 
         await relay!.sendEvents(events);
@@ -78,7 +79,20 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return result?.elementAtOrNull(0);
   }
 
-  Future<void> sendAuthEvent(IonConnectRelay relay) async {
+  Future<void> initRelayAuth(IonConnectRelay relay) async {
+    final signedAuthEvent = await createAuthEvent(
+      challenge: 'init',
+      relayUrl: Uri.parse(relay.url).toString(),
+    );
+
+    await sendEvent(
+      signedAuthEvent,
+      relay: relay,
+      cache: false,
+    );
+  }
+
+  Future<void> _sendAuthEvent(IonConnectRelay relay) async {
     final challenge = ref.read(authChallengeProvider(relay.url));
     if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
@@ -113,7 +127,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       relay: relayUrl,
     );
 
-    return sign(authEvent);
+    final delegation = await ref.read(currentUserCachedDelegationProvider.future);
+    return sign(authEvent, includeMasterPubkey: delegation != null);
   }
 
   Future<List<IonConnectEntity>?> sendEntitiesData(
@@ -151,8 +166,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
         if (_isAuthRequired(error)) {
           try {
-            // TODO: handle multiple auth requests to one connectoon properly
-            await sendAuthEvent(relay!);
+            await _sendAuthEvent(relay!);
           } catch (error, stackTrace) {
             Logger.log('Send auth exception', error: error, stackTrace: stackTrace);
           }
