@@ -51,7 +51,11 @@ class PostBody extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (content.isNotEmpty) TextEditorPreview(content: content),
+        if (content.isNotEmpty)
+          TextEditorPreview(
+            content: content,
+            enableInteractiveSelection: isTextSelectable,
+          ),
         if (postMedia.isNotEmpty)
           Padding(
             padding: EdgeInsets.only(top: 10.0.s),

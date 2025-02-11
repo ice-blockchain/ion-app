@@ -13,11 +13,13 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
     required this.content,
+    this.enableInteractiveSelection = false,
     this.media,
     super.key,
   });
 
   final Delta content;
+  final bool enableInteractiveSelection;
   final Map<String, MediaAttachment>? media;
 
   @override
@@ -35,7 +37,7 @@ class TextEditorPreview extends HookWidget {
         enableSelectionToolbar: false,
         floatingCursorDisabled: true,
         showCursor: false,
-        enableInteractiveSelection: false,
+        enableInteractiveSelection: enableInteractiveSelection,
         customStyles: getCustomStyles(context),
         embedBuilders: [
           TextEditorSingleImageBuilder(media: media),
