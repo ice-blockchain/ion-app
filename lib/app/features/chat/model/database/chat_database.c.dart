@@ -60,7 +60,6 @@ class ChatDatabase extends _$ChatDatabase {
           await customStatement('PRAGMA foreign_keys = ON');
         },
         onCreate: (migration) => migration.createAll(),
-        onUpgrade: (migration, from, to) async {},
       );
 
   static QueryExecutor _openConnection(String pubkey) {

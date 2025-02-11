@@ -48,6 +48,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
     eventMessageDao: ref.watch(conversationEventMessageDaoProvider),
     mediaEncryptionService: ref.watch(mediaEncryptionServiceProvider),
     conversationMessageStatusDao: ref.watch(conversationMessageStatusDaoProvider),
+    conversationDao: ref.watch(conversationDaoProvider),
   );
 }
 
@@ -66,6 +67,7 @@ class SendE2eeMessageService {
     required this.currentUserMasterPubkey,
     required this.eventMessageDao,
     required this.conversationMessageStatusDao,
+    required this.conversationDao,
   });
 
   final Env env;
@@ -81,7 +83,7 @@ class SendE2eeMessageService {
   final String currentUserMasterPubkey;
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageStatusDao conversationMessageStatusDao;
-
+  final ConversationDao conversationDao;
   Future<void> sendMessage({
     required String content,
     required String conversationId,
@@ -202,6 +204,8 @@ class SendE2eeMessageService {
       if (masterPubkey == currentUserMasterPubkey) {
         await eventMessageDao.add(eventMessage);
       }
+      await conversationDao.add([eventMessage]);
+      await eventMessageDao.add(eventMessage);
 
       await conversationMessageStatusDao.updateConversationMessageStatusData(
         masterPubkey: masterPubkey,

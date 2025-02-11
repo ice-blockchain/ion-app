@@ -29,10 +29,23 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(sendE2eeMessageServiceProvider);
 
+    final conversationId = useState<String?>(null);
+
+    useEffect(
+      () {
+        ref.read(existChatConversationIdProvider(receiverPubKey).future).then(
+          (value) {
+            conversationId.value = value ?? generateUuid();
+          },
+        );
+        return null;
+      },
+    );
+
     final onSubmitted = useCallback(
       (String? content) async {
-        final existConversationId =
-            await ref.watch(existChatConversationIdProvider(receiverPubKey).future);
+        // final existConversationId =
+        //     await ref.watch(existChatConversationIdProvider(receiverPubKey).future);
 
         final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
         if (currentPubkey == null) {
@@ -42,7 +55,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
             await ref.read(sendE2eeMessageServiceProvider.future);
 
         await conversationMessageManagementService.sendMessage(
-          conversationId: existConversationId ?? generateUuid(),
+          conversationId: conversationId.value!,
           content: content ?? '',
           participantsMasterkeys: [receiverPubKey, currentPubkey],
         );
@@ -60,7 +73,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         child: Column(
           children: [
             _Header(receiverMasterPubKey: receiverPubKey),
-            _MessagesList(receiverPubKey: receiverPubKey),
+            _MessagesList(conversationId: conversationId.value),
             MessagingBottomBar(
               onSubmitted: onSubmitted,
             ),
@@ -96,15 +109,18 @@ class _Header extends HookConsumerWidget {
   }
 }
 
-class _MessagesList extends HookConsumerWidget {
-  const _MessagesList({required this.receiverPubKey});
+class _MessagesList extends ConsumerWidget {
+  const _MessagesList({required this.conversationId});
 
-  final String receiverPubKey;
+  final String? conversationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final conversationId = ref.watch(existChatConversationIdProvider(receiverPubKey)).valueOrNull;
-    final messages = ref.watch(conversationMessagesProvider(conversationId ?? ''));
+    if (conversationId == null) {
+      return const E2eeConversationEmptyView();
+    }
+
+    final messages = ref.watch(conversationMessagesProvider(conversationId!));
     return Expanded(
       child: messages.maybeWhen(
         data: (messages) {
@@ -113,7 +129,7 @@ class _MessagesList extends HookConsumerWidget {
           }
           return OneToOneMessageList(messages);
         },
-        orElse: () => const SizedBox.expand(),
+        orElse: E2eeConversationEmptyView.new,
       ),
     );
   }
