@@ -29,7 +29,7 @@ part 'ion_connect_notifier.c.g.dart';
 @riverpod
 class IonConnectNotifier extends _$IonConnectNotifier {
   @override
-  FutureOr<void> build() async {}
+  FutureOr<void> build() {}
 
   Future<List<IonConnectEntity>?> sendEvents(
     List<EventMessage> events, {
