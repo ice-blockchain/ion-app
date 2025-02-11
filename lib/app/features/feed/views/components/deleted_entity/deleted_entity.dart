@@ -20,7 +20,7 @@ class DeletedEntity extends StatelessWidget {
     super.key,
     double? bottomPadding,
     double? topPadding,
-  })  : topPadding = topPadding ?? 10.0,
+  })  : topPadding = topPadding ?? 10.0.s,
         bottomPadding = bottomPadding ?? 10.0.s;
 
   final DeletedEntityType entityType;
