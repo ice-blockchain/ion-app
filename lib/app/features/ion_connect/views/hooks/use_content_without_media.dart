@@ -22,7 +22,7 @@ Delta contentWithoutMedia({
 
   if (media.isEmpty) return delta;
 
-  //TODO:impl
+  //TODO::impl
 
   return delta;
 }

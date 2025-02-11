@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -220,13 +221,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required Delta content,
     required List<MediaAttachment> media,
   }) {
-    //TODO::impl Delta?
-    return deltaToMarkdown(content);
-    // return [
-    //   if (media.isNotEmpty) TextMatch(media.map((attachment) => attachment.url).join(' ')),
-    //   if (media.isNotEmpty && content.isNotEmpty) const TextMatch(' '),
-    //   ...content,
-    // ];
+    final contentWithMedia = Delta.fromOperations(
+      media
+          .map(
+            (mediaItem) => Operation.insert(mediaItem.url, {Attribute.link.key: mediaItem.url}),
+          )
+          .toList(),
+    ).concat(content);
+    return deltaToMarkdown(contentWithMedia);
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
