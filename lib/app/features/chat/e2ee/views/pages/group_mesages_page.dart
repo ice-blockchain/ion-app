@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -14,6 +16,7 @@ import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 
 class GroupMessagesPage extends HookConsumerWidget {
   const GroupMessagesPage({
@@ -63,12 +66,15 @@ class GroupMessagesPage extends HookConsumerWidget {
                 final conversationMessageManagementService =
                     await ref.read(sendE2eeMessageServiceProvider.future);
 
+                final groupImageTag = lastMessage.tags.firstWhereOrNull((e) => e.first == 'imeta');
+
                 await conversationMessageManagementService.sendMessage(
                   conversationId: conversationId,
                   content: content ?? '',
                   subject: privateMesssageEntity.relatedSubject?.value,
                   participantsMasterkeys:
                       privateMesssageEntity.relatedPubkeys?.map((e) => e.value).toList() ?? [],
+                  groupImageTag: groupImageTag,
                 );
               },
             ),
@@ -86,15 +92,14 @@ class _Header extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = PrivateDirectMessageData.fromEventMessage(lastMessage);
-    //TODO: Add image url
-    // final image = useFuture(
-    //   ref.read(mediaServiceProvider).retreiveEncryptedMedia([entity.primaryMedia!]),
-    // );
+    final groupImageFile = useFuture(
+      ref.watch(mediaEncryptionServiceProvider).retreiveEncryptedMedia([
+        entity.primaryMedia!,
+      ]),
+    ).data?.firstOrNull;
 
     return MessagingHeader(
-      // imageUrl: null,
-      // imageUrl: mediaService.data?.isNotEmpty ?? false ? mediaService.data?.first.path ?? '' : null,
-      // imageUrl: image.data?.isNotEmpty ?? false ? image.data?.first.path : null,
+      imageWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       name: entity.relatedSubject?.value ?? '',
       subtitle: MemberCountTile(count: entity.relatedPubkeys?.length ?? 0),
     );

@@ -90,6 +90,7 @@ class SendE2eeMessageService {
     required List<String> participantsMasterkeys,
     String? subject,
     List<MediaFile> mediaFiles = const [],
+    List<String>? groupImageTag,
   }) async {
     try {
       if (eventSigner == null) {
@@ -100,6 +101,7 @@ class SendE2eeMessageService {
         subject: subject,
         conversationId: conversationId,
         masterPubkeys: participantsMasterkeys,
+        groupImageTag: groupImageTag,
       );
 
       final participantsKeysMap =
@@ -201,9 +203,6 @@ class SendE2eeMessageService {
         receiverMasterPubkey: masterPubkey,
       );
 
-      if (masterPubkey == currentUserMasterPubkey) {
-        await eventMessageDao.add(eventMessage);
-      }
       await conversationDao.add([eventMessage]);
       await eventMessageDao.add(eventMessage);
 
@@ -237,11 +236,13 @@ class SendE2eeMessageService {
     required String conversationId,
     required List<String> masterPubkeys,
     String? subject,
+    List<String>? groupImageTag,
   }) {
     final tags = [
       if (subject != null) ['subject', subject],
       ...masterPubkeys.map((pubkey) => ['p', pubkey]),
       [CommunityIdentifierTag.tagName, conversationId],
+      if (groupImageTag != null) groupImageTag,
     ];
 
     return tags;
