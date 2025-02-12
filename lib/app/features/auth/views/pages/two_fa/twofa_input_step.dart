@@ -55,6 +55,7 @@ class TwoFAInputStep extends HookConsumerWidget {
     };
 
     return SheetContent(
+      topPadding: 0,
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
@@ -81,6 +82,7 @@ class TwoFAInputStep extends HookConsumerWidget {
                             ),
                           ),
                       ],
+                      SizedBox(height: 16.0.s),
                       Button(
                         disabled: isLoading,
                         trailingIcon: isLoading ? const IONLoadingIndicator() : null,
@@ -100,6 +102,7 @@ class TwoFAInputStep extends HookConsumerWidget {
             ],
           ),
           ScreenBottomOffset(
+            margin: 28.0.s,
             child: const AuthFooter(),
           ),
         ],

@@ -60,7 +60,6 @@ class RecoveryCredsStep extends HookConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 16.0.s),
                       ...RecoveryKeyProperty.values.map(
                         (key) => Padding(
                           padding: EdgeInsets.only(bottom: 16.0.s),
@@ -77,7 +76,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 16.0.s),
+                      SizedBox(height: 4.0.s),
                       Button(
                         label: Text(context.i18n.button_restore),
                         mainAxisSize: MainAxisSize.max,
@@ -99,19 +98,14 @@ class RecoveryCredsStep extends HookConsumerWidget {
                           }
                         },
                       ),
-                      Expanded(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: 63.0.s),
-                        ),
-                      ),
-                      ScreenBottomOffset(
-                        margin: 28.0.s,
-                        child: const AuthFooter(),
-                      ),
                     ],
                   ),
                 ),
               ),
+            ),
+            ScreenBottomOffset(
+              margin: 28.0.s,
+              child: const AuthFooter(),
             ),
           ],
         ),
