@@ -31,6 +31,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/text_parser/model/text_match.c.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
@@ -292,20 +293,18 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadImage(
     MediaFile file,
   ) async {
-    const maxDimension = 1024;
-    final (:width, :height) =
-        await ref.read(compressServiceProvider).getImageDimension(path: file.path);
+    Logger.info(
+      'Uploading image: width=${file.width}, height=${file.height}, path=${file.path}',
+    );
 
-    final compressedImage = await ref.read(compressServiceProvider).compressImage(
+    final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           file,
-          width: width > height ? maxDimension : null,
-          height: height > width ? maxDimension : null,
-          quality: 70,
+          alt: _getFileAlt(),
         );
 
-    final uploadResult = await ref
-        .read(ionConnectUploadNotifierProvider.notifier)
-        .upload(compressedImage, alt: _getFileAlt());
+    Logger.info(
+      'Image uploaded successfully: fileUrl=${uploadResult.fileMetadata.url}',
+    );
 
     return (
       fileMetadatas: [uploadResult.fileMetadata],

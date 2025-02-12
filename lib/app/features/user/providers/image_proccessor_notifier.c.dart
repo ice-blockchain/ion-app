@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -54,6 +55,10 @@ class ImageProcessorNotifier extends _$ImageProcessorNotifier {
       );
       state = ImageProcessorState.picked(file: pickedFile);
 
+      Logger.info(
+        'Original image dimensions: width=${assetEntity.width}, height=${assetEntity.height}',
+      );
+
       final croppedImage = await mediaService.cropImage(
         uiSettings: cropUiSettings,
         path: file.path,
@@ -73,6 +78,13 @@ class ImageProcessorNotifier extends _$ImageProcessorNotifier {
         quality: config.quality,
       );
       state = ImageProcessorState.processed(file: compressedImage);
+
+      Logger.info(
+        'Compressed image dimensions: '
+        'width=${compressedImage.width}, '
+        'height=${compressedImage.height}, '
+        'quality=${config.quality}',
+      );
     } catch (error) {
       state = ImageProcessorState.error(message: error.toString());
     }
