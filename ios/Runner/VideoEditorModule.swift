@@ -164,7 +164,7 @@ extension VideoEditorModule {
             ExportVideoConfiguration(
                 fileURL: firstFileURL,
                 quality: .auto,
-                useHEVCCodecIfPossible: true,
+                useHEVCCodecIfPossible: false,
                 watermarkConfiguration: nil
             )
         ]
@@ -172,7 +172,7 @@ extension VideoEditorModule {
         // Set up export
         let exportConfiguration = ExportConfiguration(
             videoConfigurations: exportVideoConfigurations,
-            isCoverEnabled: true,
+            isCoverEnabled: false,
             gifSettings: nil
         )
         

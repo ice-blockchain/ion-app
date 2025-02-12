@@ -83,20 +83,23 @@ class StoryGalleryButton extends HookConsumerWidget {
 
           if (mediaType == MediaType.video) {
             final editedPath = await ref.read(editMediaProvider(selectedFile).future);
-            if (editedPath == selectedFile.path) {
-              if (context.mounted) {
-                await ref
-                    .read(imageProcessorNotifierProvider(ImageProcessingType.story).notifier)
-                    .process(
-                      assetId: mediaFiles.first.path,
-                      cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
-                        context,
-                        aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
-                      ),
-                    );
-              }
-              return;
+
+            if (context.mounted) {
+              await StoryPreviewRoute(
+                path: editedPath,
+                mimeType: selectedFile.mimeType,
+              ).push<bool>(context);
             }
+          } else {
+            await ref
+                .read(imageProcessorNotifierProvider(ImageProcessingType.story).notifier)
+                .process(
+                  assetId: mediaFiles.first.path,
+                  cropUiSettings: ref.read(mediaServiceProvider).buildCropImageUiSettings(
+                    context,
+                    aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
+                  ),
+                );
           }
         }
       },

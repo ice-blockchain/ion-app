@@ -193,7 +193,21 @@ class MainActivity : FlutterFragmentActivity() {
     // Observe export video results
     override fun onActivityResult(requestCode: Int, result: Int, intent: Intent?) {
         super.onActivityResult(requestCode, result, intent)
-        if (requestCode == PHOTO_EDITOR_REQUEST_CODE && result == RESULT_OK) {
+        if (requestCode == VIDEO_EDITOR_REQUEST_CODE && result == RESULT_OK) {
+            val exportResult =
+                intent?.getParcelableExtra(EXTRA_EXPORTED_SUCCESS) as? ExportResult.Success
+            if (exportResult == null) {
+                this.exportResult?.error(
+                    "ERR_MISSING_EXPORT_RESULT",
+                    "",
+                    null
+                )
+            } else {
+                val data = prepareVideoExportData(exportResult)
+                this.exportResult?.success(data)
+            }
+
+        } else if (requestCode == PHOTO_EDITOR_REQUEST_CODE && result == RESULT_OK) {
             val data = preparePhotoExportData(intent)
             exportResult?.success(data)
         }
@@ -208,8 +222,22 @@ class MainActivity : FlutterFragmentActivity() {
         )
     }
 
+    // Customize export data results to meet your requirements.
+    // You can use Map or JSON to pass custom data for your app.
+    private fun prepareVideoExportData(result: ExportResult.Success): Map<String, Any?> {
+        // First exported video file path is used to play video in this sample to demonstrate
+        // the result of video export.
+        // You can provide your custom logic.
+        val firstVideoFilePath = result.videoList[0].sourceUri.toString()
+        val videoCoverImagePath = result.preview.toString()
+        val data = mapOf(
+            ARG_EXPORTED_VIDEO_FILE to firstVideoFilePath,
+            ARG_EXPORTED_VIDEO_COVER to videoCoverImagePath
+        )
+        return data
+    }
+
     private fun startVideoEditorModeTrimmer(trimmerVideo: Uri) {
-        // Editor V2 is not available from Trimmer screen
         startActivityForResult(
             VideoCreationActivity.startFromTrimmer(
                 context = this,
@@ -218,7 +246,8 @@ class MainActivity : FlutterFragmentActivity() {
                 // set TrackData object if you open VideoCreationActivity with preselected music track
                 audioTrackData = null,
                 // set Trimmer video configuration
-                predefinedVideos = arrayOf(trimmerVideo)
+                predefinedVideos = arrayOf(trimmerVideo),
+                extras = extras
             ), VIDEO_EDITOR_REQUEST_CODE
         )
     }

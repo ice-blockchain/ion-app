@@ -83,8 +83,12 @@ class BanubaService {
       methodStartVideoEditorTrimmer,
       filePath,
     );
-    //TODO: handle result
-    return result as String;
+
+    if (result is Map) {
+      final exportedVideoFilePath = result[argExportedVideoFile];
+      return exportedVideoFilePath as String;
+    }
+    return filePath;
   }
 }
 
