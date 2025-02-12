@@ -35,6 +35,7 @@ class TwoFAOptionsStep extends HookConsumerWidget {
     final optionsState = ref.watch(selectedTwoFAOptionsNotifierProvider);
 
     return SheetContent(
+      topPadding: 0,
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
@@ -67,6 +68,7 @@ class TwoFAOptionsStep extends HookConsumerWidget {
                           );
                         },
                       ),
+                      SizedBox(height: 16.0.s),
                       Button(
                         onPressed: () {
                           final optionsAmount = optionsState.optionsAmount;
@@ -92,6 +94,7 @@ class TwoFAOptionsStep extends HookConsumerWidget {
             ],
           ),
           ScreenBottomOffset(
+            margin: 28.0.s,
             child: const AuthFooter(),
           ),
         ],
