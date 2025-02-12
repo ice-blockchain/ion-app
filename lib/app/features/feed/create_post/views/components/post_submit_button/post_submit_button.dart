@@ -16,7 +16,6 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/validators.dart';
 
@@ -72,8 +71,6 @@ class PostSubmitButton extends HookConsumerWidget {
     return ToolbarSendButton(
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
-        final content = deltaToMarkdown(textEditorController.document.toDelta());
-
         if (modifiedEvent != null) {
           unawaited(
             ref
@@ -83,7 +80,7 @@ class PostSubmitButton extends HookConsumerWidget {
                   ).notifier,
                 )
                 .modify(
-                  content: content,
+                  content: textEditorController.document.toDelta(),
                   eventReference: modifiedEvent!,
                   whoCanReply: whoCanReply,
                 ),
@@ -100,7 +97,7 @@ class PostSubmitButton extends HookConsumerWidget {
                   ).notifier,
                 )
                 .create(
-                  content: content,
+                  content: textEditorController.document.toDelta(),
                   parentEvent: parentEvent,
                   quotedEvent: quotedEvent,
                   mediaFiles: convertedMediaFiles,

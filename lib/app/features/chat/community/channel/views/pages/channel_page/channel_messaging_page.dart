@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -144,7 +145,7 @@ class _ActionButton extends HookConsumerWidget {
       return MessagingBottomBar(
         onSubmitted: (content) async {
           await ref.read(createPostNotifierProvider(CreatePostOption.community).notifier).create(
-                content: content ?? '',
+                content: content != null ? (Delta()..insert('$content\n')) : null,
                 communtiyId: communityId,
               );
         },

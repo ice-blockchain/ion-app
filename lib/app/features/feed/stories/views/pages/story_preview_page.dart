@@ -97,11 +97,7 @@ class StoryPreviewPage extends ConsumerWidget {
                     if (processedState case ImageProcessorStateProcessed(:final file)) {
                       await ref
                           .read(createPostNotifierProvider(CreatePostOption.story).notifier)
-                          .create(
-                            content: '',
-                            mediaFiles: [file],
-                            whoCanReply: whoCanReply,
-                          );
+                          .create(mediaFiles: [file], whoCanReply: whoCanReply);
 
                       if (context.mounted) {
                         FeedRoute().go(context);

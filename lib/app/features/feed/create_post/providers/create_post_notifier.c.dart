@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:collection/collection.dart';
+import 'package:flutter_quill/quill_delta.dart';
+import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -32,6 +34,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,7 +46,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   FutureOr<void> build(CreatePostOption createOption) {}
 
   Future<void> create({
-    required String content,
+    Delta? content,
     WhoCanReplySettingsOption whoCanReply = WhoCanReplySettingsOption.everyone,
     EventReference? parentEvent,
     EventReference? quotedEvent,
@@ -53,16 +56,17 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      final postContent = content ?? Delta();
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
 
       final postData = ModifiablePostData(
-        content: _buildContentWithMediaLinks(content: content, media: media.values.toList()),
+        content: _buildContentWithMediaLinks(content: postContent, media: media.values.toList()),
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
         editingEndedAt: _buildEntityEditingEndedAt(),
-        relatedHashtags: _buildRelatedHashtags(content),
+        relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
         relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
@@ -83,13 +87,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   Future<void> modify({
-    required String content,
     required EventReference eventReference,
+    Delta? content,
     WhoCanReplySettingsOption? whoCanReply,
   }) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
+      final postContent = content ?? Delta();
       final modifiedEntity =
           await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
       if (modifiedEntity is! ModifiablePostEntity) {
@@ -98,10 +103,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       final postData = modifiedEntity.data.copyWith(
         content: _buildContentWithMediaLinks(
-          content: content,
+          content: postContent,
           media: modifiedEntity.data.media.values.toList(),
         ),
-        relatedHashtags: _buildRelatedHashtags(content),
+        relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         settings: EntityDataWithSettings.build(
           whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
         ),
@@ -212,24 +217,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   String _buildContentWithMediaLinks({
-    required String content,
+    required Delta content,
     required List<MediaAttachment> media,
   }) {
     //TODO::impl Delta?
-    return content;
+    return deltaToMarkdown(content);
     // return [
     //   if (media.isNotEmpty) TextMatch(media.map((attachment) => attachment.url).join(' ')),
     //   if (media.isNotEmpty && content.isNotEmpty) const TextMatch(' '),
     //   ...content,
     // ];
-  }
-
-  List<RelatedHashtag> _buildRelatedHashtags(String content) {
-    //TODO::impl Delta?
-    return [
-      // for (final match in content)
-      //   if (match.matcher is HashtagMatcher) RelatedHashtag(value: match.text),
-    ];
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {
