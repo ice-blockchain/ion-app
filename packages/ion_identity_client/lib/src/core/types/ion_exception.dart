@@ -155,8 +155,9 @@ class InvalidRecoveryCredentialsException extends IONIdentityException {
         final errorMessage =
             errorData is Map<String, dynamic> ? errorData['message'] as String? : null;
         final recoveryKeyNotFound = errorMessage == 'Recovery key not found.';
+        final recoveryKeyArchived = errorMessage == 'Recovery key is archived.';
         final userNotFound = errorMessage == 'USER_NOT_FOUND';
-        return recoveryKeyNotFound || userNotFound;
+        return recoveryKeyNotFound || recoveryKeyArchived || userNotFound;
       }
       return false;
     } catch (_) {
