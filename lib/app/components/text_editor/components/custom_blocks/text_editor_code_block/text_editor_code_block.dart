@@ -13,7 +13,16 @@ const textEditorCodeKey = 'text-editor-code';
 /// Embeds a code block in the text editor.
 ///
 class TextEditorCodeEmbed extends CustomBlockEmbed {
-  TextEditorCodeEmbed() : super(textEditorCodeKey, '');
+  TextEditorCodeEmbed({required String content}) : super(textEditorCodeKey, content);
+
+  static BlockEmbed code({required String content}) => TextEditorCodeEmbed(content: content);
+
+  String get content => data as String;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        textEditorCodeKey: content,
+      };
 }
 
 ///
@@ -32,6 +41,8 @@ class TextEditorCodeBuilder extends EmbedBuilder {
     bool inline,
     TextStyle textStyle,
   ) {
+    final content = node.value.data as String? ?? '';
+
     return Container(
       padding: EdgeInsets.only(top: 12.0.s),
       decoration: BoxDecoration(
@@ -45,6 +56,7 @@ class TextEditorCodeBuilder extends EmbedBuilder {
         children: [
           const CodeBlockTypesToolbar(),
           CodeBlockContent(
+            content: content,
             onRemoveBlock: () => removeBlock(controller, node),
           ),
         ],

@@ -34,6 +34,15 @@ DefaultStyles textEditorStyles(BuildContext context, {Color? color}) {
       VerticalSpacing.zero,
       null,
     ),
+    code: DefaultTextBlockStyle(
+      context.theme.appTextThemes.body2.copyWith(
+        color: context.theme.appColors.secondaryText,
+      ),
+      HorizontalSpacing.zero,
+      VerticalSpacing.zero,
+      VerticalSpacing.zero,
+      null,
+    ),
     lists: DefaultListBlockStyle(
       context.theme.appTextThemes.body2.copyWith(
         color: textColor,
@@ -78,6 +87,9 @@ TextStyle customTextStyleBuilder(Attribute<dynamic> attribute, BuildContext cont
       decoration: TextDecoration.underline,
       color: context.theme.appColors.primaryAccent,
     );
+  } else if (attribute.key == Attribute.codeBlock.key) {
+    return const TextStyle();
   }
+
   return const TextStyle();
 }

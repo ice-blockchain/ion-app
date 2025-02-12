@@ -9,14 +9,16 @@ import 'package:ion/app/extensions/extensions.dart';
 class CodeBlockContent extends HookConsumerWidget {
   const CodeBlockContent({
     required this.onRemoveBlock,
+    required this.content,
     super.key,
   });
 
   final VoidCallback onRemoveBlock;
+  final String content;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final codeText = useState('');
+    final codeText = useState(content);
     final textController = useTextEditingController(text: codeText.value);
     final focusNode = useFocusNode();
 
