@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:json_annotation/json_annotation.dart';
 
 class DurationConverter implements JsonConverter<Duration, int> {
