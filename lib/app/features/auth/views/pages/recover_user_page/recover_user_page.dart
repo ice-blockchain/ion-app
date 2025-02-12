@@ -71,6 +71,9 @@ class RecoverUserPage extends HookConsumerWidget {
               _makeRecoverUserRequest(ref, recoveryCreds.value!, twoFaTypes);
             },
             onBackPress: () => step.value = RecoverUserStep.twoFAOptions,
+            isLoading: ref.watch(
+              initUserRecoveryActionNotifierProvider.select((notifier) => notifier.isLoading),
+            ),
           ),
         ),
     };

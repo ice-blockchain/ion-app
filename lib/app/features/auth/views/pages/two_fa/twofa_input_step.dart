@@ -18,7 +18,6 @@ import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/compon
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/selected_two_fa_types_provider.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -49,11 +48,6 @@ class TwoFAInputStep extends HookConsumerWidget {
     _listenRequestTwoFaErrorResult(context, ref);
 
     final twoFaTypes = ref.watch(selectedTwoFaOptionsProvider);
-
-    useOnInit(
-      () => _requestRecoveryCodes(ref, twoFaTypes),
-      [twoFaTypes],
-    );
 
     final formKey = useRef(GlobalKey<FormState>());
     final controllers = {
@@ -133,15 +127,6 @@ class TwoFAInputStep extends HookConsumerWidget {
         );
       }
     });
-  }
-
-  Future<void> _requestRecoveryCodes(
-    WidgetRef ref,
-    Set<TwoFaType> twoFaTypes,
-  ) async {
-    for (final twoFaType in twoFaTypes) {
-      await _requestRecoveryCode(ref, twoFaType);
-    }
   }
 
   Future<void> _requestRecoveryCode(
