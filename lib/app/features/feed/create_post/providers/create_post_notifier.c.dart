@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -57,7 +58,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final postContent = content ?? Delta();
+      final postContent = content ?? buildEmptyDelta();
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
 
@@ -95,7 +96,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final postContent = content ?? Delta();
+      final postContent = content ?? buildEmptyDelta();
       final modifiedEntity =
           await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
       if (modifiedEntity is! ModifiablePostEntity) {
