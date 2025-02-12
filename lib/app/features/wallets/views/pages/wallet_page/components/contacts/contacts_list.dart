@@ -23,6 +23,7 @@ class ContactsList extends ConsumerWidget {
     );
 
     return friendsDataState.maybeWhen(
+      skipLoadingOnRefresh: false,
       data: (friends) {
         final friendsPubkeys = friends?.pubkeys ?? [];
 

@@ -21,9 +21,10 @@ class Balance extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentWalletData = ref.watch(currentWalletViewDataProvider).valueOrNull;
-    final walletBalance = currentWalletData?.usdBalance ?? 0;
-    final isLoading = currentWalletData == null;
+    final currentWalletData = ref.watch(currentWalletViewDataProvider);
+    final currentWallet = currentWalletData.valueOrNull;
+    final walletBalance = currentWallet?.usdBalance ?? 0;
+    final isLoading = currentWalletData.isLoading;
 
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
     final hitSlop = 5.0.s;

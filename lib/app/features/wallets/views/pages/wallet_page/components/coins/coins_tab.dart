@@ -8,6 +8,7 @@ import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.da
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab_footer.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/empty_state/empty_state.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/components/loaders/list_loader.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -50,6 +51,7 @@ class CoinsTab extends ConsumerWidget {
           ],
         );
       },
+      loading: () => const ListLoader(),
       orElse: () => const SliverToBoxAdapter(
         child: SizedBox.shrink(),
       ),
