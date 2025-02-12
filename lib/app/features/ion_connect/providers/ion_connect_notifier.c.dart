@@ -90,6 +90,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     } catch (error, _) {
       if (_isAuthRequired(error)) {
         await sendAuthEvent(relay);
+      } else {
+        rethrow;
       }
     }
   }
