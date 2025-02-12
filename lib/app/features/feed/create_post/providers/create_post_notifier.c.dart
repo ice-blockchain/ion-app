@@ -53,7 +53,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? parentEvent,
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
-    String? communtiyId,
+    String? communityId,
   }) async {
     state = const AsyncValue.loading();
 
@@ -74,7 +74,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedPubkeys: parentEntity != null ? _buildRelatedPubkeys(parentEntity) : null,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
-        communityId: communtiyId,
+        communityId: communityId,
       );
 
       await _sendPostEntities([...files, postData]);

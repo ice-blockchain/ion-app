@@ -8,5 +8,5 @@ import 'package:flutter_quill/quill_delta.dart';
 ///
 /// https://quilljs.com/docs/delta#line-formatting
 Delta buildEmptyDelta() {
-  return Delta.fromOperations([Operation.insert('\n')]);
+  return Delta()..insert('\n');
 }

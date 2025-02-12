@@ -146,7 +146,7 @@ class _ActionButton extends HookConsumerWidget {
         onSubmitted: (content) async {
           await ref.read(createPostNotifierProvider(CreatePostOption.community).notifier).create(
                 content: content != null ? (Delta()..insert('$content\n')) : null,
-                communtiyId: communityId,
+                communityId: communityId,
               );
         },
       );
