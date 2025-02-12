@@ -14,7 +14,7 @@ import 'package:ion/app/features/feed/views/components/post/components/post_body
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/views/hooks/use_content_without_media.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_delta_markdown_content.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -38,15 +38,13 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final content = useContentWithoutMedia(data: postData);
+    final (:content, :media) = useParsedMarkdownContent(data: postData);
     final firstLinkOperation = useMemoized(
       () => content.operations.firstWhereOrNull(
         (operation) => isAttributedOperation(operation, attribute: Attribute.link),
       ),
       [content],
     );
-
-    final postMedia = postData.media.values.toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,10 +54,10 @@ class PostBody extends HookConsumerWidget {
             content: content,
             enableInteractiveSelection: isTextSelectable,
           ),
-        if (postMedia.isNotEmpty)
+        if (media.isNotEmpty)
           Padding(
             padding: EdgeInsets.only(top: 10.0.s),
-            child: PostMedia(media: postMedia),
+            child: PostMedia(media: media),
           ),
         if (firstLinkOperation != null)
           Padding(
