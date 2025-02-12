@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/hooks/use_text_editor_has_content.dart';
@@ -72,9 +71,6 @@ class PostSubmitButton extends HookConsumerWidget {
     return ToolbarSendButton(
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
-        final operations = textEditorController.document.toDelta().operations;
-        final content = Document.fromDelta(Delta.fromOperations(operations)).toPlainText();
-
         if (modifiedEvent != null) {
           unawaited(
             ref
@@ -84,7 +80,7 @@ class PostSubmitButton extends HookConsumerWidget {
                   ).notifier,
                 )
                 .modify(
-                  content: content,
+                  content: textEditorController.document.toDelta(),
                   eventReference: modifiedEvent!,
                   whoCanReply: whoCanReply,
                 ),
@@ -101,7 +97,7 @@ class PostSubmitButton extends HookConsumerWidget {
                   ).notifier,
                 )
                 .create(
-                  content: content,
+                  content: textEditorController.document.toDelta(),
                   parentEvent: parentEvent,
                   quotedEvent: quotedEvent,
                   mediaFiles: convertedMediaFiles,

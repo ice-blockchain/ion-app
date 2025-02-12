@@ -20,8 +20,11 @@ import 'package:ion/app/features/feed/create_post/views/components/post_submit_b
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_author_header.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
+import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_bold_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_image_button.dart';
+import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_italic_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
+import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_regular_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -140,6 +143,9 @@ class ReplyInputField extends HookConsumerWidget {
                   delegate: AttachedMediaHandler(attachedMediaNotifier),
                 ),
                 ToolbarPollButton(textEditorController: textEditorController),
+                ToolbarRegularButton(textEditorController: textEditorController),
+                ToolbarItalicButton(textEditorController: textEditorController),
+                ToolbarBoldButton(textEditorController: textEditorController),
               ],
               trailing: PostSubmitButton(
                 textEditorController: textEditorController,

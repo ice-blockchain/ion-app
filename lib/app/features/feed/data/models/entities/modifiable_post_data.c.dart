@@ -26,8 +26,6 @@ import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'modifiable_post_data.c.freezed.dart';
 
@@ -79,7 +77,7 @@ class ModifiablePostData
         _$ModifiablePostData
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
-    required List<TextMatch> content,
+    required String content,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
@@ -94,15 +92,13 @@ class ModifiablePostData
   }) = _ModifiablePostData;
 
   factory ModifiablePostData.fromEventMessage(EventMessage eventMessage) {
-    final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
-
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final quotedEventTag =
         tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
     return ModifiablePostData(
-      content: parsedContent,
-      media: EntityDataWithMediaContent.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      content: eventMessage.content,
+      media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       replaceableEventId:
           ReplaceableEventIdentifier.fromTag(tags[ReplaceableEventIdentifier.tagName]!.first),
       publishedAt: EntityPublishedAt.fromTag(tags[EntityPublishedAt.tagName]!.first),
@@ -134,7 +130,7 @@ class ModifiablePostData
       signer: signer,
       createdAt: createdAt,
       kind: ModifiablePostEntity.kind,
-      content: content.map((match) => match.text).join(),
+      content: content,
       tags: [
         ...tags,
         replaceableEventId.toTag(),
@@ -163,6 +159,6 @@ class ModifiablePostData
 
   @override
   String toString() {
-    return 'ModifiablePostData(${content.map((match) => match.text).join()})';
+    return 'ModifiablePostData($content)';
   }
 }

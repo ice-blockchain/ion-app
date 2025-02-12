@@ -21,8 +21,6 @@ import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/text_parser.dart';
 
 part 'post_data.c.freezed.dart';
 
@@ -63,7 +61,7 @@ class PostData
     with _$PostData, EntityDataWithMediaContent, EntityDataWithSettings, EntityDataWithRelatedEvents
     implements EventSerializable {
   const factory PostData({
-    required List<TextMatch> content,
+    required String content,
     required Map<String, MediaAttachment> media,
     EntityExpiration? expiration,
     QuotedEvent? quotedEvent,
@@ -74,15 +72,13 @@ class PostData
   }) = _PostData;
 
   factory PostData.fromEventMessage(EventMessage eventMessage) {
-    final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
-
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final quotedEventTag =
         tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
     return PostData(
-      content: parsedContent,
-      media: EntityDataWithMediaContent.buildMedia(tags[MediaAttachment.tagName], parsedContent),
+      content: eventMessage.content,
+      media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       expiration: tags[EntityExpiration.tagName] != null
           ? EntityExpiration.fromTag(tags[EntityExpiration.tagName]!.first)
           : null,
@@ -106,7 +102,7 @@ class PostData
       signer: signer,
       createdAt: createdAt,
       kind: PostEntity.kind,
-      content: content.map((match) => match.text).join(),
+      content: content,
       tags: [
         ...tags,
         if (expiration != null) expiration!.toTag(),
@@ -122,6 +118,6 @@ class PostData
 
   @override
   String toString() {
-    return 'PostData(${content.map((match) => match.text).join()})';
+    return 'PostData($content)';
   }
 }

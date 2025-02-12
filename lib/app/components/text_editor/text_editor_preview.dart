@@ -7,18 +7,24 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
-import 'package:ion/app/components/text_editor/utils/quill.dart';
+import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
     required this.content,
+    this.enableInteractiveSelection = false,
     this.media,
+    this.maxHeight,
+    this.customStyles,
     super.key,
   });
 
   final Delta content;
+  final bool enableInteractiveSelection;
   final Map<String, MediaAttachment>? media;
+  final DefaultStyles? customStyles;
+  final double? maxHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +41,9 @@ class TextEditorPreview extends HookWidget {
         enableSelectionToolbar: false,
         floatingCursorDisabled: true,
         showCursor: false,
-        enableInteractiveSelection: false,
-        customStyles: getCustomStyles(context),
+        enableInteractiveSelection: enableInteractiveSelection,
+        customStyles: customStyles ?? textEditorStyles(context),
+        maxHeight: maxHeight,
         embedBuilders: [
           TextEditorSingleImageBuilder(media: media),
           TextEditorSeparatorBuilder(),

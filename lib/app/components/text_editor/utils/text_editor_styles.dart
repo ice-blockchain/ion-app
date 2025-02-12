@@ -5,11 +5,12 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-DefaultStyles getCustomStyles(BuildContext context) {
+DefaultStyles textEditorStyles(BuildContext context, {Color? color}) {
+  final textColor = color ?? context.theme.appColors.secondaryText;
   return DefaultStyles(
     paragraph: DefaultTextBlockStyle(
       context.theme.appTextThemes.body2.copyWith(
-        color: context.theme.appColors.secondaryText,
+        color: textColor,
       ),
       HorizontalSpacing.zero,
       VerticalSpacing.zero,
@@ -18,11 +19,11 @@ DefaultStyles getCustomStyles(BuildContext context) {
     ),
     bold: context.theme.appTextThemes.body2.copyWith(
       fontWeight: FontWeight.bold,
-      color: context.theme.appColors.secondaryText,
+      color: textColor,
     ),
     italic: context.theme.appTextThemes.body2.copyWith(
       fontStyle: FontStyle.italic,
-      color: context.theme.appColors.secondaryText,
+      color: textColor,
     ),
     placeHolder: DefaultTextBlockStyle(
       context.theme.appTextThemes.body2.copyWith(
@@ -35,7 +36,7 @@ DefaultStyles getCustomStyles(BuildContext context) {
     ),
     lists: DefaultListBlockStyle(
       context.theme.appTextThemes.body2.copyWith(
-        color: context.theme.appColors.secondaryText,
+        color: textColor,
         fontSize: context.theme.appTextThemes.body2.fontSize,
       ),
       HorizontalSpacing.zero,

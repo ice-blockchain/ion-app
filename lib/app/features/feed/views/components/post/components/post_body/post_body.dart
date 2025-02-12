@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/text_span_builder/hooks/use_text_span_builder.dart';
-import 'package:ion/app/components/text_span_builder/text_span_builder.dart';
+import 'package:ion/app/components/text_editor/text_editor_preview.dart';
+import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -11,6 +14,7 @@ import 'package:ion/app/features/feed/views/components/post/components/post_body
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_delta_markdown_content.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -34,34 +38,31 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final textSpanBuilder = useTextSpanBuilder(
-      context,
-      defaultStyle: context.theme.appTextThemes.body2.copyWith(
-        color: context.theme.appColors.sharkText,
+    final (:content, :media) = useParsedMarkdownContent(data: postData);
+    final firstLinkOperation = useMemoized(
+      () => content.operations.firstWhereOrNull(
+        (operation) => isAttributedOperation(operation, attribute: Attribute.link),
       ),
+      [content],
     );
-
-    final postText = textSpanBuilder.build(
-      postData.contentWithoutMedia,
-      onTap: (match) => TextSpanBuilder.defaultOnTap(context, match: match),
-    );
-
-    final postMedia = postData.media.values.toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (postText.toPlainText().isNotEmpty)
-          isTextSelectable ? SelectableText.rich(postText) : Text.rich(postText),
-        if (postMedia.isNotEmpty)
-          Padding(
-            padding: EdgeInsets.only(top: 10.0.s),
-            child: PostMedia(media: postMedia),
+        if (content.isNotEmpty)
+          TextEditorPreview(
+            content: content,
+            enableInteractiveSelection: isTextSelectable,
           ),
-        if (postData.firstUrl != null)
+        if (media.isNotEmpty)
           Padding(
             padding: EdgeInsets.only(top: 10.0.s),
-            child: UrlPreviewContent(url: postData.firstUrl!),
+            child: PostMedia(media: media),
+          ),
+        if (firstLinkOperation != null)
+          Padding(
+            padding: EdgeInsets.only(top: 10.0.s),
+            child: UrlPreviewContent(url: firstLinkOperation.value as String),
           ),
       ],
     );

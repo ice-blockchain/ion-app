@@ -59,7 +59,7 @@ class TextMessage extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        entity.data.content.map((e) => e.text).join(),
+                        entity.data.content,
                         style: context.theme.appTextThemes.body2.copyWith(
                           color: isMe
                               ? context.theme.appColors.onPrimaryAccent

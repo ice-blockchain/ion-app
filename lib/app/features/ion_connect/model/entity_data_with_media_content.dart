@@ -3,57 +3,10 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 
 mixin EntityDataWithMediaContent {
-  List<TextMatch> get content;
+  String get content;
   Map<String, MediaAttachment> get media;
-
-  String? get firstUrl {
-    return contentWithoutMedia
-        .firstWhereOrNull(
-          (match) => match.matcher is UrlMatcher && !media.containsKey(match.text),
-        )
-        ?.text;
-  }
-
-  List<TextMatch> get contentWithoutMedia {
-    if (media.isEmpty) return content;
-
-    final result = <TextMatch>[];
-    TextMatch? previousMatch;
-
-    // Post-process text to remove leading space after media URLs
-    for (final match in content) {
-      final isPlainTextMatcher = match.matcher == null;
-      final isPreviousUrlMatcher = previousMatch?.matcher is UrlMatcher;
-      final isMediaUrl = media.containsKey(previousMatch?.text);
-      final isStartWithSpace = match.text.startsWith(' ');
-
-      if (isPlainTextMatcher && isPreviousUrlMatcher && isMediaUrl && isStartWithSpace) {
-        final processedText = match.text.substring(1);
-        if (processedText.isNotEmpty) {
-          result.add(
-            match.copyWith(
-              text: match.text.substring(1),
-              offset: match.offset + 1,
-            ),
-          );
-        }
-      } else {
-        result.add(match);
-      }
-
-      previousMatch = match;
-    }
-
-    // Filter out URLs from the text content that are present in the media attachments
-    // to avoid showing media URLs in the text when they're already being displayed as actual media
-    return result.where((match) {
-      return !media.values.any((media) => media.url == match.text) && match.text.isNotEmpty;
-    }).toList();
-  }
 
   bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
 
@@ -61,29 +14,6 @@ mixin EntityDataWithMediaContent {
 
   MediaAttachment? get primaryVideo =>
       media.values.firstWhereOrNull((media) => media.mediaType == MediaType.video);
-
-  static Map<String, MediaAttachment> buildMedia(
-    List<List<String>>? imetaTags,
-    List<TextMatch> parsedContent,
-  ) {
-    if (imetaTags == null) {
-      return {};
-    }
-
-    final imeta = parseImeta(imetaTags);
-
-    final media = parsedContent.fold<Map<String, MediaAttachment>>(
-      {},
-      (result, match) {
-        final link = match.text;
-        if (match.matcher is UrlMatcher && imeta.containsKey(link)) {
-          result[link] = imeta[link]!;
-        }
-        return result;
-      },
-    );
-    return media;
-  }
 
   /// Parses a list of imeta tags (Media Attachments defined in NIP-92).
   ///

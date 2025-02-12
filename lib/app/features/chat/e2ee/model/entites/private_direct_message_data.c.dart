@@ -12,8 +12,6 @@ import 'package:ion/app/features/ion_connect/model/entity_data_with_media_conten
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/services/text_parser/model/text_match.c.dart';
-import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
@@ -66,7 +64,7 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 @freezed
 class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMediaContent {
   const factory PrivateDirectMessageData({
-    required List<TextMatch> content,
+    required String content,
     required Map<String, MediaAttachment> media,
     required String uuid,
     String? relatedGroupImagePath,
@@ -77,12 +75,10 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
   }) = _PrivateDirectMessageData;
 
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
-    final parsedContent = TextParser.allMatchers().parse(eventMessage.content);
-
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
     return PrivateDirectMessageData(
-      content: parsedContent,
+      content: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
@@ -94,10 +90,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
   }
 
   factory PrivateDirectMessageData.fromRawContent(String content) {
-    final parsedContent = TextParser.allMatchers().parse(content);
-
     return PrivateDirectMessageData(
-      content: parsedContent,
+      content: content,
       media: {},
       uuid: generateUuid(),
     );
@@ -116,14 +110,13 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     ];
 
     final createdAt = DateTime.now();
-    final contentString = content.map((match) => match.text).join();
 
     final kind14EventId = EventMessage.calculateEventId(
       publicKey: pubkey,
       createdAt: createdAt,
       kind: PrivateDirectMessageEntity.kind,
       tags: eventTags,
-      content: contentString,
+      content: content,
     );
 
     return EventMessage(
@@ -132,7 +125,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       createdAt: createdAt,
       kind: PrivateDirectMessageEntity.kind,
       tags: eventTags,
-      content: contentString,
+      content: content,
       sig: null,
     );
   }
