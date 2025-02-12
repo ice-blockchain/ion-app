@@ -5,6 +5,7 @@ import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 part 'send_asset_form_data.c.freezed.dart';
 
@@ -13,12 +14,14 @@ class SendAssetFormData with _$SendAssetFormData {
   const factory SendAssetFormData({
     required WalletViewData wallet,
     required Network network,
-    required int arrivalTime,
     required DateTime arrivalDateTime,
-    required String address,
-    @Default([]) List<NetworkFeeOption> networkFeeOptions,
-    NetworkFeeOption? selectedNetworkFeeOption,
+    required String receiverAddress,
+    Wallet? senderWallet,
     String? contactPubkey,
     CryptoAssetData? assetData,
+    WalletAsset? networkNativeToken,
+    NetworkFeeOption? selectedNetworkFeeOption,
+    @Default(true) bool canCoverNetworkFee,
+    @Default([]) List<NetworkFeeOption> networkFeeOptions,
   }) = _SendAssetFormData;
 }

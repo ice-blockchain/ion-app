@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_icons.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class AddressInputField extends StatelessWidget {
+class AddressInputField extends HookWidget {
   const AddressInputField({
     required this.onOpenContactList,
     required this.onScanPressed,
+    required this.onAddressChanged,
+    this.initialValue,
     super.key,
   });
 
@@ -17,12 +21,17 @@ class AddressInputField extends StatelessWidget {
 
   final VoidCallback onOpenContactList;
   final VoidCallback onScanPressed;
+  final ValueChanged<String> onAddressChanged;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
+    final controller = useTextEditingController(text: initialValue);
     return TextInput(
       maxLines: maxLines,
+      controller: controller,
       labelText: context.i18n.wallet_enter_address,
+      onChanged: onAddressChanged,
       contentPadding: EdgeInsets.symmetric(
         vertical: 6.0.s,
         horizontal: 16.0.s,

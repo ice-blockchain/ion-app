@@ -10,20 +10,26 @@ import 'package:ion/app/router/app_routes.c.dart';
 class ContactInputSwitcher extends ConsumerWidget {
   const ContactInputSwitcher({
     required this.pubkey,
+    required this.address,
     required this.onContactTap,
     required this.onClearTap,
+    required this.onWalletAddressChanged,
     super.key,
   });
 
   final String? pubkey;
+  final String? address;
   final VoidCallback onContactTap;
   final ValueChanged<String?> onClearTap;
+  final ValueChanged<String?> onWalletAddressChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (pubkey == null) {
       return AddressInputField(
+        initialValue: address,
         onOpenContactList: onContactTap,
+        onAddressChanged: onWalletAddressChanged,
         onScanPressed: () => CoinSendScanRoute().push<void>(context),
       );
     }

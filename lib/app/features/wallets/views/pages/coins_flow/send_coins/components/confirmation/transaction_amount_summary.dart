@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 
 class TransactionAmountSummary extends StatelessWidget {
@@ -31,14 +32,14 @@ class TransactionAmountSummary extends StatelessWidget {
             icon,
             SizedBox(width: 8.0.s),
             Text(
-              '-${formatDouble(amount)} $currency',
+              '-${formatCrypto(amount, currency)}',
               style: textTheme.headline2,
             ),
           ],
         ),
         SizedBox(height: 4.0.s),
         Text(
-          '~ ${formatUSD(usdAmount)} USD',
+          context.i18n.wallet_transaction_summary_usd_amount(formatUSD(usdAmount)),
           style: textTheme.caption2.copyWith(
             color: colors.secondaryText,
           ),

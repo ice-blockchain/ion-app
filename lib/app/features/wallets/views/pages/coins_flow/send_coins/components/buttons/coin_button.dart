@@ -6,6 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -56,11 +57,11 @@ class CoinButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  formatDouble(coinInWallet.amount),
+                  formatCrypto(coinInWallet.amount),
                   style: textTheme.body,
                 ),
                 Text(
-                  formatToCurrency(coinInWallet.balanceUSD),
+                  formatUSD(coinInWallet.balanceUSD),
                   style: textTheme.caption3.copyWith(
                     color: colors.secondaryText,
                   ),

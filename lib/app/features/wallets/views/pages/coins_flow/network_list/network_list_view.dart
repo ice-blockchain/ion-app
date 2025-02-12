@@ -6,10 +6,14 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -31,13 +35,23 @@ class NetworkListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinsGroup = ref.watch(receiveCoinsFormControllerProvider).selectedCoin!;
-    final coinsState = ref.watch(
-      coinsByFiltersProvider(
-        symbol: coinsGroup.abbreviation,
-        symbolGroup: coinsGroup.symbolGroup,
-      ),
-    );
+    final coinsGroup = switch (type) {
+      NetworkListViewType.send =>
+        ref.watch(sendAssetFormControllerProvider()).assetData.as<CoinAssetData>()!.coinsGroup,
+      NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin!,
+    };
+
+    final coinsState = switch (type) {
+      NetworkListViewType.send => ref.watch(
+          syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup),
+        ),
+      NetworkListViewType.receive => ref.watch(
+          coinsByFiltersProvider(
+            symbol: coinsGroup.abbreviation,
+            symbolGroup: coinsGroup.symbolGroup,
+          ),
+        ),
+    };
 
     void onTap(Network network) {
       if (onSelectReturnType) {
@@ -47,10 +61,7 @@ class NetworkListView extends ConsumerWidget {
 
       switch (type) {
         case NetworkListViewType.send:
-          // TODO: Not implemented
-          // ref
-          //     .read(sendAssetFormControllerProvider().notifier)
-          //     .setNetwork(network);
+          ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network);
           CoinsSendFormRoute().push<void>(context);
         case NetworkListViewType.receive:
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
@@ -83,6 +94,7 @@ class NetworkListView extends ConsumerWidget {
                       coinInWallet: coin,
                       network: coin.coin.network,
                       onTap: () => onTap(coin.coin.network),
+                      disableZeroBalance: type == NetworkListViewType.send,
                     );
                   },
                 ),

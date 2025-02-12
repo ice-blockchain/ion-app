@@ -13,13 +13,13 @@ _$EstimateFeeImpl _$$EstimateFeeImplFromJson(Map<String, dynamic> json) =>
       kind: json['kind'] as String?,
       fast: json['fast'] == null
           ? null
-          : GasFee.fromJson(json['fast'] as Map<String, dynamic>),
+          : NetworkFee.fromJson(json['fast'] as Map<String, dynamic>),
       standard: json['standard'] == null
           ? null
-          : GasFee.fromJson(json['standard'] as Map<String, dynamic>),
+          : NetworkFee.fromJson(json['standard'] as Map<String, dynamic>),
       slow: json['slow'] == null
           ? null
-          : GasFee.fromJson(json['slow'] as Map<String, dynamic>),
+          : NetworkFee.fromJson(json['slow'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$EstimateFeeImplToJson(_$EstimateFeeImpl instance) =>

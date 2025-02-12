@@ -6,7 +6,14 @@ import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 class CoinsComparator {
   final CoinPriority _prioritizer = CoinPriority();
 
-  int _compare(double balanceA, double balanceB, String symbolA, String symbolB) {
+  int _compare(
+    double balanceA,
+    double balanceB,
+    String symbolA,
+    String symbolB, [
+    String? networkA,
+    String? networkB,
+  ]) {
     // 1. Compare by balanceUSD in descending order
     final balanceComparison = balanceB.compareTo(balanceA);
     if (balanceComparison != 0) return balanceComparison;
@@ -16,15 +23,26 @@ class CoinsComparator {
     final bPriority = _prioritizer.getPriorityIndex(symbolB.toUpperCase());
 
     // If both are in priority list, compare their positions
-    if (aPriority != -1 && bPriority != -1) {
+    if (aPriority != -1 && bPriority != -1 && aPriority != bPriority) {
       return aPriority.compareTo(bPriority);
     }
     // If only one is in priority list, it should come first
     if (aPriority != -1) return -1;
     if (bPriority != -1) return 1;
 
-    // 3. If neither in priority list or same priority, sort alphabetically by symbol
-    return symbolA.compareTo(symbolB);
+    // 3. Compare by symbol
+    final symbolComparison = symbolA.compareTo(symbolB);
+    if (symbolComparison != 0) return symbolComparison;
+
+    // 4. If symbols are equal, compare by networks
+    if (networkA != null && networkB != null) {
+      return networkA.compareTo(networkB);
+    }
+    // If only one has network, it should come first
+    if (networkA != null) return -1;
+    if (networkB != null) return 1;
+
+    return 0;
   }
 
   int compareGroups(CoinsGroup a, CoinsGroup b) {
@@ -42,6 +60,8 @@ class CoinsComparator {
       b.balanceUSD,
       a.coin.abbreviation,
       b.coin.abbreviation,
+      a.coin.network.serverName,
+      b.coin.network.serverName,
     );
   }
 }

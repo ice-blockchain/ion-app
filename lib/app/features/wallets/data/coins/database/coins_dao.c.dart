@@ -56,13 +56,24 @@ class CoinsDao extends DatabaseAccessor<CoinsDatabase> with _$CoinsDaoMixin {
         .get();
   }
 
-  Future<List<Coin>> getByFilters({String? symbolGroup, String? symbol}) {
+  Future<List<Coin>> getByFilters({
+    String? symbolGroup,
+    String? symbol,
+    String? network,
+    String? contractAddress,
+  }) {
     final query = select(coinsTable);
     if (symbolGroup != null) {
       query.where((row) => row.symbolGroup.lower().equals(symbolGroup.toLowerCase()));
     }
     if (symbol != null) {
       query.where((row) => row.symbol.lower().equals(symbol.toLowerCase()));
+    }
+    if (network != null) {
+      query.where((row) => row.network.lower().equals(network.toLowerCase()));
+    }
+    if (contractAddress != null) {
+      query.where((row) => row.contractAddress.equals(contractAddress));
     }
     return query.get();
   }

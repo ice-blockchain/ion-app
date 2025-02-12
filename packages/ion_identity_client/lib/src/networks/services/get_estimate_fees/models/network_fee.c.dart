@@ -4,17 +4,17 @@ import 'package:ion_identity_client/src/core/network/duration_converter.dart';
 import 'package:ion_identity_client/src/core/network/number_to_string_converter.dart';
 import 'package:ion_identity_client/src/core/types/types.dart';
 
-part 'gas_fee.c.g.dart';
+part 'network_fee.c.g.dart';
 
-part 'gas_fee.c.freezed.dart';
+part 'network_fee.c.freezed.dart';
 
 @freezed
-class GasFee with _$GasFee {
-  const factory GasFee({
+class NetworkFee with _$NetworkFee {
+  const factory NetworkFee({
     @NumberToStringConverter() required String maxFeePerGas,
     @NumberToStringConverter() required String maxPriorityFeePerGas,
     @DurationConverter() Duration? waitTime,
-  }) = _GasFee;
+  }) = _NetworkFee;
 
-  factory GasFee.fromJson(JsonObject map) => _$GasFeeFromJson(map);
+  factory NetworkFee.fromJson(JsonObject map) => _$NetworkFeeFromJson(map);
 }

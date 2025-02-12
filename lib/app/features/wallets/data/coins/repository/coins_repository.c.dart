@@ -66,8 +66,15 @@ class CoinsRepository {
   Future<List<Coin>> getCoinsByFilters({
     String? symbolGroup,
     String? symbol,
+    String? network,
+    String? contractAddress,
   }) =>
-      _coinsDao.getByFilters(symbolGroup: symbolGroup, symbol: symbol);
+      _coinsDao.getByFilters(
+        symbolGroup: symbolGroup,
+        symbol: symbol,
+        network: network,
+        contractAddress: contractAddress,
+      );
 
   int? getLastSyncTime() => _localStorage.getInt(_lastSyncTimeKey);
 

@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'gas_fee.c.dart';
+part of 'network_fee.c.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GasFeeImpl _$$GasFeeImplFromJson(Map<String, dynamic> json) => _$GasFeeImpl(
+_$NetworkFeeImpl _$$NetworkFeeImplFromJson(Map<String, dynamic> json) =>
+    _$NetworkFeeImpl(
       maxFeePerGas:
           const NumberToStringConverter().fromJson(json['maxFeePerGas']),
       maxPriorityFeePerGas: const NumberToStringConverter()
@@ -15,7 +16,7 @@ _$GasFeeImpl _$$GasFeeImplFromJson(Map<String, dynamic> json) => _$GasFeeImpl(
           json['waitTime'], const DurationConverter().fromJson),
     );
 
-Map<String, dynamic> _$$GasFeeImplToJson(_$GasFeeImpl instance) =>
+Map<String, dynamic> _$$NetworkFeeImplToJson(_$NetworkFeeImpl instance) =>
     <String, dynamic>{
       'maxFeePerGas':
           const NumberToStringConverter().toJson(instance.maxFeePerGas),

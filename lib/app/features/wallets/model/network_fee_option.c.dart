@@ -10,6 +10,7 @@ class NetworkFeeOption with _$NetworkFeeOption {
   const factory NetworkFeeOption({
     required NetworkFeeType type,
     required double amount,
+    required double priceUSD,
     required String symbol,
     Duration? arrivalTime,
   }) = _NetworkFeeOption;
