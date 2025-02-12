@@ -11,6 +11,7 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_history/get_
 import 'package:ion_identity_client/src/wallets/services/get_wallet_nfts/get_wallet_nfts_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/make_transfer/make_transfer_service.dart';
 import 'package:ion_identity_client/src/wallets/services/wallet_views/wallet_views_service.dart';
 
 /// A class that handles operations related to user wallets, such as listing the wallets
@@ -35,6 +36,7 @@ class IONIdentityWallets {
     required WalletViewsService walletViewsService,
     required ExtractUserIdService extractUserIdService,
     required BroadcastTransactionService broadcastTransactionService,
+    required MakeTransferService makeTransferService,
   })  : _createWalletService = createWalletService,
         _getWalletsService = getWalletsService,
         _getWalletAssetsService = getWalletAssetsService,
@@ -44,7 +46,8 @@ class IONIdentityWallets {
         _generateSignatureService = generateSignatureService,
         _walletViewsService = walletViewsService,
         _extractUserIdService = extractUserIdService,
-        _broadcastTransactionService = broadcastTransactionService;
+        _broadcastTransactionService = broadcastTransactionService,
+        _makeTransferService = makeTransferService;
 
   final String username;
 
@@ -58,6 +61,7 @@ class IONIdentityWallets {
   final WalletViewsService _walletViewsService;
   final ExtractUserIdService _extractUserIdService;
   final BroadcastTransactionService _broadcastTransactionService;
+  final MakeTransferService _makeTransferService;
 
   Future<Wallet> createWallet({
     required String network,
@@ -187,5 +191,16 @@ class IONIdentityWallets {
           destinationAddress,
           amount,
         ),
+      );
+
+  Future<Map<String, dynamic>> makeTransfer(
+    Wallet wallet,
+    Transfer request,
+    OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
+  ) =>
+      _makeTransferService.makeTransfer(
+        wallet: wallet,
+        request: request,
+        onVerifyIdentity: onVerifyIdentity,
       );
 }

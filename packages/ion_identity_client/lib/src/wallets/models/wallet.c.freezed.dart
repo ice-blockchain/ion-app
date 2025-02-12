@@ -22,10 +22,10 @@ Wallet _$WalletFromJson(Map<String, dynamic> json) {
 mixin _$Wallet {
   String get id => throw _privateConstructorUsedError;
   String get network => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
+  String? get status => throw _privateConstructorUsedError;
   WalletSigningKey get signingKey => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
 
   /// Serializes this Wallet to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,10 +44,10 @@ abstract class $WalletCopyWith<$Res> {
   $Res call(
       {String id,
       String network,
-      String status,
+      String? status,
       WalletSigningKey signingKey,
       String? address,
-      String name});
+      String? name});
 
   $WalletSigningKeyCopyWith<$Res> get signingKey;
 }
@@ -69,10 +69,10 @@ class _$WalletCopyWithImpl<$Res, $Val extends Wallet>
   $Res call({
     Object? id = null,
     Object? network = null,
-    Object? status = null,
+    Object? status = freezed,
     Object? signingKey = null,
     Object? address = freezed,
-    Object? name = null,
+    Object? name = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -83,10 +83,10 @@ class _$WalletCopyWithImpl<$Res, $Val extends Wallet>
           ? _value.network
           : network // ignore: cast_nullable_to_non_nullable
               as String,
-      status: null == status
+      status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       signingKey: null == signingKey
           ? _value.signingKey
           : signingKey // ignore: cast_nullable_to_non_nullable
@@ -95,10 +95,10 @@ class _$WalletCopyWithImpl<$Res, $Val extends Wallet>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ) as $Val);
   }
 
@@ -123,10 +123,10 @@ abstract class _$$WalletImplCopyWith<$Res> implements $WalletCopyWith<$Res> {
   $Res call(
       {String id,
       String network,
-      String status,
+      String? status,
       WalletSigningKey signingKey,
       String? address,
-      String name});
+      String? name});
 
   @override
   $WalletSigningKeyCopyWith<$Res> get signingKey;
@@ -147,10 +147,10 @@ class __$$WalletImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? network = null,
-    Object? status = null,
+    Object? status = freezed,
     Object? signingKey = null,
     Object? address = freezed,
-    Object? name = null,
+    Object? name = freezed,
   }) {
     return _then(_$WalletImpl(
       id: null == id
@@ -161,10 +161,10 @@ class __$$WalletImplCopyWithImpl<$Res>
           ? _value.network
           : network // ignore: cast_nullable_to_non_nullable
               as String,
-      status: null == status
+      status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       signingKey: null == signingKey
           ? _value.signingKey
           : signingKey // ignore: cast_nullable_to_non_nullable
@@ -173,10 +173,10 @@ class __$$WalletImplCopyWithImpl<$Res>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
     ));
   }
 }
@@ -200,13 +200,13 @@ class _$WalletImpl implements _Wallet {
   @override
   final String network;
   @override
-  final String status;
+  final String? status;
   @override
   final WalletSigningKey signingKey;
   @override
   final String? address;
   @override
-  final String name;
+  final String? name;
 
   @override
   String toString() {
@@ -252,10 +252,10 @@ abstract class _Wallet implements Wallet {
   factory _Wallet(
       {required final String id,
       required final String network,
-      required final String status,
+      required final String? status,
       required final WalletSigningKey signingKey,
       required final String? address,
-      required final String name}) = _$WalletImpl;
+      required final String? name}) = _$WalletImpl;
 
   factory _Wallet.fromJson(Map<String, dynamic> json) = _$WalletImpl.fromJson;
 
@@ -264,13 +264,13 @@ abstract class _Wallet implements Wallet {
   @override
   String get network;
   @override
-  String get status;
+  String? get status;
   @override
   WalletSigningKey get signingKey;
   @override
   String? get address;
   @override
-  String get name;
+  String? get name;
 
   /// Create a copy of Wallet
   /// with the given fields replaced by the non-null parameter values.
