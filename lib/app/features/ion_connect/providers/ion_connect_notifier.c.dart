@@ -46,7 +46,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
-          await _sendAuthEvent(relay!);
+          await sendAuthEvent(relay!);
         }
 
         await relay!.sendEvents(events);
@@ -85,15 +85,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       relayUrl: Uri.parse(relay.url).toString(),
     );
 
-    await sendEvent(
-      signedAuthEvent,
-      relay: relay,
-      cache: false,
-    );
+    try {
+      await relay.sendEvents([signedAuthEvent]);
+    } catch (error, _) {
+      if (_isAuthRequired(error)) {
+        await sendAuthEvent(relay);
+      }
+    }
   }
 
-  Future<void> _sendAuthEvent(IonConnectRelay relay) async {
-    final challenge = ref.read(authChallengeProvider(relay.url));
+  Future<void> sendAuthEvent(IonConnectRelay relay) async {
+    final challenge = ref.read(authChallengeProvider(relay));
     if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
     final signedAuthEvent = await createAuthEvent(
@@ -114,8 +116,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     if (!okMessages.accepted) {
       throw SendEventException(okMessages.message);
     }
-
-    ref.read(authChallengeProvider(relay.url).notifier).clearChallenge();
   }
 
   Future<EventMessage> createAuthEvent({
@@ -166,7 +166,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
         if (_isAuthRequired(error)) {
           try {
-            await _sendAuthEvent(relay!);
+            await sendAuthEvent(relay!);
           } catch (error, stackTrace) {
             Logger.log('Send auth exception', error: error, stackTrace: stackTrace);
           }
