@@ -28,7 +28,7 @@ mixin RelayDelegationMixin {
               next.value?.data.hasDelegateFor(pubkey: eventSigner.publicKey) ?? false;
 
           if (hasDelegate) {
-            ref.read(ionConnectNotifierProvider.notifier).initRelayAuth(relay);
+            ref.read(ionConnectNotifierProvider.notifier).sendAuthEvent(relay);
           }
         }
       });

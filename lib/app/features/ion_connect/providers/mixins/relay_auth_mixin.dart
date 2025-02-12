@@ -12,7 +12,7 @@ mixin RelayAuthMixin {
   void initializeAuthMessageListener(IonConnectRelay relay, Ref ref) {
     _authMessageSubscription = relay.messages.listen((message) {
       if (message is AuthMessage) {
-        ref.read(authChallengeProvider(relay.url).notifier).setChallenge = message.challenge;
+        ref.read(authChallengeProvider(relay).notifier).setChallenge = message.challenge;
       }
     });
 
