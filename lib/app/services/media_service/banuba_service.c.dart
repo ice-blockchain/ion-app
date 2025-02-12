@@ -83,19 +83,8 @@ class BanubaService {
       methodStartVideoEditorTrimmer,
       filePath,
     );
-
-    print(result);
-
-    // // final config = FeaturesConfigBuilder().build();
-
-    // // final exportResult = await VeSdkFlutter().openTrimmerScreen(
-    // //   env.get<String>(EnvVariable.BANUBA_TOKEN),
-    // //   config,
-    // //   [filePath],
-    // // );
-
-    // return exportResult?.videoSources.first ?? filePath;
-    return filePath;
+    //TODO: handle result
+    return result as String;
   }
 }
 

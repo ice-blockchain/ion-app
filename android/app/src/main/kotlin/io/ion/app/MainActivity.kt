@@ -72,9 +72,11 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private var exportResult: MethodChannel.Result? = null
-    private var photoEditorSDK: BanubaPhotoEditor? = null
+
+    private var videoEditorSDK: BanubaVideoEditor? = null
     private var photoEditorSDK: BanubaPhotoEditor? = null
     private var videoEditorModule: VideoEditorModule? = null
+
 
     // Bundle for enabling Editor V2
     private val extras = bundleOf(
@@ -116,10 +118,6 @@ class MainActivity : FlutterFragmentActivity() {
                     val videoFilePath = call.arguments as? String
                     val trimmerVideoUri = videoFilePath?.let { Uri.fromFile(File(it)) }
                     if (trimmerVideoUri == null) {
-                        Log.w(
-                            TAG,
-                            "Cannot start video editor in Trimmer mode: missing or invalid passed video = $videoFilePath"
-                        )
                         exportResult?.error("ERR_START_TRIMMER_MISSING_VIDEO", "", null)
                     } else {
                         checkSdkLicenseVideoEditor(
@@ -138,14 +136,12 @@ class MainActivity : FlutterFragmentActivity() {
                 }
 
                 METHOD_RELEASE_VIDEO_EDITOR -> {
-                    Log.d(TAG, "Release Video Editor SDK")
                     if (videoEditorModule != null) {
                         val utilityManager = try {
                             // EditorUtilityManager is NULL when the token is expired or revoked.
                             // This dependency is not explicitly created in DI.
                             getKoin().getOrNull<EditorUtilityManager>()
                         } catch (e: InstanceCreationException) {
-                            Log.w(TAG, "EditorUtilityManager was not initialized!", e)
                             result.error("EditorUtilityManager was not initialized!", "", null)
                             null
                         }
@@ -210,5 +206,35 @@ class MainActivity : FlutterFragmentActivity() {
         return mapOf(
             ARG_EXPORTED_PHOTO_FILE to photoUri?.toString()
         )
+    }
+
+    private fun startVideoEditorModeTrimmer(trimmerVideo: Uri) {
+        // Editor V2 is not available from Trimmer screen
+        startActivityForResult(
+            VideoCreationActivity.startFromTrimmer(
+                context = this,
+                // setup data that will be acceptable during export flow
+                additionalExportData = null,
+                // set TrackData object if you open VideoCreationActivity with preselected music track
+                audioTrackData = null,
+                // set Trimmer video configuration
+                predefinedVideos = arrayOf(trimmerVideo)
+            ), VIDEO_EDITOR_REQUEST_CODE
+        )
+    }
+
+
+    private fun checkSdkLicenseVideoEditor(
+        callback: LicenseStateCallback,
+        onError: () -> Unit
+    ) {
+        val sdk = videoEditorSDK
+        if (sdk == null) {
+            onError()
+        } else {
+            // Checking the license might take around 1 sec in the worst case.
+            // Please optimize use if this method in your application for the best user experience
+            sdk.getLicenseState(callback)
+        }
     }
 }

@@ -72,12 +72,7 @@ private class SampleIntegrationVeKoinModule {
         single<ContentFeatureProvider<TrackData, Fragment>>(
             named("musicTrackProvider")
         ) {
-            if (MainActivity.CONFIG_ENABLE_CUSTOM_AUDIO_BROWSER) {
-                AudioBrowserContentProvider()
-            } else {
-                // Default implementation that supports Soundstripe, Mubert and Local audio stored on the device
-                AudioBrowserMusicProvider()
-            }
+            AudioBrowserMusicProvider()
         }
     }
 }
