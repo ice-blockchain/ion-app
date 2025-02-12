@@ -18,4 +18,3 @@ class WalletViewAggregationItem with _$WalletViewAggregationItem {
 
   factory WalletViewAggregationItem.fromJson(Map<String, dynamic> json) => _$WalletViewAggregationItemFromJson(json);
 }
-

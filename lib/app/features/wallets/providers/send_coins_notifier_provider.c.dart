@@ -20,8 +20,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
     state = await AsyncValue.guard(() async {
       final ionClient = await ref.watch(ionIdentityClientProvider.future);
-      final result = await ionClient.wallets.broadcastTransaction(wallet, receiverAddress, amount);
-      print('test');
+      await ionClient.wallets.broadcastTransaction(wallet, receiverAddress, amount);
     });
   }
 }

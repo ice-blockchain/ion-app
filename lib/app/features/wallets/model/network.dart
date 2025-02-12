@@ -54,7 +54,7 @@ enum Network {
   xrpLedgerTestnet(isTestnet: true);
 
   const Network({required this.isTestnet});
-  
+
   final bool isTestnet;
 
   // Should be the same as supported networks in the getCreator() in
