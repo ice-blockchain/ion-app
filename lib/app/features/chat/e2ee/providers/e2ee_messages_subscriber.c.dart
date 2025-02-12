@@ -6,6 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -55,6 +56,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
+    final sendE2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
+    final conversationMessageStatusDao = ref.watch(conversationMessageStatusDaoProvider);
 
     ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,
@@ -81,12 +84,30 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         giftWrapService: giftWrapService,
         privateKey: eventSigner.privateKey,
       );
+
       if (rumor != null) {
-        if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName)) {
+        if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
+            rumor.kind == PrivateMessageReactionEntity.kind) {
           if (rumor.kind == PrivateDirectMessageEntity.kind) {
             await ref.watch(conversationDaoProvider).add([rumor]);
+            await ref.watch(conversationEventMessageDaoProvider).add(rumor);
+            await sendE2eeMessageService.sendReceivedStatus(rumor);
+          } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
+            final kind14EventId =
+                rumor.tags.firstWhereOrNull((tags) => tags[0] == 'e')?.elementAtOrNull(1);
+            final kind7MasterPubkey =
+                rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
+
+            if (kind7MasterPubkey == null || kind14EventId == null) {
+              return;
+            }
+
+            await conversationMessageStatusDao.updateConversationMessageStatusData(
+              eventMessageId: kind14EventId,
+              masterPubkey: kind7MasterPubkey,
+              status: MessageDeliveryStatus.received,
+            );
           }
-          await ref.watch(conversationEventMessageDaoProvider).add(rumor);
         }
       }
     });

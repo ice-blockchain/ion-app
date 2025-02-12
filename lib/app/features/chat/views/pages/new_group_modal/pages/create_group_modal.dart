@@ -203,7 +203,7 @@ class CreateGroupModal extends HookConsumerWidget {
                       await conversationMessageManagementService.sendMessage(
                         conversationId: generateUuid(),
                         content: '',
-                        participantsMasterkeys: participantsMasterkeys,
+                        participantsMasterPubkeys: participantsMasterkeys,
                         subject: createGroupForm.name,
                         mediaFiles: [groupPicture!],
                       );

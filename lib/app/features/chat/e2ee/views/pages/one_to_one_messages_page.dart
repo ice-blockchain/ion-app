@@ -57,7 +57,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         await conversationMessageManagementService.sendMessage(
           conversationId: conversationId.value!,
           content: content ?? '',
-          participantsMasterkeys: [receiverPubKey, currentPubkey],
+          participantsMasterPubkeys: [receiverPubKey, currentPubkey],
         );
       },
       [receiverPubKey],
@@ -74,9 +74,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           children: [
             _Header(receiverMasterPubKey: receiverPubKey),
             _MessagesList(conversationId: conversationId.value),
-            MessagingBottomBar(
-              onSubmitted: onSubmitted,
-            ),
+            MessagingBottomBar(onSubmitted: onSubmitted),
           ],
         ),
       ),
