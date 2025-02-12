@@ -14,6 +14,7 @@ sealed class CryptoAssetData with _$CryptoAssetData {
     // Cache selected option to avoid searching it via network each time
     CoinInWalletData? selectedOption,
     @Default(0.0) double amount,
+    @Default(0.0) double priceUSD,
   }) = CoinAssetData;
 
   const factory CryptoAssetData.nft({

@@ -23,9 +23,9 @@ mixin _$EstimateFee {
   String get network => throw _privateConstructorUsedError;
   int? get estimatedBaseFee => throw _privateConstructorUsedError;
   String? get kind => throw _privateConstructorUsedError;
-  GasFee? get fast => throw _privateConstructorUsedError;
-  GasFee? get standard => throw _privateConstructorUsedError;
-  GasFee? get slow => throw _privateConstructorUsedError;
+  NetworkFee? get fast => throw _privateConstructorUsedError;
+  NetworkFee? get standard => throw _privateConstructorUsedError;
+  NetworkFee? get slow => throw _privateConstructorUsedError;
 
   /// Serializes this EstimateFee to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,13 +47,13 @@ abstract class $EstimateFeeCopyWith<$Res> {
       {String network,
       int? estimatedBaseFee,
       String? kind,
-      GasFee? fast,
-      GasFee? standard,
-      GasFee? slow});
+      NetworkFee? fast,
+      NetworkFee? standard,
+      NetworkFee? slow});
 
-  $GasFeeCopyWith<$Res>? get fast;
-  $GasFeeCopyWith<$Res>? get standard;
-  $GasFeeCopyWith<$Res>? get slow;
+  $NetworkFeeCopyWith<$Res>? get fast;
+  $NetworkFeeCopyWith<$Res>? get standard;
+  $NetworkFeeCopyWith<$Res>? get slow;
 }
 
 /// @nodoc
@@ -94,15 +94,15 @@ class _$EstimateFeeCopyWithImpl<$Res, $Val extends EstimateFee>
       fast: freezed == fast
           ? _value.fast
           : fast // ignore: cast_nullable_to_non_nullable
-              as GasFee?,
+              as NetworkFee?,
       standard: freezed == standard
           ? _value.standard
           : standard // ignore: cast_nullable_to_non_nullable
-              as GasFee?,
+              as NetworkFee?,
       slow: freezed == slow
           ? _value.slow
           : slow // ignore: cast_nullable_to_non_nullable
-              as GasFee?,
+              as NetworkFee?,
     ) as $Val);
   }
 
@@ -110,12 +110,12 @@ class _$EstimateFeeCopyWithImpl<$Res, $Val extends EstimateFee>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GasFeeCopyWith<$Res>? get fast {
+  $NetworkFeeCopyWith<$Res>? get fast {
     if (_value.fast == null) {
       return null;
     }
 
-    return $GasFeeCopyWith<$Res>(_value.fast!, (value) {
+    return $NetworkFeeCopyWith<$Res>(_value.fast!, (value) {
       return _then(_value.copyWith(fast: value) as $Val);
     });
   }
@@ -124,12 +124,12 @@ class _$EstimateFeeCopyWithImpl<$Res, $Val extends EstimateFee>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GasFeeCopyWith<$Res>? get standard {
+  $NetworkFeeCopyWith<$Res>? get standard {
     if (_value.standard == null) {
       return null;
     }
 
-    return $GasFeeCopyWith<$Res>(_value.standard!, (value) {
+    return $NetworkFeeCopyWith<$Res>(_value.standard!, (value) {
       return _then(_value.copyWith(standard: value) as $Val);
     });
   }
@@ -138,12 +138,12 @@ class _$EstimateFeeCopyWithImpl<$Res, $Val extends EstimateFee>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $GasFeeCopyWith<$Res>? get slow {
+  $NetworkFeeCopyWith<$Res>? get slow {
     if (_value.slow == null) {
       return null;
     }
 
-    return $GasFeeCopyWith<$Res>(_value.slow!, (value) {
+    return $NetworkFeeCopyWith<$Res>(_value.slow!, (value) {
       return _then(_value.copyWith(slow: value) as $Val);
     });
   }
@@ -161,16 +161,16 @@ abstract class _$$EstimateFeeImplCopyWith<$Res>
       {String network,
       int? estimatedBaseFee,
       String? kind,
-      GasFee? fast,
-      GasFee? standard,
-      GasFee? slow});
+      NetworkFee? fast,
+      NetworkFee? standard,
+      NetworkFee? slow});
 
   @override
-  $GasFeeCopyWith<$Res>? get fast;
+  $NetworkFeeCopyWith<$Res>? get fast;
   @override
-  $GasFeeCopyWith<$Res>? get standard;
+  $NetworkFeeCopyWith<$Res>? get standard;
   @override
-  $GasFeeCopyWith<$Res>? get slow;
+  $NetworkFeeCopyWith<$Res>? get slow;
 }
 
 /// @nodoc
@@ -209,15 +209,15 @@ class __$$EstimateFeeImplCopyWithImpl<$Res>
       fast: freezed == fast
           ? _value.fast
           : fast // ignore: cast_nullable_to_non_nullable
-              as GasFee?,
+              as NetworkFee?,
       standard: freezed == standard
           ? _value.standard
           : standard // ignore: cast_nullable_to_non_nullable
-              as GasFee?,
+              as NetworkFee?,
       slow: freezed == slow
           ? _value.slow
           : slow // ignore: cast_nullable_to_non_nullable
-              as GasFee?,
+              as NetworkFee?,
     ));
   }
 }
@@ -243,11 +243,11 @@ class _$EstimateFeeImpl implements _EstimateFee {
   @override
   final String? kind;
   @override
-  final GasFee? fast;
+  final NetworkFee? fast;
   @override
-  final GasFee? standard;
+  final NetworkFee? standard;
   @override
-  final GasFee? slow;
+  final NetworkFee? slow;
 
   @override
   String toString() {
@@ -295,9 +295,9 @@ abstract class _EstimateFee implements EstimateFee {
       {required final String network,
       required final int? estimatedBaseFee,
       required final String? kind,
-      required final GasFee? fast,
-      required final GasFee? standard,
-      required final GasFee? slow}) = _$EstimateFeeImpl;
+      required final NetworkFee? fast,
+      required final NetworkFee? standard,
+      required final NetworkFee? slow}) = _$EstimateFeeImpl;
 
   factory _EstimateFee.fromJson(Map<String, dynamic> json) =
       _$EstimateFeeImpl.fromJson;
@@ -309,11 +309,11 @@ abstract class _EstimateFee implements EstimateFee {
   @override
   String? get kind;
   @override
-  GasFee? get fast;
+  NetworkFee? get fast;
   @override
-  GasFee? get standard;
+  NetworkFee? get standard;
   @override
-  GasFee? get slow;
+  NetworkFee? get slow;
 
   /// Create a copy of EstimateFee
   /// with the given fields replaced by the non-null parameter values.

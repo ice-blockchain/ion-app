@@ -2,22 +2,26 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
-import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConfirmationSheet extends ConsumerWidget {
@@ -30,7 +34,7 @@ class ConfirmationSheet extends ConsumerWidget {
     final locale = context.i18n;
 
     final formData = ref.watch(sendAssetFormControllerProvider());
-    final coin = formData.assetData?.as<CoinAssetData>()!.coinsGroup;
+    final coin = formData.assetData.as<CoinAssetData>()!;
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -50,33 +54,29 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  // TODO: Recheck balance fields
-                  if (coin case final CoinsGroup coin)
-                    TransactionAmountSummary(
-                      amount: coin.totalAmount,
-                      currency: coin.abbreviation,
-                      usdAmount: coin.totalBalanceUSD,
-                      icon: CoinIconWidget(
-                        imageUrl: coin.iconUrl,
-                        size: 36.0.s,
-                      ),
+                  TransactionAmountSummary(
+                    amount: coin.amount,
+                    currency: coin.coinsGroup.abbreviation,
+                    usdAmount: coin.priceUSD,
+                    icon: CoinIconWidget(
+                      imageUrl: coin.coinsGroup.iconUrl,
+                      size: 36.0.s,
                     ),
+                  ),
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
-                    address: formData.address,
+                    address: formData.receiverAddress,
                     pubkey: formData.contactPubkey,
                   ),
-                  if (coin case final CoinsGroup coin) ...[
-                    SizedBox(height: 16.0.s),
-                    ListItem.textWithIcon(
-                      title: Text(locale.wallet_asset),
-                      value: coin.name,
-                      icon: CoinIconWidget(
-                        imageUrl: coin.iconUrl,
-                        size: ScreenSideOffset.defaultSmallMargin,
-                      ),
+                  SizedBox(height: 16.0.s),
+                  ListItem.textWithIcon(
+                    title: Text(locale.wallet_asset),
+                    value: coin.coinsGroup.name,
+                    icon: CoinIconWidget(
+                      imageUrl: coin.coinsGroup.iconUrl,
+                      size: ScreenSideOffset.defaultSmallMargin,
                     ),
-                  ],
+                  ),
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_title),
@@ -87,7 +87,7 @@ class ConfirmationSheet extends ConsumerWidget {
                     secondary: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+                        formData.senderWallet!.address!,
                         textAlign: TextAlign.right,
                         style: context.theme.appTextThemes.caption3.copyWith(),
                       ),
@@ -102,21 +102,39 @@ class ConfirmationSheet extends ConsumerWidget {
                     ),
                   ),
                   SizedBox(height: 16.0.s),
-                  ListItemArrivalTime(
-                    arrivalTime: '${formData.arrivalTime} '
-                        '${locale.wallet_arrival_time_minutes}',
-                  ),
-                  SizedBox(height: 16.0.s),
-                  const ListItemNetworkFee(value: '1.00 USDT'),
+                  if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
+                    if (fee.arrivalTime != null) ...[
+                      ListItemArrivalTime(
+                        arrivalTime: '${fee.arrivalTime!.inMinutes} '
+                            '${locale.wallet_arrival_time_minutes}',
+                      ),
+                      SizedBox(height: 16.0.s),
+                    ],
+                    ListItemNetworkFee(value: formatCrypto(fee.amount, fee.symbol)),
+                  ],
                   SizedBox(height: 22.0.s),
-                  // TODO: Not implemented
-                  // if (formData.price != null)
-                  //   Button(
-                  //     label:
-                  //         Text('${locale.button_confirm} - ${formatToCurrency(formData.price!)}'),
-                  //     mainAxisSize: MainAxisSize.max,
-                  //     onPressed: () => CoinTransactionResultRoute().go(context),
-                  //   ),
+                  if (formData.assetData case final CoinAssetData coin)
+                    Button(
+                      label: Text(
+                        '${locale.button_confirm} - ${formatToCurrency(coin.priceUSD)}',
+                      ),
+                      mainAxisSize: MainAxisSize.max,
+                      onPressed: () async {
+                        if (formData.assetData case final CoinAssetData coin) {
+                          await ref
+                              .read(
+                                sendCoinsNotifierProvider.notifier,
+                              )
+                              .send(
+                                amount: coin.amount.toString(),
+                                wallet: formData.senderWallet!,
+                                receiverAddress: formData.receiverAddress,
+                              );
+                        }
+
+                        // CoinTransactionResultRoute().go(context),
+                      },
+                    ),
                   SizedBox(height: 16.0.s),
                 ],
               ),

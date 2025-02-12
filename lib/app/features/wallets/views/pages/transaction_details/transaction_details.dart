@@ -78,7 +78,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                     ),
                     SizedBox(height: 16.0.s),
                     SendToRecipient(
-                      address: formData.address,
+                      address: formData.receiverAddress,
                       pubkey: formData.contactPubkey,
                     ),
                     SizedBox(height: 12.0.s),

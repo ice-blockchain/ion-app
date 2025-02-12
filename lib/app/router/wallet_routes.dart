@@ -68,6 +68,7 @@ class WalletRoutes {
           path: 'coin-send-form',
           routes: [
             TypedGoRoute<CoinsSelectFriendRoute>(path: 'select-friend'),
+            TypedGoRoute<ShareAddressDepositRoute>(path: 'share-address-to-deposit'),
           ],
         ),
         TypedGoRoute<CoinSendScanRoute>(path: 'scan-receiver-wallet'),
@@ -181,6 +182,14 @@ class ChangeNetworkShareWalletRoute extends BaseRouteData {
 
 class ShareAddressCoinDetailsRoute extends BaseRouteData {
   ShareAddressCoinDetailsRoute()
+      : super(
+          child: const ShareAddressView(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ShareAddressDepositRoute extends BaseRouteData {
+  ShareAddressDepositRoute()
       : super(
           child: const ShareAddressView(),
           type: IceRouteType.bottomSheet,

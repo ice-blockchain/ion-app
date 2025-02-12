@@ -9,15 +9,18 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SendNftConfirmPage extends ConsumerWidget {
@@ -45,7 +48,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                   NftItem(nftData: nft),
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
-                    address: formData.address,
+                    address: formData.receiverAddress,
                     pubkey: formData.contactPubkey,
                   ),
                   SizedBox(height: 12.0.s),
@@ -72,12 +75,18 @@ class SendNftConfirmPage extends ConsumerWidget {
                     icon: Assets.svg.networks.walletEth.icon(size: 16.0.s),
                   ),
                   SizedBox(height: 12.0.s),
-                  ListItemArrivalTime(
-                    arrivalTime: '${formData.arrivalTime} '
-                        '${context.i18n.wallet_arrival_time_minutes}',
-                  ),
-                  SizedBox(height: 12.0.s),
-                  const ListItemNetworkFee(value: '1.00 USDT'),
+                  if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
+                    if (fee.arrivalTime != null) ...[
+                      ListItemArrivalTime(
+                        arrivalTime: '${fee.arrivalTime!.inMinutes} '
+                            '${locale.wallet_arrival_time_minutes}',
+                      ),
+                      SizedBox(height: 12.0.s),
+                    ],
+                    ListItemNetworkFee(
+                      value: formatCrypto(fee.amount, fee.symbol),
+                    ),
+                  ],
                   SizedBox(height: 12.0.s),
                   Button(
                     mainAxisSize: MainAxisSize.max,

@@ -16,17 +16,21 @@ class NetworkItem extends ConsumerWidget {
     required this.coinInWallet,
     required this.onTap,
     super.key,
+    this.disableZeroBalance = false,
   });
 
   final Network network;
-  final CoinInWalletData coinInWallet;
   final VoidCallback onTap;
+  final bool disableZeroBalance;
+  final CoinInWalletData coinInWallet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
+    final disabled = disableZeroBalance && coinInWallet.amount <= 0;
 
     return ListItem(
+      isEnabled: !disabled,
       title: Row(
         children: [
           Expanded(

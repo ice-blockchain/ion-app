@@ -3,6 +3,9 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
+import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
@@ -12,6 +15,7 @@ import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_asset_form_provider.c.g.dart';
@@ -26,28 +30,38 @@ class SendAssetFormController extends _$SendAssetFormController {
     return SendAssetFormData(
       wallet: walletView,
       network: Network.ion,
-      arrivalTime: 0,
       arrivalDateTime: DateTime.now(),
-      address: '',
+      receiverAddress: '',
     );
   }
 
   void setNft(NftData nft) {
+    // TODO: Not implemented
     // state = state.copyWith(assetData: CryptoAssetData.nft(nft: nft));
   }
 
   void setCoin(CoinsGroup coin) {
     final defaultCoin = coin.coins.first.coin;
     state = state.copyWith(
-      network: defaultCoin.network,
       assetData: CryptoAssetData.coin(coinsGroup: coin),
     );
+    setNetwork(defaultCoin.network);
   }
 
   void setContact(String? pubkey) => state = state.copyWith(contactPubkey: pubkey);
 
-  void setNetwork(Network network) {
-    state = state.copyWith(network: network);
+  Future<void> setNetwork(Network network) async {
+    final wallets = await ref.read(walletsNotifierProvider.future);
+    final wallet = wallets.firstWhereOrNull(
+      (wallet) => wallet.network.toLowerCase() == network.serverName.toLowerCase(),
+    );
+
+    state = state.copyWith(
+      network: network,
+      senderWallet: wallet,
+      networkFeeOptions: [],
+      selectedNetworkFeeOption: null,
+    );
 
     if (state.assetData case final CoinAssetData coin) {
       state = state.copyWith(
@@ -59,7 +73,7 @@ class SendAssetFormController extends _$SendAssetFormController {
       );
     }
 
-    _loadFeesInfo();
+    await _loadFeesInfo();
   }
 
   Future<void> _loadFeesInfo() async {
@@ -69,42 +83,102 @@ class SendAssetFormController extends _$SendAssetFormController {
     if (state.assetData case final CoinAssetData coin) {
       final walletId = coin.selectedOption?.walletId;
       if (walletId != null) {
-        final asset = await client.wallets.getWalletAssets(walletId).then(
+        final networkNativeToken = await client.wallets.getWalletAssets(walletId).then(
               (result) => result.assets.firstWhereOrNull((asset) => asset.isNative),
             );
 
-        double calculateAmount(String maxFeePerGas) =>
-            double.parse(maxFeePerGas) / pow(10, asset!.decimals);
+        if (networkNativeToken case final WalletAsset asset) {
+          final nativeCoin = await _getNativeCoin(asset);
 
-        final options = [
-          if (result.slow != null && asset != null)
-            NetworkFeeOption(
-              amount: calculateAmount(result.slow!.maxFeePerGas),
-              symbol: asset.symbol,
-              arrivalTime: result.slow?.waitTime,
-              type: NetworkFeeType.slow,
+          if (nativeCoin == null) return; // TODO: RETEST!
+
+          final options = [
+            if (result.slow != null)
+              _buildNetworkFeeOption(
+                result.slow!,
+                NetworkFeeType.slow,
+                nativeCoin,
+                networkNativeToken,
+              ),
+            if (result.standard != null)
+              _buildNetworkFeeOption(
+                result.standard!,
+                NetworkFeeType.standard,
+                nativeCoin,
+                networkNativeToken,
+              ),
+            if (result.fast != null)
+              _buildNetworkFeeOption(
+                result.fast!,
+                NetworkFeeType.fast,
+                nativeCoin,
+                networkNativeToken,
+              ),
+          ];
+
+          state = state.copyWith(
+            networkFeeOptions: options,
+            selectedNetworkFeeOption: options.firstOrNull,
+            networkNativeToken: networkNativeToken.copyWith(
+              name: networkNativeToken.name ?? nativeCoin.name,
             ),
-          if (result.standard != null && asset != null)
-            NetworkFeeOption(
-              amount: calculateAmount(result.standard!.maxFeePerGas),
-              symbol: asset.symbol,
-              arrivalTime: result.standard?.waitTime,
-              type: NetworkFeeType.standard,
-            ),
-          if (result.fast != null && asset != null)
-            NetworkFeeOption(
-              amount: calculateAmount(result.fast!.maxFeePerGas),
-              symbol: asset.symbol,
-              arrivalTime: result.fast?.waitTime,
-              type: NetworkFeeType.fast,
-            ),
-        ];
-        state = state.copyWith(
-          networkFeeOptions: options,
-          selectedNetworkFeeOption: options.firstOrNull,
-        );
+          );
+
+          _checkIfUserCanCoverFee();
+        }
       }
     }
+  }
+
+  NetworkFeeOption _buildNetworkFeeOption(
+    NetworkFee fee,
+    NetworkFeeType type,
+    CoinData nativeCoin,
+    WalletAsset networkNativeToken,
+  ) {
+    double calculateAmount(String maxFeePerGas) =>
+        double.parse(maxFeePerGas) / pow(10, networkNativeToken.decimals);
+    double calculatePriceUSD(double amount) => amount * nativeCoin.priceUSD;
+
+    final amount = calculateAmount(fee.maxFeePerGas);
+    return NetworkFeeOption(
+      amount: amount,
+      priceUSD: calculatePriceUSD(amount),
+      symbol: networkNativeToken.symbol,
+      arrivalTime: fee.waitTime,
+      type: type,
+    );
+  }
+
+  Future<CoinData?> _getNativeCoin(WalletAsset asset) async {
+    final service = await ref.read(coinsServiceProvider.future);
+
+    var nativeCoin = await service
+        .getCoinsByFilters(symbol: asset.symbol, network: state.network)
+        .then((coins) => coins.firstOrNull);
+
+    if (nativeCoin != null) return nativeCoin;
+
+    // TODO: REMOVE STUB
+    nativeCoin = await service
+        .getCoinsByFilters(symbol: 'ETH', network: state.network)
+        .then((coins) => coins.firstOrNull);
+    return nativeCoin!;
+  }
+
+  void _checkIfUserCanCoverFee() {
+    final selectedFee = state.selectedNetworkFeeOption;
+    final networkNativeToken = state.networkNativeToken;
+
+    if (selectedFee == null || networkNativeToken == null) return;
+
+    final parsedBalance = double.tryParse(networkNativeToken.balance) ?? 0;
+    final convertedBalance = parsedBalance / pow(10, networkNativeToken.decimals);
+    final hasEnoughForFee = convertedBalance >= selectedFee.amount;
+
+    state = state.copyWith(
+      canCoverNetworkFee: hasEnoughForFee,
+    );
   }
 
   void setCoinsAmount(String amount) {
@@ -113,16 +187,20 @@ class SendAssetFormController extends _$SendAssetFormController {
       state = state.copyWith(
         assetData: coin.copyWith(
           amount: parsedAmount,
+          priceUSD: parsedAmount * (coin.selectedOption?.coin.priceUSD ?? 0),
         ),
       );
     }
   }
 
-  void updateArrivalTime(int arrivalTime) => state = state.copyWith(arrivalTime: arrivalTime);
+  void setReceiverAddress(String address) {
+    state = state.copyWith(receiverAddress: address);
+  }
 
   void selectNetworkFeeOption(NetworkFeeOption selectedOption) {
     state = state.copyWith(
       selectedNetworkFeeOption: selectedOption,
     );
+    _checkIfUserCanCoverFee();
   }
 }
