@@ -18,8 +18,9 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
   FutureOr<String?> build() => null;
 
   Future<void> requestTwoFaCode(
-    TwoFaType twoFaType,
-  ) async {
+    TwoFaType twoFaType, {
+    String? value,
+  }) async {
     if (state.isLoading) {
       return;
     }
@@ -28,7 +29,7 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
 
     state = await AsyncValue.guard(() async {
       final client = await ref.read(ionIdentityClientProvider.future);
-      final twoFAType = await _getTwoFAType(twoFaType);
+      final twoFAType = await _getTwoFAType(twoFaType, value);
 
       final twoFaWrapper = ref.read(twoFaSignatureWrapperNotifierProvider.notifier);
       String? code;
@@ -105,9 +106,13 @@ class RequestTwoFaCodeNotifier extends _$RequestTwoFaCodeNotifier {
     });
   }
 
-  Future<TwoFAType> _getTwoFAType(TwoFaType twoFaType) async {
+  Future<TwoFAType> _getTwoFAType(TwoFaType twoFaType, [String? value]) async {
     if (twoFaType == TwoFaType.auth) {
       return const TwoFAType.authenticator();
+    }
+
+    if (value != null) {
+      return TwoFaTypeAdapter(twoFaType, value).twoFAType;
     }
 
     final userDetails = await ref.read(userDetailsProvider.future);

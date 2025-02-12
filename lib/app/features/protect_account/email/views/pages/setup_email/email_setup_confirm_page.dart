@@ -7,12 +7,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
-import 'package:ion/app/features/protect_account/common/two_fa_utils.dart';
 import 'package:ion/app/features/protect_account/email/data/model/email_steps.dart';
+import 'package:ion/app/features/protect_account/secure_account/providers/request_twofa_code_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/validate_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -29,10 +30,21 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
     final theme = context.theme;
     final formKey = useRef(GlobalKey<FormState>());
     final codeController = useTextEditingController.fromValue(TextEditingValue.empty);
+    final isRequestingCode =
+        ref.watch(requestTwoFaCodeNotifierProvider.select((state) => state.isLoading));
+    final isValidatingCode =
+        ref.watch(validateTwoFaCodeNotifierProvider.select((state) => state.isLoading));
 
     ref
       ..displayErrors(validateTwoFaCodeNotifierProvider)
+      ..displayErrors(requestTwoFaCodeNotifierProvider)
       ..listenSuccess(validateTwoFaCodeNotifierProvider, (_) => _onSuccess(context, ref));
+
+    final requestTwoFaCode = useCallback(
+      () => ref
+          .read(requestTwoFaCodeNotifierProvider.notifier)
+          .requestTwoFaCode(TwoFaType.email, value: email),
+    );
 
     return Form(
       key: formKey.value,
@@ -54,16 +66,17 @@ class EmailSetupConfirmPage extends HookConsumerWidget {
                   child: TwoFaCodeInput(
                     controller: codeController,
                     twoFaType: TwoFaType.email,
-                    onRequestCode: () => requestTwoFACode(
-                      ref,
-                      TwoFAType.email(email),
-                    ),
+                    onRequestCode: requestTwoFaCode,
+                    isSending: isRequestingCode,
+                    countdownInitially: true,
                   ),
                 ),
                 const Spacer(),
                 Button(
                   mainAxisSize: MainAxisSize.max,
                   label: Text(locale.button_confirm),
+                  disabled: isValidatingCode,
+                  trailingIcon: isValidatingCode ? const IONLoadingIndicator() : null,
                   onPressed: () => _validateAndProceed(
                     context,
                     ref,
