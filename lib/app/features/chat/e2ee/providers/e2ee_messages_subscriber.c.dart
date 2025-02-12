@@ -91,8 +91,11 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           if (rumor.kind == PrivateDirectMessageEntity.kind) {
             await ref.watch(conversationDaoProvider).add([rumor]);
             await ref.watch(conversationEventMessageDaoProvider).add(rumor);
-            await sendE2eeMessageService.sendReceivedStatus(rumor);
+            await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
           } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
+            final status = rumor.content == 'received'
+                ? MessageDeliveryStatus.received
+                : MessageDeliveryStatus.read;
             final kind14EventId =
                 rumor.tags.firstWhereOrNull((tags) => tags[0] == 'e')?.elementAtOrNull(1);
             final kind7MasterPubkey =
@@ -103,9 +106,10 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             }
 
             await conversationMessageStatusDao.updateConversationMessageStatusData(
+              status: status,
+              createdAt: rumor.createdAt,
               eventMessageId: kind14EventId,
               masterPubkey: kind7MasterPubkey,
-              status: MessageDeliveryStatus.received,
             );
           }
         }

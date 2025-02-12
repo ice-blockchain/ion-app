@@ -65,8 +65,8 @@ class MessageMetaData extends ConsumerWidget {
           color: context.theme.appColors.strokeElements,
           size: 12.0.s,
         ),
-      MessageDeliveryStatus.read => Assets.svg.iconMessageRead.icon(
-          color: context.theme.appColors.strokeElements,
+      MessageDeliveryStatus.read => Assets.svg.iconMessageDelivered.icon(
+          color: context.theme.appColors.success,
           size: 12.0.s,
         ),
       MessageDeliveryStatus.failed => Assets.svg.iconMessageFailed.icon(

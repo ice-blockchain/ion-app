@@ -106,7 +106,7 @@ class _Header extends HookConsumerWidget {
   }
 }
 
-class _MessagesList extends HookConsumerWidget {
+class _MessagesList extends ConsumerWidget {
   const _MessagesList({required this.conversationId});
 
   final String conversationId;

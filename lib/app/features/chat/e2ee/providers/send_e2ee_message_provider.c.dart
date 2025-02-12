@@ -187,9 +187,17 @@ class SendE2eeMessageService {
     }
   }
 
-  Future<void> sendReceivedStatus(EventMessage kind14Rumor) async {
+  Future<void> sendMessageStatus(EventMessage kind14Rumor, MessageDeliveryStatus status) async {
+    final allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
+
+    if (!allowedStatus.contains(status)) {
+      return;
+    }
+
+    final content = status == MessageDeliveryStatus.received ? 'received' : 'read';
+
     final eventMessage = await _createEventMessage(
-      content: 'received',
+      content: content,
       signer: eventSigner!,
       kind: PrivateMessageReactionEntity.kind,
       tags: [
@@ -264,8 +272,8 @@ class SendE2eeMessageService {
 
       await conversationMessageStatusDao.updateConversationMessageStatusData(
         masterPubkey: masterPubkey,
-        status: MessageDeliveryStatus.created,
         eventMessageId: eventMessage.id,
+        status: MessageDeliveryStatus.created,
       );
 
       await ionConnectNotifier.sendEvent(
@@ -276,14 +284,14 @@ class SendE2eeMessageService {
 
       await conversationMessageStatusDao.updateConversationMessageStatusData(
         masterPubkey: masterPubkey,
-        status: MessageDeliveryStatus.sent,
         eventMessageId: eventMessage.id,
+        status: MessageDeliveryStatus.sent,
       );
     } catch (e) {
       await conversationMessageStatusDao.updateConversationMessageStatusData(
         masterPubkey: masterPubkey,
-        status: MessageDeliveryStatus.failed,
         eventMessageId: eventMessage.id,
+        status: MessageDeliveryStatus.failed,
       );
     }
   }

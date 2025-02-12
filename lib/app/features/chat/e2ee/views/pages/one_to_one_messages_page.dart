@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/components/messaging_header/messaging_head
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
@@ -118,7 +119,18 @@ class _MessagesList extends ConsumerWidget {
       return const E2eeConversationEmptyView();
     }
 
-    final messages = ref.watch(conversationMessagesProvider(conversationId!));
+    final messages = ref.watch(
+      conversationMessagesProvider(conversationId!).select((message) {
+        message.whenData((messages) async {
+          final lastMessage = messages.entries.last.value.last;
+          await (await ref.watch(sendE2eeMessageServiceProvider.future))
+              .sendMessageStatus(lastMessage, MessageDeliveryStatus.read);
+        });
+
+        return message;
+      }),
+    );
+
     return Expanded(
       child: messages.maybeWhen(
         data: (messages) {
