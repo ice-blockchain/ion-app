@@ -34,8 +34,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final latestEventMessageDate =
-        await ref.watch(conversationEventMessageDaoProvider).getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
+    final latestEventMessageDate = await ref
+        .watch(conversationEventMessageDaoProvider)
+        .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
 
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
 
