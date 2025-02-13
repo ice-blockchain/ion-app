@@ -20,6 +20,10 @@ class TextEditorSeparatorEmbed extends CustomBlockEmbed {
 /// Embed builder for [TextEditorSeparatorEmbed].
 ///
 class TextEditorSeparatorBuilder extends EmbedBuilder {
+  TextEditorSeparatorBuilder({this.readOnly = false});
+
+  final bool readOnly;
+
   @override
   String get key => textEditorSeparatorKey;
 
@@ -33,6 +37,7 @@ class TextEditorSeparatorBuilder extends EmbedBuilder {
     TextStyle textStyle,
   ) {
     return TextEditorSeparator(
+      readOnly: readOnly,
       onRemove: () => {
         removeBlock(controller, node),
       },

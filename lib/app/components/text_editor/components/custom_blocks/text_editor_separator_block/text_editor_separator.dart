@@ -9,10 +9,12 @@ import 'package:ion/app/extensions/extensions.dart';
 class TextEditorSeparator extends HookWidget {
   const TextEditorSeparator({
     required this.onRemove,
+    this.readOnly = false,
     super.key,
   });
 
   final VoidCallback onRemove;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class TextEditorSeparator extends HookWidget {
                     ),
                   ],
                 ),
-                if (isSelected.value)
+                if (isSelected.value && !readOnly)
                   Align(
                     alignment: Alignment.topRight,
                     child: TextEditorSeparatorClose(

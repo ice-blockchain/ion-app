@@ -51,7 +51,7 @@ class TextEditorPreview extends HookWidget {
         maxHeight: maxHeight,
         embedBuilders: [
           TextEditorSingleImageBuilder(media: media),
-          TextEditorSeparatorBuilder(),
+          TextEditorSeparatorBuilder(readOnly: true),
           TextEditorCodeBuilder(readOnly: true),
         ],
         disableClipboard: true,
