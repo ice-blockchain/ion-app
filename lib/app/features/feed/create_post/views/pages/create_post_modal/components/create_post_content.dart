@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -12,6 +13,8 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_url_links.dart';
+import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
@@ -87,7 +90,7 @@ class _ParentEntitySection extends StatelessWidget {
   }
 }
 
-class _TextInputSection extends StatelessWidget {
+class _TextInputSection extends HookConsumerWidget {
   const _TextInputSection({
     required this.textEditorController,
     required this.createOption,
@@ -99,7 +102,13 @@ class _TextInputSection extends StatelessWidget {
   final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mediaFiles = attachedMediaNotifier.value;
+    final links = useUrlLinks(
+      textEditorController: textEditorController,
+      mediaFiles: mediaFiles,
+    );
+
     return Padding(
       padding: EdgeInsets.only(bottom: 10.0.s),
       child: Row(
@@ -123,11 +132,22 @@ class _TextInputSection extends StatelessWidget {
                     textEditorController,
                     placeholder: createOption.getPlaceholder(context),
                   ),
-                  if (attachedMediaNotifier.value.isNotEmpty) ...[
+                  if (mediaFiles.isNotEmpty) ...[
                     SizedBox(height: 12.0.s),
                     AttachedMediaPreview(
                       attachedMediaNotifier: attachedMediaNotifier,
                     ),
+                  ],
+                  if (links.isNotEmpty) ...[
+                    SizedBox(height: 10.0.s),
+                    for (final link in links)
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 8.0.s,
+                          right: ScreenSideOffset.defaultSmallMargin,
+                        ),
+                        child: UrlPreviewContent(url: link),
+                      ),
                   ],
                 ],
               ),
