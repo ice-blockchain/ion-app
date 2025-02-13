@@ -22,18 +22,18 @@ import 'package:ion/app/services/markdown/quill.dart';
   required EntityDataWithMediaContent data,
 }) {
   final EntityDataWithMediaContent(:content, :media) = data;
-  final markdownContent = markdownToDelta(content);
-  final plainTextContent = plainTextToDelta(content);
+  final markdownContentDelta = markdownToDelta(content);
+  final plainTextContentDelta = plainTextToDelta(content);
 
-  final deltaContent =
-      markdownContent.length == 1 && markdownContent.operations.first.attributes == null
-          ? plainTextContent
-          : markdownContent;
+  final contentDelta =
+      markdownContentDelta.length == 1 && markdownContentDelta.operations.first.attributes == null
+          ? plainTextContentDelta
+          : markdownContentDelta;
 
-  return _parseDeltaMediaContent(delta: deltaContent, media: media);
+  return _parseMediaContentDelta(delta: contentDelta, media: media);
 }
 
-({Delta content, List<MediaAttachment> media}) _parseDeltaMediaContent({
+({Delta content, List<MediaAttachment> media}) _parseMediaContentDelta({
   required Delta delta,
   required Map<String, MediaAttachment> media,
 }) {
