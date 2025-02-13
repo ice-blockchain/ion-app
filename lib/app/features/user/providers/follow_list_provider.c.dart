@@ -12,13 +12,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'follow_list_provider.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<FollowListEntity?> followList(
   Ref ref,
   String pubkey, {
   bool network = true,
   bool cache = true,
 }) async {
+  ref.onDispose(
+    () => ref.invalidate(
+      ionConnectEntityProvider(
+        eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
+        network: network,
+        cache: cache,
+      ),
+    ),
+  );
+
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
@@ -34,6 +44,7 @@ Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
   if (currentPubkey == null) {
     return null;
   }
+  ref.onDispose(() => ref.invalidate(followListProvider(currentPubkey, cache: false)));
   return ref.watch(followListProvider(currentPubkey, cache: false).future);
 }
 
