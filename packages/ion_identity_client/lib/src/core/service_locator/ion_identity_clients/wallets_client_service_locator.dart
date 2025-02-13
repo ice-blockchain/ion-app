@@ -22,6 +22,8 @@ import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_req
 import 'package:ion_identity_client/src/wallets/services/get_wallet_transfer_requests/get_wallet_transfer_requests_service.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/data_sources/get_wallets_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/get_wallets/get_wallets_service.dart';
+import 'package:ion_identity_client/src/wallets/services/make_transfer/data_sources/make_transfer_data_source.dart';
+import 'package:ion_identity_client/src/wallets/services/make_transfer/make_transfer_service.dart';
 import 'package:ion_identity_client/src/wallets/services/wallet_views/data_sources/wallet_views_data_source.dart';
 import 'package:ion_identity_client/src/wallets/services/wallet_views/wallet_views_service.dart';
 
@@ -67,6 +69,11 @@ class WalletsClientServiceLocator {
         tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       ),
       broadcastTransactionService: broadcastTransactionService(
+        username: username,
+        config: config,
+        signer: identitySigner,
+      ),
+      makeTransferService: makeTransferService(
         username: username,
         config: config,
         signer: identitySigner,
@@ -194,6 +201,20 @@ class WalletsClientServiceLocator {
         identitySigner: signer,
       ),
       TransactionCreatorFactory(),
+    );
+  }
+
+  MakeTransferService makeTransferService({
+    required String username,
+    required IONIdentityConfig config,
+    required IdentitySigner signer,
+  }) {
+    return MakeTransferService(
+      makeTransferDataSource: MakeTransferDataSource(username),
+      userActionSigner: UserActionSignerServiceLocator().userActionSigner(
+        config: config,
+        identitySigner: signer,
+      ),
     );
   }
 }

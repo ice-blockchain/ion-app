@@ -11,10 +11,10 @@ class Wallet with _$Wallet {
   factory Wallet({
     required String id,
     required String network,
-    required String status,
+    required String? status,
     required WalletSigningKey signingKey,
     required String? address,
-    required String name,
+    required String? name,
   }) = _Wallet;
 
   factory Wallet.fromJson(Map<String, dynamic> json) => _$WalletFromJson(json);
