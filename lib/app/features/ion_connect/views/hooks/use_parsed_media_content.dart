@@ -33,6 +33,15 @@ import 'package:ion/app/services/markdown/quill.dart';
   return _parseMediaContentDelta(delta: contentDelta, media: media);
 }
 
+/// Parses the provided [delta] content to extract media links and separate them from non-media content.
+///
+/// Parameters:
+/// - [delta]: The [Delta] object representing the content to be parsed.
+/// - [media]: A map of all available media links.
+///
+/// Returns:
+/// - [content]: A new [Delta] object with non-media operations.
+/// - [media]: A list of [MediaAttachment] objects extracted from the content.
 ({Delta content, List<MediaAttachment> media}) _parseMediaContentDelta({
   required Delta delta,
   required Map<String, MediaAttachment> media,
@@ -42,14 +51,27 @@ import 'package:ion/app/services/markdown/quill.dart';
   final mediaFromContent = <MediaAttachment>[];
   final nonMediaOperations = <Operation>[];
 
+  var afterMedia = false;
   for (final operation in delta.operations) {
     final attributes = operation.attributes;
     if (attributes != null &&
         attributes.containsKey(Attribute.link.key) &&
         media.containsKey(attributes[Attribute.link.key])) {
+      afterMedia = true;
       mediaFromContent.add(media[attributes[Attribute.link.key]]!);
     } else {
-      nonMediaOperations.add(operation);
+      // [afterMedia] and [trimmedValue] are needed to handle the case with
+      // processing Delta, that is built upon a plain text -
+      // there we insert media links as plain text in the beginning of the content,
+      // dividing those with a whitespace.
+      // After the links are extracted, we need to remove the whitespaces as well.
+      final value = operation.value as String;
+      final trimmedValue =
+          afterMedia && value.startsWith(' ') ? value.replaceFirst(' ', '') : value;
+      afterMedia = false;
+      if (trimmedValue.isNotEmpty) {
+        nonMediaOperations.add(Operation.insert(trimmedValue));
+      }
     }
   }
 
