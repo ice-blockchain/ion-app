@@ -6,6 +6,8 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/community_join_requests_state.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,6 +23,16 @@ part 'community_join_requests_provider.c.g.dart';
 ///
 @riverpod
 FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
+  final hideCommunity =
+      ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+
+  if (hideCommunity) {
+    return const CommunityJoinRequestsState(
+      accepted: [],
+      waitingApproval: [],
+    );
+  }
+
   final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
 
   if (currentPubkey == null) {

@@ -5,6 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_channels/advanced_search_channels.dart';
@@ -23,11 +25,18 @@ class ChatAdvancedSearchPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final hideCommunity =
+        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+
     final categories = useMemoized(
       () {
-        return AdvancedSearchCategory.values.where((category) => category.isChat).toList();
+        return AdvancedSearchCategory.values
+            .where(
+              (category) => category.isChat && (!hideCommunity || !category.isCommunity),
+            )
+            .toList();
       },
-      [],
+      [hideCommunity],
     );
 
     return Scaffold(
@@ -35,6 +44,7 @@ class ChatAdvancedSearchPage extends HookConsumerWidget {
         child: DefaultTabController(
           length: categories.length,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AdvancedSearchNavigation(
                 query: query,

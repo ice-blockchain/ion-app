@@ -38,3 +38,9 @@ final class HideCreatorsWithoutPicture extends FeatureFlag {
   static const hideCreatorsWithoutPicture =
       HideCreatorsWithoutPicture._(key: 'hideCreatorsWithoutPicture');
 }
+
+final class HideCommunityFeatureFlag extends FeatureFlag {
+  const HideCommunityFeatureFlag._({required super.key});
+
+  static const hideCommunity = HideCommunityFeatureFlag._(key: 'hideCommunity');
+}

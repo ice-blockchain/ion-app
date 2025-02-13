@@ -3,6 +3,8 @@
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -16,6 +18,13 @@ part 'community_messages_subscriber_provider.c.g.dart';
 class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
   @override
   Stream<void> build() async* {
+    final hideCommunity =
+        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+
+    if (hideCommunity) {
+      yield null;
+    }
+
     final joinedCommunities = await ref.watch(communityJoinRequestsProvider.future);
 
     final communityIds = joinedCommunities.accepted.map((e) => e.data.uuid).toList();

@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -29,6 +31,9 @@ class NewChatModal extends HookConsumerWidget {
       },
     );
 
+    final hideCommunity =
+        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+
     return SheetContent(
       topPadding: 0,
       body: UserPickerSheet(
@@ -38,26 +43,35 @@ class NewChatModal extends HookConsumerWidget {
           actions: const [NavigationCloseButton()],
         ),
         onUserSelected: onUserSelected,
-        header: Row(
-          children: [
-            _HeaderButton(
-              icon: Assets.svg.iconSearchGroups,
-              title: context.i18n.new_chat_modal_new_group_button,
-              onTap: () {
-                AddParticipantsToGroupModalRoute().push<void>(context);
-              },
-            ),
-            SizedBox(width: 20.0.s),
-            _HeaderButton(
-              icon: Assets.svg.iconSearchChannel,
-              title: context.i18n.new_chat_modal_new_channel_button,
-              onTap: () {
-                NewChannelModalRoute().replace(context);
-              },
-            ),
-          ],
-        ),
+        header: hideCommunity ? null : const _HeaderSection(),
       ),
+    );
+  }
+}
+
+class _HeaderSection extends StatelessWidget {
+  const _HeaderSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _HeaderButton(
+          icon: Assets.svg.iconSearchGroups,
+          title: context.i18n.new_chat_modal_new_group_button,
+          onTap: () {
+            AddParticipantsToGroupModalRoute().push<void>(context);
+          },
+        ),
+        SizedBox(width: 20.0.s),
+        _HeaderButton(
+          icon: Assets.svg.iconSearchChannel,
+          title: context.i18n.new_chat_modal_new_channel_button,
+          onTap: () {
+            NewChannelModalRoute().replace(context);
+          },
+        ),
+      ],
     );
   }
 }
