@@ -35,6 +35,11 @@ class TextEditorPreview extends HookWidget {
         readOnly: true,
       ),
     );
+
+    if (content.length == 1 && content.first.value == '\n') {
+      return const SizedBox.shrink();
+    }
+
     return QuillEditor.basic(
       controller: controller.value,
       configurations: QuillEditorConfigurations(

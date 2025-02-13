@@ -10,7 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
-import 'package:ion/app/features/ion_connect/views/hooks/use_delta_markdown_content.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
 QuillController? usePostQuillController(
   WidgetRef ref, {
@@ -32,7 +32,7 @@ QuillController? usePostQuillController(
       }
       if (modifiedEntity != null) {
         if (modifiedEntity is ModifiablePostEntity) {
-          final (:content, :media) = parseMarkdownContent(data: modifiedEntity.data);
+          final (:content, :media) = parseMediaContent(data: modifiedEntity.data);
           final document = Document.fromDelta(content);
           return QuillController(
             document: document,
