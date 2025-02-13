@@ -7,7 +7,7 @@ import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/ion_connect/views/hooks/use_delta_markdown_content.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
 class VideoTextPost extends HookWidget {
   const VideoTextPost({
@@ -19,7 +19,7 @@ class VideoTextPost extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (:content, :media) = useParsedMarkdownContent(data: entity.data);
+    final (:content, :media) = useParsedMediaContent(data: entity.data);
     final isTextExpanded = useState(false);
     final style = context.theme.appTextThemes.body2.copyWith(
       color: context.theme.appColors.secondaryBackground,

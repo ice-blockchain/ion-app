@@ -14,7 +14,7 @@ import 'package:ion/app/features/feed/views/components/post/components/post_body
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/views/hooks/use_delta_markdown_content.dart';
+import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -38,7 +38,7 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final (:content, :media) = useParsedMarkdownContent(data: postData);
+    final (:content, :media) = useParsedMediaContent(data: postData);
     final firstLinkOperation = useMemoized(
       () => content.operations.firstWhereOrNull(
         (operation) => isAttributedOperation(operation, attribute: Attribute.link),
