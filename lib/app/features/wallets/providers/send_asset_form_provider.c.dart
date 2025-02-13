@@ -160,10 +160,11 @@ class SendAssetFormController extends _$SendAssetFormController {
     if (nativeCoin != null) return nativeCoin;
 
     // TODO: REMOVE STUB
-    nativeCoin = await service
-        .getCoinsByFilters(symbol: 'ETH', network: state.network)
-        .then((coins) => coins.firstOrNull);
-    return nativeCoin!;
+    final coins = await service
+        // .getCoinsByFilters(symbol: 'ETH', network: state.network)
+        .getCoinsByFilters(network: state.network, contractAddress: '');
+    nativeCoin = coins.firstOrNull;
+    return nativeCoin;
   }
 
   void _checkIfUserCanCoverFee() {

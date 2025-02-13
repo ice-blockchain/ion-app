@@ -73,7 +73,7 @@ class SendNftForm extends ConsumerWidget {
                       },
                     ),
                     SizedBox(height: 17.0.s),
-                    const ArrivalTimeSelector(),
+                    const NetworkFeeSelector(),
                     SizedBox(height: 45.0.s),
                     Button(
                       label: Text(

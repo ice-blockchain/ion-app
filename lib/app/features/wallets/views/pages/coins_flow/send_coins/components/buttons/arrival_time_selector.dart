@@ -8,8 +8,8 @@ import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.da
 import 'package:ion/app/features/wallets/views/components/arrival_time/arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/network_fee.dart';
 
-class ArrivalTimeSelector extends ConsumerWidget {
-  const ArrivalTimeSelector({super.key});
+class NetworkFeeSelector extends ConsumerWidget {
+  const NetworkFeeSelector({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -22,15 +22,4 @@ sealed class CryptoAssetData with _$CryptoAssetData {
   }) = NftAssetData;
 
   const CryptoAssetData._();
-
-  // double? get price => switch (this) {
-  //       CoinAssetData(:final coin) => coin.totalBalanceUSD,
-  //       NftAssetData(:final nft) => nft.price,
-  //     };
-  //
-  // String get networkName => switch (this) {
-  //       CoinAssetData(:final coin) =>
-  //         'Not implemented', // TODO: Implement when needed
-  //       NftAssetData(:final nft) => nft.network.displayName,
-  //     };
 }

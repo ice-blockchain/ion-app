@@ -130,7 +130,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       maxValue: coin.selectedOption!.amount,
                     ),
                     SizedBox(height: 17.0.s),
-                    const ArrivalTimeSelector(),
+                    const NetworkFeeSelector(),
                     if (formController.canCoverNetworkFee)
                       SizedBox(height: 45.0.s)
                     else if (formController.networkNativeToken case final WalletAsset networkToken)
