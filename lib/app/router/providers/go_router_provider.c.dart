@@ -71,8 +71,8 @@ Future<String?> _mainRedirect({
     return IntroRoute().location;
   }
 
-  if (isAuthenticated && onboardingComplete != null) {
-    if (onboardingComplete) {
+  if (isAuthenticated && onboardingComplete != null || isAuthenticated && isOnAuth) {
+    if (onboardingComplete != null && onboardingComplete) {
       if (isOnSplash || isOnAuth) {
         return FeedRoute().location;
       } else if (isOnOnboarding) {
@@ -84,7 +84,7 @@ Future<String?> _mainRedirect({
       }
     }
 
-    if (!onboardingComplete && !isOnOnboarding) {
+    if ((onboardingComplete == null || !onboardingComplete) && !isOnOnboarding) {
       if (location == FeedRoute().location) {
         return null;
       }
