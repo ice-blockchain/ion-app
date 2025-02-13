@@ -34,6 +34,7 @@ Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
 
   try {
     return await ref.watch(userMetadataProvider(currentPubkey).future);
+    // need not throw any exceptions from here or some flows with redirect which rely on it can get stuck
   } catch (_) {
     return null;
   }
