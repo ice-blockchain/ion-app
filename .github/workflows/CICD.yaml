@@ -180,6 +180,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version-file: main-repo/pubspec.yaml
           cache: true
       - run: flutter --version
       - name: Detect context and set APP environment variables
@@ -269,6 +270,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          flutter-version-file: main-repo/pubspec.yaml
           cache: true
       - run: flutter --version
       - name: Detect context and set APP environment variables
