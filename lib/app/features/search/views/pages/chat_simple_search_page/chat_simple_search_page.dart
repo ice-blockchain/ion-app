@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/search/providers/chat_search_history_provider.c.dart'
     show chatSearchHistoryProvider;
 import 'package:ion/app/features/search/providers/chat_search_users_provider.c.dart';
@@ -26,6 +28,9 @@ class ChatSimpleSearchPage extends ConsumerWidget {
     final history = ref.watch(chatSearchHistoryProvider);
     final usersSearchResults = ref.watch(chatSearchUsersProvider(query));
 
+    final hideCommunity =
+        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+
     return Scaffold(
       body: ScreenTopOffset(
         child: Column(
@@ -45,7 +50,9 @@ class ChatSimpleSearchPage extends ConsumerWidget {
               data: (pubKeys) => pubKeys == null
                   ? history.pubKeys.isEmpty && history.queries.isEmpty
                       ? SearchHistoryEmpty(
-                          title: context.i18n.chat_search_empty,
+                          title: hideCommunity
+                              ? context.i18n.chat_search_no_community_empty
+                              : context.i18n.chat_search_empty,
                         )
                       : SearchHistory(
                           itemCount: history.pubKeys.length,

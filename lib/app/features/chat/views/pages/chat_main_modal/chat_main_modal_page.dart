@@ -2,21 +2,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/conversation_type.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class ChatMainModalPage extends StatelessWidget {
+class ChatMainModalPage extends ConsumerWidget {
   const ChatMainModalPage({super.key});
 
-  static const List<ConversationType> menuItems = ConversationType.values;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hideCommunity =
+        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+
+    final menuItems =
+        ConversationType.values.where((type) => !hideCommunity || !type.isCommunity).toList();
+
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
@@ -32,25 +38,16 @@ class ChatMainModalPage extends StatelessWidget {
             separatorBuilder: (_, __) => const HorizontalSeparator(),
             itemCount: menuItems.length,
             itemBuilder: (BuildContext context, int index) {
-              final type = menuItems[index];
+              final conversationType = menuItems[index];
 
-              final createFlowRouteLocation = _getSubRouteLocation(type);
               return MainModalItem(
-                item: type,
-                onTap: () => context.pushReplacement(createFlowRouteLocation),
+                item: conversationType,
+                onTap: () => context.pushReplacement(conversationType.subRouteLocation),
               );
             },
           ),
         ],
       ),
     );
-  }
-
-  String _getSubRouteLocation(ConversationType type) {
-    return switch (type) {
-      ConversationType.private => NewChatModalRoute().location,
-      ConversationType.channel => NewChannelModalRoute().location,
-      ConversationType.group => CreateGroupModalRoute().location,
-    };
   }
 }

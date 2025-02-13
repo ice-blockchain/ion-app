@@ -26,7 +26,9 @@ class FollowingUsers extends ConsumerWidget {
 
     return followList.maybeWhen(
       data: (data) {
-        final pubkeys = data?.data.list.map((e) => e.pubkey).toList() ?? [];
+        if (data == null || data.data.list.isEmpty) return const NoUserView();
+
+        final pubkeys = data.data.list.map((e) => e.pubkey).toList();
         return ListView.separated(
           itemBuilder: (context, index) {
             return SelectableUserListItem(

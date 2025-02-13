@@ -66,4 +66,12 @@ enum AdvancedSearchCategory {
       _ => false,
     };
   }
+
+  bool get isCommunity {
+    return switch (this) {
+      AdvancedSearchCategory.groups => true,
+      AdvancedSearchCategory.channels => true,
+      _ => false,
+    };
+  }
 }
