@@ -46,7 +46,8 @@ class ChannelMessagingPage extends HookConsumerWidget {
           communityId,
         ]);
 
-    final messages = ref.watch(conversationMessagesProvider(communityId, ConversationType.community));
+    final messages =
+        ref.watch(conversationMessagesProvider(communityId, ConversationType.community));
 
     final canPost = useCanPostToChannel(channel: channel, currentPubkey: currentPubkey);
 

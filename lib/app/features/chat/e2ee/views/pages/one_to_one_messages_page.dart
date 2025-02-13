@@ -49,7 +49,8 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }
-        final conversationMessageManagementService = await ref.read(sendE2eeMessageServiceProvider.future);
+        final conversationMessageManagementService =
+            await ref.read(sendE2eeMessageServiceProvider.future);
 
         await conversationMessageManagementService.sendMessage(
           conversationId: conversationId.value!,
@@ -115,7 +116,8 @@ class _MessagesList extends ConsumerWidget {
       return const E2eeConversationEmptyView();
     }
 
-    final messages = ref.watch(conversationMessagesProvider(conversationId!, ConversationType.oneToOne));
+    final messages =
+        ref.watch(conversationMessagesProvider(conversationId!, ConversationType.oneToOne));
 
     return Expanded(
       child: messages.maybeWhen(
