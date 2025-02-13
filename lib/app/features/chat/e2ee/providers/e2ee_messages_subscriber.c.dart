@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -91,10 +92,14 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           if (rumor.kind == PrivateDirectMessageEntity.kind) {
             await ref.watch(conversationDaoProvider).add([rumor]);
             await ref.watch(conversationEventMessageDaoProvider).add(rumor);
-            await sendE2eeMessageService.sendReceivedStatus(rumor);
+            await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
           } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
-            final kind14EventId =
-                rumor.tags.firstWhereOrNull((tags) => tags[0] == 'e')?.elementAtOrNull(1);
+            final status = rumor.content == MessageDeliveryStatus.received.name
+                ? MessageDeliveryStatus.received
+                : MessageDeliveryStatus.read;
+            final kind14EventId = rumor.tags
+                .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
+                ?.elementAtOrNull(1);
             final kind7MasterPubkey =
                 rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
 
@@ -103,9 +108,10 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             }
 
             await conversationMessageStatusDao.updateConversationMessageStatusData(
+              status: status,
+              createdAt: rumor.createdAt,
               eventMessageId: kind14EventId,
               masterPubkey: kind7MasterPubkey,
-              status: MessageDeliveryStatus.received,
             );
           }
         }

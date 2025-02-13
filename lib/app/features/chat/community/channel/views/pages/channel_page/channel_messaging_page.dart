@@ -16,6 +16,7 @@ import 'package:ion/app/features/chat/community/providers/community_metadata_pro
 import 'package:ion/app/features/chat/community/providers/join_community_provider.c.dart';
 import 'package:ion/app/features/chat/community/view/components/community_member_count_tile.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -45,7 +46,8 @@ class ChannelMessagingPage extends HookConsumerWidget {
           communityId,
         ]);
 
-    final messages = ref.watch(conversationMessagesProvider(communityId));
+    final messages =
+        ref.watch(conversationMessagesProvider(communityId, ConversationType.community));
 
     final canPost = useCanPostToChannel(channel: channel, currentPubkey: currentPubkey);
 

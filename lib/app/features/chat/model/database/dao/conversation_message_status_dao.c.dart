@@ -6,7 +6,7 @@ part of '../chat_database.c.dart';
 ConversationMessageStatusDao conversationMessageStatusDao(Ref ref) =>
     ConversationMessageStatusDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [MessageStatusTable, EventMessageTable])
+@DriftAccessor(tables: [MessageStatusTable, EventMessageTable, ConversationMessageTable])
 class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageStatusDaoMixin {
   ConversationMessageStatusDao(super.db);
@@ -15,33 +15,71 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     required String masterPubkey,
     required String eventMessageId,
     required MessageDeliveryStatus status,
+    DateTime? createdAt,
   }) async {
-    final existingRow = await (select(messageStatusTable)
-          ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where((table) => table.eventMessageId.equals(eventMessageId)))
-        .getSingleOrNull();
-
-    if (existingRow != null) {
-      if (status.index > existingRow.status.index) {
-        await update(messageStatusTable).replace(existingRow.copyWith(status: status));
-      }
-    } else {
-      final eventMessageExists = await (select(eventMessageTable)
-            ..where((table) => table.id.equals(eventMessageId)))
+    if (status == MessageDeliveryStatus.read && createdAt != null) {
+      final conversationMessageTableData = await (select(conversationMessageTable)
+            ..where((table) => table.eventMessageId.equals(eventMessageId)))
           .getSingleOrNull();
 
-      if (eventMessageExists == null) {
-        return;
-      }
+      if (conversationMessageTableData != null) {
+        final conversationId = conversationMessageTableData.conversationId;
 
-      await into(messageStatusTable).insert(
-        MessageStatusTableCompanion(
-          status: Value(status),
-          masterPubkey: Value(masterPubkey),
-          eventMessageId: Value(eventMessageId),
-        ),
-        mode: InsertMode.insertOrReplace,
-      );
+        final conversationMessageTableDataList = await (select(conversationMessageTable)
+              ..where((table) => table.conversationId.equals(conversationId)))
+            .get();
+
+        final allEventMessagesId =
+            conversationMessageTableDataList.map((e) => e.eventMessageId).toList();
+
+        final eventMessagesBeforeEvent = await (select(eventMessageTable)
+              ..where((table) => table.id.isIn(allEventMessagesId))
+              ..where((table) => table.createdAt.isSmallerThanValue(createdAt)))
+            .get();
+
+        final eventMessagesId = eventMessagesBeforeEvent.map((e) => e.id).toList()
+          ..add(eventMessageId);
+
+        final messageStatusTableData = await (select(messageStatusTable)
+              ..where((table) => table.eventMessageId.isIn(eventMessagesId))
+              ..where((table) => table.masterPubkey.equals(masterPubkey))
+              ..where((table) => table.status.isIn([MessageDeliveryStatus.received.index])))
+            .get();
+
+        await batch((batch) {
+          final rows = messageStatusTableData.map((row) => row.copyWith(status: status)).toList();
+
+          batch.replaceAll(messageStatusTable, rows);
+        });
+      }
+    } else {
+      final existingRow = await (select(messageStatusTable)
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.eventMessageId.equals(eventMessageId)))
+          .getSingleOrNull();
+
+      if (existingRow != null) {
+        if (status.index > existingRow.status.index) {
+          await update(messageStatusTable).replace(existingRow.copyWith(status: status));
+        }
+      } else {
+        final eventMessageExists = await (select(eventMessageTable)
+              ..where((table) => table.id.equals(eventMessageId)))
+            .getSingleOrNull();
+
+        if (eventMessageExists == null) {
+          return;
+        }
+
+        await into(messageStatusTable).insert(
+          MessageStatusTableCompanion(
+            status: Value(status),
+            masterPubkey: Value(masterPubkey),
+            eventMessageId: Value(eventMessageId),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
     }
   }
 
@@ -54,11 +92,15 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
       // First check if any of the rows are failed
       if (rows.any((row) => row.status == MessageDeliveryStatus.failed)) {
         return MessageDeliveryStatus.failed;
-      }
-      // Check if all rows are have delivery status
-      if (rows.every((row) => row.status == MessageDeliveryStatus.received)) {
+      } else
+      // Check if all rows are have read status
+      if (rows.every((row) => row.status == MessageDeliveryStatus.read)) {
+        return MessageDeliveryStatus.read;
+      } else
+      // Check if all rows are have received status
+      if (rows.every((row) => row.status.index >= MessageDeliveryStatus.received.index)) {
         return MessageDeliveryStatus.received;
-      }
+      } else
       // Check if all rows have delivery status or higher
       if (rows.every((row) => row.status.index > MessageDeliveryStatus.created.index)) {
         return MessageDeliveryStatus.sent;
@@ -75,5 +117,5 @@ enum MessageDeliveryStatus {
   sent,
   received,
   read,
-  deleted,
+  deleted;
 }
