@@ -21,14 +21,6 @@ class CanReply extends _$CanReply {
 
   @override
   Future<bool> build(EventReference eventReference) async {
-    ref.onDispose(() {
-      ref
-        ..invalidate(followListProvider(eventReference.pubkey, cache: false))
-        ..invalidate(
-          ionConnectEntityProvider(eventReference: eventReference, cache: false),
-        );
-    });
-
     final currentPubkey = ref.watch(currentPubkeySelectorProvider).value;
     if (currentPubkey == null) {
       return true;

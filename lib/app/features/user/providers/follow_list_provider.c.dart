@@ -45,7 +45,7 @@ Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
     return null;
   }
   ref.onDispose(() => ref.invalidate(followListProvider(currentPubkey, cache: false)));
-  return ref.watch(followListProvider(currentPubkey).future);
+  return ref.watch(followListProvider(currentPubkey, cache: false).future);
 }
 
 @riverpod
