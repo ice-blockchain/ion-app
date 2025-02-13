@@ -15,6 +15,9 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		A827DFE52D5B83CB00FC38CB /* VideoEditorModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A827DFE42D5B83CB00FC38CB /* VideoEditorModule.swift */; };
+		A827DFE72D5B874100FC38CB /* CustomViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A827DFE62D5B874100FC38CB /* CustomViewFactory.swift */; };
+		A827DFE92D5BC6E700FC38CB /* luts in Resources */ = {isa = PBXBuildFile; fileRef = A827DFE82D5BC6E700FC38CB /* luts */; };
 		A8ACC8E12CF89AB6009437D5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A8ACC8DF2CF89AB6009437D5 /* Localizable.strings */; };
 		A8D084B92CFE283000BB0883 /* PhotoEditorModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D084B82CFE283000BB0883 /* PhotoEditorModule.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +55,9 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9999E3299884A0677CEB61FC /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C961AA95A31371415072229 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		A827DFE42D5B83CB00FC38CB /* VideoEditorModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditorModule.swift; sourceTree = "<group>"; };
+		A827DFE62D5B874100FC38CB /* CustomViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewFactory.swift; sourceTree = "<group>"; };
+		A827DFE82D5BC6E700FC38CB /* luts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = luts; sourceTree = "<group>"; };
 		A8ACC8E02CF89AB6009437D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A8D084B82CFE283000BB0883 /* PhotoEditorModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditorModule.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,7 +107,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
-				A8D084B82CFE283000BB0883 /* PhotoEditorModule.swift */,
+				A827DFE82D5BC6E700FC38CB /* luts */,
 				A8ACC8DF2CF89AB6009437D5 /* Localizable.strings */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
@@ -131,6 +137,9 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				A827DFE62D5B874100FC38CB /* CustomViewFactory.swift */,
+				A827DFE42D5B83CB00FC38CB /* VideoEditorModule.swift */,
+				A8D084B82CFE283000BB0883 /* PhotoEditorModule.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -204,6 +213,7 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				A827DFE92D5BC6E700FC38CB /* luts in Resources */,
 				6B02DE462A94B8A9008D3035 /* Environment.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +317,8 @@
 			files = (
 				A8D084B92CFE283000BB0883 /* PhotoEditorModule.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
+				A827DFE52D5B83CB00FC38CB /* VideoEditorModule.swift in Sources */,
+				A827DFE72D5B874100FC38CB /* CustomViewFactory.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -404,7 +416,7 @@
 				DEVELOPMENT_TEAM = YJJ6X8TG5Y;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -537,7 +549,7 @@
 				DEVELOPMENT_TEAM = YJJ6X8TG5Y;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -564,7 +576,7 @@
 				DEVELOPMENT_TEAM = YJJ6X8TG5Y;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
