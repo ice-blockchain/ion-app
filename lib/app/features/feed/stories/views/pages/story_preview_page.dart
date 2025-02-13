@@ -19,6 +19,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class StoryPreviewPage extends ConsumerWidget {
@@ -91,17 +92,26 @@ class StoryPreviewPage extends ConsumerWidget {
                 SizedBox(height: 16.0.s),
                 StoryShareButton(
                   onPressed: () async {
-                    final processedState =
-                        ref.read(imageProcessorNotifierProvider(ImageProcessingType.story));
-
-                    if (processedState case ImageProcessorStateProcessed(:final file)) {
+                    if (mediaType == MediaType.video) {
                       await ref
                           .read(createPostNotifierProvider(CreatePostOption.story).notifier)
-                          .create(mediaFiles: [file], whoCanReply: whoCanReply);
+                          .create(
+                        mediaFiles: [MediaFile(path: path, mimeType: mimeType)],
+                        whoCanReply: whoCanReply,
+                      );
+                    } else {
+                      final processedState =
+                          ref.read(imageProcessorNotifierProvider(ImageProcessingType.story));
 
-                      if (context.mounted) {
-                        FeedRoute().go(context);
+                      if (processedState case ImageProcessorStateProcessed(:final file)) {
+                        await ref
+                            .read(createPostNotifierProvider(CreatePostOption.story).notifier)
+                            .create(mediaFiles: [file], whoCanReply: whoCanReply);
                       }
+                    }
+
+                    if (context.mounted) {
+                      FeedRoute().go(context);
                     }
                   },
                 ),

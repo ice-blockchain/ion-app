@@ -35,7 +35,7 @@ env:
 jobs:
   flutter:
     name: Flutter -- verify, build, test
-    runs-on: macOS-latest
+    runs-on: macos-15
     steps:
       - name: Checkout main repo
         id: checkout-main-repo
@@ -144,7 +144,7 @@ jobs:
   ios-cicd:
     name: iOS -- build, deploy
     needs: [flutter]
-    runs-on: macOS-latest
+    runs-on: macos-15
     env:
       FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 180
       FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 10
@@ -230,7 +230,7 @@ jobs:
   android-cicd:
     name: Android -- build, deploy
     needs: [flutter]
-    runs-on: macOS-latest
+    runs-on: macos-15
     steps:
       - uses: actions/cache@v3
         id: cache_all
