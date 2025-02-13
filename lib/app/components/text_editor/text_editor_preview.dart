@@ -52,7 +52,7 @@ class TextEditorPreview extends HookWidget {
         embedBuilders: [
           TextEditorSingleImageBuilder(media: media),
           TextEditorSeparatorBuilder(),
-          TextEditorCodeBuilder(),
+          TextEditorCodeBuilder(readOnly: true),
         ],
         disableClipboard: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),

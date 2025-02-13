@@ -10,11 +10,13 @@ class CodeBlockContent extends HookConsumerWidget {
   const CodeBlockContent({
     required this.onRemoveBlock,
     required this.content,
+    this.readOnly = false,
     super.key,
   });
 
   final VoidCallback onRemoveBlock;
   final String content;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,6 +37,7 @@ class CodeBlockContent extends HookConsumerWidget {
         },
         child: TextField(
           controller: textController,
+          readOnly: readOnly,
           onChanged: (value) {
             codeText.value = value;
           },

@@ -29,6 +29,10 @@ class TextEditorCodeEmbed extends CustomBlockEmbed {
 /// Embed builder for [TextEditorCodeBuilder].
 ///
 class TextEditorCodeBuilder extends EmbedBuilder {
+  TextEditorCodeBuilder({this.readOnly = false});
+
+  final bool readOnly;
+
   @override
   String get key => textEditorCodeKey;
 
@@ -54,9 +58,10 @@ class TextEditorCodeBuilder extends EmbedBuilder {
       ),
       child: Column(
         children: [
-          const CodeBlockTypesToolbar(),
+          if (!this.readOnly) const CodeBlockTypesToolbar(),
           CodeBlockContent(
             content: content,
+            readOnly: this.readOnly,
             onRemoveBlock: () => removeBlock(controller, node),
           ),
         ],
