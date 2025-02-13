@@ -19,16 +19,6 @@ Future<FollowListEntity?> followList(
   bool network = true,
   bool cache = true,
 }) async {
-  ref.onDispose(
-    () => ref.invalidate(
-      ionConnectEntityProvider(
-        eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
-        network: network,
-        cache: cache,
-      ),
-    ),
-  );
-
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
