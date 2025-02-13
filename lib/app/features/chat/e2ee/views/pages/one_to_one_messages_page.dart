@@ -49,8 +49,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }
-        final conversationMessageManagementService =
-            await ref.read(sendE2eeMessageServiceProvider.future);
+        final conversationMessageManagementService = await ref.read(sendE2eeMessageServiceProvider.future);
 
         await conversationMessageManagementService.sendMessage(
           conversationId: conversationId.value!,
