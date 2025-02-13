@@ -36,8 +36,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final latestEventMessageDate =
-        await ref.watch(conversationEventMessageDaoProvider).getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
+    final latestEventMessageDate = await ref
+        .watch(conversationEventMessageDaoProvider)
+        .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
 
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
 
@@ -94,10 +95,13 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             rumor.kind == PrivateMessageReactionEntity.kind) {
           // Try to get kind 14 event id from related event tag or use the rumor id
           final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
-              ? rumor.tags.firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)?.elementAtOrNull(1)
+              ? rumor.tags
+                  .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
+                  ?.elementAtOrNull(1)
               : rumor.id;
           // Try to get sender master pubkey from tags ('b' tag present in all events)
-          final rumorMasterPubkey = rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
+          final rumorMasterPubkey =
+              rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
 
           if (kind14EventId == null || rumorMasterPubkey == null) {
             throw ReceiverDevicePubkeyNotFoundException(rumor.id);
