@@ -12,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'follow_list_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<FollowListEntity?> followList(
   Ref ref,
   String pubkey, {
@@ -44,8 +44,7 @@ Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
   if (currentPubkey == null) {
     return null;
   }
-  ref.onDispose(() => ref.invalidate(followListProvider(currentPubkey, cache: false)));
-  return ref.watch(followListProvider(currentPubkey).future);
+  return ref.watch(followListProvider(currentPubkey, cache: false).future);
 }
 
 @riverpod
