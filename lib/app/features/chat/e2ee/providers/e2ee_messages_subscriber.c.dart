@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -86,32 +88,65 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         privateKey: eventSigner.privateKey,
       );
 
+      // Can be any kind
       if (rumor != null) {
+        // Only for kind 7 and kind 14
         if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
             rumor.kind == PrivateMessageReactionEntity.kind) {
+          // Try to get kind 14 event id from related event tag or use the rumor id
+          final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
+              ? rumor.tags
+                  .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
+                  ?.elementAtOrNull(1)
+              : rumor.id;
+          // Try to get sender master pubkey from tags ('b' tag present in all events)
+          final rumorMasterPubkey =
+              rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
+
+          if (kind14EventId == null || rumorMasterPubkey == null) {
+            throw ReceiverDevicePubkeyNotFoundException(rumor.id);
+          }
+
+          // Only for kind 14
           if (rumor.kind == PrivateDirectMessageEntity.kind) {
+            // Add conversation if that doesn't exist
             await ref.watch(conversationDaoProvider).add([rumor]);
+            // Add message if that doesn't exist
             await ref.watch(conversationEventMessageDaoProvider).add(rumor);
-            await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
+            // If user received another user message add "received" status
+            // for them both into the database, we don't know anything about
+            // other users in the conversation
+            final sendTo = {masterPubkey, rumorMasterPubkey};
+
+            for (final participantMasterPubkey in sendTo) {
+              await conversationMessageStatusDao.add(
+                createdAt: rumor.createdAt,
+                eventMessageId: kind14EventId,
+                status: MessageDeliveryStatus.received,
+                masterPubkey: participantMasterPubkey,
+              );
+            }
+            // Notify rest of the participants that the message was received
+            // by the current user, no need to wait for the response cause we
+            // are not sure if message will be delivered
+            // TODO: Improve and do not send every time when kind 14 is received
+            unawaited(
+                sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received));
+
+            // Only for kind 7
           } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
+            // Identify kind 7 status (received or read only)
             final status = rumor.content == MessageDeliveryStatus.received.name
                 ? MessageDeliveryStatus.received
                 : MessageDeliveryStatus.read;
-            final kind14EventId = rumor.tags
-                .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
-                ?.elementAtOrNull(1);
-            final kind7MasterPubkey =
-                rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
 
-            if (kind7MasterPubkey == null || kind14EventId == null) {
-              return;
-            }
-
-            await conversationMessageStatusDao.updateConversationMessageStatusData(
+            // Add corresponding status to the database for the sender master pubkey
+            // and the kind 14 event id, if that doesn't exist
+            await conversationMessageStatusDao.add(
               status: status,
               createdAt: rumor.createdAt,
               eventMessageId: kind14EventId,
-              masterPubkey: kind7MasterPubkey,
+              masterPubkey: rumorMasterPubkey,
             );
           }
         }

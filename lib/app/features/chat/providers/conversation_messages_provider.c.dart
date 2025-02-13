@@ -17,6 +17,7 @@ class ConversationMessages extends _$ConversationMessages {
       if (type == ConversationType.community) return;
 
       final lastMessage = event.entries.last.value.last;
+      // TODO: Improve and do not send read status every time when new message arrived
       await (await ref.watch(sendE2eeMessageServiceProvider.future))
           .sendMessageStatus(lastMessage, MessageDeliveryStatus.read);
     });

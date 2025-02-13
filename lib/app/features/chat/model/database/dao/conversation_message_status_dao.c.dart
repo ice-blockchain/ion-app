@@ -11,7 +11,7 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageStatusDaoMixin {
   ConversationMessageStatusDao(super.db);
 
-  Future<void> updateConversationMessageStatusData({
+  Future<void> add({
     required String masterPubkey,
     required String eventMessageId,
     required MessageDeliveryStatus status,
