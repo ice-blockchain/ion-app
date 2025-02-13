@@ -45,15 +45,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     final onSubmitted = useCallback(
       (String? content) async {
-        // final existConversationId =
-        //     await ref.watch(existChatConversationIdProvider(receiverPubKey).future);
-
         final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }
-        final conversationMessageManagementService =
-            await ref.read(sendE2eeMessageServiceProvider.future);
+        final conversationMessageManagementService = await ref.read(sendE2eeMessageServiceProvider.future);
 
         await conversationMessageManagementService.sendMessage(
           conversationId: conversationId.value!,
@@ -119,17 +115,7 @@ class _MessagesList extends ConsumerWidget {
       return const E2eeConversationEmptyView();
     }
 
-    final messages = ref.watch(
-      conversationMessagesProvider(conversationId!).select((message) {
-        message.whenData((messages) async {
-          final lastMessage = messages.entries.last.value.last;
-          await (await ref.watch(sendE2eeMessageServiceProvider.future))
-              .sendMessageStatus(lastMessage, MessageDeliveryStatus.read);
-        });
-
-        return message;
-      }),
-    );
+    final messages = ref.watch(conversationMessagesProvider(conversationId!, ConversationType.oneToOne));
 
     return Expanded(
       child: messages.maybeWhen(

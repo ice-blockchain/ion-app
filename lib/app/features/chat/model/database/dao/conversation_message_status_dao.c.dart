@@ -7,8 +7,7 @@ ConversationMessageStatusDao conversationMessageStatusDao(Ref ref) =>
     ConversationMessageStatusDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(tables: [MessageStatusTable, EventMessageTable, ConversationMessageTable])
-class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
-    with _$ConversationMessageStatusDaoMixin {
+class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase> with _$ConversationMessageStatusDaoMixin {
   ConversationMessageStatusDao(super.db);
 
   Future<void> updateConversationMessageStatusData({
@@ -29,19 +28,20 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
               ..where((table) => table.conversationId.equals(conversationId)))
             .get();
 
-        final allEventMessagesId =
-            conversationMessageTableDataList.map((e) => e.eventMessageId).toList();
+        final allEventMessagesId = conversationMessageTableDataList.map((e) => e.eventMessageId).toList();
 
         final eventMessagesBeforeEvent = await (select(eventMessageTable)
               ..where((table) => table.id.isIn(allEventMessagesId))
               ..where((table) => table.createdAt.isSmallerThanValue(createdAt)))
             .get();
 
-        final eventMessagesId = eventMessagesBeforeEvent.map((e) => e.id).toList();
+        final eventMessagesId = eventMessagesBeforeEvent.map((e) => e.id).toList()
+        ..add(eventMessageId);
 
         final messageStatusTableData = await (select(messageStatusTable)
               ..where((table) => table.eventMessageId.isIn(eventMessagesId))
-              ..where((table) => table.masterPubkey.equals(masterPubkey)))
+              ..where((table) => table.masterPubkey.equals(masterPubkey))
+              ..where((table) => table.status.isIn([MessageDeliveryStatus.received.index])))
             .get();
 
         await batch((batch) {
@@ -61,9 +61,8 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
           await update(messageStatusTable).replace(existingRow.copyWith(status: status));
         }
       } else {
-        final eventMessageExists = await (select(eventMessageTable)
-              ..where((table) => table.id.equals(eventMessageId)))
-            .getSingleOrNull();
+        final eventMessageExists =
+            await (select(eventMessageTable)..where((table) => table.id.equals(eventMessageId))).getSingleOrNull();
 
         if (eventMessageExists == null) {
           return;
@@ -82,9 +81,8 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Stream<MessageDeliveryStatus> getMessageStatus(String eventMessageId) {
-    final existingRows = (select(messageStatusTable)
-          ..where((table) => table.eventMessageId.equals(eventMessageId)))
-        .watch();
+    final existingRows =
+        (select(messageStatusTable)..where((table) => table.eventMessageId.equals(eventMessageId))).watch();
 
     return existingRows.map((rows) {
       // First check if any of the rows are failed
@@ -115,5 +113,5 @@ enum MessageDeliveryStatus {
   sent,
   received,
   read,
-  deleted,
+  deleted;
 }

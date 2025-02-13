@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -32,7 +33,7 @@ class GroupMessagesPage extends HookConsumerWidget {
 
     final messages = ref
         .watch(
-          conversationMessagesProvider(conversationId),
+          conversationMessagesProvider(conversationId, ConversationType.group),
         )
         .valueOrNull;
 
@@ -112,7 +113,7 @@ class _MessagesList extends ConsumerWidget {
   final String conversationId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = ref.watch(conversationMessagesProvider(conversationId));
+    final messages = ref.watch(conversationMessagesProvider(conversationId, ConversationType.group));
     return Expanded(
       child: messages.maybeWhen(
         data: (messages) {
