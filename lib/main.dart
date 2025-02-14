@@ -9,7 +9,6 @@ import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/app/features/core/views/components/app_lifecycle_observer.dart';
 import 'package:ion/app/features/core/views/components/content_scaler.dart';
-import 'package:ion/app/features/wallets/views/components/coin_sync/coins_sync_wrapper.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
@@ -49,20 +48,18 @@ class IONApp extends ConsumerWidget {
     return ContentScaler(
       child: AppLifecycleObserver(
         child: SheetScope(
-          child: CoinsSyncWrapper(
-            child: MaterialApp.router(
-              localizationsDelegates: const [
-                ...I18n.localizationsDelegates,
-                FlutterQuillLocalizations.delegate,
-              ],
-              supportedLocales: I18n.supportedLocales,
-              locale: appLocale,
-              theme: template.whenOrNull(data: (data) => buildLightTheme(data.theme)),
-              darkTheme: template.whenOrNull(data: (data) => buildDarkTheme(data.theme)),
-              themeMode: appThemeMode,
-              routerConfig: goRouter,
-              builder: (context, child) => AppRouterBuilder(child: child),
-            ),
+          child: MaterialApp.router(
+            localizationsDelegates: const [
+              ...I18n.localizationsDelegates,
+              FlutterQuillLocalizations.delegate,
+            ],
+            supportedLocales: I18n.supportedLocales,
+            locale: appLocale,
+            theme: template.whenOrNull(data: (data) => buildLightTheme(data.theme)),
+            darkTheme: template.whenOrNull(data: (data) => buildDarkTheme(data.theme)),
+            themeMode: appThemeMode,
+            routerConfig: goRouter,
+            builder: (context, child) => AppRouterBuilder(child: child),
           ),
         ),
       ),
