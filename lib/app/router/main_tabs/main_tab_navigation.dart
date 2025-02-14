@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -144,12 +143,12 @@ class _UnreadMessagesCounter extends ConsumerWidget {
       return const SizedBox();
     }
     return Positioned(
-      top: 10,
-      right: 22,
+      top: 10.0.s,
+      right: 22.0.s,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 3.0.s, vertical: 2.0.s),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(8.0.s),
           color: context.theme.appColors.attentionRed,
         ),
         constraints: BoxConstraints(
@@ -158,8 +157,7 @@ class _UnreadMessagesCounter extends ConsumerWidget {
         child: Text(
           '$unreadMessagesCount',
           textAlign: TextAlign.center,
-          style: context.theme.appTextThemes.inputFieldText.copyWith(
-            fontSize: 6,
+          style: context.theme.appTextThemes.notificationCaption.copyWith(
             color: context.theme.appColors.primaryBackground,
           ),
         ),

@@ -39,18 +39,9 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Stream<int> getAllUnreadMessagesCount(String currentUserMasterPubkey) {
-    final query = select(conversationMessageTable).join([
-      innerJoin(
-        eventMessageTable,
-        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
-      ),
-      innerJoin(
-        messageStatusTable,
-        messageStatusTable.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
-      ),
-    ])
-      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
-      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
+    final query = select(messageStatusTable)
+      ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
+      ..where((table) => table.masterPubkey.equals(currentUserMasterPubkey));
 
     return query.watch().map((rows) => rows.length);
   }

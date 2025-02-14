@@ -88,9 +88,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         privateKey: eventSigner.privateKey,
       );
 
-      // Can be any kind
       if (rumor != null) {
-        // Only for kind 7 and kind 14
         if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
             rumor.kind == PrivateMessageReactionEntity.kind) {
           // Try to get kind 14 event id from related event tag or use the rumor id
