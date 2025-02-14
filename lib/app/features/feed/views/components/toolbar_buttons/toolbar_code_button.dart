@@ -26,9 +26,7 @@ class ToolbarCodeButton extends StatelessWidget {
 
         textEditorController.document.insert(
           index,
-          BlockEmbed.custom(
-            TextEditorCodeEmbed(),
-          ),
+          TextEditorCodeEmbed(content: ''),
         );
 
         textEditorController.document.insert(index + 1, '\n');

@@ -26,9 +26,7 @@ class ToolbarSeparatorButton extends StatelessWidget {
 
         textEditorController.document.insert(
           index,
-          BlockEmbed.custom(
-            TextEditorSeparatorEmbed(),
-          ),
+          TextEditorSeparatorEmbed(),
         );
 
         textEditorController.document.insert(index + 1, '\n');

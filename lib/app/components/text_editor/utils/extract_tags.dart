@@ -7,6 +7,7 @@ List<String> extractTags(Delta content) {
       .where(
     (operation) =>
         operation.isInsert &&
+        (operation.value is String) &&
         ((operation.value as String).startsWith('#') ||
             (operation.value as String).startsWith(r'$')),
   )

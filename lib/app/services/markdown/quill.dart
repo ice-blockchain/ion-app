@@ -3,19 +3,32 @@
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_quill/markdown_quill.dart';
 
-final _deltaToMd = DeltaToMarkdown();
-final _mdToDelta = MarkdownToDelta(markdownDocument: md.Document(encodeHtml: false));
+final _mdDocument = md.Document(
+  encodeHtml: false,
+  extensionSet: md.ExtensionSet.gitHubFlavored,
+);
 
-//TODO: process text-editor-single-image, hashtags and other custom attr
-String deltaToMarkdown(Delta delta) => _deltaToMd.convert(delta);
-
-//TODO: process text-editor-single-image, hashtags and other custom attr
-Delta markdownToDelta(String markdown) => _mdToDelta.convert(markdown);
+final _mdToDelta = MarkdownToDelta(
+  markdownDocument: _mdDocument,
+  softLineBreak: true,
+  customElementToEmbeddable: {
+    'img': (attrs) {
+      final imageUrl = attrs['src'] ?? '';
+      return TextEditorSingleImageEmbed(imageUrl);
+    },
+    'pre': (attrs) {
+      final content = attrs['content'] ?? '';
+      return TextEditorCodeEmbed(content: content);
+    },
+  },
+);
 
 Delta plainTextToDelta(String text) {
   final matches = TextParser.allMatchers().parse(text.trim());
@@ -37,4 +50,90 @@ Delta plainTextToDelta(String text) {
   operations.add(Operation.insert('\n'));
 
   return Delta.fromOperations(operations);
+}
+
+final deltaToMd = DeltaToMarkdown(
+  customEmbedHandlers: {
+    'text-editor-single-image': (embed, out) {
+      final imageUrl = embed.value.data;
+      out.write('![image]($imageUrl)');
+    },
+    'text-editor-separator': (embed, out) {
+      out.write('\n---\n');
+    },
+    'text-editor-code': (embed, out) {
+      final content = embed.value.data;
+      out.write('\n```\n$content\n```\n');
+    },
+  },
+  visitLineHandleNewLine: (style, out) {
+    out.write('\n');
+  },
+);
+
+String deltaToMarkdown(Delta delta) {
+  final processedDelta = Delta();
+  for (final op in delta.toList()) {
+    if (op.key == 'insert') {
+      if (op.data is Map) {
+        processedDelta.insert(op.data);
+      } else if (op.attributes?.containsKey('text-editor-single-image') ?? false) {
+        processedDelta.insert({
+          'text-editor-single-image': op.attributes!['text-editor-single-image'],
+        });
+      } else {
+        processedDelta.insert(op.data, op.attributes);
+      }
+    }
+  }
+  return deltaToMd.convert(processedDelta);
+}
+
+Delta markdownToDelta(String markdown) {
+  final delta = _mdToDelta.convert(markdown);
+  final processedDelta = Delta();
+  final textParser = TextParser.allMatchers();
+
+  for (final op in delta.toList()) {
+    if (op.key == 'insert' && op.data is Map) {
+      final data = op.data! as Map;
+      if (data.containsKey('image')) {
+        final imageUrl = data['image'] as String;
+        processedDelta.insert({
+          'text-editor-single-image': imageUrl,
+        });
+      } else if (data.containsKey('divider')) {
+        processedDelta.insert({
+          'text-editor-separator': '---',
+        });
+      } else {
+        processedDelta.insert(op.data, op.attributes);
+      }
+    } else {
+      final text = op.data.toString();
+      final matches = textParser.parse(text);
+
+      if (matches.isEmpty) {
+        processedDelta.insert(op.data, op.attributes);
+      } else {
+        for (final match in matches) {
+          processedDelta.insert(
+            match.text,
+            {
+              ...?op.attributes,
+              ...switch (match.matcher) {
+                HashtagMatcher() => {HashtagAttribute.attributeKey: match.text},
+                MentionMatcher() => {MentionAttribute.attributeKey: match.text},
+                CashtagMatcher() => {CashtagAttribute.attributeKey: match.text},
+                UrlMatcher() => {Attribute.link.key: match.text},
+                _ => {},
+              },
+            },
+          );
+        }
+      }
+    }
+  }
+
+  return processedDelta;
 }
