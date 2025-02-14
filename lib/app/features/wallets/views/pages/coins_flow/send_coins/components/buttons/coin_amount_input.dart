@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/validators.dart';
 
@@ -28,9 +29,6 @@ class CoinAmountInput extends ConsumerWidget {
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
 
-    // final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
-    // final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
-
     return Column(
       children: [
         TextInput(
@@ -46,7 +44,7 @@ class CoinAmountInput extends ConsumerWidget {
           suffixIcon: maxValue != null
               ? TextInputTextButton(
                   onPressed: () {
-                    controller.text = maxValue.toString();
+                    controller.text = formatCrypto(maxValue ?? 0);
                   },
                   label: locale.wallet_max,
                 )

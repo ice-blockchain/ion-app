@@ -57,19 +57,6 @@ enum Network {
 
   final bool isTestnet;
 
-  // Should be the same as supported networks in the getCreator() in
-  // ion_identity_client/lib/src/wallets/services/broadcast_transaction/domain/transaction_creator/transaction_creator_factory.dart
-  static const _supportTransactions = [
-    bitcoin,
-    bitcoinTestnet3,
-    ethereum,
-    ethereumSepolia,
-    ton,
-    tonTestnet,
-    ion,
-    ionTestnet,
-  ];
-
   static const Map<Network, String> _serverNames = {
     Network.ion: 'ION',
     Network.ionTestnet: 'IONTestnet',
@@ -157,8 +144,6 @@ enum Network {
 
   // A blank in case we use a different naming convention in the future.
   String get displayName => serverName;
-
-  bool get supportTransactions => _supportTransactions.contains(this);
 
   static Network fromServerName(String name) => _serverNames.entries
       .firstWhere(

@@ -61,7 +61,7 @@ class CoinButton extends StatelessWidget {
                   style: textTheme.body,
                 ),
                 Text(
-                  formatUSD(coinInWallet.balanceUSD),
+                  formatToCurrency(coinInWallet.balanceUSD),
                   style: textTheme.caption3.copyWith(
                     color: colors.secondaryText,
                   ),

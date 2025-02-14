@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -11,7 +10,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/timeline_item_data.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
-import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/components/timeline/timeline.dart';
@@ -119,10 +117,11 @@ class TransactionDetailsPage extends ConsumerWidget {
                       icon: formData.network.svgIconAsset.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItemArrivalTime(
-                      arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
-                          .format(formData.arrivalDateTime),
-                    ),
+                    // TODO: Not implemented
+                    // ListItemArrivalTime(
+                    //   arrivalTime: DateFormat(locale.wallet_transaction_details_arrival_time_format)
+                    //       .format(formData.arrivalDateTime),
+                    // ),
                     SizedBox(height: 12.0.s),
                     const ListItemNetworkFee(value: '1.00 USDT'),
                     SizedBox(height: 15.0.s),

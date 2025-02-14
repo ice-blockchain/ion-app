@@ -5,9 +5,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
@@ -18,11 +20,13 @@ import 'package:ion/app/features/wallets/views/components/network_fee/list_item_
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class ConfirmationSheet extends ConsumerWidget {
   const ConfirmationSheet({super.key});
@@ -103,36 +107,44 @@ class ConfirmationSheet extends ConsumerWidget {
                   ),
                   SizedBox(height: 16.0.s),
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
-                    if (fee.arrivalTime != null) ...[
-                      ListItemArrivalTime(
-                        arrivalTime: '${fee.arrivalTime!.inMinutes} '
-                            '${locale.wallet_arrival_time_minutes}',
-                      ),
-                      SizedBox(height: 16.0.s),
-                    ],
+                    ListItemArrivalTime(feeOption: fee),
+                    SizedBox(height: 16.0.s),
                     ListItemNetworkFee(value: formatCrypto(fee.amount, fee.symbol)),
                   ],
                   SizedBox(height: 22.0.s),
                   if (formData.assetData case final CoinAssetData coin)
                     Button(
-                      label: Text(
-                        '${locale.button_confirm} - ${formatToCurrency(coin.priceUSD)}',
-                      ),
                       mainAxisSize: MainAxisSize.max,
+                      disabled: ref.watch(sendCoinsNotifierProvider).isLoading,
+                      label: ref.watch(sendCoinsNotifierProvider).maybeMap(
+                            loading: (_) => const IONLoadingIndicator(),
+                            orElse: () => Text(
+                              '${locale.button_confirm} - ${formatToCurrency(coin.priceUSD)}',
+                            ),
+                          ),
                       onPressed: () async {
-                        if (formData.assetData case final CoinAssetData coin) {
-                          await ref
-                              .read(
-                                sendCoinsNotifierProvider.notifier,
-                              )
-                              .send(
-                                amount: coin.amount.toString(),
-                                wallet: formData.senderWallet!,
-                                receiverAddress: formData.receiverAddress,
-                              );
-                        }
+                        if (formData.assetData is! CoinAssetData) return;
 
-                        // CoinTransactionResultRoute().go(context),
+                        await guardPasskeyDialog(
+                          ref.context,
+                          (child) {
+                            return RiverpodVerifyIdentityRequestBuilder(
+                              provider: sendCoinsNotifierProvider,
+                              requestWithVerifyIdentity: (
+                                OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
+                              ) async {
+                                await ref
+                                    .read(
+                                      sendCoinsNotifierProvider.notifier,
+                                    )
+                                    .send(onVerifyIdentity);
+
+                                if (context.mounted) CoinTransactionResultRoute().go(context);
+                              },
+                              child: child,
+                            );
+                          },
+                        );
                       },
                     ),
                   SizedBox(height: 16.0.s),

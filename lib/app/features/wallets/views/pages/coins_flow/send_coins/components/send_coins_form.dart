@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -10,14 +9,13 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/widgets/not_enough_coins_for_network_fee_message.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -38,6 +36,7 @@ class SendCoinsForm extends HookConsumerWidget {
     final notifier = ref.watch(sendAssetFormControllerProvider().notifier);
     final selectedContactPubkey = formController.contactPubkey;
     final coin = formController.assetData.as<CoinAssetData>()!;
+    final maxAmount = coin.selectedOption?.amount ?? 0;
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
@@ -47,10 +46,9 @@ class SendCoinsForm extends HookConsumerWidget {
     useEffect(
       () {
         void listener() {
-          final maxValue = coin.selectedOption?.amount;
           final numValue = double.tryParse(amountController.value.text);
-          if (numValue != null && maxValue != null && numValue > maxValue) {
-            amountController.text = maxValue.toString();
+          if (numValue != null && numValue > maxAmount) {
+            amountController.text = formatCrypto(maxAmount);
           }
           notifier.setCoinsAmount(amountController.text);
         }
@@ -127,14 +125,14 @@ class SendCoinsForm extends HookConsumerWidget {
                     CoinAmountInput(
                       controller: amountController,
                       abbreviation: coin.coinsGroup.abbreviation,
-                      maxValue: coin.selectedOption!.amount,
+                      maxValue: coin.selectedOption?.amount ?? 0,
                     ),
                     SizedBox(height: 17.0.s),
                     const NetworkFeeSelector(),
                     if (formController.canCoverNetworkFee)
                       SizedBox(height: 45.0.s)
                     else if (formController.networkNativeToken case final WalletAsset networkToken)
-                      _NotEnoughMoneyForNetworkFee(
+                      NotEnoughMoneyForNetworkFeeMessage(
                         coinAsset: coin,
                         networkToken: networkToken,
                         network: formController.network,
@@ -163,72 +161,6 @@ class SendCoinsForm extends HookConsumerWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NotEnoughMoneyForNetworkFee extends ConsumerWidget {
-  const _NotEnoughMoneyForNetworkFee({
-    required this.network,
-    required this.coinAsset,
-    required this.networkToken,
-  });
-
-  final CoinAssetData coinAsset;
-  final WalletAsset networkToken;
-  final Network network;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.theme.appColors;
-    final locale = context.i18n;
-
-    return Container(
-      margin: const EdgeInsets.fromLTRB(0, 8, 0, 12),
-      padding: EdgeInsets.symmetric(
-        vertical: 12.0.s,
-        horizontal: 16.0.s,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0.s),
-        border: Border.fromBorderSide(
-          BorderSide(
-            color: colors.onTerararyFill,
-            width: 1.0.s,
-          ),
-        ),
-        color: colors.tertararyBackground,
-      ),
-      child: RichText(
-        text: TextSpan(
-          text: locale.wallet_not_enough_coins_to_cover_fee_desc(
-            networkToken.symbol,
-          ),
-          style: context.theme.appTextThemes.body2.copyWith(
-            color: colors.secondaryText,
-          ),
-          children: [
-            const TextSpan(text: ' '), // Delimiter
-            TextSpan(
-              text: locale.wallet_not_enough_coins_to_cover_fee_deposit(
-                networkToken.symbol,
-              ),
-              style: TextStyle(
-                color: colors.primaryAccent,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  ref.read(
-                    receiveCoinsFormControllerProvider.notifier,
-                  )
-                    ..setCoin(coinAsset.coinsGroup)
-                    ..setNetwork(network);
-                  ShareAddressDepositRoute().push<void>(context);
-                },
-            ),
-          ],
         ),
       ),
     );

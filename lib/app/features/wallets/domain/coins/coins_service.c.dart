@@ -3,14 +3,18 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_fee_type.dart';
+import 'package:ion/app/features/wallets/model/send_coins_result.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_service.c.g.dart';
+part 'transfer_factory.dart';
 
 @riverpod
 Future<CoinsService> coinsService(Ref ref) async {
@@ -50,5 +54,26 @@ class CoinsService {
     return _ionIdentityClient.coins
         .getCoinsBySymbolGroup(symbolGroup)
         .then((coins) => coins.map(CoinData.fromDTO));
+  }
+
+  Future<SendCoinsResult> send({
+    required double amount,
+    required Wallet senderWallet,
+    required String receiverAddress,
+    required WalletAsset sendableAsset,
+    required OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
+  }) async {
+    final transfer = _TransferFactory().create(
+      receiverAddress: receiverAddress,
+      amountValue: amount,
+      sendableAsset: sendableAsset,
+    );
+    final result = await _ionIdentityClient.wallets.makeTransfer(
+      senderWallet,
+      transfer,
+      onVerifyIdentity,
+    );
+
+    return SendCoinsResult.fromJson(result);
   }
 }
