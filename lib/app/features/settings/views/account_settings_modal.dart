@@ -25,7 +25,7 @@ class AccountSettingsModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final languageInterestSet =
-        ref.watch(currentUserInterestsProvider(InterestSetType.languages)).valueOrNull;
+        ref.watch(currentUserInterestsSetProvider(InterestSetType.languages)).valueOrNull;
     final contentLanguages = useMemoized(
       () {
         return languageInterestSet?.data.hashtags.map(Language.fromIsoCode).nonNulls.toList();

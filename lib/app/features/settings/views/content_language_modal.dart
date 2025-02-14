@@ -14,7 +14,8 @@ class ContentLanguageModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languageInterestSet = ref.watch(currentUserInterestsProvider(InterestSetType.languages));
+    final languageInterestSet =
+        ref.watch(currentUserInterestsSetProvider(InterestSetType.languages));
     final selectedLanguages = languageInterestSet.valueOrNull?.data.hashtags;
 
     return LanguageSelectorPage(
@@ -29,7 +30,7 @@ class ContentLanguageModal extends HookConsumerWidget {
             updatedLanguages.add(lang);
           }
           ref
-              .read(currentUserInterestsProvider(InterestSetType.languages).notifier)
+              .read(currentUserInterestsSetProvider(InterestSetType.languages).notifier)
               .set(updatedLanguages.toList());
         }
       },
