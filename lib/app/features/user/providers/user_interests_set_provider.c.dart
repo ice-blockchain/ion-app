@@ -9,7 +9,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'user_interests_set.c.g.dart';
+part 'user_interests_set_provider.c.g.dart';
 
 @riverpod
 Future<InterestSetEntity?> userInterestsSet(
