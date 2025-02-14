@@ -3,7 +3,8 @@
 part of '../chat_database.c.dart';
 
 @Riverpod(keepAlive: true)
-ConversationMessageDao conversationMessageDao(Ref ref) => ConversationMessageDao(ref.watch(chatDatabaseProvider));
+ConversationMessageDao conversationMessageDao(Ref ref) =>
+    ConversationMessageDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(
   tables: [
@@ -12,7 +13,8 @@ ConversationMessageDao conversationMessageDao(Ref ref) => ConversationMessageDao
     MessageStatusTable,
   ],
 )
-class ConversationMessageDao extends DatabaseAccessor<ChatDatabase> with _$ConversationMessageDaoMixin {
+class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
+    with _$ConversationMessageDaoMixin {
   ConversationMessageDao(super.db);
 
   Stream<int> getUnreadMessagesCount({

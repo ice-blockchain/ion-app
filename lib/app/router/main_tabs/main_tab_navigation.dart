@@ -66,9 +66,10 @@ class MainTabNavigation extends HookConsumerWidget {
     }
   }
 
-  void _navigateToTab(BuildContext context, TabItem tabItem, {required bool initialLocation}) => state.isMainModalOpen
-      ? context.go(tabItem.baseRouteLocation)
-      : shell.goBranch(tabItem.navigationIndex, initialLocation: initialLocation);
+  void _navigateToTab(BuildContext context, TabItem tabItem, {required bool initialLocation}) =>
+      state.isMainModalOpen
+          ? context.go(tabItem.baseRouteLocation)
+          : shell.goBranch(tabItem.navigationIndex, initialLocation: initialLocation);
 }
 
 class _BottomNavBarContent extends ConsumerWidget {
