@@ -74,7 +74,8 @@ class FeedSearchFilter extends _$FeedSearchFilter {
         userPreferencesService.getEnum(_feedSearchPeopleFilterKey, FeedSearchFilterPeople.values);
     final languages = userPreferencesService
         .getValue<List<String>>(_feedSearchLanguagesFilterKey)
-        ?.map((isoCode) => Language.values.firstWhere((language) => language.isoCode == isoCode))
+        ?.map(Language.fromIsoCode)
+        .nonNulls
         .toList();
 
     if (people != null && languages != null) {

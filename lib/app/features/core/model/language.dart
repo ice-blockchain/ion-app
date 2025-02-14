@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
+
 enum Language {
   english(name: 'English', flag: '🇬🇧', isoCode: 'en'),
   spanish(name: 'Spanish', flag: '🇪🇸', isoCode: 'es'),
@@ -32,4 +34,10 @@ enum Language {
   final String name;
   final String flag;
   final String isoCode;
+
+  static Language? fromIsoCode(String isoCode) {
+    return Language.values.firstWhereOrNull(
+      (lang) => isoCode.toLowerCase() == lang.isoCode.toLowerCase(),
+    );
+  }
 }

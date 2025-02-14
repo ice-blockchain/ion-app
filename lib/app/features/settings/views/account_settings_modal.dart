@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/modal_action_button/modal_action_button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -17,14 +19,20 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class AccountSettingsModal extends ConsumerWidget {
+class AccountSettingsModal extends HookConsumerWidget {
   const AccountSettingsModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languages =
+    final languageInterestSet =
         ref.watch(currentUserInterestsProvider(InterestSetType.languages)).valueOrNull;
-    final contentLanguages = Language.values.take(3).toList();
+    final contentLanguages = useMemoized(
+      () {
+        return languageInterestSet?.data.hashtags.map(Language.fromIsoCode).nonNulls.toList();
+      },
+      [languageInterestSet],
+    );
+
     final primaryColor = context.theme.appColors.primaryAccent;
 
     return SheetContent(
@@ -73,30 +81,33 @@ class AccountSettingsModal extends ConsumerWidget {
                     AppLanguagesRoute().push<void>(context);
                   },
                 ),
-                ModalActionButton(
-                  icon: Assets.svg.iconSelectLanguage.icon(
-                    color: primaryColor,
-                  ),
-                  label: context.i18n.settings_content_language,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        contentLanguages.first.name,
-                        style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
-                      ),
-                      if (contentLanguages.length > 1) ...[
-                        SizedBox(width: 12.0.s),
-                        _RemainingLanguagesLabel(
-                          value: contentLanguages.length - 1,
+                if (contentLanguages != null)
+                  ModalActionButton(
+                    icon: Assets.svg.iconSelectLanguage.icon(
+                      color: primaryColor,
+                    ),
+                    label: context.i18n.settings_content_language,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          contentLanguages.first.name,
+                          style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                         ),
+                        if (contentLanguages.length > 1) ...[
+                          SizedBox(width: 12.0.s),
+                          _RemainingLanguagesLabel(
+                            value: contentLanguages.length - 1,
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                  onTap: () {
-                    ContentLanguagesRoute().push<void>(context);
-                  },
-                ),
+                    ),
+                    onTap: () {
+                      ContentLanguagesRoute().push<void>(context);
+                    },
+                  )
+                else
+                  const ItemLoadingState(),
                 ModalActionButton(
                   icon: Assets.svg.iconBlockDelete.icon(
                     color: context.theme.appColors.attentionRed,
