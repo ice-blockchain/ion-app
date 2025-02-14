@@ -62,6 +62,10 @@ dependencies:
   json_annotation: ^4.8.1
   lottie: ^3.1.0
   markdown: ^7.3.0
+  markdown_quill:
+    git:
+      url: https://github.com/ice-blockchain/markdown_quill
+      ref: master
   meta: ^1.15.0
   mime: ^2.0.0
   mocktail: ^1.0.4
