@@ -112,8 +112,6 @@ Delta markdownToDelta(String markdown) {
     } else {
       final text = op.data.toString();
       final matches = textParser.parse(text);
-      print('Text: $text');
-      print('Matches: ${matches.map((m) => '${m.text} (${m.matcher.runtimeType})')}');
 
       if (matches.isEmpty) {
         processedDelta.insert(op.data, op.attributes);
