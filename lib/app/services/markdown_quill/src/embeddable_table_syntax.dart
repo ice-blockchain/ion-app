@@ -1,9 +1,13 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:charcode/charcode.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Node;
 import 'package:markdown/markdown.dart';
 
 /// Parses markdown table and saves the table markdown content into the element attributes.
 class EmbeddableTableSyntax extends BlockSyntax {
+  /// @nodoc
+  const EmbeddableTableSyntax();
   static const _base = TableSyntax();
 
   @override
@@ -11,9 +15,6 @@ class EmbeddableTableSyntax extends BlockSyntax {
 
   @override
   RegExp get pattern => _base.pattern;
-
-  /// @nodoc
-  const EmbeddableTableSyntax();
 
   @override
   bool canParse(BlockParser parser) => _base.canParse(parser);
@@ -27,8 +28,7 @@ class EmbeddableTableSyntax extends BlockSyntax {
   Node? parse(BlockParser parser) {
     final columnCount = _columnCount(parser.next!.content);
     final headCells = _columnCount(parser.current.content);
-    final valBuf =
-        StringBuffer('${parser.current.content}\n${parser.next!.content}');
+    final valBuf = StringBuffer('${parser.current.content}\n${parser.next!.content}');
     parser.advance();
     if (columnCount != headCells) {
       return null;
@@ -42,8 +42,7 @@ class EmbeddableTableSyntax extends BlockSyntax {
       parser.advance();
     }
 
-    return Element.empty(EmbeddableTable.tableType)
-      ..attributes['data'] = valBuf.toString();
+    return Element.empty(EmbeddableTable.tableType)..attributes['data'] = valBuf.toString();
   }
 
   int _columnCount(String line) {
@@ -97,11 +96,11 @@ class EmbeddableTableSyntax extends BlockSyntax {
 
 /// An [Embeddable] table that can used to render a table in quill_editor
 class EmbeddableTable extends BlockEmbed {
-  /// [Embeddable] type
-  static const tableType = 'x-embed-table';
-
   /// @nodoc
   EmbeddableTable(String data) : super(tableType, data);
+
+  /// [Embeddable] type
+  static const tableType = 'x-embed-table';
 
   /// Create from markdown.
   //ignore: prefer_constructors_over_static_methods

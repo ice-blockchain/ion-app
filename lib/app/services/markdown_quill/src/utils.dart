@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 //ignore_for_file: cast_nullable_to_non_nullable
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
