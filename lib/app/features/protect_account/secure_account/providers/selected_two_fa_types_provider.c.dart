@@ -33,15 +33,10 @@ class SelectedTwoFAOptionsNotifier extends _$SelectedTwoFAOptionsNotifier {
   }
 
   void updateSelectedTwoFaOption(int index, TwoFaType? newValue) {
-    final oldValue = state.selectedValues[index];
     final newSelectedValues = List<TwoFaType?>.from(state.selectedValues)..[index] = newValue;
 
     state = state.copyWith(
       selectedValues: newSelectedValues,
-      availableOptions: {
-        ...state.availableOptions,
-        if (oldValue != null) oldValue,
-      }..remove(newValue),
     );
   }
 }
