@@ -2,6 +2,7 @@
 
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/mixins/relay_auth_mixin.dart';
+import 'package:ion/app/features/ion_connect/providers/mixins/relay_close_mixin.dart';
 import 'package:ion/app/features/ion_connect/providers/mixins/relay_delegation_mixin.dart';
 import 'package:ion/app/features/ion_connect/providers/mixins/relay_init_mixin.dart';
 import 'package:ion/app/features/ion_connect/providers/mixins/relay_timer_mixin.dart';
@@ -13,7 +14,7 @@ typedef RelaysState = Map<String, IonConnectRelay>;
 
 @Riverpod(keepAlive: true)
 class Relay extends _$Relay
-    with RelayTimerMixin, RelayAuthMixin, RelayInitMixin, RelayDelegationMixin {
+    with RelayTimerMixin, RelayAuthMixin, RelayDelegationMixin, RelayCloseMixin, RelayInitMixin {
   @override
   Future<IonConnectRelay> build(String url, {bool anonymous = false}) async {
     final relay = await IonConnectRelay.connect(url);
@@ -21,8 +22,9 @@ class Relay extends _$Relay
     initializeRelayTimer(relay, ref);
 
     if (!anonymous) {
-      initializeDelegationListener(relay, ref);
       initializeAuthMessageListener(relay, ref);
+      initializeDelegationListener(relay, ref);
+      initializeCloseListener(relay, ref);
       await initRelay(relay, ref);
     }
 

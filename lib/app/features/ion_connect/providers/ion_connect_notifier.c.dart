@@ -61,6 +61,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           await sendAuthEvent(relay!);
         }
 
+        // Call auth completer to complete auth process
         await relay!.sendEvents(events);
 
         if (cache) {
@@ -91,7 +92,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return result?.elementAtOrNull(0);
   }
 
-  Future<void> initRelayAuth(IonConnectRelay relay) async {
+  Future<void> initRelayAuth(IonConnectRelay relay, {void Function()? onAuthSuccess}) async {
     final signedAuthEvent = await createAuthEvent(
       challenge: 'init',
       relayUrl: Uri.parse(relay.url).toString(),
@@ -102,6 +103,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     } catch (error, _) {
       if (_isAuthRequired(error)) {
         await sendAuthEvent(relay);
+        onAuthSuccess?.call();
       } else {
         rethrow;
       }
@@ -185,6 +187,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             Logger.log('Send auth exception', error: error, stackTrace: stackTrace);
           }
         }
+
+        // Call auth completer to complete auth process
 
         final events = subscriptionBuilder != null
             ? subscriptionBuilder(requestMessage, relay!)
