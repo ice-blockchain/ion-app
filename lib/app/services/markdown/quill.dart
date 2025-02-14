@@ -46,9 +46,7 @@ Delta plainTextToDelta(String text) {
     );
   }
 
-  if (operations.isNotEmpty && !(operations.last.data! as String).endsWith('\n')) {
-    operations.add(Operation.insert('\n'));
-  }
+  operations.add(Operation.insert('\n'));
 
   return Delta.fromOperations(operations);
 }
@@ -66,11 +64,6 @@ final deltaToMd = DeltaToMarkdown(
       final content = embed.value.data;
       out.write('\n```\n$content\n```\n');
     },
-  },
-  visitLineHandleNewLine: (style, out) {
-    if (!out.toString().endsWith('\n\n')) {
-      out.write('\n\n');
-    }
   },
 );
 
@@ -93,20 +86,17 @@ String deltaToMarkdown(Delta delta) {
 }
 
 Delta markdownToDelta(String markdown) {
-  final processedMarkdown = markdown.trimRight().replaceAllMapped(
-        RegExp(r'(\n\s*\n)'),
-        (match) => '\n\u0000\n',
-      );
+  final delta = _mdToDelta.convert(markdown);
 
-  final delta = _mdToDelta.convert(processedMarkdown);
   final processedDelta = Delta();
 
   for (final op in delta.toList()) {
     if (op.key == 'insert' && op.data is Map) {
       final data = op.data! as Map;
       if (data.containsKey('image')) {
+        final imageUrl = data['image'] as String;
         processedDelta.insert({
-          'text-editor-single-image': data['image'],
+          'text-editor-single-image': imageUrl,
         });
       } else if (data.containsKey('divider')) {
         processedDelta.insert({
@@ -116,22 +106,7 @@ Delta markdownToDelta(String markdown) {
         processedDelta.insert(op.data, op.attributes);
       }
     } else {
-      final text = op.data is String ? op.data! as String : op.data.toString();
-
-      if (text.contains('\u0000') && op.data is String) {
-        var replacement = '\n\n';
-        final opsList = processedDelta.toList();
-        if (opsList.isNotEmpty &&
-            opsList.last.data is String &&
-            (opsList.last.data! as String).endsWith('\n')) {
-          replacement = '\n';
-        }
-
-        final newText = text.replaceAll('\u0000', replacement).replaceAll(RegExp(r'\n +'), '\n');
-        processedDelta.insert(newText, op.attributes);
-      } else {
-        processedDelta.insert(text, op.attributes);
-      }
+      processedDelta.insert(op.data, op.attributes);
     }
   }
 
