@@ -5,10 +5,10 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
+import 'package:ion/app/services/markdown_quill/markdown_quill.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:markdown_quill/markdown_quill.dart';
 
 final _mdDocument = md.Document(
   encodeHtml: false,
@@ -17,6 +17,7 @@ final _mdDocument = md.Document(
 
 final _mdToDelta = MarkdownToDelta(
   markdownDocument: _mdDocument,
+  softLineBreak: true,
   customElementToEmbeddable: {
     'img': (attrs) {
       final imageUrl = attrs['src'] ?? '';
@@ -64,6 +65,9 @@ final deltaToMd = DeltaToMarkdown(
       final content = embed.value.data;
       out.write('\n```\n$content\n```\n');
     },
+  },
+  visitLineHandleNewLine: (style, out) {
+    out.write('\n');
   },
 );
 

@@ -61,7 +61,6 @@ dependencies:
   json_annotation: ^4.8.1
   lottie: ^3.1.0
   markdown: ^7.3.0
-  markdown_quill: ^4.1.0
   meta: ^1.15.0
   mime: ^2.0.0
   mocktail: ^1.0.4
