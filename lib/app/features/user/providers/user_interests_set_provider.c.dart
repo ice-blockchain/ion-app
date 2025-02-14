@@ -33,7 +33,7 @@ Future<InterestSetEntity?> userInterestsSet(
 }
 
 @riverpod
-class CurrentUserInterests extends _$CurrentUserInterests {
+class CurrentUserInterestsSet extends _$CurrentUserInterestsSet {
   @override
   FutureOr<InterestSetEntity?> build(InterestSetType type) async {
     final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
