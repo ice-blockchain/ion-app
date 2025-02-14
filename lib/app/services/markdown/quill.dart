@@ -91,8 +91,8 @@ String deltaToMarkdown(Delta delta) {
 
 Delta markdownToDelta(String markdown) {
   final delta = _mdToDelta.convert(markdown);
-
   final processedDelta = Delta();
+  final textParser = TextParser.allMatchers();
 
   for (final op in delta.toList()) {
     if (op.key == 'insert' && op.data is Map) {
@@ -110,7 +110,30 @@ Delta markdownToDelta(String markdown) {
         processedDelta.insert(op.data, op.attributes);
       }
     } else {
-      processedDelta.insert(op.data, op.attributes);
+      final text = op.data.toString();
+      final matches = textParser.parse(text);
+      print('Text: $text');
+      print('Matches: ${matches.map((m) => '${m.text} (${m.matcher.runtimeType})')}');
+
+      if (matches.isEmpty) {
+        processedDelta.insert(op.data, op.attributes);
+      } else {
+        for (final match in matches) {
+          processedDelta.insert(
+            match.text,
+            {
+              ...?op.attributes,
+              ...switch (match.matcher) {
+                HashtagMatcher() => {HashtagAttribute.attributeKey: match.text},
+                MentionMatcher() => {MentionAttribute.attributeKey: match.text},
+                CashtagMatcher() => {CashtagAttribute.attributeKey: match.text},
+                UrlMatcher() => {Attribute.link.key: match.text},
+                _ => {},
+              },
+            },
+          );
+        }
+      }
     }
   }
 
