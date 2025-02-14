@@ -28,6 +28,8 @@ class TransactionResultSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formData = ref.watch(sendAssetFormControllerProvider(type: type));
+    // TODO: Get transaction hash from the sendCoinsNotifierProvider
+    // final transactionResult = ref.watch(sendCoinsNotifierProvider);
 
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
@@ -62,12 +64,12 @@ class TransactionResultSheet extends ConsumerWidget {
                       coin: (coin) => TransactionAmountSummary(
                         amount: coin.amount,
                         currency: coin.coinsGroup.abbreviation,
-                        // usdAmount: coin.balanceUSD, // TODO: Not implemented
-                        usdAmount: 0,
+                        usdAmount: coin.priceUSD,
                         icon: CoinIconWidget(
                           imageUrl: coin.coinsGroup.iconUrl,
                         ),
                       ),
+                      // TODO: Not implemented
                       nft: (nft) => Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 52.0.s,
@@ -87,15 +89,6 @@ class TransactionResultSheet extends ConsumerWidget {
                 //     child: NftItem(
                 //       nftData: formData.nft!,
                 //       backgroundColor: Colors.transparent,
-                //     ),
-                //   ),
-                // if (formData.coin case final CoinInWalletData coinInWallet)
-                //   TransactionAmountSummary(
-                //     amount: coinInWallet.amount,
-                //     currency: coinInWallet.coin.abbreviation,
-                //     usdAmount: coinInWallet.balanceUSD,
-                //     icon: CoinIconWidget(
-                //       imageUrl: coinInWallet.coin.iconUrl,
                 //     ),
                 //   ),
                 SizedBox(height: 24.0.s),

@@ -27,10 +27,8 @@ class NetworkItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
-    final disabled = disableZeroBalance && coinInWallet.amount <= 0;
 
     return ListItem(
-      isEnabled: !disabled,
       title: Row(
         children: [
           Expanded(

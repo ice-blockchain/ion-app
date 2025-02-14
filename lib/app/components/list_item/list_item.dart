@@ -27,7 +27,6 @@ class ListItem extends StatelessWidget {
     this.isSelected,
     this.backgroundColor,
     this.onTap,
-    this.isEnabled = true,
   })  : borderRadius = borderRadius ?? defaultBorderRadius,
         contentPadding = contentPadding ?? defaultContentPadding,
         leadingPadding = leadingPadding ?? defaultLeadingPadding,
@@ -110,7 +109,6 @@ class ListItem extends StatelessWidget {
   final Color? backgroundColor;
   final VoidCallback? onTap;
   final bool? isSelected;
-  final bool isEnabled;
 
   static BorderRadius get defaultBorderRadius => BorderRadius.all(Radius.circular(16.0.s));
 
@@ -131,62 +129,59 @@ class ListItem extends StatelessWidget {
       alignment: Alignment.center,
       constraints: constraints,
       padding: contentPadding,
-      child: Opacity(
-        opacity: isEnabled ? 1 : 0.5, // add 50% transparency if item disabled
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                if (leading != null)
-                  if (leadingPadding != EdgeInsets.zero)
-                    Padding(padding: leadingPadding, child: leading)
-                  else
-                    leading!,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (title != null)
-                        DefaultTextStyle(
-                          style: switchTitleStyles
-                              ? _getDefaultSubtitleStyle(context)
-                              : _getDefaultTitleStyle(context),
-                          overflow: TextOverflow.ellipsis,
-                          child: title!,
-                        ),
-                      if (subtitle != null)
-                        DefaultTextStyle(
-                          style: switchTitleStyles
-                              ? _getDefaultTitleStyle(context)
-                              : _getDefaultSubtitleStyle(context),
-                          overflow: TextOverflow.ellipsis,
-                          child: subtitle!,
-                        ),
-                    ],
-                  ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              if (leading != null)
+                if (leadingPadding != EdgeInsets.zero)
+                  Padding(padding: leadingPadding, child: leading)
+                else
+                  leading!,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (title != null)
+                      DefaultTextStyle(
+                        style: switchTitleStyles
+                            ? _getDefaultSubtitleStyle(context)
+                            : _getDefaultTitleStyle(context),
+                        overflow: TextOverflow.ellipsis,
+                        child: title!,
+                      ),
+                    if (subtitle != null)
+                      DefaultTextStyle(
+                        style: switchTitleStyles
+                            ? _getDefaultTitleStyle(context)
+                            : _getDefaultSubtitleStyle(context),
+                        overflow: TextOverflow.ellipsis,
+                        child: subtitle!,
+                      ),
+                  ],
                 ),
-                if (trailing != null)
-                  if (trailingPadding != EdgeInsets.zero)
-                    Padding(padding: trailingPadding, child: trailing)
-                  else
-                    trailing!,
-              ],
-            ),
-            if (secondary != null)
-              DefaultTextStyle(
-                style: switchTitleStyles
-                    ? _getDefaultSubtitleStyle(context)
-                    : _getDefaultTitleStyle(context),
-                child: secondary!,
               ),
-          ],
-        ),
+              if (trailing != null)
+                if (trailingPadding != EdgeInsets.zero)
+                  Padding(padding: trailingPadding, child: trailing)
+                else
+                  trailing!,
+            ],
+          ),
+          if (secondary != null)
+            DefaultTextStyle(
+              style: switchTitleStyles
+                  ? _getDefaultSubtitleStyle(context)
+                  : _getDefaultTitleStyle(context),
+              child: secondary!,
+            ),
+        ],
       ),
     );
 
     return GestureDetector(
-      onTap: isEnabled ? onTap : null,
+      onTap: onTap,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: _getBackgroundColor(context),
