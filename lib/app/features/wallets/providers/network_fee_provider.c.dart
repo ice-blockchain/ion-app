@@ -39,7 +39,6 @@ Future<NetworkFeeInformation?> networkFee(
   final sendableAsset = _getSendableAsset(walletAssets, assetSymbol);
 
   if (sendableAsset == null || networkNativeToken == null) {
-    // No sendable asset found or native token of the network
     Logger.error(
       'Cannot load fees info. '
       '${sendableAsset == null ? 'sendableAsset' : 'networkNativeToken'} is null.',

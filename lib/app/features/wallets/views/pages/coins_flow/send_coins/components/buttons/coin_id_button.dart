@@ -21,8 +21,6 @@ class CoinIdButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coinDataResult = ref.watch(coinInWalletByAbbreviationProvider(coinAbbreviation: coinId));
 
-    // TODO: Not implemented
-    return const SizedBox.shrink();
     // return coinDataResult.maybeWhen(
     //   data: (coinInWallet) => CoinButton(
     //     coinInWallet: coinInWallet!,
@@ -32,5 +30,8 @@ class CoinIdButton extends ConsumerWidget {
     //     itemHeight: 60.0.s,
     //   ),
     // );
+
+    // TODO: Widget is not implemented
+    return const SizedBox.shrink();
   }
 }
