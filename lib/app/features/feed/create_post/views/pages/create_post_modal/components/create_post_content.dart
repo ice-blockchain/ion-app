@@ -138,17 +138,7 @@ class _TextInputSection extends HookConsumerWidget {
                       attachedMediaNotifier: attachedMediaNotifier,
                     ),
                   ],
-                  if (links.isNotEmpty) ...[
-                    SizedBox(height: 10.0.s),
-                    for (final link in links)
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 8.0.s,
-                          right: ScreenSideOffset.defaultSmallMargin,
-                        ),
-                        child: UrlPreviewContent(url: link),
-                      ),
-                  ],
+                  if (links.isNotEmpty) UrlPreviewContent(url: links.first),
                 ],
               ),
             ),

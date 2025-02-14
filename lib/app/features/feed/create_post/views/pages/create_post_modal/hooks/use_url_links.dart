@@ -7,8 +7,8 @@ import 'package:ion/app/services/text_parser/model/text_matcher.dart';
 import 'package:ion/app/services/text_parser/text_parser.dart';
 import 'package:ion/app/utils/future.dart';
 
-/// A hook that extracts URLs from a QuillController's text content while considering attached
-/// media files.
+/// A hook that extracts the FIRST link from a QuillController's text content.
+/// Attached media paths are excluded from link detection.
 List<String> useUrlLinks({
   required QuillController textEditorController,
   required List<MediaFile> mediaFiles,
@@ -37,10 +37,9 @@ List<String> useUrlLinks({
       final foundUrls = contentWithoutMedia
           .where((match) => match.matcher is UrlMatcher)
           .map((match) => match.text)
-          .toSet()
           .toList();
 
-      links.value = foundUrls;
+      links.value = foundUrls.isNotEmpty ? [foundUrls.first] : [];
 
       return null;
     },
