@@ -37,7 +37,7 @@ Future<List<CoinInWalletData>> coinsByFilters(
     if (balanceComparison != 0) return balanceComparison;
 
     // If balanceUSD is equal, sort by network name in ascending order
-    return a.coin.network.serverName.compareTo(b.coin.network.serverName);
+    return a.coin.network.name.compareTo(b.coin.network.name);
   });
 
   // Added a small delay to avoid too fast transition from the loading to data display

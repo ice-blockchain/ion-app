@@ -38,8 +38,9 @@ class CoinsRepository {
   Future<List<Coin>> searchCoins(String query) => _coinsDao.search(query);
 
   Future<void> updateCoins(List<Coin> coins) async {
-    final allowedNetworks = Network.values.map((e) => e.serverName.toLowerCase());
-    final coinsToInsert = coins.where((e) => allowedNetworks.contains(e.network.toLowerCase()));
+    final coinsToInsert = coins.where(
+      (coin) => Network.allowedNetworks.contains(coin.network.toLowerCase()),
+    );
     await _coinsDao.upsertAll(coinsToInsert.toList());
   }
 

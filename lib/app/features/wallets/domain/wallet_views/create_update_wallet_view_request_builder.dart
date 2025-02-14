@@ -66,7 +66,7 @@ class _CreateUpdateRequestBuilder {
     };
 
     for (final coin in coins) {
-      final walletId = networkWithWallet[coin.network.serverName.toLowerCase()]?.id;
+      final walletId = networkWithWallet[coin.network.name.toLowerCase()]?.id;
       symbolGroups.add(coin.symbolGroup);
       walletViewItems.add(
         WalletViewCoinData(

@@ -30,7 +30,7 @@ class CryptoAssetData with _$CryptoAssetData {
   }
 
   String get networkName {
-    if (selectedCoin != null) return selectedCoin!.coin.network.displayName;
+    if (selectedCoin != null) return selectedCoin!.coin.network.name;
     if (selectedNft != null) return selectedNft!.network;
     return '';
   }

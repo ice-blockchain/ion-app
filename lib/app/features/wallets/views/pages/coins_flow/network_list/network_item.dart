@@ -74,7 +74,7 @@ class _NetworkLabel extends StatelessWidget {
         color: context.theme.appColors.attentionBlock,
       ),
       child: Text(
-        network.displayName,
+        network.name,
         style: context.theme.appTextThemes.caption3.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),
