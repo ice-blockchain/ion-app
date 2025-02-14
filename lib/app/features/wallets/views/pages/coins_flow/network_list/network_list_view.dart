@@ -94,7 +94,6 @@ class NetworkListView extends ConsumerWidget {
                       coinInWallet: coin,
                       network: coin.coin.network,
                       onTap: () => onTap(coin.coin.network),
-                      disableZeroBalance: type == NetworkListViewType.send,
                     );
                   },
                 ),

@@ -54,7 +54,6 @@ Future<NetworkFeeInformation?> networkFee(
   );
 
   if (nativeCoin == null) {
-    // No info about the native coin of the network
     Logger.error('Cannot load fees info. nativeCoin is null.');
     return null;
   }
@@ -133,76 +132,3 @@ NetworkFeeOption _buildNetworkFeeOption(
     type: type,
   );
 }
-
-// Future<void> _loadFeesInfo() async {
-//     final client = await ref.read(ionIdentityClientProvider.future);
-
-//     if (state.assetData case final CoinAssetData coin) {
-//       final walletId = coin.selectedOption?.walletId;
-
-//       if (walletId == null) {
-//         Logger.error('Cannot load fees info. walletId is null.');
-//         // No info about the wallet from which the coin should be sent
-//         return;
-//       }
-
-//       final estimateFees = await client.networks.getEstimateFees(network: state.network.serverName);
-//       final walletAssets =
-//           await client.wallets.getWalletAssets(walletId).then((result) => result.assets);
-
-//       final networkNativeToken = walletAssets.firstWhereOrNull((asset) => asset.isNative);
-//       final sendableAsset = _getSendableAsset(walletAssets, coin.coinsGroup.abbreviation);
-
-//       if (sendableAsset == null || networkNativeToken == null) {
-//         // No sendable asset found or native token of the network
-//         Logger.error(
-//           'Cannot load fees info. '
-//           '${sendableAsset == null ? 'sendableAsset' : 'networkNativeToken'} is null.',
-//         );
-//         return;
-//       }
-
-//       final nativeCoin = await _getNativeCoin(networkNativeToken);
-
-//       if (nativeCoin == null) {
-//         // No info about the native coin of the network
-//         Logger.error('Cannot load fees info. nativeCoin is null.');
-//         return;
-//       }
-
-//       final options = [
-//         if (estimateFees.slow != null)
-//           _buildNetworkFeeOption(
-//             estimateFees.slow!,
-//             NetworkFeeType.slow,
-//             nativeCoin,
-//             networkNativeToken,
-//           ),
-//         if (estimateFees.standard != null)
-//           _buildNetworkFeeOption(
-//             estimateFees.standard!,
-//             NetworkFeeType.standard,
-//             nativeCoin,
-//             networkNativeToken,
-//           ),
-//         if (estimateFees.fast != null)
-//           _buildNetworkFeeOption(
-//             estimateFees.fast!,
-//             NetworkFeeType.fast,
-//             nativeCoin,
-//             networkNativeToken,
-//           ),
-//       ];
-
-//       state = state.copyWith(
-//         networkFeeOptions: options,
-//         selectedNetworkFeeOption: options.firstOrNull,
-//         networkNativeToken: networkNativeToken.copyWith(
-//           name: networkNativeToken.name ?? nativeCoin.name,
-//         ),
-//         assetData: coin.copyWith(
-//           associatedAssetWithSelectedOption: sendableAsset,
-//         ),
-//       );
-
-//     }

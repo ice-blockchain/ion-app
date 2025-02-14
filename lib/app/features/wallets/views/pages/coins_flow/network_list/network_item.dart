@@ -16,12 +16,10 @@ class NetworkItem extends ConsumerWidget {
     required this.coinInWallet,
     required this.onTap,
     super.key,
-    this.disableZeroBalance = false,
   });
 
   final Network network;
   final VoidCallback onTap;
-  final bool disableZeroBalance;
   final CoinInWalletData coinInWallet;
 
   @override
