@@ -3,8 +3,7 @@
 part of '../chat_database.c.dart';
 
 @Riverpod(keepAlive: true)
-ConversationMessageDao conversationMessageDao(Ref ref) =>
-    ConversationMessageDao(ref.watch(chatDatabaseProvider));
+ConversationMessageDao conversationMessageDao(Ref ref) => ConversationMessageDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(
   tables: [
@@ -13,11 +12,13 @@ ConversationMessageDao conversationMessageDao(Ref ref) =>
     MessageStatusTable,
   ],
 )
-class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
-    with _$ConversationMessageDaoMixin {
+class ConversationMessageDao extends DatabaseAccessor<ChatDatabase> with _$ConversationMessageDaoMixin {
   ConversationMessageDao(super.db);
 
-  Stream<int> getUnreadMessagesCount(String currentUserMasterPubkey, String conversationId) {
+  Stream<int> getUnreadMessagesCount({
+    required String conversationId,
+    required String currentUserMasterPubkey,
+  }) {
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
@@ -29,6 +30,23 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
+
+    return query.watch().map((rows) => rows.length);
+  }
+
+  Stream<int> getAllUnreadMessagesCount(String currentUserMasterPubkey) {
+    final query = select(conversationMessageTable).join([
+      innerJoin(
+        eventMessageTable,
+        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
+      ),
+      innerJoin(
+        messageStatusTable,
+        messageStatusTable.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
+      ),
+    ])
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
 
