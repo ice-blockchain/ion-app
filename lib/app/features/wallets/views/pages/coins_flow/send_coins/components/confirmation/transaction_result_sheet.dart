@@ -81,6 +81,7 @@ class TransactionResultSheet extends ConsumerWidget {
                       ),
                     ) ??
                     const SizedBox.shrink(),
+                // TODO: NFT is not implemented
                 // if (type == CryptoAssetType.nft)
                 //   Padding(
                 //     padding: EdgeInsets.symmetric(
