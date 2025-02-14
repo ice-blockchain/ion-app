@@ -114,7 +114,7 @@ import BanubaPhotoEditorSDK
                 // Set your Mubert Api key here
                 let mubertApiLicense = ""
                 let mubertApiKey = ""
-                AudioBrowserConfig.shared.musicSource = .allSources
+                AudioBrowserConfig.shared.musicSource = .banubaMusic
                 BanubaAudioBrowser.setMubertKeys(
                     license: mubertApiLicense,
                     token: mubertApiKey
