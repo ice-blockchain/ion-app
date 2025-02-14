@@ -26,6 +26,10 @@ on:
         description: "App version"
         default: "9.9.9"
         required: true
+      run_checks:
+        description: "Run code analysis, tests and license check"
+        required: false
+        default: "true"
 
 env:
   APP_ENV: ${{ inputs.environment || 'staging' }}
@@ -111,16 +115,19 @@ jobs:
           ./scripts/generate_code.sh
       - name: Analyze code
         id: analyze-code
+        if: ${{ inputs.run_checks == 'true' }}
         run: |
           cd main-repo
           melos run analyze
       - name: Run tests
         id: run-tests
+        if: ${{ inputs.run_checks == 'true' }}
         run: |
           cd main-repo
           melos run test
       - name: Check license
         id: check-license
+        if: ${{ inputs.run_checks == 'true' }}
         run: |
           cd main-repo
           ./scripts/license_check.sh
