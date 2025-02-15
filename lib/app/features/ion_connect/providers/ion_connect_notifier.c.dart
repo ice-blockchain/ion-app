@@ -12,10 +12,10 @@ import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/auth_challenge_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/mixins/relay_auth_mixin.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -61,7 +61,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           await sendAuthEvent(relay!);
         }
 
-        // Call auth completer to complete auth process
+        await ref.read(relayAuthCompleterProvider(relay!)).future;
         await relay!.sendEvents(events);
 
         if (cache) {
@@ -92,7 +92,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return result?.elementAtOrNull(0);
   }
 
-  Future<void> initRelayAuth(IonConnectRelay relay, {void Function()? onAuthSuccess}) async {
+  Future<void> initRelayAuth(IonConnectRelay relay) async {
     final signedAuthEvent = await createAuthEvent(
       challenge: 'init',
       relayUrl: Uri.parse(relay.url).toString(),
@@ -103,7 +103,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     } catch (error, _) {
       if (_isAuthRequired(error)) {
         await sendAuthEvent(relay);
-        onAuthSuccess?.call();
       } else {
         rethrow;
       }
@@ -111,7 +110,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }
 
   Future<void> sendAuthEvent(IonConnectRelay relay) async {
-    final challenge = ref.read(authChallengeProvider(relay));
+    final challenge = ref.read(relayAuthChallengeProvider(relay));
     if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
     final signedAuthEvent = await createAuthEvent(
@@ -132,6 +131,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     if (!okMessages.accepted) {
       throw SendEventException(okMessages.message);
     }
+
+    ref.read(relayAuthCompleterProvider(relay)).complete();
   }
 
   Future<EventMessage> createAuthEvent({
@@ -188,7 +189,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
 
-        // Call auth completer to complete auth process
+        await ref.read(relayAuthCompleterProvider(relay!)).future;
 
         final events = subscriptionBuilder != null
             ? subscriptionBuilder(requestMessage, relay!)

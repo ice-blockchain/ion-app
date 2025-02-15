@@ -13,6 +13,12 @@ part 'coins_sync_provider.c.g.dart';
 class CoinsSync extends _$CoinsSync {
   @override
   Future<void> build() async {
+    final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+
+    if (identityKeyName == null) {
+      return;
+    }
+
     final authState = await ref.watch(authProvider.future);
     final coinSyncService = await ref.watch(coinsSyncServiceProvider.future);
     final appState = ref.watch(appLifecycleProvider);
