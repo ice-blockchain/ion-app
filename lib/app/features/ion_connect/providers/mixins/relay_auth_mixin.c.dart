@@ -28,6 +28,8 @@ class RelayAuthChallenge extends _$RelayAuthChallenge {
 //TODO:move everything related to auth from IonConnectNotifier here
 //TODO:handle reauth -> reset relayAuthCompleter with a new completer without the provider rebuild (store some mutable class instance)
 //TODO:make relayAuthChallengeProvider not keep alive -> same as with the relayAuthCompleter and watch here
+//TODO:check errors after logout - somehow the relay gets re-created and tries to send auth, but user is not authenticated and it throws erros. Figure out WHY the relay is inited -> it should not.
+//TODO:handle anonymous relays (no need to wait for completer)
 mixin RelayAuthMixin {
   Future<void> initializeAuth(IonConnectRelay relay, Ref ref) async {
     final authCompleter = ref.watch(relayAuthCompleterProvider(relay));

@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/active_relays_provider.c.dart';
 
+//TODO:rename to active relays mixin and put ActiveRelays here
 mixin RelayCloseMixin {
   StreamSubscription<void>? _subscriptions;
 

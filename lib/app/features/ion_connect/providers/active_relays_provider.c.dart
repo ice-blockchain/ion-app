@@ -10,13 +10,11 @@ part 'active_relays_provider.c.g.dart';
 class ActiveRelays extends _$ActiveRelays {
   @override
   Set<String> build() {
-    ref.listen(authProvider.select((state) => state.valueOrNull?.isAuthenticated), (prev, next) {
-      if (prev != null && prev == true && next == false) {
-        for (final url in state) {
-          ref.invalidate(relayProvider(url));
-        }
-        ref.invalidateSelf();
+    onLogout(ref, () {
+      for (final url in state) {
+        ref.invalidate(relayProvider(url));
       }
+      ref.invalidateSelf();
     });
 
     return {};

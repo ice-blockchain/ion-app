@@ -55,6 +55,9 @@ Future<UserDelegationEntity?> cachedUserDelegation(Ref ref, String pubkey) async
 @Riverpod(keepAlive: true)
 Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
+  if (mainWallet == null) {
+    return null;
+  }
 
   try {
     return await ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
@@ -66,6 +69,9 @@ Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
 @Riverpod(keepAlive: true)
 Future<UserDelegationEntity?> currentUserCachedDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
+  if (mainWallet == null) {
+    return null;
+  }
 
   try {
     return await ref.watch(cachedUserDelegationProvider(mainWallet.signingKey.publicKey).future);

@@ -269,9 +269,18 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     required int kind,
     required OnVerifyIdentity<GenerateSignatureResponse> onVerifyIdentity,
   }) async {
-    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider)!;
+    final currentIdentityKeyName = ref.read(currentIdentityKeyNameSelectorProvider);
+
+    if (currentIdentityKeyName == null) {
+      throw const CurrentUserNotFoundException();
+    }
+
     final mainWallet = await ref.read(mainWalletProvider.future);
     final ionIdentity = await ref.read(ionIdentityProvider.future);
+
+    if (mainWallet == null) {
+      throw MainWalletNotFoundException();
+    }
 
     final createdAt = DateTime.now();
     final masterPubkey = mainWallet.signingKey.publicKey;

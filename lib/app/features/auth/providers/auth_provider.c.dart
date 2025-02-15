@@ -84,7 +84,7 @@ String? currentIdentityKeyNameSelector(Ref ref) {
 @riverpod
 Future<String?> currentPubkeySelector(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
-  return mainWallet.signingKey.publicKey;
+  return mainWallet?.signingKey.publicKey;
 }
 
 @riverpod
@@ -116,4 +116,12 @@ class CurrentIdentityKeyNameStore extends _$CurrentIdentityKeyNameStore {
     await localStorage.setString(_currentIdentityKeyNameKey, identityKeyName);
     state = AsyncData(identityKeyName);
   }
+}
+
+void onLogout(Ref ref, void Function() callback) {
+  ref.listen(authProvider.select((state) => state.valueOrNull?.isAuthenticated), (prev, next) {
+    if (prev != null && prev == true && next == false) {
+      callback();
+    }
+  });
 }
