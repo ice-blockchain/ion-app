@@ -33,7 +33,7 @@ class SendNftForm extends ConsumerWidget {
 
     final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
     final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
-    final selectedNft = formController.assetData!.as<NftAssetData>()!.nft;
+    final selectedNft = formController.assetData.as<NftAssetData>()!.nft;
     final selectedContactPubkey = formController.contactPubkey;
 
     return SheetContent(

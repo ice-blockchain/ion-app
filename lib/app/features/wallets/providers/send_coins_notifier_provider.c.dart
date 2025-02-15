@@ -26,7 +26,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       return;
     }
 
-    final coinAssetData = form.assetData! as CoinAssetData;
+    final coinAssetData = form.assetData as CoinAssetData;
     final sendableAsset = coinAssetData.associatedAssetWithSelectedOption;
     final senderWallet = form.senderWallet;
 

@@ -29,7 +29,7 @@ class SendNftConfirmPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
     final formData = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
-    final nft = formData.assetData!.as<NftAssetData>()!.nft;
+    final nft = formData.assetData.as<NftAssetData>()!.nft;
 
     return SheetContent(
       body: Column(

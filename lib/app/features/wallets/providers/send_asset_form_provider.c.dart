@@ -30,6 +30,7 @@ class SendAssetFormController extends _$SendAssetFormController {
       network: Network.ion,
       arrivalDateTime: DateTime.now(),
       receiverAddress: '',
+      assetData: const CryptoAssetData.notInitialized(),
     );
   }
 

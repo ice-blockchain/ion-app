@@ -60,38 +60,27 @@ class TransactionResultSheet extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 24.0.s),
-                formData.assetData?.map(
-                      coin: (coin) => TransactionAmountSummary(
-                        amount: coin.amount,
-                        currency: coin.coinsGroup.abbreviation,
-                        usdAmount: coin.priceUSD,
-                        icon: CoinIconWidget(
-                          imageUrl: coin.coinsGroup.iconUrl,
-                        ),
-                      ),
-                      // TODO: Not implemented
-                      nft: (nft) => Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 52.0.s,
-                        ),
-                        child: NftItem(
-                          nftData: nft.nft,
-                          backgroundColor: Colors.transparent,
-                        ),
-                      ),
-                    ) ??
-                    const SizedBox.shrink(),
-                // TODO: NFT is not implemented
-                // if (type == CryptoAssetType.nft)
-                //   Padding(
-                //     padding: EdgeInsets.symmetric(
-                //       horizontal: 52.0.s,
-                //     ),
-                //     child: NftItem(
-                //       nftData: formData.nft!,
-                //       backgroundColor: Colors.transparent,
-                //     ),
-                //   ),
+                formData.assetData.maybeMap(
+                  coin: (coin) => TransactionAmountSummary(
+                    amount: coin.amount,
+                    currency: coin.coinsGroup.abbreviation,
+                    usdAmount: coin.priceUSD,
+                    icon: CoinIconWidget(
+                      imageUrl: coin.coinsGroup.iconUrl,
+                    ),
+                  ),
+                  // TODO: Not implemented
+                  nft: (nft) => Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 52.0.s,
+                    ),
+                    child: NftItem(
+                      nftData: nft.nft,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                  orElse: () => const SizedBox.shrink(),
+                ),
                 SizedBox(height: 24.0.s),
                 Row(
                   children: [

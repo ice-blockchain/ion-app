@@ -23,5 +23,7 @@ sealed class CryptoAssetData with _$CryptoAssetData {
     required NftData nft,
   }) = NftAssetData;
 
+  const factory CryptoAssetData.notInitialized() = _NotInitializedAssetData;
+
   const CryptoAssetData._();
 }

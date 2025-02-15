@@ -60,11 +60,10 @@ class SendCoinsForm extends HookConsumerWidget {
       [],
     );
 
-    final validAmount = formController.assetData?.maybeMap(
-          coin: (coin) => coin.amount > 0,
-          orElse: () => false,
-        ) ??
-        false;
+    final validAmount = formController.assetData.maybeMap(
+      coin: (coin) => coin.amount > 0,
+      orElse: () => false,
+    );
 
     final isContinueButtonEnabled = formController.canCoverNetworkFee &&
         validAmount &&

@@ -46,11 +46,12 @@ class TransactionDetailsPage extends ConsumerWidget {
                 padding: EdgeInsets.only(top: 10.0.s),
                 child: Column(
                   children: [
-                    formData.assetData!.map(
+                    formData.assetData.maybeMap(
                       coin: (coin) => TransactionAmountSummary(
                         amount: coin.amount,
                         currency: coin.coinsGroup.abbreviation,
-                        // usdAmount: coin.usdAmount, // TODO: Not implemented
+                        // TODO: Not implemented
+                        // usdAmount: coin.usdAmount,
                         usdAmount: 0,
                         icon: CoinIconWidget(
                           imageUrl: coin.coinsGroup.iconUrl,
@@ -65,6 +66,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                           backgroundColor: Colors.transparent,
                         ),
                       ),
+                      orElse: () => const SizedBox(),
                     ),
                     SizedBox(height: 12.0.s),
                     Timeline(
@@ -95,7 +97,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    ...formData.assetData?.maybeMap(
+                    ...formData.assetData.maybeMap(
                           coin: (coin) => [
                             SizedBox(height: 16.0.s),
                             ListItem.textWithIcon(
