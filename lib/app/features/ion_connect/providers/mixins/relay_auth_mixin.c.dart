@@ -30,6 +30,7 @@ class RelayAuthChallenge extends _$RelayAuthChallenge {
 //TODO:make relayAuthChallengeProvider not keep alive -> same as with the relayAuthCompleter and watch here
 //TODO:check errors after logout - somehow the relay gets re-created and tries to send auth, but user is not authenticated and it throws erros. Figure out WHY the relay is inited -> it should not.
 //TODO:handle anonymous relays (no need to wait for completer)
+//TODO:on logout feed gets refetched - it should not
 mixin RelayAuthMixin {
   Future<void> initializeAuth(IonConnectRelay relay, Ref ref) async {
     final authCompleter = ref.watch(relayAuthCompleterProvider(relay));
