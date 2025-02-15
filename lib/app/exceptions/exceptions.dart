@@ -355,3 +355,11 @@ class ParticipantsMasterPubkeysNotFoundException extends IONException {
           'Event id $id',
         );
 }
+
+class UnknownNetworkException extends IONException {
+  UnknownNetworkException(String network)
+      : super(
+          10070,
+          'Unknown network: $network',
+        );
+}

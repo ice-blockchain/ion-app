@@ -105,7 +105,7 @@ class _LoadingState extends StatelessWidget {
       child: _NetworksList(
         itemCount: 3,
         itemBuilder: (_, __) {
-          const network = Network.bitcoinTestnet3;
+          const network = Network(name: 'bitcoinTestnet3');
           return NetworkItem(
             coinInWallet: const CoinInWalletData(
               coin: CoinData(
