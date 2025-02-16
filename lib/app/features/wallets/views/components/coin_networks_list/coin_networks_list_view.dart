@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
@@ -16,7 +17,7 @@ import 'package:ion/app/utils/num.dart';
 
 part 'coin_network_item.dart';
 
-class CoinNetworksListView extends StatelessWidget {
+class CoinNetworksListView extends HookWidget {
   const CoinNetworksListView({
     required this.onItemTap,
     required this.coinAbbreviation,
@@ -28,10 +29,10 @@ class CoinNetworksListView extends StatelessWidget {
   final String coinAbbreviation;
   final String title;
 
-  static const List<Network> networkTypeValues = Network.values;
-
   @override
   Widget build(BuildContext context) {
+    final networks = useMemoized(() => Network.all);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -49,14 +50,14 @@ class CoinNetworksListView extends StatelessWidget {
         ),
         ListView.separated(
           shrinkWrap: true,
-          itemCount: networkTypeValues.length,
+          itemCount: networks.length,
           separatorBuilder: (BuildContext context, int index) => SizedBox(height: 12.0.s),
           itemBuilder: (BuildContext context, int index) {
             return ScreenSideOffset.small(
               child: _CoinNetworkItem(
-                coinAbbreviation: coinAbbreviation,
-                network: networkTypeValues[index],
-                onTap: () => onItemTap(networkTypeValues[index]),
+                coincoinAbbreviationId: coinAbbreviation,
+                network: networks[index],
+                onTap: () => onItemTap(networks[index]),
               ),
             );
           },

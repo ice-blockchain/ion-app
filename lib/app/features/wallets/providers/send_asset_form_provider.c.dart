@@ -27,7 +27,7 @@ class SendAssetFormController extends _$SendAssetFormController {
     final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
     return SendAssetFormData(
       wallet: walletView,
-      network: Network.ion,
+      network: Network.ion(),
       arrivalDateTime: DateTime.now(),
       receiverAddress: '',
       assetData: const CryptoAssetData.notInitialized(),
@@ -53,7 +53,7 @@ class SendAssetFormController extends _$SendAssetFormController {
   Future<void> setNetwork(Network network) async {
     final wallets = await ref.read(walletsNotifierProvider.future);
     final wallet = wallets.firstWhereOrNull(
-      (wallet) => wallet.network.toLowerCase() == network.serverName.toLowerCase(),
+      (wallet) => wallet.network.toLowerCase() == network.id.toLowerCase(),
     );
 
     // Reset current information about network

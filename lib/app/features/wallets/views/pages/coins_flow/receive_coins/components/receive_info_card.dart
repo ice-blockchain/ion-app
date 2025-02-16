@@ -55,7 +55,7 @@ class ReceiveInfoCard extends ConsumerWidget {
                     color: context.theme.appColors.primaryText,
                   ),
                 ),
-                Text('(${network.name})'),
+                Text('(${network.displayName})'),
                 SizedBox(height: 8.0.s),
                 if (walletAddress != null && walletAddress.isNotEmpty)
                   _AddressDescription(walletAddress)

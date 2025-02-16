@@ -46,7 +46,7 @@ class SelectNetworkModal extends StatelessWidget {
                 case PaymentType.receive:
                   RequestCoinsFormRoute(
                     pubkey: pubkey,
-                    network: network,
+                    networkId: network.id,
                     coinId: coinAbbreviation,
                   ).replace(context);
               }

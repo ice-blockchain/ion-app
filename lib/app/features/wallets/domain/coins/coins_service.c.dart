@@ -44,7 +44,7 @@ class CoinsService {
         .getCoinsByFilters(
           symbolGroup: symbolGroup,
           symbol: symbol,
-          network: network?.serverName,
+          network: network?.id,
           contractAddress: contractAddress,
         )
         .then((result) => result.map(CoinData.fromDB));
@@ -53,7 +53,9 @@ class CoinsService {
   Future<Iterable<CoinData>> getSyncedCoinsBySymbolGroup(String symbolGroup) {
     return _ionIdentityClient.coins.getCoinsBySymbolGroup(symbolGroup).then(
       (coins) {
-        return coins.where((e) => Network.isSupportedServerName(e.network)).map(CoinData.fromDTO);
+        return coins
+            .where((e) => Network.allowedNetworkIds.contains(e.network.toLowerCase()))
+            .map(CoinData.fromDTO);
       },
     );
   }

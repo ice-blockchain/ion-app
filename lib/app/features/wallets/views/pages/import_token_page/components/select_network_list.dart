@@ -18,7 +18,7 @@ class SelectNetworkList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final networks = useMemoized(() => Network.values.toList());
+    final networks = useMemoized(() => Network.all);
 
     return SheetContent(
       body: Column(
@@ -61,7 +61,7 @@ class _NetworkItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListItem(
       leading: network.svgIconAsset.icon(size: 36.0.s),
-      title: Text(network.name),
+      title: Text(network.displayName),
       backgroundColor: context.theme.appColors.tertararyBackground,
       onTap: () => Navigator.of(context).pop(network),
     );

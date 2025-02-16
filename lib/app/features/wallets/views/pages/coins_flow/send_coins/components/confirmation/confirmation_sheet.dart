@@ -11,7 +11,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
@@ -30,8 +29,6 @@ import 'package:ion_identity_client/ion_identity.dart';
 
 class ConfirmationSheet extends ConsumerWidget {
   const ConfirmationSheet({super.key});
-
-  static const networkTypeValues = Network.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

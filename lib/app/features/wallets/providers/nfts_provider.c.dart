@@ -22,11 +22,11 @@ Future<List<NftData>> nftsData(Ref ref) async {
 
   final nfts = List.generate(
     5,
-    (_) => const NftData(
+    (_) => NftData(
       collectionName: 'COLLECTION NULL',
       identifier: 0,
       price: 0,
-      network: Network.ethereum,
+      network: Network.ethereum(),
       currency: 'CURRENCY NULL',
       iconUrl: 'ICONURL NULL',
       currencyIconUrl: 'CURRENCYICONURL NULL',

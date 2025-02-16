@@ -6,7 +6,6 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/receive_info_card.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
@@ -21,8 +20,6 @@ import 'package:ion_identity_client/ion_identity.dart';
 
 class ShareAddressView extends HookConsumerWidget {
   const ShareAddressView({super.key});
-
-  static const List<Network> networkTypeValues = Network.values;
 
   Future<void> _loadAddress(WidgetRef ref) async {
     final network = ref.read(receiveCoinsFormControllerProvider).selectedNetwork;

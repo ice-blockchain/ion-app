@@ -9,7 +9,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
@@ -23,8 +22,6 @@ import 'package:ion/generated/assets.gen.dart';
 
 class SendNftForm extends ConsumerWidget {
   const SendNftForm({super.key});
-
-  static const List<Network> networkTypeValues = Network.values;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

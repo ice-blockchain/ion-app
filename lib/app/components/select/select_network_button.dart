@@ -129,7 +129,7 @@ class _HasNetworkSelected extends StatelessWidget {
               SizedBox(width: 10.0.s),
               Expanded(
                 child: Text(
-                  selectedNetwork.name,
+                  selectedNetwork.displayName,
                   style: textTheme.body,
                 ),
               ),

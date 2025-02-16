@@ -65,7 +65,7 @@ class CoinReceiveModal extends HookConsumerWidget {
             ScreenSideOffset.small(
               child: ListItem(
                 title: Text(context.i18n.wallet_network),
-                subtitle: Text(network.name),
+                subtitle: Text(network.displayName),
                 switchTitleStyles: true,
                 leading: network.svgIconAsset.icon(size: 36.0.s),
                 trailing: Text(

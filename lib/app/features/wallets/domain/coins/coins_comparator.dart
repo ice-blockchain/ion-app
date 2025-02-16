@@ -60,8 +60,8 @@ class CoinsComparator {
       b.balanceUSD,
       a.coin.abbreviation,
       b.coin.abbreviation,
-      a.coin.network.serverName,
-      b.coin.network.serverName,
+      a.coin.network.id,
+      b.coin.network.id,
     );
   }
 }

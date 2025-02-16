@@ -28,13 +28,13 @@ class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
     required this.pubkey,
     required this.coinAbbreviation,
-    required this.network,
+    required this.networkId,
     super.key,
   });
 
   final String pubkey;
   final String coinAbbreviation;
-  final Network network;
+  final String networkId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,12 +42,12 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final selectedNetworkType = useState(network);
-    final selectedCoinAbbreviation = useState(coinAbbreviation);
+    final selectedNetworkType = useState(Network(id: networkId));
+    final selectedCoinId = useState(coinAbbreviation);
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
 
-    // TODO: Remove the next 2 lines?
+    // TODO: Check the next 2 lines?
     final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
     final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
 

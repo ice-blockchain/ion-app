@@ -38,7 +38,7 @@ class CoinDetailsPage extends HookConsumerWidget {
     final isLoading = ref.watch(
       coinTransactionsNotifierProvider.select((data) => data.isLoading),
     );
-    final activeNetwork = useState<Network>(Network.ethereum);
+    final activeNetwork = useState<Network>(Network.ethereum());
 
     useOnInit(
       () {
@@ -46,7 +46,7 @@ class CoinDetailsPage extends HookConsumerWidget {
           ref.read(coinTransactionsNotifierProvider.notifier).fetch(
                 walletId: walletId,
                 coinId: coinsGroup.symbolGroup,
-                network: Network.ethereum,
+                network: Network.ethereum(),
               );
         }
       },
