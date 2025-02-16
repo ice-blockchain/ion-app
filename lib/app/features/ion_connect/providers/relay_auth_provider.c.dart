@@ -25,9 +25,13 @@ class RelayAuthState {
 class RelayAuth extends _$RelayAuth {
   @override
   RelayAuthState build(IonConnectRelay relay) {
-    ref.onDispose(() {
-      print('FOO>RelayAuth dispose');
+    final authMessageSubscription = relay.messages.listen((message) {
+      if (message is AuthMessage) {
+        state.challenge = message.challenge;
+      }
     });
+    ref.onDispose(authMessageSubscription.cancel);
+
     return RelayAuthState(completer: Completer());
   }
 
@@ -114,10 +118,6 @@ class RelayAuth extends _$RelayAuth {
     return ref
         .read(ionConnectNotifierProvider.notifier)
         .sign(authEvent, includeMasterPubkey: delegation != null);
-  }
-
-  set setChallenge(String challenge) {
-    state.challenge = challenge;
   }
 }
 
