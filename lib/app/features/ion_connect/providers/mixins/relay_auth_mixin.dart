@@ -25,17 +25,19 @@ mixin RelayAuthMixin {
     IonConnectRelay relay,
     Ref ref,
   ) {
-    if (previous?.value == null && next.value != null) {
-      ref.read(currentUserIonConnectEventSignerProvider.future).then((eventSigner) {
-        if (eventSigner != null) {
-          final hasDelegate =
-              next.value?.data.hasDelegateFor(pubkey: eventSigner.publicKey) ?? false;
+    final prevValue = previous?.value;
+    final nextValue = next.value;
+    final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
 
-          if (hasDelegate) {
-            ref.read(relayAuthProvider(relay).notifier).authenticateRelay();
-          }
-        }
-      });
+    if (eventSigner != null) {
+      final nextHasDelegate =
+          nextValue?.data.hasDelegateFor(pubkey: eventSigner.publicKey) ?? false;
+      final prevHasDelegate =
+          prevValue?.data.hasDelegateFor(pubkey: eventSigner.publicKey) ?? false;
+
+      if (!prevHasDelegate && nextHasDelegate) {
+        ref.read(relayAuthProvider(relay).notifier).authenticateRelay();
+      }
     }
   }
 }
