@@ -51,9 +51,11 @@ class CoinsService {
   }
 
   Future<Iterable<CoinData>> getSyncedCoinsBySymbolGroup(String symbolGroup) {
-    return _ionIdentityClient.coins
-        .getCoinsBySymbolGroup(symbolGroup)
-        .then((coins) => coins.map(CoinData.fromDTO));
+    return _ionIdentityClient.coins.getCoinsBySymbolGroup(symbolGroup).then(
+      (coins) {
+        return coins.where((e) => Network.isSupportedServerName(e.network)).map(CoinData.fromDTO);
+      },
+    );
   }
 
   Future<SendCoinsResult> send({

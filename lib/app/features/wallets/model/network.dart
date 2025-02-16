@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:collection/collection.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum Network {
@@ -31,6 +31,7 @@ enum Network {
   icp(isTestnet: false),
   kaspa(isTestnet: false),
   kusama(isTestnet: false),
+  westend(isTestnet: true),
   litecoin(isTestnet: false),
   ogy(isTestnet: false),
   optimism(isTestnet: false),
@@ -85,6 +86,7 @@ enum Network {
     Network.icp: 'ICP',
     Network.kaspa: 'Kaspa',
     Network.kusama: 'Kusama',
+    Network.westend: 'Westend',
     Network.litecoin: 'Litecoin',
     Network.ogy: 'OGY',
     Network.optimism: 'Optimism',
@@ -124,7 +126,7 @@ enum Network {
       Network.fantomOpera || Network.fantomTestnet => Assets.svg.networks.walletFantom,
       Network.icp => Assets.svg.networks.walletIcp,
       Network.kaspa => Assets.svg.networks.walletKaspa,
-      Network.kusama => Assets.svg.networks.walletKusama,
+      Network.kusama || Network.westend => Assets.svg.networks.walletKusama,
       Network.litecoin => Assets.svg.networks.walletLtc,
       Network.ogy => Assets.svg.networks.walletOgy,
       Network.optimism || Network.optimismSepolia => Assets.svg.networks.walletOptimism,
@@ -145,9 +147,14 @@ enum Network {
   // A blank in case we use a different naming convention in the future.
   String get displayName => serverName;
 
-  static Network fromServerName(String name) => _serverNames.entries
-      .firstWhere(
-        (entry) => entry.value.toLowerCase() == name.toLowerCase(),
-      )
-      .key;
+  static bool isSupportedServerName(String name) =>
+      _serverNames.values.firstWhereOrNull((e) => e.toLowerCase() == name.toLowerCase()) != null;
+
+  static Network fromServerName(String name) {
+    return _serverNames.entries
+        .firstWhere(
+          (entry) => entry.value.toLowerCase() == name.toLowerCase(),
+        )
+        .key;
+  }
 }
