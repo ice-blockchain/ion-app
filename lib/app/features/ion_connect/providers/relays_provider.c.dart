@@ -13,16 +13,16 @@ part 'relays_provider.c.g.dart';
 typedef RelaysState = Map<String, IonConnectRelay>;
 
 @Riverpod(keepAlive: true)
-class Relay extends _$Relay with RelayTimerMixin, RelayAuthMixin, RelayCloseMixin {
+class Relay extends _$Relay with RelayTimerMixin, RelayAuthMixin, ActiveRelaysMixin {
   @override
   Future<IonConnectRelay> build(String url, {bool anonymous = false}) async {
     final relay = await IonConnectRelay.connect(url);
 
     initializeRelayTimer(relay, ref);
+    initializeActiveRelaysListener(relay, ref);
 
     if (!anonymous) {
       await initializeAuth(relay, ref);
-      initializeCloseListener(relay, ref);
     }
 
     return relay;
