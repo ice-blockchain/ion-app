@@ -6,9 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/providers/select_coin_search_provider.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
-import 'package:ion/app/features/wallets/providers/filtered_wallet_coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coins_list_view.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -32,7 +32,7 @@ class SelectCoinModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinsResult = ref.watch(filteredWalletCoinsProvider);
+    final coinsResult = ref.watch(searchedWalletCoinsProvider);
     return SheetContent(
       body: CoinsListView(
         coinsResult: coinsResult,
@@ -50,8 +50,8 @@ class SelectCoinModal extends ConsumerWidget {
           }
         },
         title: context.i18n.common_select_coin,
-        onQueryChanged: (String query) {
-          // TODO: Not implemented
+        onQueryChanged: (query) {
+          ref.read(selectCoinSearchQueryProvider.notifier).query = query;
         },
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,

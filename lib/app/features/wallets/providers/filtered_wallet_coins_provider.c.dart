@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'filtered_wallet_coins_provider.c.g.dart';
 
+// TODO: review this provider, it's async, but might be sync; or use "await .future"
 @riverpod
 Future<List<CoinsGroup>> filteredWalletCoins(Ref ref) async {
   final isZeroValueAssetsVisible = ref.watch(isZeroValueAssetsVisibleSelectorProvider);
