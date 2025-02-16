@@ -6,7 +6,7 @@ import 'package:ion/app/features/ion_connect/providers/active_relays_provider.c.
 
 mixin RelayActiveMixin {
   void trackRelayAsActive(IonConnectRelay relay, Ref ref) {
-    ref.watch(activeRelaysProvider.notifier).addRelay(relay.url);
+    ref.read(activeRelaysProvider.notifier).addRelay(relay.url);
     ref.onDispose(() {
       ref.read(activeRelaysProvider.notifier).removeRelay(relay.url);
     });

@@ -14,7 +14,6 @@ class ActiveRelays extends _$ActiveRelays {
       for (final url in state) {
         ref.invalidate(relayProvider(url));
       }
-      ref.invalidateSelf();
     });
 
     return {};
