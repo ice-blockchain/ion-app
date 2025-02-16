@@ -13,7 +13,7 @@ import 'package:ion/app/utils/validators.dart';
 class CoinAmountInput extends ConsumerWidget {
   const CoinAmountInput({
     required this.controller,
-    required this.coinId,
+    required this.coinAbbreviation,
     this.showMaxAction = true,
     this.showApproximateInUsd = true,
     super.key,
@@ -22,7 +22,7 @@ class CoinAmountInput extends ConsumerWidget {
   final TextEditingController controller;
   final bool showMaxAction;
   final bool showApproximateInUsd;
-  final String coinId;
+  final String coinAbbreviation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +31,9 @@ class CoinAmountInput extends ConsumerWidget {
     final locale = context.i18n;
 
     final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
-    final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
+    final coinInWallet = ref
+        .watch(coinInWalletByAbbreviationProvider(coinAbbreviation: coinAbbreviation))
+        .valueOrNull;
 
     return Column(
       children: [

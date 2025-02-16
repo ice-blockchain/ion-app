@@ -4,24 +4,29 @@ part of 'coin_networks_list_view.dart';
 
 class _CoinNetworkItem extends ConsumerWidget {
   const _CoinNetworkItem({
-    required this.coinId,
+    required this.coinAbbreviation,
     required this.networkType,
     required this.onTap,
   });
 
-  final String coinId;
+  final String coinAbbreviation;
   final NetworkType networkType;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinDataResult = ref.watch(coinInWalletByIdProvider(coinId: coinId));
+    final coinDataResult =
+        ref.watch(coinInWalletByAbbreviationProvider(coinAbbreviation: coinAbbreviation));
     final isBalanceVisible = ref.watch(isBalanceVisibleSelectorProvider);
 
     return coinDataResult.maybeWhen(
       data: (coinInWallet) {
-        // TODO: Check nullability
-        final coinData = coinInWallet!.coin;
+        if (coinInWallet == null) {
+          return ItemLoadingState(
+            itemHeight: 60.0.s,
+          );
+        }
+        final coinData = coinInWallet.coin;
         return ListItem(
           title: Row(
             children: [

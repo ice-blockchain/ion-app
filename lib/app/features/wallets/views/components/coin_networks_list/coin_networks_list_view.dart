@@ -20,13 +20,13 @@ part 'coin_network_item.dart';
 class CoinNetworksListView extends StatelessWidget {
   const CoinNetworksListView({
     required this.onItemTap,
-    required this.coinId,
+    required this.coinAbbreviation,
     required this.title,
     super.key,
   });
 
   final void Function(NetworkType networkType) onItemTap;
-  final String coinId;
+  final String coinAbbreviation;
   final String title;
 
   static final List<NetworkType> networkTypeValues =
@@ -56,7 +56,7 @@ class CoinNetworksListView extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return ScreenSideOffset.small(
               child: _CoinNetworkItem(
-                coinId: coinId,
+                coinAbbreviation: coinAbbreviation,
                 networkType: networkTypeValues[index],
                 onTap: () => onItemTap(networkTypeValues[index]),
               ),

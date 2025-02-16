@@ -25,13 +25,13 @@ import 'package:ion/generated/assets.gen.dart';
 class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
     required this.pubkey,
-    required this.coinId,
+    required this.coinAbbreviation,
     required this.networkType,
     super.key,
   });
 
   final String pubkey;
-  final String coinId;
+  final String coinAbbreviation;
   final NetworkType networkType;
 
   @override
@@ -41,7 +41,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     final locale = context.i18n;
 
     final selectedNetworkType = useState(networkType);
-    final selectedCoinId = useState(coinId);
+    final selectedCoinAbbreviation = useState(coinAbbreviation);
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
 
@@ -69,15 +69,15 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                   child: Column(
                     children: [
                       CoinIdButton(
-                        coinId: selectedCoinId.value,
+                        coinId: selectedCoinAbbreviation.value,
                         onTap: () async {
-                          final newCoinId = await SelectCoinRoute(
+                          final newCoinAbbreviation = await SelectCoinRoute(
                             paymentType: PaymentType.receive,
                             pubkey: pubkey,
                             selectCoinModalType: SelectCoinModalType.update,
                           ).push<String>(context);
-                          if (newCoinId != null && context.mounted) {
-                            selectedCoinId.value = newCoinId;
+                          if (newCoinAbbreviation != null && context.mounted) {
+                            selectedCoinAbbreviation.value = newCoinAbbreviation;
                           }
                         },
                       ),
@@ -88,7 +88,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                           final newNetworkType = await SelectNetworkRoute(
                             paymentType: PaymentType.receive,
                             pubkey: pubkey,
-                            coinId: selectedCoinId.value,
+                            coinAbbreviation: selectedCoinAbbreviation.value,
                             selectNetworkModalType: SelectNetworkModalType.update,
                           ).push<NetworkType>(context);
                           if (newNetworkType != null && context.mounted) {
@@ -103,7 +103,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                       SizedBox(height: 16.0.s),
                       CoinAmountInput(
                         controller: amountController,
-                        coinId: selectedCoinId.value,
+                        coinAbbreviation: selectedCoinAbbreviation.value,
                         showApproximateInUsd: false,
                         showMaxAction: false,
                       ),
