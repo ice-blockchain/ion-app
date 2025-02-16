@@ -5,25 +5,9 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_auth_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-part 'relay_auth_mixin.c.g.dart';
-
-@riverpod
-Completer<void> relayAuthCompleter(Ref ref, IonConnectRelay relay) {
-  return Completer<void>();
-}
-
-@Riverpod(keepAlive: true)
-class RelayAuthChallenge extends _$RelayAuthChallenge {
-  @override
-  String? build(IonConnectRelay relay) => null;
-
-  set setChallenge(String challenge) => state = challenge;
-}
 
 //TODO:move everything related to auth from IonConnectNotifier here
 //TODO:handle reauth -> reset relayAuthCompleter with a new completer without the provider rebuild (store some mutable class instance)
@@ -33,11 +17,11 @@ class RelayAuthChallenge extends _$RelayAuthChallenge {
 //TODO:on logout feed gets refetched - it should not
 mixin RelayAuthMixin {
   Future<void> initializeAuth(IonConnectRelay relay, Ref ref) async {
-    final authCompleter = ref.watch(relayAuthCompleterProvider(relay));
+    ref.watch(relayAuthProvider(relay)); //TODO::??
 
     final authMessageSubscription = relay.messages.listen((message) {
       if (message is AuthMessage) {
-        ref.read(relayAuthChallengeProvider(relay).notifier).setChallenge = message.challenge;
+        ref.read(relayAuthProvider(relay).notifier).setChallenge = message.challenge;
       }
     });
 
@@ -46,12 +30,7 @@ mixin RelayAuthMixin {
       (previous, next) => _handleDelegationChange(previous, next, relay, ref),
     );
 
-    try {
-      await ref.read(relayAuthNotifierProvider(relay).notifier).initRelayAuth();
-    } catch (error) {
-      authCompleter.completeError(error);
-      rethrow;
-    }
+    await ref.read(relayAuthProvider(relay).notifier).initRelayAuth();
 
     ref.onDispose(authMessageSubscription.cancel);
   }
@@ -69,7 +48,7 @@ mixin RelayAuthMixin {
               next.value?.data.hasDelegateFor(pubkey: eventSigner.publicKey) ?? false;
 
           if (hasDelegate) {
-            ref.read(relayAuthNotifierProvider(relay).notifier).sendAuthEvent();
+            ref.read(relayAuthProvider(relay).notifier).sendAuthEvent();
           }
         }
       });

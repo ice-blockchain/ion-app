@@ -7,16 +7,24 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/auth_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/ion_connect/providers/mixins/relay_auth_mixin.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'relay_auth_notifier.c.g.dart';
+part 'relay_auth_provider.c.g.dart';
+
+class RelayAuthState {
+  RelayAuthState({required this.completer});
+
+  Completer<void> completer;
+  String? challenge;
+}
 
 @riverpod
-class RelayAuthNotifier extends _$RelayAuthNotifier {
+class RelayAuth extends _$RelayAuth {
   @override
-  FutureOr<void> build(IonConnectRelay relay) {}
+  RelayAuthState build(IonConnectRelay relay) {
+    return RelayAuthState(completer: Completer<void>());
+  }
 
   Future<void> initRelayAuth() async {
     final signedAuthEvent = await _createAuthEvent(
@@ -36,7 +44,7 @@ class RelayAuthNotifier extends _$RelayAuthNotifier {
   }
 
   Future<void> sendAuthEvent() async {
-    final challenge = ref.read(relayAuthChallengeProvider(relay));
+    final challenge = state.challenge;
     if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
 
     final signedAuthEvent = await _createAuthEvent(
@@ -58,7 +66,7 @@ class RelayAuthNotifier extends _$RelayAuthNotifier {
       throw SendEventException(okMessages.message);
     }
 
-    ref.read(relayAuthCompleterProvider(relay)).complete();
+    state.completer.complete();
   }
 
   Future<EventMessage> _createAuthEvent({
@@ -74,6 +82,10 @@ class RelayAuthNotifier extends _$RelayAuthNotifier {
     return ref
         .read(ionConnectNotifierProvider.notifier)
         .sign(authEvent, includeMasterPubkey: delegation != null);
+  }
+
+  set setChallenge(String challenge) {
+    state.challenge = challenge;
   }
 }
 

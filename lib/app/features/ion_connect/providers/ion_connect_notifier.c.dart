@@ -13,8 +13,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/mixins/relay_auth_mixin.c.dart';
-import 'package:ion/app/features/ion_connect/providers/relay_auth_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 <<<<<<< HEAD
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
@@ -60,10 +59,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (isRelayAuthError(error)) {
-          await ref.read(relayAuthNotifierProvider(relay!).notifier).sendAuthEvent();
+          await ref.read(relayAuthProvider(relay!).notifier).sendAuthEvent();
         }
 
-        await ref.read(relayAuthCompleterProvider(relay!)).future;
+        await ref.read(relayAuthProvider(relay!)).completer.future;
         await relay!.sendEvents(events);
 
         if (cache) {
@@ -128,10 +127,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (isRelayAuthError(error)) {
-          await ref.read(relayAuthNotifierProvider(relay!).notifier).sendAuthEvent();
+          await ref.read(relayAuthProvider(relay!).notifier).sendAuthEvent();
         }
 
-        await ref.read(relayAuthCompleterProvider(relay!)).future;
+        await ref.read(relayAuthProvider(relay!)).completer.future;
 
         final events = subscriptionBuilder != null
             ? subscriptionBuilder(requestMessage, relay!)
