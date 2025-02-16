@@ -20,12 +20,11 @@ class ActiveRelays extends _$ActiveRelays {
     return {};
   }
 
-  void addRelay(String relayUrl) {
-    state = {...state, relayUrl};
+  void addRelay(String url) {
+    state = {...state, url};
   }
 
-  void removeRelay(String relayUrl) {
-    final newState = Set<String>.from(state)..remove(relayUrl);
-    state = newState;
+  void removeRelay(String url) {
+    state = {...state}..remove(url);
   }
 }

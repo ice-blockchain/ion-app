@@ -12,12 +12,13 @@ mixin ActiveRelaysMixin {
   void initializeActiveRelaysListener(IonConnectRelay relay, Ref ref) {
     _subscriptions = relay.onClose.listen(
       (url) {
-        ref.read(activeRelaysProvider.notifier).removeRelay(url);
         _subscriptions?.cancel();
+        ref.invalidateSelf();
       },
     );
 
     ref.onDispose(() {
+      ref.read(activeRelaysProvider.notifier).removeRelay(relay.url);
       _subscriptions?.cancel();
     });
   }
