@@ -26,7 +26,7 @@ class StoryList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '';
+    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
     final filteredPubkeys = pubkeys.where((pubkey) => pubkey != currentUserPubkey).toList();
 
     ref.listenSuccess(createPostNotifierProvider(CreatePostOption.story), (next) {

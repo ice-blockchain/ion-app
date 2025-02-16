@@ -17,7 +17,7 @@ part 'ion_connect_e2ee_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<IonConnectE2eeService> ionConnectE2eeService(Ref ref) async {
-  final currentUserPubkey = await ref.read(currentPubkeySelectorProvider.future);
+  final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
   final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
   if (eventSigner == null) {

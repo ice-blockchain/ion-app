@@ -14,7 +14,7 @@ part 'reposted_events_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Stream<Set<String>?> repostedEvents(Ref ref) async* {
-  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
     yield {};

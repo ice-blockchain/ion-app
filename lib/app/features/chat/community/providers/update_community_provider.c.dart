@@ -37,7 +37,7 @@ class UpdateCommunityNotifier extends _$UpdateCommunityNotifier {
     state = await AsyncValue.guard(() async {
       final avatar = await _uploadAvatar();
       final communityAdmins = ref.read(communityAdminsProvider);
-      final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+      final pubkey = ref.read(currentPubkeySelectorProvider);
 
       if (pubkey == null) {
         throw UserMasterPubkeyNotFoundException();

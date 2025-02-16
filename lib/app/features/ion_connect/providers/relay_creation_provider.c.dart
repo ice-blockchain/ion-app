@@ -28,7 +28,7 @@ class RelayCreation extends _$RelayCreation {
   }) async {
     switch (actionSource) {
       case ActionSourceCurrentUser():
-        final pubkey = await ref.read(currentPubkeySelectorProvider.future);
+        final pubkey = ref.read(currentPubkeySelectorProvider);
         if (pubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }
@@ -48,7 +48,7 @@ class RelayCreation extends _$RelayCreation {
         return _getAndActivateRelay(relays.random, actionSource.anonymous);
 
       case ActionSourceCurrentUserChat():
-        final pubkey = await ref.read(currentPubkeySelectorProvider.future);
+        final pubkey = ref.read(currentPubkeySelectorProvider);
         if (pubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }

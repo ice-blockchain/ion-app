@@ -25,7 +25,7 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   }
 
   Future<void> toogleConversation(List<ConversationListItem> conversations) async {
-    final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentUserPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }

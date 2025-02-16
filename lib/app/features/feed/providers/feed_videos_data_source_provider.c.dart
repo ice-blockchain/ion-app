@@ -26,7 +26,7 @@ List<EntitiesDataSource>? feedVideosDataSource(
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
   final until =
       ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull?.createdAt;
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays == null || until == null || currentPubkey == null) return null;
 

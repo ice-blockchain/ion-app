@@ -25,7 +25,7 @@ class FollowerUsers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+    final pubkey = ref.watch(currentPubkeySelectorProvider);
     final dataSource = ref.watch(followersDataSourceProvider(pubkey!));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final users = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>().toList();

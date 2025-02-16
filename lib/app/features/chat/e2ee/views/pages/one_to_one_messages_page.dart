@@ -45,7 +45,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     final onSubmitted = useCallback(
       (String? content) async {
-        final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+        final currentPubkey = ref.read(currentPubkeySelectorProvider);
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }

@@ -7,8 +7,6 @@ import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dar
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 
-//TODO:check errors after logout - somehow the relay gets re-created and tries to send auth, but user is not authenticated and it throws erros. Figure out WHY the relay is inited -> it should not.
-//TODO:on logout feed gets refetched - it should not
 mixin RelayAuthMixin {
   Future<void> initializeAuth(IonConnectRelay relay, Ref ref) async {
     ref

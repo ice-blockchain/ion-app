@@ -152,7 +152,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
 
     final entity = PrivateDirectMessageData.fromEventMessage(conversation.latestMessage!);
 
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
     final receiverPukeyKey =
         entity.relatedPubkeys?.firstWhere((p) => p.value != currentUserPubkey).value;

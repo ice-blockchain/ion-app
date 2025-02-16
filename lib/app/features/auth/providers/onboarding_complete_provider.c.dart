@@ -13,9 +13,9 @@ part 'onboarding_complete_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<bool?> onboardingComplete(Ref ref) async {
-  final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
-  if (currentIdentityKeyName == null) {
+  if (currentPubkey == null) {
     return null;
   }
 

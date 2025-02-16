@@ -26,7 +26,7 @@ part 'e2ee_messages_subscriber.c.g.dart';
 class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
   @override
   Stream<void> build() async* {
-    final masterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+    final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
     if (masterPubkey == null) {
       throw UserMasterPubkeyNotFoundException();

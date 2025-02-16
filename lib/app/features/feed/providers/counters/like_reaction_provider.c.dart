@@ -11,7 +11,7 @@ part 'like_reaction_provider.c.g.dart';
 
 @riverpod
 ReactionEntity? likeReaction(Ref ref, EventReference eventReference) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
     return null;

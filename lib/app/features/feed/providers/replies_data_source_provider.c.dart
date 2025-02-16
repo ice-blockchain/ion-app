@@ -26,7 +26,7 @@ List<EntitiesDataSource>? repliesDataSource(
   Ref ref, {
   required EventReference eventReference,
 }) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
   if (currentPubkey == null || entity == null) {

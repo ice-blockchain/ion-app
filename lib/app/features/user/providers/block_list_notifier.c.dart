@@ -33,7 +33,7 @@ Future<BlockListEntity?> blockList(
 
 @riverpod
 Future<BlockListEntity?> currentUserBlockList(Ref ref) async {
-  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
     return null;
   }
@@ -48,7 +48,7 @@ Future<bool> isBlocked(Ref ref, String pubkey) async {
 
 @riverpod
 Future<bool> isBlocking(Ref ref, String pubkey, {bool cacheOnly = false}) async {
-  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
     return false;
   }
@@ -119,7 +119,7 @@ class BlockListNotifier extends _$BlockListNotifier {
   Future<void> toggleBlocked(String pubkey) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+      final currentPubkey = ref.read(currentPubkeySelectorProvider);
       if (currentPubkey == null) {
         throw UserMasterPubkeyNotFoundException();
       }

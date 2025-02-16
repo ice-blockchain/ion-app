@@ -16,7 +16,7 @@ class RepliedEvents extends _$RepliedEvents {
 
   @override
   Stream<Map<String, List<String>>?> build() async* {
-    final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
     if (currentPubkey == null) {
       yield {};

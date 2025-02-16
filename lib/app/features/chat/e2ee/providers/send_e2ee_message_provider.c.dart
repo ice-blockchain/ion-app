@@ -47,7 +47,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
     wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
     ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
-    currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '',
+    currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider) ?? '',
     eventMessageDao: ref.watch(conversationEventMessageDaoProvider),
     mediaEncryptionService: ref.watch(mediaEncryptionServiceProvider),
     conversationMessageStatusDao: ref.watch(conversationMessageStatusDaoProvider),

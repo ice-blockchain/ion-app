@@ -40,7 +40,7 @@ Future<FollowListEntity?> followList(
 
 @Riverpod(keepAlive: true)
 Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
-  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
     return null;
   }
@@ -59,7 +59,7 @@ bool isCurrentUserFollowingSelector(Ref ref, String pubkey) {
 
 @riverpod
 bool isCurrentUserFollowed(Ref ref, String pubkey) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   return ref.watch(
     followListProvider(pubkey).select(
       (state) =>

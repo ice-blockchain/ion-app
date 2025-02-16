@@ -51,7 +51,7 @@ class Count extends _$Count {
     required NostrRelay relay,
     required List<RequestFilter> filters,
   }) async {
-    final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }

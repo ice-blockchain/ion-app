@@ -17,7 +17,7 @@ class PullRightMenuPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull ?? '';
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider) ?? '';
 
     return Material(
       color: context.theme.appColors.secondaryBackground,

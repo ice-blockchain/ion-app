@@ -62,6 +62,7 @@ Future<String?> _mainRedirect({
   final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
+  final hasUserMetadata = ref.read(currentUserMetadataProvider).valueOrNull != null;
 
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
@@ -71,8 +72,8 @@ Future<String?> _mainRedirect({
     return IntroRoute().location;
   }
 
-  if (isAuthenticated && onboardingComplete != null || isAuthenticated && isOnAuth) {
-    if (onboardingComplete != null && onboardingComplete) {
+  if (isAuthenticated && onboardingComplete != null) {
+    if (onboardingComplete) {
       if (isOnSplash || isOnAuth) {
         return FeedRoute().location;
       } else if (isOnOnboarding) {
@@ -84,12 +85,8 @@ Future<String?> _mainRedirect({
       }
     }
 
-    if ((onboardingComplete == null || !onboardingComplete) && !isOnOnboarding) {
-      if (location == FeedRoute().location) {
-        return null;
-      }
-      final userMetadata = await ref.read(currentUserMetadataProvider.future);
-      if (userMetadata != null) {
+    if (!onboardingComplete && !isOnOnboarding) {
+      if (hasUserMetadata) {
         ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowLinkNewDeviceDialogEvent());
         return FeedRoute().location;
       }

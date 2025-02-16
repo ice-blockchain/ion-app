@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
@@ -27,15 +28,14 @@ Future<UserMetadataEntity?> userMetadata(
 
 @Riverpod(keepAlive: true)
 Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
-  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
     return null;
   }
 
   try {
     return await ref.watch(userMetadataProvider(currentPubkey).future);
-    // need not throw any exceptions from here or some flows with redirect which rely on it can get stuck
-  } catch (_) {
+  } on UserRelaysNotFoundException catch (_) {
     return null;
   }
 }

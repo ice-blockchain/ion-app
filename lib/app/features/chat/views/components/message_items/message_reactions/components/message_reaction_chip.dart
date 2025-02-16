@@ -13,7 +13,7 @@ class _MessageReactionChip extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubKey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+    final currentPubKey = ref.watch(currentPubkeySelectorProvider);
 
     final isCurrentUserHasReaction = useMemoized(
       () => pubkeys.contains(currentPubKey),

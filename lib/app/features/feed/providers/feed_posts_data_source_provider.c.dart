@@ -28,7 +28,7 @@ part 'feed_posts_data_source_provider.c.g.dart';
 List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   final filters = ref.watch(feedCurrentFilterProvider);
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays != null && currentPubkey != null) {
     return [

@@ -33,7 +33,7 @@ FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
     );
   }
 
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
     throw UserMasterPubkeyNotFoundException();

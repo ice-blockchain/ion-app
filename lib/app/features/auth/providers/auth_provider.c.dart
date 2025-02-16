@@ -82,15 +82,18 @@ String? currentIdentityKeyNameSelector(Ref ref) {
 }
 
 @riverpod
-Future<String?> currentPubkeySelector(Ref ref) async {
-  final mainWallet = await ref.watch(mainWalletProvider.future);
+String? currentPubkeySelector(Ref ref) {
+  final currentIdentityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentIdentityKeyName == null) {
+    return null;
+  }
+  final mainWallet = ref.watch(mainWalletProvider).valueOrNull;
   return mainWallet?.signingKey.publicKey;
 }
 
 @riverpod
 bool isCurrentUserSelector(Ref ref, String pubkey) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
-
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   return currentPubkey == pubkey;
 }
 
