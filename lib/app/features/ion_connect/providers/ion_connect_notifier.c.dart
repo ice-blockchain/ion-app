@@ -58,11 +58,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayCreationProvider.notifier)
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
-        if (isRelayAuthError(error)) {
-          await ref.read(relayAuthProvider(relay!).notifier).sendAuthEvent();
-        }
+        await ref
+            .read(relayAuthProvider(relay!).notifier)
+            .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
-        await ref.read(relayAuthProvider(relay!)).completer.future;
         await relay!.sendEvents(events);
 
         if (cache) {
@@ -126,11 +125,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayCreationProvider.notifier)
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
-        if (isRelayAuthError(error)) {
-          await ref.read(relayAuthProvider(relay!).notifier).sendAuthEvent();
-        }
-
-        await ref.read(relayAuthProvider(relay!)).completer.future;
+        await ref
+            .read(relayAuthProvider(relay!).notifier)
+            .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
         final events = subscriptionBuilder != null
             ? subscriptionBuilder(requestMessage, relay!)

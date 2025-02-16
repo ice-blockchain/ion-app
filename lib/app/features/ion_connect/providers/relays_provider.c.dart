@@ -21,7 +21,7 @@ class Relay extends _$Relay with RelayTimerMixin, RelayAuthMixin, RelayCloseMixi
     initializeRelayTimer(relay, ref);
 
     if (!anonymous) {
-      unawaited(initializeAuth(relay, ref));
+      await initializeAuth(relay, ref);
       initializeCloseListener(relay, ref);
     }
 
