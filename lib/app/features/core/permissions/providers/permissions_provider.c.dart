@@ -81,3 +81,6 @@ bool isPermanentlyDenied(Ref ref, Permission permissionType) {
 
   return permissionStatus == PermissionStatus.permanentlyDenied;
 }
+
+final isRequestingPermissionProvider =
+    StateProvider.family<bool, Permission>((ref, permission) => false);

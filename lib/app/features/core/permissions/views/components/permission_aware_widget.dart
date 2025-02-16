@@ -25,11 +25,12 @@ class PermissionAwareWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hasPermission = ref.watch(hasPermissionProvider(permissionType));
+    final isRequestingPermission = ref.watch(isRequestingPermissionProvider(permissionType));
 
     ref.listen<bool>(
       hasPermissionProvider(permissionType),
       (previous, next) {
-        if (next && context.mounted) {
+        if (next && isRequestingPermission && context.mounted) {
           onGranted();
         }
       },
@@ -45,6 +46,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     final isPermanentlyDenied = ref.read(isPermanentlyDeniedProvider(permissionType));
     final permissionsNotifier = ref.read(permissionsProvider.notifier);
     final permissionStrategy = ref.read(permissionStrategyProvider(permissionType));
+    final isRequestingNotifier = ref.read(isRequestingPermissionProvider(permissionType).notifier);
 
     if (!context.mounted) return;
 
@@ -64,7 +66,9 @@ class PermissionAwareWidget extends ConsumerWidget {
       );
 
       if (shouldRequest ?? false) {
+        isRequestingNotifier.state = true;
         await permissionsNotifier.requestPermission(permissionType);
+        isRequestingNotifier.state = false;
       }
     }
   }
