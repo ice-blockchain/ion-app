@@ -19,7 +19,7 @@ class CoinIdButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinDataResult = ref.watch(coinInWalletByIdProvider(coinId: coinId));
+    final coinDataResult = ref.watch(coinInWalletByAbbreviationProvider(coinAbbreviation: coinId));
 
     return coinDataResult.maybeWhen(
       data: (coinInWallet) => CoinButton(

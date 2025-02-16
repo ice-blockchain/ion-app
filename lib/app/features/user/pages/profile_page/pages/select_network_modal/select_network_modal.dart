@@ -19,14 +19,14 @@ class SelectNetworkModal extends StatelessWidget {
   const SelectNetworkModal({
     required this.pubkey,
     required this.type,
-    required this.coinId,
+    required this.coinAbbreviation,
     required this.paymentType,
     super.key,
   });
 
   final String pubkey;
   final SelectNetworkModalType type;
-  final String coinId;
+  final String coinAbbreviation;
   final PaymentType paymentType;
 
   @override
@@ -40,13 +40,13 @@ class SelectNetworkModal extends StatelessWidget {
                 case PaymentType.send:
                   SendCoinsFormRoute(
                     pubkey: pubkey,
-                    coinId: coinId,
+                    coinAbbreviation: coinAbbreviation,
                     networkType: networkType,
                   ).replace(context);
                 case PaymentType.receive:
                   RequestCoinsFormRoute(
                     pubkey: pubkey,
-                    coinId: coinId,
+                    coinId: coinAbbreviation,
                     networkType: networkType,
                   ).replace(context);
               }
@@ -54,7 +54,7 @@ class SelectNetworkModal extends StatelessWidget {
               context.pop(networkType);
           }
         },
-        coinId: coinId,
+        coinAbbreviation: coinAbbreviation,
         title: context.i18n.wallet_choose_network,
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,

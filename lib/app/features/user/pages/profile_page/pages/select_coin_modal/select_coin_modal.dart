@@ -42,7 +42,7 @@ class SelectCoinModal extends ConsumerWidget {
               SelectNetworkRoute(
                 paymentType: paymentType,
                 pubkey: pubkey,
-                coinId: group.abbreviation,
+                coinAbbreviation: group.abbreviation,
                 selectNetworkModalType: SelectNetworkModalType.select,
               ).replace(context);
             case SelectCoinModalType.update:

@@ -88,7 +88,7 @@ class SendCoinsForm extends HookConsumerWidget {
                     SizedBox(height: 12.0.s),
                     CoinAmountInput(
                       controller: amountController,
-                      coinId: formController.selectedCoin!.coin.abbreviation,
+                      coinAbbreviation: formController.selectedCoin!.coin.abbreviation,
                       showApproximateInUsd: false,
                     ),
                     SizedBox(height: 17.0.s),
