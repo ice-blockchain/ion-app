@@ -67,6 +67,7 @@ Future<String?> _mainRedirect({
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
+  final isOnFeed = location == FeedRoute().location;
 
   if (!isAuthenticated && !isOnAuth) {
     return IntroRoute().location;
@@ -85,12 +86,13 @@ Future<String?> _mainRedirect({
       }
     }
 
-    if (!onboardingComplete && !isOnOnboarding) {
-      if (hasUserMetadata) {
-        ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowLinkNewDeviceDialogEvent());
-        return FeedRoute().location;
-      }
+    if (!onboardingComplete && !isOnOnboarding && !hasUserMetadata) {
       return FillProfileRoute().location;
+    }
+
+    if (!onboardingComplete && !isOnFeed && hasUserMetadata) {
+      ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowLinkNewDeviceDialogEvent());
+      return FeedRoute().location;
     }
   }
   return null;
