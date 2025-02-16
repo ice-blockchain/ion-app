@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/conversation_edit_bottom_bar.dart';
@@ -111,7 +112,13 @@ class _BottomNavBarContent extends ConsumerWidget {
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 9.0.s),
                       color: context.theme.appColors.secondaryBackground,
-                      child: tabItem.getIcon(isSelected: isSelected),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          tabItem.getIcon(isSelected: isSelected),
+                          if (tabItem == TabItem.chat) const _UnreadMessagesCounter(),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -121,6 +128,40 @@ class _BottomNavBarContent extends ConsumerWidget {
         ),
         if (conversationsEditMode && currentTab == TabItem.chat) const ConversationEditBottomBar(),
       ],
+    );
+  }
+}
+
+class _UnreadMessagesCounter extends ConsumerWidget {
+  const _UnreadMessagesCounter();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadMessagesCount = ref.watch(getAllUnreadMessagesCountProvider).valueOrNull ?? 0;
+
+    if (unreadMessagesCount == 0) {
+      return const SizedBox();
+    }
+    return Positioned(
+      top: 10.0.s,
+      right: 22.0.s,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 3.0.s, vertical: 2.0.s),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0.s),
+          color: context.theme.appColors.attentionRed,
+        ),
+        constraints: BoxConstraints(
+          minWidth: 16.0.s,
+        ),
+        child: Text(
+          '$unreadMessagesCount',
+          textAlign: TextAlign.center,
+          style: context.theme.appTextThemes.notificationCaption.copyWith(
+            color: context.theme.appColors.primaryBackground,
+          ),
+        ),
+      ),
     );
   }
 }

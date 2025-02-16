@@ -6,35 +6,46 @@ part of '../chat_database.c.dart';
 ConversationMessageDao conversationMessageDao(Ref ref) =>
     ConversationMessageDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [ConversationMessageTable, EventMessageTable])
+@DriftAccessor(
+  tables: [
+    ConversationMessageTable,
+    EventMessageTable,
+    MessageStatusTable,
+  ],
+)
 class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageDaoMixin {
   ConversationMessageDao(super.db);
 
-  /// Get a stream of the count of unread messages for a conversation
-  ///
-  /// Takes a [conversationId] and returns a [Stream] of integers representing
-  /// the count of unread messages in that conversation.
-  ///
-  /// Only counts non-deleted messages in the specified conversation.
-  /// TODO: integrate message_status table to properly track read/unread status
-  Stream<int> getUnreadMessagesCount(String conversationId) {
-    // final query = select(conversationMessageTable)
-    //   ..where((tbl) => tbl.conversationId.equals(conversationId));
+  Stream<int> getUnreadMessagesCount({
+    required String conversationId,
+    required String currentUserMasterPubkey,
+  }) {
+    final query = select(conversationMessageTable).join([
+      innerJoin(
+        eventMessageTable,
+        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
+      ),
+      innerJoin(
+        messageStatusTable,
+        messageStatusTable.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
+      ),
+    ])
+      ..where(conversationMessageTable.conversationId.equals(conversationId))
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
 
-    // return query.watch().map((rows) {
-    //   return rows.length;
-    // });
-    //TODO: implement with message_status table
-    return Stream.value(0);
+    return query.watch().map((rows) => rows.length);
   }
 
-  /// Get a stream of messages for a conversation
-  ///
-  /// Takes a [conversationId] and returns a [Stream] of [EventMessage] objects
-  /// representing the messages in that conversation.
-  ///
-  /// Only includes non-deleted messages in the specified conversation.
+  Stream<int> getAllUnreadMessagesCount(String currentUserMasterPubkey) {
+    final query = select(messageStatusTable)
+      ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
+      ..where((table) => table.masterPubkey.equals(currentUserMasterPubkey));
+
+    return query.watch().map((rows) => rows.length);
+  }
+
   Stream<Map<DateTime, List<EventMessage>>> getMessages(String conversationId) {
     final query = select(conversationMessageTable).join([
       innerJoin(

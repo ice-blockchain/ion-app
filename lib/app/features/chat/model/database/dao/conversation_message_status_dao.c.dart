@@ -11,7 +11,7 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationMessageStatusDaoMixin {
   ConversationMessageStatusDao(super.db);
 
-  Future<void> updateConversationMessageStatusData({
+  Future<void> add({
     required String masterPubkey,
     required String eventMessageId,
     required MessageDeliveryStatus status,
@@ -108,6 +108,21 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
 
       return MessageDeliveryStatus.created;
     });
+  }
+
+  Future<MessageDeliveryStatus?> checkMessageStatus({
+    required String masterPubkey,
+    required String eventMessageId,
+  }) async {
+    final existingStatus = (select(messageStatusTable)
+          ..where((table) => table.masterPubkey.equals(masterPubkey))
+          ..where(
+            (table) => table.eventMessageId.equals(eventMessageId),
+          ))
+        .getSingleOrNull()
+        .then((value) => value?.status);
+
+    return existingStatus;
   }
 }
 

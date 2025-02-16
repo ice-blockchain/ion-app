@@ -215,23 +215,16 @@ class SendE2eeMessageService {
       throw ParticipantsMasterPubkeysNotFoundException(kind14Rumor.id);
     }
 
-    final participantsKeysMap =
-        await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
-
     await Future.wait(
       participantsMasterPubkeys.map((masterPubkey) async {
-        final pubkey = participantsKeysMap[masterPubkey];
-
-        if (pubkey == null) {
-          throw UserPubkeyNotFoundException(masterPubkey);
-        }
+        final currentUser = currentUserMasterPubkey == masterPubkey;
 
         final giftWrap = await _createGiftWrap(
           signer: eventSigner!,
           eventMessage: eventMessage,
-          receiverPubkey: kind14Rumor.pubkey,
           receiverMasterPubkey: masterPubkey,
           kind: PrivateMessageReactionEntity.kind,
+          receiverPubkey: currentUser ? eventSigner!.publicKey : kind14Rumor.pubkey,
         );
 
         await ionConnectNotifier.sendEvent(
@@ -268,7 +261,7 @@ class SendE2eeMessageService {
         await eventMessageDao.add(eventMessage);
       }
 
-      await conversationMessageStatusDao.updateConversationMessageStatusData(
+      await conversationMessageStatusDao.add(
         masterPubkey: masterPubkey,
         eventMessageId: eventMessage.id,
         status: MessageDeliveryStatus.created,
@@ -280,13 +273,13 @@ class SendE2eeMessageService {
         actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
       );
 
-      await conversationMessageStatusDao.updateConversationMessageStatusData(
+      await conversationMessageStatusDao.add(
         masterPubkey: masterPubkey,
         eventMessageId: eventMessage.id,
         status: MessageDeliveryStatus.sent,
       );
     } catch (e) {
-      await conversationMessageStatusDao.updateConversationMessageStatusData(
+      await conversationMessageStatusDao.add(
         masterPubkey: masterPubkey,
         eventMessageId: eventMessage.id,
         status: MessageDeliveryStatus.failed,

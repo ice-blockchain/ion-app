@@ -108,6 +108,10 @@
       "caption4": {
         "fontSize": 10,
         "fontWeight": 500
+      },
+      "notificationCaption": {
+        "fontSize": 6,
+        "fontWeight": 700
       }
     },
     "appBar": {
