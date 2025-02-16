@@ -45,7 +45,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getAndActivateRelay(relays.random, actionSource.anonymous);
+        return _getRelay(relays.random, actionSource.anonymous);
 
       case ActionSourceCurrentUserChat():
         final pubkey = ref.read(currentPubkeySelectorProvider);
@@ -67,7 +67,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getAndActivateRelay(relays.random, actionSource.anonymous);
+        return _getRelay(relays.random, actionSource.anonymous);
 
       case ActionSourceUser():
         final userRelays =
@@ -85,7 +85,7 @@ class RelayCreation extends _$RelayCreation {
 
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getAndActivateRelay(relays.random, actionSource.anonymous);
+        return _getRelay(relays.random, actionSource.anonymous);
 
       case ActionSourceUserChat():
         final userChatRelays = await _getUserChatRelays(actionSource.pubkey);
@@ -100,7 +100,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getAndActivateRelay(relays.random, actionSource.anonymous);
+        return _getRelay(relays.random, actionSource.anonymous);
 
       case ActionSourceIndexers():
         final indexers = await ref.read(currentUserIndexersProvider.future);
@@ -117,7 +117,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getAndActivateRelay(relays.random, actionSource.anonymous);
+        return _getRelay(relays.random, actionSource.anonymous);
 
       case ActionSourceRelayUrl():
         final relay = actionSource.url;
@@ -129,7 +129,7 @@ class RelayCreation extends _$RelayCreation {
         );
         if (lastUsedRelays != null) return lastUsedRelays;
 
-        return _getAndActivateRelay(relay, actionSource.anonymous);
+        return _getRelay(relay, actionSource.anonymous);
     }
   }
 
@@ -154,10 +154,8 @@ class RelayCreation extends _$RelayCreation {
     );
   }
 
-  Future<IonConnectRelay> _getAndActivateRelay(String url, bool anonymous) async {
-    final selectedRelay = await ref.read(relayProvider(url, anonymous: anonymous).future);
-    ref.read(activeRelaysProvider.notifier).addRelay(selectedRelay.url);
-    return selectedRelay;
+  Future<IonConnectRelay> _getRelay(String url, bool anonymous) async {
+    return await ref.read(relayProvider(url, anonymous: anonymous).future);
   }
 
   Future<UserRelaysEntity> _getUserRelays(String pubkey) async {

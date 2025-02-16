@@ -37,8 +37,6 @@ mixin RelayTimerMixin {
   ) {
     if (_subscribersLength == 0 && !_timer.isActive) {
       _timer.cancel();
-      relay.close();
-
       onInvalidate();
     }
   }
