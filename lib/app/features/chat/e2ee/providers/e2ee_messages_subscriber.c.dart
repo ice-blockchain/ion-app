@@ -36,9 +36,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       throw EventSignerNotFoundException();
     }
 
-    final latestEventMessageDate = await ref
-        .watch(conversationEventMessageDaoProvider)
-        .getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
+    final latestEventMessageDate =
+        await ref.watch(conversationEventMessageDaoProvider).getLatestEventMessageDate(PrivateDirectMessageEntity.kind);
 
     final sinceDate = latestEventMessageDate?.add(const Duration(days: -2));
 
@@ -93,13 +92,10 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             rumor.kind == PrivateMessageReactionEntity.kind) {
           // Try to get kind 14 event id from related event tag or use the rumor id
           final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
-              ? rumor.tags
-                  .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
-                  ?.elementAtOrNull(1)
+              ? rumor.tags.firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)?.elementAtOrNull(1)
               : rumor.id;
           // Try to get sender master pubkey from tags ('b' tag present in all events)
-          final rumorMasterPubkey =
-              rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
+          final rumorMasterPubkey = rumor.tags.firstWhereOrNull((tags) => tags[0] == 'b')?.elementAtOrNull(1);
 
           if (kind14EventId == null || rumorMasterPubkey == null) {
             throw ReceiverDevicePubkeyNotFoundException(rumor.id);
@@ -114,23 +110,18 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             // If user received another user message add "received" status
             // for them both into the database, we don't know anything about
             // other users in the conversation
-            final sendTo = {masterPubkey, rumorMasterPubkey};
+            //final sendTo = {masterPubkey, rumorMasterPubkey};
 
-            for (final participantMasterPubkey in sendTo) {
-              await conversationMessageStatusDao.add(
-                createdAt: rumor.createdAt,
-                eventMessageId: kind14EventId,
-                status: MessageDeliveryStatus.received,
-                masterPubkey: participantMasterPubkey,
-              );
-            }
             // Notify rest of the participants that the message was received
-            // by the current user, no need to wait for the response cause we
-            // are not sure if message will be delivered
-            // TODO: Improve and do not send every time when kind 14 is received
-            unawaited(
-              sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received),
+            // by the current user
+            final currentStatus = await conversationMessageStatusDao.checkMessageStatus(
+              masterPubkey: masterPubkey,
+              eventMessageId: kind14EventId,
             );
+
+            if (currentStatus == null || currentStatus.index < MessageDeliveryStatus.received.index) {
+              await sendE2eeMessageService.sendMessageStatus(rumor, MessageDeliveryStatus.received);
+            }
 
             // Only for kind 7
           } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
