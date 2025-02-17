@@ -8,8 +8,6 @@ class Network {
   Network.ion() : name = 'Ion';
   Network.ethereum() : name = 'Ethereum';
 
-  /// Unique identifier for the network, used internally for comparison and identification.
-  /// This field should not be displayed to users or used in the client-server communication.
   final String name;
 
   String get svgIconAsset {
