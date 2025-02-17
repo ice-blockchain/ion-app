@@ -87,4 +87,8 @@ bool isPermanentlyDenied(Ref ref, Permission permissionType) {
 class ActivePermissionRequestId extends _$ActivePermissionRequestId {
   @override
   String? build(String compositeKey) => null;
+
+  set requestId(String? value) {
+    state = value;
+  }
 }

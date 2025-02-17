@@ -58,7 +58,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     WidgetRef ref,
     String compositeKey,
   ) async {
-    ref.read(activePermissionRequestIdProvider(compositeKey).notifier).state = requestId;
+    ref.read(activePermissionRequestIdProvider(compositeKey).notifier).requestId = requestId;
 
     final isPermanentlyDenied = ref.read(isPermanentlyDeniedProvider(permissionType));
     final permissionsNotifier = ref.read(permissionsProvider.notifier);
