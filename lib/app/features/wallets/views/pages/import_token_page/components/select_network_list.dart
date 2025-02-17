@@ -61,7 +61,7 @@ class _NetworkItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListItem(
       leading: network.svgIconAsset.icon(size: 36.0.s),
-      title: Text(network.displayName),
+      title: Text(network.name),
       backgroundColor: context.theme.appColors.tertararyBackground,
       onTap: () => Navigator.of(context).pop(network),
     );

@@ -49,7 +49,7 @@ class NetworkButton extends StatelessWidget {
                 SizedBox(width: 10.0.s),
                 Expanded(
                   child: Text(
-                    networkType.displayName,
+                    networkType.name,
                     style: textTheme.body,
                   ),
                 ),

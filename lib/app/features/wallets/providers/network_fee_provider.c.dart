@@ -31,7 +31,7 @@ Future<NetworkFeeInformation?> networkFee(
 
   final client = await ref.read(ionIdentityClientProvider.future);
 
-  final estimateFees = await client.networks.getEstimateFees(network: network.serverName);
+  final estimateFees = await client.networks.getEstimateFees(network: network.name);
   final walletAssets =
       await client.wallets.getWalletAssets(walletId).then((result) => result.assets);
 

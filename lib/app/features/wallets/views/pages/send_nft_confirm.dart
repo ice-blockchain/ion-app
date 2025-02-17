@@ -70,7 +70,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(context.i18n.send_nft_confirm_network),
-                    value: formData.network.displayName,
+                    value: formData.network.name,
                     icon: Assets.svg.networks.walletEth.icon(size: 16.0.s),
                   ),
                   SizedBox(height: 12.0.s),

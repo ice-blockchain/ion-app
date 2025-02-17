@@ -160,8 +160,7 @@ class WalletViewsService {
         final associatedWallet = aggregation.wallets.firstWhereOrNull(
           (e) => e.walletId == coinInWalletDTO.walletId && e.coinId == coinInWalletDTO.coin.id,
         );
-        if (associatedWallet != null &&
-            associatedWallet.network.toLowerCase() == coinInWalletDTO.coin.network.toLowerCase()) {
+        if (associatedWallet != null && associatedWallet.network == coinInWalletDTO.coin.network) {
           return aggregation;
         }
       }

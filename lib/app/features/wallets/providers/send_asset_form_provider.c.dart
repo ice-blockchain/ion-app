@@ -53,7 +53,7 @@ class SendAssetFormController extends _$SendAssetFormController {
   Future<void> setNetwork(Network network) async {
     final wallets = await ref.read(walletsNotifierProvider.future);
     final wallet = wallets.firstWhereOrNull(
-      (wallet) => wallet.network.toLowerCase() == network.id.toLowerCase(),
+      (wallet) => wallet.network == network.name,
     );
 
     // Reset current information about network

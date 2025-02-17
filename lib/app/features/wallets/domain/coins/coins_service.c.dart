@@ -39,25 +39,20 @@ class CoinsService {
     String? symbol,
     Network? network,
     String? contractAddress,
-  }) async {
-    return _coinsRepository
-        .getCoinsByFilters(
-          symbolGroup: symbolGroup,
-          symbol: symbol,
-          network: network?.id,
-          contractAddress: contractAddress,
-        )
-        .then((result) => result.map(CoinData.fromDB));
-  }
+  }) =>
+      _coinsRepository
+          .getCoinsByFilters(
+            symbolGroup: symbolGroup,
+            symbol: symbol,
+            network: network?.name,
+            contractAddress: contractAddress,
+          )
+          .then((result) => result.map(CoinData.fromDB));
 
   Future<Iterable<CoinData>> getSyncedCoinsBySymbolGroup(String symbolGroup) {
     return _ionIdentityClient.coins.getCoinsBySymbolGroup(symbolGroup).then(
-      (coins) {
-        return coins
-            .where((e) => Network.allowedNetworkIds.contains(e.network.toLowerCase()))
-            .map(CoinData.fromDTO);
-      },
-    );
+          (coins) => coins.where((e) => Network.allowed.contains(e.network)).map(CoinData.fromDTO),
+        );
   }
 
   Future<SendCoinsResult> send({

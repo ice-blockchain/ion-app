@@ -57,7 +57,7 @@ class TransactionListHeaderItem extends StatelessWidget {
                 width: 6.0.s,
               ),
               Text(
-                network.displayName,
+                network.name,
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: _getTextColor(context),
                 ),

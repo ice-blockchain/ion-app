@@ -115,7 +115,7 @@ class TransactionDetailsPage extends ConsumerWidget {
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
-                      value: formData.network.displayName,
+                      value: formData.network.name,
                       icon: formData.network.svgIconAsset.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),

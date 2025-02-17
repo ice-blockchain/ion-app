@@ -26,14 +26,14 @@ import 'package:ion/generated/assets.gen.dart';
 class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
     required this.pubkey,
-    required this.networkId,
+    required this.networkName,
     required this.coinAbbreviation,
     super.key,
   });
 
   final String pubkey;
   final String coinAbbreviation;
-  final String networkId;
+  final String networkName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final selectedNetwork = useState(Network(id: networkId));
+    final selectedNetwork = useState(Network(name: networkName));
     final selectedCoinAbbreviation = useState(coinAbbreviation);
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);

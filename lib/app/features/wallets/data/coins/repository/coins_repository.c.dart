@@ -39,7 +39,7 @@ class CoinsRepository {
 
   Future<void> updateCoins(List<Coin> coins) async {
     final coinsToInsert = coins.where(
-      (coin) => Network.allowedNetworkIds.contains(coin.network.toLowerCase()),
+      (coin) => Network.allowed.contains(coin.network),
     );
     await _coinsDao.upsertAll(coinsToInsert.toList());
   }

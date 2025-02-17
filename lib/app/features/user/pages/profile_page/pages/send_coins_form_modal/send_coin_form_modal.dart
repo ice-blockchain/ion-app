@@ -27,13 +27,13 @@ import 'package:ion/generated/assets.gen.dart';
 class SendCoinFormModal extends HookConsumerWidget {
   const SendCoinFormModal({
     required this.pubkey,
-    required this.networkId,
+    required this.networkName,
     required this.coinAbbreviation,
     super.key,
   });
 
   final String pubkey;
-  final String networkId;
+  final String networkName;
   final String coinAbbreviation;
 
   @override
@@ -42,7 +42,7 @@ class SendCoinFormModal extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final selectedNetworkType = useState(Network(id: networkId));
+    final selectedNetworkType = useState(Network(name: networkName));
     final selectedCoinAbbreviation = useState(coinAbbreviation);
 
     final amountController = useTextEditingController(text: '');

@@ -45,7 +45,7 @@ class _CoinNetworkItem extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16.0.s),
                 ),
                 child: Text(
-                  network.displayName,
+                  network.name,
                   style: context.theme.appTextThemes.caption3.copyWith(
                     color: context.theme.appColors.quaternaryText,
                   ),

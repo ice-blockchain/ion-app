@@ -27,7 +27,7 @@ class TokenDataNotifier extends _$TokenDataNotifier {
       final ionIdentity = await ref.read(ionIdentityClientProvider.future);
       final coin = await ionIdentity.coins.getCoinData(
         contractAddress: tokenAddress,
-        network: network.id,
+        network: network.name,
       );
 
       return CoinData.fromDTO(coin);

@@ -79,7 +79,7 @@ class FilteredNftsNetworkNotifier extends _$FilteredNftsNetworkNotifier {
         }
 
         final filteredNetworks = allNetworks
-            .where((network) => network.network.id.toLowerCase().contains(query))
+            .where((network) => network.network.name.toLowerCase().contains(query))
             .toSet();
 
         return AsyncData(filteredNetworks);

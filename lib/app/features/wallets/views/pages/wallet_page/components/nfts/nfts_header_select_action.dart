@@ -26,7 +26,7 @@ class NftHeaderSelectAction extends ConsumerWidget {
     }
 
     // TODO: All item is not implemented
-    return selectedNftNetworks.map((e) => e.network.displayName).join(', ');
+    return selectedNftNetworks.map((e) => e.network.name).join(', ');
     // return selectedNftNetworks.any(
     //   (ManageNftNetworkData network) => network.networkType == NetworkType.all,
     // )

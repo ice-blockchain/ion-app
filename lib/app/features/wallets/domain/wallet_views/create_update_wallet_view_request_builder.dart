@@ -64,12 +64,12 @@ class _CreateUpdateRequestBuilder {
 
     final networkWithWallet = <String, List<Wallet>>{};
     for (final wallet in userWallets) {
-      final network = wallet.network.toLowerCase();
+      final network = wallet.network;
       networkWithWallet.putIfAbsent(network, () => []).add(wallet);
     }
 
     for (final coin in coins) {
-      final wallets = networkWithWallet[coin.network.id.toLowerCase()];
+      final wallets = networkWithWallet[coin.network.name];
       final walletId = wallets?.firstWhereOrNull((wallet) => wallet.name == walletView?.id)?.id;
       symbolGroups.add(coin.symbolGroup);
       walletViewItems.add(
