@@ -28,6 +28,7 @@ class ManageCoinsPage extends HookConsumerWidget {
     final searchResult = ref.watch(searchCoinsNotifierProvider);
     final manageCoins = ref.watch(manageCoinsNotifierProvider);
 
+    useEffect(() => ref.read(manageCoinsNotifierProvider.notifier).save, []);
     useOnInit(
       () => searchCoinsNotifier.search(query: searchText.value),
       [searchText.value],
