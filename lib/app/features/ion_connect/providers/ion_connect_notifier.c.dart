@@ -18,6 +18,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
@@ -37,13 +38,23 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
     IonConnectRelay? relay,
   }) async {
+    final excludedKinds = [IonConnectGiftWrapServiceImpl.kind];
+    for (final event in events) {
+      if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
+        Logger.log(
+          'Event ${event.id} of kind ${event.kind} does not contain master pubkey tag',
+          error: EventMasterPubkeyNotFoundException(eventId: event.id),
+          stackTrace: StackTrace.current,
+        );
+      }
+    }
+
     final dislikedRelaysUrls = <String>{};
 
     return withRetry(
       ({error}) async {
-        relay ??= await ref
-            .read(relayCreationProvider.notifier)
-            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay ??=
+            await ref.read(relayCreationProvider.notifier).getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
           await sendAuthEvent(relay!);
@@ -154,17 +165,14 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   Stream<EventMessage> requestEvents(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
-    Stream<RelayMessage> Function(RequestMessage requestMessage, NostrRelay relay)?
-        subscriptionBuilder,
+    Stream<RelayMessage> Function(RequestMessage requestMessage, NostrRelay relay)? subscriptionBuilder,
   }) async* {
     final dislikedRelaysUrls = <String>{};
     IonConnectRelay? relay;
 
     yield* withRetryStream(
       ({error}) async* {
-        relay = await ref
-            .read(relayCreationProvider.notifier)
-            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay = await ref.read(relayCreationProvider.notifier).getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
           try {
@@ -267,12 +275,11 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       content: '',
     );
 
-    final signResponse =
-        await ionIdentity(username: currentIdentityKeyName).wallets.generateHashSignature(
-              walletId: mainWallet.id,
-              hash: eventId,
-              onVerifyIdentity: onVerifyIdentity,
-            );
+    final signResponse = await ionIdentity(username: currentIdentityKeyName).wallets.generateHashSignature(
+          walletId: mainWallet.id,
+          hash: eventId,
+          onVerifyIdentity: onVerifyIdentity,
+        );
 
     final curveName = switch (mainWallet.signingKey.curve) {
       'ed25519' => 'curve25519',
@@ -280,8 +287,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     };
 
     final signaturePrefix = '${mainWallet.signingKey.scheme}/$curveName'.toLowerCase();
-    final signatureBody =
-        '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
+    final signatureBody = '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
     final signature = '$signaturePrefix:$signatureBody';
 
     return EventMessage(
