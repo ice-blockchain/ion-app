@@ -18,6 +18,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/utils/retry.dart';
@@ -37,6 +38,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
     IonConnectRelay? relay,
   }) async {
+    final excludedKinds = [IonConnectGiftWrapServiceImpl.kind];
+    for (final event in events) {
+      if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
+        Logger.log(
+          'Event ${event.id} of kind ${event.kind} does not contain master pubkey tag',
+          error: EventMasterPubkeyNotFoundException(eventId: event.id),
+          stackTrace: StackTrace.current,
+        );
+      }
+    }
+
     final dislikedRelaysUrls = <String>{};
 
     return withRetry(

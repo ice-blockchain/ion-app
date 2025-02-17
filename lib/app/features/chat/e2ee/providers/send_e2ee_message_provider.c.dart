@@ -342,8 +342,7 @@ class SendE2eeMessageService {
   }) async {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
-        // TODO:  Create GIFT_WRAP_EXPIRATION_TIME env variable
-        Duration(hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS)),
+        Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
       ),
     ).toTag();
 
@@ -405,7 +404,7 @@ class SendE2eeMessageService {
   ) {
     final expiration = EntityExpiration(
       value: DateTime.now().add(
-        Duration(hours: env.get<int>(EnvVariable.STORY_EXPIRATION_HOURS)),
+        Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
       ),
     );
 
