@@ -137,7 +137,7 @@ class Network {
     'xrpledgertestnet',
   };
 
-  static List<Network> get all => Network.allowedNetworkIds.map((e) => Network(id: e)).toList();
+  static final List<Network> all = Network.allowedNetworkIds.map((e) => Network(id: e)).toList();
 
   static const _testnets = {
     'iontestnet',

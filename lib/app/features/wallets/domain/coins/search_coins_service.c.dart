@@ -35,7 +35,7 @@ class SearchCoinsService {
           ),
         )
         .toList()
-      ..sort(_comparator.compareGroups);
+        .sorted(_comparator.compareGroups);
     return result;
   }
 }

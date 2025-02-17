@@ -140,7 +140,7 @@ class WalletViewsService {
     }
 
     return WalletViewData(
-      coinGroups: coinGroups.values.toList()..sort(CoinsComparator().compareGroups),
+      coinGroups: coinGroups.values.toList().sorted(CoinsComparator().compareGroups),
       id: viewDTO.id,
       name: viewDTO.name,
       symbolGroups: symbolGroups,
