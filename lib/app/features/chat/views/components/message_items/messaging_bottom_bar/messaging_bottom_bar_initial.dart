@@ -20,22 +20,20 @@ class BottomBarInitialView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
-    useEffect(
-      () {
-        void listener() {
-          if (controller.text.isEmpty) {
-            ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-          } else {
+    final onTextChanged = useCallback(
+      (String text) {
+        if (controller.text.isEmpty) {
+          ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+        } else {
+          final text = controller.text.trim();
+          if (text.isNotEmpty) {
             ref.read(messagingBottomBarActiveStateProvider.notifier).setHasText();
+          } else {
+            controller.clear();
           }
         }
-
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          controller.addListener(listener);
-        });
-        return () => controller.removeListener(listener);
       },
-      [],
+      [controller],
     );
 
     useEffect(
@@ -59,6 +57,7 @@ class BottomBarInitialView extends HookConsumerWidget {
           ),
           padding: EdgeInsets.fromLTRB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (bottomBarState.isMore)
                 GestureDetector(
@@ -96,9 +95,13 @@ class BottomBarInitialView extends HookConsumerWidget {
                     color: context.theme.appColors.primaryText,
                   ),
                   onTap: () {
-                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                    if (controller.text.isEmpty) {
+                      ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                    }
                   },
-                  maxLines: null,
+                  onChanged: onTextChanged,
+                  maxLines: 5,
+                  minLines: 1,
                   textInputAction: TextInputAction.newline,
                   decoration: InputDecoration(
                     isDense: true,
@@ -121,17 +124,14 @@ class BottomBarInitialView extends HookConsumerWidget {
                 ),
               ),
               SizedBox(width: 6.0.s),
-              AnimatedPadding(
-                duration: const Duration(milliseconds: 200),
-                padding: bottomBarState.isHasText ? EdgeInsets.only(right: 4.0.s) : EdgeInsets.zero,
-                child: Padding(
-                  padding: EdgeInsets.all(4.0.s),
+              if (!bottomBarState.isHasText)
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0.0.s, 4.0.s, 4.0.s, 4.0.s),
                   child: Assets.svg.iconCameraOpen.icon(
                     color: context.theme.appColors.primaryText,
                     size: 24.0.s,
                   ),
                 ),
-              ),
             ],
           ),
         ),
