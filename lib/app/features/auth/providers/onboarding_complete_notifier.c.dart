@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
@@ -41,18 +39,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
         // Build and cache user relays first because it is used to `sendEvents`, upload avatar
         final userRelaysEvent = await _buildAndCacheUserRelays(relayUrls: relayUrls);
 
-        final isDelegationComplete = await ref.read(delegationCompleteProvider.future);
+        // Send user delegation event in advance so all subsequent events pass delegation attestation
+        final userDelegationEvent = await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
 
-        // Handle the case when after delete account the delegation for the same identity key name stays on the BE
-        if (!isDelegationComplete.falseOrValue) {
-          // Send user delegation event in advance so all subsequent events pass delegation attestation
-          final userDelegationEvent =
-              await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
-
-          await ref
-              .read(ionConnectNotifierProvider.notifier)
-              .sendEvents([userDelegationEvent, userRelaysEvent]);
-        }
+        await ref
+            .read(ionConnectNotifierProvider.notifier)
+            .sendEvents([userDelegationEvent, userRelaysEvent]);
 
         final uploadedAvatar = await _uploadAvatar();
 
