@@ -15,11 +15,13 @@ class StoryInputField extends HookConsumerWidget {
   const StoryInputField({
     required this.controller,
     required this.bottomPadding,
+    required this.onSubmitted,
     super.key,
   });
 
   final TextEditingController controller;
   final double bottomPadding;
+  final ValueChanged<String?> onSubmitted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,8 +108,7 @@ class StoryInputField extends HookConsumerWidget {
                           child: ToolbarSendButton(
                             enabled: true,
                             onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              controller.clear();
+                              onSubmitted(controller.text);
                             },
                           ),
                         ),
