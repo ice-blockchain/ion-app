@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/date.dart';
 
 class ChatDateHeaderText extends StatelessWidget {
   const ChatDateHeaderText({
@@ -23,7 +24,11 @@ class ChatDateHeaderText extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0.s),
       ),
       child: Text(
-        DateFormat.MMMMd().format(date),
+        toPastDateDisplayValue(
+          date.millisecondsSinceEpoch,
+          context,
+          dateFormat: DateFormat.MMMMd(),
+        ),
         style: context.theme.appTextThemes.caption3.copyWith(
           color: context.theme.appColors.onTertararyBackground,
         ),
