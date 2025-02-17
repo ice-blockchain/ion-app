@@ -83,5 +83,8 @@ bool isPermanentlyDenied(Ref ref, Permission permissionType) {
   return permissionStatus == PermissionStatus.permanentlyDenied;
 }
 
-final activePermissionRequestIdProvider =
-    StateProvider.family<String?, String>((ref, compositeKey) => null);
+@riverpod
+class ActivePermissionRequestId extends _$ActivePermissionRequestId {
+  @override
+  String? build(String compositeKey) => null;
+}
