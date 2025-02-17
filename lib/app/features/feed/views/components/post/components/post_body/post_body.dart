@@ -20,11 +20,13 @@ class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.entity,
     this.isTextSelectable = false,
+    this.maxLines = 6,
     super.key,
   });
 
   final IonConnectEntity entity;
   final bool isTextSelectable;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,25 +48,73 @@ class PostBody extends HookConsumerWidget {
       [content],
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (content.isNotEmpty)
-          TextEditorPreview(
-            content: content,
-            enableInteractiveSelection: isTextSelectable,
-          ),
-        if (media.isNotEmpty)
-          Padding(
-            padding: EdgeInsets.only(top: 10.0.s),
-            child: PostMedia(media: media),
-          ),
-        if (firstLinkOperation != null)
-          Padding(
-            padding: EdgeInsets.only(top: 10.0.s),
-            child: UrlPreviewContent(url: firstLinkOperation.value as String),
-          ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxHeight = maxLines == null
+            ? null
+            : _calculateMaxHeight(
+                context,
+                text: Document.fromDelta(content).toPlainText(),
+                style: context.theme.appTextThemes.body2,
+                maxWidth: constraints.maxWidth,
+              );
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (content.isNotEmpty)
+              ClipRect(
+                child: SizedBox(
+                  height: maxHeight,
+                  child: TextEditorPreview(
+                    content: content,
+                    enableInteractiveSelection: isTextSelectable,
+                    scrollable: false,
+                  ),
+                ),
+              ),
+            if (maxHeight != null)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  context.i18n.common_show_more,
+                  style: context.theme.appTextThemes.body2.copyWith(
+                    color: context.theme.appColors.darkBlue,
+                  ),
+                ),
+              ),
+            if (media.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.only(top: 10.0.s),
+                child: PostMedia(media: media),
+              ),
+            if (firstLinkOperation != null)
+              Padding(
+                padding: EdgeInsets.only(top: 10.0.s),
+                child: UrlPreviewContent(url: firstLinkOperation.value as String),
+              ),
+          ],
+        );
+      },
     );
+  }
+
+  double? _calculateMaxHeight(
+    BuildContext context, {
+    required String text,
+    required TextStyle style,
+    required double maxWidth,
+  }) {
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: maxLines,
+      textScaler: MediaQuery.textScalerOf(context),
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: maxWidth);
+
+    if (textPainter.didExceedMaxLines) {
+      return textPainter.height;
+    }
+    return null;
   }
 }
