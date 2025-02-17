@@ -14,7 +14,15 @@ import 'package:timeago/timeago.dart' as timeago;
 /// If the [timestamp] falls on today's date, returns a localized "today".
 /// If it falls on yesterday's date, returns a localized "yesterday".
 /// Otherwise, it formats the date as 'MMM d yyyy' (or localized equivalent).
-String toPastDateDisplayValue(int timestamp, BuildContext context, {Locale? locale}) {
+///
+/// If [dateFormat] is provided, it will be used to format the date.
+/// Otherwise, the default formatter will be used.
+String toPastDateDisplayValue(
+  int timestamp,
+  BuildContext context, {
+  Locale? locale,
+  DateFormat? dateFormat,
+}) {
   final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
@@ -28,7 +36,7 @@ String toPastDateDisplayValue(int timestamp, BuildContext context, {Locale? loca
     return context.i18n.date_yesterday;
   }
 
-  return DateFormat.yMMMd(locale?.languageCode).format(date);
+  return dateFormat?.format(date) ?? DateFormat.yMMMd(locale?.languageCode).format(date);
 }
 
 /// Converts a timestamp (in milliseconds) into a time string in the 'HH:mm' format.
