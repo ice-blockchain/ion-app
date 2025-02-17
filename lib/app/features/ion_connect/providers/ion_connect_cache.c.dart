@@ -34,10 +34,7 @@ class IonConnectCache extends _$IonConnectCache {
   @override
   Map<String, CacheEntry> build() {
     onLogout(ref, () {
-      //TODO:???!!!
-      Future<void>.delayed(const Duration(seconds: 1)).then((_) {
-        state = {};
-      });
+      state = {};
     });
     return {};
   }
