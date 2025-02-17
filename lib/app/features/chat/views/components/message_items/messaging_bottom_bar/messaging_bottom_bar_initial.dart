@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BottomBarInitialView extends HookConsumerWidget {
@@ -36,14 +37,11 @@ class BottomBarInitialView extends HookConsumerWidget {
       [controller],
     );
 
-    useEffect(
+    useOnInit(
       () {
         if (bottomBarState.isText) {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            controller.clear();
-          });
+          controller.clear();
         }
-        return null;
       },
       [bottomBarState.isText],
     );
