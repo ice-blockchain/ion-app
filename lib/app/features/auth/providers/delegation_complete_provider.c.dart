@@ -8,9 +8,21 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'delegation_complete_provider.c.g.dart';
 
 @riverpod
-Future<bool?> delegationComplete(Ref ref) async {
+Future<bool> delegationComplete(Ref ref) async {
   final (delegation, eventSigner) = await (
     ref.watch(currentUserDelegationProvider.future),
+    ref.watch(currentUserIonConnectEventSignerProvider.future),
+  ).wait;
+
+  return delegation != null &&
+      eventSigner != null &&
+      delegation.data.hasDelegateFor(pubkey: eventSigner.publicKey);
+}
+
+@riverpod
+Future<bool> cacheDelegationComplete(Ref ref) async {
+  final (delegation, eventSigner) = await (
+    ref.watch(currentUserCachedDelegationProvider.future),
     ref.watch(currentUserIonConnectEventSignerProvider.future),
   ).wait;
 
