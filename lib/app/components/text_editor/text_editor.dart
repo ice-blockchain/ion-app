@@ -10,16 +10,22 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/utils/mentions_hashtags_handler.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 
+class TextEditorKeys {
+  const TextEditorKeys._();
+
+  static GlobalKey<TextEditorState> createArticle() => GlobalKey<TextEditorState>();
+  static GlobalKey<TextEditorState> replyInput() => GlobalKey<TextEditorState>();
+  static GlobalKey<TextEditorState> createPost() => GlobalKey<TextEditorState>();
+}
+
 class TextEditor extends ConsumerStatefulWidget {
-  TextEditor(
+  const TextEditor(
     this.controller, {
-    Key? key,
+    required GlobalKey<TextEditorState> key,
     this.placeholder,
     this.focusNode,
     this.autoFocus = true,
-  }) : super(key: key ?? textEditorKey);
-
-  static final textEditorKey = GlobalKey<TextEditorState>();
+  }) : super(key: key);
 
   final QuillController controller;
   final String? placeholder;

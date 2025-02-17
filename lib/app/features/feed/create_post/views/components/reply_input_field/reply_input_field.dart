@@ -42,7 +42,7 @@ class ReplyInputField extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController();
-
+    final textEditorKey = useMemoized(TextEditorKeys.replyInput);
     final currentUserMetadata = ref.watch(currentUserMetadataProvider).valueOrNull;
 
     final inputContainerKey = useRef(GlobalKey());
@@ -100,6 +100,7 @@ class ReplyInputField extends HookConsumerWidget {
                                 focusNode: focusNode,
                                 autoFocus: false,
                                 placeholder: context.i18n.post_reply_hint,
+                                key: textEditorKey,
                               ),
                             ),
                             if (hasFocus.value)
