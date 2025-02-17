@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
+import 'package:ion/app/features/auth/providers/relays_assigned_provider.c.dart';
 import 'package:ion/app/features/auth/views/pages/link_new_device/link_new_device_dialog.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -63,8 +64,6 @@ Future<String?> _mainRedirect({
   final isAuthenticated = (ref.read(authProvider).valueOrNull?.isAuthenticated).falseOrValue;
   final onboardingComplete = ref.read(onboardingCompleteProvider).valueOrNull;
   final hasNotificationsPermission = ref.read(hasPermissionProvider(Permission.notifications));
-  final hasUserMetadata = ref.read(currentUserMetadataProvider).valueOrNull != null;
-  final delegationComplete = ref.read(delegationCompleteProvider).valueOrNull.falseOrValue;
 
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
@@ -88,11 +87,20 @@ Future<String?> _mainRedirect({
       }
     }
 
-    if (!onboardingComplete && !isOnOnboarding && !hasUserMetadata) {
+    final hasUserMetadata = ref.read(currentUserMetadataProvider).valueOrNull != null;
+    final delegationComplete = ref.read(delegationCompleteProvider).valueOrNull.falseOrValue;
+    final relaysAssigned = ref.read(relaysAssignedProvider).valueOrNull.falseOrValue;
+
+    if (!onboardingComplete && !isOnOnboarding && !(hasUserMetadata && relaysAssigned)) {
       return FillProfileRoute().location;
     }
 
-    if (!onboardingComplete && !isOnFeed && hasUserMetadata && !delegationComplete) {
+    if (!onboardingComplete &&
+        !isOnFeed &&
+        !isOnOnboarding &&
+        hasUserMetadata &&
+        relaysAssigned &&
+        !delegationComplete) {
       ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowLinkNewDeviceDialogEvent());
       return FeedRoute().location;
     }

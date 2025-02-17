@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_metadata_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<UserMetadataEntity?> userMetadata(
   Ref ref,
   String pubkey, {
@@ -26,7 +26,7 @@ Future<UserMetadataEntity?> userMetadata(
   ) as UserMetadataEntity?;
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<UserMetadataEntity?> currentUserMetadata(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {

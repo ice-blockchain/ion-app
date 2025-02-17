@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
-import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
+import 'package:ion/app/features/auth/providers/relays_assigned_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -17,14 +17,11 @@ Future<bool?> onboardingComplete(Ref ref) async {
     return null;
   }
 
-  final (identity, delegationComplete, userMetadata) = await (
-    ref.watch(currentUserIdentityProvider.future),
+  final (relaysAssigned, delegationComplete, userMetadata) = await (
+    ref.watch(relaysAssignedProvider.future),
     ref.watch(delegationCompleteProvider.future),
     ref.watch(currentUserMetadataProvider.future),
   ).wait;
 
-  return delegationComplete.falseOrValue &&
-      identity != null &&
-      (identity.ionConnectRelays?.isNotEmpty).falseOrValue &&
-      userMetadata != null;
+  return delegationComplete.falseOrValue && relaysAssigned.falseOrValue && userMetadata != null;
 }
