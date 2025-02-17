@@ -25,11 +25,7 @@ class TextMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
 
-    final isMe = ref.watch(isCurrentUserEventProvider(eventMessage)).valueOrNull;
-
-    if (isMe == null) {
-      return const SizedBox.shrink();
-    }
+    final isMe = ref.watch(isCurrentUserEventProvider(eventMessage)).valueOrNull ?? false;
 
     return MessageItemWrapper(
       isLastMessageFromAuthor: isLastMessageFromAuthor,
