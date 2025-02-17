@@ -10,6 +10,7 @@ import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/views/components/coins_list/coin_item.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class CoinsListView extends StatelessWidget {
   const CoinsListView({
@@ -53,12 +54,9 @@ class CoinsListView extends StatelessWidget {
           child: coinsResult.maybeWhen(
             data: (groups) {
               if (groups.isEmpty) {
-                return ListItemsLoadingState(
-                  itemsCount: 11,
-                  itemHeight: 60.0.s,
-                  listItemsLoadingStateType: ListItemsLoadingStateType.listView,
-                );
+                return const _EmptyState();
               }
+
               return ListView.separated(
                 itemCount: groups.length,
                 separatorBuilder: (BuildContext context, int index) {
@@ -82,6 +80,27 @@ class CoinsListView extends StatelessWidget {
               listItemsLoadingStateType: ListItemsLoadingStateType.listView,
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyles = context.theme.appTextThemes;
+    final colors = context.theme.appColors;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Assets.svg.walletIconWalletEmptysearch.icon(size: 48.0.s),
+        SizedBox(height: 8.0.s),
+        Text(
+          context.i18n.core_empty_search,
+          style: textStyles.caption2.copyWith(color: colors.tertararyText),
         ),
       ],
     );
