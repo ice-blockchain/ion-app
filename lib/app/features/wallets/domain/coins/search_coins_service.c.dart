@@ -34,7 +34,6 @@ class SearchCoinsService {
             grouped[symbolGroup]!.map(CoinData.fromDB),
           ),
         )
-        .toList()
         .sorted(_comparator.compareGroups);
     return result;
   }

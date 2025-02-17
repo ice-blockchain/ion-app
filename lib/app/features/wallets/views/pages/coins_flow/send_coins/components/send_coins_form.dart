@@ -17,6 +17,7 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/compo
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/widgets/not_enough_coins_for_network_fee_message.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -43,7 +44,7 @@ class SendCoinsForm extends HookConsumerWidget {
         text: formatCrypto(coin.amount),
       ),
     );
-    useEffect(
+    useOnInit(
       () {
         void listener() {
           final numValue = double.tryParse(amountController.value.text);
@@ -54,10 +55,8 @@ class SendCoinsForm extends HookConsumerWidget {
         }
 
         amountController.addListener(listener);
-
-        return () => amountController.removeListener(listener);
       },
-      [],
+      [amountController],
     );
 
     final validAmount = formController.assetData.maybeMap(
