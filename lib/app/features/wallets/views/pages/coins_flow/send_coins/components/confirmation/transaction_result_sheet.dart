@@ -8,8 +8,6 @@ import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
@@ -24,11 +22,11 @@ class TransactionResultSheet extends ConsumerWidget {
 
   final CryptoAssetType type;
 
-  static const networkTypeValues = NetworkType.values;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formData = ref.watch(sendAssetFormControllerProvider(type: type));
+    // TODO: Get transaction hash from the sendCoinsNotifierProvider
+    // final transactionResult = ref.watch(sendCoinsNotifierProvider);
 
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
@@ -59,25 +57,26 @@ class TransactionResultSheet extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 24.0.s),
-                if (type == CryptoAssetType.nft)
-                  Padding(
+                formData.assetData.maybeMap(
+                  coin: (coin) => TransactionAmountSummary(
+                    amount: coin.amount,
+                    currency: coin.coinsGroup.abbreviation,
+                    usdAmount: coin.priceUSD,
+                    icon: CoinIconWidget(
+                      imageUrl: coin.coinsGroup.iconUrl,
+                    ),
+                  ),
+                  nft: (nft) => Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: 52.0.s,
                     ),
                     child: NftItem(
-                      nftData: formData.selectedNft!,
+                      nftData: nft.nft,
                       backgroundColor: Colors.transparent,
                     ),
                   ),
-                if (formData.selectedCoin case final CoinInWalletData coinInWallet)
-                  TransactionAmountSummary(
-                    amount: coinInWallet.amount,
-                    currency: coinInWallet.coin.abbreviation,
-                    usdAmount: coinInWallet.balanceUSD,
-                    icon: CoinIconWidget(
-                      imageUrl: coinInWallet.coin.iconUrl,
-                    ),
-                  ),
+                  orElse: () => const SizedBox.shrink(),
+                ),
                 SizedBox(height: 24.0.s),
                 Row(
                   children: [

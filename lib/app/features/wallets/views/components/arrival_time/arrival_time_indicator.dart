@@ -2,15 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ArrivalTimeIndicator extends StatelessWidget {
   const ArrivalTimeIndicator({
-    required this.arrivalTimeInMinutes,
+    required this.option,
     super.key,
   });
 
-  final int arrivalTimeInMinutes;
+  final NetworkFeeOption option;
 
   @override
   Widget build(BuildContext context) {
@@ -21,36 +22,38 @@ class ArrivalTimeIndicator extends StatelessWidget {
     return Row(
       children: [
         Text(
-          locale.wallet_arrival_time_type_standard,
+          option.type.getDisplayName(context),
           style: textTheme.body2.copyWith(
             color: colors.secondaryText,
           ),
         ),
-        SizedBox(width: 6.0.s),
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 8.0.s,
-            vertical: 4.0.s,
-          ),
-          decoration: BoxDecoration(
-            color: colors.onSecondaryBackground,
-            borderRadius: BorderRadius.circular(15.0.s),
-          ),
-          child: Row(
-            children: [
-              Assets.svg.iconBlockTime.icon(
-                size: 12.0.s,
-              ),
-              SizedBox(width: 5.0.s),
-              Text(
-                '$arrivalTimeInMinutes ${locale.wallet_arrival_time_minutes}',
-                style: textTheme.body2.copyWith(
-                  color: colors.primaryAccent,
+        if (option.arrivalTime?.inMinutes != null) ...[
+          SizedBox(width: 6.0.s),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 8.0.s,
+              vertical: 4.0.s,
+            ),
+            decoration: BoxDecoration(
+              color: colors.onSecondaryBackground,
+              borderRadius: BorderRadius.circular(15.0.s),
+            ),
+            child: Row(
+              children: [
+                Assets.svg.iconBlockTime.icon(
+                  size: 12.0.s,
                 ),
-              ),
-            ],
+                SizedBox(width: 5.0.s),
+                Text(
+                  '${option.arrivalTime?.inMinutes} ${locale.wallet_arrival_time_minutes}',
+                  style: textTheme.body2.copyWith(
+                    color: colors.primaryAccent,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

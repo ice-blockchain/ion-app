@@ -80,7 +80,7 @@ class ManageNftsPage extends HookConsumerWidget {
                         itemBuilder: (BuildContext context, int index) {
                           return ScreenSideOffset.small(
                             child: ManageNftNetworkItem(
-                              networkType: filteredNftNetworks.elementAt(index).networkType,
+                              networkType: filteredNftNetworks.elementAt(index).network,
                             ),
                           );
                         },

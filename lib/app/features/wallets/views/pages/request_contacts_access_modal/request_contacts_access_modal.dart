@@ -31,7 +31,7 @@ class RequestContactAccessModal extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Assets.images.wallet.walletIce.icon(size: iceIconSize),
+            Assets.svg.networks.walletIce.icon(size: iceIconSize),
             SizedBox(
               height: ScreenSideOffset.defaultSmallMargin,
             ),

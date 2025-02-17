@@ -6,6 +6,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
+import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -23,7 +24,6 @@ class CoinButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
-    final coinData = coinInWallet.coin;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -37,16 +37,16 @@ class CoinButton extends StatelessWidget {
           right: 8.0.s,
         ),
         title: Text(
-          coinData.name,
+          coinInWallet.coin.name,
           style: textTheme.body,
         ),
         subtitle: Text(
-          coinData.abbreviation,
+          coinInWallet.coin.abbreviation,
           style: textTheme.caption3,
         ),
         backgroundColor: Colors.transparent,
         leading: CoinIconWidget(
-          imageUrl: coinData.iconUrl,
+          imageUrl: coinInWallet.coin.iconUrl,
           size: 36.0.s,
         ),
         onTap: onTap,
@@ -57,7 +57,7 @@ class CoinButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  formatDouble(coinInWallet.amount),
+                  formatCrypto(coinInWallet.amount),
                   style: textTheme.body,
                 ),
                 Text(

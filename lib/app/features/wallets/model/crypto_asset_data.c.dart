@@ -2,36 +2,28 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
-import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 part 'crypto_asset_data.c.freezed.dart';
 
 @freezed
-class CryptoAssetData with _$CryptoAssetData {
-  const factory CryptoAssetData({
-    required WalletViewData wallet,
-    required NetworkType selectedNetwork,
-    required int arrivalTime,
-    required DateTime arrivalDateTime,
-    required String address,
-    CoinInWalletData? selectedCoin,
-    NftData? selectedNft,
-    String? selectedContactPubkey,
-  }) = _CryptoAssetData;
+sealed class CryptoAssetData with _$CryptoAssetData {
+  const factory CryptoAssetData.coin({
+    required CoinsGroup coinsGroup,
+    // Cache the selected option to avoid searching it each time
+    CoinInWalletData? selectedOption,
+    WalletAsset? associatedAssetWithSelectedOption,
+    @Default(0.0) double amount,
+    @Default(0.0) double priceUSD,
+  }) = CoinAssetData;
+
+  const factory CryptoAssetData.nft({
+    required NftData nft,
+  }) = NftAssetData;
+
+  const factory CryptoAssetData.notInitialized() = _NotInitializedAssetData;
 
   const CryptoAssetData._();
-
-  double? get price {
-    if (selectedCoin != null) return selectedCoin!.balanceUSD;
-    if (selectedNft != null) return selectedNft!.price;
-    return null;
-  }
-
-  String get networkName {
-    if (selectedCoin != null) return selectedCoin!.coin.network.name;
-    if (selectedNft != null) return selectedNft!.network;
-    return '';
-  }
 }

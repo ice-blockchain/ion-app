@@ -3,6 +3,7 @@
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/coin_client_service_locator.dart';
+import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/networks_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/users_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/wallets_client_service_locator.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
@@ -41,6 +42,10 @@ class ClientsServiceLocator {
           config: config,
         ),
         coins: CoinsClientServiceLocator().coins(
+          username: username,
+          config: config,
+        ),
+        networks: NetworksClientServiceLocator().networks(
           username: username,
           config: config,
         ),

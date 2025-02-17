@@ -356,10 +356,18 @@ class ParticipantsMasterPubkeysNotFoundException extends IONException {
         );
 }
 
+class CannotBuildTransferForUnknownAssetException extends IONException {
+  CannotBuildTransferForUnknownAssetException(String kind)
+      : super(
+          10070,
+          'Cannot build transfer for unknown asset kind: $kind',
+        );
+}
+
 class UnknownNetworkException extends IONException {
   UnknownNetworkException(String network)
       : super(
-          10070,
+          10071,
           'Unknown network: $network',
         );
 }

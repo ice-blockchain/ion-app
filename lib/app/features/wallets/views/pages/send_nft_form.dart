@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
@@ -23,8 +23,6 @@ import 'package:ion/generated/assets.gen.dart';
 class SendNftForm extends ConsumerWidget {
   const SendNftForm({super.key});
 
-  static const List<NetworkType> networkTypeValues = NetworkType.values;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.theme.appColors;
@@ -32,8 +30,8 @@ class SendNftForm extends ConsumerWidget {
 
     final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
     final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
-    final selectedNft = formController.selectedNft;
-    final selectedContactPubkey = formController.selectedContactPubkey;
+    final selectedNft = formController.assetData.as<NftAssetData>()!.nft;
+    final selectedContactPubkey = formController.contactPubkey;
 
     return SheetContent(
       backgroundColor: colors.secondaryBackground,
@@ -51,55 +49,49 @@ class SendNftForm extends ConsumerWidget {
                   ],
                 ),
               ),
-              if (selectedNft != null)
-                ScreenSideOffset.small(
-                  child: Column(
-                    children: [
-                      NftPicture(imageUrl: selectedNft.iconUrl),
-                      SizedBox(height: 16.0.s),
-                      NftName(
-                        rank: selectedNft.rank,
-                        name: selectedNft.collectionName,
+              ScreenSideOffset.small(
+                child: Column(
+                  children: [
+                    NftPicture(imageUrl: selectedNft.iconUrl),
+                    SizedBox(height: 16.0.s),
+                    NftName(
+                      rank: selectedNft.rank,
+                      name: selectedNft.collectionName,
+                    ),
+                    SizedBox(height: 16.0.s),
+                    ContactInputSwitcher(
+                      pubkey: selectedContactPubkey,
+                      address: formController.receiverAddress,
+                      onWalletAddressChanged: (String? value) {},
+                      onClearTap: (_) => notifier.setContact(null),
+                      onContactTap: () async {
+                        final pubkey = await NftSelectFriendRoute().push<String>(context);
+                        pubkey?.let(notifier.setContact);
+                      },
+                    ),
+                    SizedBox(height: 17.0.s),
+                    const NetworkFeeSelector(),
+                    SizedBox(height: 45.0.s),
+                    Button(
+                      label: Text(
+                        locale.button_continue,
                       ),
-                      SizedBox(height: 16.0.s),
-                      ContactInputSwitcher(
-                        pubkey: selectedContactPubkey,
-                        onClearTap: (pubkey) => {
-                          notifier.setContact(null),
-                        },
-                        onContactTap: () async {
-                          final pubkey = await NftSelectFriendRoute().push<String>(context);
-                          pubkey?.let(notifier.setContact);
-                        },
-                      ),
-                      SizedBox(height: 17.0.s),
-                      ArrivalTimeSelector(
-                        arrivalTimeInMinutes: formController.arrivalTime,
-                        onArrivalTimeChanged: (int value) => ref
-                            .read(sendAssetFormControllerProvider().notifier)
-                            .updateArrivalTime(value),
-                      ),
-                      SizedBox(height: 45.0.s),
-                      Button(
-                        label: Text(
-                          locale.button_continue,
+                      mainAxisSize: MainAxisSize.max,
+                      trailingIcon: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                          colors.primaryBackground,
+                          BlendMode.srcIn,
                         ),
-                        mainAxisSize: MainAxisSize.max,
-                        trailingIcon: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            colors.primaryBackground,
-                            BlendMode.srcIn,
-                          ),
-                          child: Assets.svg.iconButtonNext.icon(),
-                        ),
-                        onPressed: () {
-                          SendNftConfirmRoute().push<void>(context);
-                        },
+                        child: Assets.svg.iconButtonNext.icon(),
                       ),
-                      SizedBox(height: 16.0.s),
-                    ],
-                  ),
+                      onPressed: () {
+                        SendNftConfirmRoute().push<void>(context);
+                      },
+                    ),
+                    SizedBox(height: 16.0.s),
+                  ],
                 ),
+              ),
               ScreenBottomOffset(),
             ],
           ),

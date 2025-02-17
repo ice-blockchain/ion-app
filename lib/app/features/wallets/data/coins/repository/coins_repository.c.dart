@@ -39,7 +39,7 @@ class CoinsRepository {
 
   Future<void> updateCoins(List<Coin> coins) async {
     final coinsToInsert = coins.where(
-      (coin) => Network.allowedNetworks.contains(coin.network.toLowerCase()),
+      (coin) => Network.allowed.contains(coin.network),
     );
     await _coinsDao.upsertAll(coinsToInsert.toList());
   }
@@ -67,8 +67,15 @@ class CoinsRepository {
   Future<List<Coin>> getCoinsByFilters({
     String? symbolGroup,
     String? symbol,
+    String? network,
+    String? contractAddress,
   }) =>
-      _coinsDao.getByFilters(symbolGroup: symbolGroup, symbol: symbol);
+      _coinsDao.getByFilters(
+        symbolGroup: symbolGroup,
+        symbol: symbol,
+        network: network,
+        contractAddress: contractAddress,
+      );
 
   int? getLastSyncTime() => _localStorage.getInt(_lastSyncTimeKey);
 

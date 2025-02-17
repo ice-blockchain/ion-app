@@ -18,7 +18,7 @@ class SelectNetworkList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final networks = useMemoized(() => Network.allowedNetworks.toList());
+    final networks = useMemoized(() => Network.all);
 
     return SheetContent(
       body: Column(
@@ -38,7 +38,7 @@ class SelectNetworkList extends HookConsumerWidget {
               child: ListView.separated(
                 itemCount: networks.length,
                 itemBuilder: (context, index) => _NetworkItem(
-                  network: Network(name: networks[index]),
+                  network: networks[index],
                 ),
                 separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
               ),

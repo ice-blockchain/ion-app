@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
@@ -139,7 +140,7 @@ class WalletViewsService {
     }
 
     return WalletViewData(
-      coinGroups: coinGroups.values.toList(),
+      coinGroups: coinGroups.values.sorted(CoinsComparator().compareGroups),
       id: viewDTO.id,
       name: viewDTO.name,
       symbolGroups: symbolGroups,
@@ -159,8 +160,7 @@ class WalletViewsService {
         final associatedWallet = aggregation.wallets.firstWhereOrNull(
           (e) => e.walletId == coinInWalletDTO.walletId && e.coinId == coinInWalletDTO.coin.id,
         );
-        if (associatedWallet != null &&
-            associatedWallet.network.toLowerCase() == coinInWalletDTO.coin.network.toLowerCase()) {
+        if (associatedWallet != null && associatedWallet.network == coinInWalletDTO.coin.network) {
           return aggregation;
         }
       }

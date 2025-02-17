@@ -3,12 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ListItemArrivalTime extends StatelessWidget {
-  const ListItemArrivalTime({required this.arrivalTime, super.key});
+  const ListItemArrivalTime({required this.feeOption, super.key});
 
-  final String arrivalTime;
+  final NetworkFeeOption feeOption;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,9 @@ class ListItemArrivalTime extends StatelessWidget {
           ),
         ],
       ),
-      value: arrivalTime,
+      value: feeOption.arrivalTime != null
+          ? '${feeOption.arrivalTime!.inMinutes} ${context.i18n.wallet_arrival_time_minutes}'
+          : feeOption.type.getDisplayName(context),
       icon: Assets.svg.iconBlockTime.icon(
         size: 16.0.s,
       ),

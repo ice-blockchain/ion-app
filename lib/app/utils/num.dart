@@ -2,8 +2,14 @@
 
 import 'package:intl/intl.dart';
 
-String formatDouble(double value) {
-  final formatter = NumberFormat('#,##0.00', 'en_US');
+String formatDouble(
+  double value, {
+  int maximumFractionDigits = 2,
+  int minimumFractionDigits = 2,
+}) {
+  final formatter = NumberFormat.decimalPattern('en_US')
+    ..maximumFractionDigits = maximumFractionDigits
+    ..minimumFractionDigits = minimumFractionDigits;
   return formatter.format(value);
 }
 

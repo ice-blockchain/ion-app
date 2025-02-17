@@ -72,8 +72,8 @@ class NftDetailsPage extends ConsumerWidget {
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_token_network),
-                      value: nft.network,
-                      icon: Assets.images.wallet.walletEth.icon(size: 16.0.s),
+                      value: nft.network.name,
+                      icon: Assets.svg.networks.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(

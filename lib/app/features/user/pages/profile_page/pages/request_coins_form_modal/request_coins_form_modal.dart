@@ -12,7 +12,8 @@ import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
+import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_id_button.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
@@ -25,14 +26,14 @@ import 'package:ion/generated/assets.gen.dart';
 class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
     required this.pubkey,
+    required this.networkName,
     required this.coinAbbreviation,
-    required this.networkType,
     super.key,
   });
 
   final String pubkey;
   final String coinAbbreviation;
-  final NetworkType networkType;
+  final String networkName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,10 +41,12 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final selectedNetworkType = useState(networkType);
+    final selectedNetwork = useState(Network(name: networkName));
     final selectedCoinAbbreviation = useState(coinAbbreviation);
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
+
+    final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -69,7 +72,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                   child: Column(
                     children: [
                       CoinIdButton(
-                        coinId: selectedCoinAbbreviation.value,
+                        coinAbbreviation: selectedCoinAbbreviation.value,
                         onTap: () async {
                           final newCoinAbbreviation = await SelectCoinRoute(
                             paymentType: PaymentType.receive,
@@ -83,16 +86,16 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       NetworkButton(
-                        networkType: selectedNetworkType.value,
+                        networkType: selectedNetwork.value,
                         onTap: () async {
-                          final newNetworkType = await SelectNetworkRoute(
+                          final network = await SelectNetworkRoute(
                             paymentType: PaymentType.receive,
                             pubkey: pubkey,
                             coinAbbreviation: selectedCoinAbbreviation.value,
                             selectNetworkModalType: SelectNetworkModalType.update,
-                          ).push<NetworkType>(context);
-                          if (newNetworkType != null && context.mounted) {
-                            selectedNetworkType.value = newNetworkType;
+                          ).push<Network>(context);
+                          if (network != null && context.mounted) {
+                            selectedNetwork.value = network;
                           }
                         },
                       ),
@@ -102,10 +105,9 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       CoinAmountInput(
+                        balanceUSD: walletBalance,
                         controller: amountController,
                         coinAbbreviation: selectedCoinAbbreviation.value,
-                        showApproximateInUsd: false,
-                        showMaxAction: false,
                       ),
                       SizedBox(height: 45.0.s),
                       Button(

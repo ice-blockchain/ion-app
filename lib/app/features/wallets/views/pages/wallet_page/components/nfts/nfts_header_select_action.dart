@@ -7,7 +7,6 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/network_type.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/model/manage_nft_network_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -26,11 +25,13 @@ class NftHeaderSelectAction extends ConsumerWidget {
       return '';
     }
 
-    return selectedNftNetworks.any(
-      (ManageNftNetworkData network) => network.networkType == NetworkType.all,
-    )
-        ? context.i18n.core_all
-        : selectedNftNetworks.map((e) => e.networkType.name.toUpperCase()).join(', ');
+    // TODO: All item is not implemented
+    return selectedNftNetworks.map((e) => e.network.name).join(', ');
+    // return selectedNftNetworks.any(
+    //   (ManageNftNetworkData network) => network.networkType == NetworkType.all,
+    // )
+    //     ? context.i18n.core_all
+    //     : selectedNftNetworks.map((e) => e.networkType.name.toUpperCase()).join(', ');
   }
 
   @override
