@@ -40,7 +40,7 @@ class CoinAmountInput extends ConsumerWidget {
 
             return null;
           },
-          labelText: locale.wallet_coin_amount(abbreviation ?? ''),
+          labelText: locale.wallet_coin_amount(coinAbbreviation ?? ''),
           suffixIcon: maxValue != null
               ? TextInputTextButton(
                   onPressed: () {

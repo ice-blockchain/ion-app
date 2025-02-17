@@ -13,7 +13,6 @@ import 'package:ion/app/features/user/pages/profile_page/components/user_payment
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
-import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_id_button.dart';
@@ -27,8 +26,8 @@ import 'package:ion/generated/assets.gen.dart';
 class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
     required this.pubkey,
-    required this.coinAbbreviation,
     required this.networkId,
+    required this.coinAbbreviation,
     super.key,
   });
 
@@ -42,14 +41,12 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final selectedNetworkType = useState(Network(id: networkId));
-    final selectedCoinId = useState(coinAbbreviation);
+    final selectedNetwork = useState(Network(id: networkId));
+    final selectedCoinAbbreviation = useState(coinAbbreviation);
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
 
-    // TODO: Check the next 2 lines?
     final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
-    final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -75,7 +72,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                   child: Column(
                     children: [
                       CoinIdButton(
-                        coinId: selectedCoinAbbreviation.value,
+                        coinAbbreviation: selectedCoinAbbreviation.value,
                         onTap: () async {
                           final newCoinAbbreviation = await SelectCoinRoute(
                             paymentType: PaymentType.receive,
@@ -89,7 +86,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       NetworkButton(
-                        networkType: selectedNetworkType.value,
+                        networkType: selectedNetwork.value,
                         onTap: () async {
                           final network = await SelectNetworkRoute(
                             paymentType: PaymentType.receive,
@@ -98,7 +95,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                             selectNetworkModalType: SelectNetworkModalType.update,
                           ).push<Network>(context);
                           if (network != null && context.mounted) {
-                            selectedNetworkType.value = network;
+                            selectedNetwork.value = network;
                           }
                         },
                       ),
@@ -108,10 +105,9 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                       ),
                       SizedBox(height: 16.0.s),
                       CoinAmountInput(
+                        balanceUSD: walletBalance,
                         controller: amountController,
                         coinAbbreviation: selectedCoinAbbreviation.value,
-                        abbreviation: coinInWallet?.coin.abbreviation,
-                        balanceUSD: walletBalance,
                       ),
                       SizedBox(height: 45.0.s),
                       Button(

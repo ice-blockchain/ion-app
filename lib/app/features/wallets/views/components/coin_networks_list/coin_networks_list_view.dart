@@ -10,6 +10,7 @@ import 'package:ion/app/components/list_items_loading_state/item_loading_state.d
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -55,7 +56,7 @@ class CoinNetworksListView extends HookWidget {
           itemBuilder: (BuildContext context, int index) {
             return ScreenSideOffset.small(
               child: _CoinNetworkItem(
-                coincoinAbbreviationId: coinAbbreviation,
+                coinAbbreviation: coinAbbreviation,
                 network: networks[index],
                 onTap: () => onItemTap(networks[index]),
               ),

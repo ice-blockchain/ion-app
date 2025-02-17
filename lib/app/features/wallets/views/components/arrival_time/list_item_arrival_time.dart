@@ -34,7 +34,7 @@ class ListItemArrivalTime extends StatelessWidget {
       ),
       value: feeOption.arrivalTime != null
           ? '${feeOption.arrivalTime!.inMinutes} ${context.i18n.wallet_arrival_time_minutes}'
-          : feeOption.type.name,
+          : feeOption.type.getDisplayName(context),
       icon: Assets.svg.iconBlockTime.icon(
         size: 16.0.s,
       ),

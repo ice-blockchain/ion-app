@@ -13,7 +13,6 @@ import 'package:ion/app/features/user/pages/profile_page/components/user_payment
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
-import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
@@ -49,9 +48,7 @@ class SendCoinFormModal extends HookConsumerWidget {
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
 
-    // TODO: Recheck the next 2 lines
     final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
-    final coinInWallet = ref.watch(coinInWalletByIdProvider(coinId: coinId)).valueOrNull;
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -77,7 +74,7 @@ class SendCoinFormModal extends HookConsumerWidget {
                   child: Column(
                     children: [
                       CoinIdButton(
-                        coinId: selectedCoinAbbreviation.value,
+                        coinAbbreviation: selectedCoinAbbreviation.value,
                         onTap: () async {
                           final newCoinAbbreviation = await SelectCoinRoute(
                             paymentType: PaymentType.send,

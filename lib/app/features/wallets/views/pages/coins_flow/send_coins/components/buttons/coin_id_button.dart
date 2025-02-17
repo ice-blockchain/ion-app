@@ -9,29 +9,28 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/compo
 
 class CoinIdButton extends ConsumerWidget {
   const CoinIdButton({
-    required this.coinId,
     required this.onTap,
+    required this.coinAbbreviation,
     super.key,
   });
 
-  final String coinId;
   final VoidCallback onTap;
+  final String coinAbbreviation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinDataResult = ref.watch(coinInWalletByAbbreviationProvider(coinAbbreviation: coinId));
+    final coinDataResult = ref.watch(
+      coinInWalletByAbbreviationProvider(coinAbbreviation: coinAbbreviation),
+    );
 
-    // return coinDataResult.maybeWhen(
-    //   data: (coinInWallet) => CoinButton(
-    //     coinInWallet: coinInWallet!,
-    //     onTap: onTap,
-    //   ),
-    //   orElse: () => ItemLoadingState(
-    //     itemHeight: 60.0.s,
-    //   ),
-    // );
-
-    // TODO: Widget is not implemented
-    return const SizedBox.shrink();
+    return coinDataResult.maybeWhen(
+      data: (coinInWallet) => CoinButton(
+        coinInWallet: coinInWallet!,
+        onTap: onTap,
+      ),
+      orElse: () => ItemLoadingState(
+        itemHeight: 60.0.s,
+      ),
+    );
   }
 }
