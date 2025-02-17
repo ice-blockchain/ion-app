@@ -27,15 +27,13 @@ class PermissionAwareWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final compositeKey = '${permissionType.name}_$requestId';
-
     final activeRequestId = ref.watch(activePermissionRequestIdProvider(compositeKey));
-
     final hasPermission = ref.watch(hasPermissionProvider(permissionType));
 
     ref.listen<bool>(
       hasPermissionProvider(permissionType),
       (previous, next) {
-        if (next && (activeRequestId == requestId) && hasPermission && context.mounted) {
+        if (next && (activeRequestId == requestId) && context.mounted) {
           onGranted();
         }
       },
@@ -45,7 +43,7 @@ class PermissionAwareWidget extends ConsumerWidget {
       context,
       () {
         if (hasPermission) {
-          if (activeRequestId == requestId) {
+          if (activeRequestId == requestId && context.mounted) {
             onGranted();
           }
         } else {
