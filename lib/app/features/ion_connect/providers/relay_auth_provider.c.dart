@@ -82,27 +82,30 @@ class RelayAuth extends _$RelayAuth {
     if (state.completer.isCompleted) {
       state.completer = Completer();
     }
+    try {
+      final signedAuthEvent = await _createAuthEvent(
+        challenge: challenge,
+        relayUrl: Uri.parse(relay.url).toString(),
+      );
 
-    final signedAuthEvent = await _createAuthEvent(
-      challenge: challenge,
-      relayUrl: Uri.parse(relay.url).toString(),
-    );
+      final authMessage = AuthMessage(
+        challenge: jsonEncode(signedAuthEvent.toJson().last),
+      );
+      relay.sendMessage(authMessage);
 
-    final authMessage = AuthMessage(
-      challenge: jsonEncode(signedAuthEvent.toJson().last),
-    );
-    relay.sendMessage(authMessage);
+      final okMessages = await relay.messages
+          .where((message) => message is OkMessage)
+          .cast<OkMessage>()
+          .firstWhere((message) => signedAuthEvent.id == message.eventId);
 
-    final okMessages = await relay.messages
-        .where((message) => message is OkMessage)
-        .cast<OkMessage>()
-        .firstWhere((message) => signedAuthEvent.id == message.eventId);
+      if (!okMessages.accepted) {
+        throw SendEventException(okMessages.message);
+      }
 
-    if (!okMessages.accepted) {
-      throw SendEventException(okMessages.message);
+      state.completer.complete();
+    } catch (error) {
+      state.completer.completeError(error);
     }
-
-    state.completer.complete();
   }
 
   Future<EventMessage> _createAuthEvent({
