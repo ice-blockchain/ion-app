@@ -88,7 +88,7 @@ class LocalStorage {
     return _prefs.remove(key);
   }
 
-  Future<bool> clear() {
-    return _prefs.clear();
+  Set<String> getKeys() {
+    return _prefs.getKeys();
   }
 }
