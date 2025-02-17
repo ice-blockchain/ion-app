@@ -50,6 +50,7 @@ class PostDetailsPage extends ConsumerWidget {
                         context.pop();
                       },
                       isTextSelectable: true,
+                      bodyMaxLines: null,
                     ),
                   ),
                 ),

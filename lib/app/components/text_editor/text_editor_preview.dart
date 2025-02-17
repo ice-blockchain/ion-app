@@ -17,6 +17,7 @@ class TextEditorPreview extends HookWidget {
     this.media,
     this.maxHeight,
     this.customStyles,
+    this.scrollable = true,
     super.key,
   });
 
@@ -25,6 +26,7 @@ class TextEditorPreview extends HookWidget {
   final Map<String, MediaAttachment>? media;
   final DefaultStyles? customStyles;
   final double? maxHeight;
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,7 @@ class TextEditorPreview extends HookWidget {
         enableSelectionToolbar: false,
         floatingCursorDisabled: true,
         showCursor: false,
+        scrollable: scrollable,
         enableInteractiveSelection: enableInteractiveSelection,
         customStyles: customStyles ?? textEditorStyles(context),
         maxHeight: maxHeight,

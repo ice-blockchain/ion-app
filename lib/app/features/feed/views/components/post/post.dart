@@ -36,6 +36,7 @@ class Post extends ConsumerWidget {
     this.footer,
     this.onDelete,
     this.isTextSelectable = false,
+    this.bodyMaxLines = 6,
     super.key,
   });
 
@@ -47,6 +48,7 @@ class Post extends ConsumerWidget {
   final TimestampFormat timeFormat;
   final VoidCallback? onDelete;
   final bool isTextSelectable;
+  final int? bodyMaxLines;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,6 +85,7 @@ class Post extends ConsumerWidget {
         PostBody(
           entity: entity,
           isTextSelectable: isTextSelectable,
+          maxLines: bodyMaxLines,
         ),
         if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
         footer ??
