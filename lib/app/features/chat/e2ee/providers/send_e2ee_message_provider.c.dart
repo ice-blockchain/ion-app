@@ -108,7 +108,8 @@ class SendE2eeMessageService {
         masterPubkeys: participantsMasterPubkeys,
       );
 
-      final participantsKeysMap = await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+      final participantsKeysMap =
+          await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
       if (mediaFiles.isNotEmpty) {
         final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
@@ -121,7 +122,8 @@ class SendE2eeMessageService {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
 
-            final encryptedMediaFiles = await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
+            final encryptedMediaFiles =
+                await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
 
             final uploadedMediaFilesWithKeys = await Future.wait(
               encryptedMediaFiles.map((encryptedMediaFile) async {
@@ -206,7 +208,8 @@ class SendE2eeMessageService {
 
     final privateDirectMessageEntity = PrivateDirectMessageData.fromEventMessage(kind14Rumor);
 
-    final participantsMasterPubkeys = privateDirectMessageEntity.relatedPubkeys?.map((tag) => tag.value).toList();
+    final participantsMasterPubkeys =
+        privateDirectMessageEntity.relatedPubkeys?.map((tag) => tag.value).toList();
 
     if (participantsMasterPubkeys == null) {
       throw ParticipantsMasterPubkeysNotFoundException(kind14Rumor.id);

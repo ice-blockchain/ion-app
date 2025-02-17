@@ -53,8 +53,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
     return withRetry(
       ({error}) async {
-        relay ??=
-            await ref.read(relayCreationProvider.notifier).getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay ??= await ref
+            .read(relayCreationProvider.notifier)
+            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
           await sendAuthEvent(relay!);
@@ -165,14 +166,17 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   Stream<EventMessage> requestEvents(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
-    Stream<RelayMessage> Function(RequestMessage requestMessage, NostrRelay relay)? subscriptionBuilder,
+    Stream<RelayMessage> Function(RequestMessage requestMessage, NostrRelay relay)?
+        subscriptionBuilder,
   }) async* {
     final dislikedRelaysUrls = <String>{};
     IonConnectRelay? relay;
 
     yield* withRetryStream(
       ({error}) async* {
-        relay = await ref.read(relayCreationProvider.notifier).getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
+        relay = await ref
+            .read(relayCreationProvider.notifier)
+            .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         if (_isAuthRequired(error)) {
           try {
@@ -275,11 +279,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       content: '',
     );
 
-    final signResponse = await ionIdentity(username: currentIdentityKeyName).wallets.generateHashSignature(
-          walletId: mainWallet.id,
-          hash: eventId,
-          onVerifyIdentity: onVerifyIdentity,
-        );
+    final signResponse =
+        await ionIdentity(username: currentIdentityKeyName).wallets.generateHashSignature(
+              walletId: mainWallet.id,
+              hash: eventId,
+              onVerifyIdentity: onVerifyIdentity,
+            );
 
     final curveName = switch (mainWallet.signingKey.curve) {
       'ed25519' => 'curve25519',
@@ -287,7 +292,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     };
 
     final signaturePrefix = '${mainWallet.signingKey.scheme}/$curveName'.toLowerCase();
-    final signatureBody = '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
+    final signatureBody =
+        '${signResponse.signature['r']}${signResponse.signature['s']}'.replaceAll('0x', '');
     final signature = '$signaturePrefix:$signatureBody';
 
     return EventMessage(

@@ -59,11 +59,13 @@ class CurrentUserNotFoundException extends IONException {
 }
 
 class GetFileStorageUrlException extends IONException {
-  GetFileStorageUrlException(dynamic error) : super(10010, 'Failed to get file storage url: $error');
+  GetFileStorageUrlException(dynamic error)
+      : super(10010, 'Failed to get file storage url: $error');
 }
 
 class IncorrectEventTagsException extends IONException {
-  IncorrectEventTagsException({required String eventId}) : super(10011, 'Incorrect event $eventId tags');
+  IncorrectEventTagsException({required String eventId})
+      : super(10011, 'Incorrect event $eventId tags');
 }
 
 class UnknownEventException extends IONException {
@@ -76,11 +78,13 @@ class IncorrectEventTagException extends IONException {
 }
 
 class QuillParseException extends IONException {
-  const QuillParseException(dynamic error) : super(10014, 'Invalid content format for Quill Delta: $error');
+  const QuillParseException(dynamic error)
+      : super(10014, 'Invalid content format for Quill Delta: $error');
 }
 
 class UnsupportedRepostException extends IONException {
-  UnsupportedRepostException(dynamic eventInfo) : super(10015, 'Reposting event $eventInfo is not supported');
+  UnsupportedRepostException(dynamic eventInfo)
+      : super(10015, 'Reposting event $eventInfo is not supported');
 }
 
 class AssetEntityFileNotFoundException extends IONException {
@@ -88,11 +92,13 @@ class AssetEntityFileNotFoundException extends IONException {
 }
 
 class UnknownEventCountResultType extends IONException {
-  UnknownEventCountResultType(dynamic eventInfo) : super(10019, 'Unknown EventCount result type $eventInfo');
+  UnknownEventCountResultType(dynamic eventInfo)
+      : super(10019, 'Unknown EventCount result type $eventInfo');
 }
 
 class UnknownEventCountResultKey extends IONException {
-  UnknownEventCountResultKey(dynamic eventInfo) : super(10020, 'Unknown EventCount result key $eventInfo');
+  UnknownEventCountResultKey(dynamic eventInfo)
+      : super(10020, 'Unknown EventCount result key $eventInfo');
 }
 
 class UnsupportedSignatureAlgorithmException extends IONException {
@@ -114,11 +120,13 @@ class UserMasterPubkeyNotFoundException extends IONException {
 }
 
 class RequiredFieldIsEmptyException extends IONException {
-  RequiredFieldIsEmptyException({required String field}) : super(10024, 'Required field is empty $field');
+  RequiredFieldIsEmptyException({required String field})
+      : super(10024, 'Required field is empty $field');
 }
 
 class FileUploadException extends IONException {
-  FileUploadException(dynamic error, {required String url}) : super(10025, 'Failed to upload file to $url: $error');
+  FileUploadException(dynamic error, {required String url})
+      : super(10025, 'Failed to upload file to $url: $error');
 }
 
 class UnknownFileResolutionException extends IONException {
@@ -158,7 +166,8 @@ class DecompressBrotliException extends IONException {
 }
 
 class ConversationIsNotFoundException extends IONException {
-  ConversationIsNotFoundException(String id) : super(10035, 'Failed to find conversation for message: $id');
+  ConversationIsNotFoundException(String id)
+      : super(10035, 'Failed to find conversation for message: $id');
 }
 
 class VerifyIdentityException extends IONException {
@@ -170,7 +179,8 @@ class UnknownMediaTypeException extends IONException {
 }
 
 class UnsupportedParentEntity extends IONException {
-  UnsupportedParentEntity(dynamic eventInfo) : super(10038, 'Unsupported parent entity: $eventInfo');
+  UnsupportedParentEntity(dynamic eventInfo)
+      : super(10038, 'Unsupported parent entity: $eventInfo');
 }
 
 class RelayRequestFailedException extends IONException {
@@ -210,7 +220,8 @@ class ConfigPlatformNotSupportException extends IONException {
 }
 
 class ForceUpdateCouldntLaunchUrlException extends IONException {
-  ForceUpdateCouldntLaunchUrlException({required String url}) : super(10046, 'Could not launch $url');
+  ForceUpdateCouldntLaunchUrlException({required String url})
+      : super(10046, 'Could not launch $url');
 }
 
 class ForceUpdateFetchConfigException extends IONException {
@@ -218,15 +229,18 @@ class ForceUpdateFetchConfigException extends IONException {
 }
 
 class DeleteEntityUnsupportedTypeException extends IONException {
-  DeleteEntityUnsupportedTypeException() : super(10048, 'Failed to delete entity, unsupported type');
+  DeleteEntityUnsupportedTypeException()
+      : super(10048, 'Failed to delete entity, unsupported type');
 }
 
 class UnknownEventReferenceType extends IONException {
-  UnknownEventReferenceType({required String type}) : super(10049, 'Unknown event reference type $type');
+  UnknownEventReferenceType({required String type})
+      : super(10049, 'Unknown event reference type $type');
 }
 
 class UnsupportedEventReference extends IONException {
-  UnsupportedEventReference(dynamic eventReference) : super(10050, 'Unsupported event reference $eventReference');
+  UnsupportedEventReference(dynamic eventReference)
+      : super(10050, 'Unsupported event reference $eventReference');
 }
 
 class UnsupportedEntityBookmarking extends IONException {
