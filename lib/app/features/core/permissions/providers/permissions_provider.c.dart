@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/permissions/data/models/models.dart';
 import 'package:ion/app/features/core/permissions/factories/permission_factory.dart';
 import 'package:ion/app/features/core/permissions/strategies/strategies.dart';
+import 'package:meta/meta.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'permissions_provider.c.g.dart';
@@ -82,5 +83,5 @@ bool isPermanentlyDenied(Ref ref, Permission permissionType) {
   return permissionStatus == PermissionStatus.permanentlyDenied;
 }
 
-final isRequestingPermissionProvider =
-    StateProvider.family<bool, Permission>((ref, permission) => false);
+final activePermissionRequestIdProvider =
+    StateProvider.family<String?, String>((ref, compositeKey) => null);

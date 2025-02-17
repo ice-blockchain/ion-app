@@ -13,6 +13,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     required this.onGranted,
     required this.requestDialog,
     required this.settingsDialog,
+    this.requestId = 'default',
     super.key,
   });
 
@@ -21,16 +22,20 @@ class PermissionAwareWidget extends ConsumerWidget {
   final VoidCallback onGranted;
   final Widget requestDialog;
   final Widget settingsDialog;
+  final String requestId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final compositeKey = '${permissionType.name}_$requestId';
+
+    final activeRequestId = ref.watch(activePermissionRequestIdProvider(compositeKey));
+
     final hasPermission = ref.watch(hasPermissionProvider(permissionType));
-    final isRequestingPermission = ref.watch(isRequestingPermissionProvider(permissionType));
 
     ref.listen<bool>(
       hasPermissionProvider(permissionType),
       (previous, next) {
-        if (next && isRequestingPermission && context.mounted) {
+        if (next && (activeRequestId == requestId) && hasPermission && context.mounted) {
           onGranted();
         }
       },
@@ -38,15 +43,28 @@ class PermissionAwareWidget extends ConsumerWidget {
 
     return builder(
       context,
-      () => hasPermission ? onGranted() : _handlePermissionRequest(context, ref),
+      () {
+        if (hasPermission) {
+          if (activeRequestId == requestId) {
+            onGranted();
+          }
+        } else {
+          _handlePermissionRequest(context, ref, compositeKey);
+        }
+      },
     );
   }
 
-  Future<void> _handlePermissionRequest(BuildContext context, WidgetRef ref) async {
+  Future<void> _handlePermissionRequest(
+    BuildContext context,
+    WidgetRef ref,
+    String compositeKey,
+  ) async {
+    ref.read(activePermissionRequestIdProvider(compositeKey).notifier).state = requestId;
+
     final isPermanentlyDenied = ref.read(isPermanentlyDeniedProvider(permissionType));
     final permissionsNotifier = ref.read(permissionsProvider.notifier);
     final permissionStrategy = ref.read(permissionStrategyProvider(permissionType));
-    final isRequestingNotifier = ref.read(isRequestingPermissionProvider(permissionType).notifier);
 
     if (!context.mounted) return;
 
@@ -55,7 +73,6 @@ class PermissionAwareWidget extends ConsumerWidget {
         context: context,
         child: settingsDialog,
       );
-
       if (shouldOpenSettings ?? false) {
         await permissionStrategy.openSettings();
       }
@@ -64,11 +81,8 @@ class PermissionAwareWidget extends ConsumerWidget {
         context: context,
         child: requestDialog,
       );
-
       if (shouldRequest ?? false) {
-        isRequestingNotifier.state = true;
         await permissionsNotifier.requestPermission(permissionType);
-        isRequestingNotifier.state = false;
       }
     }
   }
