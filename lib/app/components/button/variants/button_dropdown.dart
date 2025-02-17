@@ -18,6 +18,8 @@ class _ButtonDropdown extends Button {
     bool useDefaultBorderRadius = false,
     bool useDefaultPaddings = false,
     EdgeInsetsGeometry? padding,
+    bool showClearButton = false,
+    VoidCallback? onClearTap,
   }) : super(
           type: ButtonType.dropdown,
           style: style.merge(
@@ -40,7 +42,20 @@ class _ButtonDropdown extends Button {
             ),
           ),
           leadingIconOffset: leadingIconOffset ?? 10.0.s,
-          trailingIcon: (opened ? Assets.svg.iconArrowUp : Assets.svg.iconArrowDown).icon(),
+          trailingIcon: Row(
+            children: [
+              (opened ? Assets.svg.iconArrowUp : Assets.svg.iconArrowDown).icon(),
+              if (showClearButton)
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => onClearTap?.call(),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(start: 8.0.s, top: 4.0.s, bottom: 4.0.s),
+                    child: Assets.svg.iconSheetClose.icon(size: 16.0.s),
+                  ),
+                ),
+            ],
+          ),
           trailingIconOffset: trailingIconOffset ?? 8.0.s,
         );
 }

@@ -105,6 +105,8 @@ class Button extends StatelessWidget {
     bool useDefaultPaddings,
     bool disabled,
     bool opened,
+    bool showClearButton,
+    VoidCallback? onClearTap,
   }) = _ButtonDropdown;
 
   final VoidCallback onPressed;

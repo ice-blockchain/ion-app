@@ -38,6 +38,8 @@ class TwoFASelectOptionStep extends ConsumerWidget {
                   padding: EdgeInsets.only(bottom: 22.0.s),
                   child: TwoFaOptionSelector(
                     availableOptions: optionsState.availableOptions,
+                    selectedOptions: optionsState.selectedValues,
+                    initialValue: optionsState.selectedValues[option],
                     optionIndex: option + 1,
                     onSaved: (value) {
                       ref

@@ -12,6 +12,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
     required this.isOpened,
     required this.controller,
     required this.optionIndex,
+    required this.onClear,
     this.enabled = true,
     super.key,
   });
@@ -21,6 +22,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
   final MenuController controller;
   final int optionIndex;
   final bool enabled;
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
           ? context.theme.appColors.attentionRed
           : context.theme.appColors.strokeElements,
       leadingIcon: ButtonIconFrame(
+        containerSize: 30.0.s,
         color: context.theme.appColors.tertararyBackground,
         icon: (state.value?.iconAsset ?? Assets.svg.iconSelect2).icon(
           size: 20.0.s,
@@ -50,6 +53,8 @@ class TwoFaOptionsSelectorButton extends StatelessWidget {
         ),
       ),
       opened: isOpened.value,
+      showClearButton: state.value != null,
+      onClearTap: onClear,
       onPressed: () {
         if (!enabled) return;
         isOpened.value = !isOpened.value;

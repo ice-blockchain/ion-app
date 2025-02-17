@@ -57,8 +57,9 @@ class TwoFAOptionsStep extends HookConsumerWidget {
                             padding: EdgeInsets.only(bottom: 16.0.s),
                             child: TwoFaOptionSelector(
                               availableOptions: optionsState.availableOptions,
-                              optionIndex: option + 1,
+                              selectedOptions: optionsState.selectedValues,
                               initialValue: optionsState.selectedValues[option],
+                              optionIndex: option + 1,
                               onSaved: (value) {
                                 ref
                                     .read(selectedTwoFAOptionsNotifierProvider.notifier)
