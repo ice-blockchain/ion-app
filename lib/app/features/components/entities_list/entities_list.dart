@@ -37,6 +37,7 @@ class EntitiesList extends HookWidget {
       itemCount: entities.length,
       itemBuilder: (BuildContext context, int index) {
         return _EntityListItem(
+          key: ValueKey(entities[index].id),
           eventReference: entities[index].toEventReference(),
           framedEventType: framedEventType,
           separatorHeight: separatorHeight,
@@ -51,6 +52,7 @@ class _EntityListItem extends ConsumerWidget {
     required this.eventReference,
     required this.framedEventType,
     double? separatorHeight,
+    super.key,
   }) : separatorHeight = separatorHeight ?? 12.0.s;
 
   final EventReference eventReference;

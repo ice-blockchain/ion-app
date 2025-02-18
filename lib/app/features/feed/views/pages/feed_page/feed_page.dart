@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
@@ -13,6 +14,7 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.d
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/posts_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
@@ -28,12 +30,14 @@ class FeedPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
-    final feedHasMore = ref.watch(
-      entitiesPagedDataProvider(ref.watch(feedPostsDataSourceProvider))
-          .select((state) => (state?.hasMore).falseOrValue),
+
+    final posts = ref.watch(postsProvider);
+    final entities = posts?.data.items?.toList();
+    final hasMorePosts = ref.watch(postsProvider.select((state) => (state?.hasMore).falseOrValue));
+
+    final showTrendingVideos = useRef(
+      ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo),
     );
-    final showTrendingVideos =
-        ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo);
 
     useScrollTopOnTabPress(context, scrollController: PrimaryScrollController.of(context));
 
@@ -43,18 +47,19 @@ class FeedPage extends HookConsumerWidget {
           children: [
             if (feedCategory == FeedCategory.articles) const ArticleCategoriesMenu(),
             if (feedCategory != FeedCategory.articles) const Stories(),
-            if (feedCategory == FeedCategory.feed && showTrendingVideos) const TrendingVideos(),
+            if (feedCategory == FeedCategory.feed && showTrendingVideos.value)
+              const TrendingVideos(),
           ],
         ),
       ),
-      const FeedPosts(),
+      FeedPosts(posts: entities),
     ];
 
     return Scaffold(
       body: LoadMoreBuilder(
         slivers: slivers,
-        hasMore: feedHasMore,
-        onLoadMore: () => _onLoadMore(ref),
+        hasMore: hasMorePosts,
+        onLoadMore: () => ref.read(postsProvider.notifier).loadMore(),
         builder: (context, slivers) {
           return PullToRefreshBuilder(
             sliverAppBar: CollapsingAppBar(
@@ -78,11 +83,5 @@ class FeedPage extends HookConsumerWidget {
       ..invalidate(entitiesPagedDataProvider(ref.read(feedStoriesDataSourceProvider)))
       ..invalidate(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)))
       ..invalidate(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)));
-  }
-
-  Future<void> _onLoadMore(WidgetRef ref) async {
-    await ref
-        .read(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)).notifier)
-        .fetchEntities();
   }
 }
