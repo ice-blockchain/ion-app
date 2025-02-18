@@ -45,7 +45,7 @@ class StoryContent extends HookConsumerWidget {
       (String? content) async {
         if (content == null || content.isEmpty) return;
 
-        final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+        final currentPubkey = ref.read(currentPubkeySelectorProvider);
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }

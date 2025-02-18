@@ -20,7 +20,6 @@ class RelayAuth extends _$RelayAuth {
   RelayAuthService build(IonConnectRelay relay) {
     final service = RelayAuthService(
       relay: relay,
-      completer: Completer(),
       createAuthEvent: ({
         required String challenge,
         required String relayUrl,
@@ -53,7 +52,7 @@ class RelayAuthService {
   RelayAuthService({
     required this.relay,
     required this.createAuthEvent,
-    required this.completer,
+    this.completer,
   });
 
   final IonConnectRelay relay;
@@ -61,7 +60,7 @@ class RelayAuthService {
   final Future<EventMessage> Function({required String challenge, required String relayUrl})
       createAuthEvent;
 
-  Completer<void> completer;
+  Completer<void>? completer;
 
   String? challenge;
 
@@ -98,7 +97,7 @@ class RelayAuthService {
       }
     }
     if (!actionSource.anonymous) {
-      await completer.future;
+      await completer?.future;
     }
   }
 
@@ -106,10 +105,12 @@ class RelayAuthService {
     if (challenge == null || challenge!.isEmpty) throw AuthChallengeIsEmptyException();
 
     // Cases when we need to re-authenticate the relay:
-    // when we obtained a user delegation and need to re-authenticate with the `b` tag
-    // when BE requested re-authentication (in response to sending an event or starting a subscription)
-    if (completer.isCompleted) {
+    // * when we obtained a user delegation and need to re-authenticate with the `b` tag
+    // * when BE requested re-authentication (in response to sending an event or starting a subscription)
+    if (completer == null || completer!.isCompleted) {
       completer = Completer();
+    } else {
+      return completer!.future;
     }
     try {
       final signedAuthEvent = await createAuthEvent(
@@ -131,9 +132,9 @@ class RelayAuthService {
         throw SendEventException(okMessages.message);
       }
 
-      completer.complete();
+      completer?.complete();
     } catch (error) {
-      completer.completeError(error);
+      completer?.completeError(error);
     }
   }
 
