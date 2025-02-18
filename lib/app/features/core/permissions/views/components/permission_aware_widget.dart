@@ -33,7 +33,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     ref.listen<bool>(
       hasPermissionProvider(permissionType),
       (previous, next) {
-        if (next && (activeRequestId == requestId) && context.mounted) {
+        if (next && (activeRequestId == null || activeRequestId == requestId) && context.mounted) {
           onGranted();
         }
       },
@@ -43,7 +43,7 @@ class PermissionAwareWidget extends ConsumerWidget {
       context,
       () {
         if (hasPermission) {
-          if (activeRequestId == requestId && context.mounted) {
+          if ((activeRequestId == null || activeRequestId == requestId) && context.mounted) {
             onGranted();
           }
         } else {
