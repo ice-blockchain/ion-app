@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
@@ -35,7 +36,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
     IonConnectRelay? relay,
   }) async {
-    final excludedKinds = [IonConnectGiftWrapServiceImpl.kind];
+    final excludedKinds = [IonConnectGiftWrapServiceImpl.kind, FileMetadataEntity.kind];
     for (final event in events) {
       if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
         Logger.log(
@@ -82,9 +83,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }) async {
     final result = await sendEvents(
       [event],
-      actionSource: actionSource,
       cache: cache,
       relay: relay,
+      actionSource: actionSource,
     );
     return result?.elementAtOrNull(0);
   }
@@ -180,16 +181,20 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return entities.isNotEmpty ? entities.first as T : null;
   }
 
-  Future<EventMessage> sign(EventSerializable entityData, {bool includeMasterPubkey = true}) async {
-    final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
+  Future<EventMessage> sign(
+    EventSerializable entityData, {
+    bool includeMasterPubkey = true,
+  }) async {
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
-
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
 
     if (mainWallet == null) {
       throw MainWalletNotFoundException();
+    }
+
+    final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
+
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
     }
 
     return entityData.toEventMessage(

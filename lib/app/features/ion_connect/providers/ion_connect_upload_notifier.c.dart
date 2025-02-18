@@ -2,12 +2,14 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/dio_provider.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/file_storage_metadata.c.dart';
@@ -31,6 +33,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
   Future<UploadResult> upload(
     MediaFile file, {
     required FileAlt alt,
+    EventSigner? customEventSigner,
   }) async {
     if (file.width == null || file.height == null) {
       throw UnknownFileResolutionException();
@@ -38,9 +41,23 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
 
     final dimension = '${file.width}x${file.height}';
 
-    final apiUrl = await _getFileStorageApiUrl();
+    final url = await _getFileStorageApiUrl();
 
-    final response = await _makeUploadRequest(url: apiUrl, file: file, alt: alt);
+    final fileBytes = await File(file.path).readAsBytes();
+
+    final authorizationToken = await _generateAuthorizationToken(
+      url: url,
+      fileBytes: fileBytes,
+      customEventSigner: customEventSigner,
+    );
+
+    final response = await _makeUploadRequest(
+      url: url,
+      alt: alt,
+      file: file,
+      fileBytes: fileBytes,
+      authorizationToken: authorizationToken,
+    );
 
     final fileMetadata = FileMetadata.fromUploadResponseTags(
       response.nip94Event.tags,
@@ -59,6 +76,24 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     );
 
     return (fileMetadata: fileMetadata, mediaAttachment: mediaAttachment);
+  }
+
+  Future<String> _generateAuthorizationToken({
+    required String url,
+    required List<int> fileBytes,
+    EventSigner? customEventSigner,
+  }) async {
+    final ionConnectAuth = IonConnectAuth(url: url, method: 'POST', payload: fileBytes);
+
+    if (customEventSigner != null) {
+      final authEvent = await ionConnectAuth.toEventMessage(customEventSigner);
+
+      return ionConnectAuth.toAuthorizationHeader(authEvent);
+    } else {
+      final authEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(ionConnectAuth);
+
+      return ionConnectAuth.toAuthorizationHeader(authEvent);
+    }
   }
 
   // TODO: handle delegatedToUrl when migrating to common relays
@@ -92,8 +127,9 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     required String url,
     required MediaFile file,
     required FileAlt alt,
+    required Uint8List fileBytes,
+    required String authorizationToken,
   }) async {
-    final fileBytes = await File(file.path).readAsBytes();
     final fileName = file.name ?? file.basename;
     final multipartFile = MultipartFile.fromBytes(fileBytes, filename: fileName);
 
@@ -105,15 +141,12 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
       'content_type': file.mimeType,
     });
 
-    final ionConnectAuth = IonConnectAuth(url: url, method: 'POST', payload: fileBytes);
-    final authEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(ionConnectAuth);
-
     try {
       final response = await ref.read(dioProvider).post<dynamic>(
             url,
             data: formData,
             options: Options(
-              headers: {'Authorization': ionConnectAuth.toAuthorizationHeader(authEvent)},
+              headers: {'Authorization': authorizationToken},
             ),
           );
 
