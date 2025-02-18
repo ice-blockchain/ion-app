@@ -17,7 +17,7 @@ class HorizontalSeparator extends StatelessWidget {
       height: height,
       alignment: Alignment.center,
       child: Container(
-        height: 0.5,
+        height: 0.5.s,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [

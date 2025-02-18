@@ -16,11 +16,13 @@ class WalletMainModalPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SheetContent(
+      topPadding: 0.0.s,
+      bottomPadding: 3.0.s,
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            NavigationAppBar.screen(
+            NavigationAppBar.modal(
               title: Text(context.i18n.wallet_modal_title),
               showBackButton: false,
             ),
@@ -36,6 +38,7 @@ class WalletMainModalPage extends StatelessWidget {
                 return MainModalItem(
                   item: type,
                   onTap: () => context.pushReplacement(routeLocation),
+                  index: index,
                 );
               },
             ),

@@ -25,10 +25,12 @@ class ChatMainModalPage extends ConsumerWidget {
 
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
+      topPadding: 0.0.s,
+      bottomPadding: 3.0.s,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          NavigationAppBar.screen(
+          NavigationAppBar.modal(
             title: Text(context.i18n.chat_modal_title),
             showBackButton: false,
           ),
@@ -42,6 +44,7 @@ class ChatMainModalPage extends ConsumerWidget {
 
               return MainModalItem(
                 item: conversationType,
+                index: index,
                 onTap: () => context.pushReplacement(conversationType.subRouteLocation),
               );
             },

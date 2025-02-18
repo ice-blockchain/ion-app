@@ -26,10 +26,12 @@ class FeedMainModalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
+      topPadding: 0.0.s,
+      bottomPadding: 3.0.s,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          NavigationAppBar.screen(
+          NavigationAppBar.modal(
             title: Text(context.i18n.feed_modal_title),
             showBackButton: false,
           ),
@@ -47,6 +49,7 @@ class FeedMainModalPage extends StatelessWidget {
                   builder: (_, onPressed) => MainModalItem(
                     item: type,
                     onTap: onPressed,
+                    index: index,
                   ),
                   onGranted: () => StoryRecordRoute().push<void>(context),
                   requestDialog: const PermissionRequestSheet(
@@ -93,6 +96,7 @@ class FeedMainModalPage extends StatelessWidget {
                   builder: (_, onPressed) => MainModalItem(
                     item: type,
                     onTap: onPressed,
+                    index: index,
                   ),
                 );
               }
@@ -103,6 +107,7 @@ class FeedMainModalPage extends StatelessWidget {
                   final createFlowRouteLocation = _getCreateFlowRouteLocation(type);
                   context.pushReplacement(createFlowRouteLocation);
                 },
+                index: index,
               );
             },
           ),
