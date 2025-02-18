@@ -75,7 +75,11 @@ class MessageReactionDialog extends HookConsumerWidget {
           behavior: HitTestBehavior.opaque,
           child: BackdropFilter(
             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: context.theme.appColors.primaryText.withValues(alpha: 0.5)),
+            child: Container(
+              width: MediaQuery.sizeOf(context).width,
+              height: MediaQuery.sizeOf(context).height,
+              color: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+            ),
           ),
         ),
         Positioned(
@@ -85,19 +89,22 @@ class MessageReactionDialog extends HookConsumerWidget {
           bottom: overflowBottomSize < 0
               ? MediaQuery.paddingOf(context).bottom
               : MediaQuery.paddingOf(context).bottom,
-          child: Column(
-            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MessageReactionEmojiBar(isMe: isMe),
-              Image.memory(
-                height: contentHeight,
-                fit: BoxFit.fitHeight,
-                imageBytes,
-              ),
-              //mock context menu
-              const MessageReactionContextMenu(),
-            ],
+          child: SizedBox(
+            width: MediaQuery.sizeOf(context).width,
+            child: Column(
+              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                MessageReactionEmojiBar(isMe: isMe),
+                Image.memory(
+                  imageBytes,
+                  height: contentHeight,
+                  width: size.width,
+                  fit: BoxFit.fitHeight,
+                ),
+                const IntrinsicWidth(child: MessageReactionContextMenu()),
+              ],
+            ),
           ),
         ),
       ],
