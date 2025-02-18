@@ -22,6 +22,7 @@ class GalleryPermissionButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return PermissionAwareWidget(
       permissionType: Permission.photos,
+      requestId: 'gallery_permission_button',
       onGranted: () async {
         if (context.mounted) {
           final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);

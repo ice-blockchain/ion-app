@@ -31,6 +31,7 @@ class CreateArticleAddImage extends HookConsumerWidget {
     );
 
     return PermissionAwareWidget(
+      requestId: 'create_article_image',
       permissionType: Permission.photos,
       onGranted: () async {
         if (context.mounted) {
