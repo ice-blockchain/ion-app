@@ -42,6 +42,7 @@ class StoryPreviewPage extends ConsumerWidget {
         child: Column(
           children: [
             NavigationAppBar.modal(
+              onBackPress: () => Navigator.of(context).pop(false),
               title: Text(
                 context.i18n.story_preview_title,
                 style: context.theme.appTextThemes.subtitle2,

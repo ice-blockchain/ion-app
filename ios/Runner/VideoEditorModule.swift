@@ -1,3 +1,4 @@
+
 import Foundation
 import BanubaVideoEditorSDK
 import BanubaAudioBrowserSDK
@@ -7,11 +8,11 @@ import Flutter
 protocol VideoEditor {
     func initVideoEditor(token: String?, flutterResult: @escaping FlutterResult)
     func openVideoEditorTrimmer(fromViewController controller: FlutterViewController, videoURL: URL, flutterResult: @escaping FlutterResult)
-    func openVideoEditorEditor(fromViewController controller: FlutterViewController, videoURL: URL?, flutterResult: @escaping FlutterResult)
+    func openCamera(fromViewController controller: FlutterViewController, flutterResult: @escaping FlutterResult)
+    func openEditor(fromViewController controller: FlutterViewController, videoURL: URL, flutterResult: @escaping FlutterResult)
 }
 
 class VideoEditorModule: VideoEditor {
-    
     private var videoEditorSDK: BanubaVideoEditor?
     private var flutterResult: FlutterResult?
     private let restoreLastVideoEditingSession = false
@@ -43,6 +44,7 @@ class VideoEditorModule: VideoEditor {
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
+
         let trimmerLaunchConfig = VideoEditorLaunchConfig(
             entryPoint: .trimmer,
             hostController: controller,
@@ -50,22 +52,38 @@ class VideoEditorModule: VideoEditor {
             musicTrack: nil,
             animated: true
         )
+
         checkLicenseAndStartVideoEditor(with: trimmerLaunchConfig, flutterResult: flutterResult)
     }
 
-    func openVideoEditorEditor(
+
+    func openCamera(
         fromViewController controller: FlutterViewController,
-        videoURL: URL?,
         flutterResult: @escaping FlutterResult
     ) {
         self.flutterResult = flutterResult
-        let editorLaunchConfig = VideoEditorLaunchConfig(
-            entryPoint: .editor,
+        let cameraConfig = VideoEditorLaunchConfig(
+            entryPoint: .camera,
             hostController: controller,
-            videoItems: videoURL != nil ? [videoURL!] : [],
             animated: true
         )
-        checkLicenseAndStartVideoEditor(with: editorLaunchConfig, flutterResult: flutterResult)
+        checkLicenseAndStartVideoEditor(with: cameraConfig, flutterResult: flutterResult)
+    }
+
+    
+    func openEditor(
+        fromViewController controller: FlutterViewController,
+        videoURL: URL,
+        flutterResult: @escaping FlutterResult
+    ) {
+        self.flutterResult = flutterResult
+        let editorConfig = VideoEditorLaunchConfig(
+            entryPoint: .editor,
+            hostController: controller,
+            videoItems: [videoURL],
+            animated: true
+        )
+        checkLicenseAndStartVideoEditor(with: editorConfig, flutterResult: flutterResult)
     }
 
     private func checkLicenseAndStartVideoEditor(
@@ -106,11 +124,11 @@ extension VideoEditorModule: BanubaVideoEditorDelegate {
             self.videoEditorSDK = nil
         }
     }
-    
+
     func videoEditorDone(_ videoEditor: BanubaVideoEditor) {
         exportVideo()
     }
-    
+
     func exportVideo() {
         let progressView = createProgressViewController()
         progressView.cancelHandler = { [weak self] in

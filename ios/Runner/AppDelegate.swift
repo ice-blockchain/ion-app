@@ -1,8 +1,11 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import UIKit
 import Flutter
 import AVKit
-import BanubaAudioBrowserSDK
+import BanubaVideoEditorSDK
 import BanubaPhotoEditorSDK
+import BanubaAudioBrowserSDK
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -84,15 +87,14 @@ import BanubaPhotoEditorSDK
                     guard let args = methodCall.arguments as? [String: Any],
                           let videoPath = args["videoURL"] as? String
                     else {
-                        videoEditor.openVideoEditorEditor(
+                        videoEditor.openCamera(
                             fromViewController: controller,
-                            videoURL: nil,
                             flutterResult: result
                         )
                         return
                     }
                     let url = URL(fileURLWithPath: videoPath)
-                    videoEditor.openVideoEditorEditor(
+                    videoEditor.openEditor(
                         fromViewController: controller,
                         videoURL: url,
                         flutterResult: result
