@@ -2,6 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
@@ -69,9 +70,12 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
       () async {
-        final userDelegationEvent = await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
-
-        await ref.read(ionConnectNotifierProvider.notifier).sendEvents([userDelegationEvent]);
+        final isDelegationComplete = await ref.read(delegationCompleteProvider.future);
+        if (!isDelegationComplete) {
+          final userDelegationEvent =
+              await _buildUserDelegation(onVerifyIdentity: onVerifyIdentity);
+          await ref.read(ionConnectNotifierProvider.notifier).sendEvents([userDelegationEvent]);
+        }
       },
     );
   }

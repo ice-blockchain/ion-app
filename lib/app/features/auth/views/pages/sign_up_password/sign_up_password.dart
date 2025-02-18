@@ -118,10 +118,13 @@ class SignUpPasswordPage extends HookConsumerWidget {
                                   keyName: identityKeyNameController.text,
                                   password: passwordController.text,
                                 );
-                            await onSuggestToAddBiometrics(
-                              username: identityKeyNameController.text,
-                              password: passwordController.text,
-                            );
+                            final state = ref.read(registerActionNotifierProvider);
+                            if (!state.hasError) {
+                              await onSuggestToAddBiometrics(
+                                username: identityKeyNameController.text,
+                                password: passwordController.text,
+                              );
+                            }
                           }
                         } else {
                           passwordsError.value = context.i18n.error_passwords_are_not_equal;

@@ -10,6 +10,7 @@ import 'package:ion/app/features/auth/providers/login_action_notifier.c.dart';
 import 'package:ion/app/features/auth/views/pages/get_started/get_started_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_input_step.dart';
 import 'package:ion/app/features/auth/views/pages/two_fa/twofa_options_step.dart';
+import 'package:ion/app/features/components/biometrics/hooks/use_on_suggest_biometrics.dart';
 import 'package:ion/app/features/components/passkey/hooks/use_on_suggest_to_create_local_passkey_creds.dart';
 import 'package:ion/app/features/components/passkey/identity_not_found_popup.dart';
 import 'package:ion/app/features/components/passkey/no_local_passkey_creds_popup.dart';
@@ -47,6 +48,7 @@ class GetStartedPage extends HookConsumerWidget {
     );
 
     final onSuggestToCreatePasskeyCreds = useOnSuggestToCreateLocalPasskeyCreds(ref);
+    final onSuggestToAddBiometrics = useOnSuggestToAddBiometrics(ref);
 
     return switch (step.value) {
       GetStartedPageStep.getStarted => GetStartedStep(
@@ -70,16 +72,16 @@ class GetStartedPage extends HookConsumerWidget {
                 step.value = GetStartedPageStep.twoFAOptions;
               }
             } else {
-              await _showSignInDialog(
+              final loginPassword = await _showSignInDialog(
                 ref,
                 usernameRef.value,
                 true,
                 twoFAOptions.value,
               );
               final loginState = ref.read(loginActionNotifierProvider);
-              if (loginState.hasError &&
-                  loginState.error is NoLocalPasskeyCredsFoundIONIdentityException) {
-                if (context.mounted) {
+              if (loginState.hasError) {
+                if (context.mounted &&
+                    loginState.error is NoLocalPasskeyCredsFoundIONIdentityException) {
                   final proceed = await showSimpleBottomSheet<bool>(
                     context: context,
                     child: const NoLocalPasskeyCredsPopup(),
@@ -94,6 +96,11 @@ class GetStartedPage extends HookConsumerWidget {
                     await onSuggestToCreatePasskeyCreds(username);
                   }
                 }
+              } else if (loginPassword != null) {
+                await onSuggestToAddBiometrics(
+                  username: username,
+                  password: loginPassword,
+                );
               }
             }
           },
@@ -121,27 +128,34 @@ class GetStartedPage extends HookConsumerWidget {
             isLoading:
                 loginActionState.isLoading || (authState.valueOrNull?.isAuthenticated).falseOrValue,
             onBackPress: () => step.value = GetStartedPageStep.twoFAOptions,
-            onContinuePressed: (twoFaTypes) {
+            onContinuePressed: (twoFaTypes) async {
               twoFAOptions.value = twoFaTypes;
-              _showSignInDialog(
+              final loginPassword = await _showSignInDialog(
                 ref,
                 usernameRef.value,
                 false,
                 twoFAOptions.value,
               );
+              if (loginPassword != null) {
+                await onSuggestToAddBiometrics(
+                  username: usernameRef.value,
+                  password: loginPassword,
+                );
+              }
             },
           ),
         ),
     };
   }
 
-  Future<void> _showSignInDialog(
+  Future<String?> _showSignInDialog(
     WidgetRef ref,
     String identityKeyName,
     bool localCredsOnly, [
     Map<TwoFaType, String>? twoFaTypes,
-  ]) {
-    return guardPasskeyDialog(
+  ]) async {
+    String? loginPassword;
+    await guardPasskeyDialog(
       ref.context,
       identityKeyName: identityKeyName,
       (child) => RiverpodVerifyIdentityRequestBuilder(
@@ -150,7 +164,19 @@ class GetStartedPage extends HookConsumerWidget {
         requestWithVerifyIdentity: (OnVerifyIdentity<AssertionRequestData> onVerifyIdentity) {
           ref.read(loginActionNotifierProvider.notifier).signIn(
                 keyName: identityKeyName,
-                onVerifyIdentity: onVerifyIdentity,
+                onVerifyIdentity: ({
+                  required onPasskeyFlow,
+                  required onPasswordFlow,
+                  required onBiometricsFlow,
+                }) =>
+                    onVerifyIdentity(
+                  onPasskeyFlow: onPasskeyFlow,
+                  onBiometricsFlow: onBiometricsFlow,
+                  onPasswordFlow: ({required String password}) {
+                    loginPassword = password;
+                    return onPasswordFlow(password: password);
+                  },
+                ),
                 twoFaTypes: twoFaTypes,
                 localCredsOnly: localCredsOnly,
               );
@@ -158,5 +184,6 @@ class GetStartedPage extends HookConsumerWidget {
         child: child,
       ),
     );
+    return loginPassword;
   }
 }

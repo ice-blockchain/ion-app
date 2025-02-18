@@ -104,6 +104,7 @@ class AuthClientServiceLocator {
       ),
       tokenStorage: IONIdentityServiceLocator.tokenStorage(),
       privateKeyStorage: IONIdentityServiceLocator.privateKeyStorage(),
+      biometricsStateStorage: IONIdentityServiceLocator.biometricsStateStorage(),
     );
   }
 

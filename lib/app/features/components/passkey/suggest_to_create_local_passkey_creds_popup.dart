@@ -9,9 +9,7 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/auth/providers/local_passkey_creds_provider.c.dart';
-import 'package:ion/app/features/auth/providers/onboarding_complete_notifier.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
@@ -25,10 +23,20 @@ class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final minSize = Size(56.0.s, 56.0.s);
-    final localPasskeyCredsActionsState = ref.watch(localPasskeyCredsActionsNotifierProvider);
-    final isProcessing = useState(false);
+    final rejectToCreateLocalPasskeyCredsState =
+        ref.watch(rejectToCreateLocalPasskeyCredsNotifierProvider);
+    final acceptToCreateLocalPasskeyCredsState =
+        ref.watch(acceptToCreateLocalPasskeyCredsNotifierProvider);
 
-    ref.displayErrors(onboardingCompleteNotifierProvider);
+    final handleLocalPasskeyFlow = useCallback(
+      (Future<void> Function() localPasskeyAction) async {
+        await localPasskeyAction();
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      [context],
+    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -51,37 +59,17 @@ class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
                   type: ButtonType.outlined,
                   label: Text(context.i18n.button_cancel),
                   minimumSize: minSize,
-                  disabled: isProcessing.value,
-                  trailingIcon: isProcessing.value
+                  disabled: rejectToCreateLocalPasskeyCredsState.isLoading,
+                  trailingIcon: rejectToCreateLocalPasskeyCredsState.isLoading
                       ? const IONLoadingIndicator(
                           type: IndicatorType.dark,
                         )
                       : const SizedBox.shrink(),
-                  onPressed: () async {
-                    isProcessing.value = true;
-                    try {
-                      final isDelegationComplete =
-                          ref.read(delegationCompleteProvider).valueOrNull.falseOrValue;
-                      if (!isDelegationComplete) {
-                        await ref.read(onboardingCompleteNotifierProvider.notifier).addDelegation(
-                              ({
-                                required onPasskeyFlow,
-                                required onPasswordFlow,
-                                required onBiometricsFlow,
-                              }) =>
-                                  onPasskeyFlow(),
-                            );
-                      }
-                      await ref
-                          .read(localPasskeyCredsActionsNotifierProvider.notifier)
-                          .rejectToCreateLocalPasskeyCreds(username: username);
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    } finally {
-                      isProcessing.value = false;
-                    }
-                  },
+                  onPressed: () => handleLocalPasskeyFlow(
+                    () => ref
+                        .read(rejectToCreateLocalPasskeyCredsNotifierProvider.notifier)
+                        .rejectToCreateLocalPasskeyCreds(username: username),
+                  ),
                 ),
               ),
               SizedBox(
@@ -91,18 +79,15 @@ class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
                 child: Button.compact(
                   label: Text(context.i18n.button_continue),
                   minimumSize: minSize,
-                  disabled: localPasskeyCredsActionsState.isLoading,
-                  trailingIcon: localPasskeyCredsActionsState.isLoading
+                  disabled: acceptToCreateLocalPasskeyCredsState.isLoading,
+                  trailingIcon: acceptToCreateLocalPasskeyCredsState.isLoading
                       ? const IONLoadingIndicator()
                       : const SizedBox.shrink(),
-                  onPressed: () async {
-                    await ref
-                        .read(localPasskeyCredsActionsNotifierProvider.notifier)
-                        .createLocalPasskeyCreds(username: username);
-                    if (context.mounted) {
-                      Navigator.of(context).pop();
-                    }
-                  },
+                  onPressed: () => handleLocalPasskeyFlow(
+                    () => ref
+                        .read(acceptToCreateLocalPasskeyCredsNotifierProvider.notifier)
+                        .createLocalPasskeyCreds(username: username),
+                  ),
                 ),
               ),
             ],
