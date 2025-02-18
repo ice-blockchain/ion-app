@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvent
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
+import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
@@ -37,7 +38,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
     IonConnectRelay? relay,
   }) async {
-    final excludedKinds = [IonConnectGiftWrapServiceImpl.kind];
+    final excludedKinds = [IonConnectGiftWrapServiceImpl.kind, FileMetadataEntity.kind];
     for (final event in events) {
       if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
         Logger.log(
@@ -96,12 +97,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final mainWallet = ref.read(mainWalletProvider).valueOrNull;
-
-    if (mainWallet == null) {
-      throw MainWalletNotFoundException();
-    }
-
     final events = await Future.wait(entitiesData.map(sign));
     return sendEvents(events, actionSource: actionSource, cache: cache);
   }
