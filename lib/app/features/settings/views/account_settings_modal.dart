@@ -90,16 +90,16 @@ class AccountSettingsModal extends HookConsumerWidget {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          contentLanguages.first.name,
-                          style: context.theme.appTextThemes.caption.copyWith(color: primaryColor),
-                        ),
-                        if (contentLanguages.length > 1) ...[
-                          SizedBox(width: 12.0.s),
+                        if (contentLanguages.length > 1)
                           _RemainingLanguagesLabel(
-                            value: contentLanguages.length - 1,
+                            value: contentLanguages.length,
+                          )
+                        else
+                          Text(
+                            contentLanguages.first.name,
+                            style:
+                                context.theme.appTextThemes.caption.copyWith(color: primaryColor),
                           ),
-                        ],
                       ],
                     ),
                     onTap: () {
@@ -139,7 +139,7 @@ class _RemainingLanguagesLabel extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        context.i18n.settings_remaining_content_languages_number(value),
+        value.toString(),
         style: context.theme.appTextThemes.caption
             .copyWith(color: context.theme.appColors.primaryAccent),
       ),
