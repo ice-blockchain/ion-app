@@ -26,11 +26,6 @@ class ToolbarPollButton extends HookWidget {
       icon: Assets.svg.iconPostPoll,
       enabled: !hasPoll,
       onPressed: () {
-        if (onPressed != null) {
-          onPressed!();
-          return;
-        }
-
         final index = textEditorController.selection.baseOffset;
 
         textEditorController.document.insert(
@@ -41,6 +36,8 @@ class ToolbarPollButton extends HookWidget {
         );
 
         textEditorController.moveCursorToPosition(index + 1);
+
+        onPressed?.call();
       },
     );
   }

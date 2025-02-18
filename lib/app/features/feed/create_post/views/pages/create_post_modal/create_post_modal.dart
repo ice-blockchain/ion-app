@@ -19,7 +19,7 @@ import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({
-    required this.showCollapseButton,
+    required this.shouldClearContent,
     super.key,
     this.parentEvent,
     this.quotedEvent,
@@ -32,7 +32,7 @@ class CreatePostModal extends HookConsumerWidget {
   final EventReference? quotedEvent;
   final EventReference? modifiedEvent;
   final String? content;
-  final bool showCollapseButton;
+  final bool shouldClearContent;
   final String? videoPath;
 
   @override
@@ -65,7 +65,7 @@ class CreatePostModal extends HookConsumerWidget {
         body: Column(
           children: [
             CreatePostAppBar(
-              showCollapseButton: showCollapseButton,
+              shouldClearContent: shouldClearContent,
               createOption: createOption,
               textEditorController: textEditorController,
             ),
