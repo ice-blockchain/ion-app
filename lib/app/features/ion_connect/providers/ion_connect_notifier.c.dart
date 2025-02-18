@@ -4,13 +4,11 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/auth_event.c.dart';
-import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -18,6 +16,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -85,9 +84,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   }) async {
     final result = await sendEvents(
       [event],
-      actionSource: actionSource,
       cache: cache,
       relay: relay,
+      actionSource: actionSource,
     );
     return result?.elementAtOrNull(0);
   }
@@ -97,7 +96,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final events = await Future.wait(entitiesData.map((e) => sign(e, encrypted: true)));
+    final mainWallet = ref.read(mainWalletProvider).valueOrNull;
+
+    if (mainWallet == null) {
+      throw MainWalletNotFoundException();
+    }
+
+    final events = await Future.wait(entitiesData.map(sign));
     return sendEvents(events, actionSource: actionSource, cache: cache);
   }
 
@@ -185,7 +190,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
   Future<EventMessage> sign(
     EventSerializable entityData, {
-    bool encrypted = false,
     bool includeMasterPubkey = true,
   }) async {
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
@@ -194,27 +198,16 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       throw MainWalletNotFoundException();
     }
 
-    final eventSigner = encrypted
-        ? await Ed25519KeyStore.generate()
-        : ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
+    final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
 
     if (eventSigner == null) {
       throw EventSignerNotFoundException();
     }
 
-    final expirationTag = EntityExpiration(
-      value: DateTime.now().add(
-        Duration(
-          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS),
-        ),
-      ),
-    ).toTag();
-
     return entityData.toEventMessage(
       eventSigner,
       tags: [
-        if (includeMasterPubkey && !encrypted) ['b', mainWallet.signingKey.publicKey],
-        if (encrypted) expirationTag,
+        if (includeMasterPubkey) ['b', mainWallet.signingKey.publicKey],
       ],
     );
   }

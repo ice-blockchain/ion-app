@@ -16,6 +16,7 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
@@ -23,6 +24,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/file_cache/ion_file_cache_manager.c.dart';
+import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
@@ -132,14 +134,21 @@ class SendE2eeMessageService {
                 final nonce = encryptedMediaFile.$3;
                 final mac = encryptedMediaFile.$4;
 
+                final oneTimeEventSigner = await Ed25519KeyStore.generate();
+
                 final uploadResult = await ionConnectUploadNotifier.upload(
                   mediaFile,
-                  encrypted: true,
                   alt: FileAlt.message,
+                  customEventSigner: oneTimeEventSigner,
                 );
 
-                await ionConnectNotifier.sendEntitiesData(
-                  [uploadResult.fileMetadata],
+                final fileMetadataEvent = await _generateFileMetadataEvent(
+                  ontTimeEventSigner: oneTimeEventSigner,
+                  fileMetadataEntity: uploadResult.fileMetadata,
+                );
+
+                await ionConnectNotifier.sendEvent(
+                  fileMetadataEvent,
                   actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
                 );
 
@@ -191,6 +200,21 @@ class SendE2eeMessageService {
     } catch (e) {
       throw SendEventException(e.toString());
     }
+  }
+
+  Future<EventMessage> _generateFileMetadataEvent({
+    required Ed25519KeyStore ontTimeEventSigner,
+    required EventSerializable fileMetadataEntity,
+  }) async {
+    final expirationTag = EntityExpiration(
+      value:
+          DateTime.now().add(Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS))),
+    ).toTag();
+
+    return fileMetadataEntity.toEventMessage(
+      ontTimeEventSigner,
+      tags: [expirationTag],
+    );
   }
 
   static const allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
