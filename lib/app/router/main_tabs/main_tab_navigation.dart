@@ -38,8 +38,9 @@ class MainTabNavigation extends HookConsumerWidget {
       ref.read(userChatRelaysManagerProvider.notifier).sync();
     });
 
-    final showDebugMenu = ref.watch(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO);
-    final isDebugSheetOpen = useState(false);
+    final showDebugMenu = useRef(
+      ref.watch(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO),
+    );
 
     return Scaffold(
       body: MainTabNavigationContainer(
@@ -60,25 +61,10 @@ class MainTabNavigation extends HookConsumerWidget {
                   _navigateToTab(context, tabItem, initialLocation: currentTab == tabItem);
                 }
               },
-              onLongPressedDuration: showDebugMenu ? const Duration(seconds: 2) : null,
-              onLongPressed: showDebugMenu
+              onLongPressedDuration: showDebugMenu.value ? const Duration(seconds: 2) : null,
+              onLongPressed: showDebugMenu.value
                   ? (tabItem) {
-                      if (tabItem == TabItem.main) {
-                        if (isDebugSheetOpen.value) {
-                          return;
-                        }
-
-                        isDebugSheetOpen.value = true;
-                        showSimpleBottomSheet<void>(
-                          context: rootNavigatorKey.currentContext!,
-                          child: const DebugPage(),
-                          onPopInvokedWithResult: (didPop, _) {
-                            if (didPop) {
-                              isDebugSheetOpen.value = false;
-                            }
-                          },
-                        );
-                      }
+                      if (tabItem == TabItem.main) _handleDebugMenuTap(context);
                     }
                   : null,
             ),
@@ -99,6 +85,11 @@ class MainTabNavigation extends HookConsumerWidget {
       state.isMainModalOpen
           ? context.go(tabItem.baseRouteLocation)
           : shell.goBranch(tabItem.navigationIndex, initialLocation: initialLocation);
+
+  void _handleDebugMenuTap(BuildContext context) => showSimpleBottomSheet<void>(
+        context: rootNavigatorKey.currentContext!,
+        child: const DebugPage(),
+      );
 }
 
 class _BottomNavBarContent extends ConsumerWidget {
