@@ -48,7 +48,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
             title: title,
             description: description,
           ),
-          SizedBox(height: 8.0.s),
+          SizedBox(height: 26.0.s),
           Expanded(
             child: CustomScrollView(
               slivers: [

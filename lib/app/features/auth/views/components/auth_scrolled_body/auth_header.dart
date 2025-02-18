@@ -30,50 +30,47 @@ class AuthHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 320.0.s,
-      child: Column(
-        children: [
-          SizedBox(height: topOffset),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 28.0.s),
-            child: Column(
-              children: [
-                if (icon != null)
-                  Padding(
-                    padding: EdgeInsets.only(bottom: iconOffset),
-                    child: icon,
+    return Column(
+      children: [
+        SizedBox(height: topOffset),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 28.0.s),
+          child: Column(
+            children: [
+              if (icon != null)
+                Padding(
+                  padding: EdgeInsets.only(bottom: iconOffset),
+                  child: icon,
+                ),
+              if (title?.isNotEmpty ?? false)
+                Text(
+                  title!,
+                  textAlign: TextAlign.center,
+                  style: titleStyle ??
+                      context.theme.appTextThemes.headline1.copyWith(
+                        color: context.theme.appColors.primaryText,
+                      ),
+                ),
+              if (description.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: descriptionSidePadding,
+                    right: descriptionSidePadding,
+                    top: 8.0.s,
                   ),
-                if (title?.isNotEmpty ?? false)
-                  Text(
-                    title!,
+                  child: Text(
+                    description!,
                     textAlign: TextAlign.center,
-                    style: titleStyle ??
-                        context.theme.appTextThemes.headline1.copyWith(
-                          color: context.theme.appColors.primaryText,
+                    style: descriptionStyle ??
+                        context.theme.appTextThemes.body2.copyWith(
+                          color: context.theme.appColors.tertararyText,
                         ),
                   ),
-                if (description.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: descriptionSidePadding,
-                      right: descriptionSidePadding,
-                      top: 8.0.s,
-                    ),
-                    child: Text(
-                      description!,
-                      textAlign: TextAlign.center,
-                      style: descriptionStyle ??
-                          context.theme.appTextThemes.body2.copyWith(
-                            color: context.theme.appColors.tertararyText,
-                          ),
-                    ),
-                  ),
-              ],
-            ),
+                ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
