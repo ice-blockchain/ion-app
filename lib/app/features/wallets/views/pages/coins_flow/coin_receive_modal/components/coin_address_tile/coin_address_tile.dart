@@ -10,7 +10,6 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
@@ -18,12 +17,7 @@ import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CoinAddressTile extends HookConsumerWidget {
-  const CoinAddressTile({
-    required this.coinData,
-    super.key,
-  });
-
-  final CoinData coinData;
+  const CoinAddressTile({super.key});
 
   static double get buttonSize => 36.0.s;
 
@@ -31,16 +25,12 @@ class CoinAddressTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final address = ref.watch(
-      receiveCoinsFormControllerProvider.select((state) => state.address),
-    );
+    final state = ref.watch(receiveCoinsFormControllerProvider);
+    final coinsGroup = state.selectedCoin!;
+    final address = state.address ?? '';
+
     final isCopied = useState<bool>(false);
     final tooltipLeftPosition = useState<double>(0);
-
-    // TODO: (1) nullability is not implemented. Need to make a request to receive the wallet address
-    if (address == null) {
-      return const SizedBox.shrink();
-    }
 
     return Container(
       decoration: BoxDecoration(
@@ -60,16 +50,14 @@ class CoinAddressTile extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CoinIconWidget(
-                    imageUrl: coinData.iconUrl,
+                    imageUrl: coinsGroup.iconUrl,
                     size: 16.0.s,
                   ),
                   SizedBox(
                     width: 6.0.s,
                   ),
                   Text(
-                    context.i18n.wallet_coin_address(
-                      coinData.name,
-                    ),
+                    context.i18n.wallet_coin_address(coinsGroup.name),
                     style: context.theme.appTextThemes.body.copyWith(
                       color: context.theme.appColors.primaryText,
                     ),
