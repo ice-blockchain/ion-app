@@ -14,7 +14,7 @@ part 'user_replies_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? userRepliesDataSource(Ref ref, String pubkey) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
     return null;

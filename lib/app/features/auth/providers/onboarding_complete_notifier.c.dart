@@ -122,7 +122,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   ({InterestSetData interestSetData, InterestsData interestsData}) _buildUserLanguages() {
     final OnboardingState(:languages) = ref.read(onboardingDataProvider);
 
-    final currentPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
 
     if (languages == null || languages.isEmpty) {
       throw RequiredFieldIsEmptyException(field: 'languages');

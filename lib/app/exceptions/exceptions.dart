@@ -371,3 +371,7 @@ class UnknownNetworkException extends IONException {
           'Unknown network: $network',
         );
 }
+
+class AnonymousRelayAuthException extends IONException {
+  AnonymousRelayAuthException() : super(10071, 'Auth required error in anonymous relay');
+}

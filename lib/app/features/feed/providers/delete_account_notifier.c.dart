@@ -6,10 +6,9 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
-import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,7 +42,6 @@ class DeleteAccountNotifier extends _$DeleteAccountNotifier {
         onVerifyIdentity: onVerifyIdentity,
       );
 
-      // clean ion connect data
       await ref.read(ionConnectNotifierProvider.notifier).sendEvent(event, cache: false);
 
       // clean ion identity data
@@ -53,11 +51,9 @@ class DeleteAccountNotifier extends _$DeleteAccountNotifier {
           );
 
       // clean local storage data
-      final localStorage = ref.read(localStorageProvider);
+      final localStorage =
+          ref.read(userPreferencesServiceProvider(identityKeyName: currentIdentityKeyName));
       await localStorage.clear();
-
-      // invalidate providers
-      ref.invalidate(ionConnectCacheProvider);
     });
   }
 }

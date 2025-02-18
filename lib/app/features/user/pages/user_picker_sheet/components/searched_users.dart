@@ -25,7 +25,7 @@ class SearchedUsers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final masterPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+    final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final dataSource = ref.watch(searchUsersDataSourceProvider).valueOrNull;
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     // TODO: https://github.com/ice-blockchain/ion-app/pull/617#discussion_r1935389058

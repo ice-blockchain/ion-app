@@ -29,7 +29,7 @@ part 'tables/reaction_table.dart';
 
 @Riverpod(keepAlive: true)
 ChatDatabase chatDatabase(Ref ref) {
-  final pubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final pubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (pubkey == null) {
     throw UserMasterPubkeyNotFoundException();

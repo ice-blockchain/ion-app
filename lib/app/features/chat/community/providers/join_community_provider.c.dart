@@ -23,7 +23,7 @@ class JoinCommunityNotifier extends _$JoinCommunityNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      final pubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+      final pubkey = ref.read(currentPubkeySelectorProvider);
 
       if (pubkey == null) {
         throw UserMasterPubkeyNotFoundException();

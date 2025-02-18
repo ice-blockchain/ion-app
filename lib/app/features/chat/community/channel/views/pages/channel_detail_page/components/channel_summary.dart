@@ -26,7 +26,7 @@ class ChannelSummary extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider).requireValue;
+    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
     final canEdit = useCanEditChannel(channel: channel, currentPubkey: currentUserPubkey);
 

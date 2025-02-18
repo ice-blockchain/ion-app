@@ -10,7 +10,7 @@ part 'unread_message_count_provider.c.g.dart';
 
 @riverpod
 Stream<int> getUnreadMessagesCount(Ref ref, String conversationId) async* {
-  final currentUserMasterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentUserMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
@@ -23,7 +23,7 @@ Stream<int> getUnreadMessagesCount(Ref ref, String conversationId) async* {
 
 @riverpod
 Stream<int> getAllUnreadMessagesCount(Ref ref) async* {
-  final currentUserMasterPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentUserMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();

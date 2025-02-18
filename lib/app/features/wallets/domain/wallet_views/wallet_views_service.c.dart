@@ -23,10 +23,16 @@ part 'wallet_views_service.c.g.dart';
 
 @riverpod
 Future<WalletViewsService> walletViewsService(Ref ref) async {
+  final mainWallet = await ref.watch(mainWalletProvider.future);
+
+  if (mainWallet == null) {
+    throw MainWalletNotFoundException();
+  }
+
   return WalletViewsService(
     await ref.watch(ionIdentityClientProvider.future),
     await ref.watch(walletsNotifierProvider.future),
-    await ref.watch(mainWalletProvider.future),
+    mainWallet,
   );
 }
 

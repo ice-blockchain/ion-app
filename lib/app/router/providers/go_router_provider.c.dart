@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/auth/providers/delegation_complete_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
+import 'package:ion/app/features/auth/providers/relays_assigned_provider.c.dart';
 import 'package:ion/app/features/auth/views/pages/link_new_device/link_new_device_dialog.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -66,13 +68,14 @@ Future<String?> _mainRedirect({
   final isOnSplash = location.startsWith(SplashRoute().location);
   final isOnAuth = location.contains('/${AuthRoutes.authPrefix}/');
   final isOnOnboarding = location.contains('/${AuthRoutes.onboardingPrefix}/');
+  final isOnFeed = location == FeedRoute().location;
 
   if (!isAuthenticated && !isOnAuth) {
     return IntroRoute().location;
   }
 
-  if (isAuthenticated && onboardingComplete != null || isAuthenticated && isOnAuth) {
-    if (onboardingComplete != null && onboardingComplete) {
+  if (isAuthenticated && onboardingComplete != null) {
+    if (onboardingComplete) {
       if (isOnSplash || isOnAuth) {
         return FeedRoute().location;
       } else if (isOnOnboarding) {
@@ -84,16 +87,22 @@ Future<String?> _mainRedirect({
       }
     }
 
-    if ((onboardingComplete == null || !onboardingComplete) && !isOnOnboarding) {
-      if (location == FeedRoute().location) {
-        return null;
-      }
-      final userMetadata = await ref.read(currentUserMetadataProvider.future);
-      if (userMetadata != null) {
-        ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowLinkNewDeviceDialogEvent());
-        return FeedRoute().location;
-      }
+    final hasUserMetadata = ref.read(currentUserMetadataProvider).valueOrNull != null;
+    final delegationComplete = ref.read(delegationCompleteProvider).valueOrNull.falseOrValue;
+    final relaysAssigned = ref.read(relaysAssignedProvider).valueOrNull.falseOrValue;
+
+    if (!onboardingComplete && !isOnOnboarding && !(hasUserMetadata && relaysAssigned)) {
       return FillProfileRoute().location;
+    }
+
+    if (!onboardingComplete &&
+        !isOnFeed &&
+        !isOnOnboarding &&
+        hasUserMetadata &&
+        relaysAssigned &&
+        !delegationComplete) {
+      ref.read(uiEventQueueNotifierProvider.notifier).emit(const ShowLinkNewDeviceDialogEvent());
+      return FeedRoute().location;
     }
   }
   return null;

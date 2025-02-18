@@ -31,7 +31,7 @@ Future<List<String>> archivedConversations(Ref ref) async {
             articlesRefs: [],
           );
 
-  final currentUserPubkey = ref.read(currentPubkeySelectorProvider).valueOrNull;
+  final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
   final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
 
   if (currentUserPubkey == null) {

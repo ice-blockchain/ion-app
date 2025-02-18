@@ -12,23 +12,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'follow_list_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<FollowListEntity?> followList(
   Ref ref,
   String pubkey, {
   bool network = true,
   bool cache = true,
 }) async {
-  ref.onDispose(
-    () => ref.invalidate(
-      ionConnectEntityProvider(
-        eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
-        network: network,
-        cache: cache,
-      ),
-    ),
-  );
-
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: FollowListEntity.kind),
@@ -38,14 +28,13 @@ Future<FollowListEntity?> followList(
   ) as FollowListEntity?;
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<FollowListEntity?> currentUserFollowList(Ref ref) async {
-  final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
     return null;
   }
-  ref.onDispose(() => ref.invalidate(followListProvider(currentPubkey, cache: false)));
-  return ref.watch(followListProvider(currentPubkey, cache: false).future);
+  return ref.watch(followListProvider(currentPubkey).future);
 }
 
 @riverpod
@@ -59,7 +48,7 @@ bool isCurrentUserFollowingSelector(Ref ref, String pubkey) {
 
 @riverpod
 bool isCurrentUserFollowed(Ref ref, String pubkey) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   return ref.watch(
     followListProvider(pubkey).select(
       (state) =>

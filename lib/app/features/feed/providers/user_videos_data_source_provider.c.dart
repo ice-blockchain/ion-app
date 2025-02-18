@@ -16,7 +16,7 @@ part 'user_videos_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? userVideosDataSource(Ref ref, String pubkey) {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
     return null;

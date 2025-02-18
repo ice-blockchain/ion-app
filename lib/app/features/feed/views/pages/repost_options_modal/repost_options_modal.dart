@@ -36,7 +36,7 @@ class RepostOptionsModal extends HookConsumerWidget {
 
     final selectedAction = useState<RepostOptionAction?>(null);
     final repostLoading = ref.watch(repostNotifierProvider).isLoading;
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
     final actions = [
       if (repostReference != null && repostReference!.pubkey == currentPubkey)

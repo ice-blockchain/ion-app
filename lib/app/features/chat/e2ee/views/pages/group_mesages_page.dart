@@ -56,7 +56,7 @@ class GroupMessagesPage extends HookConsumerWidget {
             _MessagesList(conversationId: conversationId),
             MessagingBottomBar(
               onSubmitted: (content) async {
-                final currentPubkey = await ref.read(currentPubkeySelectorProvider.future);
+                final currentPubkey = ref.read(currentPubkeySelectorProvider);
                 if (currentPubkey == null) {
                   throw UserMasterPubkeyNotFoundException();
                 }

@@ -36,7 +36,7 @@ class ChannelMessagingPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final channel = ref.watch(communityMetadataProvider(communityId)).valueOrNull;
     final joinRequests = ref.watch(communityJoinRequestsProvider).valueOrNull;
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
     final isJoined = useMemoized(
         () =>

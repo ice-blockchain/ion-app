@@ -21,7 +21,7 @@ class CanReply extends _$CanReply {
 
   @override
   Future<bool> build(EventReference eventReference) async {
-    final currentPubkey = ref.watch(currentPubkeySelectorProvider).value;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
       return true;
     }

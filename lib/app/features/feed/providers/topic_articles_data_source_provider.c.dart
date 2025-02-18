@@ -22,7 +22,7 @@ part 'topic_articles_data_source_provider.c.g.dart';
 List<EntitiesDataSource>? topicArticlesDataSource(Ref ref, ArticleTopic topic) {
   final filter = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
   final filterRelays = ref.watch(feedFilterRelaysProvider(filter)).valueOrNull;
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays != null && currentPubkey != null) {
     return [

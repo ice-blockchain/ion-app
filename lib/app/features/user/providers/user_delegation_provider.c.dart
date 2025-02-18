@@ -13,7 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'user_delegation_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
   final userDelegation = await ref.watch(
     cachedUserDelegationProvider(pubkey).future,
@@ -34,7 +34,7 @@ Future<UserDelegationEntity?> userDelegation(Ref ref, String pubkey) async {
       );
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<UserDelegationEntity?> cachedUserDelegation(Ref ref, String pubkey) async {
   final userDelegation = ref.watch(
     ionConnectCacheProvider.select(
@@ -52,9 +52,12 @@ Future<UserDelegationEntity?> cachedUserDelegation(Ref ref, String pubkey) async
   return userDelegation;
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
+  if (mainWallet == null) {
+    return null;
+  }
 
   try {
     return await ref.watch(userDelegationProvider(mainWallet.signingKey.publicKey).future);
@@ -63,9 +66,12 @@ Future<UserDelegationEntity?> currentUserDelegation(Ref ref) async {
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<UserDelegationEntity?> currentUserCachedDelegation(Ref ref) async {
   final mainWallet = await ref.watch(mainWalletProvider.future);
+  if (mainWallet == null) {
+    return null;
+  }
 
   try {
     return await ref.watch(cachedUserDelegationProvider(mainWallet.signingKey.publicKey).future);

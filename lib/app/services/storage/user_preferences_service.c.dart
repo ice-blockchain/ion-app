@@ -78,5 +78,19 @@ class UserPreferencesService {
     return _localStorage.remove(userKey);
   }
 
-  String _getUserKey(String key) => 'user_$_identityKeyName:$key';
+  Future<void> clear() async {
+    final userKeyPrefix = _getUserKeyPrefix();
+    await Future.wait(
+      _localStorage.getKeys().map((key) {
+        if (key.startsWith(userKeyPrefix)) {
+          return _localStorage.remove(key);
+        }
+        return null;
+      }).nonNulls,
+    );
+  }
+
+  String _getUserKey(String key) => '${_getUserKeyPrefix()}:$key';
+
+  String _getUserKeyPrefix() => 'user_$_identityKeyName';
 }
