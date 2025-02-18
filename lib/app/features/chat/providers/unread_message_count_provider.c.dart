@@ -15,10 +15,24 @@ Stream<int> getUnreadMessagesCount(Ref ref, String conversationId) async* {
   if (currentUserMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
   }
+
   yield* ref.watch(conversationMessageDaoProvider).getUnreadMessagesCount(
         conversationId: conversationId,
         currentUserMasterPubkey: currentUserMasterPubkey,
       );
+}
+
+@riverpod
+Stream<int> getAllUnreadMessagesCountInArchive(Ref ref) async* {
+  final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+  if (currentUserMasterPubkey == null) {
+    throw UserMasterPubkeyNotFoundException();
+  }
+
+  yield* ref
+      .watch(conversationMessageDaoProvider)
+      .getAllUnreadMessagesCountInArchive(currentUserMasterPubkey);
 }
 
 @riverpod
