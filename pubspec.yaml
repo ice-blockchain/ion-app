@@ -93,7 +93,6 @@ dependencies:
       version: ^1.0.0
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.6.1
-  shake_gesture: ^1.1.0
   share_plus: ^10.0.2
   shared_preferences: ^2.3.5
   shimmer: ^3.0.0
