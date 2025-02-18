@@ -8,7 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
+import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -49,8 +49,7 @@ class RecentChatTile extends HookConsumerWidget {
           context: context,
           barrierColor: Colors.transparent,
           useSafeArea: false,
-          builder: (context) => MessageReactionDialog(
-            isMe: true,
+          builder: (context) => RecentChatOverlay(
             renderObject: messageItemKey.currentContext!.findRenderObject()!,
           ),
         );
