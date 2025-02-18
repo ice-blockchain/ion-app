@@ -90,15 +90,9 @@ class WalletPage extends HookConsumerWidget {
           ],
           onRefresh: () async {
             final currentUserFollowList = ref.read(currentUserFollowListProvider).valueOrNull;
-            ref
-                .read(
-                  ionConnectCacheProvider.notifier,
-                )
-                .remove(
-                  CacheableEntity.cacheKeyBuilder(
-                    eventReference: currentUserFollowList!.toEventReference(),
-                  ),
-                );
+            if (currentUserFollowList != null) {
+              ref.read(ionConnectCacheProvider.notifier).remove(currentUserFollowList.cacheKey);
+            }
             ref
               ..invalidate(walletViewsDataNotifierProvider)
               ..invalidate(coinsInWalletProvider)
