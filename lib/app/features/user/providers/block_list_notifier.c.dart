@@ -95,8 +95,9 @@ Future<bool> isPostChildBlockedOrBlocking(
     ionConnectEntityProvider(eventReference: quotedEvent.eventReference).future,
   );
   if (quotedPost == null) return false;
-
-  return ref.watch(isEntityBlockedOrBlockingProvider(quotedPost, cacheOnly: cacheOnly).future);
+  //TODO: fix auto-dispose issue
+  // return ref.watch(isEntityBlockedOrBlockingProvider(quotedPost, cacheOnly: cacheOnly).future);
+  return false;
 }
 
 @riverpod

@@ -13,7 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_entity_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<IonConnectEntity?> ionConnectEntity(
   Ref ref, {
   required EventReference eventReference,

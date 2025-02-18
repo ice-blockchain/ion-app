@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
@@ -88,9 +89,18 @@ class WalletPage extends HookConsumerWidget {
             getActiveTabContent(),
           ],
           onRefresh: () async {
+            final currentUserFollowList = ref.read(currentUserFollowListProvider).valueOrNull;
+            ref
+                .read(
+                  ionConnectCacheProvider.notifier,
+                )
+                .remove(
+                  CacheableEntity.cacheKeyBuilder(
+                    eventReference: currentUserFollowList!.toEventReference(),
+                  ),
+                );
             ref
               ..invalidate(walletViewsDataNotifierProvider)
-              ..invalidate(currentUserFollowListProvider)
               ..invalidate(coinsInWalletProvider)
               ..invalidate(nftsDataProvider);
           },
