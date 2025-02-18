@@ -1444,9 +1444,11 @@ packages:
   markdown_quill:
     dependency: "direct main"
     description:
-      path: "../markdown_quill"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "832259d48e7f37be8dc55c390a266bfb1daa25fc"
+      url: "https://github.com/ice-blockchain/markdown_quill"
+    source: git
     version: "4.2.0"
   matcher:
     dependency: transitive

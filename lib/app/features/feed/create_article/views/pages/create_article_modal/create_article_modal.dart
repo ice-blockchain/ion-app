@@ -95,7 +95,6 @@ class CreateArticleModal extends HookConsumerWidget {
                           autofocus: true,
                           textInputAction: TextInputAction.next,
                           onSubmitted: (_) {
-                            // articleState.textEditorController.editorFocusNode?.requestFocus();
                             articleState.editorFocusNotifier.value = true;
                           },
                           style: context.theme.appTextThemes.headline2.copyWith(
