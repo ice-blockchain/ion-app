@@ -50,6 +50,7 @@ class RecentChatTile extends HookConsumerWidget {
           barrierColor: Colors.transparent,
           useSafeArea: false,
           builder: (context) => RecentChatOverlay(
+            conversation: conversation,
             renderObject: messageItemKey.currentContext!.findRenderObject()!,
           ),
         );

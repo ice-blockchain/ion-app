@@ -7,6 +7,7 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_combined_conversation_names.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
+import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
@@ -25,6 +26,19 @@ class ArchiveChatTile extends HookConsumerWidget {
     final isSelected = useMemoized(
       () => selectedConversations.toSet().containsAll(conversations),
       [selectedConversations, conversations],
+    );
+
+    final archivedConversationsUnreadMessagesCount = useFuture(
+      useMemoized(
+        () async {
+          final unreadMessagesFutures = conversations.map(
+            (c) => ref.read(getUnreadMessagesCountProvider(c.conversationId).future),
+          );
+          final counts = await Future.wait(unreadMessagesFutures);
+          return counts.fold(0, (sum, count) => sum + count);
+        },
+        [conversations],
+      ),
     );
 
     final combinedConversationNames = useCombinedConversationNames(conversations, ref);
@@ -103,8 +117,8 @@ class ArchiveChatTile extends HookConsumerWidget {
                                 maxLines: 1,
                               ),
                             ),
-                            const UnreadCountBadge(
-                              unreadCount: 30,
+                            UnreadCountBadge(
+                              unreadCount: archivedConversationsUnreadMessagesCount.data ?? 0,
                             ),
                           ],
                         ),

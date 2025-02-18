@@ -8,17 +8,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/components/recent_chat_overlay_context_menu.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class RecentChatOverlay extends HookConsumerWidget {
   const RecentChatOverlay({
     required this.renderObject,
+    required this.conversation,
     super.key,
   });
 
   /// The key of the message item to capture the image from widget tree
   final RenderObject renderObject;
+  final ConversationListItem conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -101,7 +104,11 @@ class RecentChatOverlay extends HookConsumerWidget {
                     fit: BoxFit.fitWidth,
                   ),
                 ),
-                const IntrinsicWidth(child: RecentChatOverlayContextMenu()),
+                IntrinsicWidth(
+                  child: RecentChatOverlayContextMenu(
+                    conversation: conversation,
+                  ),
+                ),
               ],
             ),
           ),
