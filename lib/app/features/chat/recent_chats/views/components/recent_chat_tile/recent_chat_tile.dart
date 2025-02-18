@@ -43,7 +43,7 @@ class RecentChatTile extends HookConsumerWidget {
 
     final messageItemKey = useMemoized(GlobalKey.new);
 
-    final showReactDialog = useCallback(
+    final showRecentChatOverlay = useCallback(
       () {
         showDialog<void>(
           context: context,
@@ -66,7 +66,7 @@ class RecentChatTile extends HookConsumerWidget {
           onTap?.call();
         }
       },
-      onLongPress: showReactDialog,
+      onLongPress: showRecentChatOverlay,
       behavior: HitTestBehavior.opaque,
       child: RepaintBoundary(
         key: messageItemKey,
