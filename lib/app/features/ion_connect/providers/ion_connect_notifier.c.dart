@@ -205,7 +205,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(
         Duration(
-            hours: ref.read(envProvider.notifier).get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
+          hours: ref.read(envProvider.notifier).get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS),
+        ),
       ),
     ).toTag();
 
