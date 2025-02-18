@@ -141,6 +141,7 @@ class ListItem extends StatelessWidget {
                   leading!,
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (title != null)
                       DefaultTextStyle(
