@@ -36,7 +36,7 @@ Future<InterestSetEntity?> userInterestsSet(
 class CurrentUserInterestsSet extends _$CurrentUserInterestsSet {
   @override
   FutureOr<InterestSetEntity?> build(InterestSetType type) async {
-    final currentPubkey = await ref.watch(currentPubkeySelectorProvider.future);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
       return null;
     }

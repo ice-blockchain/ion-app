@@ -40,17 +40,12 @@ class LanguageListItem extends StatelessWidget {
               children: [
                 Text(
                   language.flag,
-                  style: context.theme.appTextThemes.subtitle2.copyWith(
-                    color: context.theme.appColors.primaryText,
-                    fontSize: 22,
-                  ),
+                  style: TextStyle(fontSize: 18.0.s),
                 ),
-                SizedBox(
-                  width: 16.0.s,
-                ),
+                SizedBox(width: 16.0.s),
                 Expanded(
                   child: Text(
-                    language.name,
+                    language.name + (language.localName != null ? ' - ${language.localName}' : ''),
                     style: context.theme.appTextThemes.subtitle2.copyWith(
                       color: context.theme.appColors.primaryText,
                     ),
