@@ -19,12 +19,12 @@ class BanubaService {
   const BanubaService(this.env);
   final Env env;
 
-  // For Photo Editor
+  // Photo Editor
   static const methodInitPhotoEditor = 'initPhotoEditor';
   static const methodStartPhotoEditor = 'startPhotoEditor';
   static const argExportedPhotoFile = 'argExportedPhotoFilePath';
 
-  // For Video Editor
+  // Video Editor
   static const methodInitVideoEditor = 'initVideoEditor';
   static const methodStartVideoEditor = 'startVideoEditor';
   static const methodStartVideoEditorTrimmer = 'startVideoEditorTrimmer';
@@ -42,33 +42,24 @@ class BanubaService {
   Future<String> editPhoto(String filePath) async {
     try {
       await _initPhotoEditor();
-
-      final dynamic result = await platformChannel.invokeMethod(
+      final result = await platformChannel.invokeMethod(
         methodStartPhotoEditor,
         {'imagePath': filePath},
       );
-
       if (result is Map) {
         final exportedPhotoFilePath = result[argExportedPhotoFile];
-
         if (exportedPhotoFilePath == null) {
           return filePath;
         }
-
         if (Platform.isAndroid) {
           final file = await toFile(exportedPhotoFilePath as String);
           return file.path;
         }
-
         return exportedPhotoFilePath as String;
       }
       return filePath;
     } on PlatformException catch (e) {
-      Logger.log(
-        'Start Photo Editor error',
-        error: e,
-        stackTrace: StackTrace.current,
-      );
+      Logger.log('Start Photo Editor error', error: e, stackTrace: StackTrace.current);
       rethrow;
     }
   }
@@ -78,17 +69,30 @@ class BanubaService {
       methodInitVideoEditor,
       env.get<String>(EnvVariable.BANUBA_TOKEN),
     );
-
     final result = await platformChannel.invokeMethod(
-      methodStartVideoEditorTrimmer,
-      filePath,
+      methodStartVideoEditor,
+      {'videoURL': filePath},
     );
-
     if (result is Map) {
       final exportedVideoFilePath = result[argExportedVideoFile];
       return exportedVideoFilePath as String;
     }
     return filePath;
+  }
+
+  Future<void> startEditor({String? videoPath}) async {
+    await platformChannel.invokeMethod(
+      methodInitVideoEditor,
+      env.get<String>(EnvVariable.BANUBA_TOKEN),
+    );
+    if (videoPath != null) {
+      await platformChannel.invokeMethod(
+        methodStartVideoEditor,
+        {'videoURL': videoPath},
+      );
+    } else {
+      await platformChannel.invokeMethod(methodStartVideoEditor);
+    }
   }
 }
 
@@ -100,27 +104,15 @@ BanubaService banubaService(Ref ref) {
 @riverpod
 Future<String> editMedia(Ref ref, MediaFile mediaFile) async {
   final filePath = await ref.read(assetFilePathProvider(mediaFile.path).future);
-
   if (filePath == null) {
-    Logger.log(
-      'File path or mime type is null',
-      error: mediaFile,
-      stackTrace: StackTrace.current,
-    );
+    Logger.log('File path or mime type is null', error: mediaFile, stackTrace: StackTrace.current);
     throw AssetEntityFileNotFoundException();
   }
-
   if (mediaFile.mimeType == null) {
-    Logger.log(
-      'Mime type is null',
-      error: mediaFile,
-      stackTrace: StackTrace.current,
-    );
+    Logger.log('Mime type is null', error: mediaFile, stackTrace: StackTrace.current);
     throw AssetEntityFileNotFoundException();
   }
-
   final mediaType = MediaType.fromMimeType(mediaFile.mimeType!);
-
   switch (mediaType) {
     case MediaType.image:
       return ref.read(banubaServiceProvider).editPhoto(filePath);

@@ -26,7 +26,6 @@ class StoryRecordPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraState = ref.watch(cameraControllerNotifierProvider);
-
     final isRecording = cameraState.maybeWhen(
       ready: (_, isRecording, __) => isRecording,
       orElse: () => false,
@@ -57,9 +56,7 @@ class StoryRecordPage extends HookConsumerWidget {
     return PermissionAwareWidget(
       permissionType: Permission.camera,
       onGranted: () async => ref.read(cameraControllerNotifierProvider.notifier).resumeCamera(),
-      requestDialog: const PermissionRequestSheet(
-        permission: Permission.camera,
-      ),
+      requestDialog: const PermissionRequestSheet(permission: Permission.camera),
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
       builder: (context, _) {
         return Scaffold(
@@ -86,19 +83,15 @@ class StoryRecordPage extends HookConsumerWidget {
                       onCapturePhoto: isCameraReady
                           ? () async {
                               await ref.read(cameraActionsControllerProvider.notifier).takePhoto();
-
-                              final selectedFile = ref
+                              final file = ref
                                   .read(cameraActionsControllerProvider)
-                                  .whenOrNull(saved: (file) => file);
-
-                              if (selectedFile != null && context.mounted) {
+                                  .whenOrNull(saved: (f) => f);
+                              if (file != null && context.mounted) {
                                 await ref
-                                    .read(
-                                      imageProcessorNotifierProvider(ImageProcessingType.story)
-                                          .notifier,
-                                    )
+                                    .read(imageProcessorNotifierProvider(ImageProcessingType.story)
+                                        .notifier)
                                     .process(
-                                      assetId: selectedFile.path,
+                                      assetId: file.path,
                                       cropUiSettings:
                                           ref.read(mediaServiceProvider).buildCropImageUiSettings(
                                         context,
