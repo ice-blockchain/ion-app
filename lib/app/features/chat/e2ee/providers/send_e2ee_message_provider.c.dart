@@ -134,7 +134,13 @@ class SendE2eeMessageService {
 
                 final uploadResult = await ionConnectUploadNotifier.upload(
                   mediaFile,
+                  encrypted: true,
                   alt: FileAlt.message,
+                );
+
+                await ionConnectNotifier.sendEntitiesData(
+                  [uploadResult.fileMetadata],
+                  actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
                 );
 
                 return (uploadResult, secretKey, nonce, mac);

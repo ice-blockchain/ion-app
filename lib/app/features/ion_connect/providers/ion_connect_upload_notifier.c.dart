@@ -31,6 +31,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
   Future<UploadResult> upload(
     MediaFile file, {
     required FileAlt alt,
+    bool encrypted = false,
   }) async {
     if (file.width == null || file.height == null) {
       throw UnknownFileResolutionException();
@@ -40,7 +41,8 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
 
     final apiUrl = await _getFileStorageApiUrl();
 
-    final response = await _makeUploadRequest(url: apiUrl, file: file, alt: alt);
+    final response =
+        await _makeUploadRequest(url: apiUrl, file: file, alt: alt, encrypted: encrypted);
 
     final fileMetadata = FileMetadata.fromUploadResponseTags(
       response.nip94Event.tags,
@@ -92,6 +94,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     required String url,
     required MediaFile file,
     required FileAlt alt,
+    required bool encrypted,
   }) async {
     final fileBytes = await File(file.path).readAsBytes();
     final fileName = file.name ?? file.basename;
@@ -106,7 +109,10 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     });
 
     final ionConnectAuth = IonConnectAuth(url: url, method: 'POST', payload: fileBytes);
-    final authEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(ionConnectAuth);
+    final authEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(
+          ionConnectAuth,
+          encrypted: encrypted,
+        );
 
     try {
       final response = await ref.read(dioProvider).post<dynamic>(

@@ -94,7 +94,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final events = await Future.wait(entitiesData.map(sign));
+    final events = await Future.wait(entitiesData.map((e) => sign(e, encrypted: true)));
     return sendEvents(events, actionSource: actionSource, cache: cache);
   }
 
@@ -180,22 +180,29 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     return entities.isNotEmpty ? entities.first as T : null;
   }
 
-  Future<EventMessage> sign(EventSerializable entityData, {bool includeMasterPubkey = true}) async {
-    final eventSigner = ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
+  Future<EventMessage> sign(
+    EventSerializable entityData, {
+    bool encrypted = false,
+    bool includeMasterPubkey = true,
+  }) async {
     final mainWallet = ref.read(mainWalletProvider).valueOrNull;
-
-    if (eventSigner == null) {
-      throw EventSignerNotFoundException();
-    }
 
     if (mainWallet == null) {
       throw MainWalletNotFoundException();
     }
 
+    final eventSigner = encrypted
+        ? await Ed25519KeyStore.generate()
+        : ref.read(currentUserIonConnectEventSignerProvider).valueOrNull;
+
+    if (eventSigner == null) {
+      throw EventSignerNotFoundException();
+    }
+
     return entityData.toEventMessage(
       eventSigner,
       tags: [
-        if (includeMasterPubkey) ['b', mainWallet.signingKey.publicKey],
+        if (includeMasterPubkey && !encrypted) ['b', mainWallet.signingKey.publicKey],
       ],
     );
   }
