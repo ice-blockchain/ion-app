@@ -14,30 +14,59 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'relay_auth_provider.c.g.dart';
 
-// Keeping the state mutable intentionally
-class RelayAuthState {
-  RelayAuthState({required this.completer});
-
-  Completer<void> completer;
-  String? challenge;
-}
-
 @riverpod
 class RelayAuth extends _$RelayAuth {
   @override
-  RelayAuthState build(IonConnectRelay relay) {
+  RelayAuthService build(IonConnectRelay relay) {
+    final service = RelayAuthService(
+      relay: relay,
+      completer: Completer(),
+      createAuthEvent: ({
+        required String challenge,
+        required String relayUrl,
+      }) async {
+        final authEvent = AuthEvent(
+          challenge: challenge,
+          relay: relayUrl,
+        );
+
+        // Used cache delegation only because relay not authorized yet
+        final delegationComplete = await ref.read(cacheDelegationCompleteProvider.future);
+        return ref
+            .read(ionConnectNotifierProvider.notifier)
+            .sign(authEvent, includeMasterPubkey: delegationComplete.falseOrValue);
+      },
+    );
+
     final authMessageSubscription = relay.messages.listen((message) {
       if (message is AuthMessage) {
-        state.challenge = message.challenge;
+        service.challenge = message.challenge;
       }
     });
     ref.onDispose(authMessageSubscription.cancel);
 
-    return RelayAuthState(completer: Completer());
+    return service;
   }
+}
+
+class RelayAuthService {
+  RelayAuthService({
+    required this.relay,
+    required this.createAuthEvent,
+    required this.completer,
+  });
+
+  final IonConnectRelay relay;
+
+  final Future<EventMessage> Function({required String challenge, required String relayUrl})
+      createAuthEvent;
+
+  Completer<void> completer;
+
+  String? challenge;
 
   Future<void> initRelayAuth() async {
-    final signedAuthEvent = await _createAuthEvent(
+    final signedAuthEvent = await createAuthEvent(
       challenge: 'init',
       relayUrl: Uri.parse(relay.url).toString(),
     );
@@ -69,23 +98,22 @@ class RelayAuth extends _$RelayAuth {
       }
     }
     if (!actionSource.anonymous) {
-      await state.completer.future;
+      await completer.future;
     }
   }
 
   Future<void> authenticateRelay() async {
-    final challenge = state.challenge;
-    if (challenge == null || challenge.isEmpty) throw AuthChallengeIsEmptyException();
+    if (challenge == null || challenge!.isEmpty) throw AuthChallengeIsEmptyException();
 
     // Cases when we need to re-authenticate the relay:
     // when we obtained a user delegation and need to re-authenticate with the `b` tag
     // when BE requested re-authentication (in response to sending an event or starting a subscription)
-    if (state.completer.isCompleted) {
-      state.completer = Completer();
+    if (completer.isCompleted) {
+      completer = Completer();
     }
     try {
-      final signedAuthEvent = await _createAuthEvent(
-        challenge: challenge,
+      final signedAuthEvent = await createAuthEvent(
+        challenge: challenge!,
         relayUrl: Uri.parse(relay.url).toString(),
       );
 
@@ -103,34 +131,18 @@ class RelayAuth extends _$RelayAuth {
         throw SendEventException(okMessages.message);
       }
 
-      state.completer.complete();
+      completer.complete();
     } catch (error) {
-      state.completer.completeError(error);
+      completer.completeError(error);
     }
   }
 
-  Future<EventMessage> _createAuthEvent({
-    required String challenge,
-    required String relayUrl,
-  }) async {
-    final authEvent = AuthEvent(
-      challenge: challenge,
-      relay: relayUrl,
-    );
-
-    // Used cache delegation only because relay not authorized yet
-    final delegationComplete = await ref.read(cacheDelegationCompleteProvider.future);
-    return ref
-        .read(ionConnectNotifierProvider.notifier)
-        .sign(authEvent, includeMasterPubkey: delegationComplete.falseOrValue);
+  static bool isRelayAuthError(Object? error) {
+    final isSubscriptionAuthRequired = error is RelayRequestFailedException &&
+        error.event is ClosedMessage &&
+        (error.event as ClosedMessage).message.startsWith('auth-required');
+    final isSendEventAuthRequired =
+        error is SendEventException && error.code.startsWith('auth-required');
+    return isSubscriptionAuthRequired || isSendEventAuthRequired;
   }
-}
-
-bool isRelayAuthError(Object? error) {
-  final isSubscriptionAuthRequired = error is RelayRequestFailedException &&
-      error.event is ClosedMessage &&
-      (error.event as ClosedMessage).message.startsWith('auth-required');
-  final isSendEventAuthRequired =
-      error is SendEventException && error.code.startsWith('auth-required');
-  return isSubscriptionAuthRequired || isSendEventAuthRequired;
 }

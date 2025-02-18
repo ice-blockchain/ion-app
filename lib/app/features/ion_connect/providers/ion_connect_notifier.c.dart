@@ -59,7 +59,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         await ref
-            .read(relayAuthProvider(relay!).notifier)
+            .read(relayAuthProvider(relay!))
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
         await relay!.sendEvents(events);
@@ -70,7 +70,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
 
         return null;
       },
-      retryWhen: (error) => error is RelayRequestFailedException || isRelayAuthError(error),
+      retryWhen: (error) =>
+          error is RelayRequestFailedException || RelayAuthService.isRelayAuthError(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },
@@ -126,7 +127,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .getRelay(actionSource, dislikedUrls: dislikedRelaysUrls);
 
         await ref
-            .read(relayAuthProvider(relay!).notifier)
+            .read(relayAuthProvider(relay!))
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
         final events = subscriptionBuilder != null
@@ -144,7 +145,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
           }
         }
       },
-      retryWhen: (error) => error is RelayRequestFailedException || isRelayAuthError(error),
+      retryWhen: (error) =>
+          error is RelayRequestFailedException || RelayAuthService.isRelayAuthError(error),
       onRetry: () {
         if (relay != null) dislikedRelaysUrls.add(relay!.url);
       },

@@ -11,7 +11,7 @@ mixin RelayAuthMixin {
   Future<void> initializeAuth(IonConnectRelay relay, Ref ref) async {
     ref.watch(relayAuthProvider(relay));
 
-    await ref.read(relayAuthProvider(relay).notifier).initRelayAuth();
+    await ref.read(relayAuthProvider(relay)).initRelayAuth();
 
     ref.listen(
       currentUserCachedDelegationProvider,
@@ -36,7 +36,7 @@ mixin RelayAuthMixin {
           prevValue?.data.hasDelegateFor(pubkey: eventSigner.publicKey) ?? false;
 
       if (!prevHasDelegate && nextHasDelegate) {
-        ref.read(relayAuthProvider(relay).notifier).authenticateRelay();
+        ref.read(relayAuthProvider(relay)).authenticateRelay();
       }
     }
   }
