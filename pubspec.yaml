@@ -45,7 +45,7 @@ dependencies:
   flutter_keyboard_visibility: ^6.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_quill: ^10.7.5
+  flutter_quill: ^11.0.0
   flutter_screenutil: ^5.9.0
   flutter_secure_storage: ^9.2.4
   flutter_svg: ^2.0.16
@@ -63,9 +63,7 @@ dependencies:
   lottie: ^3.1.0
   markdown: ^7.3.0
   markdown_quill:
-    git:
-      url: https://github.com/ice-blockchain/markdown_quill
-      ref: master
+    path: ../markdown_quill
   meta: ^1.15.0
   mime: ^2.0.0
   mocktail: ^1.0.4

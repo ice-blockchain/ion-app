@@ -39,13 +39,9 @@ class TextEditorCodeBuilder extends EmbedBuilder {
   @override
   Widget build(
     BuildContext context,
-    QuillController controller,
-    Embed node,
-    bool readOnly,
-    bool inline,
-    TextStyle textStyle,
+    EmbedContext embedContext,
   ) {
-    final content = node.value.data as String? ?? '';
+    final content = embedContext.node.value.data as String? ?? '';
 
     return Container(
       padding: EdgeInsets.only(top: 12.0.s),
@@ -58,11 +54,11 @@ class TextEditorCodeBuilder extends EmbedBuilder {
       ),
       child: Column(
         children: [
-          if (!this.readOnly) const CodeBlockTypesToolbar(),
+          if (!readOnly) const CodeBlockTypesToolbar(),
           CodeBlockContent(
             content: content,
-            readOnly: this.readOnly,
-            onRemoveBlock: () => removeBlock(controller, node),
+            readOnly: readOnly,
+            onRemoveBlock: () => removeBlock(embedContext.controller, embedContext.node),
           ),
         ],
       ),

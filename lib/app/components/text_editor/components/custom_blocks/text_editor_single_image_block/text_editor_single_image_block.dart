@@ -35,13 +35,9 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
   @override
   Widget build(
     BuildContext context,
-    QuillController controller,
-    Embed node,
-    bool readOnly,
-    bool inline,
-    TextStyle textStyle,
+    EmbedContext embedContext,
   ) {
-    final path = node.value.data as String;
+    final path = embedContext.node.value.data as String;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
