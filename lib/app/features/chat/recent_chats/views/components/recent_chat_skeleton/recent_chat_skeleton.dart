@@ -46,3 +46,22 @@ class RecentChatSkeleton extends StatelessWidget {
     );
   }
 }
+
+class RecentChatSkeletonItem extends StatelessWidget {
+  const RecentChatSkeletonItem({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeleton(
+      child: Container(
+        height: 57.0.s,
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(vertical: 8.0.s),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.0.s),
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+}

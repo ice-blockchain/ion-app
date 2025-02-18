@@ -9,7 +9,6 @@ import 'package:ion/app/features/chat/hooks/use_combined_conversation_names.dart
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_seperator/recent_chat_seperator.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -43,82 +42,80 @@ class ArchiveChatTile extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return GestureDetector(
-      onTap: () {
-        if (isEditMode) {
-          ref.read(selectedConversationsProvider.notifier).toggleAll(conversations);
-        } else {
-          ArchivedChatsMainRoute().push<void>(context);
-        }
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: isEditMode ? 40.0.s : 0,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 10.0.s),
-                  child: isSelected
-                      ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
-                      : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
-                ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 6.0.s),
+      child: GestureDetector(
+        onTap: () {
+          if (isEditMode) {
+            ref.read(selectedConversationsProvider.notifier).toggleAll(conversations);
+          } else {
+            ArchivedChatsMainRoute().push<void>(context);
+          }
+        },
+        behavior: HitTestBehavior.opaque,
+        child: Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: isEditMode ? 40.0.s : 0,
+              child: Padding(
+                padding: EdgeInsets.only(right: 10.0.s),
+                child: isSelected
+                    ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
+                    : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
               ),
-              Flexible(
-                child: Row(
-                  children: [
-                    Avatar(
-                      imageWidget: Assets.svg.avatarArchive.icon(),
-                      size: 40.0.s,
+            ),
+            Flexible(
+              child: Row(
+                children: [
+                  Avatar(
+                    imageWidget: Assets.svg.avatarArchive.icon(),
+                    size: 40.0.s,
+                  ),
+                  SizedBox(width: 12.0.s),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              context.i18n.common_archive,
+                              style: context.theme.appTextThemes.subtitle3.copyWith(
+                                color: context.theme.appColors.primaryText,
+                              ),
+                            ),
+                            if (latestMessageAt != null)
+                              ChatTimestamp(
+                                latestMessageAt,
+                              ),
+                          ],
+                        ),
+                        SizedBox(height: 2.0.s),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: ChatPreview(
+                                content: combinedConversationNames,
+                                maxLines: 1,
+                              ),
+                            ),
+                            const UnreadCountBadge(
+                              unreadCount: 30,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 12.0.s),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                context.i18n.common_archive,
-                                style: context.theme.appTextThemes.subtitle3.copyWith(
-                                  color: context.theme.appColors.primaryText,
-                                ),
-                              ),
-                              if (latestMessageAt != null)
-                                ChatTimestamp(
-                                  latestMessageAt,
-                                ),
-                            ],
-                          ),
-                          SizedBox(height: 2.0.s),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: ChatPreview(
-                                  content: combinedConversationNames,
-                                  maxLines: 1,
-                                ),
-                              ),
-                              const UnreadCountBadge(
-                                unreadCount: 30,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const RecentChatSeparator(),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

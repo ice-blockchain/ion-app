@@ -66,7 +66,7 @@ class MessageReactionDialog extends HookConsumerWidget {
         ? null
         : overflowBottomSize < 0
             ? null
-            : position.dy - MessageReactionEmojiBar.height;
+            : position.dy - MessageReactionEmojiBar.height - 2;
 
     return Stack(
       children: [
