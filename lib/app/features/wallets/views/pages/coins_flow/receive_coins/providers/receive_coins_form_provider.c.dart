@@ -22,11 +22,7 @@ class ReceiveCoinsFormController extends _$ReceiveCoinsFormController {
         address: null,
       );
 
-  void setNetwork(Network network) {
-    state = state.copyWith(selectedNetwork: network);
-  }
+  void setNetwork(Network network) => state = state.copyWith(selectedNetwork: network);
 
-  void setWalletAddress(String address) {
-    state = state.copyWith(address: address);
-  }
+  void setWalletAddress(String address) => state = state.copyWith(address: address);
 }

@@ -83,6 +83,7 @@ class CoinReceiveModal extends HookConsumerWidget {
                 onPressed: Navigator.of(context, rootNavigator: true).pop,
               ),
             ],
+            showBackButton: false,
           ),
           ScreenSideOffset.small(
             child: const CoinAddressTile(),
