@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/relay_auth_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -47,7 +47,7 @@ mixin RelayAuthMixin {
     );
 
     try {
-      await ref.read(ionConnectNotifierProvider.notifier).initRelayAuth(relay);
+      await ref.read(relayAuthNotifierProvider(relay).notifier).initRelayAuth();
     } catch (error) {
       authCompleter.completeError(error);
       rethrow;
@@ -69,7 +69,7 @@ mixin RelayAuthMixin {
               next.value?.data.hasDelegateFor(pubkey: eventSigner.publicKey) ?? false;
 
           if (hasDelegate) {
-            ref.read(ionConnectNotifierProvider.notifier).sendAuthEvent(relay);
+            ref.read(relayAuthNotifierProvider(relay).notifier).sendAuthEvent();
           }
         }
       });
