@@ -16,13 +16,15 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 class SuggestionsContainer extends HookConsumerWidget {
   const SuggestionsContainer({
     required this.scrollController,
+    required this.editorKey,
     super.key,
   });
 
   final ScrollController scrollController;
+  final GlobalKey<TextEditorState> editorKey;
 
   void _onSuggestionSelected(String suggestion) {
-    final textEditorState = TextEditor.textEditorKey.currentState;
+    final textEditorState = editorKey.currentState;
     textEditorState?.mentionsHashtagsHandler.onSuggestionSelected(suggestion);
   }
 
@@ -31,7 +33,7 @@ class SuggestionsContainer extends HookConsumerWidget {
     final suggestionsState = useTextEditorSuggestions(
       ref: ref,
       scrollController: scrollController,
-      editorKey: TextEditor.textEditorKey,
+      editorKey: editorKey,
     );
 
     final showMentionsSuggestions =

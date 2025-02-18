@@ -8,8 +8,13 @@ import 'package:ion/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarHashtagButton extends StatelessWidget {
-  const ToolbarHashtagButton({required this.textEditorController, super.key});
+  const ToolbarHashtagButton({
+    required this.textEditorController,
+    required this.textEditorKey,
+    super.key,
+  });
   final QuillController textEditorController;
+  final GlobalKey<TextEditorState> textEditorKey;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,7 @@ class ToolbarHashtagButton extends StatelessWidget {
               ChangeSource.local,
             );
 
-          final textEditorState = TextEditor.textEditorKey.currentState;
+          final textEditorState = textEditorKey.currentState;
           if (textEditorState != null) {
             textEditorState.mentionsHashtagsHandler
               ..taggingCharacter = '#'

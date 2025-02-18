@@ -27,6 +27,7 @@ class CreateArticleModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final articleState = useCreateArticle(ref);
     final scrollController = useScrollController();
+    final textEditorKey = useMemoized(TextEditorKeys.createArticle);
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
       return showSimpleBottomSheet<bool>(
@@ -117,6 +118,7 @@ class CreateArticleModal extends HookConsumerWidget {
                               autoFocus: isFocused,
                               articleState.textEditorController,
                               placeholder: context.i18n.create_article_story_placeholder,
+                              key: textEditorKey,
                             );
                           },
                         ),
@@ -131,11 +133,15 @@ class CreateArticleModal extends HookConsumerWidget {
             ),
             Column(
               children: [
-                SuggestionsContainer(scrollController: scrollController),
+                SuggestionsContainer(
+                  scrollController: scrollController,
+                  editorKey: textEditorKey,
+                ),
                 const HorizontalSeparator(),
                 ScreenSideOffset.small(
                   child: CreateArticleToolbar(
                     textEditorController: articleState.textEditorController,
+                    textEditorKey: textEditorKey,
                   ),
                 ),
               ],

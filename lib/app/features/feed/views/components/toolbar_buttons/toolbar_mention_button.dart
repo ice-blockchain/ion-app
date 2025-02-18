@@ -9,8 +9,14 @@ import 'package:ion/app/features/feed/views/components/actions_toolbar_button/ac
 import 'package:ion/generated/assets.gen.dart';
 
 class ToolbarMentionButton extends ConsumerWidget {
-  const ToolbarMentionButton({required this.textEditorController, super.key});
+  const ToolbarMentionButton({
+    required this.textEditorController,
+    required this.textEditorKey,
+    super.key,
+  });
+
   final QuillController textEditorController;
+  final GlobalKey<TextEditorState> textEditorKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +33,7 @@ class ToolbarMentionButton extends ConsumerWidget {
               ChangeSource.local,
             );
 
-          final textEditorState = TextEditor.textEditorKey.currentState;
+          final textEditorState = textEditorKey.currentState;
           if (textEditorState != null) {
             textEditorState.mentionsHashtagsHandler
               ..taggingCharacter = '@'
