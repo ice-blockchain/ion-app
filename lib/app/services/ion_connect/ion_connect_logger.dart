@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:nostr_dart/nostr_dart.dart';
 
@@ -17,6 +18,11 @@ class IonConnectLogger implements NostrDartLogger {
 
   @override
   void warning(String message, [Object? error, StackTrace? stackTrace]) {
+    if (RelayAuthService.isRelayAuthError(error)) {
+      // suppress expected relay error during a relay authentication to reduce the noise in the logs
+      return;
+    }
+
     Logger.warning('$_prefix $message');
 
     if (error != null) {

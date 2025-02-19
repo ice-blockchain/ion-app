@@ -271,9 +271,8 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ];
     for (final event in events) {
       if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
-        Logger.log(
-          'Event ${event.id} of kind ${event.kind} does not contain master pubkey tag',
-          error: EventMasterPubkeyNotFoundException(eventId: event.id),
+        Logger.error(
+          EventMasterPubkeyNotFoundException(eventId: event.id),
           stackTrace: StackTrace.current,
         );
       }
