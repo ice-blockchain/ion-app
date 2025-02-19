@@ -20,14 +20,24 @@ Future<BlockListEntity?> blockList(
   Ref ref,
   String pubkey, {
   bool cache = true,
-  bool network = true,
 }) async {
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: BlockListEntity.kind),
-      network: network,
       cache: cache,
     ).future,
+  ) as BlockListEntity?;
+}
+
+@riverpod
+BlockListEntity? cachedBlockList(
+  Ref ref,
+  String pubkey,
+) {
+  return ref.watch(
+    cachedIonConnectEntityProvider(
+      eventReference: ReplaceableEventReference(pubkey: pubkey, kind: BlockListEntity.kind),
+    ),
   ) as BlockListEntity?;
 }
 
@@ -41,58 +51,72 @@ Future<BlockListEntity?> currentUserBlockList(Ref ref) async {
 }
 
 @riverpod
-Future<bool> isBlocked(Ref ref, String pubkey) async {
-  final currentBlockList = await ref.watch(currentUserBlockListProvider.future);
+BlockListEntity? cachedCurrentUserBlockList(Ref ref) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return null;
+  }
+  return ref.watch(cachedBlockListProvider(currentPubkey));
+}
+
+@riverpod
+bool isBlocked(Ref ref, String pubkey) {
+  final currentBlockList = ref.watch(cachedCurrentUserBlockListProvider);
   return currentBlockList?.data.pubkeys.contains(pubkey) ?? false;
 }
 
 @riverpod
-Future<bool> isBlocking(Ref ref, String pubkey, {bool cacheOnly = false}) async {
+Future<bool> isBlocking(Ref ref, String pubkey) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentPubkey == null) {
     return false;
   }
-  final otherUserBlockList = await ref.watch(blockListProvider(pubkey, network: !cacheOnly).future);
+  final otherUserBlockList = await ref.watch(blockListProvider(pubkey).future);
   return otherUserBlockList?.data.pubkeys.contains(currentPubkey) ?? false;
 }
 
 @riverpod
-Future<bool> isBlockedOrBlocking(Ref ref, String pubkey, {bool cacheOnly = false}) async {
-  final results = await Future.wait([
-    ref.watch(isBlockedProvider(pubkey).future),
-    ref.watch(isBlockingProvider(pubkey, cacheOnly: cacheOnly).future),
-  ]);
-  return results[0] || results[1];
+bool cachedIsBlocking(Ref ref, String pubkey) {
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  if (currentPubkey == null) {
+    return false;
+  }
+  final otherUserBlockList = ref.watch(cachedBlockListProvider(pubkey));
+  return otherUserBlockList?.data.pubkeys.contains(currentPubkey) ?? false;
 }
 
 @riverpod
-Future<bool> isEntityBlockedOrBlocking(
+bool isBlockedOrBlocking(Ref ref, String pubkey) {
+  final results = (
+    ref.watch(isBlockedProvider(pubkey)),
+    ref.watch(cachedIsBlockingProvider(pubkey)),
+  );
+  return results.$1 || results.$2;
+}
+
+@riverpod
+bool isEntityBlockedOrBlocking(
   Ref ref,
-  IonConnectEntity entity, {
-  bool cacheOnly = false,
-}) async {
-  final isMainAuthorBlockedOrBlocking = await ref
-      .watch(isBlockedOrBlockingProvider(entity.masterPubkey, cacheOnly: cacheOnly).future);
+  IonConnectEntity entity,
+) {
+  final isMainAuthorBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(entity.masterPubkey));
   if (isMainAuthorBlockedOrBlocking) return true;
   return switch (entity) {
-    ModifiablePostEntity() =>
-      ref.watch(isPostChildBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future),
-    GenericRepostEntity() =>
-      ref.watch(isGenericRepostChildBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future),
+    ModifiablePostEntity() => ref.watch(isPostChildBlockedOrBlockingProvider(entity)),
+    GenericRepostEntity() => ref.watch(isGenericRepostChildBlockedOrBlockingProvider(entity)),
     _ => false,
   };
 }
 
 @riverpod
-Future<bool> isPostChildBlockedOrBlocking(
+bool isPostChildBlockedOrBlocking(
   Ref ref,
-  ModifiablePostEntity entity, {
-  bool cacheOnly = false,
-}) async {
+  ModifiablePostEntity entity,
+) {
   final quotedEvent = entity.data.quotedEvent;
   if (quotedEvent == null) return false;
-  final quotedPost = await ref.watch(
-    ionConnectEntityProvider(eventReference: quotedEvent.eventReference).future,
+  final quotedPost = ref.watch(
+    cachedIonConnectEntityProvider(eventReference: quotedEvent.eventReference),
   );
   if (quotedPost == null) return false;
   //TODO: fix auto-dispose issue
@@ -101,15 +125,14 @@ Future<bool> isPostChildBlockedOrBlocking(
 }
 
 @riverpod
-Future<bool> isGenericRepostChildBlockedOrBlocking(
+bool isGenericRepostChildBlockedOrBlocking(
   Ref ref,
-  GenericRepostEntity repost, {
-  bool cacheOnly = false,
-}) async {
+  GenericRepostEntity repost,
+) {
   final entity =
-      await ref.watch(ionConnectEntityProvider(eventReference: repost.data.eventReference).future);
+      ref.watch(cachedIonConnectEntityProvider(eventReference: repost.data.eventReference));
   if (entity == null) return false;
-  return ref.watch(isEntityBlockedOrBlockingProvider(entity, cacheOnly: cacheOnly).future);
+  return ref.watch(isEntityBlockedOrBlockingProvider(entity));
 }
 
 @riverpod

@@ -19,7 +19,7 @@ class BlockUserButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final blocking = ref.watch(isBlockedProvider(pubkey)).valueOrNull ?? false;
+    final blocking = ref.watch(isBlockedProvider(pubkey));
     return _BlockButton(
       onPressed: () {
         if (!blocking) {
