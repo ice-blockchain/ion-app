@@ -176,7 +176,11 @@ class UserDataEventMessageContent {
 
   final String? category;
 
-  @JsonKey(name: 'registered_at')
+  @JsonKey(
+    name: 'registered_at',
+    toJson: _dateTimeToJson,
+    fromJson: _dateTimeFromJson,
+  )
   final DateTime? registeredAt;
 
   final String? banner;
@@ -190,6 +194,9 @@ class UserDataEventMessageContent {
   final Map<String, String>? wallets;
 
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
+
+  static int _dateTimeToJson(DateTime value) => value.millisecondsSinceEpoch ~/ 1000;
+  static DateTime _dateTimeFromJson(int value) => DateTime.fromMillisecondsSinceEpoch(value * 1000);
 }
 
 enum WhoCanSetting {
