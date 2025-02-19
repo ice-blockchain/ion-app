@@ -153,6 +153,7 @@ import 'package:ion/app/features/wallets/views/pages/wallets_modal.dart';
 import 'package:ion/app/router/base_route_data.dart';
 import 'package:ion/app/router/components/modal_wrapper/modal_wrapper.dart';
 import 'package:ion/app/router/main_tabs/main_tab_navigation.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 part 'app_routes.c.g.dart';

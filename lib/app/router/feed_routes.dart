@@ -180,6 +180,7 @@ class CreatePostRoute extends BaseRouteData {
     this.modifiedEvent,
     this.content,
     this.videoPath,
+    this.attachedMedia,
   }) : super(
           child: CreatePostModal(
             parentEvent: parentEvent != null ? EventReference.fromEncoded(parentEvent) : null,
@@ -187,19 +188,17 @@ class CreatePostRoute extends BaseRouteData {
             modifiedEvent: modifiedEvent != null ? EventReference.fromEncoded(modifiedEvent) : null,
             content: content,
             videoPath: videoPath,
+            attachedMedia: attachedMedia,
           ),
           type: IceRouteType.bottomSheet,
         );
 
   final String? parentEvent;
-
   final String? quotedEvent;
-
   final String? modifiedEvent;
-
   final String? content;
-
   final String? videoPath;
+  final String? attachedMedia;
 }
 
 class CreateArticleRoute extends BaseRouteData {

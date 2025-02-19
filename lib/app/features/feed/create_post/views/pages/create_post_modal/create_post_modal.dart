@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +27,7 @@ class CreatePostModal extends HookConsumerWidget {
     this.modifiedEvent,
     this.content,
     this.videoPath,
+    this.attachedMedia,
   });
 
   final EventReference? parentEvent;
@@ -32,6 +35,7 @@ class CreatePostModal extends HookConsumerWidget {
   final EventReference? modifiedEvent;
   final String? content;
   final String? videoPath;
+  final String? attachedMedia;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +43,16 @@ class CreatePostModal extends HookConsumerWidget {
         usePostQuillController(ref, content: content, modifiedEvent: modifiedEvent);
     final scrollController = useScrollController();
     final createOption = _determineCreateOption();
-    final attachedMediaNotifier = useState<List<MediaFile>>([]);
+
+    var mediaFiles = <MediaFile>[];
+    if (attachedMedia != null) {
+      final decodedList = jsonDecode(attachedMedia!) as List<dynamic>;
+      mediaFiles = decodedList.map((item) {
+        return MediaFile.fromJson(item as Map<String, dynamic>);
+      }).toList();
+    }
+
+    final attachedMediaNotifier = useState<List<MediaFile>>(mediaFiles);
     final attachedVideoNotifier = useState<MediaFile?>(
       videoPath != null ? MediaFile(path: videoPath!) : null,
     );

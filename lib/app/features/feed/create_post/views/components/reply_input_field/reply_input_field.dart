@@ -45,11 +45,15 @@ class ReplyInputField extends HookConsumerWidget {
     required FocusNode focusNode,
     required ValueNotifier<List<MediaFile>> attachedMediaNotifier,
   }) async {
+    final attachedMedia =
+        attachedMediaNotifier.value.isNotEmpty ? jsonEncode(attachedMediaNotifier.value) : null;
+
     await CreatePostRoute(
       parentEvent: eventReference.encode(),
       content: jsonEncode(
         textEditorController.document.toDelta().toJson(),
       ),
+      attachedMedia: attachedMedia,
     ).push<Object?>(context);
 
     _clear(
