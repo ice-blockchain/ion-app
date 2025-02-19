@@ -16,6 +16,7 @@ class ChatLearnMoreModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       topPadding: 0,
+      bottomPadding: MediaQuery.paddingOf(context).bottom,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

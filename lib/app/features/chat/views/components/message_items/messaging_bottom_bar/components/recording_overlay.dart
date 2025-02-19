@@ -28,10 +28,6 @@ class RecordingOverlay extends ConsumerWidget {
       bottom: MediaQuery.of(context).viewInsets.bottom + 8.0.s,
       right: 14.0.s,
       child: SafeArea(
-        minimum: EdgeInsets.only(
-          bottom: MediaQuery.of(context).padding.bottom > 0 ? 17.0.s : 0,
-        ),
-        bottom: false,
         child: Container(
           width: 32.0.s,
           decoration: BoxDecoration(
