@@ -22,30 +22,20 @@ class ConversationReadAllButton extends ConsumerWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        if (selectedConversations.isNotEmpty) {
-          await Future.wait(
-            selectedConversations.map((conversation) async {
-              if (conversation.latestMessage == null) {
-                return;
-              }
+        final conversationsToManage = selectedConversations.isEmpty
+            ? (ref.read(conversationsProvider).value ?? [])
+            : selectedConversations;
 
-              await (await ref.read(sendE2eeMessageServiceProvider.future))
-                  .sendMessageStatus(conversation.latestMessage!, MessageDeliveryStatus.read);
-            }),
-          );
-        } else {
-          final allConversations = ref.read(conversationsProvider).valueOrNull ?? [];
+        await Future.wait(
+          conversationsToManage.map((conversation) async {
+            if (conversation.latestMessage == null) {
+              return;
+            }
 
-          await Future.wait(
-            allConversations.map((conversation) async {
-              if (conversation.latestMessage == null) {
-                return;
-              }
-              await (await ref.read(sendE2eeMessageServiceProvider.future))
-                  .sendMessageStatus(conversation.latestMessage!, MessageDeliveryStatus.read);
-            }),
-          );
-        }
+            await (await ref.read(sendE2eeMessageServiceProvider.future))
+                .sendMessageStatus(conversation.latestMessage!, MessageDeliveryStatus.read);
+          }),
+        );
 
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
         ref.read(selectedConversationsProvider.notifier).clear();

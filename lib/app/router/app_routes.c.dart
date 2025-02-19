@@ -152,7 +152,6 @@ import 'package:ion/app/features/wallets/views/pages/wallet_scan_modal_page.dart
 import 'package:ion/app/features/wallets/views/pages/wallets_modal.dart';
 import 'package:ion/app/router/base_route_data.dart';
 import 'package:ion/app/router/components/modal_wrapper/modal_wrapper.dart';
-import 'package:ion/app/router/main_tabs/early_initialization.dart';
 import 'package:ion/app/router/main_tabs/main_tab_navigation.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
@@ -228,12 +227,10 @@ class AppShellRouteData extends StatefulShellRouteData {
     GoRouterState state,
     StatefulNavigationShell navigationShell,
   ) {
-    return EarlyInitialization(
-      child: MainTabNavigation(
-        key: state.pageKey,
-        shell: navigationShell,
-        state: state,
-      ),
+    return MainTabNavigation(
+      key: state.pageKey,
+      shell: navigationShell,
+      state: state,
     );
   }
 }
