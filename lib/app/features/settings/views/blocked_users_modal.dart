@@ -20,10 +20,10 @@ class BlockedUsersModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = useState(true);
     // We fetch the data once and keep it in state so that it doesn't cause users to disappear after unblocking
-    final pubkeys = useState<List<String>?>(null);
+    final pubkeys = useState<List<String>>([]);
     useOnInit(() async {
       final blockList = await ref.read(currentUserBlockListProvider.future);
-      pubkeys.value = blockList?.data.pubkeys;
+      pubkeys.value = blockList?.data.pubkeys ?? [];
       isLoading.value = false;
     });
 
@@ -36,9 +36,9 @@ class BlockedUsersModal extends HookConsumerWidget {
           if (!isLoading.value)
             SliverList.separated(
               separatorBuilder: (_, __) => SizedBox(height: 16.0.s),
-              itemCount: pubkeys.value!.length,
+              itemCount: pubkeys.value.length,
               itemBuilder: (context, index) => ScreenSideOffset.small(
-                child: BlockedUserListItem(pubkey: pubkeys.value![index]),
+                child: BlockedUserListItem(pubkey: pubkeys.value[index]),
               ),
             )
           else
