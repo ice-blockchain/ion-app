@@ -7,6 +7,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/key_service.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_service_locator.dart';
 import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
+import 'package:ion_identity_client/src/core/storage/local_passkey_creds_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
@@ -25,11 +26,13 @@ class IONIdentity {
     required TokenStorage tokenStorage,
     required PrivateKeyStorage privateKeyStorage,
     required BiometricsStateStorage biometricsStateStorage,
+    required LocalPasskeyCredsStateStorage localPasskeyCredsStateStorage,
   })  : _config = config,
         _identitySigner = identitySigner,
         _tokenStorage = tokenStorage,
         _privateKeyStorage = privateKeyStorage,
-        _biometricsStateStorage = biometricsStateStorage;
+        _biometricsStateStorage = biometricsStateStorage,
+        _localPasskeyCredsStateStorage = localPasskeyCredsStateStorage;
 
   /// Factory method to create a default instance of [IONIdentity] using the given [config].
   factory IONIdentity.createDefault({
@@ -42,16 +45,21 @@ class IONIdentity {
     final tokenStorage = IONIdentityServiceLocator.tokenStorage();
     final privateKeyStorage = IONIdentityServiceLocator.privateKeyStorage();
     final biometricsStateStorage = IONIdentityServiceLocator.biometricsStateStorage();
+    final localPasskeyCredsStateStorage = IONIdentityServiceLocator.localPasskeyCredsStateStorage();
 
-    final passkeySigner = PasskeysSigner();
+    final passkeySigner = PasskeysSigner(
+      localPasskeyCredsStateStorage: localPasskeyCredsStateStorage,
+    );
     final passwordSigner = PasswordSigner(
       config: config,
       keyService: const KeyService(),
       privateKeyStorage: privateKeyStorage,
       biometricsStateStorage: biometricsStateStorage,
     );
-    final identitySigner =
-        IdentitySigner(passkeySigner: passkeySigner, passwordSigner: passwordSigner);
+    final identitySigner = IdentitySigner(
+      passkeySigner: passkeySigner,
+      passwordSigner: passwordSigner,
+    );
 
     return IONIdentity._(
       config: config,
@@ -59,6 +67,7 @@ class IONIdentity {
       tokenStorage: tokenStorage,
       privateKeyStorage: privateKeyStorage,
       biometricsStateStorage: biometricsStateStorage,
+      localPasskeyCredsStateStorage: localPasskeyCredsStateStorage,
     );
   }
 
@@ -67,6 +76,7 @@ class IONIdentity {
       _tokenStorage.init(),
       _privateKeyStorage.init(),
       _biometricsStateStorage.init(),
+      _localPasskeyCredsStateStorage.init(),
     ]);
   }
 
@@ -74,6 +84,7 @@ class IONIdentity {
     _tokenStorage.dispose();
     _privateKeyStorage.dispose();
     _biometricsStateStorage.dispose();
+    _localPasskeyCredsStateStorage.dispose();
   }
 
   /// Returns a user-specific API client for the given [username].
@@ -95,6 +106,7 @@ class IONIdentity {
   final TokenStorage _tokenStorage;
   final PrivateKeyStorage _privateKeyStorage;
   final BiometricsStateStorage _biometricsStateStorage;
+  final LocalPasskeyCredsStateStorage _localPasskeyCredsStateStorage;
 
   /// A stream of the usernames of currently authorized users. This stream updates
   /// whenever the user tokens change, providing a real-time view of authenticated users.
@@ -104,4 +116,7 @@ class IONIdentity {
 
   Stream<Map<String, BiometricsState>> get biometricsStatesStream =>
       _biometricsStateStorage.dataStream;
+
+  Stream<Map<String, LocalPasskeyCredsState>> get localPasskeyCredsStateStream =>
+      _localPasskeyCredsStateStorage.dataStream;
 }

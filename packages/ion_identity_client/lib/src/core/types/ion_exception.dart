@@ -72,6 +72,14 @@ class UnknownIONIdentityException extends IONIdentityException {
   const UnknownIONIdentityException([super.message]);
 }
 
+class NoLocalPasskeyCredsFoundIONIdentityException extends IONIdentityException {
+  const NoLocalPasskeyCredsFoundIONIdentityException([super.message]);
+}
+
+class IdentityNotFoundIONIdentityException extends IONIdentityException {
+  const IdentityNotFoundIONIdentityException([super.message]);
+}
+
 class IncompleteDataIONIdentityException extends IONIdentityException {
   const IncompleteDataIONIdentityException([super.message]);
 }

@@ -2,6 +2,7 @@
 
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:ion_identity_client/src/auth/services/credentials/data_sources/create_recovery_credentials_data_source.dart';
+import 'package:ion_identity_client/src/core/storage/local_passkey_creds_state_storage.dart';
 import 'package:ion_identity_client/src/signer/identity_signer.dart';
 import 'package:ion_identity_client/src/signer/user_action_signer.dart';
 import 'package:uuid/uuid.dart';
@@ -13,6 +14,7 @@ class CreateNewCredentialsService {
     required this.dataSource,
     required this.userActionSigner,
     required this.identitySigner,
+    required this.localPasskeyCredsStateStorage,
   });
 
   final String username;
@@ -20,6 +22,7 @@ class CreateNewCredentialsService {
   final CreateRecoveryCredentialsDataSource dataSource;
   final UserActionSigner userActionSigner;
   final IdentitySigner identitySigner;
+  final LocalPasskeyCredsStateStorage localPasskeyCredsStateStorage;
 
   Future<void> createNewCredentials(
     OnVerifyIdentity<CredentialRequestData> onVerifyIdentity,
@@ -72,6 +75,25 @@ class CreateNewCredentialsService {
       credentialRequest,
       (_) => null,
     );
+  }
+
+  Future<void> createLocalPasskeyCredentials() async {
+    try {
+      await createNewCredentials(
+        ({required onPasskeyFlow, required onPasswordFlow, required onBiometricsFlow}) =>
+            onPasskeyFlow(),
+      );
+      return localPasskeyCredsStateStorage.updateLocalPasskeyCredsState(
+        username: username,
+        state: LocalPasskeyCredsState.accepted,
+      );
+    } catch (e) {
+      await localPasskeyCredsStateStorage.updateLocalPasskeyCredsState(
+        username: username,
+        state: LocalPasskeyCredsState.failed,
+      );
+      rethrow;
+    }
   }
 
   String generateCredentialName() => const Uuid().v4().toUpperCase();

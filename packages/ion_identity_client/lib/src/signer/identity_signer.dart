@@ -32,14 +32,20 @@ class IdentitySigner {
     );
   }
 
-  Future<AssertionRequestData> signWithPasskey(
-    UserActionChallenge challenge, {
-    bool preferImmediatelyAvailableCredentials = false,
+  Future<AssertionRequestData> loginWithPasskey({
+    required String username,
+    required UserActionChallenge challenge,
+    required bool localCredsOnly,
   }) async {
-    return passkeySigner.sign(
-      challenge,
-      preferImmediatelyAvailableCredentials: preferImmediatelyAvailableCredentials,
+    return passkeySigner.login(
+      challenge: challenge,
+      username: username,
+      localCredsOnly: localCredsOnly,
     );
+  }
+
+  Future<AssertionRequestData> signWithPasskey(UserActionChallenge challenge) async {
+    return passkeySigner.sign(challenge);
   }
 
   Future<AssertionRequestData> signWithPassword({
@@ -79,11 +85,15 @@ class IdentitySigner {
   }
 
   Future<bool> isPasskeyAvailable() {
-    return passkeySigner.canAuthenticate();
+    return passkeySigner.checkPasskeyAvailability();
   }
 
   Future<void> rejectToUseBiometrics(String username) {
     return passwordSigner.rejectToUseBiometrics(username);
+  }
+
+  Future<void> rejectToCreateLocalPasskeyCreds(String username) {
+    return passkeySigner.rejectToCreateLocalPasskeyCreds(username);
   }
 
   Future<void> enrollToUseBiometrics({

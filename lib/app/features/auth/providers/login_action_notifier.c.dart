@@ -11,7 +11,7 @@ part 'login_action_notifier.c.g.dart';
 @riverpod
 class LoginActionNotifier extends _$LoginActionNotifier {
   @override
-  FutureOr<({bool? localCredsUsed})> build() => (localCredsUsed: null);
+  FutureOr<void> build() {}
 
   Future<void> verifyUserLoginFlow({required String keyName}) async {
     state = const AsyncValue.loading();
@@ -19,13 +19,13 @@ class LoginActionNotifier extends _$LoginActionNotifier {
     state = await AsyncValue.guard(() async {
       final ionIdentity = await ref.read(ionIdentityProvider.future);
       await ionIdentity(username: keyName).auth.verifyUserLoginFlow();
-      return (localCredsUsed: null);
     });
   }
 
   Future<void> signIn({
     required String keyName,
     required OnVerifyIdentity<AssertionRequestData> onVerifyIdentity,
+    required bool localCredsOnly,
     Map<TwoFaType, String>? twoFaTypes,
   }) async {
     state = const AsyncValue.loading();
@@ -37,21 +37,11 @@ class LoginActionNotifier extends _$LoginActionNotifier {
           TwoFaTypeAdapter(entry.key, entry.value).twoFAType,
       ];
 
-      try {
-        await ionIdentity(username: keyName).auth.loginUser(
-              onVerifyIdentity: onVerifyIdentity,
-              twoFATypes: twoFATypes,
-              preferImmediatelyAvailableCredentials: true,
-            );
-        return (localCredsUsed: true);
-      } on PasskeyValidationException {
-        // No local passkey available, try with another device
-        await ionIdentity(username: keyName).auth.loginUser(
-              onVerifyIdentity: onVerifyIdentity,
-              twoFATypes: twoFATypes,
-            );
-        return (localCredsUsed: false);
-      }
+      await ionIdentity(username: keyName).auth.loginUser(
+            onVerifyIdentity: onVerifyIdentity,
+            twoFATypes: twoFATypes,
+            localCredsOnly: localCredsOnly,
+          );
     });
   }
 }

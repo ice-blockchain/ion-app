@@ -9,6 +9,7 @@ export 'src/auth/services/twofa/models/twofa_type.c.dart';
 export 'src/coins/models/coin.c.dart';
 export 'src/core/types/biometrics_state.dart';
 export 'src/core/types/ion_exception.dart';
+export 'src/core/types/local_passkey_creds_state.dart';
 export 'src/core/types/types.dart';
 export 'src/core/types/user_token.c.dart';
 export 'src/ion_identity.dart';

@@ -7,6 +7,7 @@ import 'package:ion_identity_client/src/core/network/auth_interceptor.dart';
 import 'package:ion_identity_client/src/core/network/network_client.dart';
 import 'package:ion_identity_client/src/core/service_locator/ion_identity_clients/auth_client_service_locator.dart';
 import 'package:ion_identity_client/src/core/storage/biometrics_state_storage.dart';
+import 'package:ion_identity_client/src/core/storage/local_passkey_creds_state_storage.dart';
 import 'package:ion_identity_client/src/core/storage/private_key_storage.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
@@ -18,6 +19,7 @@ class NetworkServiceLocator
         _TokenStorage,
         _PrivateKeyStorage,
         _BiometricsStateStorage,
+        _LocalPasskeyCredsStateStorage,
         _NetworkClient {
   factory NetworkServiceLocator() {
     return _instance;
@@ -162,6 +164,31 @@ mixin _BiometricsStateStorage {
       secureStorage: flutterSecureStorage(),
     );
     return _biometricsStateStorageInstance!;
+  }
+
+  FlutterSecureStorage flutterSecureStorage() {
+    if (_flutterSecureStorage != null) {
+      return _flutterSecureStorage!;
+    }
+
+    _flutterSecureStorage = const FlutterSecureStorage();
+    return _flutterSecureStorage!;
+  }
+}
+
+mixin _LocalPasskeyCredsStateStorage {
+  LocalPasskeyCredsStateStorage? _localPasskeyCredsStateStorageInstance;
+  FlutterSecureStorage? _flutterSecureStorage;
+
+  LocalPasskeyCredsStateStorage localPasskeyCredsStateStorage() {
+    if (_localPasskeyCredsStateStorageInstance != null) {
+      return _localPasskeyCredsStateStorageInstance!;
+    }
+
+    _localPasskeyCredsStateStorageInstance = LocalPasskeyCredsStateStorage(
+      secureStorage: flutterSecureStorage(),
+    );
+    return _localPasskeyCredsStateStorageInstance!;
   }
 
   FlutterSecureStorage flutterSecureStorage() {
