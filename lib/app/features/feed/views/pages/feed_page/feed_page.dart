@@ -12,9 +12,9 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
-import 'package:ion/app/features/feed/providers/posts_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
@@ -30,10 +30,8 @@ class FeedPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
-
-    final posts = ref.watch(postsProvider);
-    final entities = posts?.data.items?.toList();
-    final hasMorePosts = ref.watch(postsProvider.select((state) => (state?.hasMore).falseOrValue));
+    final hasMorePosts =
+        ref.watch(feedPostsProvider.select((state) => (state?.hasMore).falseOrValue));
 
     final showTrendingVideos = useRef(
       ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo),
@@ -52,14 +50,14 @@ class FeedPage extends HookConsumerWidget {
           ],
         ),
       ),
-      FeedPosts(posts: entities),
+      const FeedPostsList(),
     ];
 
     return Scaffold(
       body: LoadMoreBuilder(
         slivers: slivers,
         hasMore: hasMorePosts,
-        onLoadMore: () => ref.read(postsProvider.notifier).loadMore(),
+        onLoadMore: () => ref.watch(feedPostsProvider.notifier).loadMore(),
         builder: (context, slivers) {
           return PullToRefreshBuilder(
             sliverAppBar: CollapsingAppBar(

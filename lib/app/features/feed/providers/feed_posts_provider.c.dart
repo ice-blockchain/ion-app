@@ -7,10 +7,10 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'posts_provider.c.g.dart';
+part 'feed_posts_provider.c.g.dart';
 
 @riverpod
-class Posts extends _$Posts {
+class FeedPosts extends _$FeedPosts {
   @override
   EntitiesPagedDataState? build() {
     final dataSource = ref.watch(feedPostsDataSourceProvider);

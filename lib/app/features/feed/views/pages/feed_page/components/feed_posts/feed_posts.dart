@@ -7,20 +7,16 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedPosts extends StatelessWidget {
-  const FeedPosts({
-    this.posts,
-    super.key,
-  });
-
-  final List<IonConnectEntity>? posts;
+class FeedPostsList extends ConsumerWidget {
+  const FeedPostsList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final entities = posts;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final posts = ref.watch(feedPostsProvider);
+    final entities = posts?.data.items?.toList();
 
     if (entities == null) {
       return const EntitiesListSkeleton();
