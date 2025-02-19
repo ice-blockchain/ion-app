@@ -69,7 +69,7 @@ class _EntityListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Subscribing to the entity here instead of passing it as param to get the updates
     // e.g. when the entity is deleted
-    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+    final entity = ref.watch(cachedIonConnectEntityProvider(eventReference: eventReference));
 
     if (entity == null ||
         isBlockedOrBlocking(ref, entity) ||
@@ -119,8 +119,7 @@ class _EntityListItem extends ConsumerWidget {
   /// In such cases, we just have to wait until the metadata and block list appears
   /// in cache and then show the post (or not, if author is blocked/blocking).
   bool hasMetadata(WidgetRef ref, IonConnectEntity entity) {
-    final userMetadata =
-        ref.watch(userMetadataProvider(entity.masterPubkey, network: false)).valueOrNull;
+    final userMetadata = ref.watch(cachedUserMetadataProvider(entity.masterPubkey));
     return userMetadata != null;
   }
 }

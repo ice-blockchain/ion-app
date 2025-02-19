@@ -67,3 +67,14 @@ Future<IonConnectEntity?> ionConnectEntity(
 
   return null;
 }
+
+@riverpod
+IonConnectEntity? cachedIonConnectEntity(
+  Ref ref, {
+  required EventReference eventReference,
+}) =>
+    ref.watch(
+      ionConnectCacheProvider.select(
+        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
+      ),
+    );

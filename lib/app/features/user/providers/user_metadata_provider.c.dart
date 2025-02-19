@@ -14,15 +14,25 @@ part 'user_metadata_provider.c.g.dart';
 Future<UserMetadataEntity?> userMetadata(
   Ref ref,
   String pubkey, {
-  bool network = true,
   bool cache = true,
 }) async {
   return await ref.watch(
     ionConnectEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind),
-      network: network,
       cache: cache,
     ).future,
+  ) as UserMetadataEntity?;
+}
+
+@riverpod
+UserMetadataEntity? cachedUserMetadata(
+  Ref ref,
+  String pubkey,
+) {
+  return ref.watch(
+    cachedIonConnectEntityProvider(
+      eventReference: ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind),
+    ),
   ) as UserMetadataEntity?;
 }
 
