@@ -109,7 +109,7 @@ class _MessagesList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (conversationId == null) {
-      return const E2eeConversationEmptyView();
+      return const Expanded(child: E2eeConversationEmptyView());
     }
 
     final messages =

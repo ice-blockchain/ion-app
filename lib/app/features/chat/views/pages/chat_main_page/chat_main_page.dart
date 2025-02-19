@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/features/chat/community/providers/community_join_requests_provider.c.dart';
@@ -20,34 +19,27 @@ class ChatMainPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() {
-      ref.read(communityJoinRequestsProvider);
+      ref
+        ..read(communityJoinRequestsProvider)
+        ..read(e2eeMessagesSubscriberProvider)
+        ..read(communityMessagesSubscriberProvider);
     });
 
-    final e2eeMessagesSubscriber = ref.watch(e2eeMessagesSubscriberProvider);
-    final communityMessagesSubscriber = ref.watch(communityMessagesSubscriberProvider);
     final conversations = ref.watch(conversationsProvider);
-
-    final isLoading = useMemoized(
-        () => e2eeMessagesSubscriber.isLoading || communityMessagesSubscriber.isLoading, [
-      e2eeMessagesSubscriber.isLoading,
-      communityMessagesSubscriber.isLoading,
-    ]);
 
     return Scaffold(
       appBar: const ChatMainAppBar(),
       body: ScreenSideOffset.small(
-        child: isLoading
-            ? const RecentChatSkeleton()
-            : conversations.when(
-                data: (data) {
-                  if (data.isEmpty) {
-                    return const RecentChatsEmptyPage();
-                  }
-                  return RecentChatsTimelinePage(conversations: data);
-                },
-                error: (error, stackTrace) => const SizedBox(),
-                loading: () => const RecentChatSkeleton(),
-              ),
+        child: conversations.when(
+          data: (data) {
+            if (data.isEmpty) {
+              return const RecentChatsEmptyPage();
+            }
+            return RecentChatsTimelinePage(conversations: data);
+          },
+          error: (error, stackTrace) => const SizedBox(),
+          loading: () => const RecentChatSkeleton(),
+        ),
       ),
     );
   }

@@ -8,20 +8,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_context_menu.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_emoji_bar.dart';
+import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/components/recent_chat_overlay_context_menu.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class MessageReactionDialog extends HookConsumerWidget {
-  const MessageReactionDialog({
+class RecentChatOverlay extends HookConsumerWidget {
+  const RecentChatOverlay({
     required this.renderObject,
-    required this.isMe,
+    required this.conversation,
     super.key,
   });
-  final bool isMe;
 
   /// The key of the message item to capture the image from widget tree
   final RenderObject renderObject;
+  final ConversationListItem conversation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,8 +40,7 @@ class MessageReactionDialog extends HookConsumerWidget {
 
     /// The available height for the message content in the dialog
     final availableHeight = MediaQuery.sizeOf(context).height -
-        MessageReactionEmojiBar.height -
-        MessageReactionContextMenu.height -
+        RecentChatOverlayContextMenu.height -
         MediaQuery.paddingOf(context).bottom -
         MediaQuery.paddingOf(context).top;
 
@@ -58,7 +57,7 @@ class MessageReactionDialog extends HookConsumerWidget {
     final overflowBottomSize = MediaQuery.sizeOf(context).height -
         // bottomdY -
         (position.dy > 0 ? (isHugeComponent ? 0 : bottomdY) : bottomdY) -
-        MessageReactionContextMenu.height -
+        RecentChatOverlayContextMenu.height -
         MediaQuery.paddingOf(context).bottom;
 
     /// The y-coordinate of the top of the message content in the dialog
@@ -66,7 +65,7 @@ class MessageReactionDialog extends HookConsumerWidget {
         ? null
         : overflowBottomSize < 0
             ? null
-            : position.dy - MessageReactionEmojiBar.height - 2;
+            : position.dy;
 
     return Stack(
       children: [
@@ -83,26 +82,33 @@ class MessageReactionDialog extends HookConsumerWidget {
           ),
         ),
         Positioned(
-          left: isMe ? null : ScreenSideOffset.defaultSmallMargin,
-          right: isMe ? ScreenSideOffset.defaultSmallMargin : null,
+          right: ScreenSideOffset.defaultSmallMargin,
           top: topY,
-          bottom: overflowBottomSize < 0
-              ? MediaQuery.paddingOf(context).bottom
-              : MediaQuery.paddingOf(context).bottom,
+          bottom: MediaQuery.paddingOf(context).bottom,
           child: SizedBox(
             width: MediaQuery.sizeOf(context).width,
             child: Column(
-              crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                MessageReactionEmojiBar(isMe: isMe),
-                Image.memory(
-                  imageBytes,
-                  height: contentHeight,
-                  width: size.width,
-                  fit: BoxFit.fitHeight,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.0.s),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16.0.s),
+                  ),
+                  child: Image.memory(
+                    imageBytes,
+                    height: contentHeight,
+                    width: size.width - 24.0.s,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
-                const IntrinsicWidth(child: MessageReactionContextMenu()),
+                IntrinsicWidth(
+                  child: RecentChatOverlayContextMenu(
+                    conversation: conversation,
+                  ),
+                ),
               ],
             ),
           ),
