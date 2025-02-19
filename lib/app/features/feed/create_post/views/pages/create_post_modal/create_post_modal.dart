@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -19,21 +21,21 @@ import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class CreatePostModal extends HookConsumerWidget {
   const CreatePostModal({
-    required this.showCollapseButton,
     super.key,
     this.parentEvent,
     this.quotedEvent,
     this.modifiedEvent,
     this.content,
     this.videoPath,
+    this.attachedMedia,
   });
 
   final EventReference? parentEvent;
   final EventReference? quotedEvent;
   final EventReference? modifiedEvent;
   final String? content;
-  final bool showCollapseButton;
   final String? videoPath;
+  final String? attachedMedia;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +43,21 @@ class CreatePostModal extends HookConsumerWidget {
         usePostQuillController(ref, content: content, modifiedEvent: modifiedEvent);
     final scrollController = useScrollController();
     final createOption = _determineCreateOption();
-    final attachedMediaNotifier = useState<List<MediaFile>>([]);
+
+    final mediaFiles = useMemoized(
+      () {
+        if (attachedMedia != null) {
+          final decodedList = jsonDecode(attachedMedia!) as List<dynamic>;
+          return decodedList.map((item) {
+            return MediaFile.fromJson(item as Map<String, dynamic>);
+          }).toList();
+        }
+        return <MediaFile>[];
+      },
+      [attachedMedia],
+    );
+
+    final attachedMediaNotifier = useState<List<MediaFile>>(mediaFiles);
     final attachedVideoNotifier = useState<MediaFile?>(
       videoPath != null ? MediaFile(path: videoPath!) : null,
     );
@@ -65,7 +81,6 @@ class CreatePostModal extends HookConsumerWidget {
         body: Column(
           children: [
             CreatePostAppBar(
-              showCollapseButton: showCollapseButton,
               createOption: createOption,
               textEditorController: textEditorController,
             ),

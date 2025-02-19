@@ -179,31 +179,26 @@ class CreatePostRoute extends BaseRouteData {
     this.quotedEvent,
     this.modifiedEvent,
     this.content,
-    this.showCollapseButton = false,
     this.videoPath,
+    this.attachedMedia,
   }) : super(
           child: CreatePostModal(
             parentEvent: parentEvent != null ? EventReference.fromEncoded(parentEvent) : null,
             quotedEvent: quotedEvent != null ? EventReference.fromEncoded(quotedEvent) : null,
             modifiedEvent: modifiedEvent != null ? EventReference.fromEncoded(modifiedEvent) : null,
             content: content,
-            showCollapseButton: showCollapseButton,
             videoPath: videoPath,
+            attachedMedia: attachedMedia,
           ),
           type: IceRouteType.bottomSheet,
         );
 
   final String? parentEvent;
-
   final String? quotedEvent;
-
   final String? modifiedEvent;
-
   final String? content;
-
-  final bool showCollapseButton;
-
   final String? videoPath;
+  final String? attachedMedia;
 }
 
 class CreateArticleRoute extends BaseRouteData {

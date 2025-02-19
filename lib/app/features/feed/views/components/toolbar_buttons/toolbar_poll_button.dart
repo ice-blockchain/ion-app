@@ -11,10 +11,12 @@ import 'package:ion/generated/assets.gen.dart';
 class ToolbarPollButton extends HookWidget {
   const ToolbarPollButton({
     required this.textEditorController,
+    this.onPressed,
     super.key,
   });
 
   final QuillController textEditorController;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,8 @@ class ToolbarPollButton extends HookWidget {
         );
 
         textEditorController.moveCursorToPosition(index + 1);
+
+        onPressed?.call();
       },
     );
   }

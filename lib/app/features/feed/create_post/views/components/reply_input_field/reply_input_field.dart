@@ -39,6 +39,30 @@ class ReplyInputField extends HookConsumerWidget {
 
   final EventReference eventReference;
 
+  Future<void> _openCreatePostRoute({
+    required BuildContext context,
+    required QuillController textEditorController,
+    required FocusNode focusNode,
+    required ValueNotifier<List<MediaFile>> attachedMediaNotifier,
+  }) async {
+    final attachedMedia =
+        attachedMediaNotifier.value.isNotEmpty ? jsonEncode(attachedMediaNotifier.value) : null;
+
+    await CreatePostRoute(
+      parentEvent: eventReference.encode(),
+      content: jsonEncode(
+        textEditorController.document.toDelta().toJson(),
+      ),
+      attachedMedia: attachedMedia,
+    ).push<Object?>(context);
+
+    _clear(
+      focusNode: focusNode,
+      attachedMediaNotifier: attachedMediaNotifier,
+      textEditorController: textEditorController,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textEditorController = useQuillController();
@@ -106,24 +130,12 @@ class ReplyInputField extends HookConsumerWidget {
                             if (hasFocus.value)
                               GestureDetector(
                                 onTap: () async {
-                                  final content = await CreatePostRoute(
-                                    parentEvent: eventReference.encode(),
-                                    showCollapseButton: true,
-                                    content: jsonEncode(
-                                      textEditorController.document.toDelta().toJson(),
-                                    ),
-                                  ).push<Object?>(context);
-                                  if (content is Document) {
-                                    textEditorController
-                                      ..document = content
-                                      ..moveCursorToEnd();
-                                  } else {
-                                    _clear(
-                                      focusNode: focusNode,
-                                      attachedMediaNotifier: attachedMediaNotifier,
-                                      textEditorController: textEditorController,
-                                    );
-                                  }
+                                  await _openCreatePostRoute(
+                                    context: context,
+                                    textEditorController: textEditorController,
+                                    focusNode: focusNode,
+                                    attachedMediaNotifier: attachedMediaNotifier,
+                                  );
                                 },
                                 child: Assets.svg.iconReplysearchScale.icon(size: 20.0.s),
                               ),
@@ -143,7 +155,17 @@ class ReplyInputField extends HookConsumerWidget {
                 ToolbarImageButton(
                   delegate: AttachedMediaHandler(attachedMediaNotifier),
                 ),
-                ToolbarPollButton(textEditorController: textEditorController),
+                ToolbarPollButton(
+                  textEditorController: textEditorController,
+                  onPressed: () async {
+                    await _openCreatePostRoute(
+                      context: context,
+                      textEditorController: textEditorController,
+                      focusNode: focusNode,
+                      attachedMediaNotifier: attachedMediaNotifier,
+                    );
+                  },
+                ),
                 ToolbarRegularButton(textEditorController: textEditorController),
                 ToolbarItalicButton(textEditorController: textEditorController),
                 ToolbarBoldButton(textEditorController: textEditorController),
