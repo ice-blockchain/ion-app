@@ -43,8 +43,7 @@ class _FollowedAvatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // User metadata is fetched alongside the `followersYouKnowDataSourceProvider`, so don't fetch it manually
-    final userMetadata = ref.watch(userMetadataProvider(pubkey, network: false)).valueOrNull;
+    final userMetadata = ref.watch(cachedUserMetadataProvider(pubkey));
 
     return Container(
       padding: EdgeInsets.all(borderWidth),

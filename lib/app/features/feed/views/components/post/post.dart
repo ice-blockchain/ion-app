@@ -52,7 +52,7 @@ class Post extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+    final entity = ref.watch(cachedIonConnectEntityProvider(eventReference: eventReference));
 
     if (entity == null) {
       return const Skeleton(child: PostSkeleton());
