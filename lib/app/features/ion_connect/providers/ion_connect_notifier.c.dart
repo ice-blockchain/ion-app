@@ -16,6 +16,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/relay_creation_provider.c.dart';
+import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -36,16 +37,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
     IonConnectRelay? relay,
   }) async {
-    final excludedKinds = [IonConnectGiftWrapServiceImpl.kind, FileMetadataEntity.kind];
-    for (final event in events) {
-      if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
-        Logger.log(
-          'Event ${event.id} of kind ${event.kind} does not contain master pubkey tag',
-          error: EventMasterPubkeyNotFoundException(eventId: event.id),
-          stackTrace: StackTrace.current,
-        );
-      }
-    }
+    _warnSendIssues(events);
 
     final dislikedRelaysUrls = <String>{};
 
@@ -269,5 +261,22 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       ref.read(ionConnectCacheProvider.notifier).cache(entity);
     }
     return entity;
+  }
+
+  void _warnSendIssues(List<EventMessage> events) {
+    final excludedKinds = [
+      IonConnectGiftWrapServiceImpl.kind,
+      FileMetadataEntity.kind,
+      UserDelegationEntity.kind,
+    ];
+    for (final event in events) {
+      if (!excludedKinds.contains(event.kind) && !event.tags.any((tag) => tag[0] == 'b')) {
+        Logger.log(
+          'Event ${event.id} of kind ${event.kind} does not contain master pubkey tag',
+          error: EventMasterPubkeyNotFoundException(eventId: event.id),
+          stackTrace: StackTrace.current,
+        );
+      }
+    }
   }
 }
