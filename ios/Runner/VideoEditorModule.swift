@@ -121,6 +121,10 @@ extension VideoEditorModule: BanubaVideoEditorDelegate {
             if self.restoreLastVideoEditingSession == false {
                 self.videoEditorSDK?.clearSessionData()
             }
+            let data = [
+                AppDelegate.argExportedVideoFile: nil
+            ]
+            self.flutterResult?(data)
             self.videoEditorSDK = nil
         }
     }

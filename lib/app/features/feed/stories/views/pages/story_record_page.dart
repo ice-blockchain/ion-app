@@ -18,7 +18,6 @@ class StoryRecordPage extends HookConsumerWidget {
     final showLoading = useState(false);
 
     useOnInit(() async {
-      print('useOnInit called');
       await ref.read(banubaEditorNotifierProvider.notifier).startEditor();
 
       showLoading.value = true;
@@ -44,7 +43,7 @@ class StoryRecordPage extends HookConsumerWidget {
                     Navigator.of(context).pop();
                   }
                 } else {
-                  ref.refresh(banubaEditorNotifierProvider);
+                  ref.invalidate(banubaEditorNotifierProvider);
                   await Future.microtask(() {
                     if (context.mounted) {
                       ref.read(banubaEditorNotifierProvider.notifier).startEditor();
@@ -52,18 +51,9 @@ class StoryRecordPage extends HookConsumerWidget {
                   });
                 }
               }
-            } else {
-              ref.refresh(banubaEditorNotifierProvider);
-              await Future.microtask(() {
-                if (context.mounted) {
-                  ref.read(banubaEditorNotifierProvider.notifier).startEditor();
-                }
-              });
             }
           },
-          error: (message) {
-            showLoading.value = false;
-          },
+          error: (message) => showLoading.value = false,
         );
         return null;
       },
