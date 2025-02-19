@@ -14,6 +14,7 @@ import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
+import 'package:ion/app/utils/functions.dart';
 import 'package:ion/l10n/timeago_locales.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -34,7 +35,6 @@ Future<void> initApp(Ref ref) async {
     ref.read(sharedPreferencesProvider.future),
     ref.read(appTemplateProvider.future),
     ref.read(authProvider.future),
-    ref.read(coinsSyncProvider.future),
     ref.read(permissionsProvider.notifier).checkAllPermissions(),
     ref.read(onboardingCompleteProvider.future),
   ]);
@@ -42,6 +42,10 @@ Future<void> initApp(Ref ref) async {
   await [
     ref.read(coinInitializerProvider).initialize(),
   ].wait;
+
+  // `ref.read` lets `coinsSyncProvider` be disposed even though it's a keepAlive provider
+  // so we need to listen to it to keep it alive
+  ref.listen(coinsSyncProvider, noop);
 
   registerTimeagoLocalesForEnum();
 }
