@@ -8,15 +8,22 @@ import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
+import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedPostsList extends ConsumerWidget {
+class FeedPostsList extends HookConsumerWidget {
   const FeedPostsList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final posts = ref.watch(feedPostsProvider);
     final entities = posts?.data.items?.toList();
+
+    // Prefetching block list here so it can be used later with sync provider
+    useOnInit(() {
+      ref.read(currentUserBlockListProvider);
+    });
 
     if (entities == null) {
       return const EntitiesListSkeleton();

@@ -17,7 +17,7 @@ import 'package:ion/app/features/feed/providers/feed_stories_data_source_provide
 import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/article_categories_menu/article_categories_menu.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/feed_controls.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts/feed_posts.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_posts_list/feed_posts_list.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/stories.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/trending_videos/trending_videos.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
