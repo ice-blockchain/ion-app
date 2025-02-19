@@ -27,7 +27,7 @@ class UserInfoSummary extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final UserMetadata(:website, :registeredAt) = userMetadataValue.data;
+    final UserMetadata(:website, :registeredAt, :location) = userMetadataValue.data;
 
     final tiles = <Widget>[];
 
@@ -46,6 +46,15 @@ class UserInfoSummary extends HookConsumerWidget {
         UserInfoTile(
           title: formatDateToMonthYear(DateTime.now()),
           assetName: Assets.svg.iconFieldCalendar,
+        ),
+      );
+    }
+
+    if (location != null && location.isNotEmpty) {
+      tiles.add(
+        UserInfoTile(
+          title: location,
+          assetName: Assets.svg.iconProfileLocation,
         ),
       );
     }
