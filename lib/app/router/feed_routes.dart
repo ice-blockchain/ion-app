@@ -179,7 +179,6 @@ class CreatePostRoute extends BaseRouteData {
     this.quotedEvent,
     this.modifiedEvent,
     this.content,
-    this.shouldClearContent = false,
     this.videoPath,
   }) : super(
           child: CreatePostModal(
@@ -187,7 +186,6 @@ class CreatePostRoute extends BaseRouteData {
             quotedEvent: quotedEvent != null ? EventReference.fromEncoded(quotedEvent) : null,
             modifiedEvent: modifiedEvent != null ? EventReference.fromEncoded(modifiedEvent) : null,
             content: content,
-            shouldClearContent: shouldClearContent,
             videoPath: videoPath,
           ),
           type: IceRouteType.bottomSheet,
@@ -200,8 +198,6 @@ class CreatePostRoute extends BaseRouteData {
   final String? modifiedEvent;
 
   final String? content;
-
-  final bool shouldClearContent;
 
   final String? videoPath;
 }

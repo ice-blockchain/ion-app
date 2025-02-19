@@ -47,7 +47,6 @@ class ReplyInputField extends HookConsumerWidget {
   }) async {
     await CreatePostRoute(
       parentEvent: eventReference.encode(),
-      shouldClearContent: true,
       content: jsonEncode(
         textEditorController.document.toDelta().toJson(),
       ),

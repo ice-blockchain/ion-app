@@ -14,15 +14,38 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class CreatePostAppBar extends HookWidget {
   const CreatePostAppBar({
-    required this.shouldClearContent,
     required this.createOption,
     required this.textEditorController,
     super.key,
   });
 
-  final bool shouldClearContent;
   final CreatePostOption createOption;
   final QuillController textEditorController;
+
+  Future<void> _handleClose({
+    required BuildContext context,
+    required FocusNode focusNode,
+    required bool isVideo,
+  }) async {
+    final shouldReturnToMediaPicker = isVideo;
+
+    if (textEditorController.document.isEmpty()) {
+      context.pop(shouldReturnToMediaPicker);
+      return;
+    }
+
+    await showSimpleBottomSheet<void>(
+      context: context,
+      child: CancelCreationModal(
+        title: context.i18n.cancel_creation_post_title,
+        onCancel: () => {
+          focusNode.unfocus(),
+          textEditorController.clearContent(),
+          Navigator.of(context).pop(shouldReturnToMediaPicker),
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,44 +55,18 @@ class CreatePostAppBar extends HookWidget {
     return NavigationAppBar.modal(
       showBackButton: isVideo,
       title: Text(createOption.getTitle(context)),
-      onBackPress: () async {
-        if (textEditorController.document.isEmpty()) {
-          context.pop(false);
-        } else {
-          await showSimpleBottomSheet<void>(
-            context: context,
-            child: CancelCreationModal(
-              title: context.i18n.cancel_creation_post_title,
-              onCancel: () => Navigator.of(context).pop(false),
-            ),
-          );
-        }
-      },
+      onBackPress: () => _handleClose(
+        context: context,
+        focusNode: focusNode,
+        isVideo: isVideo,
+      ),
       actions: [
         NavigationCloseButton(
-          onPressed: () async {
-            final shouldReturnToMediaPicker = isVideo;
-
-            if (textEditorController.document.isEmpty()) {
-              context.pop(shouldReturnToMediaPicker);
-              return;
-            }
-
-            await showSimpleBottomSheet<void>(
-              context: context,
-              child: CancelCreationModal(
-                title: context.i18n.cancel_creation_post_title,
-                onCancel: () => {
-                  if (shouldClearContent)
-                    {
-                      focusNode.unfocus(),
-                      textEditorController.clearContent(),
-                    },
-                  Navigator.of(context).pop(shouldReturnToMediaPicker),
-                },
-              ),
-            );
-          },
+          onPressed: () => _handleClose(
+            context: context,
+            focusNode: focusNode,
+            isVideo: isVideo,
+          ),
         ),
       ],
     );
