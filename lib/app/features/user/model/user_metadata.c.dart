@@ -195,8 +195,11 @@ class UserDataEventMessageContent {
 
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
 
-  static int _dateTimeToJson(DateTime value) => value.millisecondsSinceEpoch ~/ 1000;
-  static DateTime _dateTimeFromJson(int value) => DateTime.fromMillisecondsSinceEpoch(value * 1000);
+  static int? _dateTimeToJson(DateTime? value) =>
+      value != null ? value.millisecondsSinceEpoch ~/ 1000 : null;
+
+  static DateTime? _dateTimeFromJson(int? value) =>
+      value != null ? DateTime.fromMillisecondsSinceEpoch(value * 1000) : null;
 }
 
 enum WhoCanSetting {
