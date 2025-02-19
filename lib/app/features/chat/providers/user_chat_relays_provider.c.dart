@@ -17,7 +17,7 @@ part 'user_chat_relays_provider.c.g.dart';
 
 @riverpod
 Future<UserChatRelaysEntity?> userChatRelays(Ref ref, String pubkey) async {
-  return ref.watch(userChatRelaysManagerProvider.notifier).fetch(pubkey);
+  return ref.read(userChatRelaysManagerProvider.notifier).fetch(pubkey);
 }
 
 @riverpod
@@ -54,7 +54,6 @@ class UserChatRelaysManager extends _$UserChatRelaysManager {
         );
   }
 
-  ///
   /// Fetches user relays and sets them as chat relays if they differ
   /// If chat relays already match user relays, does nothing
   /// Signs and broadcasts new chat relay list if an update is needed
