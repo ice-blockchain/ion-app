@@ -165,7 +165,7 @@ class SendE2eeMessageService {
 
             conversationTags.addAll(imetaTags);
 
-            await _sendMessage(
+            await _sendKind14Message(
               content: content,
               pubkey: pubkey,
               masterPubkey: masterPubkey,
@@ -188,7 +188,7 @@ class SendE2eeMessageService {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
 
-            await _sendMessage(
+            await _sendKind14Message(
               pubkey: pubkey,
               content: content,
               masterPubkey: masterPubkey,
@@ -266,7 +266,7 @@ class SendE2eeMessageService {
     );
   }
 
-  Future<void> _sendMessage({
+  Future<void> _sendKind14Message({
     required String content,
     required String pubkey,
     required String masterPubkey,
@@ -306,7 +306,9 @@ class SendE2eeMessageService {
       await conversationMessageStatusDao.add(
         masterPubkey: masterPubkey,
         eventMessageId: eventMessage.id,
-        status: MessageDeliveryStatus.sent,
+        status: masterPubkey == currentUserMasterPubkey
+            ? MessageDeliveryStatus.read
+            : MessageDeliveryStatus.sent,
       );
     } catch (e) {
       await conversationMessageStatusDao.add(

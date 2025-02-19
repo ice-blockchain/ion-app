@@ -11,6 +11,7 @@ ConversationMessageDao conversationMessageDao(Ref ref) =>
     ConversationMessageTable,
     EventMessageTable,
     MessageStatusTable,
+    ConversationTable,
   ],
 )
 class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
@@ -34,6 +35,24 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       ..where(conversationMessageTable.conversationId.equals(conversationId))
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
+
+    return query.watch().map((rows) => rows.length);
+  }
+
+  Stream<int> getAllUnreadMessagesCountInArchive(String currentUserMasterPubkey) {
+    final query = select(messageStatusTable).join([
+      innerJoin(
+        conversationMessageTable,
+        conversationMessageTable.eventMessageId.equalsExp(messageStatusTable.eventMessageId),
+      ),
+      innerJoin(
+        conversationTable,
+        conversationTable.id.equalsExp(conversationMessageTable.conversationId),
+      ),
+    ])
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
+      ..where(conversationTable.isArchived.equals(true));
 
     return query.watch().map((rows) => rows.length);
   }

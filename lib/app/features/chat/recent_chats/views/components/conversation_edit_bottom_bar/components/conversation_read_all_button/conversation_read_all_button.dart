@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -19,7 +22,21 @@ class ConversationReadAllButton extends ConsumerWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        //TODO: when flow is ready to support for e2ee and non e2ee conversations
+        final conversationsToManage = selectedConversations.isEmpty
+            ? (ref.read(conversationsProvider).value ?? [])
+            : selectedConversations;
+
+        await Future.wait(
+          conversationsToManage.map((conversation) async {
+            if (conversation.latestMessage == null) {
+              return;
+            }
+
+            await (await ref.read(sendE2eeMessageServiceProvider.future))
+                .sendMessageStatus(conversation.latestMessage!, MessageDeliveryStatus.read);
+          }),
+        );
+
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
         ref.read(selectedConversationsProvider.notifier).clear();
       },

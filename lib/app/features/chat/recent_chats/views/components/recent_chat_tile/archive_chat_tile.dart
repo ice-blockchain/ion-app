@@ -23,22 +23,12 @@ class ArchiveChatTile extends HookConsumerWidget {
     final selectedConversations = ref.watch(selectedConversationsProvider);
     final conversations = ref.watch(archivedConversationsProvider).valueOrNull ?? [];
 
+    final unreadMessagesCount =
+        ref.watch(getAllUnreadMessagesCountInArchiveProvider).valueOrNull ?? 0;
+
     final isSelected = useMemoized(
       () => selectedConversations.toSet().containsAll(conversations),
       [selectedConversations, conversations],
-    );
-
-    final archivedConversationsUnreadMessagesCount = useFuture(
-      useMemoized(
-        () async {
-          final unreadMessagesFutures = conversations.map(
-            (c) => ref.read(getUnreadMessagesCountProvider(c.conversationId).future),
-          );
-          final counts = await Future.wait(unreadMessagesFutures);
-          return counts.fold(0, (sum, count) => sum + count);
-        },
-        [conversations],
-      ),
     );
 
     final combinedConversationNames = useCombinedConversationNames(conversations, ref);
@@ -117,9 +107,7 @@ class ArchiveChatTile extends HookConsumerWidget {
                                 maxLines: 1,
                               ),
                             ),
-                            UnreadCountBadge(
-                              unreadCount: archivedConversationsUnreadMessagesCount.data ?? 0,
-                            ),
+                            UnreadCountBadge(unreadCount: unreadMessagesCount),
                           ],
                         ),
                       ],

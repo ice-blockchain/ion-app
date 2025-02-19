@@ -18,6 +18,21 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     DateTime? createdAt,
   }) async {
     if (status == MessageDeliveryStatus.read && createdAt != null) {
+      final existingRow = await (select(messageStatusTable)
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.eventMessageId.equals(eventMessageId)))
+          .getSingleOrNull();
+
+      if (existingRow == null) {
+        await into(messageStatusTable).insert(
+          MessageStatusTableCompanion(
+            status: Value(status),
+            masterPubkey: Value(masterPubkey),
+            eventMessageId: Value(eventMessageId),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
       final conversationMessageTableData = await (select(conversationMessageTable)
             ..where((table) => table.eventMessageId.equals(eventMessageId)))
           .getSingleOrNull();
