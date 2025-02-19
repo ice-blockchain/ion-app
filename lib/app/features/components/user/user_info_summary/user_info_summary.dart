@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/user_info_summary/user_info_tile.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class UserInfoSummary extends HookConsumerWidget {
@@ -25,7 +27,7 @@ class UserInfoSummary extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final website = userMetadataValue.data.website;
+    final UserMetadata(:website, :registeredAt) = userMetadataValue.data;
 
     final tiles = <Widget>[];
 
@@ -39,12 +41,14 @@ class UserInfoSummary extends HookConsumerWidget {
       );
     }
 
-    tiles.add(
-      UserInfoTile(
-        title: context.i18n.profile_creation_date,
-        assetName: Assets.svg.iconFieldCalendar,
-      ),
-    );
+    if (registeredAt != null) {
+      tiles.add(
+        UserInfoTile(
+          title: formatDateToMonthYear(DateTime.now()),
+          assetName: Assets.svg.iconFieldCalendar,
+        ),
+      );
+    }
 
     if (isCurrentUserFollowed) {
       tiles.add(

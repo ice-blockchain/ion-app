@@ -16,6 +16,7 @@ class AppLocale extends _$AppLocale {
   }
 
   set locale(Locale locale) {
+    //TODO:set Intl.defaultLocale + check if passed not supported one
     state = locale;
   }
 

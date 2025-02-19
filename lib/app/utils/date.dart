@@ -92,6 +92,11 @@ String formatDateToMonthDayYear(DateTime date, {Locale? locale}) {
   return DateFormat('MMMM d, yyyy', locale?.languageCode).format(date);
 }
 
+/// Formats a [DateTime] into the "MMMM yyyy" format (e.g., "January 2024").
+String formatDateToMonthYear(DateTime date, {Locale? locale}) {
+  return DateFormat('MMMM yyyy', locale?.languageCode).format(date);
+}
+
 /// Returns a random DateTime object before the current time.
 ///
 /// [maxDuration]: The maximum duration before the current time.
