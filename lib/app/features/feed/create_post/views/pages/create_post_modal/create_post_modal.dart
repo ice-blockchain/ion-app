@@ -44,13 +44,18 @@ class CreatePostModal extends HookConsumerWidget {
     final scrollController = useScrollController();
     final createOption = _determineCreateOption();
 
-    var mediaFiles = <MediaFile>[];
-    if (attachedMedia != null) {
-      final decodedList = jsonDecode(attachedMedia!) as List<dynamic>;
-      mediaFiles = decodedList.map((item) {
-        return MediaFile.fromJson(item as Map<String, dynamic>);
-      }).toList();
-    }
+    final mediaFiles = useMemoized(
+      () {
+        if (attachedMedia != null) {
+          final decodedList = jsonDecode(attachedMedia!) as List<dynamic>;
+          return decodedList.map((item) {
+            return MediaFile.fromJson(item as Map<String, dynamic>);
+          }).toList();
+        }
+        return <MediaFile>[];
+      },
+      [attachedMedia],
+    );
 
     final attachedMediaNotifier = useState<List<MediaFile>>(mediaFiles);
     final attachedVideoNotifier = useState<MediaFile?>(
