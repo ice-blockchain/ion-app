@@ -3,6 +3,10 @@
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger_settings.dart';
+
+const _verboseRiverpod = false;
 
 class Logger {
   Logger._();
@@ -55,6 +59,16 @@ class Logger {
           requestPen: AnsiPen()..cyan(),
           responsePen: AnsiPen()..green(),
           errorPen: AnsiPen()..red(),
+        ),
+      );
+
+  static TalkerRiverpodObserver get talkerRiverpodObserver => TalkerRiverpodObserver(
+        // enable logger by default + printProviderFailed->true
+        settings: const TalkerRiverpodLoggerSettings(
+          printProviderAdded: _verboseRiverpod,
+          printProviderUpdated: _verboseRiverpod,
+          printStateFullData: _verboseRiverpod,
+          printFailFullData: _verboseRiverpod,
         ),
       );
 

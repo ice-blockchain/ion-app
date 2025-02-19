@@ -12,13 +12,11 @@ import 'package:ion/app/features/core/views/components/content_scaler.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
 import 'package:ion/generated/app_localizations.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:talker_riverpod_logger/talker_riverpod_logger_observer.dart';
-
-const _riverpodLoggerEnabled = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +25,7 @@ void main() async {
 
   runApp(
     ProviderScope(
-      observers: <ProviderObserver>[
-        if (_riverpodLoggerEnabled) TalkerRiverpodObserver(),
-      ],
+      observers: [Logger.talkerRiverpodObserver],
       child: const IONApp(),
     ),
   );
