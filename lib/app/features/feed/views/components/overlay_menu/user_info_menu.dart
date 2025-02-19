@@ -131,7 +131,7 @@ class _BlockUserMenuItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBlocked = ref.watch(isBlockedProvider(pubkey)).value ?? false;
+    final isBlocked = ref.watch(isBlockedProvider(pubkey));
     return OverlayMenuItem(
       label: isBlocked
           ? context.i18n.post_menu_unblock_nickname(username)

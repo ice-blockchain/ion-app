@@ -95,7 +95,7 @@ class _BlockUserMenuItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isBlocked = ref.watch(isBlockedProvider(pubkey)).value ?? false;
+    final isBlocked = ref.watch(isBlockedProvider(pubkey));
     return ContextMenuItem(
       label: isBlocked ? context.i18n.button_unblock : context.i18n.button_block,
       iconAsset: Assets.svg.iconBlockClose3,

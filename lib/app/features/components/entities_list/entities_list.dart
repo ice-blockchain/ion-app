@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/async_value_listener.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/article_list_item.dart';
 import 'package:ion/app/features/components/entities_list/components/post_list_item.dart';
@@ -34,10 +33,6 @@ class EntitiesList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Keeping blocked ids here to get rid of the glitches during the scroll up
-    // More: https://github.com/ice-blockchain/ion-app/pull/601
-    final blockedEntitiesIds = useState(<String, bool>{});
-
     return SliverList.builder(
       itemCount: entities.length,
       itemBuilder: (BuildContext context, int index) {
@@ -45,7 +40,6 @@ class EntitiesList extends HookWidget {
           eventReference: entities[index].toEventReference(),
           framedEventType: framedEventType,
           separatorHeight: separatorHeight,
-          blockedIds: blockedEntitiesIds,
         );
       },
     );
@@ -56,14 +50,12 @@ class _EntityListItem extends ConsumerWidget {
   _EntityListItem({
     required this.eventReference,
     required this.framedEventType,
-    required this.blockedIds,
     double? separatorHeight,
   }) : separatorHeight = separatorHeight ?? 12.0.s;
 
   final EventReference eventReference;
   final double separatorHeight;
   final FramedEventType framedEventType;
-  final ValueNotifier<Map<String, bool>> blockedIds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -100,17 +92,7 @@ class _EntityListItem extends ConsumerWidget {
   }
 
   bool isBlockedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
-    ref.listenAsyncValue(
-      isEntityBlockedOrBlockingProvider(entity, cacheOnly: true),
-      onSuccess: (blocked) {
-        if (blocked != null && blockedIds.value[entity.id] != blocked) {
-          blockedIds.value = {...blockedIds.value, entity.id: blocked};
-        }
-      },
-    );
-    return ref.watch(isEntityBlockedOrBlockingProvider(entity)).valueOrNull ??
-        blockedIds.value[entity.id] ??
-        true;
+    return ref.watch(isEntityBlockedOrBlockingProvider(entity));
   }
 
   /// When we fetch lists (e.g. feed, search or data for tabs in profiles),
