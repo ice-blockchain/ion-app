@@ -13,7 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_sync_service.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<CoinsSyncService> coinsSyncService(Ref ref) async {
   return CoinsSyncService(
     ref.watch(coinsRepositoryProvider),
