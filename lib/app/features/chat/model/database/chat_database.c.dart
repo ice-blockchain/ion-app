@@ -35,7 +35,18 @@ ChatDatabase chatDatabase(Ref ref) {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return ChatDatabase(pubkey);
+  final database = ChatDatabase(pubkey);
+
+  ref.listen(
+    authProvider.select((state) => state.valueOrNull?.isAuthenticated),
+    (prev, next) {
+      if (prev != null && prev == true && next == false) {
+        database.close();
+      }
+    },
+  );
+
+  return database;
 }
 
 @DriftDatabase(
