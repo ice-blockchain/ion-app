@@ -23,11 +23,17 @@ QuillController? usePostQuillController(
 
   return useMemoized(
     () {
+      const defaultConfig = QuillControllerConfig(
+        clipboardConfig: QuillClipboardConfig(
+          enableExternalRichPaste: false,
+        ),
+      );
       if (content != null) {
         final document = Document.fromDelta(Delta.fromJson(jsonDecode(content) as List<dynamic>));
         return QuillController(
           document: document,
           selection: TextSelection.collapsed(offset: document.length - 1),
+          config: defaultConfig,
         );
       }
       if (modifiedEntity != null) {
@@ -37,11 +43,12 @@ QuillController? usePostQuillController(
           return QuillController(
             document: document,
             selection: TextSelection.collapsed(offset: document.length - 1),
+            config: defaultConfig,
           );
         }
         return null;
       }
-      return QuillController.basic();
+      return QuillController.basic(config: defaultConfig);
     },
     [content, modifiedEntity],
   );

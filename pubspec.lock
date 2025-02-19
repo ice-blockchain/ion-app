@@ -884,6 +884,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  flutter_keyboard_visibility_temp_fork:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_temp_fork
+      sha256: cecc44a350a8a369efbc960bb2126386af53cb0597ca6789607cbfb88081b9f4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.4"
   flutter_keyboard_visibility_web:
     dependency: transitive
     description:
@@ -925,10 +933,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_quill
-      sha256: "90da4f3866ea4ca1b0d4055f0d3a514c7e45276b82b71a62d97389e742fe9b54"
+      sha256: "3765d057bb63e6e5b7d5aba7c8fb048ec1b38c8a3428ded8c22e57cf2682a580"
       url: "https://pub.dev"
     source: hosted
-    version: "10.7.5"
+    version: "11.0.0"
   flutter_quill_delta_from_html:
     dependency: transitive
     description:
@@ -1438,7 +1446,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "8e146340a6e0e24fdf46abdfee0f677217ad46b3"
+      resolved-ref: "832259d48e7f37be8dc55c390a266bfb1daa25fc"
       url: "https://github.com/ice-blockchain/markdown_quill"
     source: git
     version: "4.2.0"
@@ -1898,10 +1906,66 @@ packages:
     dependency: transitive
     description:
       name: quill_native_bridge
-      sha256: "80cc180a6e5cc625c5431b61e2fbc056d36654964337f497c5990e34925844fe"
+      sha256: bda0f0ad9bc160dcdd4bd2b378a7ae8bdb55c3d4b7301bf739d5e3b065ee5e82
       url: "https://pub.dev"
     source: hosted
-    version: "10.5.16"
+    version: "11.0.0"
+  quill_native_bridge_android:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_android
+      sha256: b75c7e6ede362a7007f545118e756b1f19053994144ec9eda932ce5e54a57569
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1+2"
+  quill_native_bridge_ios:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_ios
+      sha256: d23de3cd7724d482fe2b514617f8eedc8f296e120fb297368917ac3b59d8099f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  quill_native_bridge_linux:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_linux
+      sha256: "5fcc60cab2ab9079e0746941f05c5ca5fec85cc050b738c8c8b9da7c09da17eb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  quill_native_bridge_macos:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_macos
+      sha256: "1c0631bd1e2eee765a8b06017c5286a4e829778f4585736e048eb67c97af8a77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  quill_native_bridge_platform_interface:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_platform_interface
+      sha256: ea48bd12bf426741747ec8a575b122350971f338a75049099b349c63447582a2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1+1"
+  quill_native_bridge_web:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_web
+      sha256: e7e55047d68f1a88574c26dbe3f12988f49d07740590d8fc6280028bbde5b908
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
+  quill_native_bridge_windows:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_windows
+      sha256: "60e50d74238f22ceb43113d9a42b6627451dab9fc27f527b979a32051cf1da45"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   quiver:
     dependency: transitive
     description:

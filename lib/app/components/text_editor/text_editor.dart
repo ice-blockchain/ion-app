@@ -66,7 +66,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
     return QuillEditor.basic(
       controller: widget.controller,
       focusNode: _focusNode,
-      configurations: QuillEditorConfigurations(
+      config: QuillEditorConfig(
         embedBuilders: [
           TextEditorSingleImageBuilder(),
           TextEditorPollBuilder(

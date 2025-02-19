@@ -115,7 +115,7 @@ class ReplyInputField extends HookConsumerWidget {
                                   ).push<Object?>(context);
                                   if (content is Document) {
                                     textEditorController
-                                      ..setContents(content.toDelta())
+                                      ..document = content
                                       ..moveCursorToEnd();
                                   } else {
                                     _clear(

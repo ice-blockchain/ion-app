@@ -30,16 +30,12 @@ class TextEditorSeparatorBuilder extends EmbedBuilder {
   @override
   Widget build(
     BuildContext context,
-    QuillController controller,
-    Embed node,
-    bool readOnly,
-    bool inline,
-    TextStyle textStyle,
+    EmbedContext embedContext,
   ) {
     return TextEditorSeparator(
       readOnly: readOnly,
       onRemove: () => {
-        removeBlock(controller, node),
+        removeBlock(embedContext.controller, embedContext.node),
       },
     );
   }

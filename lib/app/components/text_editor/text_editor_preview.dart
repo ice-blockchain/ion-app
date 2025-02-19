@@ -44,7 +44,7 @@ class TextEditorPreview extends HookWidget {
 
     return QuillEditor.basic(
       controller: controller.value,
-      configurations: QuillEditorConfigurations(
+      config: QuillEditorConfig(
         enableSelectionToolbar: false,
         floatingCursorDisabled: true,
         showCursor: false,
