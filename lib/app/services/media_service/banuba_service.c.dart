@@ -102,7 +102,6 @@ class BanubaService {
       methodStartVideoEditor,
       arguments,
     );
-    Logger.log('Banuba SDK result: $result');
     if (result is Map) {
       final path = result[argExportedVideoFile];
       if (path is String) {
