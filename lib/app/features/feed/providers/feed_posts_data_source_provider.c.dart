@@ -19,18 +19,23 @@ import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
+import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_posts_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
+  // TODO:pass languages to the filters when defined
+  final languageInterestSet =
+      ref.watch(currentUserInterestsSetProvider(InterestSetType.languages)).valueOrNull;
   final filters = ref.watch(feedCurrentFilterProvider);
   final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
-  if (filterRelays != null && currentPubkey != null) {
+  if (filterRelays != null && currentPubkey != null && languageInterestSet != null) {
     return [
       for (final entry in filterRelays.entries)
         switch (filters.category) {
