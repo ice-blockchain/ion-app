@@ -14,7 +14,7 @@ class Network {
     return switch (name) {
       'Ion' || 'IonTestnet' => Assets.svg.networks.walletIce,
       'Algorand' || 'AlgorandTestnet' => Assets.svg.networks.walletAlgorand,
-      'Aptos' || 'AptosTetnet' => Assets.svg.networks.walletAptos,
+      'Aptos' || 'AptosTestnet' => Assets.svg.networks.walletAptos,
       'ArbitrumOne' || 'ArbitrumSepolia' => Assets.svg.networks.walletArbitrumone,
       'AvalancheC' || 'AvalancheCFuji' => Assets.svg.networks.walletAvalance,
       'Base' || 'BaseSepolia' => Assets.svg.networks.walletBase,
@@ -76,7 +76,7 @@ class Network {
   static final _testnets = {
     'IonTestnet',
     'AlgorandTestnet',
-    'AptosTetnet',
+    'AptosTestnet',
     'ArbitrumSepolia',
     'AvalancheCFuji',
     'BaseSepolia',

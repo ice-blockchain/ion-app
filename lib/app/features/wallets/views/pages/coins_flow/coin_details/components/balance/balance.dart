@@ -9,6 +9,8 @@ import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/num.dart';
@@ -64,17 +66,12 @@ class Balance extends ConsumerWidget {
             padding: EdgeInsets.only(bottom: 20.0.s, top: 11.0.s),
             child: BalanceActions(
               onReceive: () {
-                // TODO: Not implemented
-                // ref.read(receiveCoinsFormControllerProvider.notifier)
-                //   ..setCoin(coinData)
-                //   ..setNetwork(networkType);
-
+                ref.read(receiveCoinsFormControllerProvider.notifier).setCoin(coinsGroup);
                 CoinReceiveRoute().push<void>(context);
               },
               onNeedToEnable2FA: () => SecureAccountModalRoute().push<void>(context),
               onSend: () {
-                // TODO: Not implemented
-                // ref.read(sendAssetFormControllerProvider().notifier).setCoin(coinData);
+                ref.read(sendAssetFormControllerProvider().notifier).setCoin(coinsGroup);
                 NetworkSelectSendRoute().push<void>(context);
               },
             ),
