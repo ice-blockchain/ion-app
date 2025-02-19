@@ -544,6 +544,7 @@
   "error_general_description": "An unexpected error occurred. Please try again later. {info}",
   "error_general_error_code": "Error code: {error}",
   "error_input_length": "Must be over {amount} characters",
+  "error_input_length_max": "Maximum {amount} characters allowed",
   "error_input_numbers": "Must contain 1 number",
   "error_input_all_cases": "Uppercase and lowercase letters",
   "error_input_special_character": "Must contain 1 special character",

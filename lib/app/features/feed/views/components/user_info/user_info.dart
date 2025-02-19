@@ -75,6 +75,7 @@ class UserInfo extends HookConsumerWidget {
             ),
           ),
           trailing: trailing,
+          trailingPadding: EdgeInsetsDirectional.only(start: 34.0.s),
         );
       },
       orElse: () => const Skeleton(child: ListItemUserShape()),

@@ -6,6 +6,8 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/general_
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+const int _nicknameMaxLength = 15;
+
 class NicknameInput extends StatelessWidget {
   const NicknameInput({
     super.key,
@@ -38,6 +40,10 @@ class NicknameInput extends StatelessWidget {
 
         if (Validators.isInvalidNickname(value)) {
           return context.i18n.error_nickname_invalid;
+        }
+
+        if (Validators.isInvalidLength(value, maxLength: _nicknameMaxLength)) {
+          return context.i18n.error_input_length_max(_nicknameMaxLength);
         }
         return null;
       },

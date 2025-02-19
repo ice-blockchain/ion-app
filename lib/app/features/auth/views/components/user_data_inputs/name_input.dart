@@ -6,6 +6,8 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/general_
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
+const int _nameMaxLength = 50;
+
 class NameInput extends StatelessWidget {
   const NameInput({
     this.onChanged,
@@ -34,6 +36,10 @@ class NameInput extends StatelessWidget {
 
         if (Validators.isInvalidDisplayName(value)) {
           return context.i18n.error_display_name_invalid;
+        }
+
+        if (Validators.isInvalidLength(value, maxLength: _nameMaxLength)) {
+          return context.i18n.error_input_length_max(_nameMaxLength);
         }
         return null;
       },
