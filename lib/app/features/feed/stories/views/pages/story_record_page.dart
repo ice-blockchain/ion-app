@@ -14,12 +14,10 @@ class StoryRecordPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final banubaState = ref.watch(banubaEditorNotifierProvider);
-
     final showLoading = useState(false);
 
     useOnInit(() async {
       await ref.read(banubaEditorNotifierProvider.notifier).startEditor();
-
       showLoading.value = true;
     });
 
@@ -30,14 +28,16 @@ class StoryRecordPage extends HookConsumerWidget {
           loading: () => showLoading.value = true,
           ready: (exportedPath) async {
             showLoading.value = false;
-
-            if (exportedPath != null) {
+            if (exportedPath == null) {
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
+            } else {
               if (context.mounted) {
                 final isPublished = await StoryPreviewRoute(
                   path: exportedPath,
                   mimeType: 'video/mp4',
                 ).push<bool>(context);
-
                 if (isPublished ?? false) {
                   if (context.mounted) {
                     Navigator.of(context).pop();

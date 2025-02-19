@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: ice License 1.0
 
 import Foundation
 import BanubaVideoEditorSDK
@@ -56,7 +57,6 @@ class VideoEditorModule: VideoEditor {
         checkLicenseAndStartVideoEditor(with: trimmerLaunchConfig, flutterResult: flutterResult)
     }
 
-
     func openCamera(
         fromViewController controller: FlutterViewController,
         flutterResult: @escaping FlutterResult
@@ -70,7 +70,6 @@ class VideoEditorModule: VideoEditor {
         checkLicenseAndStartVideoEditor(with: cameraConfig, flutterResult: flutterResult)
     }
 
-    
     func openEditor(
         fromViewController controller: FlutterViewController,
         videoURL: URL,
@@ -95,7 +94,7 @@ class VideoEditorModule: VideoEditor {
             return
         }
         sdk.getLicenseState { [weak self] isValid in
-            guard let self else { return }
+            guard let self = self else { return }
             if isValid {
                 DispatchQueue.main.async {
                     sdk.presentVideoEditor(withLaunchConfiguration: config, completion: nil)
