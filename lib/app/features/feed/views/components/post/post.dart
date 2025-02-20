@@ -52,7 +52,7 @@ class Post extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(cachedIonConnectEntityProvider(eventReference: eventReference));
+    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity == null) {
       return const Skeleton(child: PostSkeleton());
@@ -120,7 +120,7 @@ class _FramedEvent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(cachedIonConnectEntityProvider(eventReference: eventReference));
+    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
       return DeletedEntity(entityType: DeletedEntityType.post, bottomPadding: 0);
@@ -158,7 +158,7 @@ final class _QuotedPost extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity = ref.watch(cachedIonConnectEntityProvider(eventReference: eventReference));
+    final postEntity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     return QuotedEntityFrame.post(
       child: GestureDetector(

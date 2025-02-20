@@ -61,7 +61,7 @@ class _EntityListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Subscribing to the entity here instead of passing it as param to get the updates
     // e.g. when the entity is deleted
-    final entity = ref.watch(cachedIonConnectEntityProvider(eventReference: eventReference));
+    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity == null ||
         isBlockedOrBlocking(ref, entity) ||
