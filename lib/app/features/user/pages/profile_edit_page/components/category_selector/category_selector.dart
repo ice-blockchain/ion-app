@@ -1,29 +1,32 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_categories_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CategorySelector extends ConsumerWidget {
+class CategorySelector extends HookConsumerWidget {
   const CategorySelector({
     required this.selectedCategory,
-    required this.onPressed,
+    required this.onChanged,
     super.key,
   });
 
-  final VoidCallback onPressed;
+  final ValueChanged<String>? onChanged;
   final String? selectedCategory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selected = useState(selectedCategory);
     final categories = ref.watch(userCategoriesProvider).valueOrNull;
 
-    final label = selectedCategory != null
-        ? categories != null && categories.containsKey(selectedCategory)
-            ? categories[selectedCategory]!.name
+    final label = selected.value != null
+        ? categories != null && categories.containsKey(selected.value)
+            ? categories[selected.value]!.name
             : selectedCategory!
         : context.i18n.dropdown_select_category;
 
@@ -50,7 +53,15 @@ class CategorySelector extends ConsumerWidget {
         width: double.infinity,
         child: Text(label),
       ),
-      onPressed: onPressed,
+      onPressed: () async {
+        final newCategory = await CategorySelectRoute(
+          selectedCategory: selected.value,
+        ).push<String?>(context);
+        if (newCategory != null) {
+          selected.value = newCategory;
+          onChanged?.call(newCategory);
+        }
+      },
     );
   }
 }

@@ -22,7 +22,6 @@ import 'package:ion/app/features/user/pages/profile_edit_page/components/header/
 import 'package:ion/app/features/user/pages/profile_edit_page/components/user_banner_picked/user_banner_picked.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 
 class ProfileEditPage extends HookConsumerWidget {
   const ProfileEditPage({
@@ -94,15 +93,9 @@ class ProfileEditPage extends HookConsumerWidget {
                                     SizedBox(height: paddingValue),
                                     CategorySelector(
                                       selectedCategory: draftRef.value.category,
-                                      onPressed: () async {
-                                        final newCategory = await CategorySelectRoute(
-                                          pubkey: pubkey,
-                                          selectedCategory: userMetadata.data.category,
-                                        ).push<String?>(context);
-                                        if (newCategory != null) {
-                                          update(draftRef.value.copyWith(category: newCategory));
-                                        }
-                                      },
+                                      onChanged: (category) => update(
+                                        draftRef.value.copyWith(category: category),
+                                      ),
                                     ),
                                     SizedBox(height: paddingValue),
                                     LocationInput(
