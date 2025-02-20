@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/inputs/hooks/use_node_focused.dart';
-import 'package:ion/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_decoration.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -96,7 +95,6 @@ class TextInput extends HookWidget {
     final error = useState<String?>(null);
     final hasValue = useState(initialValue.isNotEmpty || (controller?.text.isNotEmpty ?? false));
     final hasFocus = useNodeFocused(focusNode);
-    final hasBeenChanged = useState(false);
 
     useOnInit(
       () {
@@ -107,7 +105,6 @@ class TextInput extends HookWidget {
 
     String? validate(String? value) {
       final validatorError = validator?.call(value);
-      hasBeenChanged.value = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         error.value = validatorError;
         onValidated?.call(validatorError == null);
@@ -118,22 +115,16 @@ class TextInput extends HookWidget {
     void onChangedHandler(String text) {
       hasValue.value = text.isNotEmpty;
       onChanged?.call(text);
-      if (isLive && hasBeenChanged.value) {
+      if (isLive) {
         validate(text);
       }
-      hasBeenChanged.value = true;
     }
-
-    useTextChanged(
-      controller: controller,
-      onTextChanged: onChangedHandler,
-    );
 
     return TextFormField(
       scrollPadding: scrollPadding,
       controller: controller,
       focusNode: focusNode,
-      onChanged: controller == null ? onChangedHandler : null,
+      onChanged: onChangedHandler,
       onTapOutside: onTapOutside,
       initialValue: initialValue,
       maxLines: maxLines,
