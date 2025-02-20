@@ -93,7 +93,7 @@ class ProfileEditPage extends HookConsumerWidget {
                                     ),
                                     SizedBox(height: paddingValue),
                                     CategorySelector(
-                                      selectedCategory: userMetadata.data.category,
+                                      selectedCategory: draftRef.value.category,
                                       onPressed: () async {
                                         final newCategory = await CategorySelectRoute(
                                           pubkey: pubkey,

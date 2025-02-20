@@ -21,5 +21,5 @@ Future<Map<String, UserCategory>?> userCategories(Ref ref) async {
 
 Future<String> _fetchCategories(String localeCode) async {
   await Future<void>.delayed(const Duration(milliseconds: 500));
-  return '[{"key":"aviation","name":"Aviation"},{"key":"blockchain","name":"Blockchain"},{"key":"business","name":"Business"},{"key":"cars","name":"Cars"},{"key":"cryptocurrency","name":"Cryptocurrency"},{"key":"dataScience","name":"DataScience"},{"key":"education","name":"Education"},{"key":"finance","name":"Finance"},{"key":"gamer","name":"Gamer"},{"key":"style","name":"Style"},{"key":"restaurant","name":"Restaurant"},{"key":"trading","name":"Trading"},{"key":"technology","name":"Technology"},{"key":"traveler","name":"Traveler"},{"key":"news","name":"News"}]';
+  return '[{"key":"aviation","name":"Aviation"},{"key":"blockchain","name":"Blockchain"},{"key":"business","name":"Business"},{"key":"cars","name":"Cars"},{"key":"cryptocurrency","name":"Cryptocurrency"},{"key":"dataScience","name":"Data Science"},{"key":"education","name":"Education"},{"key":"finance","name":"Finance"},{"key":"gamer","name":"Gamer"},{"key":"style","name":"Style"},{"key":"restaurant","name":"Restaurant"},{"key":"trading","name":"Trading"},{"key":"technology","name":"Technology"},{"key":"traveler","name":"Traveler"},{"key":"news","name":"News"}]';
 }
