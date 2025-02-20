@@ -35,7 +35,11 @@ ChatDatabase chatDatabase(Ref ref) {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return ChatDatabase(pubkey);
+  final database = ChatDatabase(pubkey);
+
+  onLogout(ref, database.close);
+
+  return database;
 }
 
 @DriftDatabase(
