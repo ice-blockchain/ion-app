@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_posts_provider.c.g.dart';
@@ -17,7 +17,7 @@ class FeedPosts extends _$FeedPosts {
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
 
     final subscription = ref
-        .watch(ionConnectCacheStreamProvider)
+        .watch(createPostNotifierStreamProvider)
         .where((entity) => _isPost(entity) && !_isPartOfState(entity))
         .distinct()
         .listen(
