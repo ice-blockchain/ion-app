@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/user_info_summary/user_info_tile.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_categories_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -27,9 +28,13 @@ class UserInfoSummary extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final UserMetadata(:website, :registeredAt, :location) = userMetadataValue.data;
+    final UserMetadata(:website, :registeredAt, :location, :category) = userMetadataValue.data;
 
     final tiles = <Widget>[];
+
+    if (category != null) {
+      tiles.add(_CategoryTile(category: category));
+    }
 
     if (website != null && website.isNotEmpty) {
       tiles.add(
@@ -79,6 +84,26 @@ class UserInfoSummary extends HookConsumerWidget {
         runSpacing: 4.0.s,
         children: tiles,
       ),
+    );
+  }
+}
+
+class _CategoryTile extends ConsumerWidget {
+  const _CategoryTile({required this.category});
+
+  final String category;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final categories = ref.watch(userCategoriesProvider).valueOrNull;
+    final label =
+        categories != null && categories.containsKey(category) ? categories[category]!.name : null;
+
+    if (label == null) return const SizedBox.shrink();
+
+    return UserInfoTile(
+      title: label,
+      assetName: Assets.svg.iconBlockchain,
     );
   }
 }
