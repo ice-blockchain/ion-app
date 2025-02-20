@@ -14,6 +14,50 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'ion_connect_entity_provider.c.g.dart';
 
 @riverpod
+IonConnectEntity? ionConnectCachedEntity(
+  Ref ref, {
+  required EventReference eventReference,
+}) =>
+    ref.watch(
+      ionConnectCacheProvider.select(
+        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
+      ),
+    );
+
+@riverpod
+Future<IonConnectEntity?> ionConnectNetworkEntity(
+  Ref ref, {
+  required EventReference eventReference,
+}) async {
+  if (eventReference is ImmutableEventReference) {
+    final requestMessage = RequestMessage()
+      ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
+    return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
+          requestMessage,
+          actionSource: ActionSourceUser(eventReference.pubkey),
+        );
+  } else if (eventReference is ReplaceableEventReference) {
+    final requestMessage = RequestMessage()
+      ..addFilter(
+        RequestFilter(
+          kinds: [eventReference.kind],
+          authors: [eventReference.pubkey],
+          tags: {
+            if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
+          },
+          limit: 1,
+        ),
+      );
+    return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
+          requestMessage,
+          actionSource: ActionSourceUser(eventReference.pubkey),
+        );
+  } else {
+    throw UnsupportedEventReference(eventReference);
+  }
+}
+
+@riverpod
 Future<IonConnectEntity?> ionConnectEntity(
   Ref ref, {
   required EventReference eventReference,
@@ -24,57 +68,37 @@ Future<IonConnectEntity?> ionConnectEntity(
   if (currentUser == null) {
     throw const CurrentUserNotFoundException();
   }
-
   if (cache) {
-    final entity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
-      ),
-    );
+    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
     if (entity != null) {
       return entity;
     }
   }
-
   if (network) {
-    if (eventReference is ImmutableEventReference) {
-      final requestMessage = RequestMessage()
-        ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
-      return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
-            requestMessage,
-            actionSource: ActionSourceUser(eventReference.pubkey),
-          );
-    } else if (eventReference is ReplaceableEventReference) {
-      final requestMessage = RequestMessage()
-        ..addFilter(
-          RequestFilter(
-            kinds: [eventReference.kind],
-            authors: [eventReference.pubkey],
-            tags: {
-              if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
-            },
-            limit: 1,
-          ),
-        );
-      return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
-            requestMessage,
-            actionSource: ActionSourceUser(eventReference.pubkey),
-          );
-    } else {
-      throw UnsupportedEventReference(eventReference);
-    }
+    return ref.watch(ionConnectNetworkEntityProvider(eventReference: eventReference).future);
   }
-
   return null;
 }
 
 @riverpod
-IonConnectEntity? cachedIonConnectEntity(
+IonConnectEntity? ionConnectSyncEntity(
   Ref ref, {
   required EventReference eventReference,
-}) =>
-    ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector(CacheableEntity.cacheKeyBuilder(eventReference: eventReference)),
-      ),
-    );
+  bool network = true,
+  bool cache = true,
+}) {
+  final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
+  if (currentUser == null) {
+    throw const CurrentUserNotFoundException();
+  }
+  if (cache) {
+    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+    if (entity != null) {
+      return entity;
+    }
+  }
+  if (network) {
+    return ref.watch(ionConnectNetworkEntityProvider(eventReference: eventReference)).valueOrNull;
+  }
+  return null;
+}

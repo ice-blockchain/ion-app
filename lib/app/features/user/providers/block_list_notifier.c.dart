@@ -35,7 +35,7 @@ BlockListEntity? cachedBlockList(
   String pubkey,
 ) {
   return ref.watch(
-    cachedIonConnectEntityProvider(
+    ionConnectSyncEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: BlockListEntity.kind),
     ),
   ) as BlockListEntity?;
@@ -116,7 +116,7 @@ bool isPostChildBlockedOrBlocking(
   final quotedEvent = entity.data.quotedEvent;
   if (quotedEvent == null) return false;
   final quotedPost = ref.watch(
-    cachedIonConnectEntityProvider(eventReference: quotedEvent.eventReference),
+    ionConnectSyncEntityProvider(eventReference: quotedEvent.eventReference),
   );
   if (quotedPost == null) return false;
   //TODO: fix auto-dispose issue
@@ -130,7 +130,7 @@ bool isGenericRepostChildBlockedOrBlocking(
   GenericRepostEntity repost,
 ) {
   final entity =
-      ref.watch(cachedIonConnectEntityProvider(eventReference: repost.data.eventReference));
+      ref.watch(ionConnectSyncEntityProvider(eventReference: repost.data.eventReference));
   if (entity == null) return false;
   return ref.watch(isEntityBlockedOrBlockingProvider(entity));
 }

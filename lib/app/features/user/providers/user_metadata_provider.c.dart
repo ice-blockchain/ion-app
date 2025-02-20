@@ -30,7 +30,7 @@ UserMetadataEntity? cachedUserMetadata(
   String pubkey,
 ) {
   return ref.watch(
-    cachedIonConnectEntityProvider(
+    ionConnectSyncEntityProvider(
       eventReference: ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind),
     ),
   ) as UserMetadataEntity?;
