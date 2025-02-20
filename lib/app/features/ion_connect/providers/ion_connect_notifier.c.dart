@@ -266,7 +266,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   void _warnSendIssues(List<EventMessage> events) {
     final excludedKinds = [
       IonConnectGiftWrapServiceImpl.kind,
-      FileMetadataEntity.kind, 
+      FileMetadataEntity.kind,
       UserDelegationEntity.kind,
     ];
     for (final event in events) {
