@@ -44,7 +44,7 @@ class UserInfoSummary extends HookConsumerWidget {
     if (registeredAt != null) {
       tiles.add(
         UserInfoTile(
-          title: formatDateToMonthYear(DateTime.now()),
+          title: formatDateToMonthYear(registeredAt),
           assetName: Assets.svg.iconFieldCalendar,
         ),
       );

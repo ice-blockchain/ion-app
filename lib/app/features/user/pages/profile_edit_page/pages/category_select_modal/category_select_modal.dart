@@ -14,11 +14,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class CategorySelectModal extends HookConsumerWidget {
   const CategorySelectModal({
-    required this.selectedUserCategoryType,
+    required this.selectedCategory,
     super.key,
   });
 
-  final UserCategoryType? selectedUserCategoryType;
+  final String? selectedCategory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,7 +80,7 @@ class CategorySelectModal extends HookConsumerWidget {
                   onPressed: () {
                     Navigator.of(context).pop(category);
                   },
-                  trailingIcon: selectedUserCategoryType == category
+                  trailingIcon: selectedCategory == category
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(
                           color: colors.success,
                         )

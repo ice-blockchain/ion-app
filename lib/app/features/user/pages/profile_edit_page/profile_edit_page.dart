@@ -22,6 +22,7 @@ import 'package:ion/app/features/user/pages/profile_edit_page/components/header/
 import 'package:ion/app/features/user/pages/profile_edit_page/components/user_banner_picked/user_banner_picked.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class ProfileEditPage extends HookConsumerWidget {
   const ProfileEditPage({
@@ -90,19 +91,19 @@ class ProfileEditPage extends HookConsumerWidget {
                                             .copyWith(about: text.trim().isEmpty ? null : text),
                                       ),
                                     ),
-                                    // SizedBox(height: paddingValue),
-                                    // CategorySelector(
-                                    //   selectedUserCategoryType: category.value,
-                                    //   onPressed: () async {
-                                    //     final newUserCategoryType = await CategorySelectRoute(
-                                    //       pubkey: pubkey,
-                                    //       selectedUserCategoryType: category.value,
-                                    //     ).push<UserCategoryType?>(context);
-                                    //     if (newUserCategoryType != null) {
-                                    //       category.value = newUserCategoryType;
-                                    //     }
-                                    //   },
-                                    // ),
+                                    SizedBox(height: paddingValue),
+                                    CategorySelector(
+                                      selectedCategory: userMetadata.data.category,
+                                      onPressed: () async {
+                                        final newCategory = await CategorySelectRoute(
+                                          pubkey: pubkey,
+                                          selectedCategory: userMetadata.data.category,
+                                        ).push<String?>(context);
+                                        if (newCategory != null) {
+                                          update(draftRef.value.copyWith(category: newCategory));
+                                        }
+                                      },
+                                    ),
                                     SizedBox(height: paddingValue),
                                     LocationInput(
                                       initialValue: userMetadata.data.location,

@@ -3,18 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/user_category_type.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CategorySelector extends StatelessWidget {
   const CategorySelector({
-    required this.selectedUserCategoryType,
+    required this.selectedCategory,
     required this.onPressed,
     super.key,
   });
 
   final VoidCallback onPressed;
-  final UserCategoryType? selectedUserCategoryType;
+  final String? selectedCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,7 @@ class CategorySelector extends StatelessWidget {
       label: SizedBox(
         width: double.infinity,
         child: Text(
-          selectedUserCategoryType?.getTitle(context) ?? context.i18n.dropdown_select_category,
+          selectedCategory ?? context.i18n.dropdown_select_category,
         ),
       ),
       onPressed: onPressed,
