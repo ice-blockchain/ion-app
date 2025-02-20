@@ -37,14 +37,7 @@ ChatDatabase chatDatabase(Ref ref) {
 
   final database = ChatDatabase(pubkey);
 
-  ref.listen(
-    authProvider.select((state) => state.valueOrNull?.isAuthenticated),
-    (prev, next) {
-      if (prev != null && prev == true && next == false) {
-        database.close();
-      }
-    },
-  );
+  onLogout(ref, database.close);
 
   return database;
 }
