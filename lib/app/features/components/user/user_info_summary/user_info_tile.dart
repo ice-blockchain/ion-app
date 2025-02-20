@@ -26,16 +26,18 @@ class UserInfoTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           assetName.icon(
-            size: 16.0.s,
+            size: 14.0.s,
             color: color,
           ),
           SizedBox(width: 4.0.s),
-          Flexible(
-            child: Text(
-              title,
-              style: context.theme.appTextThemes.body2.copyWith(color: color),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          Text(
+            title,
+            style: context.theme.appTextThemes.body2.copyWith(color: color),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textHeightBehavior: const TextHeightBehavior(
+              applyHeightToLastDescent: false,
+              applyHeightToFirstAscent: false,
             ),
           ),
         ],
