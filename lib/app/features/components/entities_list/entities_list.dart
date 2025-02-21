@@ -36,9 +36,10 @@ class EntitiesList extends HookWidget {
     return SliverList.builder(
       itemCount: entities.length,
       itemBuilder: (BuildContext context, int index) {
+        final eventReference = entities[index].toEventReference();
         return _EntityListItem(
-          key: ValueKey(entities[index].id),
-          eventReference: entities[index].toEventReference(),
+          key: ValueKey(eventReference),
+          eventReference: eventReference,
           framedEventType: framedEventType,
           separatorHeight: separatorHeight,
         );
