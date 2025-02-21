@@ -17,8 +17,8 @@ class FeedPosts extends _$FeedPosts {
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
 
     final subscription = ref
-        .watch(createModifyPostNotifierStreamProvider)
-        .where(_isPost)
+        .watch(createPostNotifierStreamProvider)
+        .where(_filterEntities)
         .distinct()
         .listen(_handlePost);
     ref.onDispose(subscription.cancel);
@@ -26,7 +26,7 @@ class FeedPosts extends _$FeedPosts {
     return entitiesPagedData;
   }
 
-  bool _isPost(IonConnectEntity entity) {
+  bool _filterEntities(IonConnectEntity entity) {
     return entity is ModifiablePostEntity && entity.data.parentEvent?.eventReference == null;
   }
 
@@ -36,8 +36,7 @@ class FeedPosts extends _$FeedPosts {
   }
 
   void _handlePost(IonConnectEntity entity) {
-    final items = Set<IonConnectEntity>.of(state?.data.items ?? {})
-      ..removeWhere((existing) => existing.toEventReference() == entity.toEventReference());
+    final items = state?.data.items ?? {};
     state = state?.copyWith.data(items: {entity, ...items});
   }
 }

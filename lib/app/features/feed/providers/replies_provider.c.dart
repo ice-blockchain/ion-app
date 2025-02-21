@@ -18,7 +18,7 @@ class Replies extends _$Replies {
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
 
     final subscription = ref
-        .watch(createModifyPostNotifierStreamProvider)
+        .watch(createPostNotifierStreamProvider)
         .where((entity) => _isReply(entity, eventReference))
         .distinct()
         .listen(_handleReply);
@@ -33,8 +33,7 @@ class Replies extends _$Replies {
   }
 
   void _handleReply(IonConnectEntity entity) {
-    final items = Set<IonConnectEntity>.of(state?.data.items ?? {})
-      ..removeWhere((existing) => existing.toEventReference() == entity.toEventReference());
+    final items = state?.data.items ?? {};
     state = state?.copyWith.data(items: {entity, ...items});
   }
 
