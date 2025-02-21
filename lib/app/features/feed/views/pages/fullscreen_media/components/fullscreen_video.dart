@@ -5,15 +5,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:video_player/video_player.dart';
 
 class FullscreenVideo extends HookConsumerWidget {
   const FullscreenVideo({
     required this.videoUrl,
+    required this.eventReference,
     super.key,
   });
 
   final String videoUrl;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
