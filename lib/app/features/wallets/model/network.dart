@@ -2,6 +2,7 @@
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 class Network {
   Network({required this.name});
@@ -104,4 +105,15 @@ class Network {
   static final Set<String> allowed = {..._mainnets, ..._testnets};
 
   bool isTestnet(String name) => _testnets.contains(name);
+}
+
+class NetworkConverter implements JsonConverter<Network, dynamic> {
+  const NetworkConverter();
+
+  @override
+  Network fromJson(dynamic json) =>
+      json is String ? Network(name: json) : Network(name: json.toString());
+
+  @override
+  dynamic toJson(Network object) => object.name;
 }

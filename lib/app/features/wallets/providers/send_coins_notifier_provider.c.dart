@@ -2,7 +2,8 @@
 
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/model/send_coins_result.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -13,7 +14,7 @@ part 'send_coins_notifier_provider.c.g.dart';
 @riverpod
 class SendCoinsNotifier extends _$SendCoinsNotifier {
   @override
-  Future<SendCoinsResult?> build() async {
+  Future<TransactionDetails?> build() async {
     state = const AsyncData(null);
     return null;
   }
@@ -42,6 +43,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
     state = await AsyncValue.guard(() async {
       final service = await ref.read(coinsServiceProvider.future);
+
       final result = await service.send(
         amount: coinAssetData.amount,
         senderWallet: senderWallet,
@@ -52,7 +54,22 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
 
-      return result;
+      return TransactionDetails(
+        txHash: result.txHash,
+        walletId: result.walletId,
+        network: result.network,
+        status: result.status,
+        dateRequested: result.dateRequested,
+        dateConfirmed: result.dateConfirmed,
+        dateBroadcasted: result.dateBroadcasted,
+        assetData: coinAssetData,
+        walletViewName: form.wallet.name,
+        senderAddress: form.senderWallet!.address!,
+        receiverAddress: form.receiverAddress,
+        receiverPubkey: form.contactPubkey,
+        type: TransactionType.send,
+        networkFeeOption: form.selectedNetworkFeeOption!,
+      );
     });
   }
 }

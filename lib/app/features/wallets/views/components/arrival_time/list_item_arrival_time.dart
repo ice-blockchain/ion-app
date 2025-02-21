@@ -7,9 +7,17 @@ import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ListItemArrivalTime extends StatelessWidget {
-  const ListItemArrivalTime({required this.feeOption, super.key});
+  const ListItemArrivalTime({required this.formattedTime, super.key});
 
-  final NetworkFeeOption feeOption;
+  factory ListItemArrivalTime.fromFeeOption(BuildContext context, NetworkFeeOption feeOption) {
+    final formattedTime = feeOption.arrivalTime != null
+        ? '${feeOption.arrivalTime!.inMinutes} ${context.i18n.wallet_arrival_time_minutes}'
+        : feeOption.type.getDisplayName(context);
+
+    return ListItemArrivalTime(formattedTime: formattedTime);
+  }
+
+  final String formattedTime;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +40,7 @@ class ListItemArrivalTime extends StatelessWidget {
           ),
         ],
       ),
-      value: feeOption.arrivalTime != null
-          ? '${feeOption.arrivalTime!.inMinutes} ${context.i18n.wallet_arrival_time_minutes}'
-          : feeOption.type.getDisplayName(context),
+      value: formattedTime,
       icon: Assets.svg.iconBlockTime.icon(
         size: 16.0.s,
       ),

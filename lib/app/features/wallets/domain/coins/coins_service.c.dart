@@ -8,7 +8,7 @@ import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/network_fee_type.dart';
-import 'package:ion/app/features/wallets/model/send_coins_result.c.dart';
+import 'package:ion/app/features/wallets/model/transfer_result.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -55,7 +55,7 @@ class CoinsService {
         );
   }
 
-  Future<SendCoinsResult> send({
+  Future<TransferResult> send({
     required double amount,
     required Wallet senderWallet,
     required String receiverAddress,
@@ -73,6 +73,6 @@ class CoinsService {
       onVerifyIdentity,
     );
 
-    return SendCoinsResult.fromJson(result);
+    return TransferResult.fromJson(result);
   }
 }
