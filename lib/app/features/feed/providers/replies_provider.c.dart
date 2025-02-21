@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/replies_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'replies_provider.c.g.dart';
@@ -18,12 +18,10 @@ class Replies extends _$Replies {
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
 
     final subscription = ref
-        .watch(ionConnectCacheStreamProvider)
-        .where((entity) => _isReply(entity, eventReference) && !_isPartOfState(entity))
+        .watch(createPostNotifierStreamProvider)
+        .where((entity) => _isReply(entity, eventReference))
         .distinct()
-        .listen(
-          (entity) => state = state?.copyWith.data(items: {entity, ...state?.data.items ?? {}}),
-        );
+        .listen(_handleReply);
     ref.onDispose(subscription.cancel);
 
     return entitiesPagedData;
@@ -34,31 +32,9 @@ class Replies extends _$Replies {
         entity.data.parentEvent?.eventReference == parentEventReference;
   }
 
-  bool _isPartOfState(IonConnectEntity entity) {
-    return state?.data.items?.any(
-          (stateEntity) =>
-              stateEntity is ModifiablePostEntity &&
-              entity is ModifiablePostEntity &&
-              stateEntity.toEventReference() == entity.toEventReference(),
-        ) ??
-        false;
-  }
-
-  Future<void> deleteReply({
-    required CacheableEntity entity,
-  }) async {
-    final currentState = state;
-    if (currentState != null) {
-      final updatedItems =
-          currentState.data.items?.where((item) => item.id != entity.id).toSet() ?? {};
-
-      state = currentState.copyWith(
-        data: currentState.data.copyWith(
-          items: updatedItems,
-          pagination: currentState.data.pagination,
-        ),
-      );
-    }
+  void _handleReply(IonConnectEntity entity) {
+    final items = state?.data.items ?? {};
+    state = state?.copyWith.data(items: {entity, ...items});
   }
 
   Future<void> loadMore(EventReference eventReference) async {

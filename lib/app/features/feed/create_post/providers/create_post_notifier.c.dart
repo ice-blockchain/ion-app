@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -42,6 +45,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
 
+final _createPostNotifierStreamController = StreamController<IonConnectEntity>.broadcast();
+
+@riverpod
+Raw<Stream<IonConnectEntity>> createPostNotifierStream(Ref ref) {
+  return _createPostNotifierStreamController.stream;
+}
+
 @riverpod
 class CreatePostNotifier extends _$CreatePostNotifier {
   @override
@@ -77,7 +87,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         communityId: communityId,
       );
 
-      await _sendPostEntities([...files, postData]);
+      final posts = await _sendPostEntities([...files, postData]);
+      posts?.whereType<ModifiablePostEntity>().forEach(_createPostNotifierStreamController.add);
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
