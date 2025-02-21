@@ -47,7 +47,7 @@ part 'create_post_notifier.c.g.dart';
 
 final _createPostNotifierStreamController = StreamController<IonConnectEntity>.broadcast();
 
-@Riverpod(keepAlive: true)
+@riverpod
 Raw<Stream<IonConnectEntity>> createPostNotifierStream(Ref ref) {
   return _createPostNotifierStreamController.stream;
 }
@@ -88,7 +88,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       );
 
       final posts = await _sendPostEntities([...files, postData]);
-      posts?.forEach(_createPostNotifierStreamController.add);
+      posts
+          ?.where(
+            (entity) =>
+                entity is ModifiablePostEntity && entity.data.parentEvent?.eventReference == null,
+          )
+          .forEach(_createPostNotifierStreamController.add);
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
