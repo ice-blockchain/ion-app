@@ -75,7 +75,42 @@ class Validators {
         );
   }
 
+  static String normalizeUrl(String url) {
+    // Remove leading/trailing whitespace
+    var normalizedUrl = url.trim();
+
+    // Remove any mailto: prefix
+    if (normalizedUrl.startsWith('mailto:')) {
+      return normalizedUrl;
+    }
+
+    // Handle common messenger/social media protocols
+    if (normalizedUrl.startsWith(RegExp('^(tg|fb|twitter|whatsapp)://'))) {
+      return normalizedUrl;
+    }
+
+    // Remove multiple forward slashes except for protocol
+    normalizedUrl = normalizedUrl.replaceAll(RegExp('([^:])//+'), r'$1/');
+
+    // Handle protocol-relative URLs (starting with //)
+    if (normalizedUrl.startsWith('//')) {
+      return 'https:$normalizedUrl';
+    }
+
+    // Add https:// if no protocol is present
+    if (!normalizedUrl.startsWith(RegExp('^[a-zA-Z]+://'))) {
+      // Remove any leading slashes before adding https://
+      normalizedUrl = normalizedUrl.replaceAll(RegExp('^/+'), '');
+      normalizedUrl = 'https://$normalizedUrl';
+    }
+
+    return normalizedUrl;
+  }
+
   static bool isInvalidUrl(String? value) {
-    return isEmpty(value) || !(Uri.tryParse(value!)?.isAbsolute).falseOrValue;
+    if (isEmpty(value)) return true;
+
+    final normalizedUrl = normalizeUrl(value!);
+    return !(Uri.tryParse(normalizedUrl)?.hasScheme).falseOrValue;
   }
 }
