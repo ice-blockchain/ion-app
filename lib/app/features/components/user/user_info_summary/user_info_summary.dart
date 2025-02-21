@@ -96,8 +96,7 @@ class _CategoryTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(userCategoriesProvider).valueOrNull;
-    final label =
-        categories != null && categories.containsKey(category) ? categories[category]!.name : null;
+    final label = categories?[category]?.name;
 
     if (label == null) return const SizedBox.shrink();
 
