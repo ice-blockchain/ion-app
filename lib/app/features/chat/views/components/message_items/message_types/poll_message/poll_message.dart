@@ -8,7 +8,6 @@ import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/poll_message/mock.dart';
 
 part 'poll_result_message.dart';
@@ -81,11 +80,12 @@ class PollMessage extends HookWidget {
             itemCount: mockPoll.options.length,
           ),
           SizedBox(height: 4.0.s),
-          Row(
+          const Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              MessageReactions(reactions: reactions),
-              const Spacer(),
+              //TODO: add metadata
+              //MessageReactions(reactions: reactions),
+              Spacer(),
               //TODO: add metadata
               // MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],

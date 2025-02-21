@@ -9,7 +9,6 @@ import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
 part 'components/meta_data_preview.dart';
@@ -64,11 +63,11 @@ class UrlPreviewMessage extends HookWidget {
                     isMe: isMe,
                   ),
                 ),
-              Row(
+              const Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  MessageReactions(reactions: reactions),
-                  const Spacer(),
+                  //MessageReactions(reactions: reactions),
+                  Spacer(),
                   //TODO: add metadata
                   // MessageMetaData(isMe: isMe, createdAt: createdAt),
                 ],

@@ -11,11 +11,13 @@ import 'package:ion/generated/assets.gen.dart';
 class MessageReactionEmojiBar extends ConsumerWidget {
   const MessageReactionEmojiBar({
     required this.isMe,
+    this.onReactionSelected,
     super.key,
   });
   static double get height => 72.0.s;
 
   final bool isMe;
+  final void Function(String reaction)? onReactionSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +41,7 @@ class MessageReactionEmojiBar extends ConsumerWidget {
                   Row(
                     children: recentEmojiReactions.map(
                       (emoji) {
-                        return _EmojiButton(emoji: emoji);
+                        return _EmojiButton(emoji: emoji, onReactionSelected: onReactionSelected);
                       },
                     ).toList(),
                   ),
@@ -94,15 +96,18 @@ class _ShowMoreEmojiButton extends StatelessWidget {
 class _EmojiButton extends ConsumerWidget {
   const _EmojiButton({
     required this.emoji,
+    this.onReactionSelected,
   });
 
   final String emoji;
+  final void Function(String reaction)? onReactionSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         ref.read(recentEmojiReactionsProvider.notifier).addEmoji(emoji);
+        onReactionSelected?.call(emoji);
         Navigator.of(context).pop();
       },
       child: Container(

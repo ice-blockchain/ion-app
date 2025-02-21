@@ -7,7 +7,6 @@ import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/forwarded_message_info/forwarded_message_info.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 
 class EmojiMessage extends StatelessWidget {
   const EmojiMessage({
@@ -55,7 +54,8 @@ class EmojiMessage extends StatelessWidget {
                     emoji,
                     style: context.theme.appTextThemes.headline1.copyWith(height: 1),
                   ),
-                  MessageReactions(reactions: reactions),
+                  //TODO: add metadata
+                  //MessageReactions(reactions: reactions),
                 ],
               ),
               //TODO: add metadata

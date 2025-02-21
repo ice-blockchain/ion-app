@@ -35,6 +35,8 @@ class _MessageWithTimestamp extends HookConsumerWidget {
                   ),
                 //TODO: Add reactions
                 // MessageReactions(reactions: reactions),
+                //TODO: add metadata
+                //MessageReactions(reactions: reactions),
               ],
             ),
           ),

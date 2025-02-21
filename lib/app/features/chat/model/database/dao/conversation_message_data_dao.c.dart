@@ -3,13 +3,19 @@
 part of '../chat_database.c.dart';
 
 @Riverpod(keepAlive: true)
-ConversationMessageStatusDao conversationMessageStatusDao(Ref ref) =>
-    ConversationMessageStatusDao(ref.watch(chatDatabaseProvider));
+ConversationMessageDataDao conversationMessageDataDao(Ref ref) =>
+    ConversationMessageDataDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [MessageStatusTable, EventMessageTable, ConversationMessageTable])
-class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
-    with _$ConversationMessageStatusDaoMixin {
-  ConversationMessageStatusDao(super.db);
+@DriftAccessor(
+  tables: [
+    MessageStatusTable,
+    EventMessageTable,
+    ConversationMessageTable,
+  ],
+)
+class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
+    with _$ConversationMessageDataDaoMixin {
+  ConversationMessageDataDao(super.db);
 
   Future<void> add({
     required String masterPubkey,
@@ -98,7 +104,7 @@ class ConversationMessageStatusDao extends DatabaseAccessor<ChatDatabase>
     }
   }
 
-  Stream<MessageDeliveryStatus> getMessageStatus(String eventMessageId) {
+  Stream<MessageDeliveryStatus> messageStatus(String eventMessageId) {
     final existingRows = (select(messageStatusTable)
           ..where((table) => table.eventMessageId.equals(eventMessageId)))
         .watch();

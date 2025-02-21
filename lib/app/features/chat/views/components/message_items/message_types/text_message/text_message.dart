@@ -6,8 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/providers/is_current_user_event_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 class TextMessage extends HookConsumerWidget {
@@ -28,6 +31,13 @@ class TextMessage extends HookConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return MessageItemWrapper(
+      onReactionSelected: (emoji) async {
+        final e2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
+        await e2eeMessageService.sendReaction(
+          kind14Rumor: eventMessage,
+          content: eventMessage.content,
+        );
+      },
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
@@ -62,8 +72,7 @@ class TextMessage extends HookConsumerWidget {
                               : context.theme.appColors.primaryText,
                         ),
                       ),
-                      //TODO: show when reactions are implemented
-                      // if (reactions.isNotEmpty) MessageReactions(reactions: reactions),
+                      MessageReactions(entity: entity),
                     ],
                   ),
                 ),

@@ -12,6 +12,7 @@ class MessageItemWrapper extends HookWidget {
     required this.isMe,
     required this.child,
     required this.contentPadding,
+    this.onReactionSelected,
     this.isLastMessageFromAuthor = true,
     super.key,
   });
@@ -20,6 +21,7 @@ class MessageItemWrapper extends HookWidget {
   final Widget child;
   final bool isLastMessageFromAuthor;
   final EdgeInsetsGeometry contentPadding;
+  final void Function(String reaction)? onReactionSelected;
 
   /// The maximum width of the message content in the chat
   static double get maxWidth => 282.0.s;
@@ -37,6 +39,7 @@ class MessageItemWrapper extends HookWidget {
             useSafeArea: false,
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
+              onReactionSelected: onReactionSelected,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
           );

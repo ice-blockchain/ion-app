@@ -46,11 +46,12 @@ class PollResultMessage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 4.0.s),
-          Row(
+          const Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              MessageReactions(reactions: reactions),
-              const Spacer(),
+              //TODO: add metadata
+              //MessageReactions(reactions: reactions),
+              Spacer(),
               //TODO: add metadata
               // MessageMetaData(isMe: isMe, createdAt: createdAt),
             ],
