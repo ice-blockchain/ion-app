@@ -13,11 +13,13 @@ class PostMediaItem extends StatelessWidget {
   const PostMediaItem({
     required this.mediaItem,
     required this.aspectRatio,
+    required this.eventReference,
     super.key,
   });
 
   final MediaAttachment mediaItem;
   final double aspectRatio;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context) {
@@ -29,24 +31,24 @@ class PostMediaItem extends StatelessWidget {
       ).push<void>(context),
       child: Hero(
         tag: 'fullscreen-media-${mediaItem.url}',
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.0.s),
-        child: AspectRatio(
-          aspectRatio: aspectRatio,
-          child: switch (mediaItem.mediaType) {
-            MediaType.image => CachedNetworkImage(
-                imageUrl: mediaItem.url,
-                fit: BoxFit.cover,
-                errorWidget: (context, url, error) => const SizedBox.shrink(),
-              ),
-            MediaType.video => VideoPreview(
-                videoUrl: mediaItem.url,
-                thumbnailUrl: mediaItem.thumb,
-              ),
-            _ => const SizedBox.shrink(),
-          },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12.0.s),
+          child: AspectRatio(
+            aspectRatio: aspectRatio,
+            child: switch (mediaItem.mediaType) {
+              MediaType.image => CachedNetworkImage(
+                  imageUrl: mediaItem.url,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
+                ),
+              MediaType.video => VideoPreview(
+                  videoUrl: mediaItem.url,
+                  thumbnailUrl: mediaItem.thumb,
+                ),
+              _ => const SizedBox.shrink(),
+            },
+          ),
         ),
-      ),
       ),
     );
   }
