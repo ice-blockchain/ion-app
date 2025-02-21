@@ -14,8 +14,13 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 part 'components/message_reaction_chip.dart';
 
 class MessageReactions extends ConsumerWidget {
-  const MessageReactions({required this.entity, super.key});
+  const MessageReactions({
+    required this.isMe,
+    required this.entity,
+    super.key,
+  });
 
+  final bool isMe;
   final PrivateDirectMessageEntity entity;
 
   @override
@@ -34,6 +39,7 @@ class MessageReactions extends ConsumerWidget {
               children: snapshot.data!
                   .map(
                     (reaction) => _MessageReactionChip(
+                      isMe: isMe,
                       emoji: reaction.emoji,
                       pubkeys: reaction.pubkeys,
                       eventMessageId: entity.id,

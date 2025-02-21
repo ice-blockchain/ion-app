@@ -72,7 +72,7 @@ class TextMessage extends HookConsumerWidget {
                               : context.theme.appColors.primaryText,
                         ),
                       ),
-                      MessageReactions(entity: entity),
+                      MessageReactions(entity: entity, isMe: isMe),
                     ],
                   ),
                 ),

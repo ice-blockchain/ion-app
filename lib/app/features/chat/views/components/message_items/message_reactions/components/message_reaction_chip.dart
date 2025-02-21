@@ -4,11 +4,13 @@ part of '../message_reactions.dart';
 
 class _MessageReactionChip extends HookConsumerWidget {
   const _MessageReactionChip({
+    required this.isMe,
     required this.emoji,
     required this.pubkeys,
     required this.eventMessageId,
   });
 
+  final bool isMe;
   final String emoji;
   final List<String> pubkeys;
   final String eventMessageId;
@@ -37,7 +39,7 @@ class _MessageReactionChip extends HookConsumerWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 4.0.s, horizontal: 6.0.s),
         decoration: BoxDecoration(
-          color: isCurrentUserHasReaction
+          color: isCurrentUserHasReaction & !isMe
               ? context.theme.appColors.primaryAccent
               : context.theme.appColors.primaryBackground,
           borderRadius: BorderRadius.circular(10.0.s),

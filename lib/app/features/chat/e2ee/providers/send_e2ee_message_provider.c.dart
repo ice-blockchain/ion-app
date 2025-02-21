@@ -221,7 +221,10 @@ class SendE2eeMessageService {
 
   static const allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
 
-  Future<void> sendMessageStatus(EventMessage kind14Rumor, MessageDeliveryStatus status) async {
+  Future<void> sendMessageStatus(
+    EventMessage kind14Rumor,
+    MessageDeliveryStatus status,
+  ) async {
     if (!allowedStatus.contains(status)) {
       return;
     }
@@ -251,12 +254,20 @@ class SendE2eeMessageService {
       participantsMasterPubkeys.map((masterPubkey) async {
         final currentUser = currentUserMasterPubkey == masterPubkey;
 
+        final participantsKeysMap =
+            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+        final pubkey = participantsKeysMap[masterPubkey];
+
+        if (pubkey == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
         final giftWrap = await _createGiftWrap(
           signer: eventSigner!,
           eventMessage: eventMessage,
           receiverMasterPubkey: masterPubkey,
           kind: PrivateMessageReactionEntity.kind,
-          receiverPubkey: currentUser ? eventSigner!.publicKey : kind14Rumor.pubkey,
+          receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
         );
 
         await ionConnectNotifier.sendEvent(
@@ -297,12 +308,20 @@ class SendE2eeMessageService {
       participantsMasterPubkeys.map((masterPubkey) async {
         final currentUser = currentUserMasterPubkey == masterPubkey;
 
+        final participantsKeysMap =
+            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+        final pubkey = participantsKeysMap[masterPubkey];
+
+        if (pubkey == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
         final giftWrap = await _createGiftWrap(
           signer: eventSigner!,
           eventMessage: eventMessage,
           receiverMasterPubkey: masterPubkey,
           kind: PrivateMessageReactionEntity.kind,
-          receiverPubkey: currentUser ? eventSigner!.publicKey : kind14Rumor.pubkey,
+          receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
         );
 
         await ionConnectNotifier.sendEvent(
