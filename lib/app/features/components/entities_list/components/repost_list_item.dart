@@ -2,7 +2,6 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/repost_author_header.dart';
@@ -44,30 +43,39 @@ class RepostListItem extends ConsumerWidget {
         _ => null,
       },
       behavior: HitTestBehavior.opaque,
-      child: ScreenSideOffset.small(
-        child: Column(
-          children: [
-            RepostAuthorHeader(pubkey: repostEntity.masterPubkey),
-            SizedBox(height: 6.0.s),
-            Padding(
-              padding: EdgeInsets.only(right: 16.0.s),
-              child: switch (repostEntity) {
-                RepostEntity() => Post(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsetsDirectional.only(start: 16.0.s),
+            child: RepostAuthorHeader(pubkey: repostEntity.masterPubkey),
+          ),
+          SizedBox(height: 6.0.s),
+          Padding(
+            padding: EdgeInsetsDirectional.only(end: 16.0.s),
+            child: switch (repostEntity) {
+              RepostEntity() => Padding(
+                  padding: EdgeInsetsDirectional.only(start: 16.0.s),
+                  child: Post(
                     eventReference: repostEntity.data.eventReference,
                     repostReference: eventReference,
                   ),
-                GenericRepostEntity() when repostEntity.data.kind == ModifiablePostEntity.kind =>
-                  Post(
+                ),
+              GenericRepostEntity() when repostEntity.data.kind == ModifiablePostEntity.kind =>
+                Padding(
+                  padding: EdgeInsetsDirectional.only(start: 16.0.s),
+                  child: Post(
                     eventReference: repostEntity.data.eventReference,
                     repostReference: eventReference,
                   ),
-                GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind =>
-                  Article(eventReference: repostEntity.data.eventReference),
-                _ => const SizedBox.shrink(),
-              },
-            ),
-          ],
-        ),
+                ),
+              GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind => Padding(
+                  padding: EdgeInsetsDirectional.only(top: 12.0.s),
+                  child: Article(eventReference: repostEntity.data.eventReference),
+                ),
+              _ => const SizedBox.shrink(),
+            },
+          ),
+        ],
       ),
     );
   }
