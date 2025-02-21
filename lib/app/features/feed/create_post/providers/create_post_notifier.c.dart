@@ -45,11 +45,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_post_notifier.c.g.dart';
 
-final _createPostNotifierStreamController = StreamController<IonConnectEntity>.broadcast();
+final _createModifyPostNotifierStreamController = StreamController<IonConnectEntity>.broadcast();
 
 @riverpod
-Raw<Stream<IonConnectEntity>> createPostNotifierStream(Ref ref) {
-  return _createPostNotifierStreamController.stream;
+Raw<Stream<IonConnectEntity>> createModifyPostNotifierStream(Ref ref) {
+  return _createModifyPostNotifierStreamController.stream;
 }
 
 @riverpod
@@ -89,11 +89,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       final posts = await _sendPostEntities([...files, postData]);
       posts
-          ?.where(
-            (entity) =>
-                entity is ModifiablePostEntity && entity.data.parentEvent?.eventReference == null,
-          )
-          .forEach(_createPostNotifierStreamController.add);
+          ?.whereType<ModifiablePostEntity>()
+          .forEach(_createModifyPostNotifierStreamController.add);
 
       if (quotedEvent != null) {
         ref.read(repostsCountProvider(quotedEvent).notifier).addOne();
@@ -130,7 +127,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ),
       );
 
-      await _sendPostEntities([postData]);
+      final posts = await _sendPostEntities([postData]);
+      posts
+          ?.whereType<ModifiablePostEntity>()
+          .forEach(_createModifyPostNotifierStreamController.add);
     });
   }
 
