@@ -88,7 +88,7 @@ class PostBody extends HookConsumerWidget {
                 padding: EdgeInsets.only(top: 10.0.s),
                 child: PostMedia(media: media),
               ),
-            if (firstLinkOperation != null)
+            if (media.isEmpty && firstLinkOperation != null)
               Padding(
                 padding: EdgeInsets.only(top: 10.0.s),
                 child: UrlPreviewContent(url: firstLinkOperation.value as String),
