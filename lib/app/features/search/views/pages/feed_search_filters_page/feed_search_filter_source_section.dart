@@ -3,19 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/model/feed_search_filter_people.dart';
+import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedSearchFilterPeopleSection extends StatelessWidget {
-  const FeedSearchFilterPeopleSection({
+class FeedSearchFilterSourceSection extends StatelessWidget {
+  const FeedSearchFilterSourceSection({
     required this.selectedFilter,
     required this.onFilterChange,
     super.key,
   });
 
-  final FeedSearchFilterPeople selectedFilter;
+  final FeedSearchSource selectedFilter;
 
-  final void Function(FeedSearchFilterPeople) onFilterChange;
+  final void Function(FeedSearchSource) onFilterChange;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class FeedSearchFilterPeopleSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.0.s),
-        ...FeedSearchFilterPeople.values.map((filter) {
+        ...FeedSearchSource.values.map((filter) {
           return ListItem(
             onTap: () {
               onFilterChange(filter);

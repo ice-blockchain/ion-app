@@ -39,17 +39,17 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
     return [
       for (final entry in filterRelays.entries)
         switch (filters.category) {
-          FeedCategory.articles => _buildArticlesDataSource(
+          FeedCategory.articles => buildArticlesDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
               currentPubkey: currentPubkey,
             ),
-          FeedCategory.videos => _buildVideosDataSource(
+          FeedCategory.videos => buildVideosDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
               currentPubkey: currentPubkey,
             ),
-          FeedCategory.feed => _buildPostsDataSource(
+          FeedCategory.feed => buildPostsDataSource(
               actionSource: ActionSourceRelayUrl(entry.key),
               authors: filters.filter == FeedFilter.following ? entry.value : null,
               currentPubkey: currentPubkey,
@@ -60,10 +60,11 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   return null;
 }
 
-EntitiesDataSource _buildArticlesDataSource({
+EntitiesDataSource buildArticlesDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
   required String currentPubkey,
+  List<SearchExtension> searchExtensions = const [],
 }) {
   final search = SearchExtensions.withCounters(
     [
@@ -75,6 +76,7 @@ EntitiesDataSource _buildArticlesDataSource({
         forKind: ArticleEntity.kind,
         includeKind: BlockListEntity.kind,
       ),
+      ...searchExtensions,
     ],
     currentPubkey: currentPubkey,
     forKind: ArticleEntity.kind,
@@ -109,10 +111,11 @@ EntitiesDataSource _buildArticlesDataSource({
   );
 }
 
-EntitiesDataSource _buildVideosDataSource({
+EntitiesDataSource buildVideosDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
   required String currentPubkey,
+  List<SearchExtension> searchExtensions = const [],
 }) {
   final search = SearchExtensions([
     ...SearchExtensions.withCounters(
@@ -155,6 +158,7 @@ EntitiesDataSource _buildVideosDataSource({
     ReferencesSearchExtension(contain: false),
     ExpirationSearchExtension(expiration: false),
     VideosSearchExtension(contain: true),
+    ...searchExtensions,
   ]).toString();
 
   return EntitiesDataSource(
@@ -197,10 +201,11 @@ EntitiesDataSource _buildVideosDataSource({
   );
 }
 
-EntitiesDataSource _buildPostsDataSource({
+EntitiesDataSource buildPostsDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
   required String currentPubkey,
+  List<SearchExtension> searchExtensions = const [],
 }) {
   final search = SearchExtensions([
     ...SearchExtensions.withCounters(
@@ -242,6 +247,7 @@ EntitiesDataSource _buildPostsDataSource({
     ).extensions,
     ReferencesSearchExtension(contain: false),
     ExpirationSearchExtension(expiration: false),
+    ...searchExtensions,
   ]).toString();
 
   return EntitiesDataSource(

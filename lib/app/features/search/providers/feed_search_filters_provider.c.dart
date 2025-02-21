@@ -3,7 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/model/language.dart';
-import 'package:ion/app/features/search/model/feed_search_filter_people.dart';
+import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,12 +14,12 @@ part 'feed_search_filters_provider.c.g.dart';
 class FeedSearchFiltersState with _$FeedSearchFiltersState {
   const factory FeedSearchFiltersState({
     required List<Language> languages,
-    required FeedSearchFilterPeople people,
+    required FeedSearchSource source,
   }) = _FeedSearchFiltersState;
 
   factory FeedSearchFiltersState.initial() {
     return const FeedSearchFiltersState(
-      people: FeedSearchFilterPeople.anyone,
+      source: FeedSearchSource.anyone,
       languages: [Language.english],
     );
   }
@@ -27,7 +27,7 @@ class FeedSearchFiltersState with _$FeedSearchFiltersState {
 
 @riverpod
 class FeedSearchFilter extends _$FeedSearchFilter {
-  static const _feedSearchPeopleFilterKey = 'FeedSearchFilter:people';
+  static const _feedSearchSourceFilterKey = 'FeedSearchFilter:source';
   static const _feedSearchLanguagesFilterKey = 'FeedSearchFilter:languages';
 
   @override
@@ -39,8 +39,8 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     return savedState;
   }
 
-  set filterPeople(FeedSearchFilterPeople filter) {
-    state = state.copyWith(people: filter);
+  set filterSource(FeedSearchSource source) {
+    state = state.copyWith(source: source);
   }
 
   set languages(List<Language> languages) {
@@ -58,7 +58,7 @@ class FeedSearchFilter extends _$FeedSearchFilter {
   void _saveState(FeedSearchFiltersState state) {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
     ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
-      ..setEnum(_feedSearchPeopleFilterKey, state.people)
+      ..setEnum(_feedSearchSourceFilterKey, state.source)
       ..setValue<List<String>>(
         _feedSearchLanguagesFilterKey,
         state.languages.map((lang) => lang.isoCode).toList(),
@@ -70,16 +70,16 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     final userPreferencesService =
         ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
 
-    final people =
-        userPreferencesService.getEnum(_feedSearchPeopleFilterKey, FeedSearchFilterPeople.values);
+    final source =
+        userPreferencesService.getEnum(_feedSearchSourceFilterKey, FeedSearchSource.values);
     final languages = userPreferencesService
         .getValue<List<String>>(_feedSearchLanguagesFilterKey)
         ?.map(Language.fromIsoCode)
         .nonNulls
         .toList();
 
-    if (people != null && languages != null) {
-      return FeedSearchFiltersState(people: people, languages: languages);
+    if (source != null && languages != null) {
+      return FeedSearchFiltersState(source: source, languages: languages);
     }
 
     return FeedSearchFiltersState.initial();

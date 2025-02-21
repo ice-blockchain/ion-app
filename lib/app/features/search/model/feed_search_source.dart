@@ -4,21 +4,21 @@ import 'package:flutter/widgets.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-enum FeedSearchFilterPeople {
+enum FeedSearchSource {
   anyone,
   following;
 
   String getIcon(BuildContext context, {double? size, Color? color}) {
     return switch (this) {
-      FeedSearchFilterPeople.anyone => Assets.svg.iconSearchAnyone,
-      FeedSearchFilterPeople.following => Assets.svg.iconSearchFollow,
+      FeedSearchSource.anyone => Assets.svg.iconSearchAnyone,
+      FeedSearchSource.following => Assets.svg.iconSearchFollow,
     };
   }
 
   String getLabel(BuildContext context) {
     return switch (this) {
-      FeedSearchFilterPeople.anyone => context.i18n.feed_search_filter_anyone,
-      FeedSearchFilterPeople.following => context.i18n.feed_search_filter_following,
+      FeedSearchSource.anyone => context.i18n.feed_search_filter_anyone,
+      FeedSearchSource.following => context.i18n.feed_search_filter_following,
     };
   }
 }
