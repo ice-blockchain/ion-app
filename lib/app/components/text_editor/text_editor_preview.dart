@@ -30,12 +30,13 @@ class TextEditorPreview extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useRef(
-      QuillController(
+    final controller = useMemoized(
+      () => QuillController(
         document: Document.fromDelta(content),
         selection: const TextSelection.collapsed(offset: 0),
         readOnly: true,
       ),
+      [content],
     );
 
     if (content.length == 1 && content.first.value == '\n') {
@@ -43,7 +44,7 @@ class TextEditorPreview extends HookWidget {
     }
 
     return QuillEditor.basic(
-      controller: controller.value,
+      controller: controller,
       config: QuillEditorConfig(
         enableSelectionToolbar: false,
         floatingCursorDisabled: true,
