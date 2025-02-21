@@ -84,7 +84,8 @@ class ProfileEditPage extends HookConsumerWidget {
                                         text: userMetadata.data.about,
                                       ),
                                       onChanged: (text) => update(
-                                        draftRef.value.copyWith(about: text.isEmpty ? null : text),
+                                        draftRef.value
+                                            .copyWith(about: text.trim().isEmpty ? null : text),
                                       ),
                                     ),
                                     //TODO:uncomment when imp
