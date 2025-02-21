@@ -14,6 +14,7 @@ class FeedRoutes {
     TypedGoRoute<ArticlesFromAuthorRoute>(path: 'articles/author/:pubkey'),
     TypedGoRoute<FeedSimpleSearchRoute>(path: 'feed-simple-search'),
     TypedGoRoute<FeedAdvancedSearchRoute>(path: 'feed-advanced-search'),
+    TypedGoRoute<FullscreenMediaRoute>(path: 'fullscreen-media-fullstack'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<SwitchAccountRoute>(path: 'switch-account'),
@@ -308,5 +309,24 @@ class VideosRoute extends BaseRouteData {
           ),
         );
 
+  final String eventReference;
+}
+
+class FullscreenMediaRoute extends BaseRouteData {
+  FullscreenMediaRoute({
+    required this.mediaUrl,
+    required this.mediaType,
+    required this.eventReference,
+  }) : super(
+          child: FullscreenMediaPage(
+            mediaUrl: mediaUrl,
+            mediaType: mediaType,
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
+          type: IceRouteType.fade,
+        );
+
+  final String mediaUrl;
+  final MediaType mediaType;
   final String eventReference;
 }
