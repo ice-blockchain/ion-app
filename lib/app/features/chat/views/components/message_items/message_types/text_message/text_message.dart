@@ -34,8 +34,8 @@ class TextMessage extends HookConsumerWidget {
       onReactionSelected: (emoji) async {
         final e2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
         await e2eeMessageService.sendReaction(
+          content: emoji,
           kind14Rumor: eventMessage,
-          content: eventMessage.content,
         );
       },
       isLastMessageFromAuthor: isLastMessageFromAuthor,

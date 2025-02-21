@@ -18,14 +18,18 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     required String masterPubkey,
     required String eventMessageId,
   }) async {
-    log('BBB1');
-    final existingRow = await (select(reactionTable)
+    final eventMessageExists = await (select(db.eventMessageTable)
+          ..where((table) => table.id.equals(eventMessageId)))
+        .getSingleOrNull();
+
+    if (eventMessageExists == null) return;
+
+    final existingRows = await (select(reactionTable)
           ..where((table) => table.masterPubkey.equals(masterPubkey))
           ..where((table) => table.eventMessageId.equals(eventMessageId)))
-        .getSingleOrNull();
-    log('BBB2');
+        .get();
 
-    if (existingRow == null) {
+    if (existingRows.isEmpty || existingRows.every((row) => row.content != content)) {
       await into(reactionTable).insert(
         ReactionTableCompanion(
           content: Value(content),
@@ -34,6 +38,12 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
         ),
         mode: InsertMode.insertOrIgnore,
       );
+    } else if (existingRows.any((row) => row.content == content && row.isDeleted)) {
+      await (update(reactionTable)
+            ..where((table) => table.masterPubkey.equals(masterPubkey))
+            ..where((table) => table.eventMessageId.equals(eventMessageId))
+            ..where((table) => table.content.equals(content)))
+          .write(const ReactionTableCompanion(isDeleted: Value(false)));
     }
   }
 
@@ -56,15 +66,27 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Stream<List<MessageReactionGroup>> messageReactions(PrivateDirectMessageEntity entity) async* {
-    final existingRows = select(reactionTable)
-      ..where((table) => table.isDeleted.equals(false))
-      ..where((table) => table.eventMessageId.equals(entity.id));
+    final existingRows = (select(reactionTable)
+          ..where((table) => table.isDeleted.equals(false))
+          ..where((table) => table.eventMessageId.equals(entity.id)))
+        .watch();
 
-    yield <MessageReactionGroup>[
-      MessageReactionGroup(
-        emoji: '\u{1f44c}',
-        pubkeys: entity.data.relatedPubkeys.emptyOrValue.map((e) => e.value).toList(),
-      ),
-    ];
+    yield* existingRows.map((rows) {
+      final groupedReactions = <String, List<String>>{};
+
+      for (final row in rows) {
+        if (!groupedReactions.containsKey(row.content)) {
+          groupedReactions[row.content] = [];
+        }
+        groupedReactions[row.content]!.add(row.masterPubkey);
+      }
+
+      return groupedReactions.entries.map((entry) {
+        return MessageReactionGroup(
+          emoji: entry.key,
+          pubkeys: entry.value,
+        );
+      }).toList();
+    });
   }
 }

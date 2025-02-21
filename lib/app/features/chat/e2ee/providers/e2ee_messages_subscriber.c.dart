@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';

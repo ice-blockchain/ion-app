@@ -31,18 +31,20 @@ class MessageItemWrapper extends HookWidget {
     final messageItemKey = useMemoized(GlobalKey.new);
 
     final showReactDialog = useCallback(
-      () {
+      () async {
         try {
-          showDialog<void>(
+          final emoji = await showDialog<String>(
             context: context,
             barrierColor: Colors.transparent,
             useSafeArea: false,
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
-              onReactionSelected: onReactionSelected,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
           );
+          if (emoji != null) {
+            onReactionSelected?.call(emoji);
+          }
         } catch (e, st) {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }

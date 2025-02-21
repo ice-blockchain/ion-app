@@ -6,10 +6,12 @@ class _MessageReactionChip extends HookConsumerWidget {
   const _MessageReactionChip({
     required this.emoji,
     required this.pubkeys,
+    required this.eventMessageId,
   });
 
   final String emoji;
   final List<String> pubkeys;
+  final String eventMessageId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,21 +22,34 @@ class _MessageReactionChip extends HookConsumerWidget {
       [pubkeys, currentPubKey],
     );
 
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 4.0.s, horizontal: 6.0.s),
-      decoration: BoxDecoration(
-        color: isCurrentUserHasReaction
-            ? context.theme.appColors.primaryAccent
-            : context.theme.appColors.primaryBackground,
-        borderRadius: BorderRadius.circular(10.0.s),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(emoji, style: context.theme.appTextThemes.title.copyWith(height: 1)),
-          _AvatarStack(pubkeys: pubkeys),
-        ],
+    return GestureDetector(
+      onTap: () {
+        final userMasterPubkey = ref.read(currentPubkeySelectorProvider);
+
+        if (userMasterPubkey == null) return;
+
+        ref.read(conversationMessageReactionDaoProvider).remove(
+              content: emoji,
+              masterPubkey: userMasterPubkey,
+              eventMessageId: eventMessageId,
+            );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 4.0.s, horizontal: 6.0.s),
+        decoration: BoxDecoration(
+          color: isCurrentUserHasReaction
+              ? context.theme.appColors.primaryAccent
+              : context.theme.appColors.primaryBackground,
+          borderRadius: BorderRadius.circular(10.0.s),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(emoji, style: context.theme.appTextThemes.title.copyWith(height: 1)),
+            _AvatarStack(pubkeys: pubkeys),
+          ],
+        ),
       ),
     );
   }

@@ -36,6 +36,7 @@ class MessageReactions extends ConsumerWidget {
                     (reaction) => _MessageReactionChip(
                       emoji: reaction.emoji,
                       pubkeys: reaction.pubkeys,
+                      eventMessageId: entity.id,
                     ),
                   )
                   .toList(),

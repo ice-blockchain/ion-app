@@ -36,7 +36,7 @@ class _EmojisGridView extends ConsumerWidget {
                   child: GestureDetector(
                     onTap: () {
                       ref.read(recentEmojiReactionsProvider.notifier).addEmoji(emoji);
-                      context.pop();
+                      context.pop<String>(emoji);
                     },
                     child: Text(
                       emoji,

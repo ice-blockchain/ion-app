@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -9,15 +10,10 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageReactionEmojiBar extends ConsumerWidget {
-  const MessageReactionEmojiBar({
-    required this.isMe,
-    this.onReactionSelected,
-    super.key,
-  });
+  const MessageReactionEmojiBar({required this.isMe, super.key});
   static double get height => 72.0.s;
 
   final bool isMe;
-  final void Function(String reaction)? onReactionSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,11 +35,7 @@ class MessageReactionEmojiBar extends ConsumerWidget {
               child: Row(
                 children: [
                   Row(
-                    children: recentEmojiReactions.map(
-                      (emoji) {
-                        return _EmojiButton(emoji: emoji, onReactionSelected: onReactionSelected);
-                      },
-                    ).toList(),
+                    children: recentEmojiReactions.map(_EmojiButton.new).toList(),
                   ),
                   const _ShowMoreEmojiButton(),
                 ],
@@ -75,8 +67,12 @@ class _ShowMoreEmojiButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        SearchEmojiRoute().push<void>(context);
+      onTap: () async {
+        final selectedEmoji = await SearchEmojiRoute().push<String>(context);
+
+        if (context.mounted) {
+          context.pop<String>(selectedEmoji);
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 5.0.s, horizontal: 9.0.s),
@@ -94,21 +90,18 @@ class _ShowMoreEmojiButton extends StatelessWidget {
 }
 
 class _EmojiButton extends ConsumerWidget {
-  const _EmojiButton({
-    required this.emoji,
-    this.onReactionSelected,
-  });
+  const _EmojiButton(
+    this.emoji,
+  );
 
   final String emoji;
-  final void Function(String reaction)? onReactionSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         ref.read(recentEmojiReactionsProvider.notifier).addEmoji(emoji);
-        onReactionSelected?.call(emoji);
-        Navigator.of(context).pop();
+        context.pop(emoji);
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 6.0.s, horizontal: 10.0.s),

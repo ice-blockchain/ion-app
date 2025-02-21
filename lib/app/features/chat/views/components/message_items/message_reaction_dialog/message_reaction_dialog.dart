@@ -16,12 +16,10 @@ class MessageReactionDialog extends HookConsumerWidget {
   const MessageReactionDialog({
     required this.isMe,
     required this.renderObject,
-    this.onReactionSelected,
     super.key,
   });
 
   final bool isMe;
-  final void Function(String reaction)? onReactionSelected;
 
   /// The key of the message item to capture the image from widget tree
   final RenderObject renderObject;
@@ -100,7 +98,7 @@ class MessageReactionDialog extends HookConsumerWidget {
               crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                MessageReactionEmojiBar(isMe: isMe, onReactionSelected: onReactionSelected),
+                MessageReactionEmojiBar(isMe: isMe),
                 Image.memory(
                   imageBytes,
                   height: contentHeight,
