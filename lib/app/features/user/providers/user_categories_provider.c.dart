@@ -12,6 +12,7 @@ part 'user_categories_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 Future<Map<String, UserCategory>?> userCategories(Ref ref) async {
   final appLocale = ref.watch(appLocaleProvider);
+  //TODO:replace with a real req when impl
   final response = await _fetchCategories(appLocale.languageCode);
   final jsonList = jsonDecode(response) as List<dynamic>;
   final categories =
