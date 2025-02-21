@@ -30,12 +30,14 @@ class FullscreenMediaPage extends HookConsumerWidget {
   final MediaType mediaType;
   final EventReference eventReference;
 
+  static String heroTagForMedia(String url) => 'fullscreen-media-$url';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final drag = usePageDismiss(context);
 
     return Hero(
-      tag: 'fullscreen-media-$mediaUrl',
+      tag: heroTagForMedia(mediaUrl),
       child: Material(
         color: Colors.transparent,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
