@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
-import 'package:ion/app/features/chat/providers/is_current_user_event_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -23,7 +23,7 @@ class MessageMetaData extends ConsumerWidget {
           eventMessage.id,
         );
 
-    final isMe = ref.watch(isCurrentUserEventProvider(eventMessage)).valueOrNull ?? false;
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return Padding(
       padding: EdgeInsets.only(left: 8.0.s),

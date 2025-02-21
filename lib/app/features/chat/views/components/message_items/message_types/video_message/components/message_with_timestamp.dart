@@ -2,21 +2,17 @@
 
 part of '../video_message.dart';
 
-class _MessageWithTimestamp extends StatelessWidget {
+class _MessageWithTimestamp extends HookConsumerWidget {
   const _MessageWithTimestamp({
-    required this.message,
-    required this.isMe,
-    required this.createdAt,
-    this.reactions,
+    required this.eventMessage,
   });
 
-  final String message;
-  final bool isMe;
-  final DateTime createdAt;
-  final List<MessageReactionGroup>? reactions;
+  final EventMessage eventMessage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+
     return Padding(
       padding: EdgeInsets.only(top: 8.0.s),
       child: Row(
@@ -28,20 +24,21 @@ class _MessageWithTimestamp extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (message.isNotEmpty)
+                if (eventMessage.content.isNotEmpty)
                   Text(
-                    message,
+                    eventMessage.content,
                     style: context.theme.appTextThemes.body2.copyWith(
                       color: isMe
                           ? context.theme.appColors.onPrimaryAccent
                           : context.theme.appColors.primaryText,
                     ),
                   ),
-                MessageReactions(reactions: reactions),
+                //TODO: Add reactions
+                // MessageReactions(reactions: reactions),
               ],
             ),
           ),
-          // MessageMetaData(isMe: isMe, createdAt: createdAt),
+          MessageMetaData(eventMessage: eventMessage),
         ],
       ),
     );

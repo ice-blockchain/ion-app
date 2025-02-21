@@ -7,16 +7,18 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BottomBarInitialView extends HookConsumerWidget {
   const BottomBarInitialView({
     required this.controller,
+    required this.onSubmitted,
     super.key,
   });
 
   final TextEditingController controller;
-
+  final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -133,7 +135,10 @@ class BottomBarInitialView extends HookConsumerWidget {
             ],
           ),
         ),
-        if (bottomBarState.isMore) const MoreContentView(),
+        if (bottomBarState.isMore)
+          MoreContentView(
+            onSubmitted: onSubmitted,
+          ),
       ],
     );
   }

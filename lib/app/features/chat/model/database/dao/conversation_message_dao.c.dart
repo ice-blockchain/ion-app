@@ -74,7 +74,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
       ..orderBy([
-        OrderingTerm.asc(eventMessageTable.createdAt),
+        OrderingTerm.desc(eventMessageTable.createdAt),
       ]);
 
     return query.watch().map((rows) {

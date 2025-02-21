@@ -129,4 +129,14 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       sig: null,
     );
   }
+
+  MessageType get messageType {
+    if (primaryVideo != null) {
+      return MessageType.video;
+    }
+
+    return MessageType.text;
+  }
 }
+
+enum MessageType { text, video }
