@@ -119,9 +119,7 @@ bool isPostChildBlockedOrBlocking(
     ionConnectSyncEntityProvider(eventReference: quotedEvent.eventReference),
   );
   if (quotedPost == null) return false;
-  //TODO: fix auto-dispose issue
-  // return ref.watch(isEntityBlockedOrBlockingProvider(quotedPost, cacheOnly: cacheOnly).future);
-  return false;
+  return ref.watch(isEntityBlockedOrBlockingProvider(quotedPost));
 }
 
 @riverpod
