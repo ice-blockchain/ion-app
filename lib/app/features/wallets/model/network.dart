@@ -107,13 +107,12 @@ class Network {
   bool isTestnet(String name) => _testnets.contains(name);
 }
 
-class NetworkConverter implements JsonConverter<Network, dynamic> {
+class NetworkConverter implements JsonConverter<Network, String> {
   const NetworkConverter();
 
   @override
-  Network fromJson(dynamic json) =>
-      json is String ? Network(name: json) : Network(name: json.toString());
+  Network fromJson(String json) => Network(name: json);
 
   @override
-  dynamic toJson(Network object) => object.name;
+  String toJson(Network object) => object.name;
 }
