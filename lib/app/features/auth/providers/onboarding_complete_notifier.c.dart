@@ -114,6 +114,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return UserMetadata(
       name: name,
       displayName: displayName,
+      registeredAt: DateTime.now(),
       picture: avatarAttachment?.url,
       media: avatarAttachment != null ? {avatarAttachment.url: avatarAttachment} : {},
     );

@@ -8,11 +8,15 @@ import 'package:ion/app/features/core/model/language.dart';
 /// If the [query] is empty, it returns the full list of languages.
 List<Language> useLanguages({String query = ''}) {
   return useMemoized(
-    () => query.isEmpty
-        ? Language.values
-        : Language.values
-            .where((language) => language.name.toLowerCase().contains(query.toLowerCase().trim()))
-            .toList(),
+    () {
+      final normalizedQuery = query.toLowerCase().trim();
+      return normalizedQuery.isEmpty
+          ? Language.values
+          : Language.values.where((language) {
+              return language.name.toLowerCase().contains(normalizedQuery) ||
+                  (language.localName?.toLowerCase().contains(normalizedQuery) ?? false);
+            }).toList();
+    },
     [query],
   );
 }

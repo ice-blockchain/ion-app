@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/user_category_type.dart';
+import 'package:ion/app/features/user/providers/user_categories_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -14,26 +14,24 @@ import 'package:ion/generated/assets.gen.dart';
 
 class CategorySelectModal extends HookConsumerWidget {
   const CategorySelectModal({
-    required this.selectedUserCategoryType,
+    required this.selectedCategory,
     super.key,
   });
 
-  final UserCategoryType? selectedUserCategoryType;
+  final String? selectedCategory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.theme.appColors;
-    final textStyles = context.theme.appTextThemes;
+    final categories = ref.watch(userCategoriesProvider).valueOrNull ?? {};
     final searchValue = useState('');
     final filteredCategories = useMemoized(
       () {
         final query = searchValue.value.toLowerCase();
-        return UserCategoryType.values.where((category) {
-          final title = category.getTitle(context).toLowerCase();
-          return title.contains(query);
+        return categories.values.where((category) {
+          return category.name.toLowerCase().contains(query);
         }).toList();
       },
-      [searchValue.value],
+      [categories, searchValue.value],
     );
 
     return SheetContent(
@@ -78,18 +76,18 @@ class CategorySelectModal extends HookConsumerWidget {
                 final category = filteredCategories[index];
                 return MenuItemButton(
                   onPressed: () {
-                    Navigator.of(context).pop(category);
+                    Navigator.of(context).pop(category.key);
                   },
-                  trailingIcon: selectedUserCategoryType == category
+                  trailingIcon: selectedCategory == category.key
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(
-                          color: colors.success,
+                          color: context.theme.appColors.success,
                         )
                       : Assets.svg.iconBlockCheckboxOff.icon(
-                          color: colors.tertararyText,
+                          color: context.theme.appColors.tertararyText,
                         ),
                   child: Text(
-                    category.getTitle(context),
-                    style: textStyles.body,
+                    category.name,
+                    style: context.theme.appTextThemes.body,
                   ),
                 );
               },

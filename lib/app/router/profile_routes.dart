@@ -55,17 +55,13 @@ class FollowListRoute extends BaseRouteData {
 
 class CategorySelectRoute extends BaseRouteData {
   CategorySelectRoute({
-    required this.selectedUserCategoryType,
-    required this.pubkey,
+    required this.selectedCategory,
   }) : super(
-          child: CategorySelectModal(
-            selectedUserCategoryType: selectedUserCategoryType,
-          ),
+          child: CategorySelectModal(selectedCategory: selectedCategory),
           type: IceRouteType.bottomSheet,
         );
 
-  final UserCategoryType? selectedUserCategoryType;
-  final String pubkey;
+  final String? selectedCategory;
 }
 
 class PaymentSelectionRoute extends BaseRouteData {

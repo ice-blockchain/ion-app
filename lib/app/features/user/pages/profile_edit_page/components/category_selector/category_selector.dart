@@ -1,28 +1,32 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/user_category_type.dart';
+import 'package:ion/app/features/user/providers/user_categories_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CategorySelector extends StatelessWidget {
+class CategorySelector extends HookConsumerWidget {
   const CategorySelector({
-    required this.selectedUserCategoryType,
-    required this.onPressed,
+    required this.selectedCategory,
+    required this.onChanged,
     super.key,
   });
 
-  final VoidCallback onPressed;
-  final UserCategoryType? selectedUserCategoryType;
+  final ValueChanged<String>? onChanged;
+  final String? selectedCategory;
 
   @override
-  Widget build(BuildContext context) {
-    final colors = context.theme.appColors;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = useState(selectedCategory);
+    final categories = ref.watch(userCategoriesProvider).valueOrNull;
 
-    final iconBorderSize = Border.fromBorderSide(
-      BorderSide(color: colors.onTerararyFill, width: 1.0.s),
-    );
+    final label = selected.value != null
+        ? (categories?[selected.value]?.name ?? selectedCategory!)
+        : context.i18n.dropdown_select_category;
 
     return Button.dropdown(
       useDefaultBorderRadius: true,
@@ -39,15 +43,23 @@ class CategorySelector extends StatelessWidget {
           size: 20.0.s,
           color: context.theme.appColors.secondaryText,
         ),
-        border: iconBorderSize,
+        border: Border.fromBorderSide(
+          BorderSide(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
+        ),
       ),
       label: SizedBox(
         width: double.infinity,
-        child: Text(
-          selectedUserCategoryType?.getTitle(context) ?? context.i18n.dropdown_select_category,
-        ),
+        child: Text(label),
       ),
-      onPressed: onPressed,
+      onPressed: () async {
+        final newCategory = await CategorySelectRoute(
+          selectedCategory: selected.value,
+        ).push<String?>(context);
+        if (newCategory != null) {
+          selected.value = newCategory;
+          onChanged?.call(newCategory);
+        }
+      },
     );
   }
 }

@@ -11,10 +11,12 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/bio_input.dart';
+import 'package:ion/app/features/auth/views/components/user_data_inputs/location_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/name_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/nickname_input.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/website_input.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
+import 'package:ion/app/features/user/pages/profile_edit_page/components/category_selector/category_selector.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/edit_submit_button/edit_submit_button.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/components/user_banner_picked/user_banner_picked.dart';
@@ -88,22 +90,21 @@ class ProfileEditPage extends HookConsumerWidget {
                                             .copyWith(about: text.trim().isEmpty ? null : text),
                                       ),
                                     ),
-                                    //TODO:uncomment when imp
-                                    // SizedBox(height: paddingValue),
-                                    // CategorySelector(
-                                    //   selectedUserCategoryType: category.value,
-                                    //   onPressed: () async {
-                                    //     final newUserCategoryType = await CategorySelectRoute(
-                                    //       pubkey: pubkey,
-                                    //       selectedUserCategoryType: category.value,
-                                    //     ).push<UserCategoryType?>(context);
-                                    //     if (newUserCategoryType != null) {
-                                    //       category.value = newUserCategoryType;
-                                    //     }
-                                    //   },
-                                    // ),
-                                    // SizedBox(height: paddingValue),
-                                    // LocationInput(controller: locationController),
+                                    SizedBox(height: paddingValue),
+                                    CategorySelector(
+                                      selectedCategory: draftRef.value.category,
+                                      onChanged: (category) => update(
+                                        draftRef.value.copyWith(category: category),
+                                      ),
+                                    ),
+                                    SizedBox(height: paddingValue),
+                                    LocationInput(
+                                      initialValue: userMetadata.data.location,
+                                      onChanged: (text) => update(
+                                        draftRef.value
+                                            .copyWith(location: text.isEmpty ? null : text),
+                                      ),
+                                    ),
                                     SizedBox(height: paddingValue),
                                     WebsiteInput(
                                       initialValue: userMetadata.data.website,

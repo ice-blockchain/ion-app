@@ -105,7 +105,6 @@ import 'package:ion/app/features/settings/views/push_notifications_settings.dart
 import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
-import 'package:ion/app/features/user/model/user_category_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/profile_edit_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';

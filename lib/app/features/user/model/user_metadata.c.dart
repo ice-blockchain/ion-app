@@ -57,6 +57,9 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
     String? about,
     String? picture,
     String? website,
+    String? location,
+    String? category,
+    DateTime? registeredAt,
     String? banner,
     @Default({}) Map<String, MediaAttachment> media,
     Map<String, String>? wallets,
@@ -86,6 +89,9 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
       picture: userDataContent.picture,
       website: userDataContent.website,
       banner: userDataContent.banner,
+      location: userDataContent.location,
+      category: userDataContent.category,
+      registeredAt: userDataContent.registeredAt,
       media: media,
       whoCanMessageYou: WhoCanSetting.fromString(userDataContent.whoCanMessageYou),
       whoCanInviteYouToGroups: WhoCanSetting.fromString(userDataContent.whoCanInviteYouToGroups),
@@ -111,6 +117,9 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
           displayName: displayName,
           website: website,
           banner: banner,
+          location: location,
+          category: category,
+          registeredAt: registeredAt,
           whoCanMessageYou: whoCanMessageYou?.name,
           whoCanInviteYouToGroups: whoCanInviteYouToGroups?.name,
           wallets: wallets,
@@ -140,6 +149,9 @@ class UserDataEventMessageContent {
     this.picture,
     this.displayName,
     this.website,
+    this.location,
+    this.category,
+    this.registeredAt,
     this.banner,
     this.whoCanMessageYou,
     this.whoCanInviteYouToGroups,
@@ -160,6 +172,17 @@ class UserDataEventMessageContent {
 
   final String? website;
 
+  final String? location;
+
+  final String? category;
+
+  @JsonKey(
+    name: 'registered_at',
+    toJson: _dateTimeToJson,
+    fromJson: _dateTimeFromJson,
+  )
+  final DateTime? registeredAt;
+
   final String? banner;
 
   @JsonKey(name: 'who_can_message_you')
@@ -171,6 +194,12 @@ class UserDataEventMessageContent {
   final Map<String, String>? wallets;
 
   Map<String, dynamic> toJson() => _$UserDataEventMessageContentToJson(this);
+
+  static int? _dateTimeToJson(DateTime? value) =>
+      value != null ? value.millisecondsSinceEpoch ~/ 1000 : null;
+
+  static DateTime? _dateTimeFromJson(int? value) =>
+      value != null ? DateTime.fromMillisecondsSinceEpoch(value * 1000) : null;
 }
 
 enum WhoCanSetting {
