@@ -38,6 +38,15 @@ class ConfirmationSheet extends ConsumerWidget {
     final formData = ref.watch(sendAssetFormControllerProvider());
     final coin = formData.assetData.as<CoinAssetData>()!;
 
+    ref
+      ..displayErrors(sendCoinsNotifierProvider)
+      ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) {
+        if (context.mounted && transactionDetails != null) {
+          ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
+          CoinTransactionResultRoute().go(context);
+        }
+      });
+
     return SheetContent(
       body: SingleChildScrollView(
         child: Column(
@@ -134,17 +143,6 @@ class ConfirmationSheet extends ConsumerWidget {
                                 await ref
                                     .read(sendCoinsNotifierProvider.notifier)
                                     .send(onVerifyIdentity);
-
-                                ref.read(sendCoinsNotifierProvider).maybeWhen(
-                                      data: (data) {
-                                        if (context.mounted && data != null) {
-                                          ref.read(transactionNotifierProvider.notifier).details =
-                                              data;
-                                          CoinTransactionResultRoute().go(context);
-                                        }
-                                      },
-                                      orElse: () {},
-                                    );
                               },
                               child: child,
                             );
