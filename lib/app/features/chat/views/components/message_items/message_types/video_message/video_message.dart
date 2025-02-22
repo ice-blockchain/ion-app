@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -24,44 +25,38 @@ class VideoMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoUrl = useState<String?>(null);
+    useAutomaticKeepAlive();
 
     final maxContentWidth = 272.0.s;
     final maxVideoHeight = 340.0.s;
 
-    useAutomaticKeepAlive();
-
+    final videoUrl = useState<String?>(null);
     final contentWidth = useState<double>(maxContentWidth);
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-
-    final videoAttachmentUrl = entity.data.primaryVideo?.url;
-
-    print('videoAttachmentUrl: $videoAttachmentUrl');
-
     useEffect(
       () {
-        ref.read(mediaEncryptionServiceProvider).retreiveEncryptedMedia(
-          [entity.data.primaryVideo!],
-        ).then((value) {
-          if (context.mounted) videoUrl.value = value.first.path;
-        });
+        if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
+          final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+          ref.read(mediaEncryptionServiceProvider).retreiveEncryptedMedia(
+            [entity.data.primaryVideo!],
+          ).then((value) {
+            if (context.mounted) videoUrl.value = value.first.path;
+          });
+        }
         return null;
       },
-      [videoAttachmentUrl],
+      [eventMessage],
     );
 
-    if (videoUrl.value == null) {
-      return const SizedBox.shrink();
-    }
-
-    final videoController = ref.watch(videoControllerProvider(videoUrl.value!, looping: true));
+    final videoController = videoUrl.value == null
+        ? null
+        : ref.watch(videoControllerProvider(videoUrl.value!, looping: true));
 
     // Identify acceptable video width to limit message content width
-    if (videoController.value.isInitialized) {
-      final aspectRatio = videoController.value.aspectRatio;
+    if (videoController?.value.isInitialized ?? false) {
+      final aspectRatio = videoController!.value.aspectRatio;
 
       var adjustedWidth = maxContentWidth;
       var adjustedHeight = adjustedWidth / aspectRatio;
@@ -77,7 +72,8 @@ class VideoMessage extends HookConsumerWidget {
     return MessageItemWrapper(
       isMe: isMe,
       contentPadding: EdgeInsets.all(8.0.s),
-      child: ConstrainedBox(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
         constraints: BoxConstraints(
           maxWidth: contentWidth.value,
         ),
@@ -91,10 +87,15 @@ class VideoMessage extends HookConsumerWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.0.s),
-                child: VideoPreview(
-                  videoUrl: videoUrl.value!,
-                  videoController: videoController,
-                ),
+                child: videoUrl.value == null
+                    //TODO: use thumbnail
+                    ? const Center(
+                        child: IONLoadingIndicator(),
+                      )
+                    : VideoPreview(
+                        videoUrl: videoUrl.value!,
+                        videoController: videoController,
+                      ),
               ),
             ),
             _MessageWithTimestamp(eventMessage: eventMessage),
