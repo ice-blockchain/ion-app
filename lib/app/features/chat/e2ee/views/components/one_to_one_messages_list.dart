@@ -34,8 +34,11 @@ class OneToOneMessageList extends HookConsumerWidget {
           slivers: [
             for (final entry in messages.entries) ...[
               SliverList(
-                key: ValueKey(entry.key),
                 delegate: SliverChildBuilderDelegate(
+                  findChildIndexCallback: (key) {
+                    final valueKey = key as ValueKey<EventMessage>;
+                    return entry.value.indexOf(valueKey.value);
+                  },
                   (context, msgIndex) {
                     final message = entry.value[msgIndex];
                     final entity = PrivateDirectMessageEntity.fromEventMessage(message);
@@ -46,6 +49,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                         previousMessage == null || previousMessage.pubkey == message.pubkey;
 
                     return Padding(
+                      key: ValueKey(message),
                       padding: EdgeInsets.only(
                         bottom: isLastMessage
                             ? 20.0.s
@@ -54,10 +58,8 @@ class OneToOneMessageList extends HookConsumerWidget {
                                 : 12.0.s,
                       ),
                       child: switch (entity.data.messageType) {
-                        MessageType.text =>
-                          TextMessage(eventMessage: message, key: ValueKey(message.id)),
-                        MessageType.video =>
-                          VideoMessage(eventMessage: message, key: ValueKey(message.id)),
+                        MessageType.text => TextMessage(eventMessage: message),
+                        MessageType.video => VideoMessage(eventMessage: message),
                       },
                     );
                   },
@@ -78,44 +80,4 @@ class OneToOneMessageList extends HookConsumerWidget {
       ),
     );
   }
-
-  // Widget _buildMessage(EventMessage message) {
-  //   final entity = PrivateDirectMessageEntity.fromEventMessage(message);
-
-  //   switch (entity.data.messageType) {
-  //     case MessageType.text:
-  //       return TextMessage(eventMessage: message, key: ValueKey(message.id));
-  //     case MessageType.video:
-  //       return VideoMessage(eventMessage: message, key: ValueKey(message.id));
-  //   }
-  // }
-
-  // bool _shouldRenderDateHeader(int index, List<EventMessage> messages) {
-  //   final message = messages[index];
-
-  //   // Extract current message's date (ignores time)
-  //   final currentMessageDate = DateTime(
-  //     message.createdAt.year,
-  //     message.createdAt.month,
-  //     message.createdAt.day,
-  //   );
-
-  //   var renderDateHeader =
-  //       index == messages.length - 1; // First item from bottom should always have a header
-
-  //   if (index < messages.length - 1) {
-  //     final nextMessage = messages[index + 1];
-
-  //     // Extract next message's date (ignores time)
-  //     final nextMessageDate = DateTime(
-  //       nextMessage.createdAt.year,
-  //       nextMessage.createdAt.month,
-  //       nextMessage.createdAt.day,
-  //     );
-
-  //     renderDateHeader = currentMessageDate != nextMessageDate;
-  //   }
-
-  //   return renderDateHeader;
-  // }
 }

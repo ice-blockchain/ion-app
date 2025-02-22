@@ -46,7 +46,7 @@ class VideoMessage extends HookConsumerWidget {
         ref.read(mediaEncryptionServiceProvider).retreiveEncryptedMedia(
           [entity.data.primaryVideo!],
         ).then((value) {
-          videoUrl.value = value.first.path;
+          if (context.mounted) videoUrl.value = value.first.path;
         });
         return null;
       },
@@ -57,7 +57,7 @@ class VideoMessage extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final videoController = ref.watch(videoControllerProvider(videoUrl.value!));
+    final videoController = ref.watch(videoControllerProvider(videoUrl.value!, looping: true));
 
     // Identify acceptable video width to limit message content width
     if (videoController.value.isInitialized) {
