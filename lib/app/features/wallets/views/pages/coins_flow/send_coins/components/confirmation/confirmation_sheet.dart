@@ -114,7 +114,9 @@ class ConfirmationSheet extends ConsumerWidget {
                   ),
                   SizedBox(height: 16.0.s),
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
-                    ListItemArrivalTime.fromFeeOption(context, fee),
+                    ListItemArrivalTime(
+                      formattedTime: fee.getDisplayArrivalTime(context),
+                    ),
                     SizedBox(height: 16.0.s),
                     ListItemNetworkFee(value: formatCrypto(fee.amount, fee.symbol)),
                   ],

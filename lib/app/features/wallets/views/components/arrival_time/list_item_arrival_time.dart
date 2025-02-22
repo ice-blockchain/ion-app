@@ -3,19 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ListItemArrivalTime extends StatelessWidget {
   const ListItemArrivalTime({required this.formattedTime, super.key});
-
-  factory ListItemArrivalTime.fromFeeOption(BuildContext context, NetworkFeeOption feeOption) {
-    final formattedTime = feeOption.arrivalTime != null
-        ? '${feeOption.arrivalTime!.inMinutes} ${context.i18n.wallet_arrival_time_minutes}'
-        : feeOption.type.getDisplayName(context);
-
-    return ListItemArrivalTime(formattedTime: formattedTime);
-  }
 
   final String formattedTime;
 

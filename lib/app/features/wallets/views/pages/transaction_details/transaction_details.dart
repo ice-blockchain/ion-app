@@ -133,9 +133,10 @@ class TransactionDetailsPage extends ConsumerWidget {
                       icon: transactionData.network.svgIconAsset.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItemArrivalTime.fromFeeOption(
-                      context,
-                      transactionData.networkFeeOption,
+                    ListItemArrivalTime(
+                      formattedTime: transactionData.networkFeeOption.getDisplayArrivalTime(
+                        context,
+                      ),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItemNetworkFee(
