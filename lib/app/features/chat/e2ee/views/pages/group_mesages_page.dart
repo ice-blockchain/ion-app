@@ -37,7 +37,7 @@ class GroupMessagesPage extends HookConsumerWidget {
         )
         .valueOrNull;
 
-    final lastMessage = messages?.entries.last.value.last;
+    final lastMessage = messages?.entries.lastOrNull?.value.last;
 
     if (lastMessage == null) {
       return const SizedBox.shrink();

@@ -75,7 +75,6 @@ class VideoMessage extends HookConsumerWidget {
     }
 
     return MessageItemWrapper(
-      key: ValueKey(eventMessage.id),
       isMe: isMe,
       contentPadding: EdgeInsets.all(8.0.s),
       child: ConstrainedBox(

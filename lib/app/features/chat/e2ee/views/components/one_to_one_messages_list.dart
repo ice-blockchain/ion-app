@@ -10,7 +10,6 @@ import 'package:ion/app/features/chat/views/components/message_items/chat_date_h
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/video_message/video_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
   const OneToOneMessageList(
@@ -26,26 +25,6 @@ class OneToOneMessageList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
 
-    // useOnInit(
-    //   () {
-    //     scrollController.jumpTo(
-    //       0,
-    //     );
-    //   },
-    //   [],
-    // );
-
-    // useOnInit(
-    //   () {
-    //     scrollController.animateTo(
-    //       0,
-    //       duration: const Duration(milliseconds: 300),
-    //       curve: Curves.easeInOut,
-    //     );
-    //   },
-    //   [messages],
-    // );
-
     return ColoredBox(
       color: context.theme.appColors.primaryBackground,
       child: ScreenSideOffset.small(
@@ -55,6 +34,7 @@ class OneToOneMessageList extends HookConsumerWidget {
           slivers: [
             for (final entry in messages.entries) ...[
               SliverList(
+                key: ValueKey(entry.key),
                 delegate: SliverChildBuilderDelegate(
                   (context, msgIndex) {
                     final message = entry.value[msgIndex];
@@ -98,4 +78,44 @@ class OneToOneMessageList extends HookConsumerWidget {
       ),
     );
   }
+
+  // Widget _buildMessage(EventMessage message) {
+  //   final entity = PrivateDirectMessageEntity.fromEventMessage(message);
+
+  //   switch (entity.data.messageType) {
+  //     case MessageType.text:
+  //       return TextMessage(eventMessage: message, key: ValueKey(message.id));
+  //     case MessageType.video:
+  //       return VideoMessage(eventMessage: message, key: ValueKey(message.id));
+  //   }
+  // }
+
+  // bool _shouldRenderDateHeader(int index, List<EventMessage> messages) {
+  //   final message = messages[index];
+
+  //   // Extract current message's date (ignores time)
+  //   final currentMessageDate = DateTime(
+  //     message.createdAt.year,
+  //     message.createdAt.month,
+  //     message.createdAt.day,
+  //   );
+
+  //   var renderDateHeader =
+  //       index == messages.length - 1; // First item from bottom should always have a header
+
+  //   if (index < messages.length - 1) {
+  //     final nextMessage = messages[index + 1];
+
+  //     // Extract next message's date (ignores time)
+  //     final nextMessageDate = DateTime(
+  //       nextMessage.createdAt.year,
+  //       nextMessage.createdAt.month,
+  //       nextMessage.createdAt.day,
+  //     );
+
+  //     renderDateHeader = currentMessageDate != nextMessageDate;
+  //   }
+
+  //   return renderDateHeader;
+  // }
 }

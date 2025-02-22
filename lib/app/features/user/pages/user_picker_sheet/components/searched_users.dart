@@ -33,15 +33,15 @@ class SearchedUsers extends ConsumerWidget {
         ?.whereType<UserMetadataEntity>()
         .whereNot((user) => user.masterPubkey == masterPubkey)
         .toList();
-    final slivers = [
-      if (users == null || users.isEmpty)
-        const SliverToBoxAdapter(child: SizedBox.shrink())
-      else
+
+    return LoadMoreBuilder(
+      slivers: [
         SliverList.separated(
           separatorBuilder: (BuildContext _, int __) => SizedBox(height: 8.0.s),
-          itemCount: users.length,
+          itemCount: users?.length ?? 0,
           itemBuilder: (BuildContext context, int index) {
-            final user = users.elementAt(index);
+            final user = users?.elementAt(index);
+            if (user == null) return const SizedBox.shrink();
             return SelectableUserListItem(
               pubkey: user.pubkey,
               masterPubkey: user.masterPubkey,
@@ -51,10 +51,7 @@ class SearchedUsers extends ConsumerWidget {
             );
           },
         ),
-    ];
-
-    return LoadMoreBuilder(
-      slivers: slivers,
+      ],
       builder: (context, slivers) => CustomScrollView(
         slivers: slivers,
       ),

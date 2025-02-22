@@ -62,25 +62,26 @@ class UserPickerSheet extends HookConsumerWidget {
                       SizedBox(height: 12.0.s),
                     ],
                   ),
-                Expanded(
-                  child: searchText.isEmpty
-                      ? initialUserListType == UserListType.follower
-                          ? FollowerUsers(
-                              onUserSelected: onUserSelected,
-                              selectedPubkeys: selectedPubkeys,
-                              selectable: selectable,
-                            )
-                          : FollowingUsers(
-                              onUserSelected: onUserSelected,
-                              selectedPubkeys: selectedPubkeys,
-                              selectable: selectable,
-                            )
-                      : SearchedUsers(
+                if (searchText.isEmpty)
+                  initialUserListType == UserListType.follower
+                      ? FollowerUsers(
                           onUserSelected: onUserSelected,
                           selectedPubkeys: selectedPubkeys,
                           selectable: selectable,
-                        ),
-                ),
+                        )
+                      : FollowingUsers(
+                          onUserSelected: onUserSelected,
+                          selectedPubkeys: selectedPubkeys,
+                          selectable: selectable,
+                        )
+                else
+                  Expanded(
+                    child: SearchedUsers(
+                      onUserSelected: onUserSelected,
+                      selectedPubkeys: selectedPubkeys,
+                      selectable: selectable,
+                    ),
+                  ),
                 bottomContent ?? const SizedBox.shrink(),
               ],
             ),
