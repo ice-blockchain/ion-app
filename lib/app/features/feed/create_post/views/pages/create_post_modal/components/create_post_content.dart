@@ -17,6 +17,7 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_url_links.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class CreatePostContent extends StatelessWidget {
@@ -48,10 +49,12 @@ class CreatePostContent extends StatelessWidget {
           children: [
             _VideoPreviewSection(attachedVideoNotifier: attachedVideoNotifier),
             if (parentEvent != null) _ParentEntitySection(eventReference: parentEvent!),
-            _TextInputSection(
-              textEditorController: textEditorController,
-              createOption: createOption,
-              attachedMediaNotifier: attachedMediaNotifier,
+            KeyboardVisibilityProvider(
+              child: _TextInputSection(
+                textEditorController: textEditorController,
+                createOption: createOption,
+                attachedMediaNotifier: attachedMediaNotifier,
+              ),
             ),
             if (quotedEvent != null) _QuotedEntitySection(eventReference: quotedEvent!),
           ],
@@ -106,6 +109,22 @@ class _TextInputSection extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaFiles = attachedMediaNotifier.value;
     final textEditorKey = useMemoized(TextEditorKeys.createPost);
+    final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
+    useOnInit(
+      () {
+        if (textEditorKey.currentContext != null && isKeyboardVisible) {
+          Future.delayed(const Duration(milliseconds: 300), () {
+            Scrollable.ensureVisible(
+              textEditorKey.currentContext!,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeInOut,
+            );
+          });
+        }
+      },
+      [isKeyboardVisible],
+    );
+
     final links = useUrlLinks(
       textEditorController: textEditorController,
       mediaFiles: mediaFiles,
