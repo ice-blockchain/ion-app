@@ -77,7 +77,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
                     if (fee.arrivalTime != null) ...[
                       ListItemArrivalTime(
-                        feeOption: fee,
+                        formattedTime: fee.getDisplayArrivalTime(context),
                       ),
                       SizedBox(height: 12.0.s),
                     ],

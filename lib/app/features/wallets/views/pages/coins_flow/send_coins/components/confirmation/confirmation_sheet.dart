@@ -14,6 +14,7 @@ import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
@@ -36,6 +37,15 @@ class ConfirmationSheet extends ConsumerWidget {
 
     final formData = ref.watch(sendAssetFormControllerProvider());
     final coin = formData.assetData.as<CoinAssetData>()!;
+
+    ref
+      ..displayErrors(sendCoinsNotifierProvider)
+      ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) {
+        if (context.mounted && transactionDetails != null) {
+          ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
+          CoinTransactionResultRoute().go(context);
+        }
+      });
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -104,7 +114,9 @@ class ConfirmationSheet extends ConsumerWidget {
                   ),
                   SizedBox(height: 16.0.s),
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
-                    ListItemArrivalTime(feeOption: fee),
+                    ListItemArrivalTime(
+                      formattedTime: fee.getDisplayArrivalTime(context),
+                    ),
                     SizedBox(height: 16.0.s),
                     ListItemNetworkFee(value: formatCrypto(fee.amount, fee.symbol)),
                   ],
@@ -131,12 +143,8 @@ class ConfirmationSheet extends ConsumerWidget {
                                 OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
                               ) async {
                                 await ref
-                                    .read(
-                                      sendCoinsNotifierProvider.notifier,
-                                    )
+                                    .read(sendCoinsNotifierProvider.notifier)
                                     .send(onVerifyIdentity);
-
-                                if (context.mounted) CoinTransactionResultRoute().go(context);
                               },
                               child: child,
                             );

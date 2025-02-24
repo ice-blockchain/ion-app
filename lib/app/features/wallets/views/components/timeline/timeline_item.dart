@@ -60,7 +60,7 @@ class TimelineItem extends StatelessWidget {
               ),
               if (data.date != null)
                 Text(
-                  DateFormat('dd.MM.yyyy HH:mm:ss').format(data.date!),
+                  DateFormat('dd.MM.yyyy HH:mm:ss').format(data.date!.toLocal()),
                   style: context.theme.appTextThemes.caption3.copyWith(
                     color: context.theme.appColors.secondaryText,
                   ),
