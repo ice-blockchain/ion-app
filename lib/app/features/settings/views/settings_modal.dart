@@ -39,35 +39,37 @@ class SettingsModal extends ConsumerWidget {
     }
 
     return SheetContent(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          NavigationAppBar.modal(
-            showBackButton: false,
-            title: Text(context.i18n.settings_title),
-            actions: [
-              NavigationCloseButton(
-                onPressed: context.pop,
-              ),
-            ],
-          ),
-          ScreenSideOffset.small(
-            child: SeparatedColumn(
-              separator: SizedBox(height: 9.0.s),
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final option in SettingsAction.values)
-                  ModalActionButton(
-                    icon: option.getIcon(context),
-                    label: option.getLabel(context),
-                    onTap: getOnPressed(option),
-                  ),
-                const _AppInfoWidget(),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            NavigationAppBar.modal(
+              showBackButton: false,
+              title: Text(context.i18n.settings_title),
+              actions: [
+                NavigationCloseButton(
+                  onPressed: context.pop,
+                ),
               ],
             ),
-          ),
-          ScreenBottomOffset(margin: 32.0.s),
-        ],
+            ScreenSideOffset.small(
+              child: SeparatedColumn(
+                separator: SizedBox(height: 9.0.s),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final option in SettingsAction.values)
+                    ModalActionButton(
+                      icon: option.getIcon(context),
+                      label: option.getLabel(context),
+                      onTap: getOnPressed(option),
+                    ),
+                  const _AppInfoWidget(),
+                ],
+              ),
+            ),
+            ScreenBottomOffset(margin: 32.0.s),
+          ],
+        ),
       ),
     );
   }

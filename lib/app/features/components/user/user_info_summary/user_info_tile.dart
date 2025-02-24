@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/services/browser/browser.dart';
+import 'package:ion/app/utils/url.dart';
 
 class UserInfoTile extends StatelessWidget {
   const UserInfoTile({
@@ -31,7 +32,7 @@ class UserInfoTile extends StatelessWidget {
           ),
           SizedBox(width: 4.0.s),
           Text(
-            title,
+            isLink ? removeHttpsPrefix(title)! : title,
             style: context.theme.appTextThemes.body2.copyWith(color: color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

@@ -20,6 +20,7 @@ class GeneralUserDataInput extends HookWidget {
     this.initialValue,
     this.isLive = false,
     this.showNoErrorsIndicator = false,
+    this.prefix,
     super.key,
   });
 
@@ -34,6 +35,8 @@ class GeneralUserDataInput extends HookWidget {
   final String? initialValue;
   final bool isLive;
   final bool showNoErrorsIndicator;
+  final Widget? prefix;
+
   @override
   Widget build(BuildContext context) {
     final isValid = useState(false);
@@ -44,6 +47,7 @@ class GeneralUserDataInput extends HookWidget {
         icons: [prefixIconAssetName.icon(color: context.theme.appColors.secondaryText)],
       ),
       onChanged: onChanged,
+      prefix: prefix,
       onValidated: (value) => isValid.value = value,
       labelText: labelText,
       controller: controller,
