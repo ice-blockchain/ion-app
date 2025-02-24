@@ -15,13 +15,11 @@ import 'package:ion/generated/assets.gen.dart';
 class RepostsCounterButton extends ConsumerWidget {
   const RepostsCounterButton({
     required this.eventReference,
-    this.repostReference,
     this.color,
     super.key,
   });
 
   final EventReference eventReference;
-  final EventReference? repostReference;
   final Color? color;
 
   @override
@@ -35,7 +33,6 @@ class RepostsCounterButton extends ConsumerWidget {
         HapticFeedback.lightImpact();
         RepostOptionsModalRoute(
           eventReference: eventReference.encode(),
-          repostReference: repostReference?.encode(),
         ).push<void>(context);
       },
       child: Container(

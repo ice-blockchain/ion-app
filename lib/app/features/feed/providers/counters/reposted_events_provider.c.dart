@@ -13,48 +13,79 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'reposted_events_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Stream<Set<String>?> repostedEvents(Ref ref) async* {
+Stream<Map<String, String>?> repostedEvents(Ref ref) async* {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (currentPubkey == null) {
     yield {};
   } else {
     final cache = ref.read(ionConnectCacheProvider);
-    var repostedIds = cache.values.fold<Set<String>>({}, (result, entry) {
-      final repostedId = _getCurrentUserRepostedId(entry.entity, currentPubkey: currentPubkey);
-      if (repostedId != null) {
-        result.add(repostedId);
+    var repostedMap = cache.values.fold<Map<String, String>>({}, (result, entry) {
+      final (repostId, originalId) =
+          _getCurrentUserRepostData(entry.entity, currentPubkey: currentPubkey);
+      if (repostId != null && originalId != null) {
+        result[originalId] = repostId;
       }
       return result;
     });
 
-    yield repostedIds;
+    yield repostedMap;
 
     await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
-      final repostedId = _getCurrentUserRepostedId(entity, currentPubkey: currentPubkey);
-      if (repostedId != null) {
-        yield repostedIds = {...repostedIds, repostedId};
+      final (repostId, originalId) =
+          _getCurrentUserRepostData(entity, currentPubkey: currentPubkey);
+
+      if (repostId != null && originalId != null) {
+        yield repostedMap = {...repostedMap, originalId: repostId};
       }
     }
   }
 }
 
-String? _getCurrentUserRepostedId(IonConnectEntity entity, {required String currentPubkey}) {
+(String?, String?) _getCurrentUserRepostData(
+  IonConnectEntity entity, {
+  required String currentPubkey,
+}) {
   if (entity.masterPubkey != currentPubkey) {
-    return null;
+    return (null, null);
   }
 
   return switch (entity) {
-    ModifiablePostEntity() when entity.data.quotedEvent != null =>
-      entity.data.quotedEvent!.eventReference.toString(),
-    GenericRepostEntity() => entity.data.eventReference.toString(),
-    RepostEntity() => entity.data.eventReference.toString(),
-    _ => null,
+    ModifiablePostEntity() when entity.data.quotedEvent != null => (
+        entity.id,
+        entity.data.quotedEvent!.eventReference.toString(),
+      ),
+    GenericRepostEntity() => (
+        entity.id,
+        entity.data.eventReference.toString(),
+      ),
+    RepostEntity() => (
+        entity.id,
+        entity.data.eventReference.toString(),
+      ),
+    _ => (null, null),
   };
 }
 
 @riverpod
 bool isReposted(Ref ref, EventReference eventReference) {
-  return ref.watch(repostedEventsProvider).valueOrNull?.contains(eventReference.toString()) ??
-      false;
+  return ref.watch(repostReferenceProvider(eventReference)) != null;
+}
+
+@riverpod
+EventReference? repostReference(Ref ref, EventReference eventReference) {
+  final repostedMap = ref.watch(repostedEventsProvider).valueOrNull;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final repostId = repostedMap?[eventReference.toString()];
+
+  if (repostId != null) {
+    final cacheEntry = ref.read(ionConnectCacheProvider)[repostId];
+    if (cacheEntry == null) return null;
+
+    final entity = cacheEntry.entity;
+    if (entity.masterPubkey == currentPubkey) {
+      return entity.toEventReference();
+    }
+  }
+  return null;
 }

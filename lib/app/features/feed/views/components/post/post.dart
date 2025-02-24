@@ -31,7 +31,6 @@ class Post extends ConsumerWidget {
     required this.eventReference,
     this.framedEventType = FramedEventType.quoted,
     this.timeFormat = TimestampFormat.short,
-    this.repostReference,
     this.header,
     this.footer,
     this.onDelete,
@@ -42,7 +41,6 @@ class Post extends ConsumerWidget {
 
   final EventReference eventReference;
   final FramedEventType framedEventType;
-  final EventReference? repostReference;
   final Widget? header;
   final Widget? footer;
   final TimestampFormat timeFormat;
@@ -91,7 +89,6 @@ class Post extends ConsumerWidget {
         footer ??
             CounterItemsFooter(
               eventReference: eventReference,
-              repostReference: repostReference,
             ),
       ],
     );
