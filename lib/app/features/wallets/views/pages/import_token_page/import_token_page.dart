@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
@@ -15,14 +16,18 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ImportTokenPage extends ConsumerWidget {
+class ImportTokenPage extends HookConsumerWidget {
   const ImportTokenPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isFormValid = useState(false);
+
     ref
       ..displayErrors(importTokenNotifierProvider)
       ..listenSuccess(importTokenNotifierProvider, (_) => _onTokenImported(context));
+
+    final isButtonDisabled = !isFormValid.value || ref.watch(importTokenNotifierProvider).isLoading;
 
     return KeyboardVisibilityProvider(
       child: SheetContent(
@@ -36,13 +41,15 @@ class ImportTokenPage extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            ImportTokenForm(),
-                            SecurityRisks(),
+                            ImportTokenForm(
+                              onValidationStateChanged: (isValid) => isFormValid.value = isValid,
+                            ),
+                            const SecurityRisks(),
                           ],
                         ),
                       ),
@@ -50,7 +57,8 @@ class ImportTokenPage extends ConsumerWidget {
                     Button(
                       onPressed: () => ref.read(importTokenNotifierProvider.notifier).importToken(),
                       label: Text(context.i18n.wallet_import_token_import_button),
-                      disabled: ref.watch(importTokenNotifierProvider).isLoading,
+                      type: isButtonDisabled ? ButtonType.disabled : ButtonType.primary,
+                      disabled: isButtonDisabled,
                       leadingIcon: Assets.svg.iconImportcoin.icon(),
                       trailingIcon: ref.watch(importTokenNotifierProvider).isLoading
                           ? const IONLoadingIndicator()
