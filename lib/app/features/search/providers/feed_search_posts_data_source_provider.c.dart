@@ -27,26 +27,53 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
   if (filterRelays != null && currentPubkey != null) {
     return [
       for (final entry in filterRelays.entries)
-        // switch (filters.category) {
-        //   FeedCategory.articles => buildArticlesDataSource(
-        //       actionSource: ActionSourceRelayUrl(entry.key),
-        //       authors: filters.filter == FeedFilter.following ? entry.value : null,
-        //       currentPubkey: currentPubkey,
-        //     ),
-        //   FeedCategory.videos => buildVideosDataSource(
-        //       actionSource: ActionSourceRelayUrl(entry.key),
-        //       authors: filters.filter == FeedFilter.following ? entry.value : null,
-        //       currentPubkey: currentPubkey,
-        //     ),
-        buildPostsDataSource(
-          actionSource: ActionSourceRelayUrl(entry.key),
-          authors: filters.source == FeedSearchSource.following ? entry.value : null,
-          currentPubkey: currentPubkey,
-          searchExtensions: [
-            QuerySearchExtension(searchQuery: query),
-          ],
-        ),
-      // },
+        switch (category) {
+          AdvancedSearchCategory.trending => buildPostsDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.source == FeedSearchSource.following ? entry.value : null,
+              currentPubkey: currentPubkey,
+              searchExtensions: [
+                QuerySearchExtension(searchQuery: query),
+                TrendingSearchExtension(),
+              ],
+            ),
+          AdvancedSearchCategory.top => buildPostsDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.source == FeedSearchSource.following ? entry.value : null,
+              currentPubkey: currentPubkey,
+              searchExtensions: [
+                QuerySearchExtension(searchQuery: query),
+                TopSearchExtension(),
+              ],
+            ),
+          AdvancedSearchCategory.latest => buildPostsDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.source == FeedSearchSource.following ? entry.value : null,
+              currentPubkey: currentPubkey,
+              searchExtensions: [
+                TopSearchExtension(),
+              ],
+            ),
+          AdvancedSearchCategory.photos => buildPostsDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.source == FeedSearchSource.following ? entry.value : null,
+              currentPubkey: currentPubkey,
+              searchExtensions: [
+                TopSearchExtension(),
+                ImagesSearchExtension(contain: true),
+              ],
+            ),
+          AdvancedSearchCategory.videos => buildPostsDataSource(
+              actionSource: ActionSourceRelayUrl(entry.key),
+              authors: filters.source == FeedSearchSource.following ? entry.value : null,
+              currentPubkey: currentPubkey,
+              searchExtensions: [
+                TopSearchExtension(),
+                VideosSearchExtension(contain: true),
+              ],
+            ),
+          _ => throw UnimplementedError(),
+        },
     ];
   }
   return null;
