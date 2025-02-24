@@ -375,13 +375,13 @@ class ContactRoute extends BaseRouteData {
 }
 
 class NftDetailsRoute extends BaseRouteData {
-  NftDetailsRoute({required this.$extra})
+  NftDetailsRoute({required this.tokenId})
       : super(
-          child: NftDetailsPage(nft: $extra),
+          child: NftDetailsPage(tokenId: tokenId),
           type: IceRouteType.bottomSheet,
         );
 
-  final NftData $extra;
+  final String tokenId;
 }
 
 class SendNftConfirmRoute extends BaseRouteData {

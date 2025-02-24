@@ -23,13 +23,13 @@ class NftListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
-      title: Text(nftData.collectionName),
+      title: Text(nftData.symbol),
       onTap: onTap,
-      subtitle: Text('#${nftData.identifier}'),
+      subtitle: Text('#${nftData.tokenId}'),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: Avatar(
         size: 36.0.s,
-        imageUrl: nftData.iconUrl,
+        imageUrl: nftData.tokenUri,
       ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,

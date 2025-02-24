@@ -12,7 +12,6 @@ import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
@@ -33,11 +32,6 @@ class SendAssetFormController extends _$SendAssetFormController {
       receiverAddress: '',
       assetData: const CryptoAssetData.notInitialized(),
     );
-  }
-
-  void setNft(NftData nft) {
-    // TODO: Not implemented
-    // state = state.copyWith(assetData: CryptoAssetData.nft(nft: nft));
   }
 
   void setCoin(CoinsGroup coin) {

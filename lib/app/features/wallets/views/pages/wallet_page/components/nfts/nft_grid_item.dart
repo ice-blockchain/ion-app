@@ -41,14 +41,14 @@ class NftGridItem extends StatelessWidget {
           ClipRRect(
             borderRadius: borderRadius,
             child: CachedNetworkImage(
-              imageUrl: nftData.iconUrl,
+              imageUrl: nftData.tokenUri,
               width: imageWidth,
               height: imageWidth * 1.13,
               fit: BoxFit.fitHeight,
             ),
           ),
           Text(
-            nftData.collectionName,
+            nftData.symbol,
             style: context.theme.appTextThemes.body2.copyWith(
               color: context.theme.appColors.primaryText,
             ),
@@ -58,7 +58,7 @@ class NftGridItem extends StatelessWidget {
           Row(
             children: [
               Text(
-                '#${nftData.identifier}',
+                '#${nftData.tokenId}',
                 style: context.theme.appTextThemes.subtitle3.copyWith(
                   color: context.theme.appColors.secondaryText,
                 ),

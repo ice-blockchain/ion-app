@@ -54,8 +54,6 @@ class Logger {
   static TalkerDioLogger? get talkerDioLogger => TalkerDioLogger(
         talker: talker,
         settings: TalkerDioLoggerSettings(
-          printRequestHeaders: true,
-          printResponseHeaders: true,
           requestPen: AnsiPen()..cyan(),
           responsePen: AnsiPen()..green(),
           errorPen: AnsiPen()..red(),
