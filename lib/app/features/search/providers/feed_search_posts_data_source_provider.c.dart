@@ -51,7 +51,7 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
               authors: filters.source == FeedSearchSource.following ? entry.value : null,
               currentPubkey: currentPubkey,
               searchExtensions: [
-                TopSearchExtension(),
+                QuerySearchExtension(searchQuery: query),
               ],
             ),
           AdvancedSearchCategory.photos => buildPostsDataSource(
@@ -59,7 +59,7 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
               authors: filters.source == FeedSearchSource.following ? entry.value : null,
               currentPubkey: currentPubkey,
               searchExtensions: [
-                TopSearchExtension(),
+                QuerySearchExtension(searchQuery: query),
                 ImagesSearchExtension(contain: true),
               ],
             ),
@@ -68,7 +68,7 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
               authors: filters.source == FeedSearchSource.following ? entry.value : null,
               currentPubkey: currentPubkey,
               searchExtensions: [
-                TopSearchExtension(),
+                QuerySearchExtension(searchQuery: query),
                 VideosSearchExtension(contain: true),
               ],
             ),

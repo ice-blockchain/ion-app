@@ -51,6 +51,7 @@ class FeedAdvancedSearchPage extends HookConsumerWidget {
                 child: TabBarView(
                   children: categories.map((category) {
                     return switch (category) {
+                      AdvancedSearchCategory.trending => FeedAdvancedSearchTop(query: query),
                       AdvancedSearchCategory.top => FeedAdvancedSearchTop(query: query),
                       AdvancedSearchCategory.latest => FeedAdvancedSearchTop(query: query),
                       AdvancedSearchCategory.people => FeedAdvancedSearchUsers(query: query),
