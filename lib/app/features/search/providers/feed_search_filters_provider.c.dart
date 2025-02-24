@@ -44,9 +44,8 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     state = state.copyWith(source: source);
   }
 
-  set toggleCategory(FeedCategory category) {
-    //TODO:add logic
-    state = state.copyWith(categories: [category]);
+  set filterCategories(List<FeedCategory> categories) {
+    state = state.copyWith(categories: categories);
   }
 
   set newState(FeedSearchFiltersState newState) {
@@ -61,7 +60,6 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
     ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
       ..setEnum(_feedSearchSourceFilterKey, state.source)
-      // TODO:add enum list to userPreferencesServiceProvider
       ..setValue<List<String>>(
         _feedSearchCategoriesFilterKey,
         state.categories.map((category) => category.toShortString()).toList(),
@@ -76,7 +74,6 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     final source =
         userPreferencesService.getEnum(_feedSearchSourceFilterKey, FeedSearchSource.values);
     final categories = userPreferencesService
-        // TODO:add enum list to userPreferencesServiceProvider
         .getValue<List<String>>(_feedSearchCategoriesFilterKey)
         ?.map((category) => EnumExtensions.fromShortString(FeedCategory.values, category))
         .nonNulls

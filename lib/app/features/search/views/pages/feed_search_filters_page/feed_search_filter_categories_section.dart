@@ -35,7 +35,8 @@ class FeedSearchFilterCategoriesSection extends StatelessWidget {
         ...FeedCategory.values.map<Widget>((category) {
           return ListItem(
             onTap: () {
-              onFilterChange([category]); //TODO
+              final categories = _toggleCategory(category);
+              onFilterChange(categories);
             },
             leading: ButtonIconFrame(
               color: category.getColor(context),
@@ -52,5 +53,27 @@ class FeedSearchFilterCategoriesSection extends StatelessWidget {
         }).intersperse(const HorizontalSeparator()),
       ],
     );
+  }
+
+  List<FeedCategory> _toggleCategory(FeedCategory category) {
+    // Can't remove the last category
+    if (selectedFilter.length == 1 && selectedFilter.contains(category)) {
+      return selectedFilter;
+    }
+
+    // Can't uncheck the videos if feed is checked
+    if (category == FeedCategory.videos && selectedFilter.contains(FeedCategory.feed)) {
+      return selectedFilter;
+    }
+
+    final categories = [...selectedFilter];
+    if (!categories.remove(category)) {
+      categories.add(category);
+      if (category == FeedCategory.feed && !categories.contains(FeedCategory.videos)) {
+        categories.add(FeedCategory.videos);
+      }
+    }
+
+    return categories;
   }
 }
