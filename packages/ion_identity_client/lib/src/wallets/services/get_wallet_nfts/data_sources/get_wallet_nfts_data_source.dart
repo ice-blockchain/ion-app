@@ -12,18 +12,20 @@ import 'package:sprintf/sprintf.dart';
 
 class GetWalletNftsDataSource {
   const GetWalletNftsDataSource(
+    this.username,
     this._networkClient,
     this._tokenStorage,
   );
 
+  final String username;
   final NetworkClient _networkClient;
   final TokenStorage _tokenStorage;
 
+  /// [walletViewId]
   static const walletNftsPath = '/wallets/%s/nfts';
 
   Future<WalletNfts> getWalletNfts(
-    String username,
-    String walletId,
+    String walletViewId,
   ) async {
     final token = _tokenStorage.getToken(username: username);
     if (token == null) {
@@ -32,7 +34,7 @@ class GetWalletNftsDataSource {
 
     try {
       return await _networkClient.get(
-        sprintf(walletNftsPath, [walletId]),
+        sprintf(walletNftsPath, [walletViewId]),
         headers: RequestHeaders.getAuthorizationHeaders(
           token: token.token,
           username: username,
