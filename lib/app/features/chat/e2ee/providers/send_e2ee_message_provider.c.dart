@@ -53,7 +53,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider) ?? '',
     eventMessageDao: ref.watch(conversationEventMessageDaoProvider),
     mediaEncryptionService: ref.watch(mediaEncryptionServiceProvider),
-    conversationMessageStatusDao: ref.watch(conversationMessageStatusDaoProvider),
+    conversationMessageStatusDao: ref.watch(conversationMessageDataDaoProvider),
     conversationDao: ref.watch(conversationDaoProvider),
   );
 }
@@ -88,7 +88,7 @@ class SendE2eeMessageService {
   final MediaEncryptionService mediaEncryptionService;
   final String currentUserMasterPubkey;
   final ConversationEventMessageDao eventMessageDao;
-  final ConversationMessageStatusDao conversationMessageStatusDao;
+  final ConversationMessageDataDao conversationMessageStatusDao;
   final ConversationDao conversationDao;
 
   Future<void> sendMessage({
@@ -221,7 +221,10 @@ class SendE2eeMessageService {
 
   static const allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
 
-  Future<void> sendMessageStatus(EventMessage kind14Rumor, MessageDeliveryStatus status) async {
+  Future<void> sendMessageStatus(
+    EventMessage kind14Rumor,
+    MessageDeliveryStatus status,
+  ) async {
     if (!allowedStatus.contains(status)) {
       return;
     }
@@ -251,12 +254,74 @@ class SendE2eeMessageService {
       participantsMasterPubkeys.map((masterPubkey) async {
         final currentUser = currentUserMasterPubkey == masterPubkey;
 
+        final participantsKeysMap =
+            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+        final pubkey = participantsKeysMap[masterPubkey];
+
+        if (pubkey == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
         final giftWrap = await _createGiftWrap(
           signer: eventSigner!,
           eventMessage: eventMessage,
           receiverMasterPubkey: masterPubkey,
           kind: PrivateMessageReactionEntity.kind,
-          receiverPubkey: currentUser ? eventSigner!.publicKey : kind14Rumor.pubkey,
+          receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
+        );
+
+        await ionConnectNotifier.sendEvent(
+          giftWrap,
+          cache: false,
+          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+        );
+      }),
+    );
+  }
+
+  Future<void> sendReaction({
+    required String content,
+    required EventMessage kind14Rumor,
+  }) async {
+    final eventMessage = await _createEventMessage(
+      content: content,
+      signer: eventSigner!,
+      kind: PrivateMessageReactionEntity.kind,
+      tags: [
+        ['k', PrivateDirectMessageEntity.kind.toString()],
+        [PubkeyTag.tagName, kind14Rumor.pubkey],
+        [RelatedImmutableEvent.tagName, kind14Rumor.id],
+        ['b', currentUserMasterPubkey],
+      ],
+    );
+
+    final privateDirectMessageEntity = PrivateDirectMessageData.fromEventMessage(kind14Rumor);
+
+    final participantsMasterPubkeys =
+        privateDirectMessageEntity.relatedPubkeys?.map((tag) => tag.value).toList();
+
+    if (participantsMasterPubkeys == null) {
+      throw ParticipantsMasterPubkeysNotFoundException(kind14Rumor.id);
+    }
+
+    await Future.wait(
+      participantsMasterPubkeys.map((masterPubkey) async {
+        final currentUser = currentUserMasterPubkey == masterPubkey;
+
+        final participantsKeysMap =
+            await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
+        final pubkey = participantsKeysMap[masterPubkey];
+
+        if (pubkey == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
+        final giftWrap = await _createGiftWrap(
+          signer: eventSigner!,
+          eventMessage: eventMessage,
+          receiverMasterPubkey: masterPubkey,
+          kind: PrivateMessageReactionEntity.kind,
+          receiverPubkey: currentUser ? eventSigner!.publicKey : pubkey,
         );
 
         await ionConnectNotifier.sendEvent(

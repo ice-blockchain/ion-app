@@ -60,7 +60,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
     final sendE2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
-    final conversationMessageStatusDao = ref.watch(conversationMessageStatusDaoProvider);
+    final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
+    final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
 
     ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,
@@ -130,19 +131,28 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
             // Only for kind 7
           } else if (rumor.kind == PrivateMessageReactionEntity.kind) {
-            // Identify kind 7 status (received or read only)
-            final status = rumor.content == MessageDeliveryStatus.received.name
-                ? MessageDeliveryStatus.received
-                : MessageDeliveryStatus.read;
+            // Identify kind 7 status message (received or read only)
+            if (rumor.content == MessageDeliveryStatus.received.name ||
+                rumor.content == MessageDeliveryStatus.read.name) {
+              final status = rumor.content == MessageDeliveryStatus.received.name
+                  ? MessageDeliveryStatus.received
+                  : MessageDeliveryStatus.read;
 
-            // Add corresponding status to the database for the sender master pubkey
-            // and the kind 14 event id, if that doesn't exist
-            await conversationMessageStatusDao.add(
-              status: status,
-              createdAt: rumor.createdAt,
-              eventMessageId: kind14EventId,
-              masterPubkey: rumorMasterPubkey,
-            );
+              // Add corresponding status to the database for the sender master pubkey
+              // and the kind 14 event id, if that doesn't exist
+              await conversationMessageStatusDao.add(
+                status: status,
+                createdAt: rumor.createdAt,
+                eventMessageId: kind14EventId,
+                masterPubkey: rumorMasterPubkey,
+              );
+            } else {
+              await conversationMessageReactionDao.add(
+                content: rumor.content,
+                eventMessageId: kind14EventId,
+                masterPubkey: rumorMasterPubkey,
+              );
+            }
           }
         }
       }

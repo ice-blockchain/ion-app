@@ -14,10 +14,11 @@ import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessageReactionDialog extends HookConsumerWidget {
   const MessageReactionDialog({
-    required this.renderObject,
     required this.isMe,
+    required this.renderObject,
     super.key,
   });
+
   final bool isMe;
 
   /// The key of the message item to capture the image from widget tree
@@ -71,7 +72,9 @@ class MessageReactionDialog extends HookConsumerWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
+          onTap: () async {
+            Navigator.of(context).pop();
+          },
           behavior: HitTestBehavior.opaque,
           child: BackdropFilter(
             filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
