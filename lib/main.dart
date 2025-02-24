@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_command/flutter_command.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,6 +23,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
   await dotenv.load(fileName: Assets.aApp);
+
+  Command.globalExceptionHandler = (error, stackTrace) {
+    Logger.error(error, stackTrace: stackTrace);
+  };
 
   runApp(
     ProviderScope(
