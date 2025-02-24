@@ -59,7 +59,8 @@ class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
                   type: ButtonType.outlined,
                   label: Text(context.i18n.button_cancel),
                   minimumSize: minSize,
-                  disabled: rejectToCreateLocalPasskeyCredsState.isLoading,
+                  disabled: rejectToCreateLocalPasskeyCredsState.isLoading ||
+                      acceptToCreateLocalPasskeyCredsState.isLoading,
                   trailingIcon: rejectToCreateLocalPasskeyCredsState.isLoading
                       ? const IONLoadingIndicator(
                           type: IndicatorType.dark,
@@ -79,7 +80,8 @@ class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
                 child: Button.compact(
                   label: Text(context.i18n.button_continue),
                   minimumSize: minSize,
-                  disabled: acceptToCreateLocalPasskeyCredsState.isLoading,
+                  disabled: acceptToCreateLocalPasskeyCredsState.isLoading ||
+                      rejectToCreateLocalPasskeyCredsState.isLoading,
                   trailingIcon: acceptToCreateLocalPasskeyCredsState.isLoading
                       ? const IONLoadingIndicator()
                       : const SizedBox.shrink(),

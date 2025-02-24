@@ -59,7 +59,8 @@ class SuggestToAddBiometricsPopup extends HookConsumerWidget {
                   type: ButtonType.outlined,
                   label: Text(context.i18n.button_cancel),
                   minimumSize: minSize,
-                  disabled: rejectToUseBiometricsState.isLoading,
+                  disabled:
+                      rejectToUseBiometricsState.isLoading || enrollToUseBiometricsState.isLoading,
                   trailingIcon: rejectToUseBiometricsState.isLoading
                       ? const IONLoadingIndicator(
                           type: IndicatorType.dark,
@@ -82,7 +83,8 @@ class SuggestToAddBiometricsPopup extends HookConsumerWidget {
                 child: Button.compact(
                   label: Text(context.i18n.button_continue),
                   minimumSize: minSize,
-                  disabled: enrollToUseBiometricsState.isLoading,
+                  disabled:
+                      enrollToUseBiometricsState.isLoading || rejectToUseBiometricsState.isLoading,
                   trailingIcon: enrollToUseBiometricsState.isLoading
                       ? const IONLoadingIndicator()
                       : const SizedBox.shrink(),

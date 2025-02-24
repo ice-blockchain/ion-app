@@ -25,6 +25,7 @@ class GetStartedStep extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isPasskeyAvailable = ref.watch(isPasskeyAvailableProvider).valueOrNull ?? false;
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: AuthScrollContainer(
@@ -53,14 +54,11 @@ class GetStartedStep extends ConsumerWidget {
                     leadingIcon: Assets.svg.iconLoginCreateacc.icon(
                       color: context.theme.appColors.secondaryText,
                     ),
-                    onPressed: () async {
-                      final isPasskeyAvailable = await ref.read(isPasskeyAvailableProvider.future);
-                      if (context.mounted) {
-                        if (isPasskeyAvailable) {
-                          await SignUpPasskeyRoute().push<void>(context);
-                        } else {
-                          await SignUpPasswordRoute().push<void>(context);
-                        }
+                    onPressed: () {
+                      if (isPasskeyAvailable) {
+                        SignUpPasskeyRoute().push<void>(context);
+                      } else {
+                        SignUpPasswordRoute().push<void>(context);
                       }
                     },
                     label: Text(context.i18n.button_register),
