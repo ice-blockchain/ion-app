@@ -45,7 +45,7 @@ class TokenAlreadyExistsDialog extends ConsumerWidget {
               ),
               SizedBox(height: 28.0.s),
               Button(
-                label: Text(locales.button_try_again),
+                label: Text(locales.button_close),
                 onPressed: () => Navigator.pop(context),
               ),
               ScreenBottomOffset(),
