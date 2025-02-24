@@ -98,6 +98,7 @@
   "common_copied": "Copied",
   "common_comments": "Comments",
   "common_select_network_button_unselected": "Select network",
+  "common_paste": "Paste",
   "auth_secured_by": "Secured by",
   "auth_link_new_device_title": "Log in with new device",
   "auth_link_new_device_description": "You have logged in with a new device, to log in to the app, link your account to the new device.",

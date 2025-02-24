@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/inputs/text_input/components/paste_suffix_button.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_border.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
@@ -18,8 +19,10 @@ import 'package:ion/app/features/wallets/views/pages/import_token_page/providers
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_address_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_already_exists_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/token_data_notifier_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/clipboard/clipboard.dart';
 
 class ImportTokenForm extends HookConsumerWidget {
   const ImportTokenForm({super.key});
@@ -53,6 +56,8 @@ class ImportTokenForm extends HookConsumerWidget {
         (exists) => _onTokenAlreadyExists(context, exists: exists ?? false),
       );
 
+    _useListenAddressChanges(ref, tokenAddressController);
+
     return Column(
       children: [
         SelectNetworkButton(
@@ -64,13 +69,16 @@ class ImportTokenForm extends HookConsumerWidget {
           labelText: context.i18n.wallet_import_token_address_label,
           controller: tokenAddressController,
           onTapOutside: (_) => FocusScope.of(context).unfocus(),
+          suffixIcon: PasteSuffixButton(
+            onTap: () async {
+              tokenAddressController.text = await pasteFromClipboard();
+              unawaited(ref.read(tokenDataNotifierProvider.notifier).fetchTokenData());
+            },
+          ),
           onFocused: (hasFocus) {
             if (!hasFocus) {
               ref.read(tokenDataNotifierProvider.notifier).fetchTokenData();
             }
-          },
-          onChanged: (address) {
-            ref.read(tokenAddressProvider.notifier).address = address;
           },
         ),
         SizedBox(height: 16.0.s),
@@ -111,6 +119,22 @@ class ImportTokenForm extends HookConsumerWidget {
         child: const TokenNotFoundDialog(),
       );
     }
+  }
+
+  void _useListenAddressChanges(
+    WidgetRef ref,
+    TextEditingController tokenAddressController,
+  ) {
+    useOnInit(
+      () {
+        tokenAddressController.addListener(
+          () {
+            ref.read(tokenAddressProvider.notifier).address = tokenAddressController.text;
+          },
+        );
+      },
+      [tokenAddressController],
+    );
   }
 }
 
