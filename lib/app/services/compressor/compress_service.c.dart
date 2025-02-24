@@ -69,7 +69,7 @@ class CompressionService {
         '-b:a',
         audioBitrate.bitrate,
         '-vf',
-        'scale=trunc(ih*9/16/2)*2:${scale.resolution},fps=$fps',
+        'scale=-1:${scale.resolution},fps=$fps',
         output,
       ];
 
