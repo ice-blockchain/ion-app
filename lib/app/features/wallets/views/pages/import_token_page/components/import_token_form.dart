@@ -25,7 +25,12 @@ import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/clipboard/clipboard.dart';
 
 class ImportTokenForm extends HookConsumerWidget {
-  const ImportTokenForm({super.key});
+  const ImportTokenForm({
+    required this.onValidationStateChanged,
+    super.key,
+  });
+
+  final ValueChanged<bool> onValidationStateChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,6 +62,14 @@ class ImportTokenForm extends HookConsumerWidget {
       );
 
     _useListenAddressChanges(ref, tokenAddressController);
+
+    useOnInit(
+      () {
+        final isValid = selectedNetwork != null && tokenAddressController.text.isNotEmpty;
+        onValidationStateChanged(isValid);
+      },
+      [selectedNetwork, tokenAddressController.text],
+    );
 
     return Column(
       children: [
