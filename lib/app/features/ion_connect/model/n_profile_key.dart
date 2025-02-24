@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 class NProfileKey {
   const NProfileKey({
     required this.masterPubkey,
