@@ -53,8 +53,6 @@ class MoreContentView extends ConsumerWidget {
                     unawaited(onSubmitted(mediaFiles: [convertedMediaFiles.first]));
 
                     ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-
-                    //on submitted
                   }
                 },
               ),
