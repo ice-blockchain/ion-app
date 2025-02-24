@@ -78,11 +78,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         return subscription.messages;
       },
     ).listen((wrap) async {
-      print('Rumor');
       if (eventSigner.publicKey != _receiverDevicePubkey(wrap)) {
         return;
       }
-      print('Rumor 2');
 
       final rumor = await _unwrapGift(
         giftWrap: wrap,
