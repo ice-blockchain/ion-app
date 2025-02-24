@@ -1,22 +1,32 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class BottomBarInitialView extends HookConsumerWidget {
   const BottomBarInitialView({
     required this.controller,
+    required this.onSubmitted,
     super.key,
   });
 
   final TextEditingController controller;
-
+  final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -123,17 +133,44 @@ class BottomBarInitialView extends HookConsumerWidget {
               ),
               SizedBox(width: 6.0.s),
               if (!bottomBarState.isHasText)
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0.0.s, 4.0.s, 4.0.s, 4.0.s),
-                  child: Assets.svg.iconCameraOpen.icon(
-                    color: context.theme.appColors.primaryText,
-                    size: 24.0.s,
+                PermissionAwareWidget(
+                  permissionType: Permission.camera,
+                  onGranted: () async {
+                    final recordedVideoAsset =
+                        await GalleryCameraRoute(mediaPickerType: MediaPickerType.video)
+                            .push<MediaFile?>(context);
+
+                    if (recordedVideoAsset != null) {
+                      final convertedVideos = await ref
+                          .read(mediaServiceProvider)
+                          .convertAssetIdsToMediaFiles(ref, mediaFiles: [recordedVideoAsset]);
+
+                      if (convertedVideos.isNotEmpty) {
+                        unawaited(onSubmitted(mediaFiles: [convertedVideos.first]));
+                        ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                      }
+                    }
+                  },
+                  requestDialog: const PermissionRequestSheet(permission: Permission.camera),
+                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
+                  builder: (_, onPressed) => GestureDetector(
+                    onTap: onPressed,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(0.0.s, 4.0.s, 4.0.s, 4.0.s),
+                      child: Assets.svg.iconCameraOpen.icon(
+                        color: context.theme.appColors.primaryText,
+                        size: 24.0.s,
+                      ),
+                    ),
                   ),
                 ),
             ],
           ),
         ),
-        if (bottomBarState.isMore) const MoreContentView(),
+        if (bottomBarState.isMore)
+          MoreContentView(
+            onSubmitted: onSubmitted,
+          ),
       ],
     );
   }

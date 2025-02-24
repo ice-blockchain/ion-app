@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/providers/is_current_user_event_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -25,7 +25,7 @@ class TextMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
 
-    final isMe = ref.watch(isCurrentUserEventProvider(eventMessage)).valueOrNull ?? false;
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return MessageItemWrapper(
       isLastMessageFromAuthor: isLastMessageFromAuthor,

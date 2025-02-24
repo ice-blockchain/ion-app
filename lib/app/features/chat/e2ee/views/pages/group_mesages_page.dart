@@ -37,7 +37,7 @@ class GroupMessagesPage extends HookConsumerWidget {
         )
         .valueOrNull;
 
-    final lastMessage = messages?.entries.last.value.last;
+    final lastMessage = messages?.entries.lastOrNull?.value.last;
 
     if (lastMessage == null) {
       return const SizedBox.shrink();
@@ -51,7 +51,7 @@ class GroupMessagesPage extends HookConsumerWidget {
             _Header(lastMessage: lastMessage),
             _MessagesList(conversationId: conversationId),
             MessagingBottomBar(
-              onSubmitted: (content) async {
+              onSubmitted: ({content, mediaFiles}) async {
                 final currentPubkey = ref.read(currentPubkeySelectorProvider);
                 if (currentPubkey == null) {
                   throw UserMasterPubkeyNotFoundException();
@@ -68,6 +68,7 @@ class GroupMessagesPage extends HookConsumerWidget {
                 await conversationMessageManagementService.sendMessage(
                   conversationId: conversationId,
                   content: content ?? '',
+                  mediaFiles: mediaFiles ?? [],
                   groupImageTag: groupImageTag,
                   subject: privateMesssageEntity.relatedSubject?.value,
                   participantsMasterPubkeys:

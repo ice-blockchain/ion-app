@@ -16,9 +16,10 @@ class ConversationMessages extends _$ConversationMessages {
     final subscription = stream.listen((event) async {
       if (type == ConversationType.community) return;
 
-      final lastMessage = event.entries.lastOrNull?.value.lastOrNull;
+      final lastMessage = event.entries.lastOrNull?.value.last;
 
       if (lastMessage == null) return;
+
       // There is no other options rather send read status for the last message
       await (await ref.watch(sendE2eeMessageServiceProvider.future))
           .sendMessageStatus(lastMessage, MessageDeliveryStatus.read);

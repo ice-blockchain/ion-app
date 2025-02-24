@@ -44,7 +44,12 @@ class MediaEncryptionService {
 
         final file = await fileCacheService.getFile(attachment.url);
 
-        final fileBytes = await file.readAsBytes();
+        final fileBytes = await compute(
+          (file) {
+            return file.readAsBytes();
+          },
+          file,
+        );
 
         final secretBox = SecretBox(
           fileBytes,

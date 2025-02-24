@@ -11,6 +11,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart'
     hide archivedConversationsProvider;
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
@@ -149,6 +150,8 @@ class CommunityRecentChatTile extends ConsumerWidget {
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: conversation.latestMessage?.content ?? context.i18n.empty_message_history,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
+      //TODO: add message type
+      messageType: MessageType.text,
       onTap: () {
         ConversationRoute(conversationId: conversation.conversationId).push<void>(context);
       },
@@ -191,6 +194,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       conversation: conversation,
       name: userMetadata.data.displayName,
       avatarUrl: userMetadata.data.picture,
+      messageType: entity.messageType,
       defaultAvatar: null,
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
       lastMessageContent: conversation.latestMessage?.content ?? '',
@@ -235,6 +239,8 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
       lastMessageContent:
           entity.content.isEmpty ? context.i18n.empty_message_history : entity.content,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
+      //TODO: add message type
+      messageType: MessageType.text,
       onTap: () {
         ConversationRoute(conversationId: conversation.conversationId).push<void>(context);
       },

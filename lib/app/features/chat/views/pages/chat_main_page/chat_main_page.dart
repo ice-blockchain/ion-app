@@ -21,7 +21,7 @@ class ChatMainPage extends HookConsumerWidget {
     useOnInit(() {
       ref
         ..read(communityJoinRequestsProvider)
-        ..read(e2eeMessagesSubscriberProvider)
+        ..watch(e2eeMessagesSubscriberProvider)
         ..read(communityMessagesSubscriberProvider);
     });
 

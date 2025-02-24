@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/hooks/use_combined_conversation_names.dart';
+import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
@@ -105,6 +106,7 @@ class ArchiveChatTile extends HookConsumerWidget {
                               child: ChatPreview(
                                 content: combinedConversationNames,
                                 maxLines: 1,
+                                messageType: MessageType.text,
                               ),
                             ),
                             UnreadCountBadge(unreadCount: unreadMessagesCount),

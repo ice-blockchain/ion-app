@@ -1,16 +1,27 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
+import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 final double moreContentHeight = 206.0.s;
 
 class MoreContentView extends ConsumerWidget {
-  const MoreContentView({super.key});
+  const MoreContentView({required this.onSubmitted, super.key});
+
+  final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
@@ -26,12 +37,50 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPhotos,
                 title: context.i18n.common_photos,
-                onTap: () {},
+                //TODO: remove this
+                onTap: () async {
+                  final mediaFiles = await MediaPickerRoute(
+                    maxSelection: 1,
+                    mediaPickerType: MediaPickerType.video,
+                  ).push<List<MediaFile>>(context);
+                  if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+                    final selectedFile = mediaFiles.first;
+
+                    final convertedMediaFiles = await ref
+                        .read(mediaServiceProvider)
+                        .convertAssetIdsToMediaFiles(ref, mediaFiles: [selectedFile]);
+
+                    unawaited(onSubmitted(mediaFiles: [convertedMediaFiles.first]));
+
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                  }
+                },
               ),
-              _MoreContentItem(
-                iconPath: Assets.svg.walletChatCamera,
-                title: context.i18n.common_camera,
-                onTap: () {},
+              PermissionAwareWidget(
+                permissionType: Permission.camera,
+                onGranted: () async {
+                  final recordedVideoAsset =
+                      await GalleryCameraRoute(mediaPickerType: MediaPickerType.video)
+                          .push<MediaFile?>(context);
+
+                  if (recordedVideoAsset != null) {
+                    final convertedVideos = await ref
+                        .read(mediaServiceProvider)
+                        .convertAssetIdsToMediaFiles(ref, mediaFiles: [recordedVideoAsset]);
+
+                    if (convertedVideos.isNotEmpty) {
+                      unawaited(onSubmitted(mediaFiles: [convertedVideos.first]));
+                      ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                    }
+                  }
+                },
+                requestDialog: const PermissionRequestSheet(permission: Permission.camera),
+                settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
+                builder: (_, onPressed) => _MoreContentItem(
+                  iconPath: Assets.svg.walletChatCamera,
+                  title: context.i18n.common_camera,
+                  onTap: onPressed,
+                ),
               ),
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatIonpay,

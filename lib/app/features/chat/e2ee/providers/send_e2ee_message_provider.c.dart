@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -150,6 +151,7 @@ class SendE2eeMessageService {
                 await ionConnectNotifier.sendEvent(
                   fileMetadataEvent,
                   actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+                  cache: false,
                 );
 
                 return (uploadResult, secretKey, nonce, mac);
@@ -176,7 +178,7 @@ class SendE2eeMessageService {
 
         for (final mediaFile in compressedMediaFiles) {
           final file = File(mediaFile.path);
-          await file.delete();
+          unawaited(file.delete());
         }
       } else {
         // Send copy of the message to each participant

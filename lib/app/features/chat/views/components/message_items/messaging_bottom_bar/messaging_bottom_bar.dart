@@ -6,11 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
   const MessagingBottomBar({required this.onSubmitted, super.key});
 
-  final Future<void> Function(String? content) onSubmitted;
+  final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,14 +24,14 @@ class MessagingBottomBar extends HookConsumerWidget {
       children: [
         AbsorbPointer(
           absorbing: bottomBarState.isVoice,
-          child: BottomBarInitialView(controller: controller),
+          child: BottomBarInitialView(controller: controller, onSubmitted: onSubmitted),
         ),
         if (bottomBarState.isVoice || bottomBarState.isVoiceLocked || bottomBarState.isVoicePaused)
           const BottomBarRecordingView(),
         ActionButton(
           controller: controller,
           onSubmitted: () async {
-            await onSubmitted(controller.text);
+            await onSubmitted(content: controller.text);
           },
         ),
       ],

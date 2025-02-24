@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/providers/conversation_messages_provider.c
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/username.dart';
 
@@ -44,7 +45,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
     );
 
     final onSubmitted = useCallback(
-      (String? content) async {
+      ({String? content, List<MediaFile>? mediaFiles}) async {
         final currentPubkey = ref.read(currentPubkeySelectorProvider);
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
@@ -55,6 +56,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         await conversationMessageManagementService.sendMessage(
           conversationId: conversationId.value!,
           content: content ?? '',
+          mediaFiles: mediaFiles ?? [],
           participantsMasterPubkeys: [receiverPubKey, currentPubkey],
         );
       },

@@ -44,8 +44,8 @@ class CompressionService {
     FfmpegBitrateArg videoBitrate = FfmpegBitrateArg.medium,
     FfmpegBitrateArg maxRate = FfmpegBitrateArg.medium,
     FfmpegBitrateArg bufSize = FfmpegBitrateArg.medium,
-    FfmpegScaleArg scale = FfmpegScaleArg.fullHd,
-    int fps = 30,
+    FfmpegScaleArg scale = FfmpegScaleArg.hd,
+    int fps = 24,
     FfmpegAudioCodecArg audioCodec = FfmpegAudioCodecArg.aac,
     FfmpegAudioBitrateArg audioBitrate = FfmpegAudioBitrateArg.low,
   }) async {
@@ -68,7 +68,8 @@ class CompressionService {
         audioCodec.codec,
         '-b:a',
         audioBitrate.bitrate,
-        // TODO: Add scale and fps
+        '-vf',
+        'scale=-2:${scale.resolution},fps=$fps',
         output,
       ];
 

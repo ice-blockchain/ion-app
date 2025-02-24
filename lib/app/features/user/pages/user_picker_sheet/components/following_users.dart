@@ -29,18 +29,20 @@ class FollowingUsers extends ConsumerWidget {
         if (data == null || data.data.list.isEmpty) return const NoUserView();
 
         final pubkeys = data.data.list.map((e) => e.pubkey).toList();
-        return ListView.separated(
-          itemBuilder: (context, index) {
-            return SelectableUserListItem(
-              pubkey: pubkeys[index],
-              masterPubkey: pubkeys[index],
-              onUserSelected: onUserSelected,
-              selectedPubkeys: selectedPubkeys,
-              selectable: selectable,
-            );
-          },
-          itemCount: pubkeys.length,
-          separatorBuilder: (context, index) => SizedBox(height: 14.0.s),
+        return Expanded(
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              return SelectableUserListItem(
+                pubkey: pubkeys[index],
+                masterPubkey: pubkeys[index],
+                onUserSelected: onUserSelected,
+                selectedPubkeys: selectedPubkeys,
+                selectable: selectable,
+              );
+            },
+            itemCount: pubkeys.length,
+            separatorBuilder: (context, index) => SizedBox(height: 14.0.s),
+          ),
         );
       },
       orElse: () => const NoUserView(),
