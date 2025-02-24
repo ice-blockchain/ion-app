@@ -11,6 +11,7 @@ import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/n_profile_key.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
@@ -73,6 +74,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     CommunityIdentifierTag? relatedConversationId,
+    String? profileMasterPubkey,
   }) = _PrivateDirectMessageData;
 
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
@@ -87,6 +89,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       uuid:
           tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).single.value ??
               '',
+      profileMasterPubkey: NProfileKey.parse(eventMessage.content),
     );
   }
 
@@ -134,6 +137,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
   MessageType get messageType {
     if (primaryVideo != null) {
       return MessageType.video;
+    } else if (profileMasterPubkey != null) {
+      return MessageType.profile;
     }
 
     return MessageType.text;

@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
+import 'package:ion/app/features/ion_connect/model/n_profile_key.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -96,9 +97,17 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPerson,
                 title: context.i18n.common_profile,
-                onTap: () {
-                  ShareProfileModalRoute().push<String>(context);
-                  ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                onTap: () async {
+                  final selectedProfilePubkey =
+                      await ShareProfileModalRoute().push<String>(context);
+                  if (selectedProfilePubkey != null) {
+                    unawaited(
+                      onSubmitted(
+                        content: NProfileKey(masterPubkey: selectedProfilePubkey).encode,
+                      ),
+                    );
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                  }
                 },
               ),
               _MoreContentItem(

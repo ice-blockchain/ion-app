@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
+import 'package:ion/app/features/ion_connect/model/n_profile_key.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -193,7 +194,7 @@ class ChatTimestamp extends StatelessWidget {
   }
 }
 
-class ChatPreview extends StatelessWidget {
+class ChatPreview extends HookConsumerWidget {
   const ChatPreview({
     required this.content,
     required this.messageType,
@@ -207,7 +208,7 @@ class ChatPreview extends StatelessWidget {
   final int maxLines;
   final MessageType messageType;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
         RecentChatMessageIcon(messageType: messageType, color: textColor),
@@ -216,11 +217,16 @@ class ChatPreview extends StatelessWidget {
             switch (messageType) {
               MessageType.text => content,
               MessageType.video => context.i18n.common_video,
+              MessageType.profile => ref
+                      .watch(userMetadataProvider(NProfileKey.parse(content) ?? ''))
+                      .valueOrNull
+                      ?.data
+                      .displayName ??
+                  '',
             },
             maxLines: maxLines,
             overflow: TextOverflow.ellipsis,
             style: context.theme.appTextThemes.body2.copyWith(
-              fontStyle: content.isEmpty ? FontStyle.italic : FontStyle.normal,
               color: textColor ?? context.theme.appColors.onTertararyBackground,
             ),
           ),
@@ -255,6 +261,7 @@ class RecentChatMessageIcon extends StatelessWidget {
   String? _getMessageIcon() => switch (messageType) {
         MessageType.text => null,
         MessageType.video => Assets.svg.iconFeedVideos,
+        MessageType.profile => Assets.svg.iconProfileUsertab,
       };
 }
 
