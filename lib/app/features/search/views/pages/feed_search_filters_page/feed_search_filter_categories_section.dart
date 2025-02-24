@@ -1,22 +1,23 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/model/feed_search_source.dart';
+import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedSearchFilterSourceSection extends StatelessWidget {
-  const FeedSearchFilterSourceSection({
+class FeedSearchFilterCategoriesSection extends StatelessWidget {
+  const FeedSearchFilterCategoriesSection({
     required this.selectedFilter,
     required this.onFilterChange,
     super.key,
   });
 
-  final FeedSearchSource selectedFilter;
+  final List<FeedCategory> selectedFilter;
 
-  final void Function(FeedSearchSource) onFilterChange;
+  final void Function(List<FeedCategory>) onFilterChange;
 
   @override
   Widget build(BuildContext context) {
@@ -25,34 +26,26 @@ class FeedSearchFilterSourceSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          context.i18n.feed_search_filter_people,
+          context.i18n.feed_search_filter_categories,
           style: context.theme.appTextThemes.caption.copyWith(
             color: context.theme.appColors.quaternaryText,
           ),
         ),
         SizedBox(height: 4.0.s),
-        ...FeedSearchSource.values.map<Widget>((filter) {
+        ...FeedCategory.values.map<Widget>((category) {
           return ListItem(
             onTap: () {
-              onFilterChange(filter);
+              onFilterChange([category]); //TODO
             },
-            leading: Container(
-              width: 36.0.s,
-              height: 36.0.s,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
-                border: Border.all(
-                  width: 1.0.s,
-                  color: context.theme.appColors.onTerararyFill,
-                ),
-              ),
-              child: filter.getIcon(context).icon(color: context.theme.appColors.primaryAccent),
+            leading: ButtonIconFrame(
+              color: category.getColor(context),
+              icon: category.getIcon(context),
+              containerSize: 36.0.s,
             ),
-            trailing: selectedFilter == filter
+            trailing: selectedFilter.contains(category)
                 ? Assets.svg.iconBlockCheckboxOn.icon(color: context.theme.appColors.success)
                 : Assets.svg.iconblockRadiooff.icon(color: context.theme.appColors.tertararyText),
-            title: Text(filter.getLabel(context)),
+            title: Text(category.getLabel(context)),
             backgroundColor: context.theme.appColors.secondaryBackground,
             contentPadding: EdgeInsets.zero,
           );

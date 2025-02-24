@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/core/model/language.dart';
+import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,22 +14,22 @@ part 'feed_search_filters_provider.c.g.dart';
 @freezed
 class FeedSearchFiltersState with _$FeedSearchFiltersState {
   const factory FeedSearchFiltersState({
-    required List<Language> languages,
+    required List<FeedCategory> categories,
     required FeedSearchSource source,
   }) = _FeedSearchFiltersState;
 
   factory FeedSearchFiltersState.initial() {
     return const FeedSearchFiltersState(
       source: FeedSearchSource.anyone,
-      languages: [Language.english],
+      categories: [FeedCategory.feed, FeedCategory.videos, FeedCategory.articles],
     );
   }
 }
 
 @riverpod
 class FeedSearchFilter extends _$FeedSearchFilter {
-  static const _feedSearchSourceFilterKey = 'FeedSearchFilter:source';
-  static const _feedSearchLanguagesFilterKey = 'FeedSearchFilter:languages';
+  static const _feedSearchSourceFilterKey = '_FeedSearchFilter:source';
+  static const _feedSearchCategoriesFilterKey = '_FeedSearchFilter:categories';
 
   @override
   FeedSearchFiltersState build() {
@@ -43,8 +44,9 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     state = state.copyWith(source: source);
   }
 
-  set languages(List<Language> languages) {
-    state = state.copyWith(languages: languages);
+  set toggleCategory(FeedCategory category) {
+    //TODO:add logic
+    state = state.copyWith(categories: [category]);
   }
 
   set newState(FeedSearchFiltersState newState) {
@@ -59,9 +61,10 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
     ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
       ..setEnum(_feedSearchSourceFilterKey, state.source)
+      // TODO:add enum list to userPreferencesServiceProvider
       ..setValue<List<String>>(
-        _feedSearchLanguagesFilterKey,
-        state.languages.map((lang) => lang.isoCode).toList(),
+        _feedSearchCategoriesFilterKey,
+        state.categories.map((category) => category.toShortString()).toList(),
       );
   }
 
@@ -72,14 +75,15 @@ class FeedSearchFilter extends _$FeedSearchFilter {
 
     final source =
         userPreferencesService.getEnum(_feedSearchSourceFilterKey, FeedSearchSource.values);
-    final languages = userPreferencesService
-        .getValue<List<String>>(_feedSearchLanguagesFilterKey)
-        ?.map(Language.fromIsoCode)
+    final categories = userPreferencesService
+        // TODO:add enum list to userPreferencesServiceProvider
+        .getValue<List<String>>(_feedSearchCategoriesFilterKey)
+        ?.map((category) => EnumExtensions.fromShortString(FeedCategory.values, category))
         .nonNulls
         .toList();
 
-    if (source != null && languages != null) {
-      return FeedSearchFiltersState(source: source, languages: languages);
+    if (source != null && categories != null) {
+      return FeedSearchFiltersState(source: source, categories: categories);
     }
 
     return FeedSearchFiltersState.initial();
