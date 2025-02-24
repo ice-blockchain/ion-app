@@ -84,7 +84,7 @@ class ImportTokenForm extends HookConsumerWidget {
           onTapOutside: (_) => FocusScope.of(context).unfocus(),
           suffixIcon: PasteSuffixButton(
             onTap: () async {
-              tokenAddressController.text = await pasteFromClipboard();
+              tokenAddressController.text = await getClipboardText();
               unawaited(ref.read(tokenDataNotifierProvider.notifier).fetchTokenData());
             },
           ),
