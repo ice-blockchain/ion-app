@@ -383,7 +383,7 @@
   "wallet_import_token_security_risks_description": "Do not forget about security. Anyone can create a token.",
   "wallet_import_token_security_risks_learn_more": "Learn more about",
   "wallet_import_token_token_already_exists_title": "Token already exists in your wallet",
-  "wallet_import_token_token_already_exists_description": "Find and enable the display of this coin in the manage coins",
+  "wallet_import_token_token_already_exists_description": "This token is already in your wallet. Go to Manage Coins to view and manage it.",
   "wallet_import_token_token_not_found_title": "Token not found",
   "wallet_import_token_token_not_found_description": "Please verify the address",
   "sorting_price_asc": "Price: low to high",
