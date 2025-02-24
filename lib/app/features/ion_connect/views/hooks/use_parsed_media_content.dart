@@ -69,8 +69,14 @@ import 'package:ion/app/services/markdown/quill.dart';
       final trimmedValue =
           afterMedia && value.startsWith(' ') ? value.replaceFirst(' ', '') : value;
       afterMedia = false;
+
       if (trimmedValue.isNotEmpty) {
-        nonMediaOperations.add(Operation.insert(trimmedValue));
+        // Preserve original attributes for non-media content
+        nonMediaOperations.add(
+          operation.attributes != null
+              ? Operation.insert(trimmedValue, operation.attributes)
+              : Operation.insert(trimmedValue),
+        );
       }
     }
   }

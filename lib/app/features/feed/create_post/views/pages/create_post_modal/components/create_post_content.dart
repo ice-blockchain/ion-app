@@ -144,7 +144,10 @@ class _TextInputSection extends HookConsumerWidget {
           SizedBox(width: 10.0.s),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(top: 6.0.s),
+              padding: EdgeInsets.only(
+                top: 6.0.s,
+                right: ScreenSideOffset.defaultSmallMargin,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +163,13 @@ class _TextInputSection extends HookConsumerWidget {
                       attachedMediaNotifier: attachedMediaNotifier,
                     ),
                   ],
-                  if (links.isNotEmpty) UrlPreviewContent(url: links.first),
+                  if (mediaFiles.isEmpty && links.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 10.0.s,
+                      ),
+                      child: UrlPreviewContent(url: links.first),
+                    ),
                 ],
               ),
             ),
