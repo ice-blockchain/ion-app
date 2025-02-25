@@ -5,7 +5,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_nip21_service.c.g.dart';
 
+///
 /// https://github.com/nostr-protocol/nips/blob/master/21.md
+///
 class IonConnectNip21Service {
   static const String _prefix = 'nostr:';
 
