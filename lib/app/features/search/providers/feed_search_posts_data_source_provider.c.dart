@@ -6,6 +6,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
+import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -33,56 +34,26 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
   final filterRelays = ref.watch(feedSearchFilterRelaysProvider(filters.source)).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
+  final searchExtensions = [
+    QuerySearchExtension(searchQuery: query),
+    if (category == AdvancedSearchCategory.videos ||
+        (!filters.categories.contains(FeedCategory.feed) &&
+            filters.categories.contains(FeedCategory.videos)))
+      VideosSearchExtension(contain: true),
+    if (category == AdvancedSearchCategory.trending) TrendingSearchExtension(),
+    if (category == AdvancedSearchCategory.top) TopSearchExtension(),
+    if (category == AdvancedSearchCategory.photos) ImagesSearchExtension(contain: true),
+  ];
+
   if (filterRelays != null && currentPubkey != null) {
     return [
       for (final entry in filterRelays.entries)
-        switch (category) {
-          AdvancedSearchCategory.trending => buildPostsDataSource(
-              actionSource: ActionSourceRelayUrl(entry.key),
-              authors: filters.source == FeedSearchSource.following ? entry.value : null,
-              currentPubkey: currentPubkey,
-              searchExtensions: [
-                QuerySearchExtension(searchQuery: query),
-                TrendingSearchExtension(),
-              ],
-            ),
-          AdvancedSearchCategory.top => buildPostsDataSource(
-              actionSource: ActionSourceRelayUrl(entry.key),
-              authors: filters.source == FeedSearchSource.following ? entry.value : null,
-              currentPubkey: currentPubkey,
-              searchExtensions: [
-                QuerySearchExtension(searchQuery: query),
-                TopSearchExtension(),
-              ],
-            ),
-          AdvancedSearchCategory.latest => buildPostsDataSource(
-              actionSource: ActionSourceRelayUrl(entry.key),
-              authors: filters.source == FeedSearchSource.following ? entry.value : null,
-              currentPubkey: currentPubkey,
-              searchExtensions: [
-                QuerySearchExtension(searchQuery: query),
-              ],
-            ),
-          AdvancedSearchCategory.photos => buildPostsDataSource(
-              actionSource: ActionSourceRelayUrl(entry.key),
-              authors: filters.source == FeedSearchSource.following ? entry.value : null,
-              currentPubkey: currentPubkey,
-              searchExtensions: [
-                QuerySearchExtension(searchQuery: query),
-                ImagesSearchExtension(contain: true),
-              ],
-            ),
-          AdvancedSearchCategory.videos => buildPostsDataSource(
-              actionSource: ActionSourceRelayUrl(entry.key),
-              authors: filters.source == FeedSearchSource.following ? entry.value : null,
-              currentPubkey: currentPubkey,
-              searchExtensions: [
-                QuerySearchExtension(searchQuery: query),
-                VideosSearchExtension(contain: true),
-              ],
-            ),
-          _ => throw UnimplementedError(),
-        },
+        buildPostsDataSource(
+          actionSource: ActionSourceRelayUrl(entry.key),
+          authors: filters.source == FeedSearchSource.following ? entry.value : null,
+          currentPubkey: currentPubkey,
+          searchExtensions: searchExtensions,
+        ),
     ];
   }
   return null;
