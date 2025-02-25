@@ -23,14 +23,19 @@ class FullscreenImage extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          child: InteractiveViewer(
-            minScale: 0.5,
-            maxScale: 4,
-            child: CachedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.contain,
-              placeholder: (context, url) => const CenteredLoadingIndicator(),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+          child: Container(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top, 
+            ),
+            child: InteractiveViewer(
+              minScale: 0.5,
+              maxScale: 4,
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, url) => const CenteredLoadingIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
           ),
         ),
