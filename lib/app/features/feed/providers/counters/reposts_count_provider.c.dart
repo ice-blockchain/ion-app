@@ -42,12 +42,33 @@ class RepostsCount extends _$RepostsCount {
   void addOne() {
     if (state != null) {
       state = state! + 1;
+      _updateCacheCount(state!);
     }
   }
 
   void removeOne() {
     if (state != null) {
       state = state! - 1;
+      _updateCacheCount(state!);
+    }
+  }
+
+  void _updateCacheCount(int newCount) {
+    final repostsKey = EventCountResultEntity.cacheKeyBuilder(
+      key: eventReference.toString(),
+      type: EventCountResultType.reposts,
+    );
+
+    final repostsEntity = ref.read(ionConnectCacheProvider)[repostsKey];
+    if (repostsEntity != null) {
+      final updatedEntity = (repostsEntity.entity as EventCountResultEntity).copyWith(
+        data: (repostsEntity.entity as EventCountResultEntity).data.copyWith(
+              content: newCount,
+            ),
+      );
+
+      final cache = ref.read(ionConnectCacheProvider.notifier);
+      cache.cache(updatedEntity);
     }
   }
 }

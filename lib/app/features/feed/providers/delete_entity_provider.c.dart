@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.c.dart';
@@ -40,6 +41,7 @@ Future<void> deleteEntity(
         await _deleteFromServer(ref, entity);
         _deleteFromDataSources(ref, entity);
         _deleteFromCache(ref, entity);
+        _deleteFromCounters(ref, entity, eventReference);
       }
     case ModifiablePostEntity():
       {
@@ -88,5 +90,18 @@ void _deleteFromDataSources(Ref ref, IonConnectEntity entity) {
 void _deleteFromCache(Ref ref, IonConnectEntity entity) {
   if (entity is CacheableEntity) {
     ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
+  }
+}
+
+void _deleteFromCounters(Ref ref, IonConnectEntity entity, EventReference eventReference) {
+  switch (entity) {
+    case RepostEntity():
+      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
+    case GenericRepostEntity() when entity.data.kind == ModifiablePostEntity.kind:
+      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
+    case GenericRepostEntity() when entity.data.kind == ArticleEntity.kind:
+      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
+    default:
+      break;
   }
 }
