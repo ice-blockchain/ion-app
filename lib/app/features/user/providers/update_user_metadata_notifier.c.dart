@@ -5,6 +5,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/utils/url.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'update_user_metadata_notifier.c.g.dart';
@@ -18,7 +19,11 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
-      var data = userMetadata.copyWith();
+      var data = userMetadata.copyWith(
+        website: userMetadata.website != null
+            ? normalizeUrl(userMetadata.website!)
+            : userMetadata.website,
+      );
 
       final (uploadedAvatar, uploadedBanner) =
           await (_upload(avatar, alt: FileAlt.avatar), _upload(banner, alt: FileAlt.banner)).wait;

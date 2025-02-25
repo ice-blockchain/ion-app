@@ -22,6 +22,7 @@ import 'package:ion/app/features/user/pages/profile_edit_page/components/header/
 import 'package:ion/app/features/user/pages/profile_edit_page/components/user_banner_picked/user_banner_picked.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/hooks/use_draft_metadata.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/utils/url.dart';
 
 class ProfileEditPage extends HookConsumerWidget {
   const ProfileEditPage({
@@ -107,10 +108,10 @@ class ProfileEditPage extends HookConsumerWidget {
                                     ),
                                     SizedBox(height: paddingValue),
                                     WebsiteInput(
-                                      initialValue: userMetadata.data.website,
+                                      initialValue: removeHttpsPrefix(userMetadata.data.website),
                                       onChanged: (text) => update(
                                         draftRef.value
-                                            .copyWith(website: text.isEmpty ? null : text),
+                                            .copyWith(website: text.trim().isEmpty ? null : text),
                                       ),
                                     ),
                                     SizedBox(height: paddingValue),

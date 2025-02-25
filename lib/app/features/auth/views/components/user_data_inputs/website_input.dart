@@ -25,6 +25,12 @@ class WebsiteInput extends StatelessWidget {
     return GeneralUserDataInput(
       controller: controller,
       onChanged: onChanged,
+      prefix: Text(
+        'https://',
+        style: context.theme.appTextThemes.body.copyWith(
+          color: context.theme.appColors.tertararyText,
+        ),
+      ),
       prefixIconAssetName: Assets.svg.iconArticleLink,
       labelText: context.i18n.profile_website,
       initialValue: initialValue,

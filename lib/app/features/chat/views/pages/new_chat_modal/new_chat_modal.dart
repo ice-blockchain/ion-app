@@ -36,14 +36,16 @@ class NewChatModal extends HookConsumerWidget {
 
     return SheetContent(
       topPadding: 0,
-      body: UserPickerSheet(
-        navigationBar: NavigationAppBar.modal(
-          showBackButton: false,
-          title: Text(context.i18n.new_chat_modal_title),
-          actions: const [NavigationCloseButton()],
+      body: SingleChildScrollView(
+        child: UserPickerSheet(
+          navigationBar: NavigationAppBar.modal(
+            showBackButton: false,
+            title: Text(context.i18n.new_chat_modal_title),
+            actions: const [NavigationCloseButton()],
+          ),
+          onUserSelected: onUserSelected,
+          header: hideCommunity ? null : const _HeaderSection(),
         ),
-        onUserSelected: onUserSelected,
-        header: hideCommunity ? null : const _HeaderSection(),
       ),
     );
   }

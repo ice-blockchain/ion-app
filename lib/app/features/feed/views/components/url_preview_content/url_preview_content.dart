@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/url.dart';
 import 'package:ion/app/utils/validators.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
@@ -24,7 +25,7 @@ class UrlPreviewContent extends HookWidget {
       return const SizedBox.shrink();
     }
 
-    final normalizedUrl = useMemoized(() => Validators.normalizeUrl(url));
+    final normalizedUrl = useMemoized(() => normalizeUrl(url));
 
     return UrlPreview(
       url: normalizedUrl,
