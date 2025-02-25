@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/address_input_field.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/contact_button.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 
 class ContactInputSwitcher extends ConsumerWidget {
   const ContactInputSwitcher({
@@ -14,6 +13,7 @@ class ContactInputSwitcher extends ConsumerWidget {
     required this.onContactTap,
     required this.onClearTap,
     required this.onWalletAddressChanged,
+    required this.onScanPressed,
     super.key,
   });
 
@@ -22,6 +22,7 @@ class ContactInputSwitcher extends ConsumerWidget {
   final VoidCallback onContactTap;
   final ValueChanged<String?> onClearTap;
   final ValueChanged<String?> onWalletAddressChanged;
+  final VoidCallback onScanPressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +31,7 @@ class ContactInputSwitcher extends ConsumerWidget {
         initialValue: address,
         onOpenContactList: onContactTap,
         onAddressChanged: onWalletAddressChanged,
-        onScanPressed: () => CoinSendScanRoute().push<void>(context),
+        onScanPressed: onScanPressed,
       );
     }
 

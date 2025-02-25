@@ -14,6 +14,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     required this.requestDialog,
     required this.settingsDialog,
     this.requestId = 'default',
+    this.onGrantedPredicate = _defaultPredicate,
     super.key,
   });
 
@@ -24,6 +25,16 @@ class PermissionAwareWidget extends ConsumerWidget {
   final Widget settingsDialog;
   final String requestId;
 
+  /// A predicate function that determines if onGranted should be executed.
+  ///
+  /// This function will be called before executing onGranted.
+  /// If it returns true, onGranted will be executed; otherwise, it won't.
+  /// By default, it always returns true.
+  final bool Function() onGrantedPredicate;
+
+  /// Default predicate that always returns true.
+  static bool _defaultPredicate() => true;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final compositeKey = '${permissionType.name}_$requestId';
@@ -33,7 +44,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     ref.listen<bool>(
       hasPermissionProvider(permissionType),
       (previous, next) {
-        if (next && (activeRequestId == null || activeRequestId == requestId) && context.mounted) {
+        if (next && _shouldExecuteOnGranted(context, activeRequestId)) {
           onGranted();
         }
       },
@@ -43,7 +54,7 @@ class PermissionAwareWidget extends ConsumerWidget {
       context,
       () {
         if (hasPermission) {
-          if ((activeRequestId == null || activeRequestId == requestId) && context.mounted) {
+          if (_shouldExecuteOnGranted(context, activeRequestId)) {
             onGranted();
           }
         } else {
@@ -51,6 +62,18 @@ class PermissionAwareWidget extends ConsumerWidget {
         }
       },
     );
+  }
+
+  /// Determines if the onGranted callback should be executed based on context and request state.
+  ///
+  /// Checks:
+  /// - The context is still mounted
+  /// - Either there's no active request ID or the active request ID matches this widget's request ID
+  /// - The onGrantedPredicate returns true
+  bool _shouldExecuteOnGranted(BuildContext context, String? activeRequestId) {
+    return context.mounted &&
+        (activeRequestId == null || activeRequestId == requestId) &&
+        onGrantedPredicate();
   }
 
   Future<void> _handlePermissionRequest(

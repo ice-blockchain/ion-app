@@ -86,11 +86,7 @@ dependencies:
   photo_manager: ^3.6.3
   photo_manager_image_provider: ^2.1.1
   pinenacl: ^0.6.0
-  qr_code_scanner:
-    git:
-      url: https://github.com/ice-blockchain/qr_code_scanner
-      ref: master
-      version: ^1.0.0
+  qr_code_scanner_plus: ^2.0.10+1
   qr_flutter: ^4.1.0
   riverpod_annotation: ^2.6.1
   share_plus: ^10.0.2
