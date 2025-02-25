@@ -35,7 +35,6 @@ class FullscreenImage extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.fitWidth,
                 placeholder: (context, url) => const CenteredLoadingIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
           ),
