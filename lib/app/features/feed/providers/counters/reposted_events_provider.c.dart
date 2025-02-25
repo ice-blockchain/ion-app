@@ -3,7 +3,6 @@
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -63,10 +62,6 @@ Stream<Map<String, String>?> repostedEvents(Ref ref) async* {
   }
 
   return switch (entity) {
-    ModifiablePostEntity() when entity.data.quotedEvent != null => (
-        entity.id,
-        entity.data.quotedEvent!.eventReference.toString(),
-      ),
     GenericRepostEntity() => (
         entity.id,
         entity.data.eventReference.toString(),
