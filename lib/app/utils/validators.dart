@@ -20,7 +20,12 @@ class Validators {
   }
 
   static bool isInvalidDisplayName(String? value) {
-    return isEmpty(value) || !RegExp(r'^[a-zA-Z0-9 .,!?@#&()_\-]*$').hasMatch(value!);
+    return isEmpty(value) ||
+        !RegExp(
+          r'^(?!.*[\u0300-\u036F\u0489])'
+          r"[\p{L}\p{N}\p{So} .'-|]+$",
+          unicode: true,
+        ).hasMatch(value!);
   }
 
   static bool isInvalidNickname(String? value) {
