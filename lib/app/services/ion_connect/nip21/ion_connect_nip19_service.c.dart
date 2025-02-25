@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-// ignore_for_file: use_string_buffers
-
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
@@ -63,10 +61,18 @@ class IonConnectNip19Service {
     // 1: relay
     if (relays != null) {
       for (final relay in relays) {
-        result = '${result}01';
+        final buffer = StringBuffer()
+          ..write(result)
+          ..write('01');
+
         final value =
             relay.codeUnits.map((number) => number.toRadixString(16).padLeft(2, '0')).join();
-        result = '$result${hex.decode(value).length.toRadixString(16).padLeft(2, '0')}$value';
+
+        buffer
+          ..write(hex.decode(value).length.toRadixString(16).padLeft(2, '0'))
+          ..write(value);
+
+        result = buffer.toString();
       }
     }
 
