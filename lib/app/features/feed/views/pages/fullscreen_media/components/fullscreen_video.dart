@@ -6,9 +6,11 @@ import 'package:ion/app/components/counter_items_footer/counter_items_footer.dar
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/video_gradient_overlay.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/video_post_info.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:video_player/video_player.dart';
@@ -59,12 +61,19 @@ class FullscreenVideo extends HookConsumerWidget {
                 child: Stack(
                   children: [
                     const Positioned.fill(child: VideoGradientOverlay()),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 14.0.s,
-                        horizontal: 16.0.s,
-                      ),
-                      child: VideoPostInfo(eventReference: eventReference),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final postEntity =
+                            ref.watch(ionConnectEntityProvider(eventReference: eventReference));
+                        final post = postEntity.valueOrNull as ModifiablePostEntity?;
+
+                        if (post == null) return const SizedBox.shrink();
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 14.0.s),
+                          child: VideoPostInfo(videoPost: post),
+                        );
+                      },
                     ),
                   ],
                 ),

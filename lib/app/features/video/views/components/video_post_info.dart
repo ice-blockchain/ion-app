@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
-import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/video/views/components/video_post_text.dart';
 
@@ -41,7 +40,6 @@ class VideoPostInfo extends StatelessWidget {
               UserInfo(
                 pubkey: videoPost.masterPubkey,
                 createdAt: videoPost.data.publishedAt.value,
-                timeFormat: TimestampFormat.detailed,
                 trailing: UserInfoMenu(
                   pubkey: videoPost.masterPubkey,
                   iconColor: context.theme.appColors.secondaryBackground,
