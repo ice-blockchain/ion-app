@@ -14,8 +14,8 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_nip19_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_nip21_service.dart';
+import 'package:ion/app/services/ion_connect/nip21/ion_connect_nip19_service.c.dart';
+import 'package:ion/app/services/ion_connect/nip21/ion_connect_nip21_service.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class ProfileShareMessage extends HookConsumerWidget {
@@ -30,11 +30,18 @@ class ProfileShareMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final nip19Service = ref.watch(ionConnectNip19ServiceProvider);
+    final nip21Service = ref.watch(ionConnectNip21ServiceProvider);
 
-    final profilePubkey = Nip19.decodeShareableIdentifiers(
-          payload: Nip21.decode(entity.data.content),
-        )?.special ??
-        '';
+    final profilePubkey = nip19Service
+        .decodeShareableIdentifiers(
+          payload: nip21Service.decode(entity.data.content),
+        )
+        ?.special;
+
+    if (profilePubkey == null) {
+      return const SizedBox.shrink();
+    }
 
     final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
 

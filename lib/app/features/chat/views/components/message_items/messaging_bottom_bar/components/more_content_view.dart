@@ -12,8 +12,9 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_nip19_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_nip21_service.dart';
+import 'package:ion/app/services/ion_connect/nip21/ion_connect_nip19_service.c.dart';
+import 'package:ion/app/services/ion_connect/nip21/ion_connect_nip21_service.c.dart';
+import 'package:ion/app/services/ion_connect/nip21/nip19_prefix.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -102,10 +103,12 @@ class MoreContentView extends ConsumerWidget {
                   final selectedProfilePubkey =
                       await ShareProfileModalRoute().push<String>(context);
                   if (selectedProfilePubkey != null) {
+                    final nip21Service = ref.read(ionConnectNip21ServiceProvider);
+                    final nip19Service = ref.read(ionConnectNip19ServiceProvider);
                     unawaited(
                       onSubmitted(
-                        content: Nip21.encode(
-                          Nip19.encodeShareableIdentifiers(
+                        content: nip21Service.encode(
+                          nip19Service.encodeShareableIdentifiers(
                             prefix: Nip19Prefix.nprofile,
                             special: selectedProfilePubkey,
                           ),
