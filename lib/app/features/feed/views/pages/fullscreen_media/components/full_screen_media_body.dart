@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_image.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_video.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/video_overlay.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class FullScreenMediaBody extends StatelessWidget {
@@ -41,7 +40,6 @@ class FullScreenMediaBody extends StatelessWidget {
             ],
           ),
         ),
-        if (mediaType == MediaType.video) VideoOverlay(eventReference: eventReference),
       ],
     );
   }

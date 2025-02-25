@@ -9,7 +9,7 @@ import 'package:video_player/video_player.dart';
 
 part 'video_player_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Raw<VideoPlayerController> videoController(
   Ref ref,
   String sourcePath, {
