@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -9,8 +8,9 @@ import 'package:ion/app/features/feed/views/components/list_separator/list_separ
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_navigation/advanced_search_navigation.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_tab_bar/advanced_search_tab_bar.dart';
-import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_top/feed_advanced_search_top.dart';
+import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_posts/feed_advanced_search_posts.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_users.dart';
+import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/hooks/use_search_categories.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class FeedAdvancedSearchPage extends HookConsumerWidget {
@@ -20,12 +20,7 @@ class FeedAdvancedSearchPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = useMemoized(
-      () {
-        return AdvancedSearchCategory.values.where((category) => category.isFeed).toList();
-      },
-      [],
-    );
+    final categories = useSearchCategories(ref);
 
     return Scaffold(
       body: ScreenTopOffset(
@@ -51,13 +46,13 @@ class FeedAdvancedSearchPage extends HookConsumerWidget {
                 child: TabBarView(
                   children: categories.map((category) {
                     return switch (category) {
-                      AdvancedSearchCategory.top => FeedAdvancedSearchTop(query: query),
-                      AdvancedSearchCategory.latest => FeedAdvancedSearchTop(query: query),
+                      AdvancedSearchCategory.trending ||
+                      AdvancedSearchCategory.top ||
+                      AdvancedSearchCategory.latest ||
+                      AdvancedSearchCategory.photos ||
+                      AdvancedSearchCategory.videos =>
+                        FeedAdvancedSearchPosts(query: query, category: category),
                       AdvancedSearchCategory.people => FeedAdvancedSearchUsers(query: query),
-                      AdvancedSearchCategory.photos => FeedAdvancedSearchTop(query: query),
-                      AdvancedSearchCategory.videos => FeedAdvancedSearchTop(query: query),
-                      AdvancedSearchCategory.groups => FeedAdvancedSearchTop(query: query),
-                      AdvancedSearchCategory.channels => FeedAdvancedSearchTop(query: query),
                       _ => const SizedBox.shrink(),
                     };
                   }).toList(),

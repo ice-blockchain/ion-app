@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/core/model/language.dart';
-import 'package:ion/app/features/search/model/feed_search_filter_people.dart';
+import 'package:ion/app/features/feed/data/models/feed_category.dart';
+import 'package:ion/app/features/search/model/feed_search_source.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,22 +16,24 @@ part 'feed_search_filters_provider.c.g.dart';
 @freezed
 class FeedSearchFiltersState with _$FeedSearchFiltersState {
   const factory FeedSearchFiltersState({
-    required List<Language> languages,
-    required FeedSearchFilterPeople people,
+    required Map<FeedCategory, bool> categories,
+    required FeedSearchSource source,
   }) = _FeedSearchFiltersState;
 
   factory FeedSearchFiltersState.initial() {
     return const FeedSearchFiltersState(
-      people: FeedSearchFilterPeople.anyone,
-      languages: [Language.english],
+      source: FeedSearchSource.anyone,
+      categories: {FeedCategory.feed: true, FeedCategory.videos: true, FeedCategory.articles: true},
     );
   }
+
+  factory FeedSearchFiltersState.fromJson(Map<String, dynamic> json) =>
+      _$FeedSearchFiltersStateFromJson(json);
 }
 
 @riverpod
 class FeedSearchFilter extends _$FeedSearchFilter {
-  static const _feedSearchPeopleFilterKey = 'FeedSearchFilter:people';
-  static const _feedSearchLanguagesFilterKey = 'FeedSearchFilter:languages';
+  static const _feedSearchFilterKey = '_FeedSearchFilter';
 
   @override
   FeedSearchFiltersState build() {
@@ -39,12 +44,12 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     return savedState;
   }
 
-  set filterPeople(FeedSearchFilterPeople filter) {
-    state = state.copyWith(people: filter);
+  set filterSource(FeedSearchSource source) {
+    state = state.copyWith(source: source);
   }
 
-  set languages(List<Language> languages) {
-    state = state.copyWith(languages: languages);
+  set filterCategories(Map<FeedCategory, bool> categories) {
+    state = state.copyWith(categories: categories);
   }
 
   set newState(FeedSearchFiltersState newState) {
@@ -57,12 +62,9 @@ class FeedSearchFilter extends _$FeedSearchFilter {
 
   void _saveState(FeedSearchFiltersState state) {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
-    ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
-      ..setEnum(_feedSearchPeopleFilterKey, state.people)
-      ..setValue<List<String>>(
-        _feedSearchLanguagesFilterKey,
-        state.languages.map((lang) => lang.isoCode).toList(),
-      );
+    ref
+        .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
+        .setValue(_feedSearchFilterKey, jsonEncode(state.toJson()));
   }
 
   FeedSearchFiltersState _loadSavedState() {
@@ -70,16 +72,14 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     final userPreferencesService =
         ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
 
-    final people =
-        userPreferencesService.getEnum(_feedSearchPeopleFilterKey, FeedSearchFilterPeople.values);
-    final languages = userPreferencesService
-        .getValue<List<String>>(_feedSearchLanguagesFilterKey)
-        ?.map(Language.fromIsoCode)
-        .nonNulls
-        .toList();
+    final savedStateJson = userPreferencesService.getValue<String>(_feedSearchFilterKey);
 
-    if (people != null && languages != null) {
-      return FeedSearchFiltersState(people: people, languages: languages);
+    if (savedStateJson != null) {
+      try {
+        return FeedSearchFiltersState.fromJson(jsonDecode(savedStateJson) as Map<String, dynamic>);
+      } catch (error, stackTrace) {
+        Logger.error(error, stackTrace: stackTrace);
+      }
     }
 
     return FeedSearchFiltersState.initial();

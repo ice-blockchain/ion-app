@@ -29,7 +29,6 @@ import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
 import 'package:ion/app/features/chat/views/pages/share_profile_modal/share_profile_modal.dart';
-import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
 import 'package:ion/app/features/core/views/pages/search_emoji_modal/search_emoji_modal.dart';
@@ -92,7 +91,6 @@ import 'package:ion/app/features/search/views/pages/chat_simple_search_page/chat
 import 'package:ion/app/features/search/views/pages/dapps_simple_search_page/dapps_simple_search_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';
-import 'package:ion/app/features/search/views/pages/feed_search_languages_page/feed_search_languages_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_simple_search_page/feed_simple_search_page.dart';
 import 'package:ion/app/features/settings/views/account_settings_modal.dart';
 import 'package:ion/app/features/settings/views/app_language_modal.dart';

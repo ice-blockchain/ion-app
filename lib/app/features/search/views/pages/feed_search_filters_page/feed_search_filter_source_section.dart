@@ -2,20 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/model/feed_search_filter_people.dart';
+import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class FeedSearchFilterPeopleSection extends StatelessWidget {
-  const FeedSearchFilterPeopleSection({
+class FeedSearchFilterSourceSection extends StatelessWidget {
+  const FeedSearchFilterSourceSection({
     required this.selectedFilter,
     required this.onFilterChange,
     super.key,
   });
 
-  final FeedSearchFilterPeople selectedFilter;
+  final FeedSearchSource selectedFilter;
 
-  final void Function(FeedSearchFilterPeople) onFilterChange;
+  final void Function(FeedSearchSource) onFilterChange;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +30,8 @@ class FeedSearchFilterPeopleSection extends StatelessWidget {
             color: context.theme.appColors.quaternaryText,
           ),
         ),
-        SizedBox(height: 10.0.s),
-        ...FeedSearchFilterPeople.values.map((filter) {
+        SizedBox(height: 4.0.s),
+        ...FeedSearchSource.values.map<Widget>((filter) {
           return ListItem(
             onTap: () {
               onFilterChange(filter);
@@ -40,7 +41,6 @@ class FeedSearchFilterPeopleSection extends StatelessWidget {
               height: 36.0.s,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: context.theme.appColors.onSecondaryBackground,
                 borderRadius: BorderRadius.all(Radius.circular(10.0.s)),
                 border: Border.all(
                   width: 1.0.s,
@@ -50,14 +50,13 @@ class FeedSearchFilterPeopleSection extends StatelessWidget {
               child: filter.getIcon(context).icon(color: context.theme.appColors.primaryAccent),
             ),
             trailing: selectedFilter == filter
-                ? Assets.svg.iconDappCheck.icon(color: context.theme.appColors.success)
-                : null,
+                ? Assets.svg.iconBlockCheckboxOn.icon(color: context.theme.appColors.success)
+                : Assets.svg.iconblockRadiooff.icon(color: context.theme.appColors.tertararyText),
             title: Text(filter.getLabel(context)),
             backgroundColor: context.theme.appColors.secondaryBackground,
             contentPadding: EdgeInsets.zero,
-            constraints: BoxConstraints(minHeight: 48.0.s),
           );
-        }),
+        }).intersperse(const HorizontalSeparator()),
       ],
     );
   }

@@ -56,6 +56,16 @@ class MostRelevantFollowersSearchExtension extends SearchExtension {
   final String query = 'most relevant followers';
 }
 
+class TrendingSearchExtension extends SearchExtension {
+  @override
+  final String query = 'trending';
+}
+
+class TopSearchExtension extends SearchExtension {
+  @override
+  final String query = 'top';
+}
+
 /// For every kind [forKind] that the subscription finds also include the count of replies that it has
 class RepliesCountSearchExtension extends IncludeSearchExtension {
   RepliesCountSearchExtension({this.root = true, this.forKind = ModifiablePostEntity.kind});

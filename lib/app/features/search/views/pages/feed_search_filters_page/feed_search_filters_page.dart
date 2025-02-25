@@ -9,8 +9,8 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/providers/feed_search_filters_provider.c.dart';
-import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filter_languages_section.dart';
-import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filter_people_section.dart';
+import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filter_categories_section.dart';
+import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filter_source_section.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_text_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -42,21 +42,22 @@ class FeedSearchFiltersPage extends HookConsumerWidget {
           ScreenSideOffset.small(
             child: Column(
               children: [
-                SizedBox(height: 8.0.s),
-                FeedSearchFilterPeopleSection(
-                  selectedFilter: filterLocalState.value.people,
-                  onFilterChange: (peopleFilter) {
-                    filterLocalState.value = filterLocalState.value.copyWith(people: peopleFilter);
+                SizedBox(height: 16.0.s),
+                FeedSearchFilterCategoriesSection(
+                  selectedFilter: filterLocalState.value.categories,
+                  onFilterChange: (categories) {
+                    filterLocalState.value =
+                        filterLocalState.value.copyWith(categories: categories);
                   },
                 ),
-                SizedBox(height: 18.0.s),
-                FeedSearchFilterLanguagesSection(
-                  selectedLanguages: filterLocalState.value.languages,
-                  onFilterChange: (languages) {
-                    filterLocalState.value = filterLocalState.value.copyWith(languages: languages);
+                SizedBox(height: 12.0.s),
+                FeedSearchFilterSourceSection(
+                  selectedFilter: filterLocalState.value.source,
+                  onFilterChange: (sourceFilter) {
+                    filterLocalState.value = filterLocalState.value.copyWith(source: sourceFilter);
                   },
                 ),
-                SizedBox(height: 34.0.s),
+                SizedBox(height: 12.0.s),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 28.0.s),
                   child: Button(

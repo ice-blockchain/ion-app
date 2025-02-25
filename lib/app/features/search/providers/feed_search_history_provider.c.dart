@@ -47,7 +47,7 @@ class FeedSearchHistory extends _$FeedSearchHistory {
   }
 
   Future<void> addQueryToTheHistory(String query) async {
-    if (!state.queries.contains(query)) {
+    if (state.queries.firstOrNull != query) {
       final newQueries = [query, ...state.queries];
 
       final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';

@@ -146,6 +146,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         editingEndedAt: null,
         relatedHashtags: [],
         relatedPubkeys: [],
+        quotedEvent: null,
         media: {}, //TODO: consider removing media from the storage
         settings: null,
       );

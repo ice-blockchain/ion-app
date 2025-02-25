@@ -32,7 +32,6 @@ class FeedRoutes {
           ],
         ),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
-        TypedGoRoute<FeedSearchLanguagesRoute>(path: 'feed-search-languages'),
         TypedGoRoute<StoryContactsShareRoute>(path: 'story-contacts-share'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
@@ -261,16 +260,6 @@ class FeedSearchFiltersRoute extends BaseRouteData {
           child: const FeedSearchFiltersPage(),
           type: IceRouteType.bottomSheet,
         );
-}
-
-class FeedSearchLanguagesRoute extends BaseRouteData {
-  FeedSearchLanguagesRoute({this.selectedLanguages = const []})
-      : super(
-          child: FeedSearchLanguagesPage(defaultSelected: selectedLanguages),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final List<Language> selectedLanguages;
 }
 
 @TypedGoRoute<StoryRecordRoute>(

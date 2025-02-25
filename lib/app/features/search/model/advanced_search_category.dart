@@ -6,6 +6,7 @@ import 'package:ion/generated/assets.gen.dart';
 
 enum AdvancedSearchCategory {
   all,
+  trending,
   top,
   latest,
   people,
@@ -18,6 +19,7 @@ enum AdvancedSearchCategory {
   String icon(BuildContext context) {
     return switch (this) {
       AdvancedSearchCategory.all => Assets.svg.iconTabAll,
+      AdvancedSearchCategory.trending => Assets.svg.iconmemeTranding,
       AdvancedSearchCategory.top => Assets.svg.iconSearchTop,
       AdvancedSearchCategory.latest => Assets.svg.iconSearchLast,
       AdvancedSearchCategory.people => Assets.svg.iconSendfundsUser,
@@ -32,6 +34,7 @@ enum AdvancedSearchCategory {
   String label(BuildContext context) {
     return switch (this) {
       AdvancedSearchCategory.all => context.i18n.core_all,
+      AdvancedSearchCategory.trending => context.i18n.feed_advanced_search_category_trending,
       AdvancedSearchCategory.top => context.i18n.feed_advanced_search_category_top,
       AdvancedSearchCategory.latest => context.i18n.feed_advanced_search_category_latest,
       AdvancedSearchCategory.people => context.i18n.feed_advanced_search_category_people,
@@ -45,6 +48,7 @@ enum AdvancedSearchCategory {
 
   bool get isFeed {
     return switch (this) {
+      AdvancedSearchCategory.trending => true,
       AdvancedSearchCategory.top => true,
       AdvancedSearchCategory.latest => true,
       AdvancedSearchCategory.people => true,
