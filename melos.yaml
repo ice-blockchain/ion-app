@@ -6,6 +6,7 @@ packages:
 
 ignore:
   - "packages/**/example"
+  - "packages/ion_screenshot_detector"
 
 command:
   bootstrap:
@@ -23,13 +24,8 @@ scripts:
     exec: flutter test
   build_runner:
     exec: flutter pub run build_runner build --delete-conflicting-outputs
-    concurrency: 1
   build_runner_watch:
     exec: flutter pub run build_runner watch --delete-conflicting-outputs
-    concurrency: 1
-    filter:
-    exclude:
-      - ion_screenshot_detector
   generate_code:
     run: ./scripts/generate_code.sh
   generate_locales:
