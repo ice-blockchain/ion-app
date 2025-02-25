@@ -34,7 +34,10 @@ class FullScreenMediaBody extends StatelessWidget {
                           videoUrl: mediaUrl,
                           eventReference: eventReference,
                         )
-                      : FullscreenImage(imageUrl: mediaUrl),
+                      : FullscreenImage(
+                          imageUrl: mediaUrl,
+                          eventReference: eventReference,
+                        ),
                 ),
               ),
             ],
