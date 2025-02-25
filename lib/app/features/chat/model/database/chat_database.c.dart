@@ -16,10 +16,12 @@ import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/related_subject.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_database.c.g.dart';
 part 'dao/conversation_dao.c.dart';
+part 'dao/event_message_dao.c.dart';
 part 'dao/conversation_event_message_dao.c.dart';
 part 'dao/conversation_message_dao.c.dart';
 part 'dao/conversation_message_data_dao.c.dart';
@@ -60,7 +62,7 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -71,6 +73,21 @@ class ChatDatabase extends _$ChatDatabase {
         onUpgrade: stepByStep(
           from1To2: (m, schema) async {
             await m.createTable(schema.reactionTable);
+          },
+          from2To3: (m, schema) async {
+            await m.renameColumn(
+              schema.reactionTable,
+              Schema2(database: m.database).reactionTable.eventMessageId.name,
+              reactionTable.kind14Id,
+            );
+            await m.alterTable(
+              TableMigration(
+                schema.reactionTable,
+                columnTransformer: {
+                  reactionTable.id: reactionTable.id.cast<String>(),
+                },
+              ),
+            );
           },
         ),
       );

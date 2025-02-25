@@ -14,77 +14,115 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
   ConversationMessageReactionDao(super.db);
 
   Future<void> add({
-    required String content,
+    required Ref ref,
     required String masterPubkey,
-    required String eventMessageId,
+    required String kind14EventId,
+    required EventMessage newReactionEvent,
   }) async {
-    final eventMessageExists = await (select(db.eventMessageTable)
-          ..where((table) => table.id.equals(eventMessageId)))
+    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+
+    final kind14EventMessage = await (select(db.eventMessageTable)
+          ..where((table) => table.id.equals(kind14EventId)))
         .getSingleOrNull();
 
-    if (eventMessageExists == null) return;
+    if (kind14EventMessage == null) return;
 
-    final existingRows = await (select(reactionTable)
+    final existingReactionRow = await (select(reactionTable)
+          ..where((table) => table.content.equals(newReactionEvent.content))
           ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where((table) => table.eventMessageId.equals(eventMessageId)))
-        .get();
+          ..where((table) => table.kind14Id.equals(kind14EventId)))
+        .getSingleOrNull();
 
-    if (existingRows.isEmpty || existingRows.every((row) => row.content != content)) {
+    if (existingReactionRow == null) {
+      await eventMessageDao.add(newReactionEvent);
       await into(reactionTable).insert(
         ReactionTableCompanion(
-          content: Value(content),
+          id: Value(newReactionEvent.id),
+          kind14Id: Value(kind14EventId),
           masterPubkey: Value(masterPubkey),
-          eventMessageId: Value(eventMessageId),
+          content: Value(newReactionEvent.content),
         ),
         mode: InsertMode.insertOrIgnore,
       );
-    } else if (existingRows.any((row) => row.content == content && row.isDeleted)) {
-      await (update(reactionTable)
-            ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.eventMessageId.equals(eventMessageId))
-            ..where((table) => table.content.equals(content)))
-          .write(const ReactionTableCompanion(isDeleted: Value(false)));
+    } else {
+      final previousReactionEvent = await (select(db.eventMessageTable)
+            ..where((table) => table.id.equals(existingReactionRow.id)))
+          .getSingleOrNull();
+
+      await eventMessageDao.add(newReactionEvent);
+
+      if (previousReactionEvent != null &&
+          previousReactionEvent.createdAt.isBefore(newReactionEvent.createdAt)) {
+        await (update(reactionTable)..where((table) => table.id.equals(existingReactionRow.id)))
+            .write(
+          ReactionTableCompanion(
+            id: Value(newReactionEvent.id),
+            isDeleted: const Value(false),
+          ),
+        );
+      }
     }
   }
 
   Future<void> remove({
-    required String content,
-    required String masterPubkey,
-    required String eventMessageId,
+    required Ref ref,
+    required EventMessage removalRequest,
   }) async {
-    final existingRow = await (select(db.reactionTable)
-          ..where((table) => table.content.equals(content))
-          ..where((table) => table.masterPubkey.equals(masterPubkey))
-          ..where((table) => table.eventMessageId.equals(eventMessageId)))
+    final reactionEventId = removalRequest.tags
+        .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
+        ?.elementAtOrNull(1);
+
+    if (reactionEventId == null) return;
+
+    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+
+    await eventMessageDao.add(removalRequest);
+
+    final existingReactionEvent = await (select(db.eventMessageTable)
+          ..where((table) => table.id.equals(reactionEventId)))
         .getSingleOrNull();
 
-    if (existingRow == null) return;
+    final existingReactionRow = await (select(db.reactionTable)
+          ..where((table) => table.id.equals(reactionEventId)))
+        .getSingleOrNull();
 
-    await (update(reactionTable)..where((table) => table.id.equals(existingRow.id))).write(
+    if (existingReactionRow == null ||
+        existingReactionEvent == null ||
+        removalRequest.createdAt.isBefore(existingReactionEvent.createdAt)) {
+      return;
+    }
+
+    await (update(reactionTable)..where((table) => table.id.equals(existingReactionRow.id))).write(
       const ReactionTableCompanion(isDeleted: Value(true)),
     );
   }
 
-  Stream<List<MessageReactionGroup>> messageReactions(PrivateDirectMessageEntity entity) async* {
+  Stream<List<MessageReactionGroup>> messageReactions(EventMessage kind14EventMessage) async* {
     final existingRows = (select(reactionTable)
           ..where((table) => table.isDeleted.equals(false))
-          ..where((table) => table.eventMessageId.equals(entity.id)))
+          ..where((table) => table.kind14Id.equals(kind14EventMessage.id)))
         .watch();
 
-    yield* existingRows.map((rows) {
-      final groupedReactions = <String, List<String>>{};
+    yield* existingRows.asyncMap((rows) async {
+      final groupedReactions = <String, List<EventMessage>>{};
 
       for (final row in rows) {
-        if (!groupedReactions.containsKey(row.content)) {
-          groupedReactions[row.content] = [];
+        final eventMessageDataRow = await (select(db.eventMessageTable)
+              ..where((table) => table.id.equals(row.id)))
+            .getSingleOrNull();
+
+        if (eventMessageDataRow != null) {
+          if (!groupedReactions.containsKey(row.content)) {
+            groupedReactions[row.content] = [];
+          }
+          groupedReactions[row.content]!.add(eventMessageDataRow.toEventMessage());
         }
-        groupedReactions[row.content]!.add(row.masterPubkey);
       }
 
       return groupedReactions.entries.map((entry) {
         return MessageReactionGroup(
           emoji: entry.key,
-          pubkeys: entry.value,
+          eventMessages: entry.value,
         );
       }).toList();
     });

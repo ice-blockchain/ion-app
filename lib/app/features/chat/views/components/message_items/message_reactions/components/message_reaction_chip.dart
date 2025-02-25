@@ -4,42 +4,28 @@ part of '../message_reactions.dart';
 
 class _MessageReactionChip extends HookConsumerWidget {
   const _MessageReactionChip({
+    required this.onTap,
     required this.isMe,
     required this.emoji,
-    required this.pubkeys,
-    required this.eventMessageId,
+    required this.masterPubkeys,
+    required this.currentUserHasReaction,
   });
 
   final bool isMe;
   final String emoji;
-  final List<String> pubkeys;
-  final String eventMessageId;
+  final List<String> masterPubkeys;
+  final bool currentUserHasReaction;
+
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPubKey = ref.watch(currentPubkeySelectorProvider);
-
-    final isCurrentUserHasReaction = useMemoized(
-      () => pubkeys.contains(currentPubKey),
-      [pubkeys, currentPubKey],
-    );
-
     return GestureDetector(
-      onTap: () {
-        final userMasterPubkey = ref.read(currentPubkeySelectorProvider);
-
-        if (userMasterPubkey == null) return;
-
-        ref.read(conversationMessageReactionDaoProvider).remove(
-              content: emoji,
-              masterPubkey: userMasterPubkey,
-              eventMessageId: eventMessageId,
-            );
-      },
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 4.0.s, horizontal: 6.0.s),
         decoration: BoxDecoration(
-          color: isCurrentUserHasReaction & !isMe
+          color: currentUserHasReaction & !isMe
               ? context.theme.appColors.primaryAccent
               : context.theme.appColors.primaryBackground,
           borderRadius: BorderRadius.circular(10.0.s),
@@ -49,7 +35,7 @@ class _MessageReactionChip extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(emoji, style: context.theme.appTextThemes.title.copyWith(height: 1)),
-            _AvatarStack(pubkeys: pubkeys),
+            _AvatarStack(pubkeys: masterPubkeys),
           ],
         ),
       ),

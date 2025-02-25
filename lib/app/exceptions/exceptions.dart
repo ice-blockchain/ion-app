@@ -375,3 +375,7 @@ class UnknownNetworkException extends IONException {
 class AnonymousRelayAuthException extends IONException {
   AnonymousRelayAuthException() : super(10071, 'Auth required error in anonymous relay');
 }
+
+class PubkeysDoNotMatchException extends IONException {
+  PubkeysDoNotMatchException() : super(10072, 'Pubkeys do not match');
+}

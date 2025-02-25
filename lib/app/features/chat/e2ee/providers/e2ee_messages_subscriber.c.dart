@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -46,6 +47,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       kinds: const [IonConnectGiftWrapServiceImpl.kind],
       tags: {
         '#k': [
+          DeletionRequest.kind.toString(),
           PrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
         ],
@@ -148,12 +150,19 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
               );
             } else {
               await conversationMessageReactionDao.add(
-                content: rumor.content,
-                eventMessageId: kind14EventId,
+                ref: ref,
+                newReactionEvent: rumor,
+                kind14EventId: kind14EventId,
                 masterPubkey: rumorMasterPubkey,
               );
             }
           }
+          // For kind 5
+        } else if (rumor.kind == DeletionRequest.kind) {
+          await conversationMessageReactionDao.remove(
+            ref: ref,
+            removalRequest: rumor,
+          );
         }
       }
     });
