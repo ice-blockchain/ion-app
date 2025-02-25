@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:bech32/bech32.dart';
 import 'package:convert/convert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

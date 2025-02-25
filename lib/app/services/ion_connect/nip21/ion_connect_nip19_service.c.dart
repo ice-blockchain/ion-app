@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // ignore_for_file: use_string_buffers
 
 import 'dart:typed_data';
@@ -11,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_nip19_service.c.g.dart';
 
+/// https://github.com/nostr-protocol/nips/blob/master/19.md
 class IonConnectNip19Service {
   const IonConnectNip19Service({required this.bech32Service});
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // import 'dart:typed_data';
 
 // import 'package:bech32/bech32.dart';

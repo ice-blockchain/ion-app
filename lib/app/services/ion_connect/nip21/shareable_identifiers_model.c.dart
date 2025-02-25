@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/services/ion_connect/nip21/nip19_prefix.dart';
 
 class ShareableIdentifiers {
