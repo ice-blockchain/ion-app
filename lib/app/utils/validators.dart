@@ -20,26 +20,12 @@ class Validators {
   }
 
   static bool isInvalidDisplayName(String? value) {
-    // Disallow bold and italic characters
     return isEmpty(value) ||
-        RegExp(r'(?:\uD835(?:'
-                r'[\uDC00-\uDC33]|' // Bold
-                r'[\uDC34-\uDC67]|' // Italic
-                r'[\uDC68-\uDC9B]|' // Bold Italic
-                r'[\uDCD0-\uDD03]|' // Bold Script (Calligraphic Bold)
-                r'[\uDD6C-\uDD9F]|' // Bold Fraktur
-                r'[\uDDD4-\uDE07]|' // Sans-serif Bold
-                r'[\uDE08-\uDE3B]|' // Sans-serif Italic
-                r'[\uDE3C-\uDE6F]|' // Sans-serif Bold Italic
-                r'[\uDFCE-\uDFD7]|' // Bold Digits
-                r'[\uDFEC-\uDFF5]|' // Sans-serif Bold Digits
-                r'[\uDEA8-\uDEE1]|' // Greek Bold
-                r'[\uDEE2-\uDF1B]|' // Greek Italic
-                r'[\uDF1C-\uDF55]|' // Greek Bold Italic
-                r'[\uDF56-\uDF8F]|' // Greek Sans-serif Bold
-                r'[\uDF90-\uDFC9]' // Greek Sans-serif Bold Italic
-                '))')
-            .hasMatch(value!);
+        !RegExp(
+          r'^(?!.*[\u0300-\u036F\u0489])'
+          r"[\p{L}\p{N}\p{So} .'-|]+$",
+          unicode: true,
+        ).hasMatch(value!);
   }
 
   static bool isInvalidNickname(String? value) {
