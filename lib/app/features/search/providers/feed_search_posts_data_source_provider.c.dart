@@ -20,7 +20,9 @@ import 'package:ion/app/features/search/model/feed_search_source.dart';
 import 'package:ion/app/features/search/providers/feed_search_filter_relays_provider.c.dart';
 import 'package:ion/app/features/search/providers/feed_search_filters_provider.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
+import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_search_posts_data_source_provider.c.g.dart';
@@ -31,6 +33,10 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
   required String query,
   required AdvancedSearchCategory category,
 }) {
+  // TODO:pass languages to the filters when defined
+  // ignore: unused_local_variable
+  final languageInterestSet =
+      ref.watch(currentUserInterestsSetProvider(InterestSetType.languages)).valueOrNull;
   final filters = ref.watch(feedSearchFilterProvider);
   final filterRelays = ref.watch(feedSearchFilterRelaysProvider(filters.source)).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
