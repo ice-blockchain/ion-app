@@ -67,8 +67,7 @@ class RepostsCount extends _$RepostsCount {
             ),
       );
 
-      final cache = ref.read(ionConnectCacheProvider.notifier);
-      cache.cache(updatedEntity);
+      ref.read(ionConnectCacheProvider.notifier).cache(updatedEntity);
     }
   }
 }
