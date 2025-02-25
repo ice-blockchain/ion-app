@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -32,6 +33,17 @@ Stream<Map<String, String>?> repostedEvents(Ref ref) async* {
     yield repostedMap;
 
     await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
+      final entryToRemove =
+          repostedMap.entries.firstWhereOrNull((entry) => entry.value == entity.id);
+
+      final cacheEntry = ref.read(ionConnectCacheProvider)[entity.id];
+
+      if (entryToRemove != null && cacheEntry == null) {
+        repostedMap = Map.from(repostedMap)..remove(entryToRemove.key);
+        yield repostedMap;
+        continue;
+      }
+
       final (repostId, originalId) =
           _getCurrentUserRepostData(entity, currentPubkey: currentPubkey);
 
