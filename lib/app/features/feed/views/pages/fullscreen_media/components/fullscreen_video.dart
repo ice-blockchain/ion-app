@@ -5,14 +5,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/video_gradient_overlay.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/features/video/views/components/video_button.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/generated/assets.gen.dart';
 import 'package:video_player/video_player.dart';
 
 class FullscreenVideo extends HookConsumerWidget {
@@ -33,6 +36,13 @@ class FullscreenVideo extends HookConsumerWidget {
         autoPlay: true,
         looping: true,
       ),
+    );
+
+    final isMuted = ref.watch(globalMuteProvider);
+
+    useOnInit(
+      () => controller.setVolume(isMuted ? 0 : 1),
+      [isMuted],
     );
 
     if (!controller.value.isInitialized) {
@@ -60,7 +70,6 @@ class FullscreenVideo extends HookConsumerWidget {
                 bottom: 0,
                 child: Stack(
                   children: [
-                    const Positioned.fill(child: VideoGradientOverlay()),
                     Consumer(
                       builder: (context, ref, child) {
                         final postEntity =
@@ -69,13 +78,31 @@ class FullscreenVideo extends HookConsumerWidget {
 
                         if (post == null) return const SizedBox.shrink();
 
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 14.0.s),
-                          child: VideoPostInfo(videoPost: post),
-                        );
+                        return VideoPostInfo(videoPost: post);
                       },
                     ),
                   ],
+                ),
+              ),
+              Positioned(
+                right: 16.0.s,
+                bottom: 86.0.s,
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final isMuted = ref.watch(globalMuteProvider);
+                    return VideoButton(
+                      icon: isMuted
+                          ? Assets.svg.iconChannelMute.icon(
+                              color: context.theme.appColors.secondaryBackground,
+                              size: 20.0.s,
+                            )
+                          : Assets.svg.iconChannelUnmute.icon(
+                              color: context.theme.appColors.secondaryBackground,
+                              size: 20.0.s,
+                            ),
+                      onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
+                    );
+                  },
                 ),
               ),
             ],

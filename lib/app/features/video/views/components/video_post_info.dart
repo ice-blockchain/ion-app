@@ -40,9 +40,12 @@ class VideoPostInfo extends StatelessWidget {
               UserInfo(
                 pubkey: videoPost.masterPubkey,
                 createdAt: videoPost.data.publishedAt.value,
-                trailing: UserInfoMenu(
-                  pubkey: videoPost.masterPubkey,
-                  iconColor: context.theme.appColors.secondaryBackground,
+                trailing: Padding(
+                  padding: EdgeInsets.only(right: 6.0.s),
+                  child: UserInfoMenu(
+                    pubkey: videoPost.masterPubkey,
+                    iconColor: context.theme.appColors.secondaryBackground,
+                  ),
                 ),
                 textStyle: TextStyle(
                   color: context.theme.appColors.secondaryBackground,
