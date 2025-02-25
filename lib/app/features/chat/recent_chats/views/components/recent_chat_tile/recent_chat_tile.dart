@@ -10,8 +10,9 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
-import 'package:ion/app/features/ion_connect/model/n_profile_key.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_nip19_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_nip21_service.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -218,7 +219,14 @@ class ChatPreview extends HookConsumerWidget {
               MessageType.text => content,
               MessageType.video => context.i18n.common_video,
               MessageType.profile => ref
-                      .watch(userMetadataProvider(NProfileKey.parse(content) ?? ''))
+                      .watch(
+                        userMetadataProvider(
+                          Nip19.decodeShareableIdentifiers(
+                                payload: Nip21.decode(content),
+                              )?.special ??
+                              '',
+                        ),
+                      )
                       .valueOrNull
                       ?.data
                       .displayName ??

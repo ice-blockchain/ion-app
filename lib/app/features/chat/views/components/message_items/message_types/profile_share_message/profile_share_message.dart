@@ -14,6 +14,8 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_nip19_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_nip21_service.dart';
 import 'package:ion/app/utils/username.dart';
 
 class ProfileShareMessage extends HookConsumerWidget {
@@ -29,8 +31,12 @@ class ProfileShareMessage extends HookConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
-    final userMetadata =
-        ref.watch(userMetadataProvider(entity.data.profileMasterPubkey!)).valueOrNull;
+    final profilePubkey = Nip19.decodeShareableIdentifiers(
+          payload: Nip21.decode(entity.data.content),
+        )?.special ??
+        '';
+
+    final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
 
     if (userMetadata == null) {
       return const SizedBox.shrink();

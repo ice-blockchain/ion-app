@@ -11,8 +11,9 @@ import 'package:ion/app/features/core/permissions/views/components/permission_aw
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
-import 'package:ion/app/features/ion_connect/model/n_profile_key.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_nip19_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_nip21_service.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -103,7 +104,12 @@ class MoreContentView extends ConsumerWidget {
                   if (selectedProfilePubkey != null) {
                     unawaited(
                       onSubmitted(
-                        content: NProfileKey(masterPubkey: selectedProfilePubkey).encode,
+                        content: Nip21.encode(
+                          Nip19.encodeShareableIdentifiers(
+                            prefix: Nip19Prefix.nprofile,
+                            special: selectedProfilePubkey,
+                          ),
+                        ),
                       ),
                     );
                     ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
