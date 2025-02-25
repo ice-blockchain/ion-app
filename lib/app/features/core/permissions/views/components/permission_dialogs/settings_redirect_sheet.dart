@@ -46,7 +46,7 @@ class SettingsRedirectSheet extends StatelessWidget {
           header: context.i18n.push_notifications_permission_headline,
           title: context.i18n.push_notifications_no_access_title,
           description: context.i18n.push_notifications_no_access_description,
-          headerIconAsset: Assets.svg.iconPostCamerapermission,
+          headerIconAsset: Assets.svg.iconProfileNotifications,
           iconAsset: Assets.svg.walletIconProfileDisablednotification,
         ),
       _ => throw Exception(

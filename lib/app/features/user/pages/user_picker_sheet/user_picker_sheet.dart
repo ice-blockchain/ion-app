@@ -47,47 +47,45 @@ class UserPickerSheet extends HookConsumerWidget {
         navigationBar,
         ConstrainedBox(
           constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.9),
-          child: Expanded(
-            child: ScreenSideOffset.small(
-              child: Column(
-                children: [
-                  SearchInput(
-                    textInputAction: TextInputAction.search,
-                    onTextChanged: (text) {
-                      ref.read(searchUsersQueryProvider.notifier).text = text;
-                    },
+          child: ScreenSideOffset.small(
+            child: Column(
+              children: [
+                SearchInput(
+                  textInputAction: TextInputAction.search,
+                  onTextChanged: (text) {
+                    ref.read(searchUsersQueryProvider.notifier).text = text;
+                  },
+                ),
+                SizedBox(height: 12.0.s),
+                if (header != null)
+                  Column(
+                    children: [
+                      header!,
+                      SizedBox(height: 12.0.s),
+                    ],
                   ),
-                  SizedBox(height: 12.0.s),
-                  if (header != null)
-                    Column(
-                      children: [
-                        header!,
-                        SizedBox(height: 12.0.s),
-                      ],
+                if (searchText.isEmpty)
+                  initialUserListType == UserListType.follower
+                      ? FollowerUsers(
+                          onUserSelected: onUserSelected,
+                          selectedPubkeys: selectedPubkeys,
+                          selectable: selectable,
+                        )
+                      : FollowingUsers(
+                          onUserSelected: onUserSelected,
+                          selectedPubkeys: selectedPubkeys,
+                          selectable: selectable,
+                        )
+                else
+                  Expanded(
+                    child: SearchedUsers(
+                      onUserSelected: onUserSelected,
+                      selectedPubkeys: selectedPubkeys,
+                      selectable: selectable,
                     ),
-                  if (searchText.isEmpty)
-                    initialUserListType == UserListType.follower
-                        ? FollowerUsers(
-                            onUserSelected: onUserSelected,
-                            selectedPubkeys: selectedPubkeys,
-                            selectable: selectable,
-                          )
-                        : FollowingUsers(
-                            onUserSelected: onUserSelected,
-                            selectedPubkeys: selectedPubkeys,
-                            selectable: selectable,
-                          )
-                  else
-                    Expanded(
-                      child: SearchedUsers(
-                        onUserSelected: onUserSelected,
-                        selectedPubkeys: selectedPubkeys,
-                        selectable: selectable,
-                      ),
-                    ),
-                  bottomContent ?? const SizedBox.shrink(),
-                ],
-              ),
+                  ),
+                bottomContent ?? const SizedBox.shrink(),
+              ],
             ),
           ),
         ),
