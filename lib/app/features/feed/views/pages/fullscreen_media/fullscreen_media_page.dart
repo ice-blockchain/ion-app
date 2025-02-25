@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/full_screen_media_body.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_media_context_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
@@ -63,7 +63,13 @@ class FullscreenMediaPage extends HookConsumerWidget {
                   onBackPress: () => context.pop(),
                   actions: [
                     if (mediaType == MediaType.image)
-                      FullscreenMediaContextMenu(pubkey: eventReference.pubkey),
+                      Padding(
+                        padding: EdgeInsets.only(right: 6.0.s),
+                        child: UserInfoMenu(
+                          pubkey: eventReference.pubkey,
+                          iconColor: context.theme.appColors.secondaryBackground,
+                        ),
+                      ),
                   ],
                 ),
                 body: FullScreenMediaBody(
