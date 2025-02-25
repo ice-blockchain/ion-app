@@ -50,8 +50,9 @@ class FullscreenMediaPage extends HookConsumerWidget {
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 backgroundColor: context.theme.appColors.primaryText,
+                extendBodyBehindAppBar: true,
                 appBar: NavigationAppBar.screen(
-                  backgroundColor: context.theme.appColors.primaryText,
+                  backgroundColor: Colors.transparent,
                   leading: NavigationBackButton(
                     () => context.pop(),
                     icon: Assets.svg.iconChatBack.icon(
