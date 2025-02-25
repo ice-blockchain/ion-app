@@ -13,17 +13,23 @@ import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/providers/feed_search_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 
-class FeedAdvancedSearchTop extends HookConsumerWidget {
-  const FeedAdvancedSearchTop({required this.query, super.key});
+class FeedAdvancedSearchPosts extends HookConsumerWidget {
+  const FeedAdvancedSearchPosts({
+    required this.query,
+    required this.category,
+    super.key,
+  });
 
   final String query;
+
+  final AdvancedSearchCategory category;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
     final dataSource = ref.watch(
-      feedSearchPostsDataSourceProvider(query: query, category: AdvancedSearchCategory.top),
+      feedSearchPostsDataSourceProvider(query: query, category: category),
     );
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items?.toList();
