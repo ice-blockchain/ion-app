@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
@@ -48,66 +49,28 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
   if (filterRelays != null && currentPubkey != null) {
     return [
       for (final entry in filterRelays.entries)
-        buildPostsDataSource(
+        _buildSearchDataSource(
           actionSource: ActionSourceRelayUrl(entry.key),
           authors: filters.source == FeedSearchSource.following ? entry.value : null,
-          currentPubkey: currentPubkey,
-          searchExtensions: searchExtensions,
+          filters: _buildFilters(
+            authors: filters.source == FeedSearchSource.following ? entry.value : null,
+            currentPubkey: currentPubkey,
+            searchExtensions: searchExtensions,
+            includePosts: filters.categories.contains(FeedCategory.feed) ||
+                filters.categories.contains(FeedCategory.videos),
+            includeArticles: filters.categories.contains(FeedCategory.articles),
+          ),
         ),
     ];
   }
   return null;
 }
 
-EntitiesDataSource buildPostsDataSource({
+EntitiesDataSource _buildSearchDataSource({
   required ActionSource actionSource,
   required List<String>? authors,
-  required String currentPubkey,
-  List<SearchExtension> searchExtensions = const [],
+  required List<RequestFilter> filters,
 }) {
-  final search = SearchExtensions([
-    ...SearchExtensions.withCounters(
-      [
-        TagMarkerSearchExtension(
-          tagName: RelatedReplaceableEvent.tagName,
-          marker: RelatedEventMarker.reply.toShortString(),
-          negative: true,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: ModifiablePostEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: ModifiablePostEntity.kind,
-          includeKind: BlockListEntity.kind,
-        ),
-      ],
-      currentPubkey: currentPubkey,
-    ).extensions,
-    ...SearchExtensions.withCounters(
-      [
-        TagMarkerSearchExtension(
-          tagName: RelatedImmutableEvent.tagName,
-          marker: RelatedEventMarker.reply.toShortString(),
-          negative: true,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: PostEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-        GenericIncludeSearchExtension(
-          forKind: PostEntity.kind,
-          includeKind: BlockListEntity.kind,
-        ),
-      ],
-      currentPubkey: currentPubkey,
-      forKind: PostEntity.kind,
-    ).extensions,
-    ReferencesSearchExtension(contain: false),
-    ExpirationSearchExtension(expiration: false),
-    ...searchExtensions,
-  ]).toString();
-
   return EntitiesDataSource(
     actionSource: actionSource,
     entityFilter: (entity) {
@@ -118,28 +81,105 @@ EntitiesDataSource buildPostsDataSource({
       return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
           (entity is PostEntity && entity.data.parentEvent == null) ||
           entity is RepostEntity ||
-          entity is GenericRepostEntity;
+          entity is GenericRepostEntity ||
+          entity is ArticleEntity;
     },
-    requestFilters: [
-      RequestFilter(
-        kinds: const [
+    requestFilters: filters,
+  );
+}
+
+List<RequestFilter> _buildFilters({
+  required List<String>? authors,
+  required String currentPubkey,
+  required bool includePosts,
+  required bool includeArticles,
+  List<SearchExtension> searchExtensions = const [],
+}) {
+  final search = SearchExtensions([
+    ...searchExtensions,
+    if (includePosts) ...[
+      ...SearchExtensions.withCounters(
+        [
+          TagMarkerSearchExtension(
+            tagName: RelatedReplaceableEvent.tagName,
+            marker: RelatedEventMarker.reply.toShortString(),
+            negative: true,
+          ),
+          GenericIncludeSearchExtension(
+            forKind: ModifiablePostEntity.kind,
+            includeKind: UserMetadataEntity.kind,
+          ),
+          GenericIncludeSearchExtension(
+            forKind: ModifiablePostEntity.kind,
+            includeKind: BlockListEntity.kind,
+          ),
+        ],
+        currentPubkey: currentPubkey,
+      ).extensions,
+      ...SearchExtensions.withCounters(
+        [
+          TagMarkerSearchExtension(
+            tagName: RelatedImmutableEvent.tagName,
+            marker: RelatedEventMarker.reply.toShortString(),
+            negative: true,
+          ),
+          GenericIncludeSearchExtension(
+            forKind: PostEntity.kind,
+            includeKind: UserMetadataEntity.kind,
+          ),
+          GenericIncludeSearchExtension(
+            forKind: PostEntity.kind,
+            includeKind: BlockListEntity.kind,
+          ),
+        ],
+        currentPubkey: currentPubkey,
+        forKind: PostEntity.kind,
+      ).extensions,
+      ReferencesSearchExtension(contain: false),
+      ExpirationSearchExtension(expiration: false),
+    ],
+    if (includeArticles)
+      ...SearchExtensions.withCounters(
+        [
+          GenericIncludeSearchExtension(
+            forKind: ArticleEntity.kind,
+            includeKind: UserMetadataEntity.kind,
+          ),
+          GenericIncludeSearchExtension(
+            forKind: ArticleEntity.kind,
+            includeKind: BlockListEntity.kind,
+          ),
+        ],
+        currentPubkey: currentPubkey,
+        forKind: ArticleEntity.kind,
+      ).extensions,
+  ]).toString();
+
+  return [
+    RequestFilter(
+      kinds: [
+        if (includePosts) ...[
           PostEntity.kind,
           ModifiablePostEntity.kind,
           RepostEntity.kind,
         ],
-        search: search,
-        authors: authors,
-        limit: 20,
-      ),
-      RequestFilter(
-        kinds: const [GenericRepostEntity.kind],
-        authors: authors,
-        search: search,
-        tags: {
-          '#k': [ModifiablePostEntity.kind.toString()],
-        },
-        limit: 20,
-      ),
-    ],
-  );
+        if (includeArticles) ArticleEntity.kind,
+      ],
+      search: search,
+      authors: authors,
+      limit: 20,
+    ),
+    RequestFilter(
+      kinds: const [GenericRepostEntity.kind],
+      authors: authors,
+      search: search,
+      tags: {
+        '#k': [
+          if (includePosts) ModifiablePostEntity.kind.toString(),
+          if (includeArticles) ArticleEntity.kind.toString(),
+        ],
+      },
+      limit: 20,
+    ),
+  ];
 }
