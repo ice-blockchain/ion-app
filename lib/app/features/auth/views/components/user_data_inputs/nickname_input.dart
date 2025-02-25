@@ -6,7 +6,7 @@ import 'package:ion/app/features/auth/views/components/user_data_inputs/general_
 import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-const int _nicknameMaxLength = 15;
+const int _nicknameMaxLength = 20;
 
 class NicknameInput extends StatelessWidget {
   const NicknameInput({
