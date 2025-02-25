@@ -6,7 +6,7 @@ import 'package:convert/convert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/services/ion_connect/nip21/bech32_service.c.dart';
 import 'package:ion/app/services/ion_connect/nip21/nip19_prefix.dart';
-import 'package:ion/app/services/ion_connect/nip21/shareable_identifiers_model.c.dart';
+import 'package:ion/app/services/ion_connect/nip21/shareable_identifiers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_nip19_service.c.g.dart';
