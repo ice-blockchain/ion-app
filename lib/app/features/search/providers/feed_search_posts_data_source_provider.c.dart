@@ -44,8 +44,8 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
   final searchExtensions = [
     QuerySearchExtension(searchQuery: query),
     if (category == AdvancedSearchCategory.videos ||
-        (!filters.categories.contains(FeedCategory.feed) &&
-            filters.categories.contains(FeedCategory.videos)))
+        (!filters.categories[FeedCategory.feed].falseOrValue &&
+            filters.categories[FeedCategory.videos].falseOrValue))
       VideosSearchExtension(contain: true),
     if (category == AdvancedSearchCategory.trending) TrendingSearchExtension(),
     if (category == AdvancedSearchCategory.top) TopSearchExtension(),
@@ -62,9 +62,9 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
             authors: filters.source == FeedSearchSource.following ? entry.value : null,
             currentPubkey: currentPubkey,
             searchExtensions: searchExtensions,
-            includePosts: filters.categories.contains(FeedCategory.feed) ||
-                filters.categories.contains(FeedCategory.videos),
-            includeArticles: filters.categories.contains(FeedCategory.articles),
+            includePosts: filters.categories[FeedCategory.feed].falseOrValue ||
+                filters.categories[FeedCategory.videos].falseOrValue,
+            includeArticles: filters.categories[FeedCategory.articles].falseOrValue,
           ),
         ),
     ];

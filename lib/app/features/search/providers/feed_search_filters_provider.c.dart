@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/search/model/feed_search_source.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,22 +16,24 @@ part 'feed_search_filters_provider.c.g.dart';
 @freezed
 class FeedSearchFiltersState with _$FeedSearchFiltersState {
   const factory FeedSearchFiltersState({
-    required List<FeedCategory> categories,
+    required Map<FeedCategory, bool> categories,
     required FeedSearchSource source,
   }) = _FeedSearchFiltersState;
 
   factory FeedSearchFiltersState.initial() {
     return const FeedSearchFiltersState(
       source: FeedSearchSource.anyone,
-      categories: [FeedCategory.feed, FeedCategory.videos, FeedCategory.articles],
+      categories: {FeedCategory.feed: true, FeedCategory.videos: true, FeedCategory.articles: true},
     );
   }
+
+  factory FeedSearchFiltersState.fromJson(Map<String, dynamic> json) =>
+      _$FeedSearchFiltersStateFromJson(json);
 }
 
 @riverpod
 class FeedSearchFilter extends _$FeedSearchFilter {
-  static const _feedSearchSourceFilterKey = '_FeedSearchFilter:source';
-  static const _feedSearchCategoriesFilterKey = '_FeedSearchFilter:categories';
+  static const _feedSearchFilterKey = '_FeedSearchFilter';
 
   @override
   FeedSearchFiltersState build() {
@@ -44,7 +48,7 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     state = state.copyWith(source: source);
   }
 
-  set filterCategories(List<FeedCategory> categories) {
+  set filterCategories(Map<FeedCategory, bool> categories) {
     state = state.copyWith(categories: categories);
   }
 
@@ -58,12 +62,9 @@ class FeedSearchFilter extends _$FeedSearchFilter {
 
   void _saveState(FeedSearchFiltersState state) {
     final identityKeyName = ref.read(currentIdentityKeyNameSelectorProvider) ?? '';
-    ref.read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
-      ..setEnum(_feedSearchSourceFilterKey, state.source)
-      ..setValue<List<String>>(
-        _feedSearchCategoriesFilterKey,
-        state.categories.map((category) => category.toShortString()).toList(),
-      );
+    ref
+        .read(userPreferencesServiceProvider(identityKeyName: identityKeyName))
+        .setValue(_feedSearchFilterKey, jsonEncode(state.toJson()));
   }
 
   FeedSearchFiltersState _loadSavedState() {
@@ -71,16 +72,14 @@ class FeedSearchFilter extends _$FeedSearchFilter {
     final userPreferencesService =
         ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName));
 
-    final source =
-        userPreferencesService.getEnum(_feedSearchSourceFilterKey, FeedSearchSource.values);
-    final categories = userPreferencesService
-        .getValue<List<String>>(_feedSearchCategoriesFilterKey)
-        ?.map((category) => EnumExtensions.fromShortString(FeedCategory.values, category))
-        .nonNulls
-        .toList();
+    final savedStateJson = userPreferencesService.getValue<String>(_feedSearchFilterKey);
 
-    if (source != null && categories != null) {
-      return FeedSearchFiltersState(source: source, categories: categories);
+    if (savedStateJson != null) {
+      try {
+        return FeedSearchFiltersState.fromJson(jsonDecode(savedStateJson) as Map<String, dynamic>);
+      } catch (error, stackTrace) {
+        Logger.error(error, stackTrace: stackTrace);
+      }
     }
 
     return FeedSearchFiltersState.initial();

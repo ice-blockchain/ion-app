@@ -15,9 +15,9 @@ class FeedSearchFilterCategoriesSection extends StatelessWidget {
     super.key,
   });
 
-  final List<FeedCategory> selectedFilter;
+  final Map<FeedCategory, bool> selectedFilter;
 
-  final void Function(List<FeedCategory>) onFilterChange;
+  final void Function(Map<FeedCategory, bool>) onFilterChange;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class FeedSearchFilterCategoriesSection extends StatelessWidget {
               icon: category.getIcon(context),
               containerSize: 36.0.s,
             ),
-            trailing: selectedFilter.contains(category)
+            trailing: selectedFilter[category].falseOrValue
                 ? Assets.svg.iconBlockCheckboxOn.icon(color: context.theme.appColors.success)
                 : Assets.svg.iconblockRadiooff.icon(color: context.theme.appColors.tertararyText),
             title: Text(category.getLabel(context)),
@@ -55,24 +55,24 @@ class FeedSearchFilterCategoriesSection extends StatelessWidget {
     );
   }
 
-  List<FeedCategory> _toggleCategory(FeedCategory category) {
+  Map<FeedCategory, bool> _toggleCategory(FeedCategory category) {
     // Can't remove the last category
-    if (selectedFilter.length == 1 && selectedFilter.contains(category)) {
+    if (selectedFilter.length == 1 && selectedFilter[category].falseOrValue) {
       return selectedFilter;
     }
 
     // Can't uncheck the videos if feed is checked
-    if (category == FeedCategory.videos && selectedFilter.contains(FeedCategory.feed)) {
+    if (category == FeedCategory.videos && selectedFilter[FeedCategory.feed].falseOrValue) {
       return selectedFilter;
     }
 
-    final categories = [...selectedFilter];
-    if (!categories.remove(category)) {
-      categories.add(category);
-      if (category == FeedCategory.feed && !categories.contains(FeedCategory.videos)) {
-        categories.add(FeedCategory.videos);
-      }
+    final categories = {...selectedFilter};
+
+    if (category == FeedCategory.feed && !categories[category].falseOrValue) {
+      categories[FeedCategory.videos] = true;
     }
+
+    categories[category] = !categories[category].falseOrValue;
 
     return categories;
   }
