@@ -36,55 +36,60 @@ class FullscreenVideo extends HookConsumerWidget {
       return const CenteredLoadingIndicator();
     }
 
-    return Stack(
+    return Column(
       children: [
-        SizedBox.expand(
-          child: FittedBox(
-            fit: BoxFit.cover,
-            child: SizedBox(
-              width: controller.value.size.width,
-              height: controller.value.size.height,
-              child: VideoPlayer(controller),
-            ),
+        Expanded(
+          child: Stack(
+            children: [
+              SizedBox.expand(
+                child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    width: controller.value.size.width,
+                    height: controller.value.size.height,
+                    child: VideoPlayer(controller),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Stack(
+                  children: [
+                    const Positioned.fill(child: VideoGradientOverlay()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 14.0.s,
+                        horizontal: 16.0.s,
+                      ),
+                      child: VideoPostInfo(eventReference: eventReference),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
+        VideoProgressBar(controller: controller),
+        SizedBox(height: 20.0.s),
+        ColoredBox(
+          color: context.theme.appColors.primaryText,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(
-                children: [
-                  const Positioned.fill(child: VideoGradientOverlay()),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-                        child: VideoPostInfo(eventReference: eventReference),
-                      ),
-                      SizedBox(height: 14.0.s),
-                      VideoProgressBar(controller: controller),
-                      SizedBox(height: 20.0.s),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-                        child: SafeArea(
-                          top: false,
-                          child: CounterItemsFooter(
-                            eventReference: eventReference,
-                            color: context.theme.appColors.onPrimaryAccent,
-                            bottomPadding: 0,
-                            topPadding: 0,
-                          ),
-                        ),
-                      ),
-                    ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+                child: SafeArea(
+                  top: false,
+                  child: CounterItemsFooter(
+                    eventReference: eventReference,
+                    color: context.theme.appColors.onPrimaryAccent,
+                    bottomPadding: 0,
+                    topPadding: 0,
                   ),
-                ],
+                ),
               ),
             ],
           ),
