@@ -48,9 +48,8 @@ class FullscreenMediaPage extends HookConsumerWidget {
             child: Transform.translate(
               offset: Offset(0, drag.offset),
               child: Scaffold(
-                resizeToAvoidBottomInset: false,
                 backgroundColor: context.theme.appColors.primaryText,
-                extendBodyBehindAppBar: true,
+                extendBodyBehindAppBar: mediaType != MediaType.image,
                 appBar: NavigationAppBar.screen(
                   backgroundColor: Colors.transparent,
                   leading: NavigationBackButton(

@@ -32,7 +32,8 @@ class FullscreenImage extends StatelessWidget {
               maxScale: 4,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
-                fit: BoxFit.contain,
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.fitWidth,
                 placeholder: (context, url) => const CenteredLoadingIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),

@@ -20,30 +20,16 @@ class FullScreenMediaBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: CustomScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            slivers: [
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(
-                  child: mediaType == MediaType.video
-                      ? FullscreenVideo(
-                          videoUrl: mediaUrl,
-                          eventReference: eventReference,
-                        )
-                      : FullscreenImage(
-                          imageUrl: mediaUrl,
-                          eventReference: eventReference,
-                        ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+    return Center(
+      child: mediaType == MediaType.video
+          ? FullscreenVideo(
+              videoUrl: mediaUrl,
+              eventReference: eventReference,
+            )
+          : FullscreenImage(
+              imageUrl: mediaUrl,
+              eventReference: eventReference,
+            ),
     );
   }
 }
