@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -11,6 +10,7 @@ import 'package:ion/app/features/search/views/components/advanced_search_navigat
 import 'package:ion/app/features/search/views/components/advanced_search_tab_bar/advanced_search_tab_bar.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_top/feed_advanced_search_top.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_users.dart';
+import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/hooks/use_search_categories.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class FeedAdvancedSearchPage extends HookConsumerWidget {
@@ -20,12 +20,7 @@ class FeedAdvancedSearchPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = useMemoized(
-      () {
-        return AdvancedSearchCategory.values.where((category) => category.isFeed).toList();
-      },
-      [],
-    );
+    final categories = useSearchCategories(ref);
 
     return Scaffold(
       body: ScreenTopOffset(
