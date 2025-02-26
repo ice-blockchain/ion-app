@@ -7,6 +7,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/providers/feed_search_history_provider.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class FeedSearchResultsListItem extends ConsumerWidget {
@@ -25,6 +26,7 @@ class FeedSearchResultsListItem extends ConsumerWidget {
           behavior: HitTestBehavior.opaque,
           onTap: () {
             ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(user.masterPubkey);
+            ProfileRoute(pubkey: user.masterPubkey).push<void>(context);
           },
           child: ListItem.user(
             title: Text(user.data.displayName),
