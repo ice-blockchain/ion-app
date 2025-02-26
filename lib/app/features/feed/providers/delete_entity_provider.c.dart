@@ -42,6 +42,7 @@ Future<void> deleteEntity(
         _deleteFromDataSources(ref, entity);
         _deleteFromCache(ref, entity);
         _deleteFromCounters(ref, entity, eventReference);
+        _deleteFromProviders(ref, entity);
       }
     case ModifiablePostEntity():
       {
@@ -97,11 +98,13 @@ void _deleteFromCounters(Ref ref, IonConnectEntity entity, EventReference eventR
   switch (entity) {
     case RepostEntity():
       ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
-    case GenericRepostEntity() when entity.data.kind == ModifiablePostEntity.kind:
-      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
-    case GenericRepostEntity() when entity.data.kind == ArticleEntity.kind:
+    case GenericRepostEntity():
       ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
     default:
       break;
   }
+}
+
+void _deleteFromProviders(Ref ref, IonConnectEntity entity) {
+  // TODO: Remove from repostedEventsProvider -> entity.data.eventReference
 }
