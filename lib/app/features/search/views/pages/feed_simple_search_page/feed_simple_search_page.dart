@@ -26,6 +26,7 @@ class FeedSimpleSearchPage extends ConsumerWidget {
     final history = ref.watch(feedSearchHistoryProvider);
     final usersSearchResults = ref.watch(searchUsersProvider(query: query)).valueOrNull;
 
+    // TODO: add PullToRefreshBuilder + PullToRefresh
     return Scaffold(
       body: ScreenTopOffset(
         child: Column(
