@@ -49,7 +49,7 @@ class _LinkedPhone extends ConsumerWidget {
     final colors = context.theme.appColors;
 
     final linkedPhone = ref.watch(linkedPhoneProvider).valueOrNull;
-    final shortenedPhone = linkedPhone != null ? shortenPhoneNumber(linkedPhone) : '';
+    final obscuredPhone = linkedPhone != null ? obscurePhoneNumber(linkedPhone) : '';
 
     return Column(
       children: [
@@ -61,7 +61,7 @@ class _LinkedPhone extends ConsumerWidget {
         ),
         SizedBox(height: 8.0.s),
         Text(
-          shortenedPhone,
+          obscuredPhone,
           style: context.theme.appTextThemes.subtitle.copyWith(
             color: colors.primaryText,
           ),

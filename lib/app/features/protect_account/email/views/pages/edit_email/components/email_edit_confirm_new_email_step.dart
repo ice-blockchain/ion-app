@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/protect_account/components/two_fa_edit_new_value_confirmation_step.dart';
 import 'package:ion/app/features/protect_account/components/twofa_step_scaffold.dart';
+import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class EmailEditConfirmNewEmailStep extends HookConsumerWidget {
@@ -31,7 +32,7 @@ class EmailEditConfirmNewEmailStep extends HookConsumerWidget {
       onBackPress: onPrevious,
       contentPadding: 0,
       child: TwoFaEditConfirmNewValueStep(
-        newValue: email,
+        newValue: obscureEmail(email),
         twoFaType: TwoFaType.email,
         onNext: onNext,
       ),
