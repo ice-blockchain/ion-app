@@ -12,6 +12,9 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -96,9 +99,26 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPerson,
                 title: context.i18n.common_profile,
-                onTap: () {
-                  ShareProfileModalRoute().push<String>(context);
-                  ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                onTap: () async {
+                  final selectedProfilePubkey =
+                      await ShareProfileModalRoute().push<String>(context);
+                  if (selectedProfilePubkey != null) {
+                    final ionConnectUriProtocolService =
+                        ref.read(ionConnectUriProtocolServiceProvider);
+                    final ionConnectUriIdentifierService =
+                        ref.read(ionConnectUriIdentifierServiceProvider);
+                    unawaited(
+                      onSubmitted(
+                        content: ionConnectUriProtocolService.encode(
+                          ionConnectUriIdentifierService.encodeShareableIdentifiers(
+                            prefix: IonConnectProtocolIdentiferType.nprofile,
+                            special: selectedProfilePubkey,
+                          ),
+                        ),
+                      ),
+                    );
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                  }
                 },
               ),
               _MoreContentItem(

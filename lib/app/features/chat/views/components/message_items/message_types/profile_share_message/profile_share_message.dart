@@ -1,35 +1,55 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
 import 'package:ion/app/utils/username.dart';
 
-class ProfileShareMessage extends StatelessWidget {
+class ProfileShareMessage extends HookConsumerWidget {
   const ProfileShareMessage({
-    required this.isMe,
-    required this.createdAt,
-    this.isLastMessageFromAuthor = true,
-    this.reactions,
-    this.author,
+    required this.eventMessage,
     super.key,
   });
 
-  final bool isMe;
-  final DateTime createdAt;
-  final MessageAuthor? author;
-  final bool isLastMessageFromAuthor;
-  final List<MessageReactionGroup>? reactions;
+  final EventMessage eventMessage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final ionConnectUriIdentifierService = ref.watch(ionConnectUriIdentifierServiceProvider);
+    final ionConnectUriProtocolService = ref.watch(ionConnectUriProtocolServiceProvider);
+
+    final profilePubkey = ionConnectUriIdentifierService
+        .decodeShareableIdentifiers(
+          payload: ionConnectUriProtocolService.decode(entity.data.content),
+        )
+        ?.special;
+
+    if (profilePubkey == null) {
+      return const SizedBox.shrink();
+    }
+
+    final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
+
+    if (userMetadata == null) {
+      return const SizedBox.shrink();
+    }
+
     return MessageItemWrapper(
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(12.0.s),
       isMe: isMe,
       child: IntrinsicWidth(
@@ -41,16 +61,19 @@ class ProfileShareMessage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MessageAuthorNameWidget(author: author),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _ProfileSummary(isMe: isMe),
+                      _ProfileSummary(isMe: isMe, userMetadata: userMetadata),
                       SizedBox(height: 8.0.s),
                       Button.compact(
                         type: ButtonType.outlined,
                         backgroundColor: context.theme.appColors.tertararyBackground,
-                        onPressed: () {},
+                        onPressed: () {
+                          context.replace(
+                            ConversationRoute(receiverPubKey: userMetadata.masterPubkey).location,
+                          );
+                        },
                         minimumSize: Size(120.0.s, 32.0.s),
                         label: Padding(
                           padding: EdgeInsets.only(bottom: 2.0.s),
@@ -64,14 +87,12 @@ class ProfileShareMessage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  //TODO: add metadata
-                  //MessageReactions(reactions: reactions),
+                  MessageReactions(eventMessage: eventMessage, isMe: isMe),
                 ],
               ),
             ),
             SizedBox(width: 16.0.s),
-            //TODO: add metadata
-            // MessageMetaData(isMe: isMe, createdAt: createdAt),
+            MessageMetaData(eventMessage: eventMessage),
           ],
         ),
       ),
@@ -82,16 +103,17 @@ class ProfileShareMessage extends StatelessWidget {
 class _ProfileSummary extends StatelessWidget {
   const _ProfileSummary({
     required this.isMe,
+    required this.userMetadata,
   });
 
   final bool isMe;
-
+  final UserMetadataEntity userMetadata;
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: ListItem.user(
         title: Text(
-          'Alina Proxima',
+          userMetadata.data.displayName,
           style: context.theme.appTextThemes.subtitle3.copyWith(
             color: isMe
                 ? context.theme.appColors.onPrimaryAccent
@@ -99,14 +121,14 @@ class _ProfileSummary extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          prefixUsername(username: 'alinaproxima', context: context),
+          prefixUsername(username: userMetadata.data.name, context: context),
           style: context.theme.appTextThemes.body2.copyWith(
             color: isMe
                 ? context.theme.appColors.onPrimaryAccent
                 : context.theme.appColors.onTertararyBackground,
           ),
         ),
-        profilePicture: 'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png',
+        profilePicture: userMetadata.data.picture,
         avatarSize: 40.0.s,
       ),
     );
