@@ -12,7 +12,8 @@ class CoinsTable extends Table {
   @JsonKey('iconURL')
   TextColumn get iconURL => text()();
   TextColumn get name => text()();
-  TextColumn get network => text()();
+  @JsonKey('network')
+  TextColumn get networkId => text()();
   @JsonKey('priceUSD')
   RealColumn get priceUSD => real()();
   TextColumn get symbol => text()();

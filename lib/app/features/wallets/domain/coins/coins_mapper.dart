@@ -12,7 +12,7 @@ class CoinsMapper {
             decimals: coin.decimals,
             iconURL: coin.iconURL,
             name: coin.name,
-            network: coin.network,
+            networkId: coin.network,
             priceUSD: coin.priceUSD,
             symbol: coin.symbol,
             symbolGroup: coin.symbolGroup,

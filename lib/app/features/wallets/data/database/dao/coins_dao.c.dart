@@ -36,7 +36,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
 
   Stream<List<CoinData>> watch(Iterable<String>? coinIds) {
     final query = select(coinsTable).join([
-      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
     ]);
 
     if (coinIds?.isNotEmpty ?? false) {
@@ -48,7 +48,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
 
   Future<List<CoinData>> get(Iterable<String>? coinIds) {
     final query = select(coinsTable).join([
-      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
     ]);
 
     if (coinIds?.isNotEmpty ?? false) {
@@ -61,7 +61,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
   Future<List<CoinData>> search(String searchQuery) {
     final formattedQuery = '%${searchQuery.trim().toLowerCase()}%';
     final query = select(coinsTable).join([
-      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
     ])
       ..where(
         coinsTable.symbol.lower().like(formattedQuery) |
@@ -78,7 +78,7 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     String? contractAddress,
   }) {
     final query = select(coinsTable).join([
-      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
     ]);
     if (symbolGroup != null) {
       query.where(coinsTable.symbolGroup.lower().equals(symbolGroup.toLowerCase()));
