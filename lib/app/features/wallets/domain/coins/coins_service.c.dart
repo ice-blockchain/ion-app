@@ -37,37 +37,21 @@ class CoinsService {
   final NetworksRepository _networksRepository;
   final IONIdentityClient _ionIdentityClient;
 
-  Stream<Iterable<CoinData>> watchCoins(Iterable<String>? coinIds) async* {
-    final coinStream = _coinsRepository.watchCoins(coinIds);
-
-    await for (final coins in coinStream) {
-      final networks = await _networksRepository.getAllAsMap();
-      yield coins
-          .where((coin) => networks.containsKey(coin.network))
-          .map((coin) => CoinData.fromDB(coin, networks[coin.network]!));
-    }
-  }
+  Stream<Iterable<CoinData>> watchCoins(Iterable<String>? coinIds) =>
+      _coinsRepository.watchCoins(coinIds);
 
   Future<Iterable<CoinData>> getCoinsByFilters({
     String? symbolGroup,
     String? symbol,
     NetworkData? network,
     String? contractAddress,
-  }) async {
-    final networks = await _networksRepository.getAllAsMap();
-
-    return _coinsRepository
-        .getCoinsByFilters(
-          symbolGroup: symbolGroup,
-          symbol: symbol,
-          network: network?.id,
-          contractAddress: contractAddress,
-        )
-        .then(
-          (result) => result
-              .where((coin) => networks.containsKey(coin.network))
-              .map((coin) => CoinData.fromDB(coin, networks[coin.network]!)),
-        );
+  }) {
+    return _coinsRepository.getCoinsByFilters(
+      symbolGroup: symbolGroup,
+      symbol: symbol,
+      network: network?.id,
+      contractAddress: contractAddress,
+    );
   }
 
   Future<Iterable<CoinData>> getSyncedCoinsBySymbolGroup(String symbolGroup) async {

@@ -15,7 +15,7 @@ Future<List<String>> cashtagSuggestions(Ref ref, String query) async {
   await ref.debounce();
 
   final searchQuery = query.substring(1).toLowerCase();
-  final searchService = await ref.read(searchCoinsServiceProvider.future);
+  final searchService = ref.read(searchCoinsServiceProvider);
 
   try {
     final coinsGroups = await searchService.search(searchQuery);

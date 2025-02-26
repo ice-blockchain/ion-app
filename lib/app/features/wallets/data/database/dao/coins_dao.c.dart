@@ -3,7 +3,10 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/tables/networks_table.c.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
+import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_dao.c.g.dart';
@@ -11,7 +14,7 @@ part 'coins_dao.c.g.dart';
 @Riverpod(keepAlive: true)
 CoinsDao coinsDao(Ref ref) => CoinsDao(db: ref.watch(walletsDatabaseProvider));
 
-@DriftAccessor(tables: [CoinsTable])
+@DriftAccessor(tables: [CoinsTable, NetworksTable])
 class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
   CoinsDao({required WalletsDatabase db}) : super(db);
 
@@ -31,50 +34,73 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     await delete(coinsTable).go();
   }
 
-  Stream<List<Coin>> watch(Iterable<String>? coinIds) {
-    if (coinIds?.isEmpty ?? true) {
-      return select(coinsTable).watch();
+  Stream<List<CoinData>> watch(Iterable<String>? coinIds) {
+    final query = select(coinsTable).join([
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+    ]);
+
+    if (coinIds?.isNotEmpty ?? false) {
+      query.where(coinsTable.id.isIn(coinIds!));
     }
-    return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).watch();
+
+    return query.map(_toCoinData).watch();
   }
 
-  Future<List<Coin>> get(Iterable<String>? coinIds) {
-    if (coinIds?.isEmpty ?? true) {
-      return select(coinsTable).get();
+  Future<List<CoinData>> get(Iterable<String>? coinIds) {
+    final query = select(coinsTable).join([
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+    ]);
+
+    if (coinIds?.isNotEmpty ?? false) {
+      query.where(coinsTable.id.isIn(coinIds!));
     }
-    return (select(coinsTable)..where((row) => row.id.isIn(coinIds!))).get();
+
+    return query.map(_toCoinData).get();
   }
 
-  Future<List<Coin>> search(String query) {
-    final formattedQuery = '%${query.trim().toLowerCase()}%';
+  Future<List<CoinData>> search(String searchQuery) {
+    final formattedQuery = '%${searchQuery.trim().toLowerCase()}%';
+    final query = select(coinsTable).join([
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+    ])
+      ..where(
+        coinsTable.symbol.lower().like(formattedQuery) |
+            coinsTable.name.lower().like(formattedQuery),
+      );
 
-    return (select(coinsTable)
-          ..where(
-            (row) =>
-                row.symbol.lower().like(formattedQuery) | row.name.lower().like(formattedQuery),
-          ))
-        .get();
+    return query.map(_toCoinData).get();
   }
 
-  Future<List<Coin>> getByFilters({
+  Future<List<CoinData>> getByFilters({
     String? symbolGroup,
     String? symbol,
     String? network,
     String? contractAddress,
   }) {
-    final query = select(coinsTable);
+    final query = select(coinsTable).join([
+      leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.network)),
+    ]);
     if (symbolGroup != null) {
-      query.where((row) => row.symbolGroup.lower().equals(symbolGroup.toLowerCase()));
+      query.where(coinsTable.symbolGroup.lower().equals(symbolGroup.toLowerCase()));
     }
     if (symbol != null) {
-      query.where((row) => row.symbol.lower().equals(symbol.toLowerCase()));
+      query.where(coinsTable.symbol.lower().equals(symbol.toLowerCase()));
     }
     if (network != null) {
-      query.where((row) => row.network.lower().equals(network.toLowerCase()));
+      query.where(networksTable.id.lower().equals(network.toLowerCase()));
     }
     if (contractAddress != null) {
-      query.where((row) => row.contractAddress.equals(contractAddress));
+      query.where(coinsTable.contractAddress.equals(contractAddress));
     }
-    return query.get();
+    return query.map(_toCoinData).get();
+  }
+
+  CoinData _toCoinData(TypedResult row) {
+    return CoinData.fromDB(
+      row.readTable(coinsTable),
+      NetworkData.fromDB(
+        row.readTable(networksTable),
+      ),
+    );
   }
 }
