@@ -2,18 +2,18 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart';
-import 'package:ion/app/features/wallets/data/coins/database/coins_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'coins_dao.c.g.dart';
 
 @Riverpod(keepAlive: true)
-CoinsDao coinsDao(Ref ref) => CoinsDao(db: ref.watch(coinsDatabaseProvider));
+CoinsDao coinsDao(Ref ref) => CoinsDao(db: ref.watch(walletsDatabaseProvider));
 
 @DriftAccessor(tables: [CoinsTable])
-class CoinsDao extends DatabaseAccessor<CoinsDatabase> with _$CoinsDaoMixin {
-  CoinsDao({required CoinsDatabase db}) : super(db);
+class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
+  CoinsDao({required WalletsDatabase db}) : super(db);
 
   Future<bool> hasAny() async {
     final query = select(coinsTable)..limit(1);

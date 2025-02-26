@@ -2,8 +2,8 @@
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
-import 'package:ion/app/features/wallets/data/networks/repository/networks_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';

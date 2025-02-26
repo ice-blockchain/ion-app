@@ -2,18 +2,18 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/networks/database/networks_database.c.dart';
-import 'package:ion/app/features/wallets/data/networks/database/networks_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/tables/networks_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'networks_dao.c.g.dart';
 
 @Riverpod(keepAlive: true)
-NetworksDao networksDao(Ref ref) => NetworksDao(db: ref.watch(networksDatabaseProvider));
+NetworksDao networksDao(Ref ref) => NetworksDao(db: ref.watch(walletsDatabaseProvider));
 
 @DriftAccessor(tables: [NetworksTable])
-class NetworksDao extends DatabaseAccessor<NetworksDatabase> with _$NetworksDaoMixin {
-  NetworksDao({required NetworksDatabase db}) : super(db);
+class NetworksDao extends DatabaseAccessor<WalletsDatabase> with _$NetworksDaoMixin {
+  NetworksDao({required WalletsDatabase db}) : super(db);
 
   Future<void> insertAll(List<Network> networks) async {
     await batch((batch) {

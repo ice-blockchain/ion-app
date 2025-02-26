@@ -4,8 +4,8 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
-import 'package:ion/app/features/wallets/data/networks/repository/networks_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_type.dart';
