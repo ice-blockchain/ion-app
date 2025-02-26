@@ -44,6 +44,7 @@ class SendCoinsForm extends HookConsumerWidget {
         text: formatCrypto(coin.amount),
       ),
     );
+
     useOnInit(
       () {
         void listener() {
@@ -116,6 +117,12 @@ class SendCoinsForm extends HookConsumerWidget {
 
                         if (pubkey != null) {
                           notifier.setContact(pubkey);
+                        }
+                      },
+                      onScanPressed: () async {
+                        final address = await CoinSendScanRoute().push<String?>(context);
+                        if (address != null) {
+                          notifier.setReceiverAddress(address);
                         }
                       },
                     ),

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,16 +9,33 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class QRScannerBottomSheet extends HookConsumerWidget {
   const QRScannerBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qrKey = useMemoized(() => GlobalKey(debugLabel: 'QR'));
+    final qrKey = useMemoized(GlobalKey.new);
+    final controllerRef = useRef<QRViewController?>(null);
+    final subscriptionRef = useRef<StreamSubscription<Barcode>?>(null);
 
-    final result = useState<Barcode?>(null);
+    final onQRViewCreated = useCallback(
+      (QRViewController controller) {
+        controllerRef.value = controller;
+        subscriptionRef.value = controller.scannedDataStream.listen((scanData) {
+          if (scanData.code != null && context.mounted) {
+            Navigator.of(context).pop(scanData.code);
+          }
+        });
+      },
+      [],
+    );
+
+    useEffect(
+      () => subscriptionRef.value?.cancel,
+      const [],
+    );
 
     return Column(
       children: [
@@ -30,10 +49,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
           child: Stack(
             children: [
               QRView(
-                onQRViewCreated: (QRViewController controller) {
-                  controller.scannedDataStream
-                      .listen((Barcode scanData) => result.value = scanData);
-                },
+                onQRViewCreated: onQRViewCreated,
                 overlay: QrScannerOverlayShape(
                   borderColor: context.theme.appColors.primaryAccent,
                   borderRadius: 10.0.s,
