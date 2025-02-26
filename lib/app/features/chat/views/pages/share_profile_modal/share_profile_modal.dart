@@ -16,13 +16,15 @@ class ShareProfileModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return SheetContent(
       topPadding: 0,
-      body: UserPickerSheet(
-        navigationBar: NavigationAppBar.modal(
-          showBackButton: false,
-          title: Text(context.i18n.chat_profile_share_modal_title),
-          actions: [NavigationCloseButton(onPressed: () => context.pop())],
+      body: SingleChildScrollView(
+        child: UserPickerSheet(
+          navigationBar: NavigationAppBar.modal(
+            showBackButton: false,
+            title: Text(context.i18n.chat_profile_share_modal_title),
+            actions: [NavigationCloseButton(onPressed: () => context.pop())],
+          ),
+          onUserSelected: (UserMetadataEntity user) => context.pop<String>(user.masterPubkey),
         ),
-        onUserSelected: (UserMetadataEntity user) => context.pop<String>(user.masterPubkey),
       ),
     );
   }
