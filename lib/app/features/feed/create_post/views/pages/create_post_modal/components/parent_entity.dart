@@ -65,10 +65,7 @@ class ParentEntity extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   switch (parentEntity) {
-                    PostEntity() || ModifiablePostEntity() => PostBody(
-                        entity: parentEntity,
-                        eventReference: eventReference,
-                      ),
+                    PostEntity() || ModifiablePostEntity() => PostBody(entity: parentEntity),
                     ArticleEntity() =>
                       Article(eventReference: eventReference, header: const SizedBox.shrink()),
                     _ => const SizedBox.shrink(),

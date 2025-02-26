@@ -86,7 +86,6 @@ class Post extends ConsumerWidget {
           entity: entity,
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
-          eventReference: eventReference,
         ),
         if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
         footer ??

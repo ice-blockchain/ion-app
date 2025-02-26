@@ -13,14 +13,12 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
     required this.entity,
-    required this.eventReference,
     this.isTextSelectable = false,
     this.maxLines = 6,
     super.key,
@@ -29,7 +27,6 @@ class PostBody extends HookConsumerWidget {
   final IonConnectEntity entity;
   final bool isTextSelectable;
   final int? maxLines;
-  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,7 +88,7 @@ class PostBody extends HookConsumerWidget {
                 padding: EdgeInsets.only(top: 10.0.s),
                 child: PostMedia(
                   media: media,
-                  eventReference: eventReference,
+                  eventReference: entity.toEventReference(),
                 ),
               ),
             if (media.isEmpty && firstLinkOperation != null)
