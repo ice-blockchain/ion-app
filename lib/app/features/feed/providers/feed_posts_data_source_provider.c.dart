@@ -32,7 +32,7 @@ List<EntitiesDataSource>? feedPostsDataSource(Ref ref) {
   final languageInterestSet =
       ref.watch(currentUserInterestsSetProvider(InterestSetType.languages)).valueOrNull;
   final filters = ref.watch(feedCurrentFilterProvider);
-  final filterRelays = ref.watch(feedFilterRelaysProvider(filters.filter)).valueOrNull;
+  final filterRelays = ref.watch(feedFilterRelaysProvider).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays != null && currentPubkey != null && languageInterestSet != null) {

@@ -20,7 +20,7 @@ part 'feed_trending_videos_data_source_provider.c.g.dart';
 @riverpod
 List<EntitiesDataSource>? feedTrendingVideosDataSource(Ref ref) {
   final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
-  final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
+  final filterRelays = ref.watch(feedFilterRelaysProvider).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays == null || currentPubkey == null) return null;
