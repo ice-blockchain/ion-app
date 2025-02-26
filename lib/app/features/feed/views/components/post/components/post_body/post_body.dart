@@ -86,7 +86,10 @@ class PostBody extends HookConsumerWidget {
             if (media.isNotEmpty)
               Padding(
                 padding: EdgeInsets.only(top: 10.0.s),
-                child: PostMedia(media: media),
+                child: PostMedia(
+                  media: media,
+                  eventReference: entity.toEventReference(),
+                ),
               ),
             if (media.isEmpty && firstLinkOperation != null)
               Padding(

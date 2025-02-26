@@ -29,6 +29,7 @@ import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
 import 'package:ion/app/features/chat/views/pages/share_profile_modal/share_profile_modal.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
 import 'package:ion/app/features/core/views/pages/search_emoji_modal/search_emoji_modal.dart';
@@ -53,6 +54,7 @@ import 'package:ion/app/features/feed/views/pages/articles_from_author_page/arti
 import 'package:ion/app/features/feed/views/pages/articles_from_topic_page/articles_from_topic_page.dart';
 import 'package:ion/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/feed_page.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/fullscreen_media_page.dart';
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/notifications_history_page.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
