@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/counters/reposted_events_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
@@ -41,7 +42,7 @@ Future<void> deleteEntity(
         await _deleteFromServer(ref, entity);
         _deleteFromDataSources(ref, entity);
         _deleteFromCache(ref, entity);
-        _deleteFromCounters(ref, entity, eventReference);
+        _deleteFromCounters(ref, entity);
         _deleteFromProviders(ref, entity);
       }
     case ModifiablePostEntity():
@@ -94,7 +95,7 @@ void _deleteFromCache(Ref ref, IonConnectEntity entity) {
   }
 }
 
-void _deleteFromCounters(Ref ref, IonConnectEntity entity, EventReference eventReference) {
+void _deleteFromCounters(Ref ref, IonConnectEntity entity) {
   switch (entity) {
     case RepostEntity():
       ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
@@ -106,5 +107,13 @@ void _deleteFromCounters(Ref ref, IonConnectEntity entity, EventReference eventR
 }
 
 void _deleteFromProviders(Ref ref, IonConnectEntity entity) {
-  // TODO: Remove from repostedEventsProvider -> entity.data.eventReference
+  final eventReference = switch (entity) {
+    RepostEntity() => entity.data.eventReference,
+    GenericRepostEntity() => entity.data.eventReference,
+    _ => null,
+  };
+
+  if (eventReference != null) {
+    ref.read(repostedEventsNotifierProvider.notifier).removeRepost(eventReference);
+  }
 }

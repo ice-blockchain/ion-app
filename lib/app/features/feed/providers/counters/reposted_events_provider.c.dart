@@ -1,66 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
-import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/counters/reposted_events_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'reposted_events_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Stream<Map<EventReference, EventReference>?> repostedEvents(Ref ref) async* {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+Stream<Map<EventReference, EventReference>> repostedEvents(Ref ref) async* {
+  yield ref.watch(repostedEventsNotifierProvider);
 
-  if (currentPubkey == null) {
-    yield {};
-  } else {
-    final cache = ref.read(ionConnectCacheProvider);
-    var repostedMap = cache.values.fold<Map<EventReference, EventReference>>({}, (result, entry) {
-      final userRepostData = _getCurrentUserRepostData(entry.entity, currentPubkey: currentPubkey);
-      if (userRepostData != null) {
-        result[userRepostData.postReference] = userRepostData.repostReference;
-      }
-      return result;
-    });
-
-    yield repostedMap;
-
-    await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
-      final userRepostData = _getCurrentUserRepostData(entity, currentPubkey: currentPubkey);
-
-      if (userRepostData != null) {
-        yield repostedMap = {
-          ...repostedMap,
-          userRepostData.postReference: userRepostData.repostReference,
-        };
-      }
-    }
-  }
-}
-
-({EventReference repostReference, EventReference postReference})? _getCurrentUserRepostData(
-  IonConnectEntity entity, {
-  required String currentPubkey,
-}) {
-  if (entity.masterPubkey != currentPubkey) {
-    return null;
-  }
-
-  return switch (entity) {
-    GenericRepostEntity() => (
-        repostReference: entity.toEventReference(),
-        postReference: entity.data.eventReference,
-      ),
-    RepostEntity() => (
-        repostReference: entity.toEventReference(),
-        postReference: entity.data.eventReference,
-      ),
-    _ => null,
-  };
+  ref.listen(repostedEventsNotifierProvider, (previous, next) {});
 }
 
 @riverpod
