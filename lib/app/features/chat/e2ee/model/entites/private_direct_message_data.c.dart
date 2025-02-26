@@ -13,7 +13,7 @@ import 'package:ion/app/features/ion_connect/model/entity_data_with_media_conten
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/services/ion_connect/nip21/nip19_prefix.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
@@ -135,7 +135,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
   MessageType get messageType {
     if (primaryVideo != null) {
       return MessageType.video;
-    } else if (Nip19PrefixValidator.isProfileIdentifier(content)) {
+    } else if (IonConnectProtocolIdentiferTypeValidator.isProfileIdentifier(content)) {
       return MessageType.profile;
     }
 

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/ion_connect/nip21/nip19_prefix.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
 
-class ShareableIdentifiers {
-  ShareableIdentifiers({
+class ShareableIdentifier {
+  ShareableIdentifier({
     required this.prefix,
     required this.special,
     this.relays = const [],
     this.author,
     this.kind,
   });
-  final Nip19Prefix prefix;
+  final IonConnectProtocolIdentiferType prefix;
   final String special;
   List<String> relays;
   String? author;

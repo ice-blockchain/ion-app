@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-enum Nip19Prefix {
+enum IonConnectProtocolIdentiferType {
   nsec,
   npub,
   note,
@@ -8,10 +8,11 @@ enum Nip19Prefix {
   nevent,
   naddr;
 
-  static Nip19Prefix from(String name) => Nip19Prefix.values.byName(name.toLowerCase());
+  static IonConnectProtocolIdentiferType from(String name) =>
+      IonConnectProtocolIdentiferType.values.byName(name.toLowerCase());
 }
 
-class Nip19PrefixValidator {
+class IonConnectProtocolIdentiferTypeValidator {
   static bool isProfileIdentifier(String? value) =>
       RegExp(r'^nostr:nprofile1[a-z0-9]+$').hasMatch(value ?? '');
   static bool isEventIdentifier(String? value) =>

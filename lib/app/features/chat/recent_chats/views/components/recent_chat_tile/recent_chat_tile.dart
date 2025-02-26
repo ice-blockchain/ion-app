@@ -11,8 +11,8 @@ import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/services/ion_connect/nip21/ion_connect_nip19_service.c.dart';
-import 'package:ion/app/services/ion_connect/nip21/ion_connect_nip21_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -210,8 +210,8 @@ class ChatPreview extends HookConsumerWidget {
   final MessageType messageType;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nip19Service = ref.read(ionConnectNip19ServiceProvider);
-    final nip21Service = ref.read(ionConnectNip21ServiceProvider);
+    final ionConnectUriIdentifierService = ref.read(ionConnectUriIdentifierServiceProvider);
+    final ionConnectUriProtocolService = ref.read(ionConnectUriProtocolServiceProvider);
 
     return Row(
       children: [
@@ -224,9 +224,9 @@ class ChatPreview extends HookConsumerWidget {
               MessageType.profile => ref
                       .watch(
                         userMetadataProvider(
-                          nip19Service
+                          ionConnectUriIdentifierService
                                   .decodeShareableIdentifiers(
-                                    payload: nip21Service.decode(content),
+                                    payload: ionConnectUriProtocolService.decode(content),
                                   )
                                   ?.special ??
                               '',

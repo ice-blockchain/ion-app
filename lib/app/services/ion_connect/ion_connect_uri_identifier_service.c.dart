@@ -4,28 +4,28 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/services/ion_connect/nip21/bech32_service.c.dart';
-import 'package:ion/app/services/ion_connect/nip21/nip19_prefix.dart';
-import 'package:ion/app/services/ion_connect/nip21/shareable_identifiers.dart';
+import 'package:ion/app/services/bech32/bech32_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/shareable_identifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_connect_nip19_service.c.g.dart';
+part 'ion_connect_uri_identifier_service.c.g.dart';
 
 ///
 /// https://github.com/nostr-protocol/nips/blob/master/19.md
 ///
-class IonConnectNip19Service {
-  const IonConnectNip19Service({required this.bech32Service});
+class IonConnectUriIdentifierService {
+  const IonConnectUriIdentifierService({required this.bech32Service});
 
   final Bech32Service bech32Service;
 
   static const _shareableIdentifiersPrefixes = [
-    Nip19Prefix.nprofile,
-    Nip19Prefix.nevent,
-    Nip19Prefix.naddr,
+    IonConnectProtocolIdentiferType.nprofile,
+    IonConnectProtocolIdentiferType.nevent,
+    IonConnectProtocolIdentiferType.naddr,
   ];
 
-  ({Nip19Prefix prefix, String data}) decode({required String payload}) {
+  ({IonConnectProtocolIdentiferType prefix, String data}) decode({required String payload}) {
     final decoded = bech32Service.decode(payload);
     if (_shareableIdentifiersPrefixes.contains(decoded.prefix)) {
       throw Exception('use decodeShareableIdentifiers instead');
@@ -34,7 +34,7 @@ class IonConnectNip19Service {
   }
 
   String encode({
-    required Nip19Prefix prefix,
+    required IonConnectProtocolIdentiferType prefix,
     required String data,
   }) {
     if (_shareableIdentifiersPrefixes.contains(prefix)) {
@@ -44,7 +44,7 @@ class IonConnectNip19Service {
   }
 
   String encodeShareableIdentifiers({
-    required Nip19Prefix prefix,
+    required IonConnectProtocolIdentiferType prefix,
     required String special,
     List<String>? relays,
     String? author,
@@ -55,7 +55,7 @@ class IonConnectNip19Service {
     }
 
     // 0: special
-    if (prefix == Nip19Prefix.naddr) {
+    if (prefix == IonConnectProtocolIdentiferType.naddr) {
       special = special.codeUnits.map((number) => number.toRadixString(16).padLeft(2, '0')).join();
     }
     var result = '00${hex.decode(special).length.toRadixString(16).padLeft(2, '0')}$special';
@@ -116,7 +116,7 @@ class IonConnectNip19Service {
   /// 3: kind
   /// - for naddr, the 32-bit unsigned integer of the kind, big-endian
   /// - for nevent, optionally, the 32-bit unsigned integer of the kind, big-endian
-  ShareableIdentifiers? decodeShareableIdentifiers({
+  ShareableIdentifier? decodeShareableIdentifiers({
     required String? payload,
   }) {
     try {
@@ -139,7 +139,7 @@ class IonConnectNip19Service {
         index += length;
 
         if (type == 0) {
-          special = (decoded.prefix == Nip19Prefix.naddr)
+          special = (decoded.prefix == IonConnectProtocolIdentiferType.naddr)
               ? String.fromCharCodes(value)
               : hex.encode(value);
         } else if (type == 1) {
@@ -152,7 +152,7 @@ class IonConnectNip19Service {
         }
       }
 
-      return ShareableIdentifiers(
+      return ShareableIdentifier(
         prefix: decoded.prefix,
         special: special,
         relays: relays,
@@ -166,6 +166,6 @@ class IonConnectNip19Service {
 }
 
 @riverpod
-IonConnectNip19Service ionConnectNip19Service(Ref ref) {
-  return IonConnectNip19Service(bech32Service: ref.read(bech32ServiceProvider));
+IonConnectUriIdentifierService ionConnectUriIdentifierService(Ref ref) {
+  return IonConnectUriIdentifierService(bech32Service: ref.read(bech32ServiceProvider));
 }
