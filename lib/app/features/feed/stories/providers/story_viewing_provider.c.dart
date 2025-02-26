@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
+import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -79,19 +81,14 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void toggleLike(String postId) {
-    final updatedUsers = state.userStories.map((user) {
-      final updatedPosts = user.stories.map((post) {
-        if (post.id == postId) {
-          // wait for an event from post to cheсk the like's state when it's ready on the backend
-        }
-        return post;
-      }).toList();
-
-      return user.copyWith(stories: updatedPosts);
-    }).toList();
-
-    state = state.copyWith(
-      userStories: updatedUsers,
+    final userStory = state.userStories.firstWhereOrNull(
+      (user) => user.getStoryById(postId) != null,
     );
+
+    if (userStory != null) {
+      final post = userStory.getStoryById(postId)!;
+      final eventReference = post.toEventReference();
+      ref.read(likesNotifierProvider(eventReference).notifier).toggle();
+    }
   }
 }
