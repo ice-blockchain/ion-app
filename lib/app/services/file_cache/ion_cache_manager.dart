@@ -28,7 +28,7 @@ class IONFileSystem implements FileSystem {
   final String _cacheKey;
 
   static Future<Directory> createDirectory(String key) async {
-    final baseDir = await getLibraryDirectory();
+    final baseDir = await getApplicationSupportDirectory();
     final path = p.join(baseDir.path, key);
 
     const fs = LocalFileSystem();
