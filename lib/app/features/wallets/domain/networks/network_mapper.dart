@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:ion/app/features/wallets/data/networks/database/networks_database.c.dart' as db;
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 
