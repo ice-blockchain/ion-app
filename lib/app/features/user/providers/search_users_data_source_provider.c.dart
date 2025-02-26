@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
@@ -12,10 +13,31 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'search_users_data_source_provider.c.g.dart';
 
 @riverpod
-Future<List<EntitiesDataSource>> searchUsersDataSource(Ref ref) async {
-  final searchText = ref.watch(searchUsersQueryProvider);
+class SearchUsers extends _$SearchUsers {
+  @override
+  Future<({List<UserMetadataEntity> users, bool hasMore, List<EntitiesDataSource> dataSource})>
+      build({required String query}) async {
+    final masterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final dataSource = ref.watch(searchUsersDataSourceProvider(query: query));
+    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final users = entitiesPagedData?.data.items
+            ?.whereType<UserMetadataEntity>()
+            .whereNot((user) => user.masterPubkey == masterPubkey)
+            .toList() ??
+        [];
+    return (users: users, hasMore: entitiesPagedData?.hasMore ?? false, dataSource: dataSource);
+  }
 
-  await ref.debounce();
+  Future<void> loadMore() async {
+    final dataSource = state.valueOrNull?.dataSource;
+    if (dataSource != null) {
+      return ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
+    }
+  }
+}
+
+@riverpod
+List<EntitiesDataSource> searchUsersDataSource(Ref ref, {required String query}) {
   return [
     EntitiesDataSource(
       actionSource: const ActionSourceIndexers(),
@@ -25,7 +47,7 @@ Future<List<EntitiesDataSource>> searchUsersDataSource(Ref ref) async {
           kinds: const [UserMetadataEntity.kind],
           search: SearchExtensions(
             [
-              QuerySearchExtension(searchQuery: searchText),
+              QuerySearchExtension(searchQuery: query),
             ],
           ).toString(),
           limit: 20,
