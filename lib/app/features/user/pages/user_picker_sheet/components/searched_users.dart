@@ -6,7 +6,7 @@ import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/selectable_user_list_item.dart';
-import 'package:ion/app/features/user/providers/search_users_data_source_provider.c.dart';
+import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
 
 class SearchedUsers extends ConsumerWidget {
   const SearchedUsers({

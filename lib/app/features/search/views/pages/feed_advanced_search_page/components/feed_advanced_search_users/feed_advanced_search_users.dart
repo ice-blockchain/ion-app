@@ -6,9 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
-import 'package:ion/app/features/search/providers/feed_search_users_provider.c.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_user_list_item.dart';
+import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
 
 class FeedAdvancedSearchUsers extends HookConsumerWidget {
   const FeedAdvancedSearchUsers({required this.query, super.key});
@@ -19,19 +19,18 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final usersSearchResults = ref.watch(feedSearchUsersProvider(query));
-
+    final usersSearchResults = ref.watch(searchUsersProvider(query: query));
     return usersSearchResults.maybeWhen(
-      data: (pubKeys) {
-        if (pubKeys == null || pubKeys.isEmpty) {
+      data: (data) {
+        if (data.users.isEmpty) {
           return NothingIsFound(
             title: context.i18n.search_nothing_found,
           );
         }
 
         return ListView.separated(
-          itemCount: pubKeys.length,
-          itemBuilder: (context, index) => FeedAdvancedSearchUserListItem(pubkey: pubKeys[index]),
+          itemCount: data.users.length,
+          itemBuilder: (context, index) => FeedAdvancedSearchUserListItem(user: data.users[index]),
           separatorBuilder: (_, __) => FeedListSeparator(),
         );
       },

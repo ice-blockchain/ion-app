@@ -10,7 +10,7 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'search_users_data_source_provider.c.g.dart';
+part 'search_users_provider.c.g.dart';
 
 @riverpod
 class SearchUsers extends _$SearchUsers {

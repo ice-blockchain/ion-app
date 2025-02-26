@@ -5,9 +5,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/search/providers/feed_search_users_provider.c.dart';
 import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/pages/chat_advanced_search_page/components/chat_advanced_search_users/chat_advanced_search_user_list_item.dart';
+import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
 
 class ChatAdvancedSearchUsers extends HookConsumerWidget {
   const ChatAdvancedSearchUsers({required this.query, super.key});
@@ -18,18 +18,18 @@ class ChatAdvancedSearchUsers extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final usersSearchResults = ref.watch(feedSearchUsersProvider(query));
+    final usersSearchResults = ref.watch(searchUsersProvider(query: query));
 
     return usersSearchResults.maybeWhen(
-      data: (pubKeys) {
-        if (pubKeys == null || pubKeys.isEmpty) {
+      data: (data) {
+        if (data.users.isEmpty) {
           return NothingIsFound(
             title: context.i18n.core_empty_search,
           );
         }
 
         return ListView.builder(
-          itemCount: pubKeys.length,
+          itemCount: data.users.length,
           itemBuilder: (context, index) {
             return Column(
               children: [
@@ -37,7 +37,7 @@ class ChatAdvancedSearchUsers extends HookConsumerWidget {
                   SizedBox(
                     height: 12.0.s,
                   ),
-                ChatAdvancedSearchUserListItem(pubkey: pubKeys[index]),
+                ChatAdvancedSearchUserListItem(user: data.users[index]),
                 HorizontalSeparator(
                   height: 16.0.s,
                 ),

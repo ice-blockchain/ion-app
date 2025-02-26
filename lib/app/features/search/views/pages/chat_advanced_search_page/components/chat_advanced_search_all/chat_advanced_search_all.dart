@@ -7,7 +7,6 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_groups/advanced_search_group_list_item.dart';
 import 'package:ion/app/features/search/views/pages/chat_advanced_search_page/components/chat_advanced_search_chats/chat_advanced_search_chat_list_item.dart';
-import 'package:ion/app/features/search/views/pages/chat_advanced_search_page/components/chat_advanced_search_users/chat_advanced_search_user_list_item.dart';
 
 class ChatAdvancedSearchAll extends HookConsumerWidget {
   const ChatAdvancedSearchAll({required this.query, super.key});
@@ -23,9 +22,6 @@ class ChatAdvancedSearchAll extends HookConsumerWidget {
         Padding(
           padding: EdgeInsets.only(top: 4.0.s, bottom: 8.0.s),
           child: const HorizontalSeparator(),
-        ),
-        const ChatAdvancedSearchUserListItem(
-          pubkey: 'f5d70542664e65719b55d8d6250b7d51cbbea7711412dbb524108682cbd7f0d4',
         ),
         HorizontalSeparator(
           height: 16.0.s,
