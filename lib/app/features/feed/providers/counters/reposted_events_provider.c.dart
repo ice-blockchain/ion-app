@@ -10,8 +10,6 @@ part 'reposted_events_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 Stream<Map<EventReference, EventReference>> repostedEvents(Ref ref) async* {
   yield ref.watch(repostedEventsNotifierProvider);
-
-  ref.listen(repostedEventsNotifierProvider, (previous, next) {});
 }
 
 @riverpod
