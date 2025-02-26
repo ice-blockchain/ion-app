@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ConversationDeleteButton extends ConsumerWidget {
@@ -16,24 +18,25 @@ class ConversationDeleteButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedConversations = ref.watch(selectedConversationsProvider);
 
+    final conversationsToManage = selectedConversations.isEmpty
+        ? (ref.read(conversationsProvider).value ?? [])
+        : selectedConversations;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        if (selectedConversations.isNotEmpty) {
-          ref.invalidate(selectedConversationsProvider);
-          ref.read(conversationsEditModeProvider.notifier).editMode = false;
-          //TODO: when flow is ready to support for e2ee and non e2ee conversations
-          // DeleteConversationRoute(conversationIds: selectedConversationsIds)
-          //     .push<void>(context)
-          //     .then((_) {
-          // });
-        }
+      onTap: () async {
+        await DeleteConversationRoute(
+          conversationIds: conversationsToManage.map((e) => e.conversationId).toList(),
+        ).push<void>(context);
+
+        ref.invalidate(selectedConversationsProvider);
+        ref.read(conversationsEditModeProvider.notifier).editMode = false;
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Assets.svg.iconBlockDelete.icon(
-            color: selectedConversations.isNotEmpty
+            color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.attentionRed
                 : context.theme.appColors.tertararyText,
             size: 20.0.s,
@@ -43,9 +46,11 @@ class ConversationDeleteButton extends ConsumerWidget {
             child: Text(
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              context.i18n.button_delete,
+              selectedConversations.isNotEmpty
+                  ? context.i18n.button_delete
+                  : context.i18n.button_delete_all,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: selectedConversations.isNotEmpty
+                color: conversationsToManage.isNotEmpty
                     ? context.theme.appColors.attentionRed
                     : context.theme.appColors.tertararyText,
               ),

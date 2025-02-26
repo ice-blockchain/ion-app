@@ -47,8 +47,6 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 
   static const kind = 14;
 
-  String get allPubkeysMask => allPubkeys.join(',');
-
   List<String> get allPubkeys {
     return data.relatedPubkeys?.map((pubkey) => pubkey.value).toList() ?? []
       ..sort();

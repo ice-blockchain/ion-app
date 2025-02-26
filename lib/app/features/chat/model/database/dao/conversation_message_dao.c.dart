@@ -95,4 +95,21 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
       return groupedMessages;
     });
   }
+
+  Future<void> removeMessages({
+    required Ref ref,
+    required EventMessage deleteRequest,
+    required List<String> messageIds,
+  }) async {
+    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+
+    await eventMessageDao.add(deleteRequest);
+
+    await (update(messageStatusTable)..where((table) => table.eventMessageId.isIn(messageIds)))
+        .write(
+      const MessageStatusTableCompanion(
+        status: Value(MessageDeliveryStatus.deleted),
+      ),
+    );
+  }
 }

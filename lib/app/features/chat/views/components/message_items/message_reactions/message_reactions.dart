@@ -66,8 +66,8 @@ class MessageReactions extends ConsumerWidget {
                         );
 
                         ref.read(
-                          e2eeDeleteEventProvider(
-                            event: userReactionEventMessage,
+                          e2eeDeleteReactionProvider(
+                            reactionEvent: userReactionEventMessage,
                             participantsMasterPubkeys: messageEntity.allPubkeys,
                           ),
                         );

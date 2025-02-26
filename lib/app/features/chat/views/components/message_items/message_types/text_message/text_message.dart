@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -29,58 +30,70 @@ class TextMessage extends HookConsumerWidget {
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
-    return MessageItemWrapper(
-      onReactionSelected: (emoji) async {
-        final e2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
-        await e2eeMessageService.sendReaction(
-          content: emoji,
-          kind14Rumor: eventMessage,
+    final deliveryStatus = ref.watch(conversationMessageDataDaoProvider).messageStatus(
+          eventMessage.id,
         );
-      },
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: 12.0.s,
-        vertical: 12.0.s,
-      ),
-      isMe: isMe,
-      child: IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //TODO: show when group messages are implemented
-            // MessageAuthorNameWidget(author: author),
-            // if (repliedMessage case final RepliedMessage replied)
-            //   RepliedMessageInfo(
-            //     isMe: isMe,
-            //     sender: replied.author,
-            //     message: replied.message,
-            //   ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
+
+    return StreamBuilder<MessageDeliveryStatus>(
+      stream: deliveryStatus,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.deleted) {
+          return const SizedBox.shrink();
+        }
+        return MessageItemWrapper(
+          onReactionSelected: (emoji) async {
+            final e2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
+            await e2eeMessageService.sendReaction(
+              content: emoji,
+              kind14Rumor: eventMessage,
+            );
+          },
+          isLastMessageFromAuthor: isLastMessageFromAuthor,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 12.0.s,
+            vertical: 12.0.s,
+          ),
+          isMe: isMe,
+          child: IntrinsicWidth(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        entity.data.content,
-                        style: context.theme.appTextThemes.body2.copyWith(
-                          color: isMe
-                              ? context.theme.appColors.onPrimaryAccent
-                              : context.theme.appColors.primaryText,
-                        ),
+                //TODO: show when group messages are implemented
+                // MessageAuthorNameWidget(author: author),
+                // if (repliedMessage case final RepliedMessage replied)
+                //   RepliedMessageInfo(
+                //     isMe: isMe,
+                //     sender: replied.author,
+                //     message: replied.message,
+                //   ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            entity.data.content,
+                            style: context.theme.appTextThemes.body2.copyWith(
+                              color: isMe
+                                  ? context.theme.appColors.onPrimaryAccent
+                                  : context.theme.appColors.primaryText,
+                            ),
+                          ),
+                          MessageReactions(eventMessage: eventMessage, isMe: isMe),
+                        ],
                       ),
-                      MessageReactions(eventMessage: eventMessage, isMe: isMe),
-                    ],
-                  ),
+                    ),
+                    MessageMetaData(eventMessage: eventMessage),
+                  ],
                 ),
-                MessageMetaData(eventMessage: eventMessage),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

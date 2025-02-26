@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
@@ -17,12 +18,17 @@ class ConversationArchiveButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedConversations = ref.watch(selectedConversationsProvider);
 
+    final conversationsToManage = selectedConversations.isEmpty
+        ? (ref.read(conversationsProvider).value ?? [])
+        : selectedConversations;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         await ref
             .read(toggleArchivedConversationsProvider.notifier)
-            .toogleConversation(selectedConversations);
+            .toogleConversation(conversationsToManage);
+            
         ref.read(selectedConversationsProvider.notifier).clear();
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
       },
@@ -30,7 +36,7 @@ class ConversationArchiveButton extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Assets.svg.iconChatArchive.icon(
-            color: selectedConversations.isNotEmpty
+            color: conversationsToManage.isNotEmpty
                 ? context.theme.appColors.primaryAccent
                 : context.theme.appColors.tertararyText,
             size: 20.0.s,
@@ -40,9 +46,11 @@ class ConversationArchiveButton extends ConsumerWidget {
             child: Text(
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              context.i18n.common_archive,
+              selectedConversations.isEmpty
+                  ? context.i18n.common_archive_all
+                  : context.i18n.common_archive,
               style: context.theme.appTextThemes.body2.copyWith(
-                color: selectedConversations.isNotEmpty
+                color: conversationsToManage.isNotEmpty
                     ? context.theme.appColors.primaryAccent
                     : context.theme.appColors.tertararyText,
               ),

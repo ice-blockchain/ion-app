@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -30,7 +31,9 @@ class DeleteConversationModal extends ConsumerWidget {
               child: Assets.svg.actionCreatepostDeletepost.icon(size: 80.0.s),
             ),
             Text(
-              context.i18n.chat_delete_modal_title,
+              conversationIds.length > 1
+                  ? context.i18n.chat_delete_modal_title
+                  : context.i18n.chat_delete_modal_title_single,
               style: context.theme.appTextThemes.title.copyWith(
                 color: context.theme.appColors.primaryText,
               ),
@@ -43,7 +46,9 @@ class DeleteConversationModal extends ConsumerWidget {
                 right: 36.0.s,
               ),
               child: Text(
-                context.i18n.chat_delete_modal_description,
+                conversationIds.length > 1
+                    ? context.i18n.chat_delete_modal_description
+                    : context.i18n.chat_delete_modal_description_single,
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.secondaryText,
                 ),
@@ -57,10 +62,16 @@ class DeleteConversationModal extends ConsumerWidget {
                   child: Button.compact(
                     type: ButtonType.outlined,
                     label: Text(
-                      context.i18n.button_cancel,
+                      context.i18n.button_for_everyone,
                     ),
-                    onPressed: () {
-                      context.pop();
+                    onPressed: () async {
+                      ref.read(
+                        e2eeDeleteConversationProvider(
+                          conversationIds: conversationIds,
+                          forEveryone: true,
+                        ),
+                      );
+                      context.pop(true);
                     },
                     minimumSize: buttonMinimalSize,
                   ),
@@ -71,15 +82,11 @@ class DeleteConversationModal extends ConsumerWidget {
                 Expanded(
                   child: Button.compact(
                     label: Text(
-                      context.i18n.button_delete,
+                      context.i18n.button_for_me,
                     ),
                     onPressed: () async {
-                      // await ref
-                      //     .read(e2eeConversationManagementProvider.notifier)
-                      //     .deleteConversations(conversationIds);
-                      if (context.mounted) {
-                        context.pop();
-                      }
+                      ref.read(e2eeDeleteConversationProvider(conversationIds: conversationIds));
+                      context.pop(true);
                     },
                     minimumSize: buttonMinimalSize,
                     backgroundColor: context.theme.appColors.attentionRed,

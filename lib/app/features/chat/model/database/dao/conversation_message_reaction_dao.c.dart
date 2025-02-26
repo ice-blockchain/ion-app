@@ -66,17 +66,12 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
   Future<void> remove({
     required Ref ref,
-    required EventMessage removalRequest,
+    required String reactionEventId,
+    required EventMessage deleteRequest,
   }) async {
-    final reactionEventId = removalRequest.tags
-        .firstWhereOrNull((tags) => tags[0] == RelatedImmutableEvent.tagName)
-        ?.elementAtOrNull(1);
-
-    if (reactionEventId == null) return;
-
     final eventMessageDao = ref.watch(eventMessageDaoProvider);
 
-    await eventMessageDao.add(removalRequest);
+    await eventMessageDao.add(deleteRequest);
 
     final existingReactionEvent = await (select(db.eventMessageTable)
           ..where((table) => table.id.equals(reactionEventId)))
@@ -88,7 +83,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
 
     if (existingReactionRow == null ||
         existingReactionEvent == null ||
-        removalRequest.createdAt.isBefore(existingReactionEvent.createdAt)) {
+        deleteRequest.createdAt.isBefore(existingReactionEvent.createdAt)) {
       return;
     }
 
