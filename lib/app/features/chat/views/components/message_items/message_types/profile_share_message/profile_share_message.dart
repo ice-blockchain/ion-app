@@ -87,7 +87,7 @@ class ProfileShareMessage extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                  MessageReactions(entity: entity, isMe: isMe),
+                  MessageReactions(eventMessage: eventMessage, isMe: isMe),
                 ],
               ),
             ),
