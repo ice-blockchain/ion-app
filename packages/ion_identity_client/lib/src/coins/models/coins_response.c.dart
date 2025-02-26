@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion_identity_client/src/coins/models/coin.c.dart';
+import 'package:ion_identity_client/src/coins/models/network.c.dart';
 
 part 'coins_response.c.freezed.dart';
 part 'coins_response.c.g.dart';
@@ -10,6 +11,7 @@ part 'coins_response.c.g.dart';
 class CoinsResponse with _$CoinsResponse {
   const factory CoinsResponse({
     required List<Coin> coins,
+    required List<Network> networks,
     required int version,
   }) = _CoinsResponse;
 

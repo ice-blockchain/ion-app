@@ -60,6 +60,7 @@ fastlane/keys
 # Third-party tools
 .cursorrules
 
+assets/ion_identity/networks.json
 assets/ion_identity/coins.json
 assets/ion_identity/coins_version.txt
 .aider*

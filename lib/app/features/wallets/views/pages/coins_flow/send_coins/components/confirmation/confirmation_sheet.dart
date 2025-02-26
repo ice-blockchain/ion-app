@@ -10,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
@@ -107,9 +108,10 @@ class ConfirmationSheet extends ConsumerWidget {
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_network),
-                    value: formData.network.name,
-                    icon: formData.network.svgIconAsset.icon(
+                    value: formData.network!.displayName,
+                    icon: NetworkIconWidget(
                       size: 16.0.s,
+                      imageUrl: formData.network!.image,
                     ),
                   ),
                   SizedBox(height: 16.0.s),

@@ -57,7 +57,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       return TransactionDetails(
         txHash: result.txHash,
         walletId: result.walletId,
-        network: result.network,
+        network: form.network!,
         status: result.status,
         dateRequested: result.dateRequested,
         dateConfirmed: result.dateConfirmed,

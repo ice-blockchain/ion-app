@@ -69,7 +69,7 @@ class _CreateUpdateRequestBuilder {
     }
 
     for (final coin in coins) {
-      final wallets = networkWithWallet[coin.network.name];
+      final wallets = networkWithWallet[coin.network.id];
       final walletId = wallets?.firstWhereOrNull((wallet) => wallet.name == walletView?.id)?.id;
       symbolGroups.add(coin.symbolGroup);
       walletViewItems.add(

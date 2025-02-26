@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 
 const String mockWalletIconUrl =
@@ -37,3 +38,12 @@ const mockedWalletDataArray = <WalletViewData>[
     isMainWalletView: false,
   ),
 ];
+
+const mockedNetwork = NetworkData(
+  id: 'IonTestnet',
+  image:
+      'https://assets.coingecko.com/coins/images/34674/standard/ion-coingecko-200w.png?1714009819',
+  isTestnet: true,
+  displayName: 'ION',
+  explorerUrl: 'https://explorer.testnet.ice.io/address/{txHash}',
+);

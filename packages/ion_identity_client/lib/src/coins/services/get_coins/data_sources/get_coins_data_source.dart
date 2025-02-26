@@ -43,7 +43,7 @@ class GetCoinsDataSource {
       ),
       decoder: (response) {
         if (response is String && response.isEmpty) {
-          return CoinsResponse(coins: [], version: currentVersion);
+          return CoinsResponse(coins: [], networks: [], version: currentVersion);
         }
 
         return parseJsonObject(

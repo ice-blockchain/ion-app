@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallets/views/components/coin_icon_with_network.dart';
 import 'package:ion/app/utils/num.dart';
@@ -18,7 +18,7 @@ class NetworkItem extends ConsumerWidget {
     super.key,
   });
 
-  final Network network;
+  final NetworkData network;
   final VoidCallback onTap;
   final CoinInWalletData coinInWallet;
 
@@ -68,7 +68,7 @@ class NetworkItem extends ConsumerWidget {
 class _NetworkLabel extends StatelessWidget {
   const _NetworkLabel({required this.network});
 
-  final Network network;
+  final NetworkData network;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class _NetworkLabel extends StatelessWidget {
         color: context.theme.appColors.attentionBlock,
       ),
       child: Text(
-        network.name,
+        network.displayName,
         style: context.theme.appTextThemes.caption3.copyWith(
           color: context.theme.appColors.quaternaryText,
         ),

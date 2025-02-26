@@ -8,10 +8,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/wallets/data/networks/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -31,33 +33,42 @@ Future<WalletViewsService> walletViewsService(Ref ref) async {
 
   return WalletViewsService(
     await ref.watch(ionIdentityClientProvider.future),
-    await ref.watch(walletsNotifierProvider.future),
     mainWallet,
+    await ref.watch(walletsNotifierProvider.future),
+    ref.watch(networksRepositoryProvider),
   );
 }
 
 class WalletViewsService {
   WalletViewsService(
     this._identity,
-    this._userWallets,
     this._mainWallet,
+    this._userWallets,
+    this._networksRepository,
   );
 
-  final IONIdentityClient _identity;
   final Wallet _mainWallet;
   final List<Wallet> _userWallets;
+  final IONIdentityClient _identity;
+  final NetworksRepository _networksRepository;
 
   Future<List<WalletViewData>> fetch() async {
     final shortViews = await _identity.wallets.getWalletViews();
+
     final viewsDetailsDTO = await Future.wait(
       shortViews.map((e) => _identity.wallets.getWalletView(e.id)),
     );
-    return viewsDetailsDTO.map(_parseWalletView).toList();
+    final networks = await _networksRepository.getAll();
+
+    return viewsDetailsDTO.map((viewDTO) => _parseWalletView(viewDTO, networks)).toList();
   }
 
   Future<WalletViewData> create(String name) async {
     final request = _CreateUpdateRequestBuilder().build(name: name);
-    final walletView = await _identity.wallets.createWalletView(request).then(_parseWalletView);
+    final networks = await _networksRepository.getAll();
+    final walletView = await _identity.wallets
+        .createWalletView(request)
+        .then((viewDTO) => _parseWalletView(viewDTO, networks));
     return walletView;
   }
 
@@ -66,6 +77,7 @@ class WalletViewsService {
     String? updatedName,
     List<CoinData>? updatedCoinsList,
   }) async {
+    final networks = await _networksRepository.getAll();
     final request = _CreateUpdateRequestBuilder().build(
       name: updatedName,
       walletView: walletView,
@@ -73,14 +85,16 @@ class WalletViewsService {
       userWallets: _userWallets,
     );
 
-    return _identity.wallets.updateWalletView(walletView.id, request).then(_parseWalletView);
+    return _identity.wallets
+        .updateWalletView(walletView.id, request)
+        .then((viewDTO) => _parseWalletView(viewDTO, networks));
   }
 
   Future<void> delete({required String walletViewId}) async {
     return _identity.wallets.deleteWalletView(walletViewId);
   }
 
-  WalletViewData _parseWalletView(WalletView viewDTO) {
+  WalletViewData _parseWalletView(WalletView viewDTO, List<NetworkData> networks) {
     final coinGroups = <String, CoinsGroup>{};
     final symbolGroups = <String>{};
 
@@ -89,6 +103,7 @@ class WalletViewsService {
 
     for (final coinInWalletDTO in viewDTO.coins) {
       final coinDTO = coinInWalletDTO.coin;
+      final network = networks.firstWhere((network) => network.id == coinDTO.network);
 
       var coinAmount = 0.0;
       var coinBalanceUSD = 0.0;
@@ -131,7 +146,7 @@ class WalletViewsService {
         amount: coinAmount,
         balanceUSD: coinBalanceUSD,
         walletId: coinInWalletDTO.walletId,
-        coin: CoinData.fromDTO(coinDTO),
+        coin: CoinData.fromDTO(coinDTO, network),
       );
 
       final currentGroup = coinGroups[symbolGroup] ?? CoinsGroup.fromCoin(coinInWallet.coin);

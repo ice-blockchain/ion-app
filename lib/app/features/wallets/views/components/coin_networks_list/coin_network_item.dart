@@ -10,7 +10,7 @@ class _CoinNetworkItem extends ConsumerWidget {
   });
 
   final String coinAbbreviation;
-  final Network network;
+  final NetworkData network;
   final VoidCallback onTap;
 
   @override
@@ -45,7 +45,7 @@ class _CoinNetworkItem extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16.0.s),
                 ),
                 child: Text(
-                  network.name,
+                  network.displayName,
                   style: context.theme.appTextThemes.caption3.copyWith(
                     color: context.theme.appColors.quaternaryText,
                   ),
@@ -65,7 +65,10 @@ class _CoinNetworkItem extends ConsumerWidget {
               Positioned(
                 bottom: -3.0.s,
                 right: -3.0.s,
-                child: network.svgIconAsset.icon(size: 16.0.s),
+                child: NetworkIconWidget(
+                  size: 16.0.s,
+                  imageUrl: network.image,
+                ),
               ),
             ],
           ),

@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/model/manage_nft_network_data.c.dart';
-import 'package:ion/app/features/wallets/views/pages/manage_nfts/providers/mock_data/manage_nfts_mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'manage_nfts_provider.c.g.dart';
@@ -12,12 +11,13 @@ part 'manage_nfts_provider.c.g.dart';
 class ManageNftNetworksNotifier extends _$ManageNftNetworksNotifier {
   @override
   AsyncValue<Set<ManageNftNetworkData>> build() {
-    return AsyncData<Set<ManageNftNetworkData>>(mockedManageNftsNetworkDataSet);
+    // TODO: Not implemented
+    return const AsyncData<Set<ManageNftNetworkData>>({});
   }
 
   void selectNetwork({
     required bool isSelected,
-    required Network network,
+    required NetworkData network,
   }) {
     final currentSet = state.value ?? {};
 
@@ -79,7 +79,11 @@ class FilteredNftsNetworkNotifier extends _$FilteredNftsNetworkNotifier {
         }
 
         final filteredNetworks = allNetworks
-            .where((network) => network.network.name.toLowerCase().contains(query))
+            .where(
+              (network) =>
+                  network.network.displayName.toLowerCase().contains(query) ||
+                  network.network.id.toLowerCase().contains(query),
+            )
             .toSet();
 
         return AsyncData(filteredNetworks);

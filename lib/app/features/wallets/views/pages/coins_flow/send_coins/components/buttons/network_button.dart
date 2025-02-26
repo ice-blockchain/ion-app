@@ -4,18 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NetworkButton extends StatelessWidget {
   const NetworkButton({
     required this.onTap,
-    required this.networkType,
+    required this.network,
     super.key,
   });
 
   final VoidCallback onTap;
-  final Network networkType;
+  final NetworkData network;
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +46,14 @@ class NetworkButton extends StatelessWidget {
             SizedBox(height: 4.0.s),
             Row(
               children: [
-                networkType.svgIconAsset.icon(),
+                NetworkIconWidget(
+                  size: 16.0.s,
+                  imageUrl: network.image,
+                ),
                 SizedBox(width: 10.0.s),
                 Expanded(
                   child: Text(
-                    networkType.name,
+                    network.displayName,
                     style: textTheme.body,
                   ),
                 ),

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
 
 part 'transfer_result.c.freezed.dart';
@@ -20,7 +19,7 @@ class TransferResult with _$TransferResult {
     required DateTime dateRequested,
     required DateTime? dateConfirmed,
     required DateTime? dateBroadcasted,
-    @NetworkConverter() required Network network,
+    required String network,
   }) = _TransferResult;
 
   factory TransferResult.fromJson(Map<String, dynamic> json) => _$TransferResultFromJson(json);

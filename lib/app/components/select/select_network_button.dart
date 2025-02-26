@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class SelectNetworkButton extends StatelessWidget {
@@ -13,7 +14,7 @@ class SelectNetworkButton extends StatelessWidget {
   });
 
   final VoidCallback onTap;
-  final Network? selectedNetwork;
+  final NetworkData? selectedNetwork;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +105,7 @@ class _HasNetworkSelected extends StatelessWidget {
     required this.selectedNetwork,
   });
 
-  final Network selectedNetwork;
+  final NetworkData selectedNetwork;
 
   @override
   Widget build(BuildContext context) {
@@ -125,11 +126,14 @@ class _HasNetworkSelected extends StatelessWidget {
           SizedBox(height: 2.0.s),
           Row(
             children: [
-              selectedNetwork.svgIconAsset.icon(),
+              NetworkIconWidget(
+                size: 16.0.s,
+                imageUrl: selectedNetwork.image,
+              ),
               SizedBox(width: 10.0.s),
               Expanded(
                 child: Text(
-                  selectedNetwork.name,
+                  selectedNetwork.displayName,
                   style: textTheme.body,
                 ),
               ),

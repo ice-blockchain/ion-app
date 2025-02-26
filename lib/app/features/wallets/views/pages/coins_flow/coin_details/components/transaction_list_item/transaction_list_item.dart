@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_item_leading_icon.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/app/utils/num.dart';
@@ -33,7 +34,10 @@ class TransactionListItem extends StatelessWidget {
       title: Text(transactionData.transactionType.getDisplayName(context)),
       subtitle: Row(
         children: [
-          transactionData.network.svgIconAsset.icon(size: 16.0.s),
+          NetworkIconWidget(
+            size: 16.0.s,
+            imageUrl: transactionData.network.image,
+          ),
           SizedBox(
             width: 4.0.s,
           ),

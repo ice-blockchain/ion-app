@@ -95,7 +95,7 @@ class PrivacySettingsModal extends ConsumerWidget {
           if (coin.walletId == null) {
             return null;
           }
-          return MapEntry(coin.coin.network.name, coin.walletId!);
+          return MapEntry(coin.coin.network.id, coin.walletId!);
         }).nonNulls,
       );
     }

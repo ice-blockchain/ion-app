@@ -12,7 +12,8 @@ import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_id_button.dart';
@@ -26,27 +27,37 @@ import 'package:ion/generated/assets.gen.dart';
 class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
     required this.pubkey,
-    required this.networkName,
+    required this.networkId,
     required this.coinAbbreviation,
     super.key,
   });
 
   final String pubkey;
   final String coinAbbreviation;
-  final String networkName;
+  final String networkId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final colors = context.theme.appColors;
     final locale = context.i18n;
-
-    final selectedNetwork = useState(Network(name: networkName));
     final selectedCoinAbbreviation = useState(coinAbbreviation);
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
 
     final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
+
+    final initialNetwork = ref.watch(networkByIdProvider(networkId)).valueOrNull;
+    final selectedNetwork = useState<NetworkData?>(null);
+    useEffect(
+      () {
+        if (selectedNetwork.value == null && initialNetwork != null) {
+          selectedNetwork.value = initialNetwork;
+        }
+        return null;
+      },
+      [networks],
+    );
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -85,20 +96,21 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                         },
                       ),
                       SizedBox(height: 16.0.s),
-                      NetworkButton(
-                        networkType: selectedNetwork.value,
-                        onTap: () async {
-                          final network = await SelectNetworkRoute(
-                            paymentType: PaymentType.receive,
-                            pubkey: pubkey,
-                            coinAbbreviation: selectedCoinAbbreviation.value,
-                            selectNetworkModalType: SelectNetworkModalType.update,
-                          ).push<Network>(context);
-                          if (network != null && context.mounted) {
-                            selectedNetwork.value = network;
-                          }
-                        },
-                      ),
+                      if (selectedNetwork.value case final NetworkData network)
+                        NetworkButton(
+                          network: network,
+                          onTap: () async {
+                            final network = await SelectNetworkRoute(
+                              paymentType: PaymentType.receive,
+                              pubkey: pubkey,
+                              coinAbbreviation: selectedCoinAbbreviation.value,
+                              selectNetworkModalType: SelectNetworkModalType.update,
+                            ).push<NetworkData>(context);
+                            if (network != null && context.mounted) {
+                              selectedNetwork.value = network;
+                            }
+                          },
+                        ),
                       SizedBox(height: 16.0.s),
                       UserPaymentFlowCard(
                         pubkey: pubkey,

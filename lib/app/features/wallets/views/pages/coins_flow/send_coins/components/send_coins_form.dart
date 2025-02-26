@@ -97,7 +97,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       ),
                     SizedBox(height: 12.0.s),
                     NetworkButton(
-                      networkType: formController.network,
+                      network: formController.network!,
                       onTap: () {
                         NetworkSelectSendRoute().push<void>(context);
                       },
@@ -140,7 +140,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       NotEnoughMoneyForNetworkFeeMessage(
                         coinAsset: coin,
                         networkToken: networkToken,
-                        network: formController.network,
+                        network: formController.network!,
                       ),
                     Button(
                       label: Text(

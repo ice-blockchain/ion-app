@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 
 class CoinIconWithNetwork extends StatelessWidget {
   const CoinIconWithNetwork._({
@@ -16,7 +17,7 @@ class CoinIconWithNetwork extends StatelessWidget {
 
   factory CoinIconWithNetwork.small(
     String iconUrl, {
-    required Network network,
+    required NetworkData network,
   }) =>
       CoinIconWithNetwork._(
         iconUrl: iconUrl,
@@ -28,7 +29,7 @@ class CoinIconWithNetwork extends StatelessWidget {
 
   factory CoinIconWithNetwork.medium(
     String iconUrl, {
-    required Network network,
+    required NetworkData network,
   }) =>
       CoinIconWithNetwork._(
         iconUrl: iconUrl,
@@ -39,7 +40,7 @@ class CoinIconWithNetwork extends StatelessWidget {
       );
 
   final String iconUrl;
-  final Network network;
+  final NetworkData network;
 
   final double coinSize;
   final double networkSize;
@@ -62,7 +63,10 @@ class CoinIconWithNetwork extends StatelessWidget {
           Positioned(
             bottom: 0,
             right: 0,
-            child: network.svgIconAsset.icon(size: networkSize),
+            child: NetworkIconWidget(
+              size: networkSize,
+              imageUrl: network.image,
+            ),
           ),
         ],
       ),

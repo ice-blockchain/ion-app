@@ -3,17 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ManageNftNetworkItem extends ConsumerWidget {
   const ManageNftNetworkItem({required this.networkType, super.key});
 
-  final Network networkType;
+  final NetworkData networkType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,9 +25,12 @@ class ManageNftNetworkItem extends ConsumerWidget {
     );
 
     return ListItem(
-      title: Text(networkType.name),
+      title: Text(networkType.displayName),
       backgroundColor: context.theme.appColors.tertararyBackground,
-      leading: networkType.svgIconAsset.icon(size: 40),
+      leading: NetworkIconWidget(
+        size: 40.0.s,
+        imageUrl: networkType.image,
+      ),
       trailing: nftNetworkData!.isSelected
           ? Assets.svg.iconBlockCheckboxOn.icon()
           : Assets.svg.iconBlockCheckboxOff.icon(),

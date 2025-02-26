@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart';
 import 'package:ion/app/features/wallets/data/coins/database/sync_coins_dao.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -37,12 +36,7 @@ class CoinsRepository {
 
   Future<List<Coin>> searchCoins(String query) => _coinsDao.search(query);
 
-  Future<void> updateCoins(List<Coin> coins) async {
-    final coinsToInsert = coins.where(
-      (coin) => Network.allowed.contains(coin.network),
-    );
-    await _coinsDao.upsertAll(coinsToInsert.toList());
-  }
+  Future<void> updateCoins(List<Coin> coins) => _coinsDao.upsertAll(coins);
 
   Future<void> updateCoinSyncQueue(List<SyncCoins> syncCoins) => _syncCoinsDao.insertAll(syncCoins);
 

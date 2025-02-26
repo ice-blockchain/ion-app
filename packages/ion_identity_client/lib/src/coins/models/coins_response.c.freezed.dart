@@ -21,6 +21,7 @@ CoinsResponse _$CoinsResponseFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$CoinsResponse {
   List<Coin> get coins => throw _privateConstructorUsedError;
+  List<Network> get networks => throw _privateConstructorUsedError;
   int get version => throw _privateConstructorUsedError;
 
   /// Serializes this CoinsResponse to a JSON map.
@@ -39,7 +40,7 @@ abstract class $CoinsResponseCopyWith<$Res> {
           CoinsResponse value, $Res Function(CoinsResponse) then) =
       _$CoinsResponseCopyWithImpl<$Res, CoinsResponse>;
   @useResult
-  $Res call({List<Coin> coins, int version});
+  $Res call({List<Coin> coins, List<Network> networks, int version});
 }
 
 /// @nodoc
@@ -58,6 +59,7 @@ class _$CoinsResponseCopyWithImpl<$Res, $Val extends CoinsResponse>
   @override
   $Res call({
     Object? coins = null,
+    Object? networks = null,
     Object? version = null,
   }) {
     return _then(_value.copyWith(
@@ -65,6 +67,10 @@ class _$CoinsResponseCopyWithImpl<$Res, $Val extends CoinsResponse>
           ? _value.coins
           : coins // ignore: cast_nullable_to_non_nullable
               as List<Coin>,
+      networks: null == networks
+          ? _value.networks
+          : networks // ignore: cast_nullable_to_non_nullable
+              as List<Network>,
       version: null == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
@@ -81,7 +87,7 @@ abstract class _$$CoinsResponseImplCopyWith<$Res>
       __$$CoinsResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Coin> coins, int version});
+  $Res call({List<Coin> coins, List<Network> networks, int version});
 }
 
 /// @nodoc
@@ -98,6 +104,7 @@ class __$$CoinsResponseImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? coins = null,
+    Object? networks = null,
     Object? version = null,
   }) {
     return _then(_$CoinsResponseImpl(
@@ -105,6 +112,10 @@ class __$$CoinsResponseImplCopyWithImpl<$Res>
           ? _value._coins
           : coins // ignore: cast_nullable_to_non_nullable
               as List<Coin>,
+      networks: null == networks
+          ? _value._networks
+          : networks // ignore: cast_nullable_to_non_nullable
+              as List<Network>,
       version: null == version
           ? _value.version
           : version // ignore: cast_nullable_to_non_nullable
@@ -117,8 +128,11 @@ class __$$CoinsResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CoinsResponseImpl implements _CoinsResponse {
   const _$CoinsResponseImpl(
-      {required final List<Coin> coins, required this.version})
-      : _coins = coins;
+      {required final List<Coin> coins,
+      required final List<Network> networks,
+      required this.version})
+      : _coins = coins,
+        _networks = networks;
 
   factory _$CoinsResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$CoinsResponseImplFromJson(json);
@@ -131,12 +145,20 @@ class _$CoinsResponseImpl implements _CoinsResponse {
     return EqualUnmodifiableListView(_coins);
   }
 
+  final List<Network> _networks;
+  @override
+  List<Network> get networks {
+    if (_networks is EqualUnmodifiableListView) return _networks;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_networks);
+  }
+
   @override
   final int version;
 
   @override
   String toString() {
-    return 'CoinsResponse(coins: $coins, version: $version)';
+    return 'CoinsResponse(coins: $coins, networks: $networks, version: $version)';
   }
 
   @override
@@ -145,13 +167,17 @@ class _$CoinsResponseImpl implements _CoinsResponse {
         (other.runtimeType == runtimeType &&
             other is _$CoinsResponseImpl &&
             const DeepCollectionEquality().equals(other._coins, _coins) &&
+            const DeepCollectionEquality().equals(other._networks, _networks) &&
             (identical(other.version, version) || other.version == version));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_coins), version);
+      runtimeType,
+      const DeepCollectionEquality().hash(_coins),
+      const DeepCollectionEquality().hash(_networks),
+      version);
 
   /// Create a copy of CoinsResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -172,6 +198,7 @@ class _$CoinsResponseImpl implements _CoinsResponse {
 abstract class _CoinsResponse implements CoinsResponse {
   const factory _CoinsResponse(
       {required final List<Coin> coins,
+      required final List<Network> networks,
       required final int version}) = _$CoinsResponseImpl;
 
   factory _CoinsResponse.fromJson(Map<String, dynamic> json) =
@@ -179,6 +206,8 @@ abstract class _CoinsResponse implements CoinsResponse {
 
   @override
   List<Coin> get coins;
+  @override
+  List<Network> get networks;
   @override
   int get version;
 
