@@ -23,6 +23,7 @@ class ChatAdvancedSearchUserListItem extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 8.0.s),
           Row(
             children: [
               Avatar(
@@ -55,6 +56,7 @@ class ChatAdvancedSearchUserListItem extends ConsumerWidget {
                   .icon(size: 24.0.s, color: context.theme.appColors.tertararyText),
             ],
           ),
+          SizedBox(height: 8.0.s),
         ],
       ),
     );

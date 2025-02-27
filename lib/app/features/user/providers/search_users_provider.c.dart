@@ -15,28 +15,34 @@ part 'search_users_provider.c.g.dart';
 @riverpod
 class SearchUsers extends _$SearchUsers {
   @override
-  Future<({List<UserMetadataEntity> users, bool hasMore, List<EntitiesDataSource> dataSource})>
-      build({required String query}) async {
+  ({List<UserMetadataEntity> users, bool hasMore, List<EntitiesDataSource> dataSource})? build({
+    required String query,
+  }) {
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final dataSource = ref.watch(searchUsersDataSourceProvider(query: query));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final users = entitiesPagedData?.data.items
+
+    if (entitiesPagedData == null) {
+      return null;
+    }
+
+    final users = entitiesPagedData.data.items
             ?.whereType<UserMetadataEntity>()
             .whereNot((user) => user.masterPubkey == masterPubkey)
             .toList() ??
         [];
-    return (users: users, hasMore: entitiesPagedData?.hasMore ?? false, dataSource: dataSource);
+    return (users: users, hasMore: entitiesPagedData.hasMore, dataSource: dataSource);
   }
 
   Future<void> loadMore() async {
-    final dataSource = state.valueOrNull?.dataSource;
+    final dataSource = state?.dataSource;
     if (dataSource != null) {
       return ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
     }
   }
 
   Future<void> refresh() async {
-    final dataSource = state.valueOrNull?.dataSource;
+    final dataSource = state?.dataSource;
     if (dataSource != null) {
       return ref.invalidate(entitiesPagedDataProvider(dataSource));
     }

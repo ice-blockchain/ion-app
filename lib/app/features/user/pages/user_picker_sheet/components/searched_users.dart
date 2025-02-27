@@ -23,7 +23,7 @@ class SearchedUsers extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final query = ref.watch(searchUsersQueryProvider);
-    final searchResults = ref.watch(searchUsersProvider(query: query)).valueOrNull;
+    final searchResults = ref.watch(searchUsersProvider(query: query));
 
     if (searchResults == null) {
       return const SizedBox.shrink();

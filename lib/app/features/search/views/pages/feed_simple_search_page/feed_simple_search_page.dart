@@ -26,7 +26,7 @@ class FeedSimpleSearchPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final history = ref.watch(feedSearchHistoryProvider);
-    final searchResults = ref.watch(searchUsersProvider(query: query)).valueOrNull;
+    final searchResults = ref.watch(searchUsersProvider(query: query));
 
     return Scaffold(
       body: ScreenTopOffset(
