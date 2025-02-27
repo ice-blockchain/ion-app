@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
@@ -31,8 +32,7 @@ class FeedPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final feedCategory = ref.watch(feedCurrentFilterProvider.select((state) => state.category));
     final hasMorePosts =
-        ref.watch(feedPostsProvider.select((state) => (state?.hasMore).falseOrValue));
-
+        ref.watch(feedPostsProvider.select((state) => state?.hasMore)).falseOrValue;
     final showTrendingVideos = useRef(
       ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo),
     );
@@ -80,6 +80,8 @@ class FeedPage extends HookConsumerWidget {
     ref
       ..invalidate(entitiesPagedDataProvider(ref.read(feedStoriesDataSourceProvider)))
       ..invalidate(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)))
-      ..invalidate(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)));
+      ..invalidate(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)))
+      // invalidate feedFilterRelaysProvider to trigger provider rebuild with new relays
+      ..invalidate(feedFilterRelaysProvider);
   }
 }

@@ -3,7 +3,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/feed_filter.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -17,7 +16,7 @@ part 'feed_stories_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? feedStoriesDataSource(Ref ref) {
-  final filterRelays = ref.watch(feedFilterRelaysProvider(FeedFilter.forYou)).valueOrNull;
+  final filterRelays = ref.watch(feedForYouFilterRelaysProvider).valueOrNull;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
 
   if (filterRelays == null || currentPubkey == null) {

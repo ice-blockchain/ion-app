@@ -23,7 +23,7 @@ List<EntitiesDataSource>? feedVideosDataSource(
   required EventReference eventReference,
 }) {
   final filters = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
-  final filterRelays = ref.watch(feedFilterRelaysProvider(filters)).valueOrNull;
+  final filterRelays = ref.watch(feedFilterRelaysProvider).valueOrNull;
   final until =
       ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull?.createdAt;
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
