@@ -315,10 +315,12 @@ class FullscreenMediaRoute extends BaseRouteData {
     required this.mediaUrl,
     required this.mediaType,
     required this.eventReference,
+    required this.heroTag,
   }) : super(
           child: FullscreenMediaPage(
             mediaUrl: mediaUrl,
             mediaType: mediaType,
+            heroTag: heroTag,
             eventReference: EventReference.fromEncoded(eventReference),
           ),
           type: IceRouteType.fade,
@@ -326,5 +328,6 @@ class FullscreenMediaRoute extends BaseRouteData {
 
   final String mediaUrl;
   final MediaType mediaType;
+  final String heroTag;
   final String eventReference;
 }

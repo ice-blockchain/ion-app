@@ -18,12 +18,14 @@ class FullscreenMediaPage extends HookConsumerWidget {
   const FullscreenMediaPage({
     required this.mediaUrl,
     required this.mediaType,
+    required this.heroTag,
     required this.eventReference,
     super.key,
   });
 
   final String mediaUrl;
   final MediaType mediaType;
+  final String heroTag;
   final EventReference eventReference;
 
   static String heroTagForMedia(String url) => 'fullscreen-media-$url';
@@ -33,7 +35,7 @@ class FullscreenMediaPage extends HookConsumerWidget {
     final drag = usePageDismiss(context);
 
     return Hero(
-      tag: heroTagForMedia(mediaUrl),
+      tag: heroTag,
       child: Material(
         color: Colors.transparent,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
