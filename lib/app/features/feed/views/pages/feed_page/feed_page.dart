@@ -81,6 +81,7 @@ class FeedPage extends HookConsumerWidget {
       ..invalidate(entitiesPagedDataProvider(ref.read(feedStoriesDataSourceProvider)))
       ..invalidate(entitiesPagedDataProvider(ref.read(feedPostsDataSourceProvider)))
       ..invalidate(entitiesPagedDataProvider(ref.read(feedTrendingVideosDataSourceProvider)))
+      // invalidate feedFilterRelaysProvider to trigger provider rebuild with new relays
       ..invalidate(feedFilterRelaysProvider);
   }
 }

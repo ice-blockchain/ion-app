@@ -17,6 +17,8 @@ part 'feed_filter_relays_provider.c.g.dart';
 Future<Map<String, List<String>>> feedFilterRelays(Ref ref) async {
   final filter = ref.watch(feedCurrentFilterProvider.select((state) => state.filter));
 
+  // Use ref.read instead of ref.watch to avoid triggering data source provider which depends on this filter,
+  // preventing unnecessary feed rerenders
   switch (filter) {
     case FeedFilter.forYou:
       return ref.read(feedForYouFilterRelaysProvider.future);
@@ -30,7 +32,7 @@ Future<Map<String, List<String>>> feedForYouFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
   final followListRelays = followList != null
-      ? await ref.read(userRelaysManagerProvider.notifier).fetch(
+      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(
             followList.pubkeys,
             actionSource: const ActionSourceCurrentUser(),
           )
@@ -52,7 +54,7 @@ Future<Map<String, List<String>>> feedFollowingFilterRelays(Ref ref) async {
   final followList = await ref.watch(currentUserFollowListProvider.future);
 
   final followListRelays = followList != null
-      ? await ref.read(userRelaysManagerProvider.notifier).fetch(
+      ? await ref.watch(userRelaysManagerProvider.notifier).fetch(
             followList.pubkeys,
             actionSource: const ActionSourceCurrentUser(),
           )
