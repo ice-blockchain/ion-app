@@ -9,10 +9,10 @@ part 'networks_provider.c.g.dart';
 
 @riverpod
 Future<List<NetworkData>> networks(Ref ref) async {
-  return ref.read(networksRepositoryProvider).getAll();
+  return ref.watch(networksRepositoryProvider).getAll();
 }
 
 @riverpod
 Future<NetworkData?> networkById(Ref ref, String id) async {
-  return ref.read(networksRepositoryProvider).getById(id);
+  return ref.watch(networksRepositoryProvider).getById(id);
 }

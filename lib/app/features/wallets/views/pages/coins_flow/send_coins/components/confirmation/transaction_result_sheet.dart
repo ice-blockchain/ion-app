@@ -102,7 +102,7 @@ class TransactionResultSheet extends ConsumerWidget {
                     Button(
                       type: ButtonType.outlined,
                       onPressed: () {
-                        final transactionData = ref.watch(transactionNotifierProvider)!;
+                        final transactionData = ref.read(transactionNotifierProvider)!;
                         shareContent(transactionData.transactionExplorerUrl);
                       },
                       backgroundColor: context.theme.appColors.tertararyBackground,

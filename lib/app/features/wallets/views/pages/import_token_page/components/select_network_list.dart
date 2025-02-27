@@ -37,17 +37,14 @@ class SelectNetworkList extends HookConsumerWidget {
           ),
           Expanded(
             child: ScreenSideOffset.small(
-              child: networks.maybeMap(
-                data: (data) {
-                  final networks = data.value;
-                  return ListView.separated(
-                    itemCount: networks.length,
-                    itemBuilder: (context, index) => _NetworkItem(
-                      network: networks[index],
-                    ),
-                    separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
-                  );
-                },
+              child: networks.maybeWhen(
+                data: (networks) => ListView.separated(
+                  itemCount: networks.length,
+                  itemBuilder: (context, index) => _NetworkItem(
+                    network: networks[index],
+                  ),
+                  separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
+                ),
                 orElse: () => ListItemsLoadingState(
                   listItemsLoadingStateType: ListItemsLoadingStateType.listView,
                   itemHeight: 36.0.s,
