@@ -15,7 +15,7 @@ part 'stories_provider.c.g.dart';
 ///
 /// The provider filters post entities to include only those with image or video media types
 /// and groups them by the pubkey
-@riverpod
+@Riverpod(keepAlive: true)
 List<UserStories>? stories(Ref ref) {
   final dataSource = ref.watch(feedStoriesDataSourceProvider);
   final entitiesPagedDataState = ref.watch(entitiesPagedDataProvider(dataSource));
