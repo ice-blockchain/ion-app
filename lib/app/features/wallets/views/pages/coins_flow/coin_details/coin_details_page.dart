@@ -39,16 +39,20 @@ class CoinDetailsPage extends HookConsumerWidget {
     final isLoading = ref.watch(
       coinTransactionsNotifierProvider.select((data) => data.isLoading),
     );
-    final networks = ref
-        .watch(syncedCoinsBySymbolGroupProvider(symbolGroup))
-        .valueOrNull
-        ?.map((e) => e.coin.network)
-        .toList();
+    final networks = ref.watch(
+      syncedCoinsBySymbolGroupProvider(symbolGroup).select(
+        (value) => value.maybeWhen(
+          data: (list) => list.map((e) => e.coin.network).toList(),
+          orElse: () => const <NetworkData>[],
+        ),
+      ),
+    );
+
     final activeNetwork = useState<NetworkData?>(null);
 
     useEffect(
       () {
-        if (activeNetwork.value == null && networks != null && networks.isNotEmpty) {
+        if (activeNetwork.value == null && networks.isNotEmpty) {
           activeNetwork.value = networks.first;
         }
         return null;
@@ -112,7 +116,7 @@ class CoinDetailsPage extends HookConsumerWidget {
           if (activeNetwork.value != null)
             SliverToBoxAdapter(
               child: TransactionListHeader(
-                networks: networks ?? [],
+                networks: networks,
                 selectedNetwork: activeNetwork.value!,
                 onNetworkTypeSelect: (NetworkData newNetwork) => activeNetwork.value = newNetwork,
               ),
