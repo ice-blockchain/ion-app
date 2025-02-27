@@ -10,10 +10,10 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
+import 'package:ion/app/features/user/pages/profile_page/hooks/useNetworkState.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_id_button.dart';
@@ -46,18 +46,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     useListenable(amountController);
 
     final walletBalance = ref.watch(currentWalletViewDataProvider).valueOrNull?.usdBalance;
-
-    final initialNetwork = ref.watch(networkByIdProvider(networkId)).valueOrNull;
-    final selectedNetwork = useState<NetworkData?>(null);
-    useEffect(
-      () {
-        if (selectedNetwork.value == null && initialNetwork != null) {
-          selectedNetwork.value = initialNetwork;
-        }
-        return null;
-      },
-      [initialNetwork],
-    );
+    final selectedNetwork = useNetworkState(ref, networkId);
 
     return SheetContent(
       body: KeyboardDismissOnTap(
