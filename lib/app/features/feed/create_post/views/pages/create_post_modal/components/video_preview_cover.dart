@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,7 +13,6 @@ import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoPreviewCover extends HookConsumerWidget {
   const VideoPreviewCover({
@@ -86,7 +86,7 @@ class VideoPreviewCover extends HookConsumerWidget {
                       height: double.infinity,
                     )
                   else
-                    VideoPlayer(videoController),
+                    CachedVideoPlayerPlus(videoController),
                   if (!videoPlaying.value)
                     Container(
                       width: 48.0.s,

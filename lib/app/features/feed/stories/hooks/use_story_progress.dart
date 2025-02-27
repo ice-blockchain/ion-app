@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:video_player/video_player.dart';
 
 class StoryProgress {
   const StoryProgress({
@@ -20,7 +20,7 @@ StoryProgress useStoryProgress({
   required ModifiablePostEntity post,
   required bool isCurrent,
   required bool isPaused,
-  required VideoPlayerController? videoController,
+  required CachedVideoPlayerPlusController? videoController,
 }) {
   final progress = useState<double>(0);
   final isCompleted = useState(false);
@@ -102,7 +102,7 @@ StoryProgress useStoryProgress({
 }
 
 void _handleVideoProgress(
-  VideoPlayerController? controller,
+  CachedVideoPlayerPlusController? controller,
   ValueNotifier<double> progress,
   ValueNotifier<bool> isCompleted,
 ) {
@@ -128,7 +128,7 @@ void _handleImageProgress(
 }
 
 VoidCallback? _setupVideoController(
-  VideoPlayerController? controller,
+  CachedVideoPlayerPlusController? controller,
   VoidCallback handleProgress,
   bool isCurrent,
   bool isPaused,
