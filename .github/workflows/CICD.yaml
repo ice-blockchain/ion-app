@@ -84,7 +84,6 @@ jobs:
           source ./.app.env
           set +a
           
-          # Save headers and body separately
           curl -X 'GET' \
             "${ION_ORIGIN}/v1/networks" \
             -H 'accept: application/json' \
