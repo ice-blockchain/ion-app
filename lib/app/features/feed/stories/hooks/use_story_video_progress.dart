@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:video_player/video_player.dart';
 
-VideoPlayerController? useVideoStoryProgress({
+CachedVideoPlayerPlusController? useVideoStoryProgress({
   required WidgetRef ref,
   required bool isVideo,
   required String storyId,
