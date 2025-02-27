@@ -9,10 +9,12 @@ import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.d
 class WalletsList extends ConsumerWidget {
   const WalletsList({
     required this.itemBuilder,
+    this.padding,
     super.key,
   });
 
   final Widget Function(WalletViewData) itemBuilder;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,7 +26,7 @@ class WalletsList extends ConsumerWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.only(top: 6.0.s),
+      padding: padding ?? EdgeInsets.only(top: 6.0.s),
       child: Column(
         children: [
           for (final walletView in walletViews) itemBuilder(walletView),
