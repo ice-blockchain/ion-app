@@ -13,7 +13,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
   required bool isPaused,
 }) {
   final media = post.data.primaryMedia;
-  final mediaType = media?.mediaType ?? MediaType.unknown;
+  final mediaType = useMemoized(() => media?.mediaType ?? MediaType.unknown, [post.id]);
 
   final imageAnimationController = useAnimationController(
     duration: const Duration(seconds: 5),

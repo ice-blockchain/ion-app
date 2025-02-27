@@ -40,17 +40,42 @@ class StoryProgressSegment extends StatelessWidget {
         color: context.theme.appColors.onPrimaryAccent.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(1.0.s),
       ),
-      child: _buildProgress(context),
+      child: _ProgressContent(
+        post: post,
+        isActive: isActive,
+        isPreviousStory: isPreviousStory,
+        imageController: imageController,
+        mediaType: mediaType,
+        videoController: videoController,
+      ),
     );
   }
+}
 
-  Widget _buildProgress(BuildContext context) {
-    if (isPreviousStory) {
-      return const StoryProgressFill(isActive: true, storyProgress: 1);
-    }
-    if (!isActive) {
-      return const StoryProgressFill(isActive: false, storyProgress: 0);
-    }
+class _ProgressContent extends StatelessWidget {
+  const _ProgressContent({
+    required this.post,
+    required this.isActive,
+    required this.isPreviousStory,
+    required this.imageController,
+    required this.mediaType,
+    required this.videoController,
+  });
+
+  final ModifiablePostEntity post;
+  final bool isActive;
+  final bool isPreviousStory;
+  final AnimationController? imageController;
+  final CachedVideoPlayerPlusController? videoController;
+  final MediaType mediaType;
+
+  @override
+  Widget build(BuildContext context) {
+    const emptyProgress = StoryProgressFill(isActive: false, storyProgress: 0);
+    const fullProgress = StoryProgressFill(isActive: true, storyProgress: 1);
+
+    if (isPreviousStory) return fullProgress;
+    if (!isActive) return emptyProgress;
 
     switch (mediaType) {
       case MediaType.image:
@@ -88,9 +113,8 @@ class StoryProgressSegment extends StatelessWidget {
           },
         );
 
-      case MediaType.audio:
-      case MediaType.unknown:
-        return const StoryProgressFill(isActive: false, storyProgress: 0);
+      case MediaType.audio || MediaType.unknown:
+        return emptyProgress;
     }
   }
 }
