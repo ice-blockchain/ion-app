@@ -10,7 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
-import 'package:ion/app/features/user/pages/profile_page/hooks/useNetworkState.dart';
+import 'package:ion/app/features/user/pages/profile_page/hooks/use_network_state.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/select_network_modal/select_network_modal.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
