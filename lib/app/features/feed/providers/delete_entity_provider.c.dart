@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposted_events_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
@@ -47,6 +48,7 @@ Future<void> deleteEntity(
       }
     case ModifiablePostEntity():
       {
+        _deleteFromCounters(ref, entity);
         await ref
             .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
             .softDelete(eventReference: eventReference);
@@ -101,6 +103,14 @@ void _deleteFromCounters(Ref ref, IonConnectEntity entity) {
       ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
     case GenericRepostEntity():
       ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
+
+    case ModifiablePostEntity():
+      if (entity.data.parentEvent != null) {
+        ref
+            .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
+            .removeOne();
+      }
+
     default:
       break;
   }

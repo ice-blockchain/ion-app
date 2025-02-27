@@ -56,6 +56,13 @@ class RepostsCount extends _$RepostsCount {
                 type: EventCountResultType.reposts,
               ),
             );
+
+        ref.read(ionConnectCacheProvider.notifier).remove(
+              EventCountResultEntity.cacheKeyBuilder(
+                key: eventReference.toString(),
+                type: EventCountResultType.quotes,
+              ),
+            );
       }
     }
   }
