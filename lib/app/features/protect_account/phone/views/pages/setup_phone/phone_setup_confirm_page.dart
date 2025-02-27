@@ -17,6 +17,7 @@ import 'package:ion/app/features/protect_account/secure_account/providers/reques
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/validate_twofa_code_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/utils/formatters.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
@@ -57,7 +58,7 @@ class PhoneSetupConfirmPage extends HookConsumerWidget {
               children: [
                 SizedBox(height: 8.0.s),
                 Text(
-                  phone,
+                  obscurePhoneNumber(phone),
                   style: theme.appTextThemes.body,
                 ),
                 if (isKeyboardVisible) SizedBox(height: 58.0.s),

@@ -49,7 +49,7 @@ class _LinkedEmail extends ConsumerWidget {
     final colors = context.theme.appColors;
 
     final linkedEmail = ref.watch(linkedEmailProvider).valueOrNull;
-    final shortenedEmail = linkedEmail != null ? shortenEmail(linkedEmail) : '';
+    final obscuredEmail = linkedEmail != null ? obscureEmail(linkedEmail) : '';
 
     return Column(
       children: [
@@ -61,7 +61,7 @@ class _LinkedEmail extends ConsumerWidget {
         ),
         SizedBox(height: 8.0.s),
         Text(
-          shortenedEmail,
+          obscuredEmail,
           style: context.theme.appTextThemes.subtitle.copyWith(
             color: colors.primaryText,
           ),
@@ -81,7 +81,7 @@ class _EditEmailButton extends StatelessWidget {
 
     return Button(
       type: ButtonType.outlined,
-      label: Text(locale.two_fa_edit_email_button),
+      label: Text(locale.two_fa_edit_email_title),
       minimumSize: Size(0.0.s, 44.0.s),
       leadingIcon: Assets.svg.iconEditLink.icon(size: 24.0.s),
       borderColor: colors.onTerararyFill,
