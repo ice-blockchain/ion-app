@@ -10,24 +10,22 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
 
-class FeedSearchResultsListItem extends ConsumerWidget {
-  const FeedSearchResultsListItem({required this.user, super.key});
-
-  static double get itemVerticalOffset => 8.0.s;
+class FeedSimpleSearchListItem extends ConsumerWidget {
+  const FeedSimpleSearchListItem({required this.user, super.key});
 
   final UserMetadataEntity user;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
-      child: ScreenSideOffset.small(
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(user.masterPubkey);
-            ProfileRoute(pubkey: user.masterPubkey).push<void>(context);
-          },
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        ref.read(feedSearchHistoryProvider.notifier).addUserIdToTheHistory(user.masterPubkey);
+        ProfileRoute(pubkey: user.masterPubkey).push<void>(context);
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0.s),
+        child: ScreenSideOffset.small(
           child: ListItem.user(
             title: Text(user.data.displayName),
             subtitle: Text(

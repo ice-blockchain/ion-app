@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
-import 'package:ion/app/features/search/views/pages/feed_simple_search_page/components/search_results/feed_search_results.dart';
-import 'package:ion/app/features/search/views/pages/feed_simple_search_page/components/search_results/feed_search_results_list_item.dart';
+import 'package:ion/app/extensions/extensions.dart';
 
 class SearchResultsSkeleton extends StatelessWidget {
   const SearchResultsSkeleton({super.key});
@@ -20,15 +19,13 @@ class SearchResultsSkeleton extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: Skeleton(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: FeedSearchResults.listVerticalOffset),
+            padding: EdgeInsets.symmetric(vertical: 14.0.s),
             child: Column(
               children: List.generate(
                 numberOfItems,
                 (_) => ScreenSideOffset.small(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: FeedSearchResultsListItem.itemVerticalOffset,
-                    ),
+                    padding: EdgeInsets.symmetric(vertical: 8.0.s),
                     child: const ListItemUserShape(),
                   ),
                 ),

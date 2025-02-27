@@ -34,6 +34,13 @@ class SearchUsers extends _$SearchUsers {
       return ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities();
     }
   }
+
+  Future<void> refresh() async {
+    final dataSource = state.valueOrNull?.dataSource;
+    if (dataSource != null) {
+      return ref.invalidate(entitiesPagedDataProvider(dataSource));
+    }
+  }
 }
 
 @riverpod
