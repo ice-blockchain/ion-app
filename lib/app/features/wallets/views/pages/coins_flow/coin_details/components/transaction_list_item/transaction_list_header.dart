@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header_item.dart';
 
-class TransactionListHeader extends ConsumerWidget {
+class TransactionListHeader extends StatelessWidget {
   const TransactionListHeader({
     required this.networks,
     required this.selectedNetwork,
@@ -21,7 +20,7 @@ class TransactionListHeader extends ConsumerWidget {
   final void Function(NetworkData) onNetworkTypeSelect;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return SizedBox(
       height: TransactionListConstants.headerItemHeight +
           TransactionListConstants.headerPaddingBottom +

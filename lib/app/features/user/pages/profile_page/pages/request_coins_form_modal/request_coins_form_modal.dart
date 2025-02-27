@@ -56,7 +56,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
         }
         return null;
       },
-      [networks],
+      [initialNetwork],
     );
 
     return SheetContent(
