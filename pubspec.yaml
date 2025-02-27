@@ -169,7 +169,7 @@ flutter:
     - assets/emoji_data_sets/emoji-keywords.json
     - assets/ion_identity/coins.json
     - assets/ion_identity/coins_version.txt
-    - assets/ion_identity/networks.json
+
 flutter_gen:
   output: lib/generated/
 
