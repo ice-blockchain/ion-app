@@ -36,6 +36,15 @@ class LikesCount extends _$LikesCount {
   }
 
   void removeOne() {
-    state = state - 1;
+    if (state > 1) {
+      state = state - 1;
+    } else if (state == 1) {
+      ref.read(ionConnectCacheProvider.notifier).remove(
+            EventCountResultEntity.cacheKeyBuilder(
+              key: eventReference.toString(),
+              type: EventCountResultType.reactions,
+            ),
+          );
+    }
   }
 }
