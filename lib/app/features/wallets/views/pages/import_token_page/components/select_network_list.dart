@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -18,7 +20,7 @@ class SelectNetworkList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final networks = useMemoized(() => Network.all);
+    final networks = ref.watch(networksProvider);
 
     return SheetContent(
       body: Column(
@@ -35,12 +37,18 @@ class SelectNetworkList extends HookConsumerWidget {
           ),
           Expanded(
             child: ScreenSideOffset.small(
-              child: ListView.separated(
-                itemCount: networks.length,
-                itemBuilder: (context, index) => _NetworkItem(
-                  network: networks[index],
+              child: networks.maybeWhen(
+                data: (networks) => ListView.separated(
+                  itemCount: networks.length,
+                  itemBuilder: (context, index) => _NetworkItem(
+                    network: networks[index],
+                  ),
+                  separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
                 ),
-                separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
+                orElse: () => ListItemsLoadingState(
+                  listItemsLoadingStateType: ListItemsLoadingStateType.listView,
+                  itemHeight: 36.0.s,
+                ),
               ),
             ),
           ),
@@ -55,13 +63,16 @@ class _NetworkItem extends ConsumerWidget {
     required this.network,
   });
 
-  final Network network;
+  final NetworkData network;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListItem(
-      leading: network.svgIconAsset.icon(size: 36.0.s),
-      title: Text(network.name),
+      leading: NetworkIconWidget(
+        size: 36.0.s,
+        imageUrl: network.image,
+      ),
+      title: Text(network.displayName),
       backgroundColor: context.theme.appColors.tertararyBackground,
       onTap: () => Navigator.of(context).pop(network),
     );

@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 
 part 'coin_receive_modal_data.c.freezed.dart';
 
@@ -10,6 +10,6 @@ part 'coin_receive_modal_data.c.freezed.dart';
 class CoinReceiveModalData with _$CoinReceiveModalData {
   const factory CoinReceiveModalData({
     required CoinData coinData,
-    required Network network,
+    required NetworkData network,
   }) = _CoinReceiveModalData;
 }

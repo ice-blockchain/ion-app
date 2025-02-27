@@ -2,8 +2,8 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
+import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'nfts_provider.c.g.dart';
@@ -22,11 +22,11 @@ Future<List<NftData>> nftsData(Ref ref) async {
 
   final nfts = List.generate(
     5,
-    (_) => NftData(
+    (_) => const NftData(
       collectionName: 'COLLECTION NULL',
       identifier: 0,
       price: 0,
-      network: Network.ethereum(),
+      network: mockedNetwork,
       currency: 'CURRENCY NULL',
       iconUrl: 'ICONURL NULL',
       currencyIconUrl: 'CURRENCYICONURL NULL',

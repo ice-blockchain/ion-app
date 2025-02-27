@@ -86,7 +86,7 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
 
     await ref.debounce();
 
-    final searchService = await ref.read(searchCoinsServiceProvider.future);
+    final searchService = ref.read(searchCoinsServiceProvider);
     final searchResult = await searchService.search(query).then((coinGroups) {
       return {for (final group in coinGroups) group.symbolGroup: group};
     });

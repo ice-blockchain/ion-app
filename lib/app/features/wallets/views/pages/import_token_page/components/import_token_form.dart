@@ -12,7 +12,7 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/select/select_network_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/token_already_exists_dialog.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/components/token_not_found_dialog.dart';
 import 'package:ion/app/features/wallets/views/pages/import_token_page/providers/selected_network_provider.c.dart';
@@ -109,7 +109,7 @@ class ImportTokenForm extends HookConsumerWidget {
   }
 
   Future<void> _onNetworkPressed(WidgetRef ref) async {
-    final newNetwork = await SelectNetworkForTokenRoute().push<Network?>(ref.context);
+    final newNetwork = await SelectNetworkForTokenRoute().push<NetworkData?>(ref.context);
     if (newNetwork != null) {
       ref.read(selectedNetworkProvider.notifier).network = newNetwork;
       unawaited(ref.read(tokenDataNotifierProvider.notifier).fetchTokenData());

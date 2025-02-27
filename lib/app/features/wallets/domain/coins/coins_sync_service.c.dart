@@ -3,9 +3,11 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart' as db;
-import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart' as db;
+import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_mapper.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -17,6 +19,7 @@ part 'coins_sync_service.c.g.dart';
 Future<CoinsSyncService> coinsSyncService(Ref ref) async {
   return CoinsSyncService(
     ref.watch(coinsRepositoryProvider),
+    ref.watch(networksRepositoryProvider),
     await ref.watch(ionIdentityClientProvider.future),
   );
 }
@@ -24,6 +27,7 @@ Future<CoinsSyncService> coinsSyncService(Ref ref) async {
 class CoinsSyncService {
   CoinsSyncService(
     this._coinsRepository,
+    this._networksRepository,
     this._ionIdentityClient,
   );
 
@@ -32,6 +36,7 @@ class CoinsSyncService {
   Timer? _syncTimer;
 
   final CoinsRepository _coinsRepository;
+  final NetworksRepository _networksRepository;
   final IONIdentityClient _ionIdentityClient;
 
   var _syncQueueActive = false;
@@ -63,6 +68,12 @@ class CoinsSyncService {
       _coinsRepository.setCoinsVersion(response.version),
       _coinsRepository.setLastSyncTime(currentTime),
     ).wait;
+
+    if (response.networks.isNotEmpty) {
+      await _networksRepository.save(
+        response.networks.map(NetworkData.fromDTO).toList(),
+      );
+    }
 
     if (response.coins.isEmpty) {
       return;

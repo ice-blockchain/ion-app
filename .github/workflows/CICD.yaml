@@ -77,6 +77,18 @@ jobs:
           
           # Extract 'x-version' header from coins_headers.txt and save it
           grep -i 'x-version:' ./assets/ion_identity/coins_headers.txt | awk '{print $2}' | tr -d '\r' > ./assets/ion_identity/coins_version.txt
+      - name: Fetch networks data using ION_ORIGIN
+        run: |
+          cd main-repo
+          set -a
+          source ./.app.env
+          set +a
+          
+          curl -X 'GET' \
+            "${ION_ORIGIN}/v1/networks" \
+            -H 'accept: application/json' \
+            -H "X-API-Key: ${{ secrets.IDENTITY_IO_API_KEY }}" \
+            -o ./assets/ion_identity/networks.json
       - name: Mask APP environment and keys in logs
         id: mask-secrets
         run: |

@@ -17,6 +17,7 @@ import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
@@ -107,9 +108,10 @@ class ConfirmationSheet extends ConsumerWidget {
                   SizedBox(height: 16.0.s),
                   ListItem.textWithIcon(
                     title: Text(locale.wallet_network),
-                    value: formData.network.name,
-                    icon: formData.network.svgIconAsset.icon(
+                    value: formData.network!.displayName,
+                    icon: NetworkIconWidget(
                       size: 16.0.s,
+                      imageUrl: formData.network!.image,
                     ),
                   ),
                   SizedBox(height: 16.0.s),

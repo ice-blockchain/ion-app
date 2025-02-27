@@ -9,7 +9,8 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
@@ -38,15 +39,37 @@ class CoinDetailsPage extends HookConsumerWidget {
     final isLoading = ref.watch(
       coinTransactionsNotifierProvider.select((data) => data.isLoading),
     );
-    final activeNetwork = useState<Network>(Network.ethereum());
+    final networks = ref.watch(
+      syncedCoinsBySymbolGroupProvider(symbolGroup).select(
+        (value) => value.maybeWhen(
+          data: (list) => list.map((e) => e.coin.network).toList(),
+          orElse: () => const <NetworkData>[],
+        ),
+      ),
+    );
+
+    final activeNetwork = useState<NetworkData?>(null);
+
+    useEffect(
+      () {
+        if (activeNetwork.value == null && networks.isNotEmpty) {
+          activeNetwork.value = networks.first;
+        }
+        return null;
+      },
+      [networks],
+    );
 
     useOnInit(
       () {
-        if (walletId != null && walletId.isNotEmpty && coinsGroup != null) {
+        if (walletId != null &&
+            walletId.isNotEmpty &&
+            coinsGroup != null &&
+            activeNetwork.value != null) {
           ref.read(coinTransactionsNotifierProvider.notifier).fetch(
                 walletId: walletId,
                 coinId: coinsGroup.symbolGroup,
-                network: Network.ethereum(),
+                network: activeNetwork.value!,
               );
         }
       },
@@ -81,20 +104,23 @@ class CoinDetailsPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Delimiter(),
-                Balance(
-                  coinsGroup: coinsGroup,
-                  network: activeNetwork.value,
-                ),
+                if (activeNetwork.value != null)
+                  Balance(
+                    coinsGroup: coinsGroup,
+                    network: activeNetwork.value!,
+                  ),
                 const Delimiter(),
               ],
             ),
           ),
-          SliverToBoxAdapter(
-            child: TransactionListHeader(
-              selectedNetwork: activeNetwork.value,
-              onNetworkTypeSelect: (Network newNetwork) => activeNetwork.value = newNetwork,
+          if (activeNetwork.value != null)
+            SliverToBoxAdapter(
+              child: TransactionListHeader(
+                networks: networks,
+                selectedNetwork: activeNetwork.value!,
+                onNetworkTypeSelect: (NetworkData newNetwork) => activeNetwork.value = newNetwork,
+              ),
             ),
-          ),
           if (coinTransactionsMap.isEmpty && !isLoading) const EmptyState(),
           if (isLoading)
             ListItemsLoadingState(

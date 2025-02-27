@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion_identity_client/ion_identity.dart' as ion_identity;
 
 class CoinsMapper {
@@ -12,7 +12,7 @@ class CoinsMapper {
             decimals: coin.decimals,
             iconURL: coin.iconURL,
             name: coin.name,
-            network: coin.network,
+            networkId: coin.network,
             priceUSD: coin.priceUSD,
             symbol: coin.symbol,
             symbolGroup: coin.symbolGroup,

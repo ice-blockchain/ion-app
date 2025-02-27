@@ -6,13 +6,13 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_information.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_type.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/ion_identity.dart' as ion;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'network_fee_provider.c.g.dart';
@@ -20,7 +20,7 @@ part 'network_fee_provider.c.g.dart';
 @riverpod
 Future<NetworkFeeInformation?> networkFee(
   Ref ref, {
-  required Network network,
+  required NetworkData network,
   required String? walletId,
   required String assetSymbol,
 }) async {
@@ -31,7 +31,7 @@ Future<NetworkFeeInformation?> networkFee(
 
   final client = await ref.read(ionIdentityClientProvider.future);
 
-  final estimateFees = await client.networks.getEstimateFees(network: network.name);
+  final estimateFees = await client.networks.getEstimateFees(network: network.id);
   final walletAssets =
       await client.wallets.getWalletAssets(walletId).then((result) => result.assets);
 
@@ -88,8 +88,8 @@ Future<NetworkFeeInformation?> networkFee(
 
 Future<CoinData?> _getNativeCoin({
   required CoinsService coinsService,
-  required WalletAsset asset,
-  required Network network,
+  required ion.WalletAsset asset,
+  required NetworkData network,
 }) async {
   final nativeCoin = await coinsService
       .getCoinsByFilters(symbol: asset.symbol, network: network)
@@ -104,7 +104,7 @@ Future<CoinData?> _getNativeCoin({
       .then((coins) => coins.firstOrNull);
 }
 
-WalletAsset? _getSendableAsset(List<WalletAsset> assets, String abbreviation) {
+ion.WalletAsset? _getSendableAsset(List<ion.WalletAsset> assets, String abbreviation) {
   final result = assets.firstWhereOrNull(
     (asset) => asset.symbol.toLowerCase() == abbreviation.toLowerCase(),
   );
@@ -113,10 +113,10 @@ WalletAsset? _getSendableAsset(List<WalletAsset> assets, String abbreviation) {
 }
 
 NetworkFeeOption _buildNetworkFeeOption(
-  NetworkFee fee,
+  ion.NetworkFee fee,
   NetworkFeeType type,
   CoinData nativeCoin,
-  WalletAsset networkNativeToken,
+  ion.WalletAsset networkNativeToken,
 ) {
   double calculateAmount(String maxFeePerGas) =>
       double.parse(maxFeePerGas) / pow(10, networkNativeToken.decimals);

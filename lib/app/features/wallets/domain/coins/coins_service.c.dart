@@ -4,9 +4,10 @@ import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/wallets/data/coins/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_result.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
@@ -20,38 +21,45 @@ part 'transfer_factory.dart';
 Future<CoinsService> coinsService(Ref ref) async {
   return CoinsService(
     ref.watch(coinsRepositoryProvider),
+    ref.watch(networksRepositoryProvider),
     await ref.watch(ionIdentityClientProvider.future),
   );
 }
 
 class CoinsService {
-  CoinsService(this._coinsRepository, this._ionIdentityClient);
+  CoinsService(
+    this._coinsRepository,
+    this._networksRepository,
+    this._ionIdentityClient,
+  );
 
   final CoinsRepository _coinsRepository;
+  final NetworksRepository _networksRepository;
   final IONIdentityClient _ionIdentityClient;
 
-  Stream<Iterable<CoinData>> watchCoins(Iterable<String>? coinIds) {
-    return _coinsRepository.watchCoins(coinIds).map((coins) => coins.map(CoinData.fromDB));
-  }
+  Stream<Iterable<CoinData>> watchCoins(Iterable<String>? coinIds) =>
+      _coinsRepository.watchCoins(coinIds);
 
   Future<Iterable<CoinData>> getCoinsByFilters({
     String? symbolGroup,
     String? symbol,
-    Network? network,
+    NetworkData? network,
     String? contractAddress,
-  }) =>
-      _coinsRepository
-          .getCoinsByFilters(
-            symbolGroup: symbolGroup,
-            symbol: symbol,
-            network: network?.name,
-            contractAddress: contractAddress,
-          )
-          .then((result) => result.map(CoinData.fromDB));
+  }) {
+    return _coinsRepository.getCoinsByFilters(
+      symbolGroup: symbolGroup,
+      symbol: symbol,
+      network: network?.id,
+      contractAddress: contractAddress,
+    );
+  }
 
-  Future<Iterable<CoinData>> getSyncedCoinsBySymbolGroup(String symbolGroup) {
+  Future<Iterable<CoinData>> getSyncedCoinsBySymbolGroup(String symbolGroup) async {
+    final networks = await _networksRepository.getAllAsMap();
     return _ionIdentityClient.coins.getCoinsBySymbolGroup(symbolGroup).then(
-          (coins) => coins.where((e) => Network.allowed.contains(e.network)).map(CoinData.fromDTO),
+          (result) => result
+              .where((coin) => networks.containsKey(coin.network))
+              .map((coin) => CoinData.fromDTO(coin, networks[coin.network]!)),
         );
   }
 

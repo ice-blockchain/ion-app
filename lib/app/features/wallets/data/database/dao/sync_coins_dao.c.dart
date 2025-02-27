@@ -2,20 +2,20 @@
 
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/coins/database/coins_database.c.dart';
-import 'package:ion/app/features/wallets/data/coins/database/coins_table.c.dart';
-import 'package:ion/app/features/wallets/data/coins/database/sync_coins_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/tables/coins_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/tables/sync_coins_table.c.dart';
+import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sync_coins_dao.c.g.dart';
 
 @Riverpod(keepAlive: true)
-SyncCoinsDao syncCoinsDao(Ref ref) => SyncCoinsDao(db: ref.watch(coinsDatabaseProvider));
+SyncCoinsDao syncCoinsDao(Ref ref) => SyncCoinsDao(db: ref.watch(walletsDatabaseProvider));
 
 @DriftAccessor(tables: [CoinsTable, SyncCoinsTable])
-class SyncCoinsDao extends DatabaseAccessor<CoinsDatabase> with _$SyncCoinsDaoMixin {
+class SyncCoinsDao extends DatabaseAccessor<WalletsDatabase> with _$SyncCoinsDaoMixin {
   SyncCoinsDao({
-    required CoinsDatabase db,
+    required WalletsDatabase db,
   }) : super(db);
 
   Future<void> insertAll(List<SyncCoins> syncCoinsCompanions) async {

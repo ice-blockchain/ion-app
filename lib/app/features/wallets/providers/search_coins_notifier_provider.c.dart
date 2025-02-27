@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/domain/wallet_views/search_coins_service.c.dart';
+import 'package:ion/app/features/wallets/domain/coins/search_coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -28,7 +28,7 @@ class SearchCoinsNotifier extends _$SearchCoinsNotifier {
 
     await ref.debounce();
 
-    final searchService = await ref.read(searchCoinsServiceProvider.future);
+    final searchService = ref.read(searchCoinsServiceProvider);
     final searchResult = await searchService.search(query).then((coinGroups) {
       return {for (final group in coinGroups) group.symbolGroup: group};
     });

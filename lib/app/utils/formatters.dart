@@ -20,7 +20,7 @@ String obscureEmail(String email) {
 }
 
 String shortenAddress(String address) {
-  if (address.length < 42) {
+  if (address.length < 30) {
     return address;
   }
   return '${address.substring(0, 12)}...'

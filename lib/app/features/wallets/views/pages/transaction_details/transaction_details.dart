@@ -14,6 +14,7 @@ import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.da
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/components/timeline/timeline.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
@@ -24,6 +25,7 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
@@ -129,8 +131,11 @@ class TransactionDetailsPage extends ConsumerWidget {
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_confirm_network),
-                      value: transactionData.network.name,
-                      icon: transactionData.network.svgIconAsset.icon(size: 16.0.s),
+                      value: transactionData.network.displayName,
+                      icon: NetworkIconWidget(
+                        size: 16.0.s,
+                        imageUrl: transactionData.network.image,
+                      ),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItemArrivalTime(
@@ -146,11 +151,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 15.0.s),
-                    // TODO: Not implemented section
                     TransactionDetailsActions(
                       onViewOnExplorer: () {
-                        const url =
-                            'https://etherscan.io/address/0x1f9090aae28b8a3dceadf281b0f12828e676c326';
+                        final url = transactionData.transactionExplorerUrl;
                         final location = transactionData.assetData.map(
                           coin: (coin) => ExploreCoinTransactionDetailsRoute(
                             url: url,
@@ -161,11 +164,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                           notInitialized: (_) => null,
                         );
 
-                        if (location != null) {
-                          context.push<void>(location);
-                        }
+                        if (location != null) context.push<void>(location);
                       },
-                      onShare: () {},
+                      onShare: () => shareContent(transactionData.transactionExplorerUrl),
                     ),
                     SizedBox(height: 8.0.s),
                   ],

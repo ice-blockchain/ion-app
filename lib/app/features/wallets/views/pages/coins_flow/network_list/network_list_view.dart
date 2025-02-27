@@ -10,8 +10,9 @@ import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_item.dart';
@@ -53,7 +54,7 @@ class NetworkListView extends ConsumerWidget {
         ),
     };
 
-    void onTap(Network network) {
+    void onTap(NetworkData network) {
       if (onSelectReturnType) {
         Navigator.of(context).pop(network);
         return;
@@ -118,23 +119,22 @@ class _LoadingState extends StatelessWidget {
       child: _NetworksList(
         itemCount: 3,
         itemBuilder: (_, __) {
-          final network = Network.ethereum();
           return NetworkItem(
-            coinInWallet: CoinInWalletData(
+            coinInWallet: const CoinInWalletData(
               coin: CoinData(
                 id: '',
                 contractAddress: '',
                 decimals: 1,
                 iconUrl: '',
                 name: '',
-                network: network,
+                network: mockedNetwork,
                 priceUSD: 1,
                 abbreviation: '',
                 symbolGroup: '',
                 syncFrequency: Duration.zero,
               ),
             ),
-            network: network,
+            network: mockedNetwork,
             onTap: () {},
           );
         },

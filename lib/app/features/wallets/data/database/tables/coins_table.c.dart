@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:drift/drift.dart';
-import 'package:ion/app/features/wallets/data/coins/database/duration_type.dart';
+import 'package:ion/app/features/wallets/data/database/tables/duration_type.dart';
 
 @DataClassName('Coin')
 class CoinsTable extends Table {
@@ -12,7 +12,8 @@ class CoinsTable extends Table {
   @JsonKey('iconURL')
   TextColumn get iconURL => text()();
   TextColumn get name => text()();
-  TextColumn get network => text()();
+  @JsonKey('network')
+  TextColumn get networkId => text()();
   @JsonKey('priceUSD')
   RealColumn get priceUSD => real()();
   TextColumn get symbol => text()();

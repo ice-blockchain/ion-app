@@ -2,11 +2,11 @@
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
-import 'package:ion_identity_client/ion_identity.dart';
+import 'package:ion_identity_client/ion_identity.dart' as ion;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_address_notifier_provider.c.g.dart';
@@ -17,8 +17,8 @@ class WalletAddressNotifier extends _$WalletAddressNotifier {
   FutureOr<void> build() {}
 
   Future<String?> createWallet({
-    required Network network,
-    required OnVerifyIdentity<Wallet> onVerifyIdentity,
+    required NetworkData network,
+    required ion.OnVerifyIdentity<ion.Wallet> onVerifyIdentity,
   }) async {
     state = const AsyncValue.loading();
 
@@ -28,7 +28,7 @@ class WalletAddressNotifier extends _$WalletAddressNotifier {
       final walletView = await ref.read(currentWalletViewDataProvider.future);
 
       final result = await ionIdentity.wallets.createWallet(
-        network: network.name,
+        network: network.displayName,
         walletViewId: walletView.id,
         onVerifyIdentity: onVerifyIdentity,
       );

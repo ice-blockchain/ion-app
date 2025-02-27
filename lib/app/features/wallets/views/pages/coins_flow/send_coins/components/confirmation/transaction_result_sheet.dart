@@ -9,12 +9,14 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class TransactionResultSheet extends ConsumerWidget {
@@ -25,8 +27,6 @@ class TransactionResultSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formData = ref.watch(sendAssetFormControllerProvider(type: type));
-    // TODO: Get transaction hash from the sendCoinsNotifierProvider
-    // final transactionResult = ref.watch(sendCoinsNotifierProvider);
 
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
@@ -101,7 +101,10 @@ class TransactionResultSheet extends ConsumerWidget {
                     SizedBox(width: 13.0.s),
                     Button(
                       type: ButtonType.outlined,
-                      onPressed: () {},
+                      onPressed: () {
+                        final transactionData = ref.read(transactionNotifierProvider)!;
+                        shareContent(transactionData.transactionExplorerUrl);
+                      },
                       backgroundColor: context.theme.appColors.tertararyBackground,
                       leadingIcon: icons.iconButtonShare.icon(),
                     ),

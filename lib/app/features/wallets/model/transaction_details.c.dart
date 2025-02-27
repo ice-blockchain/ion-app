@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/model/network.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
@@ -14,7 +14,7 @@ class TransactionDetails with _$TransactionDetails {
   const factory TransactionDetails({
     required String txHash,
     required String walletId,
-    required Network network,
+    required NetworkData network,
     required TransactionType type,
     required CryptoAssetData assetData,
     required String walletViewName,
@@ -29,4 +29,8 @@ class TransactionDetails with _$TransactionDetails {
     required DateTime? dateConfirmed,
     required DateTime? dateBroadcasted,
   }) = _TransactionDetails;
+
+  const TransactionDetails._();
+
+  String get transactionExplorerUrl => network.getExplorerUrl(txHash);
 }
