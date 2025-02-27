@@ -5,8 +5,8 @@ part of 'app_routes.c.dart';
 class ChatRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<AppTestRoute>(path: 'app-test'),
-    TypedGoRoute<ChatSimpleSearchRoute>(path: 'simple-search'),
-    TypedGoRoute<ChatAdvancedSearchRoute>(path: 'feed-advanced-search'),
+    TypedGoRoute<ChatSimpleSearchRoute>(path: 'chat-simple-search'),
+    TypedGoRoute<ChatAdvancedSearchRoute>(path: 'chat-advanced-search'),
     TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
