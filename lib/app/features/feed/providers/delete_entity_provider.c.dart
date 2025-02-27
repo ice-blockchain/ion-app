@@ -109,6 +109,10 @@ void _deleteFromCounters(Ref ref, IonConnectEntity entity) {
         ref
             .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
             .removeOne();
+      } else if (entity.data.quotedEvent != null) {
+        ref
+            .read(repostsCountProvider(entity.data.quotedEvent!.eventReference).notifier)
+            .removeOne(isQuote: true);
       }
 
     default:
