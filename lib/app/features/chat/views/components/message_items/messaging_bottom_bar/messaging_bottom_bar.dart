@@ -18,6 +18,7 @@ class MessagingBottomBar extends HookConsumerWidget {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
     final controller = useTextEditingController();
+    final recordedMediaFile = useState<MediaFile?>(null);
 
     return Stack(
       alignment: Alignment.center,
@@ -27,11 +28,20 @@ class MessagingBottomBar extends HookConsumerWidget {
           child: BottomBarInitialView(controller: controller, onSubmitted: onSubmitted),
         ),
         if (bottomBarState.isVoice || bottomBarState.isVoiceLocked || bottomBarState.isVoicePaused)
-          const BottomBarRecordingView(),
+          BottomBarRecordingView(
+            onRecordingFinished: (mediaFile) {
+              recordedMediaFile.value = mediaFile;
+            },
+          ),
         ActionButton(
           controller: controller,
           onSubmitted: () async {
-            await onSubmitted(content: controller.text);
+            if (recordedMediaFile.value != null) {
+              await onSubmitted(content: controller.text, mediaFiles: [recordedMediaFile.value!]);
+            } else {
+              await onSubmitted(content: controller.text);
+            }
+            recordedMediaFile.value = null;
           },
         ),
       ],

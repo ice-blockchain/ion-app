@@ -9,12 +9,17 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:mime/mime.dart';
 
 class BottomBarRecordingView extends HookConsumerWidget {
   const BottomBarRecordingView({
+    required this.onRecordingFinished,
     super.key,
   });
+
+  final void Function(MediaFile mediaFile) onRecordingFinished;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -71,6 +76,8 @@ class BottomBarRecordingView extends HookConsumerWidget {
                   playerController.value,
                   playerWaveStyle,
                 );
+            final mimetype = lookupMimeType(path);
+            onRecordingFinished(MediaFile(path: path, mimeType: mimetype));
           });
         }
         return null;

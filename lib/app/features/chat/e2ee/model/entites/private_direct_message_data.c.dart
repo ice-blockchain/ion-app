@@ -135,6 +135,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
   MessageType get messageType {
     if (primaryVideo != null) {
       return MessageType.video;
+    } else if (primaryAudio != null) {
+      return MessageType.audio;
     } else if (IonConnectProtocolIdentiferTypeValidator.isProfileIdentifier(content)) {
       return MessageType.profile;
     }

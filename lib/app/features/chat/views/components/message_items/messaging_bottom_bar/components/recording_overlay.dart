@@ -18,12 +18,6 @@ class RecordingOverlay extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
-    final scale = paddingBottom < 20
-        ? 1.0
-        : paddingBottom > 60
-            ? 1.2
-            : 1.0 + ((paddingBottom - 20) / 80) * 0.2;
-
     return Positioned(
       bottom: MediaQuery.of(context).viewInsets.bottom + 8.0.s,
       right: 14.0.s,
@@ -56,25 +50,19 @@ class RecordingOverlay extends ConsumerWidget {
               else
                 Padding(
                   padding: EdgeInsets.only(top: 4.0.s),
-                  child: AnimatedScale(
-                    scale: scale,
-                    duration: const Duration(milliseconds: 100), // Quick animations for small steps
-                    curve: Curves.easeInOut,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 100),
-                      padding: EdgeInsets.all(4.0.s),
-                      decoration: BoxDecoration(
-                        color: paddingBottom > 20
-                            ? context.theme.appColors.primaryAccent
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(12.0.s),
-                      ),
-                      child: Assets.svg.linearSecurityLockKeyholeUnlocked.icon(
-                        color: paddingBottom > 20
-                            ? context.theme.appColors.onPrimaryAccent
-                            : context.theme.appColors.primaryAccent,
-                        size: 20.0.s,
-                      ),
+                  child: Container(
+                    padding: EdgeInsets.all(4.0.s),
+                    decoration: BoxDecoration(
+                      color: paddingBottom > 20
+                          ? context.theme.appColors.primaryAccent
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12.0.s),
+                    ),
+                    child: Assets.svg.linearSecurityLockKeyholeUnlocked.icon(
+                      color: paddingBottom > 20
+                          ? context.theme.appColors.onPrimaryAccent
+                          : context.theme.appColors.primaryAccent,
+                      size: 20.0.s,
                     ),
                   ),
                 ),
