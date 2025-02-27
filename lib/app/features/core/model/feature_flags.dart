@@ -10,6 +10,7 @@ final class WalletFeatureFlag extends FeatureFlag {
   const WalletFeatureFlag._({required super.key});
 
   static const buyNftEnabled = WalletFeatureFlag._(key: 'buyNftEnabled');
+  static const dappsEnabled = WalletFeatureFlag._(key: 'dappsEnabled');
 }
 
 final class FeedFeatureFlag extends FeatureFlag {

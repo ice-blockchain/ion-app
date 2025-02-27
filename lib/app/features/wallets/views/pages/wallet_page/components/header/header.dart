@@ -1,21 +1,27 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/components/wallet_switcher/wallet_switcher.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class Header extends StatelessWidget {
+class Header extends ConsumerWidget {
   const Header({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final dappsEnabled =
+        ref.watch(featureFlagsProvider.notifier).get(WalletFeatureFlag.dappsEnabled);
+
     return ScreenSideOffset.small(
       child: SizedBox(
         height: NavigationButton.defaultSize,
@@ -29,13 +35,15 @@ class Header extends StatelessWidget {
                 child: WalletSwitcher(),
               ),
             ),
-            SizedBox(width: 12.0.s),
-            NavigationButton(
-              onPressed: () => DAppsRoute().push<void>(context),
-              icon: Assets.svg.iconDappOff.icon(
-                color: context.theme.appColors.primaryText,
+            if (dappsEnabled) ...[
+              SizedBox(width: 12.0.s),
+              NavigationButton(
+                onPressed: () => DAppsRoute().push<void>(context),
+                icon: Assets.svg.iconDappOff.icon(
+                  color: context.theme.appColors.primaryText,
+                ),
               ),
-            ),
+            ],
             SizedBox(width: 12.0.s),
             NavigationButton(
               onPressed: () => ScanWalletRoute().push<void>(context),
