@@ -55,33 +55,36 @@ class FeedSimpleSearchPage extends ConsumerWidget {
                       onClearHistory: ref.read(feedSearchHistoryProvider.notifier).clear,
                       itemBuilder: (context, index) =>
                           FeedSearchHistoryUserListItem(pubkey: history.pubKeys[index]),
-                    ),
-            PullToRefreshBuilder(
-              slivers: [
-                if (searchResults == null)
-                  ListItemsLoadingState(
-                    padding: EdgeInsets.symmetric(vertical: 20.0.s),
-                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
-                  )
-                else if (searchResults.users.isEmpty && !searchResults.hasMore)
-                  NothingIsFound(title: context.i18n.search_nothing_found)
-                else
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(vertical: 12.0.s),
-                    sliver: SliverList.builder(
-                      itemCount: searchResults.users.length,
-                      itemBuilder: (context, index) =>
-                          FeedSimpleSearchListItem(user: searchResults.users[index]),
-                    ),
+                    )
+            else
+              Expanded(
+                child: PullToRefreshBuilder(
+                  slivers: [
+                    if (searchResults == null)
+                      ListItemsLoadingState(
+                        padding: EdgeInsets.symmetric(vertical: 20.0.s),
+                        listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
+                      )
+                    else if (searchResults.users.isEmpty && !searchResults.hasMore)
+                      NothingIsFound(title: context.i18n.search_nothing_found)
+                    else
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(vertical: 12.0.s),
+                        sliver: SliverList.builder(
+                          itemCount: searchResults.users.length,
+                          itemBuilder: (context, index) =>
+                              FeedSimpleSearchListItem(user: searchResults.users[index]),
+                        ),
+                      ),
+                  ],
+                  onRefresh: ref.read(searchUsersProvider(query: query).notifier).refresh,
+                  builder: (context, slivers) => LoadMoreBuilder(
+                    slivers: slivers,
+                    onLoadMore: ref.read(searchUsersProvider(query: query).notifier).loadMore,
+                    hasMore: searchResults?.hasMore ?? false,
                   ),
-              ],
-              onRefresh: ref.read(searchUsersProvider(query: query).notifier).refresh,
-              builder: (context, slivers) => LoadMoreBuilder(
-                slivers: slivers,
-                onLoadMore: ref.read(searchUsersProvider(query: query).notifier).loadMore,
-                hasMore: searchResults?.hasMore ?? false,
+                ),
               ),
-            ),
           ],
         ),
       ),
