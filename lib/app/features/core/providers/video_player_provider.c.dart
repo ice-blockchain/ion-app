@@ -2,15 +2,15 @@
 
 import 'dart:io';
 
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:video_player/video_player.dart';
 
 part 'video_player_provider.c.g.dart';
 
 @riverpod
-Raw<VideoPlayerController> videoController(
+Raw<CachedVideoPlayerPlusController> videoController(
   Ref ref,
   String sourcePath, {
   bool autoPlay = false,
@@ -49,21 +49,21 @@ class VideoPlayerControllerFactory {
 
   final String sourcePath;
 
-  VideoPlayerController createController() {
+  CachedVideoPlayerPlusController createController() {
     final videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
 
     if (_isNetworkSource(sourcePath)) {
-      return VideoPlayerController.networkUrl(
+      return CachedVideoPlayerPlusController.networkUrl(
         Uri.parse(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
       );
     } else if (_isLocalFile(sourcePath)) {
-      return VideoPlayerController.file(
+      return CachedVideoPlayerPlusController.file(
         File(sourcePath),
         videoPlayerOptions: videoPlayerOptions,
       );
     }
-    return VideoPlayerController.asset(
+    return CachedVideoPlayerPlusController.asset(
       sourcePath,
       videoPlayerOptions: videoPlayerOptions,
     );

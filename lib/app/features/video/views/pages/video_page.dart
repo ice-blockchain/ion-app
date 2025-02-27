@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
@@ -14,7 +15,6 @@ import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:ion/app/features/video/views/hooks/use_video_ended.dart';
-import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPage extends HookConsumerWidget {
@@ -71,7 +71,7 @@ class VideoPage extends HookConsumerWidget {
           Center(
             child: AspectRatio(
               aspectRatio: playerController.value.aspectRatio,
-              child: VideoPlayer(playerController),
+              child: CachedVideoPlayerPlus(playerController),
             ),
           ),
           SafeArea(

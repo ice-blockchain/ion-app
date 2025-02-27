@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoProgress extends HookWidget {
   const VideoProgress({
@@ -11,7 +11,7 @@ class VideoProgress extends HookWidget {
     super.key,
   });
 
-  final VideoPlayerController controller;
+  final CachedVideoPlayerPlusController controller;
   final Widget Function(
     BuildContext context,
     Duration progress,
