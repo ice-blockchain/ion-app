@@ -140,8 +140,9 @@ Future<void> _deleteMessages({
     throw PubkeysDoNotMatchException();
   }
 
-  final participantsMasterPubkeys =
-      PrivateDirectMessageEntity.fromEventMessage(messageEvents.first).allPubkeys;
+  final participantsMasterPubkeys = forEveryone
+      ? PrivateDirectMessageEntity.fromEventMessage(messageEvents.first).allPubkeys
+      : [currentUserMasterPubkey];
 
   final deleteRequest = E2eeDeleteRequest(
     events:

@@ -67,6 +67,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
     final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
 
+    // TODO Clear expired and deleted database messages later
+
     ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,
       actionSource: const ActionSourceCurrentUserChat(),

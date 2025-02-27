@@ -10,16 +10,19 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_context_menu.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_emoji_bar.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessageReactionDialog extends HookConsumerWidget {
   const MessageReactionDialog({
     required this.isMe,
     required this.renderObject,
+    required this.messageEvent,
     super.key,
   });
 
   final bool isMe;
+  final EventMessage messageEvent;
 
   /// The key of the message item to capture the image from widget tree
   final RenderObject renderObject;
@@ -105,7 +108,7 @@ class MessageReactionDialog extends HookConsumerWidget {
                   width: size.width,
                   fit: BoxFit.fitHeight,
                 ),
-                const IntrinsicWidth(child: MessageReactionContextMenu()),
+                IntrinsicWidth(child: MessageReactionContextMenu(messageEvent: messageEvent)),
               ],
             ),
           ),

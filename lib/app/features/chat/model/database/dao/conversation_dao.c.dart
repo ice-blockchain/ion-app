@@ -263,7 +263,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     ])
           ..where(conversationMessageTable.conversationId.isIn(conversationIds))
           ..where(eventMessageTable.createdAt.isSmallerThanValue(deleteRequest.createdAt)))
-        .map((row) => row.readTable(conversationMessageTable).eventMessageId)
+        .map((row) => row.readTable(eventMessageTable).id)
         .get();
 
     await batch((b) {

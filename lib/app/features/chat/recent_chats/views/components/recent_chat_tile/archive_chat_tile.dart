@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/hooks/use_combined_conversation_names.dart
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/archive_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
@@ -50,11 +51,13 @@ class ArchiveChatTile extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0.s),
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
           if (isEditMode) {
             ref.read(selectedConversationsProvider.notifier).toggleAll(conversations);
           } else {
-            ArchivedChatsMainRoute().push<void>(context);
+            ref.read(archiveStateProvider.notifier).toggle();
+            await ArchivedChatsMainRoute().push<void>(context);
+            ref.read(archiveStateProvider.notifier).toggle();
           }
         },
         behavior: HitTestBehavior.opaque,

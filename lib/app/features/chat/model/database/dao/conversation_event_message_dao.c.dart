@@ -6,7 +6,12 @@ part of '../chat_database.c.dart';
 ConversationEventMessageDao conversationEventMessageDao(Ref ref) =>
     ConversationEventMessageDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [EventMessageTable, ConversationMessageTable])
+@DriftAccessor(
+  tables: [
+    EventMessageTable,
+    ConversationMessageTable,
+  ],
+)
 class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
     with _$ConversationEventMessageDaoMixin {
   ConversationEventMessageDao(super.db);

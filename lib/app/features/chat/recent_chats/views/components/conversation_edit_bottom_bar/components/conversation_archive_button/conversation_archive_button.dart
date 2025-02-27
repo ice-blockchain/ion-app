@@ -19,7 +19,12 @@ class ConversationArchiveButton extends ConsumerWidget {
     final selectedConversations = ref.watch(selectedConversationsProvider);
 
     final conversationsToManage = selectedConversations.isEmpty
-        ? (ref.read(conversationsProvider).value ?? [])
+        ? (ref
+                .read(conversationsProvider)
+                .value
+                ?.where((conversation) => !conversation.isArchived)
+                .toList() ??
+            [])
         : selectedConversations;
 
     return GestureDetector(
@@ -28,7 +33,7 @@ class ConversationArchiveButton extends ConsumerWidget {
         await ref
             .read(toggleArchivedConversationsProvider.notifier)
             .toogleConversation(conversationsToManage);
-            
+
         ref.read(selectedConversationsProvider.notifier).clear();
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
       },
