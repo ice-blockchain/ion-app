@@ -141,7 +141,6 @@ class FeedSimpleSearchRoute extends BaseRouteData {
   FeedSimpleSearchRoute({this.query = ''})
       : super(
           child: FeedSimpleSearchPage(query: query),
-          type: IceRouteType.fade,
         );
 
   final String query;
@@ -151,7 +150,6 @@ class FeedAdvancedSearchRoute extends BaseRouteData {
   FeedAdvancedSearchRoute({required this.query})
       : super(
           child: FeedAdvancedSearchPage(query: query),
-          type: IceRouteType.fade,
         );
 
   final String query;

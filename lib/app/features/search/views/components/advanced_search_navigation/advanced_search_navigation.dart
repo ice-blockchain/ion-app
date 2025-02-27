@@ -8,7 +8,6 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -50,7 +49,7 @@ class AdvancedSearchNavigation extends HookConsumerWidget {
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => FeedSimpleSearchRoute(query: query).push<void>(context),
+              onTap: onTapSearch,
               child: IgnorePointer(
                 child: SearchInput(controller: searchController, suffix: const SizedBox.shrink()),
               ),

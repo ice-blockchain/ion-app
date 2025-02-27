@@ -9,7 +9,7 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/follower_users.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/following_users.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/searched_users.dart';
-import 'package:ion/app/features/user/providers/search_users_data_source_provider.c.dart';
+import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 enum UserListType {

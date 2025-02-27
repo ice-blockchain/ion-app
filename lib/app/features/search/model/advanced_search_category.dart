@@ -54,8 +54,6 @@ enum AdvancedSearchCategory {
       AdvancedSearchCategory.people => true,
       AdvancedSearchCategory.photos => true,
       AdvancedSearchCategory.videos => true,
-      AdvancedSearchCategory.groups => true,
-      AdvancedSearchCategory.channels => true,
       _ => false,
     };
   }

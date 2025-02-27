@@ -6,11 +6,11 @@ import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
+import 'package:ion/app/features/search/providers/feed_search_categories.c.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_navigation/advanced_search_navigation.dart';
 import 'package:ion/app/features/search/views/components/advanced_search_tab_bar/advanced_search_tab_bar.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_posts/feed_advanced_search_posts.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/components/feed_advanced_search_users/feed_advanced_search_users.dart';
-import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/hooks/use_search_categories.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class FeedAdvancedSearchPage extends HookConsumerWidget {
@@ -20,7 +20,7 @@ class FeedAdvancedSearchPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = useSearchCategories(ref);
+    final categories = ref.watch(searchCategoriesProvider);
 
     return Scaffold(
       body: ScreenTopOffset(

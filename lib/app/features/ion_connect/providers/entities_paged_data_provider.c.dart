@@ -75,16 +75,18 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     );
   }
 
-  void deleteEntity(IonConnectEntity postEntity) {
-    final currentState = state;
-    if (currentState == null) return;
+  void deleteEntity(IonConnectEntity entity) {
+    final items = state?.data.items;
+    if (items == null) return;
 
-    final oldItems = currentState.data.items ?? <IonConnectEntity>{};
-    final updatedItems = oldItems.where((entity) => entity.id != postEntity.id).toSet();
+    final updatedItems = {...items};
+    final removed = updatedItems.remove(entity);
 
-    state = currentState.copyWith(
-      data: currentState.data.copyWith(items: updatedItems),
-    );
+    if (removed) {
+      state = state!.copyWith(
+        data: state!.data.copyWith(items: updatedItems),
+      );
+    }
   }
 
   Future<MapEntry<ActionSource, PaginationParams>> _fetchEntitiesFromDataSource(
