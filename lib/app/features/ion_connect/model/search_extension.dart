@@ -33,7 +33,6 @@ class SearchExtensions {
       QuotesCountSearchExtension(forKind: forKind),
       ReactionsCountSearchExtension(forKind: forKind),
       ReplySampleSearchExtension(currentPubkey: currentPubkey, root: root, forKind: forKind),
-      QuoteSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       GenericRepostSampleSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ReactionsSearchExtension(currentPubkey: currentPubkey, forKind: forKind),
       ...extensions,

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -20,38 +22,47 @@ class RepliedEvents extends _$RepliedEvents {
 
     if (currentPubkey == null) {
       yield {};
-    } else {
-      var repliedMap = <String, List<String>>{};
+      return;
+    }
 
-      final cache = ref.read(ionConnectCacheProvider);
-      repliedMap = _buildInitialMap(cache, currentPubkey);
-      yield repliedMap;
+    final cache = ref.read(ionConnectCacheProvider);
+    var repliedMap = _buildInitialMap(cache, currentPubkey);
 
-      await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
-        if (entity case final ModifiablePostEntity post) {
-          final parentId = post.data.parentEvent?.eventReference.toString();
-          if (parentId == null) continue;
+    yield repliedMap;
 
-          final currentUserRepliedIds =
-              _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
+    final controller = StreamController<Map<String, List<String>>>();
 
-          if (currentUserRepliedIds != null) {
-            final validIds =
-                currentUserRepliedIds.where((id) => !_deletedIds.contains(id)).toList();
+    final subscription = ref.watch(ionConnectCacheStreamProvider).listen((entity) {
+      if (entity case final ModifiablePostEntity post) {
+        final parentId = post.data.parentEvent?.eventReference.toString();
+        if (parentId == null) return;
 
-            final updatedMap = Map<String, List<String>>.from(repliedMap);
+        final currentUserRepliedIds = _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
 
-            if (validIds.isEmpty) {
-              updatedMap.remove(parentId);
-            } else {
-              updatedMap[parentId] = validIds;
-            }
+        if (currentUserRepliedIds != null) {
+          final validIds = currentUserRepliedIds.where((id) => !_deletedIds.contains(id)).toList();
 
-            repliedMap = updatedMap;
-            yield repliedMap;
+          final updatedMap = Map<String, List<String>>.from(repliedMap);
+
+          if (validIds.isEmpty) {
+            updatedMap.remove(parentId);
+          } else {
+            updatedMap[parentId] = validIds;
           }
+
+          repliedMap = updatedMap;
+          controller.add(updatedMap);
         }
       }
+    });
+
+    ref.onDispose(() async {
+      await subscription.cancel();
+      await controller.close();
+    });
+
+    await for (final update in controller.stream) {
+      yield update;
     }
   }
 

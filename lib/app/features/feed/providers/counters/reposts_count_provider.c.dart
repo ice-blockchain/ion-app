@@ -11,30 +11,8 @@ part 'reposts_count_provider.c.g.dart';
 class RepostsCount extends _$RepostsCount {
   @override
   int? build(EventReference eventReference) {
-    final repostsCountEntity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: eventReference.toString(),
-            type: EventCountResultType.reposts,
-          ),
-        ),
-      ),
-    );
-
-    final quotesCountEntity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: eventReference.toString(),
-            type: EventCountResultType.quotes,
-          ),
-        ),
-      ),
-    );
-
-    final repostsCount = repostsCountEntity != null ? repostsCountEntity.data.content as int : 0;
-    final quotesCount = quotesCountEntity != null ? quotesCountEntity.data.content as int : 0;
+    final repostsCount = _getCountFromCache(EventCountResultType.reposts);
+    final quotesCount = _getCountFromCache(EventCountResultType.quotes);
 
     return repostsCount + quotesCount;
   }
@@ -45,9 +23,46 @@ class RepostsCount extends _$RepostsCount {
     }
   }
 
-  void removeOne() {
-    if (state != null) {
+  void removeOne({bool isQuote = false}) {
+    if (state == null) return;
+
+    final countType = isQuote ? EventCountResultType.quotes : EventCountResultType.reposts;
+    final count = _getCountFromCache(countType);
+
+    if (count == 1) {
+      _removeCacheEntry(countType);
+    }
+
+    if (state! > 0) {
       state = state! - 1;
     }
+  }
+
+  int _getCountFromCache(EventCountResultType type) {
+    final entity = ref.read(
+      ionConnectCacheProvider.select(
+        cacheSelector<EventCountResultEntity>(
+          _buildCacheKey(type),
+        ),
+      ),
+    );
+
+    return entity != null ? entity.data.content as int : 0;
+  }
+
+  String _buildCacheKey(EventCountResultType type) {
+    return EventCountResultEntity.cacheKeyBuilder(
+      key: eventReference.toString(),
+      type: type,
+    );
+  }
+
+  void _removeCacheEntry(EventCountResultType type) {
+    // Manually remove the cache entry when counter reaches zero.
+    // This is necessary because when the backend counter is 0, no event is sent to the frontend,
+    // but the old value remains in the cache, causing stale data to be displayed.
+    ref.read(ionConnectCacheProvider.notifier).remove(
+          _buildCacheKey(type),
+        );
   }
 }

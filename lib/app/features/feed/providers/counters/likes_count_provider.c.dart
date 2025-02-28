@@ -36,6 +36,18 @@ class LikesCount extends _$LikesCount {
   }
 
   void removeOne() {
-    state = state - 1;
+    if (state > 1) {
+      state = state - 1;
+    } else if (state == 1) {
+      // Manually remove the cache entry when counter reaches zero.
+      // This is necessary because when the backend counter is 0, no event is sent to the frontend,
+      // but the old value remains in the cache, causing stale data to be displayed.
+      ref.read(ionConnectCacheProvider.notifier).remove(
+            EventCountResultEntity.cacheKeyBuilder(
+              key: eventReference.toString(),
+              type: EventCountResultType.reactions,
+            ),
+          );
+    }
   }
 }

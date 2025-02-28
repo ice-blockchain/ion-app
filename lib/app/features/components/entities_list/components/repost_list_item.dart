@@ -57,7 +57,6 @@ class RepostListItem extends ConsumerWidget {
                   padding: EdgeInsetsDirectional.only(start: 16.0.s),
                   child: Post(
                     eventReference: repostEntity.data.eventReference,
-                    repostReference: eventReference,
                   ),
                 ),
               GenericRepostEntity() when repostEntity.data.kind == ModifiablePostEntity.kind =>
@@ -65,7 +64,6 @@ class RepostListItem extends ConsumerWidget {
                   padding: EdgeInsetsDirectional.only(start: 16.0.s),
                   child: Post(
                     eventReference: repostEntity.data.eventReference,
-                    repostReference: eventReference,
                   ),
                 ),
               GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind => Padding(

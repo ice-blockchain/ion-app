@@ -10,6 +10,9 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/counters/replies_count_provider.c.dart';
+import 'package:ion/app/features/feed/providers/counters/reposted_events_notifier.c.dart';
+import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.c.dart';
@@ -40,9 +43,12 @@ Future<void> deleteEntity(
         await _deleteFromServer(ref, entity);
         _deleteFromDataSources(ref, entity);
         _deleteFromCache(ref, entity);
+        _deleteFromCounters(ref, entity);
+        _deleteFromProviders(ref, entity);
       }
     case ModifiablePostEntity():
       {
+        _deleteFromCounters(ref, entity);
         await ref
             .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
             .softDelete(eventReference: eventReference);
@@ -88,5 +94,40 @@ void _deleteFromDataSources(Ref ref, IonConnectEntity entity) {
 void _deleteFromCache(Ref ref, IonConnectEntity entity) {
   if (entity is CacheableEntity) {
     ref.read(ionConnectCacheProvider.notifier).remove(entity.cacheKey);
+  }
+}
+
+void _deleteFromCounters(Ref ref, IonConnectEntity entity) {
+  switch (entity) {
+    case RepostEntity():
+      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
+    case GenericRepostEntity():
+      ref.read(repostsCountProvider(entity.data.eventReference).notifier).removeOne();
+
+    case ModifiablePostEntity():
+      if (entity.data.parentEvent != null) {
+        ref
+            .read(repliesCountProvider(entity.data.parentEvent!.eventReference).notifier)
+            .removeOne();
+      } else if (entity.data.quotedEvent != null) {
+        ref
+            .read(repostsCountProvider(entity.data.quotedEvent!.eventReference).notifier)
+            .removeOne(isQuote: true);
+      }
+
+    default:
+      break;
+  }
+}
+
+void _deleteFromProviders(Ref ref, IonConnectEntity entity) {
+  final eventReference = switch (entity) {
+    RepostEntity() => entity.data.eventReference,
+    GenericRepostEntity() => entity.data.eventReference,
+    _ => null,
+  };
+
+  if (eventReference != null) {
+    ref.read(repostedEventsNotifierProvider.notifier).removeRepost(eventReference);
   }
 }
