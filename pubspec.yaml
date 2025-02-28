@@ -53,6 +53,7 @@ dependencies:
   freezed_annotation: ^2.4.1
   go_router: ^14.6.3
   hooks_riverpod: ^2.6.1
+  icloud_storage: ^2.2.0
   image_cropper: ^8.1.0
   image_picker: ^1.1.2
   intl: any
