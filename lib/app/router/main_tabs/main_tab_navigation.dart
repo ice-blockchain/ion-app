@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,12 +10,8 @@ import 'package:ion/app/features/chat/providers/user_chat_relays_provider.c.dart
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/conversation_edit_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/unread_messages_counter.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
-import 'package:ion/app/features/debug/views/debug_page.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/main_tabs/components/components.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class MainTabNavigation extends HookConsumerWidget {
   const MainTabNavigation({
@@ -38,10 +32,6 @@ class MainTabNavigation extends HookConsumerWidget {
       ref.read(userChatRelaysManagerProvider.notifier).sync();
     });
 
-    final showDebugMenu = useRef(
-      ref.watch(envProvider.notifier).get<bool>(EnvVariable.SHOW_DEBUG_INFO),
-    );
-
     return Scaffold(
       body: MainTabNavigationContainer(
         tabPressStream: tabPressStreamController.stream,
@@ -61,12 +51,6 @@ class MainTabNavigation extends HookConsumerWidget {
                   _navigateToTab(context, tabItem, initialLocation: currentTab == tabItem);
                 }
               },
-              onLongPressedDuration: showDebugMenu.value ? const Duration(seconds: 2) : null,
-              onLongPressed: showDebugMenu.value
-                  ? (tabItem) {
-                      if (tabItem == TabItem.main) _handleDebugMenuTap(context);
-                    }
-                  : null,
             ),
     );
   }
@@ -91,11 +75,6 @@ class MainTabNavigation extends HookConsumerWidget {
       shell.goBranch(tabItem.navigationIndex, initialLocation: initialLocation);
     }
   }
-
-  void _handleDebugMenuTap(BuildContext context) => showSimpleBottomSheet<void>(
-        context: rootNavigatorKey.currentContext!,
-        child: const DebugPage(),
-      );
 }
 
 class _BottomNavBarContent extends ConsumerWidget {
@@ -103,20 +82,15 @@ class _BottomNavBarContent extends ConsumerWidget {
     required this.state,
     required this.currentTab,
     required this.onTabPressed,
-    this.onLongPressed,
-    this.onLongPressedDuration,
   });
 
   final GoRouterState state;
   final TabItem currentTab;
   final ValueChanged<TabItem> onTabPressed;
-  final ValueChanged<TabItem>? onLongPressed;
-  final Duration? onLongPressedDuration;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final conversationsEditMode = ref.watch(conversationsEditModeProvider);
-    Timer? timer;
 
     return Stack(
       children: [
@@ -141,15 +115,6 @@ class _BottomNavBarContent extends ConsumerWidget {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () => onTabPressed(tabItem),
-                    onPanCancel: onLongPressed != null ? () => timer?.cancel() : null,
-                    onPanDown: onLongPressed != null
-                        ? (_) => {
-                              timer = Timer(
-                                onLongPressedDuration ?? const Duration(seconds: 2),
-                                () => onLongPressed!(tabItem),
-                              ),
-                            }
-                        : null,
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 9.0.s),
                       color: context.theme.appColors.secondaryBackground,
