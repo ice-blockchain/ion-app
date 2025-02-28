@@ -8,6 +8,8 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/tabs/tabs_header_tab.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
@@ -27,6 +29,9 @@ class WalletTabsHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchVisibleProvider = walletSearchVisibilityProvider(activeTab);
+    final dappsEnabled =
+        ref.watch(featureFlagsProvider.notifier).get(WalletFeatureFlag.dappsEnabled);
+
     return Padding(
       padding: EdgeInsets.only(
         top: 16.0.s - UiConstants.hitSlop,
@@ -49,11 +54,13 @@ class WalletTabsHeader extends ConsumerWidget {
             title: WalletTabType.nfts.getTitle(context),
             onTap: () => onTabSwitch(WalletTabType.nfts),
           ),
-          WalletTabsHeaderTab(
-            isActive: false,
-            title: context.i18n.core_dapps,
-            onTap: () => DAppsRoute().push<void>(context),
-          ),
+          if (dappsEnabled) ...[
+            WalletTabsHeaderTab(
+              isActive: false,
+              title: context.i18n.core_dapps,
+              onTap: () => DAppsRoute().push<void>(context),
+            ),
+          ],
           const Spacer(),
           TextButton(
             onPressed: () {

@@ -13,6 +13,7 @@ class FeatureFlags extends _$FeatureFlags {
     return {
       /// Local flags
       WalletFeatureFlag.buyNftEnabled: false,
+      WalletFeatureFlag.dappsEnabled: false,
       FeedFeatureFlag.showTrendingVideo: false,
       FeedFeatureFlag.showMentionsSuggestions: true,
       HideCreatorsWithoutPicture.hideCreatorsWithoutPicture: true,
