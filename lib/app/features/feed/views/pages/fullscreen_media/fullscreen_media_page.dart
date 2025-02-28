@@ -28,8 +28,6 @@ class FullscreenMediaPage extends HookConsumerWidget {
   final String heroTag;
   final EventReference eventReference;
 
-  static String heroTagForMedia(String url) => 'fullscreen-media-$url';
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final drag = usePageDismiss(context);

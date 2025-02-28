@@ -6,7 +6,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/fullscreen_media_page.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -26,10 +25,7 @@ class PostMediaItem extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final heroTag = useMemoized(
-      // use uuid to avoid hero tag collision betweeen different routes
-      () => FullscreenMediaPage.heroTagForMedia(mediaItem.url + generateUuid()),
-    );
+    final heroTag = useMemoized(generateUuid);
 
     return GestureDetector(
       onTap: () => FullscreenMediaRoute(
