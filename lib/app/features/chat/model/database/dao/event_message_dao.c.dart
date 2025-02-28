@@ -5,7 +5,15 @@ part of '../chat_database.c.dart';
 @Riverpod(keepAlive: true)
 EventMessageDao eventMessageDao(Ref ref) => EventMessageDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [EventMessageTable])
+@DriftAccessor(
+  tables: [
+    ReactionTable,
+    ConversationTable,
+    EventMessageTable,
+    MessageStatusTable,
+    ConversationMessageTable,
+  ],
+)
 class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessageDaoMixin {
   EventMessageDao(super.db);
 

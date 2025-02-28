@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
@@ -8,6 +9,7 @@ import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RecentChatOverlayContextMenu extends ConsumerWidget {
@@ -86,8 +88,15 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                   verticalPadding: 12.0.s,
                   icon: Assets.svg.iconBlockDelete
                       .icon(size: iconSize, color: context.theme.appColors.attentionRed),
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    final deleted = await DeleteConversationRoute(
+                          conversationIds: [conversation.conversationId],
+                        ).push<bool>(context) ??
+                        false;
+
+                    if (deleted && context.mounted) {
+                      context.pop();
+                    }
                   },
                 ),
               ],

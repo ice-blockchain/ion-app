@@ -41,7 +41,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
         );
       }
       final conversationMessageTableData = await (select(conversationMessageTable)
-            ..where((table) => table.eventMessageId.equals(eventMessageId)))
+            ..where((table) => table.eventMessageId.equals(eventMessageId))
+            ..limit(1))
           .getSingleOrNull();
 
       if (conversationMessageTableData != null) {
@@ -77,7 +78,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     } else {
       final existingRow = await (select(messageStatusTable)
             ..where((table) => table.masterPubkey.equals(masterPubkey))
-            ..where((table) => table.eventMessageId.equals(eventMessageId)))
+            ..where((table) => table.eventMessageId.equals(eventMessageId))
+            ..limit(1))
           .getSingleOrNull();
 
       if (existingRow != null) {
@@ -86,7 +88,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
         }
       } else {
         final eventMessageExists = await (select(eventMessageTable)
-              ..where((table) => table.id.equals(eventMessageId)))
+              ..where((table) => table.id.equals(eventMessageId))
+              ..limit(1))
             .getSingleOrNull();
 
         if (eventMessageExists == null) {
@@ -111,6 +114,9 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
         .watch();
 
     return existingRows.map((rows) {
+      if (rows.every((row) => row.status == MessageDeliveryStatus.deleted)) {
+        return MessageDeliveryStatus.deleted;
+      } else
       // First check if any of the rows are failed
       if (rows.any((row) => row.status == MessageDeliveryStatus.failed)) {
         return MessageDeliveryStatus.failed;
@@ -140,7 +146,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
           ..where((table) => table.masterPubkey.equals(masterPubkey))
           ..where(
             (table) => table.eventMessageId.equals(eventMessageId),
-          ))
+          )
+          ..limit(1))
         .getSingleOrNull()
         .then((value) => value?.status);
 

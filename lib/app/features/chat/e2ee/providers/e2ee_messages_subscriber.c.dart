@@ -62,8 +62,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     final sealService = await ref.watch(ionConnectSealServiceProvider.future);
     final giftWrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
     final sendE2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
+    final conversationDao = ref.watch(conversationDaoProvider);
+    final conversationMessageDao = ref.watch(conversationMessageDaoProvider);
     final conversationMessageStatusDao = ref.watch(conversationMessageDataDaoProvider);
     final conversationMessageReactionDao = ref.watch(conversationMessageReactionDaoProvider);
+
+    // TODO Clear expired and deleted database messages later
 
     ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
       requestMessage,
@@ -92,8 +96,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       );
 
       if (rumor != null) {
-        if (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
-            rumor.kind == PrivateMessageReactionEntity.kind) {
+        if (rumor.kind != DeletionRequest.kind &&
+            (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
+                rumor.kind == PrivateMessageReactionEntity.kind)) {
           // Try to get kind 14 event id from related event tag or use the rumor id
           final kind14EventId = rumor.kind == PrivateMessageReactionEntity.kind
               ? rumor.tags
@@ -159,10 +164,42 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           }
           // For kind 5
         } else if (rumor.kind == DeletionRequest.kind) {
-          await conversationMessageReactionDao.remove(
-            ref: ref,
-            removalRequest: rumor,
-          );
+          final deleteEventKind =
+              rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
+
+          final deleteEventIds = rumor.tags
+              .where((tags) => tags[0] == RelatedImmutableEvent.tagName)
+              .map((tag) => tag.elementAtOrNull(1))
+              .nonNulls
+              .toList();
+
+          final deleteConversationIds = rumor.tags
+              .where((tags) => tags[0] == CommunityIdentifierTag.tagName)
+              .map((tag) => tag.elementAtOrNull(1))
+              .nonNulls
+              .toList();
+
+          if (deleteConversationIds.isNotEmpty) {
+            await conversationDao.removeConversations(
+              ref: ref,
+              deleteRequest: rumor,
+              conversationIds: deleteConversationIds,
+            );
+          } else if (deleteEventKind == PrivateDirectMessageEntity.kind.toString()) {
+            if (deleteEventIds.isNotEmpty) {
+              await conversationMessageDao.removeMessages(
+                ref: ref,
+                deleteRequest: rumor,
+                messageIds: deleteEventIds,
+              );
+            }
+          } else if (deleteEventKind == PrivateMessageReactionEntity.kind.toString()) {
+            await conversationMessageReactionDao.remove(
+              ref: ref,
+              deleteRequest: rumor,
+              reactionEventId: deleteEventIds.single,
+            );
+          }
         }
       }
     });

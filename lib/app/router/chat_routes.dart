@@ -10,7 +10,8 @@ class ChatRoutes {
     TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<DeleteConversationRoute>(path: 'delete'),
+        TypedGoRoute<DeleteConversationRoute>(path: 'delete-conversation'),
+        TypedGoRoute<DeleteMessageRoute>(path: 'delete-message'),
         TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
         TypedGoRoute<NewChannelModalRoute>(path: 'new-channel'),
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
@@ -102,6 +103,14 @@ class DeleteConversationRoute extends BaseRouteData {
         );
 
   final List<String> conversationIds;
+}
+
+class DeleteMessageRoute extends BaseRouteData {
+  DeleteMessageRoute()
+      : super(
+          child: const DeleteMessageModal(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class NewChatModalRoute extends BaseRouteData {

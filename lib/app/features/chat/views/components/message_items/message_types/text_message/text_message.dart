@@ -30,6 +30,7 @@ class TextMessage extends HookConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return MessageItemWrapper(
+      messageEvent: eventMessage,
       onReactionSelected: (emoji) async {
         final e2eeMessageService = await ref.watch(sendE2eeMessageServiceProvider.future);
         await e2eeMessageService.sendReaction(

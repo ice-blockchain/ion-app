@@ -41,12 +41,10 @@ class MessageMetaData extends ConsumerWidget {
           if (isMe)
             StreamBuilder<MessageDeliveryStatus>(
               stream: deliveryStatus,
-              builder: (context, snapshot) {
-                return Padding(
-                  padding: EdgeInsets.only(left: 2.0.s),
-                  child: statusIcon(context, snapshot.data ?? MessageDeliveryStatus.created),
-                );
-              },
+              builder: (context, snapshot) => Padding(
+                padding: EdgeInsets.only(left: 2.0.s),
+                child: statusIcon(context, snapshot.data ?? MessageDeliveryStatus.created),
+              ),
             ),
         ],
       ),

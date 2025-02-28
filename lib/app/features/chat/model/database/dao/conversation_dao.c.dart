@@ -5,7 +5,14 @@ part of '../chat_database.c.dart';
 @Riverpod(keepAlive: true)
 ConversationDao conversationDao(Ref ref) => ConversationDao(ref.watch(chatDatabaseProvider));
 
-@DriftAccessor(tables: [ConversationTable, ConversationMessageTable, EventMessageTable])
+@DriftAccessor(
+  tables: [
+    ConversationTable,
+    ConversationMessageTable,
+    EventMessageTable,
+    MessageStatusTable,
+  ],
+)
 class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$ConversationDaoMixin {
   ConversationDao(super.db);
 
@@ -110,6 +117,15 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
         eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
       ),
     ])
+      ..where(
+        notExistsQuery(
+          select(messageStatusTable)
+            ..where(
+              (tbl) => tbl.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
+            )
+            ..where((tbl) => tbl.status.equals(MessageDeliveryStatus.deleted.index)),
+        ),
+      )
       ..addColumns([
         eventMessageTable.createdAt.max(),
       ])
@@ -202,12 +218,60 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     });
   }
 
-  ///
-  /// Get the type of a conversation
-  ///
   Future<ConversationType?> getConversationType(String conversationId) async {
     final query = select(conversationTable)..where((t) => t.id.equals(conversationId));
     final row = await query.getSingleOrNull();
     return row?.type;
+  }
+
+  Future<List<String>> getConversationParticipants(String conversationId) async {
+    final query = select(eventMessageTable).join([
+      innerJoin(
+        conversationMessageTable,
+        conversationMessageTable.eventMessageId.equalsExp(eventMessageTable.id),
+      ),
+    ])
+      ..where(conversationMessageTable.conversationId.equals(conversationId))
+      ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)])
+      ..limit(1);
+
+    final row = await query.getSingleOrNull();
+    final eventMessage = row?.readTable(eventMessageTable).toEventMessage();
+
+    if (eventMessage != null) {
+      final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+      return entity.allPubkeys;
+    }
+
+    return [];
+  }
+
+  Future<void> removeConversations({
+    required Ref ref,
+    required List<String> conversationIds,
+    required EventMessage deleteRequest,
+  }) async {
+    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+
+    await eventMessageDao.add(deleteRequest);
+
+    final eventMessageIds = await (select(conversationMessageTable).join([
+      innerJoin(
+        eventMessageTable,
+        eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
+      ),
+    ])
+          ..where(conversationMessageTable.conversationId.isIn(conversationIds))
+          ..where(eventMessageTable.createdAt.isSmallerThanValue(deleteRequest.createdAt)))
+        .map((row) => row.readTable(eventMessageTable).id)
+        .get();
+
+    await batch((b) {
+      b.update(
+        messageStatusTable,
+        const MessageStatusTableCompanion(status: Value(MessageDeliveryStatus.deleted)),
+        where: (tbl) => tbl.eventMessageId.isIn(eventMessageIds),
+      );
+    });
   }
 }

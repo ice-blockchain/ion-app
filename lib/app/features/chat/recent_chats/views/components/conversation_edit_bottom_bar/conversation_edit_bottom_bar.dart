@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/archive_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/components/conversation_archive_button/conversation_archive_button.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/components/conversation_archive_button/conversation_unarchive_button.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/conversation_edit_bottom_bar/components/conversation_delete_button/conversation_delete_button.dart';
@@ -16,8 +16,7 @@ class ConversationEditBottomBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasAnyArchivedConversation =
-        ref.watch(selectedConversationsProvider.select((value) => value.any((e) => e.isArchived)));
+    final archiveOpened = ref.read(archiveStateProvider).falseOrValue;
 
     return Positioned(
       top: 0,
@@ -32,7 +31,7 @@ class ConversationEditBottomBar extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Expanded(child: ConversationReadAllButton()),
-            if (hasAnyArchivedConversation)
+            if (archiveOpened)
               const Expanded(child: ConversationUnarchiveButton())
             else
               const Expanded(child: ConversationArchiveButton()),
