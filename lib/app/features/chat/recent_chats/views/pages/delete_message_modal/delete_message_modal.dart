@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/card/info_card.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -24,28 +25,11 @@ class DeleteMessageModal extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 30.0.s, bottom: 10.0.s),
-              child: Assets.svg.actionCreatepostDeletepost.icon(size: 80.0.s),
-            ),
-            Text(
-              context.i18n.chat_delete_modal_title_single,
-              style: context.theme.appTextThemes.title.copyWith(
-                color: context.theme.appColors.primaryText,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: 8.0.s,
-                bottom: 30.0.s,
-                left: 36.0.s,
-                right: 36.0.s,
-              ),
-              child: Text(
-                context.i18n.chat_delete_modal_description_single,
-                style: context.theme.appTextThemes.body2.copyWith(
-                  color: context.theme.appColors.secondaryText,
-                ),
-                textAlign: TextAlign.center,
+              padding: EdgeInsets.only(top: 32.0.s, bottom: 28.0.s),
+              child: InfoCard(
+                title: context.i18n.chat_delete_modal_title_single,
+                description: context.i18n.chat_delete_modal_description_single,
+                iconAsset: Assets.svg.actionCreatepostDeletepost,
               ),
             ),
             Row(
