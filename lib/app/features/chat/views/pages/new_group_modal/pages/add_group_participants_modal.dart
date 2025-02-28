@@ -27,7 +27,6 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
       topPadding: 0,
       body: UserPickerSheet(
         selectable: true,
-        initialUserListType: UserListType.follower,
         key: const Key('add-group-participants-modal'),
         selectedPubkeys: createGroupForm.participantsMasterkeys.toList(),
         onUserSelected: (user) {

@@ -18,14 +18,12 @@ class ShareModalBase extends HookWidget {
     required this.title,
     required this.emptyStateWidget,
     this.showNextIcon = true,
-    this.showBackButton = false,
     this.onSearch,
     this.onClose,
     super.key,
   });
 
   final String title;
-  final bool showBackButton;
   final bool showNextIcon;
   final Widget emptyStateWidget;
   final ValueChanged<String>? onSearch;
@@ -42,7 +40,6 @@ class ShareModalBase extends HookWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           NavigationAppBar.modal(
-            showBackButton: showBackButton,
             title: Text(title),
             actions: [
               if (onClose != null)

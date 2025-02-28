@@ -6,16 +6,10 @@ import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
-import 'package:ion/app/features/user/pages/user_picker_sheet/components/follower_users.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/following_users.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/components/searched_users.dart';
 import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-
-enum UserListType {
-  follower,
-  following,
-}
 
 class UserPickerSheet extends HookConsumerWidget {
   const UserPickerSheet({
@@ -26,7 +20,6 @@ class UserPickerSheet extends HookConsumerWidget {
     this.selectedPubkeys = const [],
     this.selectable = false,
     this.bottomContent,
-    this.initialUserListType = UserListType.following,
   });
 
   final NavigationAppBar navigationBar;
@@ -35,7 +28,6 @@ class UserPickerSheet extends HookConsumerWidget {
   final bool selectable;
   final Widget? bottomContent;
   final void Function(UserMetadataEntity user) onUserSelected;
-  final UserListType initialUserListType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,17 +57,11 @@ class UserPickerSheet extends HookConsumerWidget {
                     ],
                   ),
                 if (searchText.isEmpty)
-                  initialUserListType == UserListType.follower
-                      ? FollowerUsers(
-                          onUserSelected: onUserSelected,
-                          selectedPubkeys: selectedPubkeys,
-                          selectable: selectable,
-                        )
-                      : FollowingUsers(
-                          onUserSelected: onUserSelected,
-                          selectedPubkeys: selectedPubkeys,
-                          selectable: selectable,
-                        )
+                  FollowingUsers(
+                    onUserSelected: onUserSelected,
+                    selectedPubkeys: selectedPubkeys,
+                    selectable: selectable,
+                  )
                 else
                   Expanded(
                     child: SearchedUsers(
