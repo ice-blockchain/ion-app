@@ -18,7 +18,6 @@ import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dar
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_arg.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -166,8 +165,7 @@ class CompressionService {
     ]).then((session) async {
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        final mimetype = lookupMimeType(outputPath);
-        return MediaFile(path: outputPath, mimeType: mimetype, width: 0, height: 0);
+        return MediaFile(path: outputPath, mimeType: 'audio/ogg', width: 0, height: 0);
       }
       final logs = await session.getAllLogsAsString();
       final stackTrace = await session.getFailStackTrace();

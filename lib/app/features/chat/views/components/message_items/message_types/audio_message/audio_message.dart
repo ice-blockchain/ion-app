@@ -34,26 +34,33 @@ class AudioMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useAutomaticKeepAlive();
+
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
     final audioUrl = useState<String?>(null);
 
-    useEffect(
-      () {
-        ref
-            .read(mediaEncryptionServiceProvider)
-            .retreiveEncryptedMedia([entity.data.primaryAudio!]).then((value) {
-          ref.read(compressServiceProvider).compressAudioToWav(value.first.path).then((wav) {
-            audioUrl.value = wav;
-          });
-        });
-        return null;
-      },
-      [],
+    final audioData = useFuture(
+      useMemoized(
+        () async {
+          final encryptedMedia = await ref
+              .read(mediaEncryptionServiceProvider)
+              .retreiveEncryptedMedia([entity.data.primaryAudio!]);
+          return ref.read(compressServiceProvider).compressAudioToWav(encryptedMedia.first.path);
+        },
+        [],
+      ),
     );
 
-    useAutomaticKeepAlive();
+    useEffect(
+      () {
+        if (audioData.data != null) audioUrl.value = audioData.data;
+        return null;
+      },
+      [audioData.data],
+    );
+
     final audioPlaybackState = useState<PlayerState?>(null);
     final audioPlaybackController = useAudioWavePlaybackController();
 
