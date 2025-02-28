@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -13,6 +15,7 @@ part 'replied_events_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class RepliedEvents extends _$RepliedEvents {
   final _deletedIds = <String>{};
+  StreamSubscription<IonConnectEntity>? _subscription;
 
   @override
   Stream<Map<String, List<String>>?> build() async* {
@@ -20,38 +23,49 @@ class RepliedEvents extends _$RepliedEvents {
 
     if (currentPubkey == null) {
       yield {};
-    } else {
-      var repliedMap = <String, List<String>>{};
+      return;
+    }
 
-      final cache = ref.read(ionConnectCacheProvider);
-      repliedMap = _buildInitialMap(cache, currentPubkey);
-      yield repliedMap;
+    final cache = ref.read(ionConnectCacheProvider);
+    var repliedMap = _buildInitialMap(cache, currentPubkey);
 
-      await for (final entity in ref.watch(ionConnectCacheStreamProvider)) {
-        if (entity case final ModifiablePostEntity post) {
-          final parentId = post.data.parentEvent?.eventReference.toString();
-          if (parentId == null) continue;
+    yield repliedMap;
 
-          final currentUserRepliedIds =
-              _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
+    await _subscription?.cancel();
 
-          if (currentUserRepliedIds != null) {
-            final validIds =
-                currentUserRepliedIds.where((id) => !_deletedIds.contains(id)).toList();
+    final controller = StreamController<Map<String, List<String>>>();
 
-            final updatedMap = Map<String, List<String>>.from(repliedMap);
+    _subscription = ref.watch(ionConnectCacheStreamProvider).listen((entity) {
+      if (entity case final ModifiablePostEntity post) {
+        final parentId = post.data.parentEvent?.eventReference.toString();
+        if (parentId == null) return;
 
-            if (validIds.isEmpty) {
-              updatedMap.remove(parentId);
-            } else {
-              updatedMap[parentId] = validIds;
-            }
+        final currentUserRepliedIds = _getCurrentUserRepliedIds(post, currentPubkey: currentPubkey);
 
-            repliedMap = updatedMap;
-            yield repliedMap;
+        if (currentUserRepliedIds != null) {
+          final validIds = currentUserRepliedIds.where((id) => !_deletedIds.contains(id)).toList();
+
+          final updatedMap = Map<String, List<String>>.from(repliedMap);
+
+          if (validIds.isEmpty) {
+            updatedMap.remove(parentId);
+          } else {
+            updatedMap[parentId] = validIds;
           }
+
+          repliedMap = updatedMap;
+          controller.add(updatedMap);
         }
       }
+    });
+
+    ref.onDispose(() async {
+      await _subscription?.cancel();
+      await controller.close();
+    });
+
+    await for (final update in controller.stream) {
+      yield update;
     }
   }
 
