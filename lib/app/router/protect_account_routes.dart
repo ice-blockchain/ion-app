@@ -20,14 +20,10 @@ class ProtectAccountRoutes {
     TypedGoRoute<AuthenticatorDeleteSuccessRoute>(path: 'authenticator-delete-success'),
     TypedGoRoute<EmailSetupRoute>(path: 'email-setup/:step'),
     TypedGoRoute<EmailEditRoute>(path: 'email-edit'),
-    TypedGoRoute<EmailEditSuccessRoute>(path: 'email-edit-success'),
     TypedGoRoute<EmailDeleteRoute>(path: 'email-delete'),
-    TypedGoRoute<EmailDeleteSuccessRoute>(path: 'email-delete-success'),
     TypedGoRoute<PhoneSetupRoute>(path: 'phone-setup/:step'),
     TypedGoRoute<PhoneEditRoute>(path: 'phone-edit'),
-    TypedGoRoute<PhoneEditSuccessRoute>(path: 'phone-edit-success'),
     TypedGoRoute<PhoneDeleteRoute>(path: 'phone-delete'),
-    TypedGoRoute<PhoneDeleteSuccessRoute>(path: 'phone-delete-success'),
     TypedGoRoute<SelectCountriesRoute>(path: 'select-countries'),
   ];
 }
@@ -163,26 +159,10 @@ class EmailEditRoute extends BaseRouteData {
         );
 }
 
-class EmailEditSuccessRoute extends BaseRouteData {
-  EmailEditSuccessRoute()
-      : super(
-          child: const EmailEditSuccessPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
 class EmailDeleteRoute extends BaseRouteData {
   EmailDeleteRoute()
       : super(
           child: const EmailDeletePage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class EmailDeleteSuccessRoute extends BaseRouteData {
-  EmailDeleteSuccessRoute()
-      : super(
-          child: const EmailDeleteSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -206,26 +186,10 @@ class PhoneEditRoute extends BaseRouteData {
         );
 }
 
-class PhoneEditSuccessRoute extends BaseRouteData {
-  PhoneEditSuccessRoute()
-      : super(
-          child: const PhoneEditSuccessPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
 class PhoneDeleteRoute extends BaseRouteData {
   PhoneDeleteRoute()
       : super(
           child: const PhoneDeletePage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class PhoneDeleteSuccessRoute extends BaseRouteData {
-  PhoneDeleteSuccessRoute()
-      : super(
-          child: const PhoneDeleteSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }
