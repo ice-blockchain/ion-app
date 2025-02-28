@@ -15,7 +15,6 @@ part 'replied_events_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class RepliedEvents extends _$RepliedEvents {
   final _deletedIds = <String>{};
-  StreamSubscription<IonConnectEntity>? _subscription;
 
   @override
   Stream<Map<String, List<String>>?> build() async* {
@@ -31,11 +30,9 @@ class RepliedEvents extends _$RepliedEvents {
 
     yield repliedMap;
 
-    await _subscription?.cancel();
-
     final controller = StreamController<Map<String, List<String>>>();
 
-    _subscription = ref.watch(ionConnectCacheStreamProvider).listen((entity) {
+    final subscription = ref.watch(ionConnectCacheStreamProvider).listen((entity) {
       if (entity case final ModifiablePostEntity post) {
         final parentId = post.data.parentEvent?.eventReference.toString();
         if (parentId == null) return;
@@ -60,7 +57,7 @@ class RepliedEvents extends _$RepliedEvents {
     });
 
     ref.onDispose(() async {
-      await _subscription?.cancel();
+      await subscription.cancel();
       await controller.close();
     });
 

@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
@@ -15,8 +13,6 @@ part 'reposted_events_notifier.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class RepostedEventsNotifier extends _$RepostedEventsNotifier {
-  StreamSubscription<IonConnectEntity>? _subscription;
-
   @override
   Map<EventReference, EventReference> build() {
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
@@ -34,8 +30,7 @@ class RepostedEventsNotifier extends _$RepostedEventsNotifier {
       return result;
     });
 
-    _subscription?.cancel();
-    _subscription = ref.watch(ionConnectCacheStreamProvider).listen((entity) {
+    final subscription = ref.watch(ionConnectCacheStreamProvider).listen((entity) {
       final userRepostData = _getCurrentUserRepostData(entity, currentPubkey: currentPubkey);
       if (userRepostData != null) {
         state = {
@@ -45,8 +40,8 @@ class RepostedEventsNotifier extends _$RepostedEventsNotifier {
       }
     });
 
-    ref.onDispose(() {
-      _subscription?.cancel();
+    ref.onDispose(() async {
+      await subscription.cancel();
     });
 
     return repostedMap;
