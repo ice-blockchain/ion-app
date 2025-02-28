@@ -71,6 +71,8 @@ class ActionButton extends HookConsumerWidget {
           if (paddingBottom.value > 20) {
             ref.read(messagingBottomBarActiveStateProvider.notifier).setVoiceLocked();
             paddingBottom.value = 0;
+          } else {
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
           }
         },
         child: AbsorbPointer(

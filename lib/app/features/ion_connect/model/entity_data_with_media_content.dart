@@ -15,6 +15,9 @@ mixin EntityDataWithMediaContent {
   MediaAttachment? get primaryVideo =>
       media.values.firstWhereOrNull((media) => media.mediaType == MediaType.video);
 
+  MediaAttachment? get primaryAudio =>
+      media.values.firstWhereOrNull((media) => media.mediaType == MediaType.audio);
+
   /// Parses a list of imeta tags (Media Attachments defined in NIP-92).
   ///
   /// Media attachments (images, videos, and other files) may be added to events

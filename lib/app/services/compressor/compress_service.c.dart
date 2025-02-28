@@ -154,7 +154,7 @@ class CompressionService {
   /// If success, returns the path to the compressed audio file.
   /// If fails, throws an exception.
   ///
-  Future<String> compressAudio(String inputPath) async {
+  Future<MediaFile> compressAudio(String inputPath) async {
     final outputPath = await _generateOutputPath(extension: 'opus');
     return FFmpegKit.executeWithArguments([
       '-i',
@@ -165,7 +165,7 @@ class CompressionService {
     ]).then((session) async {
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        return outputPath;
+        return MediaFile(path: outputPath, mimeType: 'audio/ogg', width: 0, height: 0);
       }
       final logs = await session.getAllLogsAsString();
       final stackTrace = await session.getFailStackTrace();

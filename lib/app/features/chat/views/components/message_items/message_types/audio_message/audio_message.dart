@@ -6,13 +6,17 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
+import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -22,28 +26,41 @@ part 'components/play_pause_button.dart';
 
 class AudioMessage extends HookConsumerWidget {
   const AudioMessage({
-    required this.id,
-    required this.audioUrl,
-    required this.isMe,
-    required this.createdAt,
-    this.isLastMessageFromAuthor = true,
-    this.author,
-    this.reactions,
+    required this.eventMessage,
     super.key,
   });
 
-  final bool isMe;
-  final String id;
-
-  final String audioUrl;
-  final DateTime createdAt;
-  final MessageAuthor? author;
-  final bool isLastMessageFromAuthor;
-  final List<MessageReactionGroup>? reactions;
+  final EventMessage eventMessage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
+
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+
+    final audioUrl = useState<String?>(null);
+
+    final audioData = useFuture(
+      useMemoized(
+        () async {
+          final encryptedMedia = await ref
+              .read(mediaEncryptionServiceProvider)
+              .retreiveEncryptedMedia([entity.data.primaryAudio!]);
+          return ref.read(compressServiceProvider).compressAudioToWav(encryptedMedia.first.path);
+        },
+        [],
+      ),
+    );
+
+    useEffect(
+      () {
+        if (audioData.data != null) audioUrl.value = audioData.data;
+        return null;
+      },
+      [audioData.data],
+    );
+
     final audioPlaybackState = useState<PlayerState?>(null);
     final audioPlaybackController = useAudioWavePlaybackController();
 
@@ -61,9 +78,10 @@ class AudioMessage extends HookConsumerWidget {
 
     useEffect(
       () {
+        if (audioUrl.value == null) return null;
         ref.read(audioWavePlaybackServiceProvider).initializePlayer(
-              id,
-              audioUrl,
+              eventMessage.id,
+              audioUrl.value!,
               audioPlaybackController,
               playerWaveStyle,
             );
@@ -77,7 +95,7 @@ class AudioMessage extends HookConsumerWidget {
 
         return null;
       },
-      [],
+      [audioUrl.value],
     );
 
     final metadataWidth = useState<double>(0);
@@ -93,7 +111,6 @@ class AudioMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: contentPadding,
       child: VisibilityDetector(
         key: ValueKey(audioUrl),
@@ -109,7 +126,6 @@ class AudioMessage extends HookConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MessageAuthorNameWidget(author: author),
                 Row(
                   children: [
                     _PlayPauseButton(
@@ -125,18 +141,15 @@ class AudioMessage extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                //TODO: add reactions
-                //SizedBox(
-                //  width:
-                //      MessageItemWrapper.maxWidth - contentPadding.horizontal - metadataWidth.value,
-                //  child: MessageReactions(reactions: reactions),
-                //),
+                MessageReactions(
+                  isMe: isMe,
+                  eventMessage: eventMessage,
+                ),
               ],
             ),
-            //TODO: add metadata
-            // MessageMetaData(
-            //   eventMessage: eventMessage,
-            // ),
+            MessageMetaData(
+              eventMessage: eventMessage,
+            ),
           ],
         ),
       ),

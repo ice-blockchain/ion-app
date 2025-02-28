@@ -1,21 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
-
 import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:file_saver/file_saver.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'audio_wave_playback_service.c.g.dart';
 
 class AudioWavePlaybackService {
-  const AudioWavePlaybackService(this._compressionService);
-  final CompressionService _compressionService;
+  const AudioWavePlaybackService();
 
   Future<void> initializePlayer(
     String id,
@@ -24,14 +18,7 @@ class AudioWavePlaybackService {
     PlayerWaveStyle playerWaveStyle,
   ) async {
     try {
-      final cachePath = await _getCachedFilePath(id);
-
-      if (File(cachePath).existsSync()) {
-        await preparePlayer(cachePath, audioPlaybackController, playerWaveStyle);
-      } else {
-        final savedFilePath = await _downloadAudio(id, audioUrl);
-        await preparePlayer(savedFilePath, audioPlaybackController, playerWaveStyle);
-      }
+      await preparePlayer(audioUrl, audioPlaybackController, playerWaveStyle);
     } catch (e, s) {
       Logger.log('Error initializing player', error: e, stackTrace: s);
     }
@@ -51,22 +38,7 @@ class AudioWavePlaybackService {
       Logger.log('Error preparing player', error: e, stackTrace: s);
     }
   }
-
-  Future<String> _getCachedFilePath(String id) async {
-    final documentsDir = await getApplicationDocumentsDirectory();
-    return '${documentsDir.path}/audio_messages/$id';
-  }
-
-  Future<String> _downloadAudio(String id, String audioUrl) async {
-    final savedFilePath = await FileSaver.instance.saveFile(
-      name: id,
-      link: LinkDetails(link: audioUrl),
-    );
-    final compressedFilePath = await _compressionService.compressAudioToWav(savedFilePath);
-    return compressedFilePath;
-  }
 }
 
 @riverpod
-AudioWavePlaybackService audioWavePlaybackService(Ref ref) =>
-    AudioWavePlaybackService(ref.watch(compressServiceProvider));
+AudioWavePlaybackService audioWavePlaybackService(Ref ref) => const AudioWavePlaybackService();
