@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
@@ -18,6 +17,7 @@ import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class FullscreenVideo extends HookConsumerWidget {
@@ -79,7 +79,7 @@ class FullscreenVideo extends HookConsumerWidget {
                     child: SizedBox(
                       width: controller.value.size.width,
                       height: controller.value.size.height,
-                      child: CachedVideoPlayerPlus(controller),
+                      child: VideoPlayer(controller),
                     ),
                   ),
                 ),

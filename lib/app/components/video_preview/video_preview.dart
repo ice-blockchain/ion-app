@@ -2,7 +2,6 @@
 
 import 'dart:ui';
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPreview extends HookConsumerWidget {
@@ -22,7 +22,7 @@ class VideoPreview extends HookConsumerWidget {
 
   final String videoUrl;
   final String? thumbnailUrl;
-  final CachedVideoPlayerPlusController? videoController;
+  final VideoPlayerController? videoController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +88,7 @@ class VideoPreview extends HookConsumerWidget {
               child: SizedBox(
                 width: controller.value.size.width,
                 height: controller.value.size.height,
-                child: CachedVideoPlayerPlus(controller),
+                child: VideoPlayer(controller),
               ),
             ),
           ),
@@ -119,7 +119,7 @@ class VideoPreview extends HookConsumerWidget {
 class _VideoDurationLabel extends StatelessWidget {
   const _VideoDurationLabel({required this.controller});
 
-  final CachedVideoPlayerPlusController controller;
+  final VideoPlayerController controller;
 
   @override
   Widget build(BuildContext context) {

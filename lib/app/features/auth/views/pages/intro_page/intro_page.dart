@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,6 +9,7 @@ import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:video_player/video_player.dart';
 
 class IntroPage extends HookConsumerWidget {
   const IntroPage({super.key});
@@ -34,7 +34,7 @@ class IntroPage extends HookConsumerWidget {
             Center(
               child: AspectRatio(
                 aspectRatio: videoController.value.aspectRatio,
-                child: CachedVideoPlayerPlus(videoController),
+                child: VideoPlayer(videoController),
               ),
             ),
           Positioned(

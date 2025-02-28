@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/splash_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:video_player/video_player.dart';
 
 class SplashPage extends ConsumerWidget {
   const SplashPage({super.key});
@@ -25,7 +25,7 @@ class SplashPage extends ConsumerWidget {
     // This ensures a seamless transition to the IntroPage without flickering or delays.
     ref
       ..watch(videoControllerProvider(Assets.videos.intro, looping: true))
-      ..listen<CachedVideoPlayerPlusController>(
+      ..listen<VideoPlayerController>(
         videoControllerProvider(Assets.videos.logoStatic, autoPlay: true),
         (previous, controller) {
           void onSplashVideoComplete() {
@@ -46,7 +46,7 @@ class SplashPage extends ConsumerWidget {
         child: splashVideoController.value.isInitialized
             ? AspectRatio(
                 aspectRatio: splashVideoController.value.aspectRatio,
-                child: CachedVideoPlayerPlus(splashVideoController),
+                child: VideoPlayer(splashVideoController),
               )
             : const SizedBox.shrink(),
       ),
