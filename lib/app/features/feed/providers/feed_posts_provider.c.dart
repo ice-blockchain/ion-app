@@ -27,7 +27,9 @@ class FeedPosts extends _$FeedPosts {
   }
 
   bool _filterEntities(IonConnectEntity entity) {
-    return entity is ModifiablePostEntity && entity.data.parentEvent?.eventReference == null;
+    return entity is ModifiablePostEntity &&
+        entity.data.parentEvent?.eventReference == null &&
+        entity.data.expiration == null;
   }
 
   Future<void> loadMore() async {
