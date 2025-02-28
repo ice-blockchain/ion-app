@@ -2,16 +2,33 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/services/bech32/bech32_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
+import 'package:ion/app/services/ion_connect/shareable_identifier.dart';
 
 part 'event_reference.c.freezed.dart';
 
 abstract class EventReference {
   factory EventReference.fromEncoded(String input) {
-    final parts = input.split(separator);
-    return switch (parts[0]) {
-      ImmutableEventReference.tagName => ImmutableEventReference.fromEncoded(input),
-      ReplaceableEventReference.tagName => ReplaceableEventReference.fromEncoded(input),
-      _ => throw UnknownEventReferenceType(type: parts[0]),
+    final identifier =
+        IonConnectUriIdentifierService(bech32Service: Bech32Service()).decodeShareableIdentifiers(
+      payload: IonConnectUriProtocolService().decode(input),
+    );
+
+    if (identifier == null) {
+      throw ShareableIdentifierDecodeException(input);
+    }
+
+    return switch (identifier.prefix) {
+      IonConnectProtocolIdentiferType.nevent =>
+        ImmutableEventReference.fromShareableIdentifier(identifier),
+      IonConnectProtocolIdentiferType.naddr ||
+      IonConnectProtocolIdentiferType.nprofile =>
+        ReplaceableEventReference.fromShareableIdentifier(identifier),
+      _ => throw ShareableIdentifierDecodeException(input),
     };
   }
 
@@ -35,15 +52,14 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
 
   const ImmutableEventReference._();
 
-  // TODO: use https://github.com/nostr-protocol/nips/blob/master/19.md#shareable-identifiers-with-extra-metadata ?
-  factory ImmutableEventReference.fromEncoded(String input) {
-    final parts = input.split(EventReference.separator);
+  factory ImmutableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
+    final ShareableIdentifier(:special, :author) = identifier;
 
-    if (parts[0] != tagName) {
-      throw UnknownEventReferenceType(type: parts[0]);
+    if (author == null) {
+      throw IncorrectShareableIdentifierException(identifier);
     }
 
-    return ImmutableEventReference(eventId: parts[1], pubkey: parts[2]);
+    return ImmutableEventReference(eventId: special, pubkey: author);
   }
 
   @override
@@ -53,7 +69,13 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
 
   @override
   String encode() {
-    return [tagName, eventId, pubkey].join(EventReference.separator);
+    return IonConnectUriProtocolService().encode(
+      IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
+        prefix: IonConnectProtocolIdentiferType.nevent,
+        special: eventId,
+        author: pubkey,
+      ),
+    );
   }
 
   @override
@@ -87,18 +109,25 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
     return ReplaceableEventReference.fromString(tag[1]);
   }
 
-  factory ReplaceableEventReference.fromEncoded(String input) {
-    final parts = input.split(EventReference.separator);
+  factory ReplaceableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
+    final ShareableIdentifier(:special, :author, :kind, :prefix) = identifier;
 
-    if (parts[0] != tagName) {
-      throw UnknownEventReferenceType(type: parts[0]);
+    if (prefix == IonConnectProtocolIdentiferType.nprofile) {
+      return ReplaceableEventReference(
+        kind: UserMetadataEntity.kind,
+        pubkey: special,
+      );
+    } else {
+      if (author == null || kind == null) {
+        throw IncorrectShareableIdentifierException(identifier);
+      }
+
+      return ReplaceableEventReference(
+        kind: kind,
+        pubkey: author,
+        dTag: special.isNotEmpty ? special : null,
+      );
     }
-
-    return ReplaceableEventReference(
-      kind: int.parse(parts[1]),
-      pubkey: parts[2],
-      dTag: parts.elementAtOrNull(3),
-    );
   }
 
   factory ReplaceableEventReference.fromString(String input) {
@@ -121,7 +150,23 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
 
   @override
   String encode() {
-    return [tagName, kind, pubkey, dTag].nonNulls.join(EventReference.separator);
+    if (kind == UserMetadataEntity.kind) {
+      return IonConnectUriProtocolService().encode(
+        IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
+          prefix: IonConnectProtocolIdentiferType.nprofile,
+          special: pubkey,
+        ),
+      );
+    } else {
+      return IonConnectUriProtocolService().encode(
+        IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
+          prefix: IonConnectProtocolIdentiferType.naddr,
+          special: dTag ?? '',
+          author: pubkey,
+          kind: kind,
+        ),
+      );
+    }
   }
 
   @override
