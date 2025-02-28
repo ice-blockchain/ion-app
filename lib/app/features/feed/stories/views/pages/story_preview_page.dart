@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
@@ -22,7 +23,7 @@ import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class StoryPreviewPage extends ConsumerWidget {
+class StoryPreviewPage extends HookConsumerWidget {
   const StoryPreviewPage({
     required this.path,
     required this.mimeType,
@@ -36,6 +37,18 @@ class StoryPreviewPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaType = mimeType != null ? MediaType.fromMimeType(mimeType!) : MediaType.unknown;
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
+    final isPublishing = useState(false);
+
+    ref
+      ..displayErrors(createPostNotifierProvider(CreatePostOption.story))
+      ..listenSuccess(
+        createPostNotifierProvider(CreatePostOption.story),
+        (_) {
+          if (context.mounted) {
+            FeedRoute().go(context);
+          }
+        },
+      );
 
     return Scaffold(
       body: SafeArea(
@@ -91,29 +104,38 @@ class StoryPreviewPage extends ConsumerWidget {
               children: [
                 SizedBox(height: 16.0.s),
                 StoryShareButton(
-                  onPressed: () async {
-                    if (mediaType == MediaType.video) {
-                      await ref
-                          .read(createPostNotifierProvider(CreatePostOption.story).notifier)
-                          .create(
-                        mediaFiles: [MediaFile(path: path, mimeType: mimeType)],
-                        whoCanReply: whoCanReply,
-                      );
-                    } else {
-                      final processedState =
-                          ref.read(imageProcessorNotifierProvider(ImageProcessingType.story));
+                  isLoading: isPublishing.value,
+                  onPressed: isPublishing.value
+                      ? null
+                      : () async {
+                          isPublishing.value = true;
 
-                      if (processedState case ImageProcessorStateProcessed(:final file)) {
-                        await ref
-                            .read(createPostNotifierProvider(CreatePostOption.story).notifier)
-                            .create(mediaFiles: [file], whoCanReply: whoCanReply);
-                      }
-                    }
+                          final createPostNotifier = ref.read(
+                            createPostNotifierProvider(CreatePostOption.story).notifier,
+                          );
 
-                    if (context.mounted) {
-                      FeedRoute().go(context);
-                    }
-                  },
+                          if (mediaType == MediaType.video) {
+                            await createPostNotifier.create(
+                              mediaFiles: [MediaFile(path: path, mimeType: mimeType)],
+                              whoCanReply: whoCanReply,
+                            );
+                          } else {
+                            final processedState = ref.read(
+                              imageProcessorNotifierProvider(ImageProcessingType.story),
+                            );
+
+                            if (processedState case ImageProcessorStateProcessed(:final file)) {
+                              await createPostNotifier.create(
+                                mediaFiles: [file],
+                                whoCanReply: whoCanReply,
+                              );
+                            }
+                          }
+
+                          if (context.mounted) {
+                            isPublishing.value = false;
+                          }
+                        },
                 ),
                 ScreenBottomOffset(margin: 36.0.s),
               ],
