@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,7 +13,6 @@ import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:video_player/video_player.dart';
 
 Timer? debounce;
 
@@ -53,7 +53,7 @@ class VideoCompressTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compressedVideoController = useRef<VideoPlayerController?>(null);
+    final compressedVideoController = useRef<CachedVideoPlayerPlusController?>(null);
     final isCompressing = useState<bool>(false);
     final originalSize = useState<String>('');
     final compressedSize = useState<String>('');
@@ -85,7 +85,8 @@ class VideoCompressTab extends HookConsumerWidget {
 
         // Here you would invoke the compression logic
         // For demo purposes, we are directly playing the selected video
-        compressedVideoController.value = VideoPlayerController.file(File(compressedFile.path));
+        compressedVideoController.value =
+            CachedVideoPlayerPlusController.file(File(compressedFile.path));
         await compressedVideoController.value!.initialize();
         await compressedVideoController.value!.play();
         isCompressing.value = false;
@@ -117,7 +118,7 @@ class VideoCompressTab extends HookConsumerWidget {
           Expanded(
             child: AspectRatio(
               aspectRatio: compressedVideoController.value!.value.aspectRatio,
-              child: VideoPlayer(compressedVideoController.value!),
+              child: CachedVideoPlayerPlus(compressedVideoController.value!),
             ),
           ),
         const SizedBox(height: 40),
@@ -253,7 +254,7 @@ class VideoPlayerTab extends HookConsumerWidget {
               children: [
                 AspectRatio(
                   aspectRatio: remoteVideoController.value.aspectRatio,
-                  child: VideoPlayer(remoteVideoController),
+                  child: CachedVideoPlayerPlus(remoteVideoController),
                 ),
                 Positioned(
                   top: 0,
