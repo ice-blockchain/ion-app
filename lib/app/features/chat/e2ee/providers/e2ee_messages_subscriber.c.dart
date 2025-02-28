@@ -6,13 +6,13 @@ import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/e2ee_delete_request.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -47,7 +47,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       kinds: const [IonConnectGiftWrapServiceImpl.kind],
       tags: {
         '#k': [
-          E2eeDeleteRequest.kind.toString(),
+          DeletionRequest.kind.toString(),
           PrivateDirectMessageEntity.kind.toString(),
           PrivateMessageReactionEntity.kind.toString(),
         ],
@@ -96,7 +96,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       );
 
       if (rumor != null) {
-        if (rumor.kind != E2eeDeleteRequest.kind &&
+        if (rumor.kind != DeletionRequest.kind &&
             (rumor.tags.any((tag) => tag[0] == CommunityIdentifierTag.tagName) ||
                 rumor.kind == PrivateMessageReactionEntity.kind)) {
           // Try to get kind 14 event id from related event tag or use the rumor id
@@ -163,7 +163,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             }
           }
           // For kind 5
-        } else if (rumor.kind == E2eeDeleteRequest.kind) {
+        } else if (rumor.kind == DeletionRequest.kind) {
           final deleteEventKind =
               rumor.tags.firstWhereOrNull((tags) => tags[0] == 'k')?.elementAtOrNull(1);
 

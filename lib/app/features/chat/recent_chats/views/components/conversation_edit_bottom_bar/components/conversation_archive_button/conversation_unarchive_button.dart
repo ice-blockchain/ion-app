@@ -23,7 +23,7 @@ class ConversationUnarchiveButton extends ConsumerWidget {
         ? (ref
                 .read(conversationsProvider)
                 .value
-                ?.where((conversation) => !conversation.isArchived)
+                ?.where((conversation) => conversation.isArchived)
                 .toList() ??
             [])
         : selectedConversations;

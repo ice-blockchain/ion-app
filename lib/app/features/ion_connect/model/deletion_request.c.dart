@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/deletable_event.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 
 part 'deletion_request.c.freezed.dart';
@@ -11,7 +12,7 @@ part 'deletion_request.c.freezed.dart';
 @freezed
 class DeletionRequest with _$DeletionRequest implements EventSerializable {
   const factory DeletionRequest({
-    required List<EventToDelete> events,
+    required List<DeletableEvent> events,
   }) = _DeletionRequest;
 
   const DeletionRequest._();
@@ -39,7 +40,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
 }
 
 @freezed
-class EventToDelete with _$EventToDelete {
+class EventToDelete with _$EventToDelete implements DeletableEvent {
   const factory EventToDelete({
     required String eventId,
     required int kind,
@@ -47,6 +48,7 @@ class EventToDelete with _$EventToDelete {
 
   const EventToDelete._();
 
+  @override
   List<List<String>> toTags() {
     return [
       ['e', eventId],

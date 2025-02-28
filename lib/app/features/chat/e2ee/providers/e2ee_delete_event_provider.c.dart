@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/e2ee_delete_request.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/conversation_to_delete.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
@@ -11,6 +11,7 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -82,7 +83,7 @@ Future<void> _deleteReaction({
     throw PubkeysDoNotMatchException();
   }
 
-  final deleteRequest = E2eeDeleteRequest(
+  final deleteRequest = DeletionRequest(
     events: [EventToDelete(eventId: reactionEvent.id, kind: reactionEvent.kind)],
   );
 
@@ -144,7 +145,7 @@ Future<void> _deleteMessages({
       ? PrivateDirectMessageEntity.fromEventMessage(messageEvents.first).allPubkeys
       : [currentUserMasterPubkey];
 
-  final deleteRequest = E2eeDeleteRequest(
+  final deleteRequest = DeletionRequest(
     events:
         messageEvents.map((event) => EventToDelete(eventId: event.id, kind: event.kind)).toList(),
   );
@@ -199,8 +200,8 @@ Future<void> _deleteConversations({
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final deleteRequest = E2eeDeleteRequest(
-    conversations: conversationIds.map(ConversationToDelete.new).toList(),
+  final deleteRequest = DeletionRequest(
+    events: conversationIds.map(ConversationToDelete.new).toList(),
   );
 
   final eventMessage = await deleteRequest.toEventMessage(signer);
@@ -271,7 +272,7 @@ Future<EventMessage> _createGiftWrap({
     event: seal,
     expirationTag: expirationTag,
     receiverPubkey: receiverPubkey,
-    contentKind: E2eeDeleteRequest.kind,
+    contentKind: DeletionRequest.kind,
     receiverMasterpubkey: receiverMasterPubkey,
   );
 
