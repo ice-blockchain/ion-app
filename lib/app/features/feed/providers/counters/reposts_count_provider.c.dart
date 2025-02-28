@@ -58,6 +58,9 @@ class RepostsCount extends _$RepostsCount {
   }
 
   void _removeCacheEntry(EventCountResultType type) {
+    // Manually remove the cache entry when counter reaches zero.
+    // This is necessary because when the backend counter is 0, no event is sent to the frontend,
+    // but the old value remains in the cache, causing stale data to be displayed.
     ref.read(ionConnectCacheProvider.notifier).remove(
           _buildCacheKey(type),
         );
