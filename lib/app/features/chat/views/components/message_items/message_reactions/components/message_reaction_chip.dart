@@ -65,13 +65,13 @@ class _AvatarStack extends ConsumerWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: context.theme.appColors.onPrimaryAccent,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(5),
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(1.0.s),
                     child: Avatar(
                       size: 16.0.s,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(5),
                       imageUrl: userPicture,
                     ),
                   ),
