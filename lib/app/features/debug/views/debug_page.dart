@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -14,6 +15,7 @@ class DebugPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appInfo = ref.watch(appInfoProvider).valueOrNull;
     final featureFlags = ref.watch(featureFlagsProvider);
     final talker = Logger.talker;
 
@@ -31,6 +33,13 @@ class DebugPage extends ConsumerWidget {
             child: ListView(
               shrinkWrap: true,
               children: [
+                if (appInfo != null)
+                  ListTile(
+                    title: Text(
+                      '${appInfo.appName} v${appInfo.version} build ${appInfo.buildNumber}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
                 if (talker != null)
                   Card(
                     child: ListTile(
