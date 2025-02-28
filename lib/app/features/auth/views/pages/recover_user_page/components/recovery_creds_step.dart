@@ -58,54 +58,60 @@ class RecoveryCredsStep extends HookConsumerWidget {
                 child: Form(
                   key: formKey.value,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ...RecoveryKeyProperty.values.map(
-                        (key) => Padding(
-                          padding: EdgeInsets.only(bottom: 16.0.s),
-                          child: RecoveryKeyInput(
-                            controller: controllers[key]!,
-                            labelText: key.getDisplayName(context),
-                            prefixIcon:
-                                key.iconAsset.icon(color: context.theme.appColors.secondaryText),
-                            validator: (value) => value == null || value.isEmpty ? '' : null,
-                            textInputAction: key == RecoveryKeyProperty.recoveryCode
-                                ? TextInputAction.done
-                                : TextInputAction.next,
-                            autoValidateMode: validationMode.value,
+                      Column(
+                        children: [
+                          SizedBox(height: 60.0.s),
+                          ...RecoveryKeyProperty.values.map(
+                            (key) => Padding(
+                              padding: EdgeInsets.only(bottom: 16.0.s),
+                              child: RecoveryKeyInput(
+                                controller: controllers[key]!,
+                                labelText: key.getDisplayName(context),
+                                prefixIcon: key.iconAsset
+                                    .icon(color: context.theme.appColors.secondaryText),
+                                validator: (value) => value == null || value.isEmpty ? '' : null,
+                                textInputAction: key == RecoveryKeyProperty.recoveryCode
+                                    ? TextInputAction.done
+                                    : TextInputAction.next,
+                                autoValidateMode: validationMode.value,
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(height: 4.0.s),
+                          Button(
+                            label: Text(context.i18n.button_restore),
+                            mainAxisSize: MainAxisSize.max,
+                            disabled: isInitLoading || isCompleteLoading,
+                            trailingIcon: isInitLoading ? const IONLoadingIndicator() : null,
+                            onPressed: () {
+                              if (formKey.value.currentState!.validate()) {
+                                onContinuePressed(
+                                  controllers[RecoveryKeyProperty.identityKeyName]!.text,
+                                  controllers[RecoveryKeyProperty.recoveryKeyId]!.text,
+                                  controllers[RecoveryKeyProperty.recoveryCode]!.text,
+                                );
+                              } else {
+                                validationMode.value = AutovalidateMode.onUserInteraction;
+                                showSimpleBottomSheet<void>(
+                                  context: context,
+                                  child: const RecoverInvalidCredentialsErrorAlert(),
+                                );
+                              }
+                            },
+                          ),
+                          SizedBox(height: 16.0.s),
+                        ],
                       ),
-                      SizedBox(height: 4.0.s),
-                      Button(
-                        label: Text(context.i18n.button_restore),
-                        mainAxisSize: MainAxisSize.max,
-                        disabled: isInitLoading || isCompleteLoading,
-                        trailingIcon: isInitLoading ? const IONLoadingIndicator() : null,
-                        onPressed: () {
-                          if (formKey.value.currentState!.validate()) {
-                            onContinuePressed(
-                              controllers[RecoveryKeyProperty.identityKeyName]!.text,
-                              controllers[RecoveryKeyProperty.recoveryKeyId]!.text,
-                              controllers[RecoveryKeyProperty.recoveryCode]!.text,
-                            );
-                          } else {
-                            validationMode.value = AutovalidateMode.onUserInteraction;
-                            showSimpleBottomSheet<void>(
-                              context: context,
-                              child: const RecoverInvalidCredentialsErrorAlert(),
-                            );
-                          }
-                        },
+                      ScreenBottomOffset(
+                        margin: 28.0.s,
+                        child: const AuthFooter(),
                       ),
                     ],
                   ),
                 ),
               ),
-            ),
-            ScreenBottomOffset(
-              margin: 28.0.s,
-              child: const AuthFooter(),
             ),
           ],
         ),
