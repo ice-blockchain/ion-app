@@ -21,6 +21,8 @@ class CreateArticleState {
     required this.editorFocusNotifier,
     required this.onNext,
     required this.titleInputFormatters,
+    required this.titleFocusNode,
+    required this.isTitleFocused,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
@@ -31,6 +33,8 @@ class CreateArticleState {
   final ValueNotifier<bool> editorFocusNotifier;
   final void Function() onNext;
   final List<TextInputFormatter> titleInputFormatters;
+  final FocusNode titleFocusNode;
+  final ValueNotifier<bool> isTitleFocused;
 }
 
 CreateArticleState useCreateArticle(WidgetRef ref) {
@@ -39,8 +43,22 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
   final textEditorController = useQuillController();
   final editorFocusNotifier = useState<bool>(false);
   final titleController = useTextEditingController();
+  final titleFocusNode = useFocusNode();
+  final isTitleFocused = useState(false);
 
   const titleMaxLength = 120;
+
+  useEffect(
+    () {
+      void onFocusChange() {
+        isTitleFocused.value = titleFocusNode.hasFocus;
+      }
+
+      titleFocusNode.addListener(onFocusChange);
+      return () => titleFocusNode.removeListener(onFocusChange);
+    },
+    [titleFocusNode],
+  );
 
   final titleInputFormatters = useMemoized(
     () => [
@@ -108,5 +126,7 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
     editorFocusNotifier: editorFocusNotifier,
     onNext: onNext,
     titleInputFormatters: titleInputFormatters,
+    titleFocusNode: titleFocusNode,
+    isTitleFocused: isTitleFocused,
   );
 }

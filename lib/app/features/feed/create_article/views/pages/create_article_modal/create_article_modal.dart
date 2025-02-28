@@ -92,6 +92,7 @@ class CreateArticleModal extends HookConsumerWidget {
                         ),
                         child: TextField(
                           controller: articleState.titleController,
+                          focusNode: articleState.titleFocusNode,
                           autofocus: true,
                           textInputAction: TextInputAction.next,
                           onSubmitted: (_) {
@@ -138,11 +139,19 @@ class CreateArticleModal extends HookConsumerWidget {
                   editorKey: textEditorKey,
                 ),
                 const HorizontalSeparator(),
-                ScreenSideOffset.small(
-                  child: CreateArticleToolbar(
-                    textEditorController: articleState.textEditorController,
-                    textEditorKey: textEditorKey,
-                  ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: articleState.isTitleFocused,
+                  builder: (context, isTitleFocused, child) {
+                    if (isTitleFocused) {
+                      return const SizedBox.shrink();
+                    }
+                    return ScreenSideOffset.small(
+                      child: CreateArticleToolbar(
+                        textEditorController: articleState.textEditorController,
+                        textEditorKey: textEditorKey,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
