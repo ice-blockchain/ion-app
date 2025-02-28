@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,6 +20,9 @@ class CreateArticleState {
     required this.isButtonEnabled,
     required this.editorFocusNotifier,
     required this.onNext,
+    required this.titleInputFormatters,
+    required this.titleFocusNode,
+    required this.isTitleFocused,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
@@ -28,6 +32,9 @@ class CreateArticleState {
   final bool isButtonEnabled;
   final ValueNotifier<bool> editorFocusNotifier;
   final void Function() onNext;
+  final List<TextInputFormatter> titleInputFormatters;
+  final FocusNode titleFocusNode;
+  final ValueNotifier<bool> isTitleFocused;
 }
 
 CreateArticleState useCreateArticle(WidgetRef ref) {
@@ -36,6 +43,36 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
   final textEditorController = useQuillController();
   final editorFocusNotifier = useState<bool>(false);
   final titleController = useTextEditingController();
+  final titleFocusNode = useFocusNode();
+  final isTitleFocused = useState(false);
+
+  const titleMaxLength = 120;
+
+  useEffect(
+    () {
+      void onFocusChange() {
+        isTitleFocused.value = titleFocusNode.hasFocus;
+      }
+
+      titleFocusNode.addListener(onFocusChange);
+      return () => titleFocusNode.removeListener(onFocusChange);
+    },
+    [titleFocusNode],
+  );
+
+  final titleInputFormatters = useMemoized(
+    () => [
+      LengthLimitingTextInputFormatter(titleMaxLength),
+      TextInputFormatter.withFunction((oldValue, newValue) {
+        if (newValue.text.length > oldValue.text.length + 1 &&
+            newValue.text.length > titleMaxLength) {
+          return oldValue;
+        }
+        return newValue;
+      }),
+    ],
+    [titleMaxLength],
+  );
 
   final processorState =
       ref.watch(imageProcessorNotifierProvider(ImageProcessingType.articleCover));
@@ -55,6 +92,14 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
   useEffect(
     () {
       void listener() {
+        if (titleController.text.length > titleMaxLength) {
+          titleController
+            ..text = titleController.text.substring(0, titleMaxLength)
+            ..selection = TextSelection.fromPosition(
+              const TextPosition(offset: titleMaxLength),
+            );
+        }
+
         titleFilled.value = titleController.text.trim().isNotEmpty;
       }
 
@@ -80,5 +125,8 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
     isButtonEnabled: isButtonEnabled,
     editorFocusNotifier: editorFocusNotifier,
     onNext: onNext,
+    titleInputFormatters: titleInputFormatters,
+    titleFocusNode: titleFocusNode,
+    isTitleFocused: isTitleFocused,
   );
 }
