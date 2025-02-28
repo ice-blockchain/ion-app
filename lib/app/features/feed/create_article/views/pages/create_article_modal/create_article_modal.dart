@@ -97,6 +97,7 @@ class CreateArticleModal extends HookConsumerWidget {
                           onSubmitted: (_) {
                             articleState.editorFocusNotifier.value = true;
                           },
+                          inputFormatters: articleState.titleInputFormatters,
                           style: context.theme.appTextThemes.headline2.copyWith(
                             color: context.theme.appColors.primaryText,
                           ),
