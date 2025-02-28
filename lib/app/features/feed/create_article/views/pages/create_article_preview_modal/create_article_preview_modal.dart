@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -23,8 +24,6 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paddingValue = 20.0.s;
-
     final DraftArticleState(:title, :image, :imageIds, :content, :imageColor) =
         ref.watch(draftArticleProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
@@ -38,51 +37,58 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
             title: Text(context.i18n.article_preview_title),
           ),
           const HorizontalSeparator(),
-          SizedBox(height: 12.0.s),
-          const ArticlePreview(),
-          SizedBox(height: 12.0.s),
-          const HorizontalSeparator(),
-          SizedBox(height: 40.0.s),
-          const SelectArticleTopicsItem(),
-          SizedBox(height: 20.0.s),
-          const HorizontalSeparator(),
-          SizedBox(height: 20.0.s),
-          const SelectArticleWhoCanReplyItem(),
-          const Spacer(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ScreenSideOffset.large(
-                  child: Button(
-                    leadingIcon: Assets.svg.iconFeedArticles.icon(
-                      color: context.theme.appColors.onPrimaryAccent,
-                    ),
-                    onPressed: () {
-                      ref.read(createArticleProvider(CreateArticleOption.plain).notifier).create(
-                            title: title,
-                            content: content,
-                            topics: selectedTopics,
-                            coverImagePath: image?.path,
-                            mediaIds: imageIds,
-                            whoCanReply: whoCanReply,
-                            imageColor: imageColor,
-                          );
-
-                      if (!ref.read(createArticleProvider(CreateArticleOption.plain)).hasError &&
-                          ref.context.mounted) {
-                        final state = GoRouterState.of(ref.context);
-                        ref.context.go(state.currentTab.baseRouteLocation);
-                      }
-                    },
-                    label: Text(context.i18n.button_publish),
-                    mainAxisSize: MainAxisSize.max,
-                  ),
-                ),
-                SizedBox(height: paddingValue + MediaQuery.paddingOf(context).bottom),
-              ],
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 12.0.s),
+                  const ArticlePreview(),
+                  SizedBox(height: 12.0.s),
+                  const HorizontalSeparator(),
+                  SizedBox(height: 40.0.s),
+                  const SelectArticleTopicsItem(),
+                  SizedBox(height: 20.0.s),
+                  const HorizontalSeparator(),
+                  SizedBox(height: 20.0.s),
+                  const SelectArticleWhoCanReplyItem(),
+                  SizedBox(height: 40.0.s),
+                ],
+              ),
             ),
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const HorizontalSeparator(),
+              SizedBox(height: 16.0.s),
+              ScreenSideOffset.large(
+                child: Button(
+                  leadingIcon: Assets.svg.iconFeedArticles.icon(
+                    color: context.theme.appColors.onPrimaryAccent,
+                  ),
+                  onPressed: () {
+                    ref.read(createArticleProvider(CreateArticleOption.plain).notifier).create(
+                          title: title,
+                          content: content,
+                          topics: selectedTopics,
+                          coverImagePath: image?.path,
+                          mediaIds: imageIds,
+                          whoCanReply: whoCanReply,
+                          imageColor: imageColor,
+                        );
+
+                    if (!ref.read(createArticleProvider(CreateArticleOption.plain)).hasError &&
+                        ref.context.mounted) {
+                      final state = GoRouterState.of(ref.context);
+                      ref.context.go(state.currentTab.baseRouteLocation);
+                    }
+                  },
+                  label: Text(context.i18n.button_publish),
+                  mainAxisSize: MainAxisSize.max,
+                ),
+              ),
+              ScreenBottomOffset(margin: 36.0.s),
+            ],
           ),
         ],
       ),
