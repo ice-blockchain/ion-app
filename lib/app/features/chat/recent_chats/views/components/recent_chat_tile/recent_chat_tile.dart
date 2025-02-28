@@ -10,9 +10,8 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/pages/recent_chat_overlay/recent_chat_overlay.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -210,9 +209,6 @@ class ChatPreview extends HookConsumerWidget {
   final MessageType messageType;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionConnectUriIdentifierService = ref.read(ionConnectUriIdentifierServiceProvider);
-    final ionConnectUriProtocolService = ref.read(ionConnectUriProtocolServiceProvider);
-
     return Row(
       children: [
         RecentChatMessageIcon(messageType: messageType, color: textColor),
@@ -223,16 +219,7 @@ class ChatPreview extends HookConsumerWidget {
               MessageType.video => context.i18n.common_video,
               MessageType.audio => context.i18n.common_voice_message,
               MessageType.profile => ref
-                      .watch(
-                        userMetadataProvider(
-                          ionConnectUriIdentifierService
-                                  .decodeShareableIdentifiers(
-                                    payload: ionConnectUriProtocolService.decode(content),
-                                  )
-                                  ?.special ??
-                              '',
-                        ),
-                      )
+                      .watch(userMetadataProvider(EventReference.fromEncoded(content).pubkey))
                       .valueOrNull
                       ?.data
                       .displayName ??

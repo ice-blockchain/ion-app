@@ -11,11 +11,10 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class ProfileShareMessage extends HookConsumerWidget {
@@ -30,18 +29,7 @@ class ProfileShareMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-    final ionConnectUriIdentifierService = ref.watch(ionConnectUriIdentifierServiceProvider);
-    final ionConnectUriProtocolService = ref.watch(ionConnectUriProtocolServiceProvider);
-
-    final profilePubkey = ionConnectUriIdentifierService
-        .decodeShareableIdentifiers(
-          payload: ionConnectUriProtocolService.decode(entity.data.content),
-        )
-        ?.special;
-
-    if (profilePubkey == null) {
-      return const SizedBox.shrink();
-    }
+    final profilePubkey = EventReference.fromEncoded(entity.data.content).pubkey;
 
     final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
 
