@@ -3,13 +3,13 @@
 import 'package:bech32/bech32.dart';
 import 'package:convert/convert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'bech32_service.c.g.dart';
 
 class Bech32Service {
-  String encode(IonConnectProtocolIdentiferType prefix, String hexData, {int? length}) {
+  String encode(IonConnectProtocolIdentifierType prefix, String hexData, {int? length}) {
     final data = hex.decode(hexData);
     final convertedData = _convertBits(data, 8, 5, true);
     final bech32Data = Bech32(prefix.name, convertedData);
@@ -19,7 +19,7 @@ class Bech32Service {
     return bech32.encode(bech32Data);
   }
 
-  ({IonConnectProtocolIdentiferType prefix, String data}) decode(
+  ({IonConnectProtocolIdentifierType prefix, String data}) decode(
     String bech32Data, {
     int? length,
   }) {
@@ -27,7 +27,7 @@ class Bech32Service {
         length != null ? bech32.decode(bech32Data, length) : bech32.decode(bech32Data);
     final convertedData = _convertBits(decodedData.data, 5, 8, false);
     final hexData = hex.encode(convertedData);
-    return (prefix: IonConnectProtocolIdentiferType.from(decodedData.hrp), data: hexData);
+    return (prefix: IonConnectProtocolIdentifierType.from(decodedData.hrp), data: hexData);
   }
 
   List<int> _convertBits(List<int> data, int fromBits, int toBits, bool pad) {

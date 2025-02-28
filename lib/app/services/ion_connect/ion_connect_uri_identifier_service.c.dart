@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/services/bech32/bech32_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/ion_connect/shareable_identifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,12 +20,12 @@ class IonConnectUriIdentifierService {
   final Bech32Service bech32Service;
 
   static const _shareableIdentifiersPrefixes = [
-    IonConnectProtocolIdentiferType.nprofile,
-    IonConnectProtocolIdentiferType.nevent,
-    IonConnectProtocolIdentiferType.naddr,
+    IonConnectProtocolIdentifierType.nprofile,
+    IonConnectProtocolIdentifierType.nevent,
+    IonConnectProtocolIdentifierType.naddr,
   ];
 
-  ({IonConnectProtocolIdentiferType prefix, String data}) decode({required String payload}) {
+  ({IonConnectProtocolIdentifierType prefix, String data}) decode({required String payload}) {
     final decoded = bech32Service.decode(payload);
     if (_shareableIdentifiersPrefixes.contains(decoded.prefix)) {
       throw Exception('use decodeShareableIdentifiers instead');
@@ -34,7 +34,7 @@ class IonConnectUriIdentifierService {
   }
 
   String encode({
-    required IonConnectProtocolIdentiferType prefix,
+    required IonConnectProtocolIdentifierType prefix,
     required String data,
   }) {
     if (_shareableIdentifiersPrefixes.contains(prefix)) {
@@ -44,7 +44,7 @@ class IonConnectUriIdentifierService {
   }
 
   String encodeShareableIdentifiers({
-    required IonConnectProtocolIdentiferType prefix,
+    required IonConnectProtocolIdentifierType prefix,
     required String special,
     List<String>? relays,
     String? author,
@@ -55,7 +55,7 @@ class IonConnectUriIdentifierService {
     }
 
     // 0: special
-    if (prefix == IonConnectProtocolIdentiferType.naddr) {
+    if (prefix == IonConnectProtocolIdentifierType.naddr) {
       special = special.codeUnits.map((number) => number.toRadixString(16).padLeft(2, '0')).join();
     }
     var result = '00${hex.decode(special).length.toRadixString(16).padLeft(2, '0')}$special';
@@ -139,7 +139,7 @@ class IonConnectUriIdentifierService {
         index += length;
 
         if (type == 0) {
-          special = (decoded.prefix == IonConnectProtocolIdentiferType.naddr)
+          special = (decoded.prefix == IonConnectProtocolIdentifierType.naddr)
               ? String.fromCharCodes(value)
               : hex.encode(value);
         } else if (type == 1) {
