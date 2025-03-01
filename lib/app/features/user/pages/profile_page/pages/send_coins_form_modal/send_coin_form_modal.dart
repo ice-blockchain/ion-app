@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
@@ -86,11 +85,8 @@ class SendCoinFormModal extends HookConsumerWidget {
                 padding: EdgeInsets.symmetric(vertical: 8.0.s),
                 child: NavigationAppBar.screen(
                   title: Text(locale.profile_send_coin),
-                  showBackButton: false,
-                  actions: [
-                    NavigationCloseButton(
-                      onPressed: () => context.pop(),
-                    ),
+                  actions: const [
+                    NavigationCloseButton(),
                   ],
                 ),
               ),
