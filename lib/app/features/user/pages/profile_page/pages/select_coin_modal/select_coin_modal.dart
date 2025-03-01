@@ -45,7 +45,7 @@ class SelectCoinModal extends ConsumerWidget {
                 coinAbbreviation: group.abbreviation,
                 coinSymbolGroup: group.symbolGroup,
                 selectNetworkModalType: SelectNetworkModalType.select,
-              ).replace(context);
+              ).push<void>(context);
             case SelectCoinModalType.update:
               context.pop(group);
           }
