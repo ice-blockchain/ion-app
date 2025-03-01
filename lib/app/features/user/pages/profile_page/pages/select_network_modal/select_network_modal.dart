@@ -71,7 +71,6 @@ class SelectNetworkModal extends ConsumerWidget {
               context.pop(network);
           }
         },
-        // symbolGroup: symbolGroup,
         title: context.i18n.wallet_choose_network,
       ),
       backgroundColor: context.theme.appColors.secondaryBackground,
