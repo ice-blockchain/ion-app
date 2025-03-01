@@ -99,12 +99,14 @@ class SelectCoinRoute extends BaseRouteData {
 class SelectNetworkRoute extends BaseRouteData {
   SelectNetworkRoute({
     required this.paymentType,
+    required this.coinSymbolGroup,
     required this.coinAbbreviation,
     required this.pubkey,
     required this.selectNetworkModalType,
   }) : super(
           child: SelectNetworkModal(
             pubkey: pubkey,
+            coinSymbolGroup: coinSymbolGroup,
             coinAbbreviation: coinAbbreviation,
             paymentType: paymentType,
             type: selectNetworkModalType,
@@ -112,9 +114,10 @@ class SelectNetworkRoute extends BaseRouteData {
           type: IceRouteType.bottomSheet,
         );
 
-  final PaymentType paymentType;
-  final String coinAbbreviation;
   final String pubkey;
+  final String coinSymbolGroup;
+  final String coinAbbreviation;
+  final PaymentType paymentType;
   final SelectNetworkModalType selectNetworkModalType;
 }
 
@@ -122,30 +125,35 @@ class SendCoinsFormRoute extends BaseRouteData {
   SendCoinsFormRoute({
     required this.pubkey,
     required this.networkId,
+    required this.coinSymbolGroup,
     required this.coinAbbreviation,
   }) : super(
           child: SendCoinFormModal(
             pubkey: pubkey,
             networkId: networkId,
+            coinSymbolGroup: coinSymbolGroup,
             coinAbbreviation: coinAbbreviation,
           ),
           type: IceRouteType.bottomSheet,
         );
 
-  final String networkId;
-  final String coinAbbreviation;
   final String pubkey;
+  final String networkId;
+  final String coinSymbolGroup;
+  final String coinAbbreviation;
 }
 
 class RequestCoinsFormRoute extends BaseRouteData {
   RequestCoinsFormRoute({
     required this.pubkey,
     required this.networkId,
+    required this.coinSymbolGroup,
     required this.coinAbbreviation,
   }) : super(
           child: RequestCoinsFormModal(
             pubkey: pubkey,
             networkId: networkId,
+            coinSymbolGroup: coinSymbolGroup,
             coinAbbreviation: coinAbbreviation,
           ),
           type: IceRouteType.bottomSheet,
@@ -153,5 +161,6 @@ class RequestCoinsFormRoute extends BaseRouteData {
 
   final String pubkey;
   final String networkId;
+  final String coinSymbolGroup;
   final String coinAbbreviation;
 }

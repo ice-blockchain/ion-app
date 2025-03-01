@@ -26,9 +26,10 @@ class CoinsComparator {
     if (aPriority != -1 && bPriority != -1 && aPriority != bPriority) {
       return aPriority.compareTo(bPriority);
     }
+
     // If only one is in priority list, it should come first
-    if (aPriority != -1) return -1;
-    if (bPriority != -1) return 1;
+    if (aPriority != -1 && bPriority == -1) return -1;
+    if (bPriority != -1 && aPriority == -1) return 1;
 
     // 3. Compare by symbol
     final symbolComparison = symbolA.compareTo(symbolB);

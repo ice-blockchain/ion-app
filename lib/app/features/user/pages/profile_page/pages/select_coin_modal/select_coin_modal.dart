@@ -43,10 +43,11 @@ class SelectCoinModal extends ConsumerWidget {
                 paymentType: paymentType,
                 pubkey: pubkey,
                 coinAbbreviation: group.abbreviation,
+                coinSymbolGroup: group.symbolGroup,
                 selectNetworkModalType: SelectNetworkModalType.select,
               ).replace(context);
             case SelectCoinModalType.update:
-              context.pop(group.abbreviation);
+              context.pop(group);
           }
         },
         title: context.i18n.common_select_coin,
