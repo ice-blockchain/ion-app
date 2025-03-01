@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
