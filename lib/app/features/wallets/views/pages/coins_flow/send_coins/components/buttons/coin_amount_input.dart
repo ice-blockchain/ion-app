@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_text_button.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -9,7 +8,7 @@ import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/app/utils/validators.dart';
 
-class CoinAmountInput extends ConsumerWidget {
+class CoinAmountInput extends StatelessWidget {
   const CoinAmountInput({
     required this.controller,
     this.balanceUSD,
@@ -24,7 +23,7 @@ class CoinAmountInput extends ConsumerWidget {
   final String? coinAbbreviation;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;

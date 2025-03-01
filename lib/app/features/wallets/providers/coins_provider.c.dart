@@ -20,15 +20,20 @@ Future<List<CoinsGroup>> coinsInWallet(Ref ref) async {
 }
 
 @riverpod
-Future<CoinInWalletData?> coinInWalletByAbbreviation(
+Future<CoinInWalletData?> coinInWallet(
   Ref ref, {
-  required String coinAbbreviation,
+  required String abbreviation,
+  required String symbolGroup,
+  required String networkId,
 }) async {
-  // TODO (1) Recheck this provider. Looks like nullability here is extra.
   final coinGroups = await ref.watch(coinsInWalletProvider.future);
+
   for (final group in coinGroups) {
     for (final coin in group.coins) {
-      if (coin.coin.abbreviation == coinAbbreviation) {
+      final coinData = coin.coin;
+      if (coinData.abbreviation == abbreviation &&
+          coinData.symbolGroup == symbolGroup &&
+          coinData.network.id == networkId) {
         return coin;
       }
     }
