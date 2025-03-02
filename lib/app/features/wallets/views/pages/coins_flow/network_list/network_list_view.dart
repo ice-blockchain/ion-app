@@ -62,7 +62,9 @@ class NetworkListView extends ConsumerWidget {
 
       switch (type) {
         case NetworkListViewType.send:
-          ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network);
+          ref.read(sendAssetFormControllerProvider().notifier)
+            ..setNetwork(network)
+            ..setReceiverAddress('');
           CoinsSendFormRoute().push<void>(context);
         case NetworkListViewType.receive:
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
