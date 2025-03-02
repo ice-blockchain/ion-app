@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/progress/progress.dart';
+import 'package:ion/app/services/logger/logger.dart';
 
 class StoryProgressBarContainer extends ConsumerWidget {
   const StoryProgressBarContainer({
@@ -27,15 +28,18 @@ class StoryProgressBarContainer extends ConsumerWidget {
       return const SizedBox();
     }
 
+    Logger.info('StoryProgressBarContainer: currentStoryIndex=$currentStoryIndex, '
+        'currentUserIndex=$currentUserIndex, posts.length=${posts!.length}');
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0.s),
       child: Row(
-        children: posts!.asMap().entries.map((post) {
+        children: posts.asMap().entries.map((post) {
           final index = post.key;
           return Expanded(
             child: StoryProgressTracker(
+              key: ValueKey(post.value.id),
               post: post.value,
-              isActive: index <= currentStoryIndex,
               isCurrent: index == currentStoryIndex,
               isPreviousStory: index < currentStoryIndex,
               onCompleted: () {

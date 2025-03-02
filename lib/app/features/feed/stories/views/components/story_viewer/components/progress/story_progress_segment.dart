@@ -13,7 +13,7 @@ class StoryProgressSegment extends StatelessWidget {
   const StoryProgressSegment({
     required this.post,
     required this.mediaType,
-    required this.isActive,
+    required this.isCurrent,
     required this.isPreviousStory,
     required this.imageController,
     required this.videoController,
@@ -22,7 +22,7 @@ class StoryProgressSegment extends StatelessWidget {
   });
 
   final ModifiablePostEntity post;
-  final bool isActive;
+  final bool isCurrent;
   final bool isPreviousStory;
   final EdgeInsetsGeometry? margin;
 
@@ -42,7 +42,7 @@ class StoryProgressSegment extends StatelessWidget {
       ),
       child: _ProgressContent(
         post: post,
-        isActive: isActive,
+        isCurrent: isCurrent,
         isPreviousStory: isPreviousStory,
         imageController: imageController,
         mediaType: mediaType,
@@ -55,7 +55,7 @@ class StoryProgressSegment extends StatelessWidget {
 class _ProgressContent extends StatelessWidget {
   const _ProgressContent({
     required this.post,
-    required this.isActive,
+    required this.isCurrent,
     required this.isPreviousStory,
     required this.imageController,
     required this.mediaType,
@@ -63,7 +63,7 @@ class _ProgressContent extends StatelessWidget {
   });
 
   final ModifiablePostEntity post;
-  final bool isActive;
+  final bool isCurrent;
   final bool isPreviousStory;
   final AnimationController? imageController;
   final VideoPlayerController? videoController;
@@ -75,7 +75,7 @@ class _ProgressContent extends StatelessWidget {
     const fullProgress = StoryProgressFill(isActive: true, storyProgress: 1);
 
     if (isPreviousStory) return fullProgress;
-    if (!isActive) return emptyProgress;
+    if (!isCurrent) return emptyProgress;
 
     switch (mediaType) {
       case MediaType.image:
