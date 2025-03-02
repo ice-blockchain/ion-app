@@ -6,7 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/authorization_tag.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';

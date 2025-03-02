@@ -233,11 +233,6 @@ class DeleteEntityUnsupportedTypeException extends IONException {
       : super(10048, 'Failed to delete entity, unsupported type');
 }
 
-class UnknownEventReferenceType extends IONException {
-  UnknownEventReferenceType({required String type})
-      : super(10049, 'Unknown event reference type $type');
-}
-
 class UnsupportedEventReference extends IONException {
   UnsupportedEventReference(dynamic eventReference)
       : super(10050, 'Unsupported event reference $eventReference');
@@ -378,4 +373,14 @@ class AnonymousRelayAuthException extends IONException {
 
 class PubkeysDoNotMatchException extends IONException {
   PubkeysDoNotMatchException() : super(10072, 'Pubkeys do not match');
+}
+
+class ShareableIdentifierDecodeException extends IONException {
+  ShareableIdentifierDecodeException(String identifier)
+      : super(10073, 'Failed to decode $identifier');
+}
+
+class IncorrectShareableIdentifierException extends IONException {
+  IncorrectShareableIdentifierException(dynamic identifier)
+      : super(10074, 'Incorrect shareable identifier $identifier');
 }
