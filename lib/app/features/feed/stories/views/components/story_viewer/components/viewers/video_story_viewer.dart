@@ -19,12 +19,7 @@ class VideoStoryViewer extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMuted = ref.watch(globalMuteProvider);
-    final videoController = ref.watch(
-      videoControllerProvider(
-        videoPath,
-        autoPlay: true,
-      ),
-    );
+    final videoController = ref.watch(videoControllerProvider(videoPath));
 
     if (!videoController.value.isInitialized) {
       return const CenteredLoadingIndicator();

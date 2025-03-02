@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_player/video_player.dart';
 
@@ -17,20 +16,16 @@ Raw<VideoPlayerController> videoController(
   bool autoPlay = false,
   bool looping = false,
 }) {
-  Logger.info('Creating video controller for $sourcePath, autoPlay=$autoPlay, looping=$looping');
-
   final controller = ref.read(videoPlayerControllerFactoryProvider(sourcePath)).createController();
   var isInitialized = false;
 
   void handleInitialized() {
     if (!isInitialized && controller.value.isInitialized) {
       isInitialized = true;
-      Logger.info('Video controller initialized for $sourcePath');
       controller
         ..setLooping(looping)
         ..setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
       if (autoPlay) {
-        Logger.info('Auto-playing video for $sourcePath');
         controller.play();
       }
       ref.notifyListeners();
@@ -42,7 +37,6 @@ Raw<VideoPlayerController> videoController(
     ..initialize();
 
   ref.onDispose(() async {
-    Logger.info('Disposing video controller for $sourcePath');
     controller.removeListener(handleInitialized);
     await controller.dispose();
   });

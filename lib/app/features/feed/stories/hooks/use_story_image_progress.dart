@@ -1,78 +1,85 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:flutter/material.dart';
+import 'package:flutter/animation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/features/core/model/media_type.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 
-({AnimationController? imageController, MediaType mediaType}) useStoryImageProgress({
-  required ModifiablePostEntity post,
+class UseImageStoryResult {
+  UseImageStoryResult({required this.controller});
+  final AnimationController controller;
+}
+
+UseImageStoryResult useImageStoryProgress({
+  required bool isImage,
+  required String storyId,
   required bool isCurrent,
   required bool isPaused,
+  required VoidCallback onCompleted,
 }) {
-  final media = post.data.primaryMedia;
-  final mediaType = useMemoized(() => media?.mediaType ?? MediaType.unknown, [post.id]);
-
-  final wasCurrentRef = useRef(false);
-
-  final controllerKey = useMemoized(UniqueKey.new, [post.id]);
-
-  final imageAnimationController = useAnimationController(
+  final animationController = useAnimationController(
     duration: const Duration(seconds: 5),
-    keys: [controllerKey],
+    keys: [storyId],
   );
+
+  final wasCurrentRef = useRef<bool>(false);
 
   useEffect(
     () {
-      Logger.info('Created a new controller for story ${post.id}');
-      imageAnimationController.reset();
+      if (isImage) {
+        animationController.reset();
+      }
       return null;
     },
-    [controllerKey],
+    [isImage, storyId],
   );
 
   useEffect(
     () {
-      if (mediaType != MediaType.image) {
-        return null;
-      }
+      if (!isImage) return null;
 
-      final becameCurrent = isCurrent && !wasCurrentRef.value;
+      final justBecameCurrent = isCurrent && !wasCurrentRef.value;
+      final becameInactive = !isCurrent && wasCurrentRef.value;
+
       wasCurrentRef.value = isCurrent;
 
-      if (becameCurrent) {
-        Logger.info('Story ${post.id} became current - resetting and starting animation');
-        imageAnimationController
+      if (justBecameCurrent) {
+        animationController
           ..reset()
           ..forward(from: 0);
-        return null;
-      }
-
-      if (isCurrent) {
-        if (isPaused) {
-          Logger.info('Pausing animation for story ${post.id}');
-          imageAnimationController.stop();
-        } else if (!imageAnimationController.isAnimating) {
-          Logger.info('Resuming animation for story ${post.id}');
-          imageAnimationController.forward();
-        }
-      } else {
-        if (imageAnimationController.isAnimating || imageAnimationController.value > 0) {
-          Logger.info('Stopping animation for inactive story ${post.id}');
-          imageAnimationController
+      } else if (becameInactive) {
+        if (animationController.isAnimating || animationController.value > 0) {
+          animationController
             ..reset()
             ..stop();
         }
       }
 
+      if (isCurrent) {
+        if (isPaused) {
+          animationController.stop();
+        } else if (!animationController.isAnimating) {
+          animationController.forward();
+        }
+      }
       return null;
     },
-    [isCurrent, isPaused, mediaType],
+    [isImage, isCurrent, isPaused],
   );
 
-  return (
-    mediaType: mediaType,
-    imageController: mediaType == MediaType.image ? imageAnimationController : null,
+  useEffect(
+    () {
+      if (!isImage) return null;
+
+      void statusListener(AnimationStatus status) {
+        if (status == AnimationStatus.completed && isCurrent) {
+          onCompleted();
+        }
+      }
+
+      animationController.addStatusListener(statusListener);
+      return () => animationController.removeStatusListener(statusListener);
+    },
+    [isImage, animationController, isCurrent, onCompleted],
   );
+
+  return UseImageStoryResult(controller: animationController);
 }
