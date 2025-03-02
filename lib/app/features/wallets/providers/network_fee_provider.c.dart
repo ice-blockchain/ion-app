@@ -31,7 +31,12 @@ Future<NetworkFeeInformation?> networkFee(
 
   final client = await ref.read(ionIdentityClientProvider.future);
 
-  final estimateFees = await client.networks.getEstimateFees(network: network.id);
+  final estimateFees =
+      await client.networks.getEstimateFees(network: network.id).onError((error, stack) {
+    Logger.error('Cannot load fees info. $error', stackTrace: stack);
+    return ion.EstimateFee(network: network.id);
+  });
+
   final walletAssets =
       await client.wallets.getWalletAssets(walletId).then((result) => result.assets);
 

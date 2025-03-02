@@ -227,11 +227,11 @@ class __$$EstimateFeeImplCopyWithImpl<$Res>
 class _$EstimateFeeImpl implements _EstimateFee {
   _$EstimateFeeImpl(
       {required this.network,
-      required this.estimatedBaseFee,
-      required this.kind,
-      required this.fast,
-      required this.standard,
-      required this.slow});
+      this.estimatedBaseFee,
+      this.kind,
+      this.fast,
+      this.standard,
+      this.slow});
 
   factory _$EstimateFeeImpl.fromJson(Map<String, dynamic> json) =>
       _$$EstimateFeeImplFromJson(json);
@@ -293,11 +293,11 @@ class _$EstimateFeeImpl implements _EstimateFee {
 abstract class _EstimateFee implements EstimateFee {
   factory _EstimateFee(
       {required final String network,
-      required final int? estimatedBaseFee,
-      required final String? kind,
-      required final NetworkFee? fast,
-      required final NetworkFee? standard,
-      required final NetworkFee? slow}) = _$EstimateFeeImpl;
+      final int? estimatedBaseFee,
+      final String? kind,
+      final NetworkFee? fast,
+      final NetworkFee? standard,
+      final NetworkFee? slow}) = _$EstimateFeeImpl;
 
   factory _EstimateFee.fromJson(Map<String, dynamic> json) =
       _$EstimateFeeImpl.fromJson;
