@@ -3,7 +3,6 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_viewing_provider.c.g.dart';
@@ -32,12 +31,8 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void moveToNextStory() {
-    Logger.info('moveToNextStory called: currentStoryIndex=${state.currentStoryIndex}, '
-        'currentUserIndex=${state.currentUserIndex}, hasNextStory=${state.hasNextStory}');
-
     if (state.hasNextStory) {
       state = state.copyWith(currentStoryIndex: state.currentStoryIndex + 1);
-      Logger.info('Story index updated to: ${state.currentStoryIndex}');
     } else {
       moveToNextUser();
     }
@@ -66,15 +61,11 @@ class StoryViewingController extends _$StoryViewingController {
   }
 
   void moveToNextUser() {
-    Logger.info('moveToNextUser called: currentUserIndex=${state.currentUserIndex}, '
-        'hasNextUser=${state.hasNextUser}');
-
     if (state.hasNextUser) {
       state = state.copyWith(
         currentUserIndex: state.currentUserIndex + 1,
         currentStoryIndex: 0,
       );
-      Logger.info('User index updated to: ${state.currentUserIndex}, story index reset to 0');
     }
   }
 
