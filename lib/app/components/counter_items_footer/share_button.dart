@@ -23,7 +23,7 @@ class ShareButton extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        ShareModalRoute(eventReference: eventReference.encode()).push<void>(context);
+        ShareViaMessageModalRoute(eventReference: eventReference.encode()).push<void>(context);
       },
       behavior: HitTestBehavior.opaque,
       child: Center(

@@ -99,8 +99,7 @@ class MoreContentView extends ConsumerWidget {
                 iconPath: Assets.svg.walletChatPerson,
                 title: context.i18n.common_profile,
                 onTap: () async {
-                  final selectedProfilePubkey =
-                      await ShareProfileModalRoute().push<String>(context);
+                  final selectedProfilePubkey = await SendProfileModalRoute().push<String>(context);
                   if (selectedProfilePubkey != null) {
                     final eventReference = ReplaceableEventReference(
                       pubkey: selectedProfilePubkey,

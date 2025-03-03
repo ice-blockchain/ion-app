@@ -11,6 +11,7 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ShareOptions extends ConsumerWidget {
@@ -28,7 +29,7 @@ class ShareOptions extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final isFeedPost = entity is ModifiablePostEntity && entity.data.expiration == null;
+    final isPost = entity is ModifiablePostEntity && entity.data.expiration == null;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -37,7 +38,7 @@ class ShareOptions extends ConsumerWidget {
         child: SeparatedRow(
           separator: SizedBox(width: 12.0.s),
           children: [
-            if (isFeedPost)
+            if (isPost)
               _ShareOptionsMenuItem(
                 buttonType: ButtonType.primary,
                 icon: Assets.svg.iconFeedStories.icon(size: iconSize),
@@ -50,7 +51,7 @@ class ShareOptions extends ConsumerWidget {
               label: context.i18n.feed_copy_link,
               onPressed: () {},
             ),
-            if (isFeedPost)
+            if (isPost)
               _ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
                 icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
@@ -79,7 +80,9 @@ class ShareOptions extends ConsumerWidget {
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedMore.icon(size: iconSize),
               label: context.i18n.feed_more,
-              onPressed: () {},
+              onPressed: () {
+                shareContent(eventReference.encode());
+              },
             ),
           ],
         ),

@@ -46,7 +46,7 @@ class StoryViewerActionButtons extends ConsumerWidget {
             onPressed: () async {
               ref.read(storyPauseControllerProvider.notifier).paused = true;
 
-              await ShareModalRoute(eventReference: post.toEventReference().encode())
+              await ShareViaMessageModalRoute(eventReference: post.toEventReference().encode())
                   .push<void>(context);
 
               ref.read(storyPauseControllerProvider.notifier).paused = false;

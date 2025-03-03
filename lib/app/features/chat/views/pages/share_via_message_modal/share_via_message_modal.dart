@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/views/pages/share_modal/share_options.dart';
-import 'package:ion/app/features/chat/views/pages/share_modal/share_send_button.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/share_options.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/share_send_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
@@ -13,8 +13,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class ShareModal extends HookWidget {
-  const ShareModal({
+class ShareViaMessageModal extends HookWidget {
+  const ShareViaMessageModal({
     required this.eventReference,
     super.key,
   });

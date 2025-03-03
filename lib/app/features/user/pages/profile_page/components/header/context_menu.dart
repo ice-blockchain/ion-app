@@ -51,7 +51,7 @@ class ContextMenu extends HookConsumerWidget {
               iconAsset: Assets.svg.iconButtonShare,
               onPressed: () {
                 closeMenu();
-                ShareModalRoute(
+                ShareViaMessageModalRoute(
                   eventReference:
                       ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind)
                           .encode(),
