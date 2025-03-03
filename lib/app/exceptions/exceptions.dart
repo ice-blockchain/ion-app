@@ -396,3 +396,7 @@ class CloudFileUploadFailedException extends IONException {
 class CloudFileDownloadFailedException extends IONException {
   CloudFileDownloadFailedException() : super(10076, 'File download from cloud failed');
 }
+
+class RecoveryKeysRestoreFailedException extends IONException {
+  RecoveryKeysRestoreFailedException() : super(10077, 'Recovery keys restore failed');
+}

@@ -23,7 +23,7 @@ CloudStorageService cloudStorage(Ref ref) {
 }
 
 abstract class CloudStorageService {
-  Future<List<String>> listFilesPaths();
+  Future<List<String>> listFilesPaths({String? directory});
   Future<void> uploadFile(String filePath, String fileContent);
-  Future<String> downloadFile(String filePath);
+  Future<String?> downloadFile(String filePath);
 }
