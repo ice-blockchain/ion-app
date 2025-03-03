@@ -6,12 +6,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -46,7 +49,14 @@ class ContextMenu extends HookConsumerWidget {
             ContextMenuItem(
               label: context.i18n.button_share,
               iconAsset: Assets.svg.iconButtonShare,
-              onPressed: closeMenu,
+              onPressed: () {
+                closeMenu();
+                SharePostModalRoute(
+                  eventReference:
+                      ReplaceableEventReference(pubkey: pubkey, kind: UserMetadataEntity.kind)
+                          .encode(),
+                ).push<void>(context);
+              },
               onLayout: updateWidth,
             ),
             const ContextMenuItemDivider(),
