@@ -22,7 +22,7 @@ class ProfileNetworkButton extends StatelessWidget {
   final String pubkey;
   final PaymentType paymentType;
   final CoinInWalletData? coinInWallet;
-  final void Function(NetworkData) onUpdate;
+  final ValueChanged<NetworkData> onUpdate;
 
   @override
   Widget build(BuildContext context) {
