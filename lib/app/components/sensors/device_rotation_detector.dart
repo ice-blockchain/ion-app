@@ -10,12 +10,12 @@ import 'package:sensors_plus/sensors_plus.dart';
 class DeviceRotationDetector extends HookWidget {
   const DeviceRotationDetector({
     required this.child,
-    required this.onRotate,
+    required this.onUpsideDown,
     this.holdDuration = const Duration(seconds: 1),
     super.key,
   });
 
-  final VoidCallback onRotate;
+  final VoidCallback onUpsideDown;
   final Widget child;
   final Duration holdDuration;
 
@@ -36,7 +36,7 @@ class DeviceRotationDetector extends HookWidget {
 
             if (currentlyUpsideDown) {
               holdTimer.value = Timer(holdDuration, () {
-                onRotate();
+                onUpsideDown();
                 holdTimer.value = null;
               });
             } else {

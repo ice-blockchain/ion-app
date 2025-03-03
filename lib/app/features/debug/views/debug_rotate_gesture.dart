@@ -27,7 +27,7 @@ class DebugRotateGesture extends HookConsumerWidget {
     final isSheetOpen = useState(false);
 
     return DeviceRotationDetector(
-      onRotate: () {
+      onUpsideDown: () {
         if (isSheetOpen.value) {
           return;
         }
