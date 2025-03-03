@@ -288,11 +288,13 @@ class StoryViewerRoute extends BaseRouteData {
 }
 
 class StoryContactsShareRoute extends BaseRouteData {
-  StoryContactsShareRoute()
+  StoryContactsShareRoute({required this.eventReference})
       : super(
-          child: const StoryShareModal(),
+          child: StoryShareModal(eventReference: EventReference.fromEncoded(eventReference)),
           type: IceRouteType.bottomSheet,
         );
+
+  final String eventReference;
 }
 
 class VideosRoute extends BaseRouteData {

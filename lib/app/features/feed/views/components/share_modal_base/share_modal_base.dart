@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/pages/share_post_modal/components/share_send_button.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/pages/user_picker_sheet/user_picker_sheet.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -15,13 +16,13 @@ class ShareModalBase extends HookWidget {
   const ShareModalBase({
     required this.title,
     required this.buttons,
-    required this.onShare,
+    required this.eventReference,
     super.key,
   });
 
   final String title;
   final Widget buttons;
-  final void Function(List<String>) onShare;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,10 @@ class ShareModalBase extends HookWidget {
             height: 110.0.s,
             child: selectedPubkeys.isEmpty
                 ? buttons
-                : ShareSendButton(onPressed: () => onShare(selectedPubkeys)),
+                : ShareSendButton(
+                    pubkeys: selectedPubkeys,
+                    eventReference: eventReference,
+                  ),
           ),
         ],
       ),
