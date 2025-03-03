@@ -48,7 +48,9 @@ class UserPickerSheet extends HookConsumerWidget {
             color: context.theme.appColors.onPrimaryAccent,
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: 8.0.s, horizontal: ScreenSideOffset.defaultSmallMargin),
+                vertical: 8.0.s,
+                horizontal: ScreenSideOffset.defaultSmallMargin,
+              ),
               child: SearchInput(
                 textInputAction: TextInputAction.search,
                 onTextChanged: (text) {

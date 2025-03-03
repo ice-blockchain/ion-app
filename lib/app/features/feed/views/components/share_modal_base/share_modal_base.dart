@@ -14,14 +14,12 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 class ShareModalBase extends HookWidget {
   const ShareModalBase({
     required this.title,
-    required this.emptyStateWidget,
-    this.showNextIcon = true,
+    required this.buttons,
     super.key,
   });
 
   final String title;
-  final bool showNextIcon;
-  final Widget emptyStateWidget;
+  final Widget buttons;
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +43,7 @@ class ShareModalBase extends HookWidget {
           const HorizontalSeparator(),
           SizedBox(
             height: 110.0.s,
-            child: selectedPubkeys.isEmpty
-                ? emptyStateWidget
-                : ShareSendButton(showNextIcon: showNextIcon),
+            child: selectedPubkeys.isEmpty ? buttons : const ShareSendButton(),
           ),
         ],
       ),

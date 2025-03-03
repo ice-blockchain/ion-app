@@ -7,11 +7,8 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ShareSendButton extends StatelessWidget {
   const ShareSendButton({
-    this.showNextIcon = true,
     super.key,
   });
-
-  final bool showNextIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +23,8 @@ class ShareSendButton extends StatelessWidget {
         child: Button(
           mainAxisSize: MainAxisSize.max,
           minimumSize: Size(56.0.s, 56.0.s),
-          trailingIcon: showNextIcon
-              ? Assets.svg.iconButtonNext.icon(
-                  color: context.theme.appColors.onPrimaryAccent,
-                )
-              : null,
+          trailingIcon:
+              Assets.svg.iconButtonNext.icon(color: context.theme.appColors.onPrimaryAccent),
           label: Text(
             context.i18n.feed_send,
           ),
