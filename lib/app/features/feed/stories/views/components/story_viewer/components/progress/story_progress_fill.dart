@@ -15,6 +15,8 @@ class StoryProgressFill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final progressColor = context.theme.appColors.onPrimaryAccent;
+
     return RepaintBoundary(
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -27,9 +29,7 @@ class StoryProgressFill extends StatelessWidget {
                 duration: Duration.zero,
                 width: fillWidth,
                 height: constraints.maxHeight,
-                decoration: BoxDecoration(
-                  color: context.theme.appColors.onPrimaryAccent,
-                ),
+                decoration: BoxDecoration(color: progressColor),
               ),
             ],
           );

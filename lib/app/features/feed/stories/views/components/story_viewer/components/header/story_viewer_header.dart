@@ -22,6 +22,11 @@ class StoryViewerHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataEntity = ref.watch(userMetadataProvider(currentPost.masterPubkey));
 
+    final appColors = context.theme.appColors;
+    final textThemes = context.theme.appTextThemes;
+    final onPrimaryAccent = appColors.onPrimaryAccent;
+    final primaryTextWithAlpha = appColors.primaryText.withValues(alpha: 0.25);
+
     final shadow = [
       Shadow(
         offset: Offset(
@@ -29,7 +34,7 @@ class StoryViewerHeader extends ConsumerWidget {
           1.5.s,
         ),
         blurRadius: 1.5,
-        color: context.theme.appColors.primaryText.withValues(alpha: 0.25),
+        color: primaryTextWithAlpha,
       ),
     ];
 
@@ -47,8 +52,8 @@ class StoryViewerHeader extends ConsumerWidget {
               profilePicture: userMetadata.data.picture,
               title: Text(
                 userMetadata.data.displayName,
-                style: context.theme.appTextThemes.subtitle3.copyWith(
-                  color: context.theme.appColors.onPrimaryAccent,
+                style: textThemes.subtitle3.copyWith(
+                  color: onPrimaryAccent,
                   shadows: shadow,
                 ),
               ),
@@ -57,8 +62,8 @@ class StoryViewerHeader extends ConsumerWidget {
                   username: userMetadata.data.name,
                   context: context,
                 ),
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color: context.theme.appColors.onPrimaryAccent,
+                style: textThemes.caption.copyWith(
+                  color: onPrimaryAccent,
                   shadows: shadow,
                 ),
               ),

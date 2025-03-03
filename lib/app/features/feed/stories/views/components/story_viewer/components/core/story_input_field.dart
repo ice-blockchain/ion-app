@@ -29,6 +29,11 @@ class StoryInputField extends HookConsumerWidget {
     final focusNode = useFocusNode();
     final focused = useNodeFocused(focusNode);
 
+    final appColors = context.theme.appColors;
+    final onPrimaryAccent = appColors.onPrimaryAccent;
+    final textTheme = context.theme.appTextThemes;
+    final body2 = textTheme.body2;
+
     useOnInit(
       () => ref.read(storyPauseControllerProvider.notifier).paused = focused.value,
       [focused.value],
@@ -75,12 +80,12 @@ class StoryInputField extends HookConsumerWidget {
                         minLines: 1,
                         maxLines: 4,
                         scrollPhysics: const BouncingScrollPhysics(),
-                        cursorColor: context.theme.appColors.onPrimaryAccent,
+                        cursorColor: onPrimaryAccent,
                         controller: controller,
                         focusNode: focusNode,
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: context.theme.appColors.primaryText.withValues(alpha: 0.5),
+                          fillColor: appColors.primaryText.withValues(alpha: 0.5),
                           contentPadding: EdgeInsets.only(
                             left: 12.0.s,
                             top: 9.0.s,
@@ -92,14 +97,10 @@ class StoryInputField extends HookConsumerWidget {
                             borderSide: BorderSide.none,
                           ),
                           hintText: context.i18n.write_a_message,
-                          hintStyle: context.theme.appTextThemes.body2.copyWith(
-                            color: context.theme.appColors.onPrimaryAccent,
-                          ),
+                          hintStyle: body2.copyWith(color: onPrimaryAccent),
                           isDense: true,
                         ),
-                        style: context.theme.appTextThemes.body2.copyWith(
-                          color: context.theme.appColors.onPrimaryAccent,
-                        ),
+                        style: body2.copyWith(color: onPrimaryAccent),
                       ),
                       if (isTextNotEmpty.value)
                         Positioned(
@@ -107,9 +108,7 @@ class StoryInputField extends HookConsumerWidget {
                           right: 4.0.s,
                           child: ToolbarSendButton(
                             enabled: true,
-                            onPressed: () {
-                              onSubmitted(controller.text);
-                            },
+                            onPressed: () => onSubmitted(controller.text),
                           ),
                         ),
                     ],
