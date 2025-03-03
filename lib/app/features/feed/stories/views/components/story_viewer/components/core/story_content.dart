@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -72,6 +73,8 @@ class StoryContent extends HookConsumerWidget {
       [post.masterPubkey],
     );
 
+    final isPaused = ref.watch(storyPauseControllerProvider);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
       child: Stack(
@@ -83,7 +86,10 @@ class StoryContent extends HookConsumerWidget {
               const StoryHeaderGradient(),
               StoryViewerHeader(currentPost: post),
             ],
-          ),
+          )
+              .animate(target: isPaused ? 0 : 1)
+              .fade(duration: 300.ms)
+              .slideY(begin: -0.1, end: 0, duration: 300.ms),
           Stack(
             children: [
               if (canReply && !isCurrentUserStory)
@@ -101,7 +107,10 @@ class StoryContent extends HookConsumerWidget {
                   textController: textController,
                 ),
             ],
-          ),
+          )
+              .animate(target: isPaused ? 0 : 1)
+              .fade(duration: 300.ms)
+              .slideY(begin: 0.1, end: 0, duration: 300.ms),
           if (emojiState.showNotification && emojiState.selectedEmoji != null)
             StoryReactionNotification(
               emoji: emojiState.selectedEmoji!,
