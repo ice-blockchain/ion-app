@@ -18,7 +18,7 @@ class HeaderActions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final iconMoreColor = context.theme.appColors.onPrimaryAccent;
-    
+
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
     final isCurrentUser = currentUserPubkey == post.masterPubkey;
 
