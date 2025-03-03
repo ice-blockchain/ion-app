@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-ValueNotifier<T?> useSateWithInitValueFromProvider<T>(
+ValueNotifier<T?> useStateWithInitValueFromProvider<T>(
   WidgetRef ref,
   ProviderListenable<AsyncValue<T>> provider,
 ) {

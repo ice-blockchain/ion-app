@@ -13,10 +13,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_state_with_init_value_from_provider.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/common/coin_button.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/common/network_button.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/common/profile_coin_button.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/common/profile_network_button.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
@@ -44,7 +43,7 @@ class SendCoinFormModal extends HookConsumerWidget {
     final locale = context.i18n;
     final colors = context.theme.appColors;
 
-    final selectedCoinInWallet = useSateWithInitValueFromProvider(
+    final selectedCoinInWallet = useStateWithInitValueFromProvider(
       ref,
       coinInWalletProvider(
         networkId: networkId,
@@ -99,7 +98,7 @@ class SendCoinFormModal extends HookConsumerWidget {
                         pubkey: pubkey,
                         paymentType: PaymentType.send,
                         coinInWalletData: selectedCoinInWallet.value,
-                        onUpdate: (CoinsGroup group) {
+                        onUpdate: (group) {
                           final coin = selectedCoinInWallet.value?.coin;
 
                           if (coin == null) return;
