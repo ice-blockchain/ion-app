@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/services/bech32/bech32_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -13,7 +13,7 @@ void main() {
   late MockBech32Service mockBech32Service;
 
   setUpAll(() {
-    registerFallbackValue(IonConnectProtocolIdentiferType.note);
+    registerFallbackValue(IonConnectProtocolIdentifierType.note);
   });
 
   setUp(() {
@@ -26,7 +26,7 @@ void main() {
   group('decode', () {
     test('throws when trying to decode shareable identifier', () {
       when(() => mockBech32Service.decode(any())).thenReturn(
-        (prefix: IonConnectProtocolIdentiferType.nprofile, data: 'test'),
+        (prefix: IonConnectProtocolIdentifierType.nprofile, data: 'test'),
       );
 
       expect(
@@ -37,11 +37,11 @@ void main() {
 
     test('decodes non-shareable identifier', () {
       when(() => mockBech32Service.decode(any())).thenReturn(
-        (prefix: IonConnectProtocolIdentiferType.note, data: 'test'),
+        (prefix: IonConnectProtocolIdentifierType.note, data: 'test'),
       );
 
       final result = service.decode(payload: 'note1asdadasasdasdadasd');
-      expect(result.prefix, IonConnectProtocolIdentiferType.note);
+      expect(result.prefix, IonConnectProtocolIdentifierType.note);
     });
   });
 
@@ -49,7 +49,7 @@ void main() {
     test('throws when trying to encode shareable identifier', () {
       expect(
         () => service.encode(
-          prefix: IonConnectProtocolIdentiferType.nprofile,
+          prefix: IonConnectProtocolIdentifierType.nprofile,
           data: 'test',
         ),
         throwsException,
@@ -60,7 +60,7 @@ void main() {
       when(() => mockBech32Service.encode(any(), any())).thenReturn('note1test');
 
       final result = service.encode(
-        prefix: IonConnectProtocolIdentiferType.note,
+        prefix: IonConnectProtocolIdentifierType.note,
         data: 'test',
       );
       expect(result.startsWith('note1'), isTrue);
@@ -71,7 +71,7 @@ void main() {
     test('throws when trying to encode non-shareable identifier', () {
       expect(
         () => service.encodeShareableIdentifiers(
-          prefix: IonConnectProtocolIdentiferType.note,
+          prefix: IonConnectProtocolIdentifierType.note,
           special: 'test',
         ),
         throwsException,
@@ -83,7 +83,7 @@ void main() {
           .thenReturn('nprofile1test');
 
       final result = service.encodeShareableIdentifiers(
-        prefix: IonConnectProtocolIdentiferType.nprofile,
+        prefix: IonConnectProtocolIdentifierType.nprofile,
         special: '477318cfb5427b9cfc66a9fa376150c1ddbc62115ae27cef72417eb959691396',
       );
       expect(result.startsWith('nprofile1'), isTrue);
@@ -100,7 +100,7 @@ void main() {
       // Mocking the bech32Service to return a valid decoded result
       when(() => mockBech32Service.decode(any(), length: any(named: 'length'))).thenReturn(
         (
-          prefix: IonConnectProtocolIdentiferType.nprofile,
+          prefix: IonConnectProtocolIdentifierType.nprofile,
           data: '0020477318cfb5427b9cfc66a9fa376150c1ddbc62115ae27cef72417eb959691396'
         ),
       );
@@ -111,7 +111,7 @@ void main() {
 
       // Verifying the result
       expect(result, isNotNull);
-      expect(result?.prefix, IonConnectProtocolIdentiferType.nprofile);
+      expect(result?.prefix, IonConnectProtocolIdentifierType.nprofile);
       expect(result?.special, '477318cfb5427b9cfc66a9fa376150c1ddbc62115ae27cef72417eb959691396');
     });
 

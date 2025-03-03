@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
@@ -9,7 +10,7 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/providers/community_metadata_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/conversations_provider.c.dart'
@@ -21,6 +22,7 @@ import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/archive_chat_tile.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -32,31 +34,53 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final archiveVisible = useState(false);
+    final scrollConroller = useScrollController();
     final archivedConversations = ref.watch(archivedConversationsProvider);
     final isArchivedConversationsEmpty = archivedConversations.valueOrNull?.isEmpty ?? true;
 
+    useOnInit(() {
+      scrollConroller.addListener(() {
+        if (scrollConroller.position.userScrollDirection == ScrollDirection.forward &&
+            scrollConroller.offset < -60.0.s) {
+          archiveVisible.value = true;
+        } else if (scrollConroller.position.userScrollDirection == ScrollDirection.reverse &&
+            scrollConroller.offset > 30.0.s) {
+          archiveVisible.value = false;
+        }
+      });
+    });
+
     return PullToRefreshBuilder(
-      slivers: [
-        SliverAppBar(
-          backgroundColor: Colors.transparent,
-          flexibleSpace: FlexibleSpaceBar(
-            background: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () => ChatSimpleSearchRoute().push<void>(context),
-              child: const IgnorePointer(
-                child: SearchInput(),
-              ),
+      sliverAppBar: SliverAppBar(
+        pinned: true,
+        backgroundColor: context.theme.appColors.secondaryBackground,
+        flexibleSpace: FlexibleSpaceBar(
+          background: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => ChatSimpleSearchRoute().push<void>(context),
+            child: const IgnorePointer(
+              child: SearchInput(),
             ),
           ),
-          toolbarHeight: SearchInput.height,
         ),
+        toolbarHeight: SearchInput.height,
+      ),
+      slivers: [
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.only(top: 12.0.s),
             child: const HorizontalSeparator(),
           ),
         ),
-        if (!isArchivedConversationsEmpty) const SliverToBoxAdapter(child: ArchiveChatTile()),
+        if (scrollConroller.hasClients && !isArchivedConversationsEmpty)
+          SliverToBoxAdapter(
+            child: AnimatedContainer(
+              height: archiveVisible.value ? 60.0.s : 0,
+              duration: const Duration(milliseconds: 100),
+              child: archiveVisible.value ? const ArchiveChatTile() : const SizedBox.shrink(),
+            ),
+          ),
         if (!isArchivedConversationsEmpty && conversations.isNotEmpty)
           const SliverToBoxAdapter(
             child: HorizontalSeparator(),
@@ -71,6 +95,8 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
       ],
       onRefresh: () async => ref.invalidate(conversationsProvider),
       builder: (context, slivers) => CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: scrollConroller,
         slivers: slivers,
       ),
     );
