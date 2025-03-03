@@ -32,6 +32,8 @@ class StoryContent extends HookConsumerWidget {
     final textController = useTextEditingController();
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
     final canReply = ref.watch(canReplyProvider(post.toEventReference())).valueOrNull ?? false;
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+    final isCurrentUserStory = currentPubkey == post.masterPubkey;
 
     useOnInit(
       () => ref.read(storyPauseControllerProvider.notifier).paused = isKeyboardVisible,
@@ -84,7 +86,7 @@ class StoryContent extends HookConsumerWidget {
           ),
           Stack(
             children: [
-              if (canReply)
+              if (canReply && !isCurrentUserStory)
                 StoryInputField(
                   controller: textController,
                   bottomPadding: bottomPadding,
