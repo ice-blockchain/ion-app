@@ -40,7 +40,7 @@ class AddAdminModal extends HookConsumerWidget {
             NavigationCloseButton(),
           ],
         ),
-        bottomContent: Column(
+        footer: Column(
           children: [
             const HorizontalSeparator(),
             Padding(

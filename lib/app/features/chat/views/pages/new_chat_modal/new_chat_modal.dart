@@ -54,24 +54,27 @@ class _HeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _HeaderButton(
-          icon: Assets.svg.iconSearchGroups,
-          title: context.i18n.new_chat_modal_new_group_button,
-          onTap: () {
-            AddParticipantsToGroupModalRoute().push<void>(context);
-          },
-        ),
-        SizedBox(width: 20.0.s),
-        _HeaderButton(
-          icon: Assets.svg.iconSearchChannel,
-          title: context.i18n.new_chat_modal_new_channel_button,
-          onTap: () {
-            NewChannelModalRoute().replace(context);
-          },
-        ),
-      ],
+    return PinnedHeaderSliver(
+      child: Row(
+        children: [
+          _HeaderButton(
+            icon: Assets.svg.iconSearchGroups,
+            title: context.i18n.new_chat_modal_new_group_button,
+            onTap: () {
+              AddParticipantsToGroupModalRoute().push<void>(context);
+            },
+          ),
+          SizedBox(width: 20.0.s),
+          _HeaderButton(
+            icon: Assets.svg.iconSearchChannel,
+            title: context.i18n.new_chat_modal_new_channel_button,
+            onTap: () {
+              NewChannelModalRoute().replace(context);
+            },
+          ),
+          SizedBox(width: 12.0.s),
+        ],
+      ),
     );
   }
 }

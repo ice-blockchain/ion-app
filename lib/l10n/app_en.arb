@@ -633,7 +633,6 @@
   "chat_profile_share_modal_title": "Share profile",
   "new_chat_modal_title": "New Chat",
   "new_chat_modal_description": "Search above for users, groups, and channels...",
-  "new_chat_modal_no_community_description": "Search above for users, chats...",
   "new_chat_modal_new_group_button": "New group",
   "new_chat_modal_new_channel_button": "New channel",
   "chat_read": "Read",
@@ -768,5 +767,6 @@
   "members_count": "{count, plural, =1 {{count} member} other {{count} members}}",
   "all_chains_item": "All chains",
   "suggestions_empty_description": "Type for further selection from the list",
-  "empty_message_history": "The message history is empty"
+  "empty_message_history": "The message history is empty",
+  "users_search": "Search above for users"
 }

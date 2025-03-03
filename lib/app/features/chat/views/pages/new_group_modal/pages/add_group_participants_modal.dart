@@ -39,7 +39,7 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
             NavigationCloseButton(),
           ],
         ),
-        bottomContent: Column(
+        footer: Column(
           children: [
             const HorizontalSeparator(),
             ScreenBottomOffset(

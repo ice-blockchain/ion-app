@@ -15,65 +15,64 @@ class UserPickerSheet extends HookConsumerWidget {
   const UserPickerSheet({
     required this.navigationBar,
     required this.onUserSelected,
-    this.header,
     super.key,
     this.selectedPubkeys = const [],
     this.selectable = false,
-    this.bottomContent,
+    this.header,
+    this.footer,
   });
 
   final NavigationAppBar navigationBar;
-  final Widget? header;
   final List<String> selectedPubkeys;
   final bool selectable;
-  final Widget? bottomContent;
   final void Function(UserMetadataEntity user) onUserSelected;
+
+  final Widget? header;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchText = ref.watch(searchUsersQueryProvider);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        navigationBar,
-        Expanded(
-          child: ScreenSideOffset.small(
-            child: Column(
-              children: [
-                SearchInput(
-                  textInputAction: TextInputAction.search,
-                  onTextChanged: (text) {
-                    ref.read(searchUsersQueryProvider.notifier).text = text;
-                  },
-                ),
-                SizedBox(height: 12.0.s),
-                if (header != null)
-                  Column(
-                    children: [
-                      header!,
-                      SizedBox(height: 12.0.s),
-                    ],
-                  ),
-                if (searchText.isEmpty)
-                  FollowingUsers(
-                    onUserSelected: onUserSelected,
-                    selectedPubkeys: selectedPubkeys,
-                    selectable: selectable,
-                  )
-                else
-                  Expanded(
-                    child: SearchedUsers(
-                      onUserSelected: onUserSelected,
-                      selectedPubkeys: selectedPubkeys,
-                      selectable: selectable,
-                    ),
-                  ),
-                bottomContent ?? const SizedBox.shrink(),
-              ],
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          primary: false,
+          flexibleSpace: navigationBar,
+          automaticallyImplyLeading: false,
+          toolbarHeight: NavigationAppBar.modalHeaderHeight,
+          pinned: true,
+        ),
+        PinnedHeaderSliver(
+          child: ColoredBox(
+            color: context.theme.appColors.onPrimaryAccent,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: 8.0.s, horizontal: ScreenSideOffset.defaultSmallMargin),
+              child: SearchInput(
+                textInputAction: TextInputAction.search,
+                onTextChanged: (text) {
+                  ref.read(searchUsersQueryProvider.notifier).text = text;
+                },
+              ),
             ),
           ),
         ),
+        if (header != null) header!,
+        if (searchText.isEmpty)
+          FollowingUsers(
+            onUserSelected: onUserSelected,
+            selectedPubkeys: selectedPubkeys,
+            selectable: selectable,
+          )
+        else
+          SearchedUsers(
+            onUserSelected: onUserSelected,
+            selectedPubkeys: selectedPubkeys,
+            selectable: selectable,
+          ),
+        SliverToBoxAdapter(child: SizedBox(height: 8.0.s)),
+        if (footer != null) footer!,
       ],
     );
   }
