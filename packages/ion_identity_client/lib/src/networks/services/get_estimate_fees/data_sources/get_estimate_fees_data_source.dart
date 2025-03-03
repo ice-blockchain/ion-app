@@ -7,7 +7,6 @@ import 'package:ion_identity_client/src/core/network/network_exception.dart';
 import 'package:ion_identity_client/src/core/network/utils.dart';
 import 'package:ion_identity_client/src/core/storage/token_storage.dart';
 import 'package:ion_identity_client/src/core/types/request_headers.dart';
-import 'package:ion_identity_client/src/networks/services/get_estimate_fees/models/estimate_fee.c.dart';
 
 class GetEstimateFeesDataSource {
   const GetEstimateFeesDataSource(this._networkClient, this._tokenStorage);

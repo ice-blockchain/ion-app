@@ -16,6 +16,7 @@ export 'src/core/types/user_token.c.dart';
 export 'src/ion_identity.dart';
 export 'src/ion_identity_client.dart';
 export 'src/ion_identity_config.dart';
+export 'src/networks/services/get_estimate_fees/models/estimate_fee.c.dart';
 export 'src/networks/services/get_estimate_fees/models/network_fee.c.dart';
 export 'src/signer/dtos/assertion_request_data.c.dart';
 export 'src/signer/dtos/user_registration_challenge.c.dart';
