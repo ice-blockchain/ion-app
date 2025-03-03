@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
@@ -42,16 +41,14 @@ class PostDetailsPage extends ConsumerWidget {
               eventReference: eventReference,
               headers: [
                 SliverToBoxAdapter(
-                  child: ScreenSideOffset.small(
-                    child: Post(
-                      eventReference: eventReference,
-                      timeFormat: TimestampFormat.detailed,
-                      onDelete: () {
-                        context.pop();
-                      },
-                      isTextSelectable: true,
-                      bodyMaxLines: null,
-                    ),
+                  child: Post(
+                    eventReference: eventReference,
+                    timeFormat: TimestampFormat.detailed,
+                    onDelete: () {
+                      context.pop();
+                    },
+                    isTextSelectable: true,
+                    bodyMaxLines: null,
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),

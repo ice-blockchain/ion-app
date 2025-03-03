@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -69,27 +70,40 @@ class Post extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 12.0.s),
-        header ??
-            UserInfo(
-              pubkey: eventReference.pubkey,
-              createdAt:
-                  entity is ModifiablePostEntity ? entity.data.publishedAt.value : entity.createdAt,
-              timeFormat: timeFormat,
-              trailing: isOwnedByCurrentUser
-                  ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
-                  : UserInfoMenu(pubkey: eventReference.pubkey),
-            ),
+        ScreenSideOffset.small(
+          child: Column(
+            children: [
+              header ??
+                  UserInfo(
+                    pubkey: eventReference.pubkey,
+                    createdAt: entity is ModifiablePostEntity
+                        ? entity.data.publishedAt.value
+                        : entity.createdAt,
+                    timeFormat: timeFormat,
+                    trailing: isOwnedByCurrentUser
+                        ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
+                        : UserInfoMenu(pubkey: eventReference.pubkey),
+                  ),
+            ],
+          ),
+        ),
         SizedBox(height: 10.0.s),
         PostBody(
           entity: entity,
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
         ),
-        if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
-        footer ??
-            CounterItemsFooter(
-              eventReference: eventReference,
-            ),
+        ScreenSideOffset.small(
+          child: Column(
+            children: [
+              if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
+              footer ??
+                  CounterItemsFooter(
+                    eventReference: eventReference,
+                  ),
+            ],
+          ),
+        ),
       ],
     );
   }
