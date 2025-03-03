@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 
 class ShareableIdentifier {
   ShareableIdentifier({
@@ -10,7 +10,7 @@ class ShareableIdentifier {
     this.author,
     this.kind,
   });
-  final IonConnectProtocolIdentiferType prefix;
+  final IonConnectProtocolIdentifierType prefix;
   final String special;
   List<String> relays;
   String? author;

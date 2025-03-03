@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_admin_tag.c.dart';
-import 'package:ion/app/features/chat/community/models/entities/tags/community_identifer_tag.c.dart';
+import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_moderator_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_openness_tag.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_visibility_tag.c.dart';

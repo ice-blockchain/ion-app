@@ -3,7 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
-part 'community_identifer_tag.c.freezed.dart';
+part 'community_identifier_tag.c.freezed.dart';
 
 @freezed
 class CommunityIdentifierTag with _$CommunityIdentifierTag {

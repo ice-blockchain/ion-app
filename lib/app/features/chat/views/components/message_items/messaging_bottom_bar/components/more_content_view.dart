@@ -12,7 +12,7 @@ import 'package:ion/app/features/core/permissions/views/components/permission_di
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -111,7 +111,7 @@ class MoreContentView extends ConsumerWidget {
                       onSubmitted(
                         content: ionConnectUriProtocolService.encode(
                           ionConnectUriIdentifierService.encodeShareableIdentifiers(
-                            prefix: IonConnectProtocolIdentiferType.nprofile,
+                            prefix: IonConnectProtocolIdentifierType.nprofile,
                             special: selectedProfilePubkey,
                           ),
                         ),
