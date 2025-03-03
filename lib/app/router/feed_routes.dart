@@ -126,7 +126,9 @@ class SharePostModalRoute extends BaseRouteData {
   SharePostModalRoute({
     required this.eventReference,
   }) : super(
-          child: SharePostModal(eventReference: EventReference.fromEncoded(eventReference)),
+          child: ShareModalBase(
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
           type: IceRouteType.bottomSheet,
         );
 
@@ -290,7 +292,9 @@ class StoryViewerRoute extends BaseRouteData {
 class StoryContactsShareRoute extends BaseRouteData {
   StoryContactsShareRoute({required this.eventReference})
       : super(
-          child: StoryShareModal(eventReference: EventReference.fromEncoded(eventReference)),
+          child: ShareModalBase(
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
           type: IceRouteType.bottomSheet,
         );
 

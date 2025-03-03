@@ -1,21 +1,35 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/separated/separated_row.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ShareOptions extends StatelessWidget {
-  const ShareOptions({super.key});
+class ShareOptions extends ConsumerWidget {
+  const ShareOptions({required this.eventReference, super.key});
+
+  final EventReference eventReference;
 
   static double get iconSize => 28.0.s;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+
+    if (entity == null) {
+      return const SizedBox.shrink();
+    }
+
+    final isFeedPost = entity is ModifiablePostEntity && entity.data.expiration == null;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -23,28 +37,42 @@ class ShareOptions extends StatelessWidget {
         child: SeparatedRow(
           separator: SizedBox(width: 12.0.s),
           children: [
-            _ShareOptionsMenuItem(
-              buttonType: ButtonType.primary,
-              icon: Assets.svg.iconFeedStories.icon(size: iconSize),
-              label: context.i18n.feed_add_story,
-              onPressed: () {},
-            ),
+            if (isFeedPost)
+              _ShareOptionsMenuItem(
+                buttonType: ButtonType.primary,
+                icon: Assets.svg.iconFeedStories.icon(size: iconSize),
+                label: context.i18n.feed_add_story,
+                onPressed: () {},
+              ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
               label: context.i18n.feed_copy_link,
               onPressed: () {},
             ),
-            _ShareOptionsMenuItem(
-              buttonType: ButtonType.dropdown,
-              icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
-              label: context.i18n.button_bookmark,
-              onPressed: () {},
-            ),
+            if (isFeedPost)
+              _ShareOptionsMenuItem(
+                buttonType: ButtonType.dropdown,
+                icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
+                label: context.i18n.button_bookmark,
+                onPressed: () {},
+              ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconFeedWhatsapp.icon(size: iconSize),
               label: context.i18n.feed_whatsapp,
+              onPressed: () {},
+            ),
+            _ShareOptionsMenuItem(
+              buttonType: ButtonType.dropdown,
+              icon: Assets.svg.iconFeedTelegram.icon(size: iconSize),
+              label: context.i18n.feed_telegram,
+              onPressed: () {},
+            ),
+            _ShareOptionsMenuItem(
+              buttonType: ButtonType.dropdown,
+              icon: Assets.svg.iconLoginXlogo.icon(size: iconSize),
+              label: context.i18n.feed_x,
               onPressed: () {},
             ),
             _ShareOptionsMenuItem(

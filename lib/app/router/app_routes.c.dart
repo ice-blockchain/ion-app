@@ -45,7 +45,6 @@ import 'package:ion/app/features/feed/create_article/views/pages/select_artcile_
 import 'package:ion/app/features/feed/create_post/views/pages/compress_test_page.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/share/story_share_modal.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_record_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
@@ -59,7 +58,6 @@ import 'package:ion/app/features/feed/views/pages/fullscreen_media/fullscreen_me
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/notifications_history_page.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
-import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
 import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';
 import 'package:ion/app/features/gallery/views/pages/gallery_camera_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
@@ -100,6 +98,7 @@ import 'package:ion/app/features/settings/views/logout_confirm_modal.dart';
 import 'package:ion/app/features/settings/views/privacy_settings_modal.dart';
 import 'package:ion/app/features/settings/views/push_notifications_settings.dart';
 import 'package:ion/app/features/settings/views/settings_modal.dart';
+import 'package:ion/app/features/share/views/components/share_modal_base.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
