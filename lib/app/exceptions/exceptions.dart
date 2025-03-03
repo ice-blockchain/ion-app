@@ -379,3 +379,20 @@ class AnonymousRelayAuthException extends IONException {
 class PubkeysDoNotMatchException extends IONException {
   PubkeysDoNotMatchException() : super(10072, 'Pubkeys do not match');
 }
+
+class CloudPermissionFailedException extends IONException {
+  CloudPermissionFailedException()
+      : super(10073, 'Not signed in for cloud account or permission denied');
+}
+
+class CloudFilesGatherFailedException extends IONException {
+  CloudFilesGatherFailedException() : super(10074, 'Files gather from cloud failed');
+}
+
+class CloudFileUploadFailedException extends IONException {
+  CloudFileUploadFailedException() : super(10075, 'File upload to cloud failed');
+}
+
+class CloudFileDownloadFailedException extends IONException {
+  CloudFileDownloadFailedException() : super(10076, 'File download from cloud failed');
+}
