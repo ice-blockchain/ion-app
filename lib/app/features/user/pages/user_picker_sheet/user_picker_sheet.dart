@@ -37,8 +37,7 @@ class UserPickerSheet extends HookConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         navigationBar,
-        ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.9),
+        Expanded(
           child: ScreenSideOffset.small(
             child: Column(
               children: [
