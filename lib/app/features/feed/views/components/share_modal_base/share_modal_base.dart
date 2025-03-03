@@ -15,11 +15,13 @@ class ShareModalBase extends HookWidget {
   const ShareModalBase({
     required this.title,
     required this.buttons,
+    required this.onShare,
     super.key,
   });
 
   final String title;
   final Widget buttons;
+  final void Function(List<String>) onShare;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,9 @@ class ShareModalBase extends HookWidget {
           const HorizontalSeparator(),
           SizedBox(
             height: 110.0.s,
-            child: selectedPubkeys.isEmpty ? buttons : const ShareSendButton(),
+            child: selectedPubkeys.isEmpty
+                ? buttons
+                : ShareSendButton(onPressed: () => onShare(selectedPubkeys)),
           ),
         ],
       ),

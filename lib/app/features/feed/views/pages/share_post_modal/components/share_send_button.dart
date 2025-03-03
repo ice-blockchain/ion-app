@@ -7,8 +7,11 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ShareSendButton extends StatelessWidget {
   const ShareSendButton({
+    required this.onPressed,
     super.key,
   });
+
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class ShareSendButton extends StatelessWidget {
           label: Text(
             context.i18n.feed_send,
           ),
-          onPressed: () {},
+          onPressed: onPressed,
         ),
       ),
     );
