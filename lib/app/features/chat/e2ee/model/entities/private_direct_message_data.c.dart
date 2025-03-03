@@ -135,7 +135,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       return MessageType.video;
     } else if (primaryAudio != null) {
       return MessageType.audio;
-    } else if (IonConnectProtocolIdentiferTypeValidator.isProfileIdentifier(content)) {
+    } else if (IonConnectProtocolIdentifierTypeValidator.isProfileIdentifier(content)) {
       return MessageType.profile;
     }
 

@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/services/bech32/bech32_service.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifer_type.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_uri_identifier_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_uri_protocol_service.c.dart';
 import 'package:ion/app/services/ion_connect/shareable_identifier.dart';
@@ -23,10 +23,10 @@ abstract class EventReference {
     }
 
     return switch (identifier.prefix) {
-      IonConnectProtocolIdentiferType.nevent =>
+      IonConnectProtocolIdentifierType.nevent =>
         ImmutableEventReference.fromShareableIdentifier(identifier),
-      IonConnectProtocolIdentiferType.naddr ||
-      IonConnectProtocolIdentiferType.nprofile =>
+      IonConnectProtocolIdentifierType.naddr ||
+      IonConnectProtocolIdentifierType.nprofile =>
         ReplaceableEventReference.fromShareableIdentifier(identifier),
       _ => throw ShareableIdentifierDecodeException(input),
     };
@@ -71,7 +71,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
   String encode() {
     return IonConnectUriProtocolService().encode(
       IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
-        prefix: IonConnectProtocolIdentiferType.nevent,
+        prefix: IonConnectProtocolIdentifierType.nevent,
         special: eventId,
         author: pubkey,
       ),
@@ -112,7 +112,7 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
   factory ReplaceableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
     final ShareableIdentifier(:special, :author, :kind, :prefix) = identifier;
 
-    if (prefix == IonConnectProtocolIdentiferType.nprofile) {
+    if (prefix == IonConnectProtocolIdentifierType.nprofile) {
       return ReplaceableEventReference(
         kind: UserMetadataEntity.kind,
         pubkey: special,
@@ -153,14 +153,14 @@ class ReplaceableEventReference with _$ReplaceableEventReference implements Even
     if (kind == UserMetadataEntity.kind) {
       return IonConnectUriProtocolService().encode(
         IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
-          prefix: IonConnectProtocolIdentiferType.nprofile,
+          prefix: IonConnectProtocolIdentifierType.nprofile,
           special: pubkey,
         ),
       );
     } else {
       return IonConnectUriProtocolService().encode(
         IonConnectUriIdentifierService(bech32Service: Bech32Service()).encodeShareableIdentifiers(
-          prefix: IonConnectProtocolIdentiferType.naddr,
+          prefix: IonConnectProtocolIdentifierType.naddr,
           special: dTag ?? '',
           author: pubkey,
           kind: kind,
