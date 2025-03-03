@@ -20,6 +20,7 @@ class ChatRoutes {
         TypedGoRoute<SearchEmojiRoute>(path: 'search-emoji'),
         TypedGoRoute<AddParticipantsToGroupModalRoute>(path: 'add-participants-to-group'),
         TypedGoRoute<CreateGroupModalRoute>(path: 'create-group'),
+        TypedGoRoute<ShareModalRoute>(path: 'share/:eventReference'),
       ],
     ),
   ];
@@ -167,4 +168,25 @@ class CreateGroupModalRoute extends BaseRouteData {
           child: const CreateGroupModal(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class SearchEmojiRoute extends BaseRouteData {
+  SearchEmojiRoute()
+      : super(
+          child: const SearchEmojiModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ShareModalRoute extends BaseRouteData {
+  ShareModalRoute({
+    required this.eventReference,
+  }) : super(
+          child: ShareModal(
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String eventReference;
 }

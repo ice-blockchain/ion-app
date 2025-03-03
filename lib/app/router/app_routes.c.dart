@@ -98,7 +98,7 @@ import 'package:ion/app/features/settings/views/logout_confirm_modal.dart';
 import 'package:ion/app/features/settings/views/privacy_settings_modal.dart';
 import 'package:ion/app/features/settings/views/push_notifications_settings.dart';
 import 'package:ion/app/features/settings/views/settings_modal.dart';
-import 'package:ion/app/features/share/views/components/share_modal_base.dart';
+import 'package:ion/app/features/share/views/pages/share_modal/share_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
@@ -202,7 +202,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
     TypedStatefulShellBranch(
       routes: [
         TypedGoRoute<SelfProfileRoute>(
-          path: '/self-profile',
+          path: '/profile',
           routes: [
             ...ProfileRoutes.routes,
           ],
@@ -347,12 +347,4 @@ class PhotoGalleryRoute extends BaseRouteData {
   final String title;
   final String senderName;
   final DateTime sentAt;
-}
-
-class SearchEmojiRoute extends BaseRouteData {
-  SearchEmojiRoute()
-      : super(
-          child: const SearchEmojiModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }
