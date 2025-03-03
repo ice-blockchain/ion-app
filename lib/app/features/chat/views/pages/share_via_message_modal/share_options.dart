@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/separated/separated_row.dart';
@@ -9,8 +10,10 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
+import 'package:ion/app/services/clipboard/clipboard.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -31,6 +34,8 @@ class ShareOptions extends ConsumerWidget {
 
     final isPost = entity is ModifiablePostEntity && entity.data.expiration == null;
 
+    final shareUrl = eventReference.encode();
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -49,14 +54,22 @@ class ShareOptions extends ConsumerWidget {
               buttonType: ButtonType.dropdown,
               icon: Assets.svg.iconBlockCopy1.icon(size: iconSize, color: Colors.black),
               label: context.i18n.feed_copy_link,
-              onPressed: () {},
+              onPressed: () {
+                copyToClipboard(shareUrl);
+                context.pop();
+              },
             ),
             if (isPost)
               _ShareOptionsMenuItem(
                 buttonType: ButtonType.dropdown,
                 icon: Assets.svg.iconBookmarks.icon(size: iconSize, color: Colors.black),
                 label: context.i18n.button_bookmark,
-                onPressed: () {},
+                onPressed: () async {
+                  await ref.read(bookmarksNotifierProvider.notifier).toggleBookmark(eventReference);
+                  if (context.mounted) {
+                    context.pop();
+                  }
+                },
               ),
             _ShareOptionsMenuItem(
               buttonType: ButtonType.dropdown,
@@ -81,7 +94,7 @@ class ShareOptions extends ConsumerWidget {
               icon: Assets.svg.iconFeedMore.icon(size: iconSize),
               label: context.i18n.feed_more,
               onPressed: () {
-                shareContent(eventReference.encode());
+                shareContent(shareUrl);
               },
             ),
           ],

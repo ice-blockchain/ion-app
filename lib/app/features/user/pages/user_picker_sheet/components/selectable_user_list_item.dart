@@ -43,7 +43,9 @@ class SelectableUserListItem extends ConsumerWidget {
           subtitle: Text(prefixUsername(username: user.data.name, context: context)),
           profilePicture: user.data.picture,
           contentPadding: EdgeInsets.symmetric(
-              vertical: 8.0.s, horizontal: ScreenSideOffset.defaultSmallMargin),
+            vertical: 8.0.s,
+            horizontal: ScreenSideOffset.defaultSmallMargin,
+          ),
           trailing: selectable
               ? isSelected
                   ? Assets.svg.iconBlockCheckboxOnblue.icon(
