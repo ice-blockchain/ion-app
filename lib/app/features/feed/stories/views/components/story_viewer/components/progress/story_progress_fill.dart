@@ -15,11 +15,25 @@ class StoryProgressFill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      alignment: Alignment.centerLeft,
-      widthFactor: isActive ? storyProgress : 0.0,
-      child: ColoredBox(
-        color: context.theme.appColors.onPrimaryAccent,
+    return RepaintBoundary(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final maxWidth = constraints.maxWidth;
+          final fillWidth = isActive ? maxWidth * storyProgress : 0.0;
+
+          return Stack(
+            children: [
+              AnimatedContainer(
+                duration: Duration.zero,
+                width: fillWidth,
+                height: constraints.maxHeight,
+                decoration: BoxDecoration(
+                  color: context.theme.appColors.onPrimaryAccent,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

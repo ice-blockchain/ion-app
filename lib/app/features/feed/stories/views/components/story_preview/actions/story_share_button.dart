@@ -7,9 +7,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class StoryShareButton extends StatelessWidget {
-  const StoryShareButton({required this.onPressed, super.key});
+  const StoryShareButton({
+    required this.onPressed,
+    this.isLoading = false,
+    super.key,
+  });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,9 @@ class StoryShareButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         label: Text(context.i18n.button_share_story),
         trailingIcon: Assets.svg.iconFeedSendbutton.icon(),
-        onPressed: onPressed,
+        onPressed: onPressed ?? () {},
+        disabled: isLoading || onPressed == null,
+        type: onPressed == null ? ButtonType.disabled : ButtonType.primary,
       ),
     );
   }

@@ -32,9 +32,7 @@ class StoryViewingController extends _$StoryViewingController {
 
   void moveToNextStory() {
     if (state.hasNextStory) {
-      state = state.copyWith(
-        currentStoryIndex: state.currentStoryIndex + 1,
-      );
+      state = state.copyWith(currentStoryIndex: state.currentStoryIndex + 1);
     } else {
       moveToNextUser();
     }

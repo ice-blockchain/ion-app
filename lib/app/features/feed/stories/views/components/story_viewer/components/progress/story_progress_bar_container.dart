@@ -15,10 +15,11 @@ class StoryProgressBarContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyState = ref.watch(storyViewingControllerProvider);
-
-    final userStories = storyState.userStories;
-    final currentStoryIndex = storyState.currentStoryIndex;
-    final currentUserIndex = storyState.currentUserIndex;
+    final userStories = ref.watch(storyViewingControllerProvider.select((s) => s.userStories));
+    final currentStoryIndex =
+        ref.watch(storyViewingControllerProvider.select((s) => s.currentStoryIndex));
+    final currentUserIndex =
+        ref.watch(storyViewingControllerProvider.select((s) => s.currentUserIndex));
 
     final posts = userStories.isNotEmpty ? userStories[currentUserIndex].stories : null;
 
@@ -33,8 +34,8 @@ class StoryProgressBarContainer extends ConsumerWidget {
           final index = post.key;
           return Expanded(
             child: StoryProgressTracker(
+              key: ValueKey(post.value.id),
               post: post.value,
-              isActive: index <= currentStoryIndex,
               isCurrent: index == currentStoryIndex,
               isPreviousStory: index < currentStoryIndex,
               onCompleted: () {
