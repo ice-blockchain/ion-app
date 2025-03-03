@@ -29,6 +29,7 @@ import 'package:ion/app/features/chat/views/pages/conversation_page/conversation
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
+import 'package:ion/app/features/chat/views/pages/share_modal/share_modal.dart';
 import 'package:ion/app/features/chat/views/pages/share_profile_modal/share_profile_modal.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
@@ -98,7 +99,6 @@ import 'package:ion/app/features/settings/views/logout_confirm_modal.dart';
 import 'package:ion/app/features/settings/views/privacy_settings_modal.dart';
 import 'package:ion/app/features/settings/views/push_notifications_settings.dart';
 import 'package:ion/app/features/settings/views/settings_modal.dart';
-import 'package:ion/app/features/share/views/pages/share_modal/share_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
