@@ -43,7 +43,7 @@ String useCombinedConversationNames(
       }
       return names.join(', ');
     },
-    [conversations],
+    conversations,
   );
 
   final snapshot = useFuture(future);
