@@ -15,7 +15,7 @@ final class ICloudStorageService extends CloudStorageService {
   final String containerId;
 
   @override
-  Future<List<String>> listFilesPaths() async {
+  Future<List<String>> listFilesPaths({String? directory}) async {
     try {
       final fileList = await ICloudStorage.gather(
         containerId: containerId,
@@ -25,7 +25,7 @@ final class ICloudStorageService extends CloudStorageService {
       if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
         throw CloudPermissionFailedException();
       }
-      throw CloudFilesGatherFailedException();
+      throw CloudFilesGatherFailedException(e);
     }
   }
 
@@ -68,9 +68,9 @@ final class ICloudStorageService extends CloudStorageService {
   }
 
   @override
-  Future<String> downloadFile(String filePath) async {
+  Future<String?> downloadFile(String filePath) async {
     try {
-      final completer = Completer<String>();
+      final completer = Completer<String?>();
       StreamSubscription<double>? downloadProgressSubscription;
 
       final directory = await getApplicationDocumentsDirectory();
@@ -108,13 +108,13 @@ final class ICloudStorageService extends CloudStorageService {
     if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
       return CloudPermissionFailedException();
     }
-    return CloudFileUploadFailedException();
+    return CloudFileUploadFailedException(e);
   }
 
   Exception _mapDownloadException(dynamic e) {
     if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
       return CloudPermissionFailedException();
     }
-    return CloudFileDownloadFailedException();
+    return CloudFileDownloadFailedException(e);
   }
 }

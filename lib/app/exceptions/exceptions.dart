@@ -386,13 +386,25 @@ class CloudPermissionFailedException extends IONException {
 }
 
 class CloudFilesGatherFailedException extends IONException {
-  CloudFilesGatherFailedException() : super(10074, 'Files gather from cloud failed');
+  CloudFilesGatherFailedException(dynamic error)
+      : super(10074, 'Files gather from cloud failed, error: $error');
 }
 
 class CloudFileUploadFailedException extends IONException {
-  CloudFileUploadFailedException() : super(10075, 'File upload to cloud failed');
+  CloudFileUploadFailedException(dynamic error)
+      : super(10075, 'File upload to cloud failed, error: $error');
+}
+
+class CloudUploadedFileNotFoundException extends IONException {
+  CloudUploadedFileNotFoundException()
+      : super(10076, 'Cloud upload failed - uploaded file not found');
 }
 
 class CloudFileDownloadFailedException extends IONException {
-  CloudFileDownloadFailedException() : super(10076, 'File download from cloud failed');
+  CloudFileDownloadFailedException(dynamic error)
+      : super(10077, 'File download from cloud failed, error: $error');
+}
+
+class RecoveryKeysRestoreFailedException extends IONException {
+  RecoveryKeysRestoreFailedException() : super(10078, 'Recovery keys restore failed');
 }

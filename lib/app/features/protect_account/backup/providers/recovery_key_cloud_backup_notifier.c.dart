@@ -10,7 +10,7 @@ part 'recovery_key_cloud_backup_notifier.c.g.dart';
 @riverpod
 class RecoveryKeyCloudBackupNotifier extends _$RecoveryKeyCloudBackupNotifier {
   @override
-  FutureOr<void> build() {}
+  Future<void> build() async => {};
 
   Future<void> backup(
     String identityKeyName,
