@@ -400,16 +400,26 @@ class CloudFileDownloadFailedException extends IONException {
       : super(10077, 'File download from cloud failed, error: $error');
 }
 
+class RecoveryKeysFileDoesNotExistException extends IONException {
+  RecoveryKeysFileDoesNotExistException() : super(10078, 'Recovery keys file does not exist');
+}
+
 class RecoveryKeysRestoreFailedException extends IONException {
-  RecoveryKeysRestoreFailedException() : super(10078, 'Recovery keys restore failed');
+  RecoveryKeysRestoreFailedException(dynamic error)
+      : super(10079, 'Recovery keys restore failed, error: $error');
+}
+
+class RecoveryKeysRestoreIncorrectPasswordException extends IONException {
+  RecoveryKeysRestoreIncorrectPasswordException()
+      : super(10080, 'Recovery keys restore incorrect password');
 }
 
 class ShareableIdentifierDecodeException extends IONException {
   ShareableIdentifierDecodeException(String identifier)
-      : super(10077, 'Failed to decode $identifier');
+      : super(10081, 'Failed to decode $identifier');
 }
 
 class IncorrectShareableIdentifierException extends IONException {
   IncorrectShareableIdentifierException(dynamic identifier)
-      : super(10078, 'Incorrect shareable identifier $identifier');
+      : super(10082, 'Incorrect shareable identifier $identifier');
 }
