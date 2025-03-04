@@ -109,11 +109,10 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
   }
 
   Stream<MessageDeliveryStatus> messageStatus(String eventMessageId) {
-    final existingRows = (select(messageStatusTable)
+    return (select(messageStatusTable)
           ..where((table) => table.eventMessageId.equals(eventMessageId)))
-        .watch();
-
-    return existingRows.map((rows) {
+        .watch()
+        .map((rows) {
       if (rows.every((row) => row.status == MessageDeliveryStatus.deleted)) {
         return MessageDeliveryStatus.deleted;
       } else
@@ -138,6 +137,14 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
+  Future<Map<String, MessageDeliveryStatus>> messageStatuses(String eventMessageId) async {
+    final existingRows = await (select(messageStatusTable)
+          ..where((table) => table.eventMessageId.equals(eventMessageId)))
+        .get();
+
+    return {for (final row in existingRows) row.masterPubkey: row.status};
+  }
+
   Future<MessageDeliveryStatus?> checkMessageStatus({
     required String masterPubkey,
     required String eventMessageId,
@@ -156,8 +163,8 @@ class ConversationMessageDataDao extends DatabaseAccessor<ChatDatabase>
 }
 
 enum MessageDeliveryStatus {
-  failed,
   created,
+  failed,
   sent,
   received,
   read,

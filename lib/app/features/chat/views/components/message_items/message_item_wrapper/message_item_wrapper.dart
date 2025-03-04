@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class MessageItemWrapper extends HookConsumerWidget {
   const MessageItemWrapper({
@@ -35,12 +36,21 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
+    final deliveryStatus =
+        ref.watch(conversationMessageDataDaoProvider).messageStatus(messageEvent!.id);
+
     final showReactDialog = useCallback(
       () async {
         try {
           if (messageEvent == null) {
             return;
           }
+
+          var messageStatus = MessageDeliveryStatus.created;
+
+          final subscription = deliveryStatus.listen((status) {
+            messageStatus = status;
+          });
 
           final emoji = await showDialog<String>(
             context: context,
@@ -49,22 +59,22 @@ class MessageItemWrapper extends HookConsumerWidget {
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
               messageEvent: messageEvent!,
+              messageStatus: messageStatus,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
           );
+
           if (emoji != null) {
             onReactionSelected?.call(emoji);
           }
+
+          await subscription.cancel();
         } catch (e, st) {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
       [messageItemKey, isMe],
     );
-
-    final deliveryStatus = messageEvent != null
-        ? ref.watch(conversationMessageDataDaoProvider).messageStatus(messageEvent!.id)
-        : Stream.value(MessageDeliveryStatus.created);
 
     return StreamBuilder<MessageDeliveryStatus>(
       stream: deliveryStatus,
@@ -83,26 +93,41 @@ class MessageItemWrapper extends HookConsumerWidget {
             },
             child: RepaintBoundary(
               key: messageItemKey,
-              child: Container(
-                padding: contentPadding,
-                constraints: BoxConstraints(
-                  maxWidth: maxWidth,
-                ),
-                decoration: BoxDecoration(
-                  color: isMe
-                      ? context.theme.appColors.primaryAccent
-                      : context.theme.appColors.onPrimaryAccent,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12.0.s),
-                    topRight: Radius.circular(12.0.s),
-                    bottomLeft:
-                        !isLastMessageFromAuthor || isMe ? Radius.circular(12.0.s) : Radius.zero,
-                    bottomRight:
-                        isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: contentPadding,
+                    constraints: BoxConstraints(
+                      maxWidth: maxWidth,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isMe
+                          ? context.theme.appColors.primaryAccent
+                          : context.theme.appColors.onPrimaryAccent,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12.0.s),
+                        topRight: Radius.circular(12.0.s),
+                        bottomLeft: !isLastMessageFromAuthor || isMe
+                            ? Radius.circular(12.0.s)
+                            : Radius.zero,
+                        bottomRight:
+                            isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
+                      ),
+                    ),
+                    child: child,
                   ),
-                ),
-                // Sender name shouldn't be shown for messages of the current user
-                child: child,
+                  if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
+                    Row(
+                      children: [
+                        SizedBox(width: 6.0.s),
+                        Assets.svg.iconMessageFailed.icon(
+                          color: context.theme.appColors.attentionRed,
+                          size: 16.0.s,
+                        ),
+                      ],
+                    ),
+                ],
               ),
             ),
           ),

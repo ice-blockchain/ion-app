@@ -35,17 +35,17 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final archiveVisible = useState(false);
-    final scrollConroller = useScrollController();
+    final scrollController = useScrollController();
     final archivedConversations = ref.watch(archivedConversationsProvider);
     final isArchivedConversationsEmpty = archivedConversations.valueOrNull?.isEmpty ?? true;
 
     useOnInit(() {
-      scrollConroller.addListener(() {
-        if (scrollConroller.position.userScrollDirection == ScrollDirection.forward &&
-            scrollConroller.offset < -60.0.s) {
+      scrollController.addListener(() {
+        if (scrollController.position.userScrollDirection == ScrollDirection.forward &&
+            scrollController.offset < -60.0.s) {
           archiveVisible.value = true;
-        } else if (scrollConroller.position.userScrollDirection == ScrollDirection.reverse &&
-            scrollConroller.offset > 30.0.s) {
+        } else if (scrollController.position.userScrollDirection == ScrollDirection.reverse &&
+            scrollController.offset > 30.0.s) {
           archiveVisible.value = false;
         }
       });
@@ -73,7 +73,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
             child: const HorizontalSeparator(),
           ),
         ),
-        if (scrollConroller.hasClients && !isArchivedConversationsEmpty)
+        if (scrollController.hasClients && !isArchivedConversationsEmpty)
           SliverToBoxAdapter(
             child: AnimatedContainer(
               height: archiveVisible.value ? 60.0.s : 0,
@@ -93,10 +93,17 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
           ),
         ),
       ],
-      onRefresh: () async => ref.invalidate(conversationsProvider),
+      onRefresh: () async {
+        ref.invalidate(conversationsProvider);
+      },
       builder: (context, slivers) => CustomScrollView(
+        primary: false,
         physics: const AlwaysScrollableScrollPhysics(),
-        controller: scrollConroller,
+        scrollBehavior: ScrollConfiguration.of(context).copyWith(
+          overscroll: false,
+          physics: const BouncingScrollPhysics(),
+        ),
+        controller: scrollController,
         slivers: slivers,
       ),
     );
