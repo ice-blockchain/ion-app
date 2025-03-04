@@ -36,3 +36,9 @@ String normalizeUrl(String url) {
 
   return normalizedUrl;
 }
+
+String resolveImageUrl(String baseUrl, String imageUrl) {
+  return imageUrl.startsWith('/')
+      ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
+      : imageUrl;
+}
