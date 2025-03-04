@@ -29,7 +29,8 @@ import 'package:ion/app/features/chat/views/pages/conversation_page/conversation
 import 'package:ion/app/features/chat/views/pages/new_chat_modal/new_chat_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/add_group_participants_modal.dart';
 import 'package:ion/app/features/chat/views/pages/new_group_modal/pages/create_group_modal.dart';
-import 'package:ion/app/features/chat/views/pages/share_profile_modal/share_profile_modal.dart';
+import 'package:ion/app/features/chat/views/pages/send_profile_modal/send_profile_modal.dart';
+import 'package:ion/app/features/chat/views/pages/share_via_message_modal/share_via_message_modal.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/views/pages/app_test_page/app_test_page.dart';
 import 'package:ion/app/features/core/views/pages/error_page.dart';
@@ -45,7 +46,6 @@ import 'package:ion/app/features/feed/create_article/views/pages/select_artcile_
 import 'package:ion/app/features/feed/create_post/views/pages/compress_test_page.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/create_post_modal.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
-import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/share/story_share_modal.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_preview_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_record_page.dart';
 import 'package:ion/app/features/feed/stories/views/pages/story_viewer_page.dart';
@@ -59,7 +59,6 @@ import 'package:ion/app/features/feed/views/pages/fullscreen_media/fullscreen_me
 import 'package:ion/app/features/feed/views/pages/notifications_history_page/notifications_history_page.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
-import 'package:ion/app/features/feed/views/pages/share_post_modal/share_post_modal.dart';
 import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';
 import 'package:ion/app/features/gallery/views/pages/gallery_camera_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_page.dart';
@@ -203,7 +202,7 @@ final transitionObserver = NavigationSheetTransitionObserver();
     TypedStatefulShellBranch(
       routes: [
         TypedGoRoute<SelfProfileRoute>(
-          path: '/self-profile',
+          path: '/profile',
           routes: [
             ...ProfileRoutes.routes,
           ],
@@ -348,12 +347,4 @@ class PhotoGalleryRoute extends BaseRouteData {
   final String title;
   final String senderName;
   final DateTime sentAt;
-}
-
-class SearchEmojiRoute extends BaseRouteData {
-  SearchEmojiRoute()
-      : super(
-          child: const SearchEmojiModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }

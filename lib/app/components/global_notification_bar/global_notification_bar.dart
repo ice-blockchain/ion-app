@@ -12,7 +12,6 @@ import 'package:ion/app/features/feed/create_post/model/create_post_option.dart'
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class GlobalNotificationBar extends HookConsumerWidget {
   const GlobalNotificationBar({super.key});
@@ -133,10 +132,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
     if (notifier.isLoading) {
       ref.read(globalNotificationProvider.notifier).show(type.loading());
     } else if (notifier.hasError && notifier.error != null) {
-      showSimpleBottomSheet<void>(
-        context: rootNavigatorKey.currentContext!,
-        child: ErrorModal(error: notifier.error!),
-      );
+      showErrorModal(rootNavigatorKey.currentContext!, notifier.error!);
       ref.read(globalNotificationProvider.notifier).hide();
     } else if (notifier.hasValue) {
       ref.read(globalNotificationProvider.notifier).show(type.ready());

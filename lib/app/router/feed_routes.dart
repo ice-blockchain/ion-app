@@ -23,7 +23,6 @@ class FeedRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
-        TypedGoRoute<SharePostModalRoute>(path: 'share-post/:eventReference'),
         TypedGoRoute<CreatePostRoute>(path: 'create-post'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
         TypedGoRoute<MediaPickerRoute>(
@@ -33,7 +32,6 @@ class FeedRoutes {
           ],
         ),
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
-        TypedGoRoute<StoryContactsShareRoute>(path: 'story-contacts-share'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
       ],
@@ -116,17 +114,6 @@ class RepostOptionsModalRoute extends BaseRouteData {
           child: RepostOptionsModal(
             eventReference: EventReference.fromEncoded(eventReference),
           ),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final String eventReference;
-}
-
-class SharePostModalRoute extends BaseRouteData {
-  SharePostModalRoute({
-    required this.eventReference,
-  }) : super(
-          child: SharePostModal(eventReference: EventReference.fromEncoded(eventReference)),
           type: IceRouteType.bottomSheet,
         );
 
@@ -285,14 +272,6 @@ class StoryViewerRoute extends BaseRouteData {
         );
 
   final String pubkey;
-}
-
-class StoryContactsShareRoute extends BaseRouteData {
-  StoryContactsShareRoute()
-      : super(
-          child: const StoryShareModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }
 
 class VideosRoute extends BaseRouteData {

@@ -12,7 +12,7 @@ enum IonConnectProtocolIdentifierType {
       IonConnectProtocolIdentifierType.values.byName(name.toLowerCase());
 }
 
-class IonConnectProtocolIdentiferTypeValidator {
+class IonConnectProtocolIdentifierTypeValidator {
   static bool isProfileIdentifier(String? value) =>
       RegExp(r'^nostr:nprofile1[a-z0-9]+$').hasMatch(value ?? '');
   static bool isEventIdentifier(String? value) =>

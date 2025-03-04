@@ -9,22 +9,20 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class ShareProfileModal extends StatelessWidget {
-  const ShareProfileModal({super.key});
+class SendProfileModal extends StatelessWidget {
+  const SendProfileModal({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SheetContent(
       topPadding: 0,
-      body: SingleChildScrollView(
-        child: UserPickerSheet(
-          navigationBar: NavigationAppBar.modal(
-            showBackButton: false,
-            title: Text(context.i18n.chat_profile_share_modal_title),
-            actions: [NavigationCloseButton(onPressed: () => context.pop())],
-          ),
-          onUserSelected: (UserMetadataEntity user) => context.pop<String>(user.masterPubkey),
+      body: UserPickerSheet(
+        navigationBar: NavigationAppBar.modal(
+          showBackButton: false,
+          title: Text(context.i18n.chat_profile_share_modal_title),
+          actions: [NavigationCloseButton(onPressed: () => context.pop())],
         ),
+        onUserSelected: (UserMetadataEntity user) => context.pop<String>(user.masterPubkey),
       ),
     );
   }

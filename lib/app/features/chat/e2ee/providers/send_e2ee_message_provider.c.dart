@@ -38,10 +38,8 @@ part 'send_e2ee_message_provider.c.g.dart';
 Future<SendE2eeMessageService> sendE2eeMessageService(
   Ref ref,
 ) async {
-  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
-
   return SendE2eeMessageService(
-    eventSigner: eventSigner,
+    eventSigner: await ref.watch(currentUserIonConnectEventSignerProvider.future),
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
     compressionService: ref.watch(compressServiceProvider),

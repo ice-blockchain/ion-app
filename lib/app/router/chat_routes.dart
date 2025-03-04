@@ -15,11 +15,12 @@ class ChatRoutes {
         TypedGoRoute<NewChatModalRoute>(path: 'new-chat'),
         TypedGoRoute<NewChannelModalRoute>(path: 'new-channel'),
         TypedGoRoute<ChatLearnMoreModalRoute>(path: 'learn-more'),
-        TypedGoRoute<ShareProfileModalRoute>(path: 'share-profile'),
+        TypedGoRoute<SendProfileModalRoute>(path: 'send-profile'),
         TypedGoRoute<ChatAddPollModalRoute>(path: 'add-poll'),
         TypedGoRoute<SearchEmojiRoute>(path: 'search-emoji'),
         TypedGoRoute<AddParticipantsToGroupModalRoute>(path: 'add-participants-to-group'),
         TypedGoRoute<CreateGroupModalRoute>(path: 'create-group'),
+        TypedGoRoute<ShareViaMessageModalRoute>(path: 'share-via-message/:eventReference'),
       ],
     ),
   ];
@@ -137,10 +138,10 @@ class ChatLearnMoreModalRoute extends BaseRouteData {
         );
 }
 
-class ShareProfileModalRoute extends BaseRouteData {
-  ShareProfileModalRoute()
+class SendProfileModalRoute extends BaseRouteData {
+  SendProfileModalRoute()
       : super(
-          child: const ShareProfileModal(),
+          child: const SendProfileModal(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -167,4 +168,25 @@ class CreateGroupModalRoute extends BaseRouteData {
           child: const CreateGroupModal(),
           type: IceRouteType.bottomSheet,
         );
+}
+
+class SearchEmojiRoute extends BaseRouteData {
+  SearchEmojiRoute()
+      : super(
+          child: const SearchEmojiModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class ShareViaMessageModalRoute extends BaseRouteData {
+  ShareViaMessageModalRoute({
+    required this.eventReference,
+  }) : super(
+          child: ShareViaMessageModal(
+            eventReference: EventReference.fromEncoded(eventReference),
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String eventReference;
 }

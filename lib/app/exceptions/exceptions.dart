@@ -233,11 +233,6 @@ class DeleteEntityUnsupportedTypeException extends IONException {
       : super(10048, 'Failed to delete entity, unsupported type');
 }
 
-class UnknownEventReferenceType extends IONException {
-  UnknownEventReferenceType({required String type})
-      : super(10049, 'Unknown event reference type $type');
-}
-
 class UnsupportedEventReference extends IONException {
   UnsupportedEventReference(dynamic eventReference)
       : super(10050, 'Unsupported event reference $eventReference');
@@ -407,4 +402,14 @@ class CloudFileDownloadFailedException extends IONException {
 
 class RecoveryKeysRestoreFailedException extends IONException {
   RecoveryKeysRestoreFailedException() : super(10078, 'Recovery keys restore failed');
+}
+
+class ShareableIdentifierDecodeException extends IONException {
+  ShareableIdentifierDecodeException(String identifier)
+      : super(10077, 'Failed to decode $identifier');
+}
+
+class IncorrectShareableIdentifierException extends IONException {
+  IncorrectShareableIdentifierException(dynamic identifier)
+      : super(10078, 'Incorrect shareable identifier $identifier');
 }

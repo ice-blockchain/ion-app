@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/views/pages/error_modal.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 extension DebounceExtension on Ref {
   Future<void> debounce({Duration duration = const Duration(milliseconds: 300)}) {
@@ -41,10 +40,7 @@ extension DisplayErrorsExtension on WidgetRef {
           context.isCurrentRoute &&
           context.mounted &&
           !excludedExceptions.contains(error.runtimeType)) {
-        showSimpleBottomSheet<void>(
-          context: context,
-          child: ErrorModal(error: error),
-        );
+        showErrorModal(context, error);
       }
     });
   }
@@ -52,10 +48,7 @@ extension DisplayErrorsExtension on WidgetRef {
   void displayErrorsForState<S>(ProviderListenable<dynamic> provider) {
     listen(provider, (prev, next) {
       if (prev is! S && next is S && context.isCurrentRoute && context.mounted) {
-        showSimpleBottomSheet<void>(
-          context: context,
-          child: ErrorModal(error: next as Object),
-        );
+        showErrorModal(context, next as Object);
       }
     });
   }
