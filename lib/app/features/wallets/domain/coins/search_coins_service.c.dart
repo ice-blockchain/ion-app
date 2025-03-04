@@ -3,7 +3,6 @@
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
-import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,19 +14,16 @@ SearchCoinsService searchCoinsService(Ref ref) {
 }
 
 class SearchCoinsService {
-  SearchCoinsService(
-    this._coinsRepository,
-  ) : _comparator = CoinsComparator();
+  SearchCoinsService(this._coinsRepository);
 
   final CoinsRepository _coinsRepository;
-  final CoinsComparator _comparator;
 
   Future<List<CoinsGroup>> search(String query) async {
     final coins = await _coinsRepository.searchCoins(query);
     final grouped = coins.groupListsBy((coin) => coin.symbolGroup);
-    final result = grouped.keys
-        .map((symbolGroup) => CoinsGroup.fromCoinsData(grouped[symbolGroup]!))
-        .sorted(_comparator.compareGroups);
+    final result =
+        grouped.keys.map((symbolGroup) => CoinsGroup.fromCoinsData(grouped[symbolGroup]!)).toList();
+
     return result;
   }
 }

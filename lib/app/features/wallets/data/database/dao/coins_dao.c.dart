@@ -60,13 +60,37 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
 
   Future<List<CoinData>> search(String searchQuery) {
     final formattedQuery = '%${searchQuery.trim().toLowerCase()}%';
+    final exactMatchQuery = searchQuery.trim().toLowerCase();
+
     final query = select(coinsTable).join([
       leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
     ])
       ..where(
         coinsTable.symbol.lower().like(formattedQuery) |
             coinsTable.name.lower().like(formattedQuery),
-      );
+      )
+      ..orderBy([
+        // 1. Coins with exact symbol
+        OrderingTerm(
+          expression: coinsTable.symbol.lower().equals(exactMatchQuery),
+          mode: OrderingMode.desc,
+        ),
+        // 2. Coins with exact names
+        OrderingTerm(
+          expression: coinsTable.name.lower().equals(exactMatchQuery),
+          mode: OrderingMode.desc,
+        ),
+        // 3. Coins where the symbol starts with the entered query
+        OrderingTerm(
+          expression: coinsTable.symbol.lower().like('$exactMatchQuery%'),
+          mode: OrderingMode.desc,
+        ),
+        // 4. Coins where the name starts with the entered query
+        OrderingTerm(
+          expression: coinsTable.name.lower().like('$exactMatchQuery%'),
+          mode: OrderingMode.desc,
+        ),
+      ]);
 
     return query.map(_toCoinData).get();
   }
