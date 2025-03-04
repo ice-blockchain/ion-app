@@ -393,10 +393,15 @@ class CloudFileUploadFailedException extends IONException {
   CloudFileUploadFailedException() : super(10075, 'File upload to cloud failed');
 }
 
+class CloudUploadedFileNotFoundException extends IONException {
+  CloudUploadedFileNotFoundException()
+      : super(10076, 'Cloud upload failed - uploaded file not found');
+}
+
 class CloudFileDownloadFailedException extends IONException {
-  CloudFileDownloadFailedException() : super(10076, 'File download from cloud failed');
+  CloudFileDownloadFailedException() : super(10077, 'File download from cloud failed');
 }
 
 class RecoveryKeysRestoreFailedException extends IONException {
-  RecoveryKeysRestoreFailedException() : super(10077, 'Recovery keys restore failed');
+  RecoveryKeysRestoreFailedException() : super(10078, 'Recovery keys restore failed');
 }

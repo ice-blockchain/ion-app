@@ -66,7 +66,7 @@ final class GoogleDriveStorageService extends CloudStorageService {
           ? await drive.files.update(googleFile, existingFileId, uploadMedia: content)
           : await drive.files.create(googleFile, uploadMedia: content);
       if (uploadedFile.id == null) {
-        throw CloudFileUploadFailedException();
+        throw CloudUploadedFileNotFoundException();
       }
     } catch (e) {
       throw CloudFileUploadFailedException();
