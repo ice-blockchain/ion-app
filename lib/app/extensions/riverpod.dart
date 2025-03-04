@@ -40,7 +40,7 @@ extension DisplayErrorsExtension on WidgetRef {
           context.isCurrentRoute &&
           context.mounted &&
           !excludedExceptions.contains(error.runtimeType)) {
-        showErrorModal(error);
+        showErrorModal(context, error);
       }
     });
   }
@@ -48,7 +48,7 @@ extension DisplayErrorsExtension on WidgetRef {
   void displayErrorsForState<S>(ProviderListenable<dynamic> provider) {
     listen(provider, (prev, next) {
       if (prev is! S && next is S && context.isCurrentRoute && context.mounted) {
-        showErrorModal(next as Object);
+        showErrorModal(context, next as Object);
       }
     });
   }

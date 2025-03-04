@@ -10,7 +10,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -62,9 +61,9 @@ class ErrorModal extends ConsumerWidget {
   }
 }
 
-void showErrorModal(Object error) {
+void showErrorModal(BuildContext context, Object error) {
   showSimpleBottomSheet<void>(
-    context: rootNavigatorKey.currentContext!,
+    context: context,
     child: ErrorModal(error: error),
   );
 }

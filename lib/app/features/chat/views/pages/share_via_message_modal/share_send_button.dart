@@ -59,7 +59,9 @@ class ShareSendButton extends HookConsumerWidget {
                 context.pop();
               }
             } catch (error) {
-              showErrorModal(error);
+              if (context.mounted) {
+                showErrorModal(context, error);
+              }
             } finally {
               loading.value = false;
             }
