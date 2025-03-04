@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/services/browser/browser.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
 class UrlPreview extends HookWidget {
@@ -12,38 +11,53 @@ class UrlPreview extends HookWidget {
     super.key,
   });
 
+  static final Map<String, OgpData?> _metadataCache = {};
+
   final String url;
   final Widget Function(OgpData? meta, String favIconUrl) builder;
 
+  String _resolveFavIconUrl(String baseUrl) {
+    return '${Uri.parse(baseUrl).origin}/favicon.ico';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final metadata = useMemoized(() => OgpDataExtract.execute(url));
-    final metadataSnapshot = useFuture(metadata);
+    final metadata = useState<OgpData?>(_metadataCache[url]);
+    final isLoading = useState(false);
 
-    if (metadataSnapshot.data == null || !_hasFullMetaData(metadataSnapshot.data!)) {
-      return builder(null, _resolveFavIconUrl(url));
+    useEffect(
+      () {
+        if (metadata.value != null) return null;
+
+        Future<void> loadMetadata() async {
+          if (_metadataCache.containsKey(url)) {
+            metadata.value = _metadataCache[url];
+            return;
+          }
+
+          isLoading.value = true;
+          try {
+            final result = await OgpDataExtract.execute(url);
+            _metadataCache[url] = result;
+            metadata.value = result;
+          } catch (e) {
+            _metadataCache[url] = null;
+            metadata.value = null;
+          } finally {
+            isLoading.value = false;
+          }
+        }
+
+        loadMetadata();
+        return null;
+      },
+      [url],
+    );
+
+    if (isLoading.value) {
+      return const SizedBox.shrink();
     }
 
-    final meta = metadataSnapshot.data!;
-
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => openUrlInAppBrowser(url),
-      child: builder(
-        meta,
-        _resolveFavIconUrl(url),
-      ),
-    );
+    return builder(metadata.value, _resolveFavIconUrl(url));
   }
-}
-
-bool _hasFullMetaData(OgpData meta) {
-  return meta.image != null ||
-      meta.title != null ||
-      meta.description != null ||
-      meta.siteName != null;
-}
-
-String _resolveFavIconUrl(String baseUrl) {
-  return '${Uri.parse(baseUrl).origin}/favicon.ico';
 }
