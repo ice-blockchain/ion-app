@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/select/select_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
@@ -27,38 +28,6 @@ class SelectNetworkButton extends StatelessWidget {
   }
 }
 
-class _SelectNetworkButtonContainer extends StatelessWidget {
-  const _SelectNetworkButtonContainer({
-    required this.child,
-  });
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.theme.appColors;
-
-    return ConstrainedBox(
-      constraints: BoxConstraints.expand(height: 58.0.s),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border.all(color: colors.strokeElements),
-          borderRadius: BorderRadius.circular(16.0.s),
-          color: colors.secondaryBackground,
-        ),
-        child: Row(
-          children: [
-            SizedBox(width: 16.0.s),
-            Expanded(child: child),
-            Assets.svg.iconArrowDown.icon(),
-            SizedBox(width: 16.0.s),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _NoNetworkSelected extends StatelessWidget {
   const _NoNetworkSelected();
 
@@ -67,26 +36,10 @@ class _NoNetworkSelected extends StatelessWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
 
-    return _SelectNetworkButtonContainer(
+    return SelectContainer(
       child: Row(
         children: [
-          SizedBox.square(
-            dimension: 30.0.s,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: colors.onTerararyFill),
-                borderRadius: BorderRadius.circular(6.66.s),
-                color: colors.secondaryBackground,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(5.0.s),
-                child: Assets.svg.iconMemeNetwork.icon(
-                  color: colors.secondaryText,
-                  size: 20.0.s,
-                ),
-              ),
-            ),
-          ),
+          Assets.svg.walletnetwork.icon(size: 30.0.s),
           SizedBox(width: 10.0.s),
           Text(
             context.i18n.common_select_network_button_unselected,
@@ -112,7 +65,7 @@ class _HasNetworkSelected extends StatelessWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
 
-    return _SelectNetworkButtonContainer(
+    return SelectContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

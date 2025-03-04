@@ -6,6 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_modal_page/components/contact_item.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_actions.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -40,7 +41,10 @@ class ContactPage extends ConsumerWidget {
           ScreenSideOffset.small(
             child: BalanceActions(
               onReceive: () => ReceiveCoinRoute().push<void>(context),
-              onSend: () => CoinSendRoute().push<void>(context),
+              onSend: () {
+                ref.read(sendAssetFormControllerProvider().notifier).reset();
+                CoinSendRoute().push<void>(context);
+              },
               onNeedToEnable2FA: () => Navigator.of(context).pop(true),
             ),
           ),
