@@ -71,21 +71,17 @@ class Post extends ConsumerWidget {
       children: [
         SizedBox(height: 12.0.s),
         ScreenSideOffset.small(
-          child: Column(
-            children: [
-              header ??
-                  UserInfo(
-                    pubkey: eventReference.pubkey,
-                    createdAt: entity is ModifiablePostEntity
-                        ? entity.data.publishedAt.value
-                        : entity.createdAt,
-                    timeFormat: timeFormat,
-                    trailing: isOwnedByCurrentUser
-                        ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
-                        : UserInfoMenu(pubkey: eventReference.pubkey),
-                  ),
-            ],
-          ),
+          child: header ??
+              UserInfo(
+                pubkey: eventReference.pubkey,
+                createdAt: entity is ModifiablePostEntity
+                    ? entity.data.publishedAt.value
+                    : entity.createdAt,
+                timeFormat: timeFormat,
+                trailing: isOwnedByCurrentUser
+                    ? OwnEntityMenu(eventReference: eventReference, onDelete: onDelete)
+                    : UserInfoMenu(pubkey: eventReference.pubkey),
+              ),
         ),
         SizedBox(height: 10.0.s),
         PostBody(
