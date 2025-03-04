@@ -46,7 +46,6 @@ dev_dependencies:
   json_serializable: ^6.8.0
   very_good_analysis: ^6.0.0
 
-flutter:
 
 dependency_overrides:
   js: ^0.7.1
