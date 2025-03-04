@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -10,6 +12,8 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/components/wallet_switcher/wallet_switcher.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_scan_modal_page.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -46,7 +50,7 @@ class Header extends ConsumerWidget {
             ],
             SizedBox(width: 12.0.s),
             NavigationButton(
-              onPressed: () => ScanWalletRoute().push<void>(context),
+              onPressed: () => _onScanPressed(ref),
               icon: Assets.svg.iconHeaderScan1.icon(
                 color: context.theme.appColors.primaryText,
               ),
@@ -55,5 +59,26 @@ class Header extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _onScanPressed(WidgetRef ref) async {
+    final scannedAddress = await showModalBottomSheet<String>(
+      context: ref.context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(top: 64.0.s),
+        child: const WalletScanModalPage(),
+      ),
+    );
+    if (scannedAddress == null || !ref.context.mounted) return;
+
+    // Navigation to the CoinSendRoute doesn't work while the bottom sheet animation is running
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    if (!ref.context.mounted) return; // Check again after delay
+
+    ref.invalidate(sendAssetFormControllerProvider());
+    ref.read(sendAssetFormControllerProvider().notifier).setReceiverAddress(scannedAddress);
+    await CoinsSendFormRoute().push<void>(ref.context);
   }
 }

@@ -6,14 +6,14 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/select/select_coin_button.dart';
+import 'package:ion/app/components/select/select_network_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_button.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/network_button.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/widgets/not_enough_coins_for_network_fee_message.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
@@ -36,12 +36,12 @@ class SendCoinsForm extends HookConsumerWidget {
     final formController = ref.watch(sendAssetFormControllerProvider());
     final notifier = ref.watch(sendAssetFormControllerProvider().notifier);
     final selectedContactPubkey = formController.contactPubkey;
-    final coin = formController.assetData.as<CoinAssetData>()!;
-    final maxAmount = coin.selectedOption?.amount ?? 0;
+    final coin = formController.assetData.as<CoinAssetData>();
+    final maxAmount = coin?.selectedOption?.amount ?? 0;
 
     final amountController = useTextEditingController.fromValue(
       TextEditingValue(
-        text: formatCrypto(coin.amount),
+        text: formatCrypto(coin?.amount ?? 0),
       ),
     );
 
@@ -88,18 +88,19 @@ class SendCoinsForm extends HookConsumerWidget {
               ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    if (coin.selectedOption != null)
-                      CoinButton(
-                        coinInWallet: coin.selectedOption!,
-                        onTap: () {
-                          CoinSendRoute().push<void>(context);
-                        },
-                      ),
+                    SelectCoinButton(
+                      selectedCoin: coin?.selectedOption,
+                      onTap: () => CoinSendRoute().push<void>(context),
+                    ),
                     SizedBox(height: 12.0.s),
-                    NetworkButton(
-                      network: formController.network!,
+                    SelectNetworkButton(
+                      selectedNetwork: formController.network,
                       onTap: () {
-                        NetworkSelectSendRoute().push<void>(context);
+                        if (coin?.selectedOption != null) {
+                          NetworkSelectSendRoute().push<void>(context);
+                        } else {
+                          CoinSendRoute().push<void>(context);
+                        }
                       },
                     ),
                     SizedBox(height: 12.0.s),
@@ -129,8 +130,8 @@ class SendCoinsForm extends HookConsumerWidget {
                     SizedBox(height: 12.0.s),
                     CoinAmountInput(
                       controller: amountController,
-                      maxValue: coin.selectedOption?.amount ?? 0,
-                      coinAbbreviation: coin.coinsGroup.abbreviation,
+                      maxValue: coin?.selectedOption?.amount ?? 0,
+                      coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
                     ),
                     SizedBox(height: 17.0.s),
                     const NetworkFeeSelector(),
@@ -138,7 +139,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       SizedBox(height: 45.0.s)
                     else if (formController.networkNativeToken case final WalletAsset networkToken)
                       NotEnoughMoneyForNetworkFeeMessage(
-                        coinAsset: coin,
+                        coinAsset: coin!,
                         networkToken: networkToken,
                         network: formController.network!,
                       ),

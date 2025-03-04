@@ -103,6 +103,7 @@
   "common_copied": "Copied",
   "common_comments": "Comments",
   "common_select_network_button_unselected": "Select network",
+  "common_select_coin_button_unselected": "Select coin",
   "common_paste": "Paste",
   "auth_secured_by": "Secured by",
   "auth_link_new_device_title": "Log in with new device",

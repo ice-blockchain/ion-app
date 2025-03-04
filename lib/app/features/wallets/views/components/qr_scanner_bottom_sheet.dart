@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -25,7 +26,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
         controllerRef.value = controller;
         subscriptionRef.value = controller.scannedDataStream.listen((scanData) {
           if (scanData.code != null && context.mounted) {
-            Navigator.of(context).pop(scanData.code);
+            context.pop(scanData.code);
           }
         });
       },

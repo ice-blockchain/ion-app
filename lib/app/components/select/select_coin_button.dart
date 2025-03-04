@@ -4,21 +4,63 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/select/select_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CoinButton extends StatelessWidget {
-  const CoinButton({
-    required this.coinInWallet,
+class SelectCoinButton extends StatelessWidget {
+  const SelectCoinButton({
+    required this.selectedCoin,
     required this.onTap,
     super.key,
   });
 
-  final CoinInWalletData coinInWallet;
+  final CoinInWalletData? selectedCoin;
   final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: selectedCoin == null
+          ? const _NoCoinSelected()
+          : _HasCoinSelected(selectedCoin: selectedCoin!),
+    );
+  }
+}
+
+class _NoCoinSelected extends StatelessWidget {
+  const _NoCoinSelected();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.theme.appColors;
+    final textTheme = context.theme.appTextThemes;
+
+    return SelectContainer(
+      child: Row(
+        children: [
+          Assets.svg.walletassets.icon(size: 30.0.s),
+          SizedBox(width: 10.0.s),
+          Text(
+            context.i18n.common_select_coin_button_unselected,
+            style: textTheme.body.copyWith(color: colors.primaryText),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HasCoinSelected extends StatelessWidget {
+  const _HasCoinSelected({
+    required this.selectedCoin,
+  });
+
+  final CoinInWalletData selectedCoin;
 
   @override
   Widget build(BuildContext context) {
@@ -37,19 +79,18 @@ class CoinButton extends StatelessWidget {
           right: 8.0.s,
         ),
         title: Text(
-          coinInWallet.coin.name,
+          selectedCoin.coin.name,
           style: textTheme.body,
         ),
         subtitle: Text(
-          coinInWallet.coin.abbreviation,
+          selectedCoin.coin.abbreviation,
           style: textTheme.caption3,
         ),
         backgroundColor: Colors.transparent,
         leading: CoinIconWidget(
-          imageUrl: coinInWallet.coin.iconUrl,
+          imageUrl: selectedCoin.coin.iconUrl,
           size: 36.0.s,
         ),
-        onTap: onTap,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -57,23 +98,20 @@ class CoinButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  formatCrypto(coinInWallet.amount),
+                  formatCrypto(selectedCoin.amount),
                   style: textTheme.body,
                 ),
                 Text(
-                  formatToCurrency(coinInWallet.balanceUSD),
+                  formatToCurrency(selectedCoin.balanceUSD),
                   style: textTheme.caption3.copyWith(
                     color: colors.secondaryText,
                   ),
                 ),
               ],
             ),
-            GestureDetector(
-              onTap: onTap,
-              child: Padding(
-                padding: EdgeInsets.all(8.0.s),
-                child: Assets.svg.iconArrowDown.icon(),
-              ),
+            Padding(
+              padding: EdgeInsets.all(8.0.s),
+              child: Assets.svg.iconArrowDown.icon(),
             ),
           ],
         ),

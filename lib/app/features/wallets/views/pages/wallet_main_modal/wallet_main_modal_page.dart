@@ -2,19 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_main_modal/wallet_main_modal_list_item.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-class WalletMainModalPage extends StatelessWidget {
+class WalletMainModalPage extends ConsumerWidget {
   const WalletMainModalPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       topPadding: 0.0.s,
       bottomPadding: 3.0.s,
@@ -37,7 +39,10 @@ class WalletMainModalPage extends StatelessWidget {
                 final routeLocation = _getSubRouteLocation(type);
                 return MainModalItem(
                   item: type,
-                  onTap: () => context.pushReplacement(routeLocation),
+                  onTap: () {
+                    ref.invalidate(sendAssetFormControllerProvider());
+                    context.pushReplacement(routeLocation);
+                  },
                   index: index,
                 );
               },
