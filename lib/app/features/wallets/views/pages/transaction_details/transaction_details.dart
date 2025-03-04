@@ -138,18 +138,19 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 12.0.s),
-                    ListItemArrivalTime(
-                      formattedTime: transactionData.networkFeeOption.getDisplayArrivalTime(
-                        context,
+                    if (transactionData.networkFeeOption != null) ...[
+                      ListItemArrivalTime(
+                        formattedTime:
+                            transactionData.networkFeeOption!.getDisplayArrivalTime(context),
                       ),
-                    ),
-                    SizedBox(height: 12.0.s),
-                    ListItemNetworkFee(
-                      value: formatCrypto(
-                        transactionData.networkFeeOption.amount,
-                        transactionData.networkFeeOption.symbol,
+                      SizedBox(height: 12.0.s),
+                      ListItemNetworkFee(
+                        value: formatCrypto(
+                          transactionData.networkFeeOption!.amount,
+                          transactionData.networkFeeOption!.symbol,
+                        ),
                       ),
-                    ),
+                    ],
                     SizedBox(height: 15.0.s),
                     TransactionDetailsActions(
                       onViewOnExplorer: () {

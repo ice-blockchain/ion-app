@@ -22,7 +22,7 @@ class TransactionDetails with _$TransactionDetails {
     required String receiverAddress,
     required String? receiverPubkey,
     // TODO: Most likely will be replaced with more flexible model to cover case with receive transactions.
-    required NetworkFeeOption networkFeeOption,
+    required NetworkFeeOption? networkFeeOption,
     // TODO: Recheck these fields. We don't have them for the receive transactions.
     required TransferStatus status,
     required DateTime dateRequested,
