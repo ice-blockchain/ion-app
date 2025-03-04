@@ -40,7 +40,7 @@ class WalletMainModalPage extends ConsumerWidget {
                 return MainModalItem(
                   item: type,
                   onTap: () {
-                    ref.read(sendAssetFormControllerProvider().notifier).reset();
+                    ref.invalidate(sendAssetFormControllerProvider());
                     context.pushReplacement(routeLocation);
                   },
                   index: index,

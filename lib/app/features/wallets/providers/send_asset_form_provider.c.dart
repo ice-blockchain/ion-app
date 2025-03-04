@@ -33,17 +33,6 @@ class SendAssetFormController extends _$SendAssetFormController {
     );
   }
 
-  void reset() {
-    state = state.copyWith(
-      assetData: const CryptoAssetData.notInitialized(),
-      network: null,
-      senderWallet: null,
-      networkFeeOptions: [],
-      selectedNetworkFeeOption: null,
-      networkNativeToken: null,
-    );
-  }
-
   void setNft(NftData nft) {
     // TODO: Not implemented
     // state = state.copyWith(assetData: CryptoAssetData.nft(nft: nft));
