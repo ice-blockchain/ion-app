@@ -25,7 +25,7 @@ final class ICloudStorageService extends CloudStorageService {
       if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
         throw CloudPermissionFailedException();
       }
-      throw CloudFilesGatherFailedException();
+      throw CloudFilesGatherFailedException(e);
     }
   }
 
@@ -108,13 +108,13 @@ final class ICloudStorageService extends CloudStorageService {
     if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
       return CloudPermissionFailedException();
     }
-    return CloudFileUploadFailedException();
+    return CloudFileUploadFailedException(e);
   }
 
   Exception _mapDownloadException(dynamic e) {
     if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
       return CloudPermissionFailedException();
     }
-    return CloudFileDownloadFailedException();
+    return CloudFileDownloadFailedException(e);
   }
 }

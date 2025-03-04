@@ -38,7 +38,7 @@ final class GoogleDriveStorageService extends CloudStorageService {
       final paths = filesInFolder.files?.map((file) => file.name).nonNulls.toList();
       return paths ?? [];
     } catch (e) {
-      throw CloudFilesGatherFailedException();
+      throw CloudFilesGatherFailedException(e);
     }
   }
 
@@ -69,7 +69,7 @@ final class GoogleDriveStorageService extends CloudStorageService {
         throw CloudUploadedFileNotFoundException();
       }
     } catch (e) {
-      throw CloudFileUploadFailedException();
+      throw CloudFileUploadFailedException(e);
     }
   }
 
@@ -102,7 +102,7 @@ final class GoogleDriveStorageService extends CloudStorageService {
       unawaited(tempFile.delete());
       return fileContent;
     } catch (e) {
-      throw CloudFileDownloadFailedException();
+      throw CloudFileDownloadFailedException(e);
     }
   }
 

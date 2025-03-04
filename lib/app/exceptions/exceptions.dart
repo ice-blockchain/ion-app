@@ -386,11 +386,21 @@ class CloudPermissionFailedException extends IONException {
 }
 
 class CloudFilesGatherFailedException extends IONException {
-  CloudFilesGatherFailedException() : super(10074, 'Files gather from cloud failed');
+  CloudFilesGatherFailedException(this.error) : super(10074, 'Files gather from cloud failed');
+
+  final dynamic error;
+
+  @override
+  String toString() => 'IONException(code: $code, message: $message, error: $error)';
 }
 
 class CloudFileUploadFailedException extends IONException {
-  CloudFileUploadFailedException() : super(10075, 'File upload to cloud failed');
+  CloudFileUploadFailedException(this.error) : super(10075, 'File upload to cloud failed');
+
+  final dynamic error;
+
+  @override
+  String toString() => 'IONException(code: $code, message: $message, error: $error)';
 }
 
 class CloudUploadedFileNotFoundException extends IONException {
@@ -399,7 +409,12 @@ class CloudUploadedFileNotFoundException extends IONException {
 }
 
 class CloudFileDownloadFailedException extends IONException {
-  CloudFileDownloadFailedException() : super(10077, 'File download from cloud failed');
+  CloudFileDownloadFailedException(this.error) : super(10077, 'File download from cloud failed');
+
+  final dynamic error;
+
+  @override
+  String toString() => 'IONException(code: $code, message: $message, error: $error)';
 }
 
 class RecoveryKeysRestoreFailedException extends IONException {
