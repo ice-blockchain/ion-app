@@ -55,6 +55,7 @@ class MessageMetaData extends ConsumerWidget {
     return switch (deliveryStatus) {
       MessageDeliveryStatus.deleted => const SizedBox.shrink(),
       MessageDeliveryStatus.created => const SizedBox.shrink(),
+      MessageDeliveryStatus.failed => const SizedBox.shrink(),
       MessageDeliveryStatus.sent => Assets.svg.iconMessageSent.icon(
           color: context.theme.appColors.strokeElements,
           size: 12.0.s,
@@ -65,10 +66,6 @@ class MessageMetaData extends ConsumerWidget {
         ),
       MessageDeliveryStatus.read => Assets.svg.iconMessageDelivered.icon(
           color: context.theme.appColors.success,
-          size: 12.0.s,
-        ),
-      MessageDeliveryStatus.failed => Assets.svg.iconMessageFailed.icon(
-          color: context.theme.appColors.strokeElements,
           size: 12.0.s,
         ),
     };

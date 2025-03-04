@@ -23,7 +23,7 @@ abstract class IonConnectGiftWrapService {
   Future<EventMessage> createWrap({
     required EventMessage event,
     required String receiverPubkey,
-    required String receiverMasterpubkey,
+    required String receiverMasterPubkey,
     required int contentKind,
     List<String>? expirationTag,
   });
@@ -47,7 +47,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   Future<EventMessage> createWrap({
     required EventMessage event,
     required String receiverPubkey,
-    required String receiverMasterpubkey,
+    required String receiverMasterPubkey,
     required int contentKind,
     List<String>? expirationTag,
   }) async {
@@ -69,7 +69,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
       signer: oneTimeSigner,
       content: encryptedEvent,
       tags: [
-        [RelatedPubkey.tagName, receiverMasterpubkey, '', receiverPubkey],
+        [RelatedPubkey.tagName, receiverMasterPubkey, '', receiverPubkey],
         ['k', contentKind.toString()],
         if (expirationTag != null) expirationTag,
       ],

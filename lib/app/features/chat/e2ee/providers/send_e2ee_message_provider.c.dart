@@ -38,14 +38,18 @@ part 'send_e2ee_message_provider.c.g.dart';
 Future<SendE2eeMessageService> sendE2eeMessageService(
   Ref ref,
 ) async {
+  final sealService = await ref.watch(ionConnectSealServiceProvider.future);
+  final wrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+
   return SendE2eeMessageService(
-    eventSigner: await ref.watch(currentUserIonConnectEventSignerProvider.future),
+    eventSigner: eventSigner,
+    sealService: sealService,
+    wrapService: wrapService,
     env: ref.watch(envProvider.notifier),
     fileCacheService: ref.watch(fileCacheServiceProvider),
     compressionService: ref.watch(compressServiceProvider),
-    sealService: await ref.watch(ionConnectSealServiceProvider.future),
     ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
-    wrapService: await ref.watch(ionConnectGiftWrapServiceProvider.future),
     ionConnectUploadNotifier: ref.watch(ionConnectUploadNotifierProvider.notifier),
     conversationPubkeysNotifier: ref.watch(conversationPubkeysProvider.notifier),
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider) ?? '',
@@ -85,17 +89,17 @@ class SendE2eeMessageService {
   final ConversationPubkeys conversationPubkeysNotifier;
   final MediaEncryptionService mediaEncryptionService;
   final String currentUserMasterPubkey;
+  final ConversationDao conversationDao;
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageDataDao conversationMessageStatusDao;
-  final ConversationDao conversationDao;
 
   Future<void> sendMessage({
     required String content,
     required String conversationId,
     required List<String> participantsMasterPubkeys,
     String? subject,
-    List<MediaFile> mediaFiles = const [],
     List<String>? groupImageTag,
+    List<MediaFile> mediaFiles = const [],
   }) async {
     try {
       if (eventSigner == null) {
@@ -200,6 +204,50 @@ class SendE2eeMessageService {
     } catch (e) {
       throw SendEventException(e.toString());
     }
+  }
+
+  Future<void> resendFailedMessage(EventMessage failedMessageEvent) async {
+    final messageStatuses =
+        await conversationMessageStatusDao.messageStatuses(failedMessageEvent.id);
+
+    final failedParticipantsMasterPubkeysMap = messageStatuses
+      ..removeWhere((key, value) => value != MessageDeliveryStatus.failed);
+
+    final failedParticipantsMasterPubkeys = failedParticipantsMasterPubkeysMap.keys.toList();
+
+    final participantsKeysMap =
+        await conversationPubkeysNotifier.fetchUsersKeys(failedParticipantsMasterPubkeys);
+
+    await Future.wait(
+      failedParticipantsMasterPubkeys.map((masterPubkey) async {
+        final pubkey = participantsKeysMap[masterPubkey];
+
+        if (pubkey == null) {
+          throw UserPubkeyNotFoundException(masterPubkey);
+        }
+
+        final giftWrap = await _createGiftWrap(
+          signer: eventSigner!,
+          receiverPubkey: failedMessageEvent.pubkey,
+          eventMessage: failedMessageEvent,
+          receiverMasterPubkey: masterPubkey,
+        );
+
+        await ionConnectNotifier.sendEvent(
+          giftWrap,
+          cache: false,
+          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+        );
+
+        await conversationMessageStatusDao.add(
+          masterPubkey: masterPubkey,
+          eventMessageId: failedMessageEvent.id,
+          status: masterPubkey == currentUserMasterPubkey
+              ? MessageDeliveryStatus.read
+              : MessageDeliveryStatus.sent,
+        );
+      }),
+    );
   }
 
   Future<EventMessage> _generateFileMetadataEvent({
@@ -332,8 +380,8 @@ class SendE2eeMessageService {
   }
 
   Future<void> _sendKind14Message({
-    required String content,
     required String pubkey,
+    required String content,
     required String masterPubkey,
     required List<List<String>> conversationTags,
   }) async {
@@ -453,7 +501,7 @@ class SendE2eeMessageService {
       event: seal,
       contentKind: kind,
       receiverPubkey: receiverPubkey,
-      receiverMasterpubkey: receiverMasterPubkey,
+      receiverMasterPubkey: receiverMasterPubkey,
       expirationTag: expirationTag,
     );
 

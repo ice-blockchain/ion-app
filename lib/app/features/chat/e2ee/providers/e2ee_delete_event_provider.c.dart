@@ -273,7 +273,7 @@ Future<EventMessage> _createGiftWrap({
     expirationTag: expirationTag,
     receiverPubkey: receiverPubkey,
     contentKind: DeletionRequest.kind,
-    receiverMasterpubkey: receiverMasterPubkey,
+    receiverMasterPubkey: receiverMasterPubkey,
   );
 
   return wrap;
