@@ -27,9 +27,8 @@ class PostMediaCarouselVertical extends StatelessWidget {
     return SizedBox(
       height: itemWidth / aspectRatio,
       child: ListView.separated(
-        padding: EdgeInsets.only(
-          left: ScreenSideOffset.defaultSmallMargin,
-          right: ScreenSideOffset.defaultSmallMargin,
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSideOffset.defaultSmallMargin,
         ),
         itemCount: media.length,
         scrollDirection: Axis.horizontal,
