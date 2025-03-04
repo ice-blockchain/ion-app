@@ -17,6 +17,8 @@ class HeaderActions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final iconMoreColor = context.theme.appColors.onPrimaryAccent;
+
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
     final isCurrentUser = currentUserPubkey == post.masterPubkey;
 
@@ -26,17 +28,13 @@ class HeaderActions extends ConsumerWidget {
           StoryContextMenu(
             pubkey: post.masterPubkey,
             child: SvgShadow(
-              child: Assets.svg.iconMoreStories.icon(
-                color: context.theme.appColors.onPrimaryAccent,
-              ),
+              child: Assets.svg.iconMoreStories.icon(color: iconMoreColor),
             ),
           ),
         SizedBox(width: 16.0.s),
         GestureDetector(
           child: SvgShadow(
-            child: Assets.svg.iconSheetClose.icon(
-              color: context.theme.appColors.onPrimaryAccent,
-            ),
+            child: Assets.svg.iconSheetClose.icon(color: iconMoreColor),
           ),
           onTap: () => context.pop(),
         ),

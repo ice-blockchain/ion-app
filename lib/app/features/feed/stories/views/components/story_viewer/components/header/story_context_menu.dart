@@ -31,6 +31,8 @@ class StoryContextMenu extends HookConsumerWidget {
     final isMuted = ref.watch(globalMuteProvider);
     final menuWidth = useState<double>(100.0.s);
 
+    final i18n = context.i18n;
+
     final updateWidth = useCallback(
       (Size size) {
         if (size.width > menuWidth.value) {
@@ -48,7 +50,7 @@ class StoryContextMenu extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ContextMenuItem(
-              label: context.i18n.button_report,
+              label: i18n.button_report,
               iconAsset: Assets.svg.iconReport,
               onPressed: () {
                 showSimpleBottomSheet<void>(
@@ -60,14 +62,14 @@ class StoryContextMenu extends HookConsumerWidget {
             ),
             const ContextMenuItemDivider(),
             ContextMenuItem(
-              label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
+              label: isMuted ? i18n.button_unmute : i18n.button_mute,
               iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
               onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
               onLayout: updateWidth,
             ),
             const ContextMenuItemDivider(),
             ContextMenuItem(
-              label: context.i18n.button_unfollow,
+              label: i18n.button_unfollow,
               iconAsset: Assets.svg.iconCategoriesUnflow,
               onPressed: () {
                 closeMenu();

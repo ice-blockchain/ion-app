@@ -26,6 +26,8 @@ class StoryViewerActionButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final shareColor = context.theme.appColors.onPrimaryAccent;
+
     return Positioned(
       bottom: bottomPadding,
       right: 16.0.s,
@@ -38,7 +40,7 @@ class StoryViewerActionButtons extends ConsumerWidget {
             borderRadius: 16.0.s,
             iconPadding: 8.0.s,
             icon: Assets.svg.iconBlockShare.icon(
-              color: context.theme.appColors.onPrimaryAccent,
+              color: shareColor,
               size: 20.0.s,
             ),
             onPressed: () async {
@@ -72,6 +74,7 @@ class _SoundButton extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final muteColor = context.theme.appColors.onPrimaryAccent;
     final isMuted = ref.watch(globalMuteProvider);
 
     return StoryControlButton(
@@ -79,11 +82,11 @@ class _SoundButton extends ConsumerWidget {
       iconPadding: 8.0.s,
       icon: isMuted
           ? Assets.svg.iconChannelMute.icon(
-              color: context.theme.appColors.onPrimaryAccent,
+              color: muteColor,
               size: 20.0.s,
             )
           : Assets.svg.iconChannelUnmute.icon(
-              color: context.theme.appColors.onPrimaryAccent,
+              color: muteColor,
               size: 20.0.s,
             ),
       onPressed: () {
@@ -104,9 +107,9 @@ class _LikeButton extends ConsumerWidget {
     final eventReference = post.toEventReference();
     final isLiked = ref.watch(isLikedProvider(eventReference));
 
+    final appColors = context.theme.appColors;
+    final color = isLiked ? appColors.attentionRed : appColors.onPrimaryAccent;
     final icon = isLiked ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff;
-    final color =
-        isLiked ? context.theme.appColors.attentionRed : context.theme.appColors.onPrimaryAccent;
 
     ref.displayErrors(likesNotifierProvider(eventReference));
 

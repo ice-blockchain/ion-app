@@ -20,6 +20,10 @@ class StoryReactionNotification extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiState = ref.watch(emojiReactionsControllerProvider);
 
+    final appTextThemes = context.theme.appTextThemes;
+    final notificationColor = context.theme.appColors.onPrimaryAccent;
+    final i18n = context.i18n;
+
     return Positioned(
       top: 70.0.s,
       left: 0.0.s,
@@ -56,10 +60,8 @@ class StoryReactionNotification extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      context.i18n.reaction_was_sent,
-                      style: context.theme.appTextThemes.body2.copyWith(
-                        color: context.theme.appColors.onPrimaryAccent,
-                      ),
+                      i18n.reaction_was_sent,
+                      style: appTextThemes.body2.copyWith(color: notificationColor),
                     ),
                     Text(
                       ' $emoji',
