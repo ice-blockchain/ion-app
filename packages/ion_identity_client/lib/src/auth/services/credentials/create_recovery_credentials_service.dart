@@ -26,7 +26,7 @@ class CreateRecoveryCredentialsService {
   final IdentitySigner identitySigner;
   final KeyService keyService;
 
-  Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials(
+  Future<RecoveryCredentials> createRecoveryCredentials(
     OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
   ) async {
     final credentialChallenge = await dataSource.createCredentialInit(username: username);
@@ -73,7 +73,7 @@ class CreateRecoveryCredentialsService {
       },
     );
 
-    return CreateRecoveryCredentialsSuccess(
+    return RecoveryCredentials(
       identityKeyName: username,
       recoveryCode: recoveryCode,
       recoveryKeyId: credentialResponse.credentialId,

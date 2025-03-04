@@ -23,7 +23,7 @@ import 'package:ion_identity_client/ion_identity.dart';
 class CreateRecoveryKeySuccessState extends HookWidget {
   const CreateRecoveryKeySuccessState({required this.recoveryData, super.key});
 
-  final CreateRecoveryCredentialsSuccess recoveryData;
+  final RecoveryCredentials recoveryData;
 
   @override
   Widget build(BuildContext context) {
