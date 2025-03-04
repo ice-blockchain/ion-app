@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -62,27 +63,33 @@ class PostBody extends HookConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (content.isNotEmpty)
-              ClipRect(
-                child: SizedBox(
-                  height: maxHeight,
-                  child: TextEditorPreview(
-                    content: content,
-                    enableInteractiveSelection: isTextSelectable,
-                    scrollable: false,
-                  ),
-                ),
+            ScreenSideOffset.small(
+              child: Column(
+                children: [
+                  if (content.isNotEmpty)
+                    ClipRect(
+                      child: SizedBox(
+                        height: maxHeight,
+                        child: TextEditorPreview(
+                          content: content,
+                          enableInteractiveSelection: isTextSelectable,
+                          scrollable: false,
+                        ),
+                      ),
+                    ),
+                  if (maxHeight != null)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        context.i18n.common_show_more,
+                        style: context.theme.appTextThemes.body2.copyWith(
+                          color: context.theme.appColors.darkBlue,
+                        ),
+                      ),
+                    ),
+                ],
               ),
-            if (maxHeight != null)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  context.i18n.common_show_more,
-                  style: context.theme.appTextThemes.body2.copyWith(
-                    color: context.theme.appColors.darkBlue,
-                  ),
-                ),
-              ),
+            ),
             if (media.isNotEmpty)
               Padding(
                 padding: EdgeInsets.only(top: 10.0.s),
@@ -92,9 +99,11 @@ class PostBody extends HookConsumerWidget {
                 ),
               ),
             if (media.isEmpty && firstLinkOperation != null)
-              Padding(
-                padding: EdgeInsets.only(top: 10.0.s),
-                child: UrlPreviewContent(url: firstLinkOperation.value as String),
+              ScreenSideOffset.small(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10.0.s),
+                  child: UrlPreviewContent(url: firstLinkOperation.value as String),
+                ),
               ),
           ],
         );

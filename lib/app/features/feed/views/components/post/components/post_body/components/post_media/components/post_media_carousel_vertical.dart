@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -26,6 +27,9 @@ class PostMediaCarouselVertical extends StatelessWidget {
     return SizedBox(
       height: itemWidth / aspectRatio,
       child: ListView.separated(
+        padding: EdgeInsets.symmetric(
+          horizontal: ScreenSideOffset.defaultSmallMargin,
+        ),
         itemCount: media.length,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) {
