@@ -100,7 +100,7 @@ class _Body extends HookConsumerWidget {
     });
 
     return switch (recoveryData) {
-      AsyncData(:final CreateRecoveryCredentialsSuccess value) =>
+      AsyncData(:final RecoveryCredentials value) =>
         CreateRecoveryKeySuccessState(recoveryData: value),
       AsyncError() => const CreateRecoveryKeyErrorState(),
       _ => const CreateRecoveryKeyLoadingState(),
