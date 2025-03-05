@@ -29,6 +29,7 @@ class EmojiMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      messageEvent: eventMessage,
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 6.0.s),
       child: Row(
