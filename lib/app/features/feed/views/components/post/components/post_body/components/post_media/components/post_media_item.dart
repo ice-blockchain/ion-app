@@ -29,10 +29,9 @@ class PostMediaItem extends HookWidget {
 
     return GestureDetector(
       onTap: () => FullscreenMediaRoute(
-        mediaUrl: mediaItem.url,
-        mediaType: mediaItem.mediaType,
-        heroTag: heroTag,
         eventReference: eventReference.encode(),
+        initialMediaIndex: 0,
+        heroTag: heroTag,
       ).push<void>(context),
       child: Hero(
         tag: heroTag,

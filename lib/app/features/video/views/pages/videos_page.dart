@@ -4,15 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/feed_videos_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class VideosPage extends HookConsumerWidget {
   const VideosPage(this.eventReference, {super.key});
@@ -47,13 +52,35 @@ class VideosPage extends HookConsumerWidget {
       ),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        extendBodyBehindAppBar: true,
         backgroundColor: context.theme.appColors.primaryText,
+        appBar: NavigationAppBar.screen(
+              backgroundColor: Colors.transparent,
+              leading: NavigationBackButton(
+                () => context.pop(),
+                icon: Assets.svg.iconChatBack.icon(
+                  size: NavigationAppBar.actionButtonSide,
+                  color: context.theme.appColors.onPrimaryAccent,
+                ),
+              ),
+              onBackPress: () => context.pop(),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.only(right: 6.0.s),
+                  child: UserInfoMenu(
+                    pubkey: eventReference.pubkey,
+                    iconColor: context.theme.appColors.secondaryBackground,
+                  ),
+                ),
+              ],
+            ),
         body: PageView.builder(
           controller: userPageController,
           itemCount: videos.length,
           scrollDirection: Axis.vertical,
           onPageChanged: (index) => _loadMore(ref, index, videos.length),
           itemBuilder: (_, index) => VideoPage(
+            eventReference: eventReference,
             video: videos[index],
             onVideoEnded: () => userPageController.nextPage(
               duration: 300.ms,

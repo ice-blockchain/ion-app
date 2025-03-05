@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_image_reply_field.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 class FullscreenImage extends StatelessWidget {
@@ -44,22 +43,14 @@ class FullscreenImage extends StatelessWidget {
           color: context.theme.appColors.primaryText,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0.s),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CounterItemsFooter(
-                  eventReference: eventReference,
-                  color: context.theme.appColors.onPrimaryAccent,
-                  bottomPadding: 0,
-                  topPadding: 0,
-                ),
-                SizedBox(height: 11.0.s),
-                const SafeArea(
-                  top: false,
-                  child: FullscreenImageReplyField(),
-                ),
-              ],
+            child: SafeArea(
+              top: false,
+              child: CounterItemsFooter(
+                eventReference: eventReference,
+                color: context.theme.appColors.onPrimaryAccent,
+                bottomPadding: 0,
+                topPadding: 0,
+              ),
             ),
           ),
         ),
