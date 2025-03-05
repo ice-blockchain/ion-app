@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
@@ -14,6 +15,7 @@ import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_asset_form_provider.c.g.dart';
@@ -47,7 +49,14 @@ class SendAssetFormController extends _$SendAssetFormController {
     );
   }
 
-  void setContact(String? pubkey) => state = state.copyWith(contactPubkey: pubkey);
+  Future<void> setContact(String? pubkey) async {
+    state = state.copyWith(contactPubkey: pubkey);
+
+    if (pubkey != null) {
+      final contactMetadata = await ref.read(userMetadataProvider(pubkey).future);
+      Logger.info('contact metadata $contactMetadata');
+    }
+  }
 
   Future<void> setNetwork(NetworkData network) async {
     final wallets = await ref.read(walletsNotifierProvider.future);
