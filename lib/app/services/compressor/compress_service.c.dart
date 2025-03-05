@@ -24,6 +24,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'compress_service.c.g.dart';
 
+final brotliCodec = BrotliCodec(level: 0);
+
 ///
 /// A service that handles file compression.
 /// - Compresses video, audio and image files using FFmpeg with configurable compression parameters;
@@ -256,18 +258,8 @@ class CompressionService {
   ///
   Future<MediaFile> compressWithBrotli(File inputFile) async {
     try {
-      // The input buffer needs to be larger than 50% of the total file size
-      // for it to be compressed correctly. This is due to this issue:
-      // https://github.com/instantiations/es_compression/issues/53
-      // Once it is fixed, the current solution needs to be reconsidered.
-      const bufferPercentage = 0.6;
-      final fileSize = inputFile.lengthSync();
-
-      final brotliCompressor = BrotliCodec(
-        inputBufferLength: (fileSize * bufferPercentage).ceil(),
-      );
       final inputData = await inputFile.readAsBytes();
-      final compressedData = brotliCompressor.encode(inputData);
+      final compressedData = brotliCodec.encode(inputData);
 
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
@@ -282,7 +274,7 @@ class CompressionService {
   Future<File> decompressBrotli(File compressedFile, {String outputExtension = ''}) async {
     try {
       final compressedData = await compressedFile.readAsBytes();
-      final decompressedData = brotli.decode(
+      final decompressedData = brotliCodec.decode(
         Uint8List.fromList(compressedData),
       );
       final outputFile =
