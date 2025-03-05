@@ -34,6 +34,7 @@ class OneToOneMessageList extends HookConsumerWidget {
       child: ScreenSideOffset.small(
         child: CustomScrollView(
           controller: scrollController,
+          physics: const ClampingScrollPhysics(),
           reverse: true,
           slivers: [
             for (final entry in messages.entries) ...[
