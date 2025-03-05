@@ -15,6 +15,7 @@ import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
+import 'package:ion/app/utils/string.dart';
 
 part 'private_direct_message_data.c.freezed.dart';
 
@@ -137,6 +138,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       return MessageType.audio;
     } else if (IonConnectProtocolIdentifierTypeValidator.isProfileIdentifier(content)) {
       return MessageType.profile;
+    } else if (content.isEmoji) {
+      return MessageType.emoji;
     }
 
     return MessageType.text;
