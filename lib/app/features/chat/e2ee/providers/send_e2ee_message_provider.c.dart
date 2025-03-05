@@ -120,13 +120,6 @@ class SendE2eeMessageService {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
 
-            final conversationTags = _generateConversationTags(
-              subject: subject,
-              groupImageTag: groupImageTag,
-              conversationId: conversationId,
-              masterPubkeys: participantsMasterPubkeys,
-            );
-
             // These are used to for uploading state
             final conversationTagsWithDummyMediaTags = _generateConversationTags(
               subject: subject,
@@ -136,7 +129,7 @@ class SendE2eeMessageService {
             )..add([
                 'imeta',
                 'url https://example.com',
-                'm video/mp4',
+                'm ${mediaFiles.first.mimeType}',
                 'alt message',
                 'dim null',
                 'x null',
@@ -204,7 +197,12 @@ class SendE2eeMessageService {
 
             final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
 
-            conversationTags.addAll(imetaTags);
+            final conversationTags = _generateConversationTags(
+              subject: subject,
+              groupImageTag: groupImageTag,
+              conversationId: conversationId,
+              masterPubkeys: participantsMasterPubkeys,
+            )..addAll(imetaTags);
 
             final eventMessageWithMedia = await _createEventMessage(
               previousId: eventMessageWithoutMedia.id,
