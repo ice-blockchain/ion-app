@@ -167,9 +167,3 @@ class _MetaDescription extends StatelessWidget {
     );
   }
 }
-
-String resolveImageUrl(String baseUrl, String imageUrl) {
-  return imageUrl.startsWith('/')
-      ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
-      : imageUrl;
-}
