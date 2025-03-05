@@ -68,7 +68,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         receiverAddress: form.receiverAddress,
         receiverPubkey: form.contactPubkey,
         type: TransactionType.send,
-        networkFeeOption: form.selectedNetworkFeeOption!,
+        networkFeeOption: form.selectedNetworkFeeOption,
       );
     });
   }
