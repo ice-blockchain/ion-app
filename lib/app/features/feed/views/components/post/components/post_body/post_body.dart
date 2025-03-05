@@ -49,6 +49,16 @@ class PostBody extends HookConsumerWidget {
       [content],
     );
 
+    final urlPreview = useMemoized(
+      () => firstLinkOperation != null
+          ? UrlPreviewContent(
+              key: ValueKey(firstLinkOperation.value),
+              url: firstLinkOperation.value as String,
+            )
+          : null,
+      [firstLinkOperation],
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxHeight = maxLines == null
@@ -98,11 +108,11 @@ class PostBody extends HookConsumerWidget {
                   eventReference: entity.toEventReference(),
                 ),
               ),
-            if (media.isEmpty && firstLinkOperation != null)
+            if (media.isEmpty && urlPreview != null)
               ScreenSideOffset.small(
                 child: Padding(
                   padding: EdgeInsets.only(top: 10.0.s),
-                  child: UrlPreviewContent(url: firstLinkOperation.value as String),
+                  child: urlPreview,
                 ),
               ),
           ],

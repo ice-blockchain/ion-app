@@ -7,6 +7,7 @@ class _UrlMetadataPreview extends StatelessWidget {
     required this.meta,
     required this.url,
     required this.favIconUrl,
+    super.key,
   });
 
   final OgpData meta;
@@ -138,10 +139,4 @@ class _UrlMetadataDescription extends StatelessWidget {
       ),
     );
   }
-}
-
-String resolveImageUrl(String baseUrl, String imageUrl) {
-  return imageUrl.startsWith('/')
-      ? Uri.parse(Uri.parse(baseUrl).origin + imageUrl).toString()
-      : imageUrl;
 }

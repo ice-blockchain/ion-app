@@ -25,9 +25,10 @@ class UrlPreviewContent extends HookWidget {
       return const SizedBox.shrink();
     }
 
-    final normalizedUrl = useMemoized(() => normalizeUrl(url));
+    final normalizedUrl = useMemoized(() => normalizeUrl(url), [url]);
 
     return UrlPreview(
+      key: ValueKey(normalizedUrl),
       url: normalizedUrl,
       builder: (meta, favIconUrl) {
         if (meta == null) {
@@ -44,9 +45,10 @@ class UrlPreviewContent extends HookWidget {
             ),
           ),
           child: _UrlMetadataPreview(
+            key: ValueKey('${url}_${meta.hashCode}'),
             meta: meta,
+            url: url,
             favIconUrl: favIconUrl,
-            url: normalizedUrl,
           ),
         );
       },
