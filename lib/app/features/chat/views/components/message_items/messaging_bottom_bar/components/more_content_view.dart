@@ -38,7 +38,7 @@ class MoreContentView extends ConsumerWidget {
             children: [
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPhotos,
-                title: context.i18n.common_photos,
+                title: context.i18n.common_media,
                 //TODO: remove this
                 onTap: () async {
                   final mediaFiles = await MediaPickerRoute(
