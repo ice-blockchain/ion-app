@@ -72,7 +72,7 @@ class MediaEncryptionService {
         );
 
         if (attachment.mediaType == MediaType.unknown) {
-          final decompressedFile = await compressionService.decompressBrotli(file);
+          final decompressedFile = await compressionService.decompressBrotli(decryptedFile);
 
           decryptedDecompressedFiles.add(decompressedFile);
         } else {

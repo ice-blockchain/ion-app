@@ -596,9 +596,7 @@ class SendE2eeMessageService {
                 height: mediaFile.height,
               ),
             MediaType.audio => await compressionService.compressAudio(mediaFile.path),
-            MediaType.unknown => MediaFile(
-                path: (await compressionService.compressWithBrotli(File(mediaFile.path))).path,
-              )
+            MediaType.unknown => await compressionService.compressWithBrotli(File(mediaFile.path)),
           };
 
           return compressedMediaFile;
