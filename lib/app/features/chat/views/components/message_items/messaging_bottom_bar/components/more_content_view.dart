@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -16,6 +17,7 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:mime/mime.dart';
 
 final double moreContentHeight = 206.0.s;
 
@@ -114,7 +116,30 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatDocument,
                 title: context.i18n.common_document,
-                onTap: () {},
+                onTap: () async {
+                  final result = await FilePicker.platform.pickFiles(
+                    allowCompression: false,
+                  );
+                  final firstFile = result?.files.first;
+                  if (firstFile != null && context.mounted && firstFile.path != null) {
+                    final mimeType = lookupMimeType(firstFile.path!);
+                    unawaited(
+                      onSubmitted(
+                        content: firstFile.name,
+                        mediaFiles: [
+                          MediaFile(
+                            path: firstFile.path!,
+                            mimeType: mimeType,
+                            width: firstFile.size,
+                            height: firstFile.size,
+                          ),
+                        ],
+                      ),
+                    );
+
+                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+                  }
+                },
               ),
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPoll,

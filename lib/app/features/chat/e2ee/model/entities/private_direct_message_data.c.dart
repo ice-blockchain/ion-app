@@ -140,6 +140,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       return MessageType.profile;
     } else if (content.isEmoji) {
       return MessageType.emoji;
+    } else if (media.isNotEmpty) {
+      return MessageType.document;
     }
 
     return MessageType.text;
