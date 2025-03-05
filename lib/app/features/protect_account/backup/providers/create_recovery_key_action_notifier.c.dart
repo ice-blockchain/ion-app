@@ -11,7 +11,7 @@ part 'create_recovery_key_action_notifier.c.g.dart';
 @riverpod
 class CreateRecoveryKeyActionNotifier extends _$CreateRecoveryKeyActionNotifier {
   @override
-  FutureOr<CreateRecoveryCredentialsSuccess?> build() {
+  FutureOr<RecoveryCredentials?> build() {
     return null;
   }
 

@@ -106,7 +106,7 @@ class IONIdentityAuth {
   Future<void> rejectToCreateLocalPasskeyCreds() =>
       identitySigner.rejectToCreateLocalPasskeyCreds(username);
 
-  Future<CreateRecoveryCredentialsSuccess> createRecoveryCredentials(
+  Future<RecoveryCredentials> createRecoveryCredentials(
     OnVerifyIdentity<CredentialResponse> onVerifyIdentity,
   ) =>
       createRecoveryCredentialsService.createRecoveryCredentials(onVerifyIdentity);

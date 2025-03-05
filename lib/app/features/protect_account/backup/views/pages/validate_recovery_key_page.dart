@@ -24,7 +24,7 @@ class ValidateRecoveryKeyPage extends ConsumerWidget {
   String? _validateProperty(
     String? inputValue,
     RecoveryKeyProperty property,
-    CreateRecoveryCredentialsSuccess recoveryData,
+    RecoveryCredentials recoveryData,
   ) {
     final propertyValue = switch (property) {
       RecoveryKeyProperty.identityKeyName => recoveryData.identityKeyName,

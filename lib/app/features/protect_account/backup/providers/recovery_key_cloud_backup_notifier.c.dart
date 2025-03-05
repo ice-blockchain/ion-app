@@ -3,6 +3,8 @@
 import 'dart:convert';
 
 import 'package:ion/app/services/cloud_storage/cloud_storage_service.c.dart';
+import 'package:ion/app/services/encryptor/aes_gcm_encryptor.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'recovery_key_cloud_backup_notifier.c.g.dart';
@@ -12,17 +14,25 @@ class RecoveryKeyCloudBackupNotifier extends _$RecoveryKeyCloudBackupNotifier {
   @override
   Future<void> build() async => {};
 
-  Future<void> backup(
-    String identityKeyName,
-  ) async {
+  Future<void> backup({
+    required RecoveryCredentials recoveryData,
+    required String password,
+  }) async {
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {
       final cloudStorage = ref.read(cloudStorageProvider);
-      // TODO: Create new recovery key and encrypt it
-      final content = {'key1': 'value1', 'key2': 'value2'};
-      final stringContent = jsonEncode(content);
-      await cloudStorage.uploadFile('ion/$identityKeyName.json', stringContent);
+      final credentialsJson = recoveryData.toJson();
+      final credentialsString = jsonEncode(credentialsJson);
+      final encryptedCredentials = await ref.read(aesGcmEncryptorProvider).encrypt(
+            credentialsString,
+            password,
+          );
+      // TODO: Additionally encrypt with biometrics if available
+      await cloudStorage.uploadFile(
+        'ion/${recoveryData.identityKeyName}.json',
+        encryptedCredentials,
+      );
     });
   }
 }
