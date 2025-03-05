@@ -106,13 +106,6 @@ class SendE2eeMessageService {
         throw EventSignerNotFoundException();
       }
 
-      final conversationTags = _generateConversationTags(
-        subject: subject,
-        groupImageTag: groupImageTag,
-        conversationId: conversationId,
-        masterPubkeys: participantsMasterPubkeys,
-      );
-
       final participantsKeysMap =
           await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
@@ -127,6 +120,44 @@ class SendE2eeMessageService {
               throw UserPubkeyNotFoundException(masterPubkey);
             }
 
+            final conversationTags = _generateConversationTags(
+              subject: subject,
+              groupImageTag: groupImageTag,
+              conversationId: conversationId,
+              masterPubkeys: participantsMasterPubkeys,
+            );
+
+            // These are used to for uploading state
+            final conversationTagsWithDummyMediaTags = _generateConversationTags(
+              subject: subject,
+              groupImageTag: groupImageTag,
+              conversationId: conversationId,
+              masterPubkeys: participantsMasterPubkeys,
+            )..add([
+                'imeta',
+                'url https://example.com',
+                'm video/mp4',
+                'alt message',
+                'dim null',
+                'x null',
+                'ox null',
+                'expiration null',
+                'encryption-key null null null aes-gcm',
+              ]);
+
+            final eventMessageWithoutMedia = await _createEventMessage(
+              content: content,
+              signer: eventSigner!,
+              tags: conversationTagsWithDummyMediaTags,
+            );
+
+            // We need to insert event message to DB before video is uploaded to
+            // retry if upload failed
+            if (masterPubkey == currentUserMasterPubkey) {
+              await conversationDao.add([eventMessageWithoutMedia]);
+              await eventMessageDao.add(eventMessageWithoutMedia);
+            }
+
             final encryptedMediaFiles =
                 await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
 
@@ -138,6 +169,12 @@ class SendE2eeMessageService {
                 final mac = encryptedMediaFile.$4;
 
                 final oneTimeEventSigner = await Ed25519KeyStore.generate();
+
+                await conversationMessageStatusDao.add(
+                  masterPubkey: masterPubkey,
+                  eventMessageId: eventMessageWithoutMedia.id,
+                  status: MessageDeliveryStatus.created,
+                );
 
                 final uploadResult = await ionConnectUploadNotifier.upload(
                   mediaFile,
@@ -169,11 +206,37 @@ class SendE2eeMessageService {
 
             conversationTags.addAll(imetaTags);
 
-            await _sendKind14Message(
+            final eventMessageWithMedia = await _createEventMessage(
+              previousId: eventMessageWithoutMedia.id,
               content: content,
-              pubkey: pubkey,
+              signer: eventSigner!,
+              tags: conversationTags,
+            );
+
+            final giftWrap = await _createGiftWrap(
+              signer: eventSigner!,
+              receiverPubkey: pubkey,
+              receiverMasterPubkey: masterPubkey,
+              eventMessage: eventMessageWithMedia,
+            );
+
+            // We replace existing event message with the one with uploaded media
+            if (masterPubkey == currentUserMasterPubkey) {
+              await eventMessageDao.add(eventMessageWithMedia);
+            }
+
+            await ionConnectNotifier.sendEvent(
+              giftWrap,
+              cache: false,
+              actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+            );
+
+            await conversationMessageStatusDao.add(
               masterPubkey: masterPubkey,
-              conversationTags: conversationTags,
+              eventMessageId: eventMessageWithMedia.id,
+              status: masterPubkey == currentUserMasterPubkey
+                  ? MessageDeliveryStatus.read
+                  : MessageDeliveryStatus.sent,
             );
           }),
         );
@@ -183,6 +246,13 @@ class SendE2eeMessageService {
           unawaited(file.delete());
         }
       } else {
+        final conversationTags = _generateConversationTags(
+          subject: subject,
+          groupImageTag: groupImageTag,
+          conversationId: conversationId,
+          masterPubkeys: participantsMasterPubkeys,
+        );
+
         // Send copy of the message to each participant
         await Future.wait(
           participantsMasterPubkeys.map((masterPubkey) async {
@@ -453,17 +523,19 @@ class SendE2eeMessageService {
     required String content,
     required EventSigner signer,
     required List<List<String>> tags,
+    String? previousId,
     int kind = PrivateDirectMessageEntity.kind,
   }) async {
     final createdAt = DateTime.now().toUtc();
 
-    final id = EventMessage.calculateEventId(
-      tags: tags,
-      kind: kind,
-      content: content,
-      createdAt: createdAt,
-      publicKey: signer.publicKey,
-    );
+    final id = previousId ??
+        EventMessage.calculateEventId(
+          tags: tags,
+          kind: kind,
+          content: content,
+          createdAt: createdAt,
+          publicKey: signer.publicKey,
+        );
 
     final eventMessage = EventMessage(
       id: id,
