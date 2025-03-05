@@ -45,6 +45,7 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
                   child: ScreenSideOffset.small(
                     child: PostMediaItem(
                       mediaItem: media[i],
+                      mediaIndex: i,
                       aspectRatio: aspectRatio,
                       eventReference: eventReference,
                     ),

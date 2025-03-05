@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_image.dart';
@@ -22,10 +24,6 @@ class AdaptiveMediaView extends HookConsumerWidget {
   final EventReference eventReference;
   final int initialMediaIndex;
 
-  static List<MediaAttachment> _filterKnownMedia(List<MediaAttachment> media) {
-    return media.where((mediaItem) => mediaItem.mediaType != MediaType.unknown).toList();
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final postAsync = ref.watch(ionConnectEntityProvider(eventReference: eventReference));
@@ -36,63 +34,118 @@ class AdaptiveMediaView extends HookConsumerWidget {
           return const SizedBox.shrink();
         }
 
-        final allMedia = _filterKnownMedia(post.data.media.values.toList());
-
-        if (allMedia.isEmpty) {
-          return const SizedBox.shrink();
-        }
-
-        final currentIndex = initialMediaIndex.clamp(0, allMedia.length - 1);
-        final initialMedia = allMedia[currentIndex];
-        final isVideo = initialMedia.mediaType == MediaType.video;
-
-        final videoMedia = allMedia.where((m) => m.mediaType == MediaType.video).toList();
-        final imageMedia = allMedia.where((m) => m.mediaType == MediaType.image).toList();
-
-        final currentMediaList = isVideo ? videoMedia : imageMedia;
-
-        if (currentMediaList.length <= 1) {
-          return _buildSingleMediaView(context, post, initialMedia);
-        }
-
-        final startingIndex = currentMediaList.indexWhere((m) => m.url == initialMedia.url);
-        final pageController =
-            usePageController(initialPage: startingIndex >= 0 ? startingIndex : 0);
-
-        return isVideo
-            ? _buildVerticalVideoCarousel(context, post, videoMedia, pageController)
-            : _buildHorizontalImageCarousel(context, imageMedia, pageController);
+        return _MediaContentHandler(
+          post: post,
+          eventReference: eventReference,
+          initialMediaIndex: initialMediaIndex,
+        );
       },
       orElse: () => const SizedBox.shrink(),
     );
   }
+}
 
-  Widget _buildSingleMediaView(
-    BuildContext context,
-    ModifiablePostEntity post,
-    MediaAttachment media,
-  ) {
-    if (media.mediaType == MediaType.video) {
-      return VideoPage(
-        video: post,
-        eventReference: eventReference,
-      );
-    } else {
-      return FullscreenImage(
-        imageUrl: media.url,
+class _MediaContentHandler extends HookConsumerWidget {
+  const _MediaContentHandler({
+    required this.post,
+    required this.eventReference,
+    required this.initialMediaIndex,
+  });
+
+  final ModifiablePostEntity post;
+  final EventReference eventReference;
+  final int initialMediaIndex;
+
+  static List<MediaAttachment> _filterKnownMedia(List<MediaAttachment> media) {
+    return media.where((mediaItem) => mediaItem.mediaType != MediaType.unknown).toList();
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allMedia = _filterKnownMedia(post.data.media.values.toList());
+
+    if (allMedia.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final currentIndex = initialMediaIndex.clamp(0, allMedia.length - 1);
+    final selectedMedia = allMedia[currentIndex];
+
+    final isVideoSelected = selectedMedia.mediaType == MediaType.video;
+
+    final filteredMedia =
+        allMedia.where((media) => media.mediaType == selectedMedia.mediaType).toList();
+
+    if (filteredMedia.length <= 1) {
+      return _SingleMediaView(
+        post: post,
+        media: selectedMedia,
         eventReference: eventReference,
       );
     }
-  }
 
-  Widget _buildVerticalVideoCarousel(
-    BuildContext context,
-    ModifiablePostEntity post,
-    List<MediaAttachment> videos,
-    PageController controller,
-  ) {
+    final filteredIndex = filteredMedia.indexWhere((media) => media.url == selectedMedia.url);
+    final startIndex = filteredIndex >= 0 ? filteredIndex : 0;
+
+    return isVideoSelected
+        ? _VideoCarousel(
+            post: post,
+            videos: filteredMedia,
+            initialIndex: startIndex,
+            eventReference: eventReference,
+          )
+        : _ImageCarousel(
+            images: filteredMedia,
+            initialIndex: startIndex,
+            eventReference: eventReference,
+          );
+  }
+}
+
+class _SingleMediaView extends StatelessWidget {
+  const _SingleMediaView({
+    required this.post,
+    required this.media,
+    required this.eventReference,
+  });
+
+  final ModifiablePostEntity post;
+  final MediaAttachment media;
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    return media.mediaType == MediaType.video
+        ? VideoPage(
+            video: post,
+            eventReference: eventReference,
+          )
+        : FullscreenImage(
+            imageUrl: media.url,
+            eventReference: eventReference,
+          );
+  }
+}
+
+class _VideoCarousel extends HookWidget {
+  const _VideoCarousel({
+    required this.post,
+    required this.videos,
+    required this.initialIndex,
+    required this.eventReference,
+  });
+
+  final ModifiablePostEntity post;
+  final List<MediaAttachment> videos;
+  final int initialIndex;
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    final pageController = usePageController(initialPage: initialIndex);
+
     return PageView.builder(
-      controller: controller,
+      controller: pageController,
       scrollDirection: Axis.vertical,
       itemCount: videos.length,
       itemBuilder: (context, index) {
@@ -105,7 +158,7 @@ class AdaptiveMediaView extends HookConsumerWidget {
             ),
           ),
           eventReference: eventReference,
-          onVideoEnded: () => controller.nextPage(
+          onVideoEnded: () => pageController.nextPage(
             duration: 300.ms,
             curve: Curves.easeInOut,
           ),
@@ -113,21 +166,54 @@ class AdaptiveMediaView extends HookConsumerWidget {
       },
     );
   }
+}
 
-  Widget _buildHorizontalImageCarousel(
-    BuildContext context,
-    List<MediaAttachment> images,
-    PageController controller,
-  ) {
-    return PageView.builder(
-      controller: controller,
-      itemCount: images.length,
-      itemBuilder: (context, index) {
-        return FullscreenImage(
-          imageUrl: images[index].url,
-          eventReference: eventReference,
-        );
-      },
+class _ImageCarousel extends HookWidget {
+  const _ImageCarousel({
+    required this.images,
+    required this.initialIndex,
+    required this.eventReference,
+  });
+
+  final List<MediaAttachment> images;
+  final int initialIndex;
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    final pageController = usePageController(initialPage: initialIndex);
+
+    return Column(
+      children: [
+        Expanded(
+          child: PageView.builder(
+            controller: pageController,
+            itemCount: images.length,
+            itemBuilder: (context, index) {
+              return FullscreenImage(
+                imageUrl: images[index].url,
+                eventReference: eventReference,
+              );
+            },
+          ),
+        ),
+        SizedBox(height: 20.0.s),
+        ColoredBox(
+          color: context.theme.appColors.primaryText,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+            child: SafeArea(
+              top: false,
+              child: CounterItemsFooter(
+                eventReference: eventReference,
+                color: context.theme.appColors.onPrimaryAccent,
+                bottomPadding: 0,
+                topPadding: 0,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

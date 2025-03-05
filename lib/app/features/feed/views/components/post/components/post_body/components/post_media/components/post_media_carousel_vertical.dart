@@ -54,6 +54,7 @@ class PostMediaCarouselVertical extends HookConsumerWidget {
               ).push<void>(context),
               child: PostMediaItem(
                 mediaItem: media[index],
+                mediaIndex: index,
                 aspectRatio: aspectRatio,
                 eventReference: eventReference,
               ),
