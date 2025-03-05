@@ -2,9 +2,11 @@
 
 import 'dart:io';
 
+import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entites/private_direct_message_data.c.dart';
@@ -12,11 +14,11 @@ import 'package:ion/app/features/chat/views/components/message_items/message_ite
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:mime/mime.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class DocumentMessage extends HookConsumerWidget {
   const DocumentMessage({
@@ -34,30 +36,23 @@ class DocumentMessage extends HookConsumerWidget {
     final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
     final filePath = useState<String>('');
-    final fileSize = useState<String>('');
-    final fileData = useFuture(
-      useMemoized(
-        () async {
-          final encryptedMedia = await ref
-              .read(mediaEncryptionServiceProvider)
-              .retreiveEncryptedMedia(entity.data.media.values.toList());
+    final fileSizeInFormat = useState<String>('');
 
-          return encryptedMedia.first.path;
-        },
-        [],
-      ),
-    );
-
-    useEffect(
+    useOnInit(
       () {
-        if (fileData.data != null) {
-          filePath.value = fileData.data!;
-          fileSize.value =
-              '${(File(filePath.value).lengthSync() / (1024 * 1024)).toStringAsFixed(1)} MB';
-        }
-        return null;
+        ref
+            .read(mediaEncryptionServiceProvider)
+            .retreiveEncryptedMedia(entity.data.media.values.toList())
+            .then(
+          (encryptedMedia) {
+            if (context.mounted) {
+              filePath.value = encryptedMedia.first.path;
+              fileSizeInFormat.value = filesize(File(filePath.value).lengthSync());
+            }
+          },
+        );
       },
-      [fileData.data],
+      [],
     );
 
     return MessageItemWrapper(
@@ -66,9 +61,19 @@ class DocumentMessage extends HookConsumerWidget {
         horizontal: 12.0.s,
         vertical: 12.0.s,
       ),
-      child: VisibilityDetector(
-        key: ValueKey(eventMessage.id),
-        onVisibilityChanged: (info) {},
+      child: GestureDetector(
+        onTap: () {
+          Share.shareXFiles(
+            [
+              XFile.fromData(
+                File(filePath.value).readAsBytesSync(),
+                mimeType: lookupMimeType(entity.data.content),
+                name: entity.data.content,
+              ),
+            ],
+            subject: entity.data.content,
+          );
+        },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,19 +85,8 @@ class DocumentMessage extends HookConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      _DownloadButton(
-                        onPressed: () {
-                          Share.shareXFiles(
-                            [
-                              XFile.fromData(
-                                File(filePath.value).readAsBytesSync(),
-                                mimeType: lookupMimeType(entity.data.content),
-                                name: entity.data.content,
-                              ),
-                            ],
-                            subject: entity.data.content,
-                          );
-                        },
+                      _DocumentIcon(
+                        isLoading: filePath.value.isEmpty,
                       ),
                       SizedBox(
                         width: 12.0.s,
@@ -112,7 +106,7 @@ class DocumentMessage extends HookConsumerWidget {
                               maxLines: 1,
                             ),
                             Text(
-                              fileSize.value,
+                              fileSizeInFormat.value,
                               style: context.theme.appTextThemes.caption2.copyWith(
                                 color: isMe
                                     ? context.theme.appColors.onPrimaryAccent
@@ -142,32 +136,33 @@ class DocumentMessage extends HookConsumerWidget {
   }
 }
 
-class _DownloadButton extends StatelessWidget {
-  const _DownloadButton({
-    required this.onPressed,
+class _DocumentIcon extends StatelessWidget {
+  const _DocumentIcon({
+    required this.isLoading,
   });
 
-  final VoidCallback onPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: EdgeInsets.all(8.0.s),
-        decoration: BoxDecoration(
-          color: context.theme.appColors.tertararyBackground,
-          borderRadius: BorderRadius.circular(12.0.s),
-          border: Border.all(
-            color: context.theme.appColors.onTerararyFill,
-            width: 1.0.s,
-          ),
-        ),
-        child: Assets.svg.iconSecurityDownload.icon(
-          size: 20.0.s,
-          color: context.theme.appColors.primaryAccent,
+    return Container(
+      padding: EdgeInsets.all(8.0.s),
+      decoration: BoxDecoration(
+        color: context.theme.appColors.tertararyBackground,
+        borderRadius: BorderRadius.circular(12.0.s),
+        border: Border.all(
+          color: context.theme.appColors.onTerararyFill,
+          width: 1.0.s,
         ),
       ),
+      child: isLoading
+          ? const IONLoadingIndicator(
+              type: IndicatorType.dark,
+            )
+          : Assets.svg.iconFeedAddfile.icon(
+              size: 20.0.s,
+              color: context.theme.appColors.primaryAccent,
+            ),
     );
   }
 }
