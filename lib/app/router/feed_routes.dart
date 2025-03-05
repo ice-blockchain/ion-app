@@ -287,22 +287,19 @@ class VideosRoute extends BaseRouteData {
 
 class FullscreenMediaRoute extends BaseRouteData {
   FullscreenMediaRoute({
-    required this.mediaUrl,
-    required this.mediaType,
+    required this.initialMediaIndex,
     required this.eventReference,
     required this.heroTag,
   }) : super(
           child: FullscreenMediaPage(
-            mediaUrl: mediaUrl,
-            mediaType: mediaType,
+            initialMediaIndex: initialMediaIndex,
             heroTag: heroTag,
             eventReference: EventReference.fromEncoded(eventReference),
           ),
           type: IceRouteType.fade,
         );
 
-  final String mediaUrl;
-  final MediaType mediaType;
+  final int initialMediaIndex;
   final String heroTag;
   final String eventReference;
 }

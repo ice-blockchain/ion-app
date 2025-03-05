@@ -8,9 +8,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/video/views/components/video_actions.dart';
-import 'package:ion/app/features/video/views/components/video_controls.dart';
-import 'package:ion/app/features/video/views/components/video_header.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
@@ -20,11 +19,13 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoPage extends HookConsumerWidget {
   const VideoPage({
     required this.video,
+    required this.eventReference,
     this.onVideoEnded,
     super.key,
   });
 
   final ModifiablePostEntity video;
+  final EventReference eventReference;
   final VoidCallback? onVideoEnded;
 
   @override
@@ -78,9 +79,7 @@ class VideoPage extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const VideoHeader(),
                 const Spacer(),
-                VideoControls(videoPath: videoPath),
                 VideoPostInfo(videoPost: video),
                 VideoProgress(
                   controller: playerController,
