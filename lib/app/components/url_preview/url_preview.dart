@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/url_preview/providers/url_metadata_provider.c.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
-class UrlPreview extends HookWidget {
+class UrlPreview extends HookConsumerWidget {
   const UrlPreview({
     required this.url,
     required this.builder,
     super.key,
   });
-
-  static final Map<String, OgpData?> _metadataCache = {};
 
   final String url;
   final Widget Function(OgpData? meta, String favIconUrl) builder;
@@ -21,43 +21,33 @@ class UrlPreview extends HookWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final metadata = useState<OgpData?>(_metadataCache[url]);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final metadataAsync = ref.watch(urlMetadataProvider(url));
     final isLoading = useState(false);
 
     useEffect(
       () {
-        if (metadata.value != null) return null;
-
-        Future<void> loadMetadata() async {
-          if (_metadataCache.containsKey(url)) {
-            metadata.value = _metadataCache[url];
-            return;
-          }
-
-          isLoading.value = true;
-          try {
-            final result = await OgpDataExtract.execute(url);
-            _metadataCache[url] = result;
-            metadata.value = result;
-          } catch (e) {
-            _metadataCache[url] = null;
-            metadata.value = null;
-          } finally {
-            isLoading.value = false;
-          }
-        }
-
-        loadMetadata();
+        if (!metadataAsync.isLoading) return null;
+        isLoading.value = true;
         return null;
       },
-      [url],
+      [metadataAsync.isLoading],
     );
 
-    if (isLoading.value) {
+    useEffect(
+      () {
+        if (metadataAsync.hasValue) {
+          isLoading.value = false;
+        }
+        return null;
+      },
+      [metadataAsync.hasValue],
+    );
+
+    if (isLoading.value || metadataAsync.isLoading) {
       return const SizedBox.shrink();
     }
 
-    return builder(metadata.value, _resolveFavIconUrl(url));
+    return builder(metadataAsync.valueOrNull, _resolveFavIconUrl(url));
   }
 }
