@@ -16,10 +16,12 @@ class PostMediaItem extends HookWidget {
     required this.mediaItem,
     required this.aspectRatio,
     required this.eventReference,
+    this.mediaIndex = 0,
     super.key,
   });
 
   final MediaAttachment mediaItem;
+  final int mediaIndex;
   final double aspectRatio;
   final EventReference eventReference;
 
@@ -29,10 +31,9 @@ class PostMediaItem extends HookWidget {
 
     return GestureDetector(
       onTap: () => FullscreenMediaRoute(
-        mediaUrl: mediaItem.url,
-        mediaType: mediaItem.mediaType,
-        heroTag: heroTag,
         eventReference: eventReference.encode(),
+        initialMediaIndex: mediaIndex,
+        heroTag: heroTag,
       ).push<void>(context),
       child: Hero(
         tag: heroTag,
