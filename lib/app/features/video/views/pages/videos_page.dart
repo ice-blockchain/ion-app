@@ -55,25 +55,25 @@ class VideosPage extends HookConsumerWidget {
         extendBodyBehindAppBar: true,
         backgroundColor: context.theme.appColors.primaryText,
         appBar: NavigationAppBar.screen(
-              backgroundColor: Colors.transparent,
-              leading: NavigationBackButton(
-                () => context.pop(),
-                icon: Assets.svg.iconChatBack.icon(
-                  size: NavigationAppBar.actionButtonSide,
-                  color: context.theme.appColors.onPrimaryAccent,
-                ),
-              ),
-              onBackPress: () => context.pop(),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(right: 6.0.s),
-                  child: UserInfoMenu(
-                    pubkey: eventReference.pubkey,
-                    iconColor: context.theme.appColors.secondaryBackground,
-                  ),
-                ),
-              ],
+          backgroundColor: Colors.transparent,
+          leading: NavigationBackButton(
+            () => context.pop(),
+            icon: Assets.svg.iconChatBack.icon(
+              size: NavigationAppBar.actionButtonSide,
+              color: context.theme.appColors.onPrimaryAccent,
             ),
+          ),
+          onBackPress: () => context.pop(),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 6.0.s),
+              child: UserInfoMenu(
+                pubkey: eventReference.pubkey,
+                iconColor: context.theme.appColors.secondaryBackground,
+              ),
+            ),
+          ],
+        ),
         body: PageView.builder(
           controller: userPageController,
           itemCount: videos.length,
