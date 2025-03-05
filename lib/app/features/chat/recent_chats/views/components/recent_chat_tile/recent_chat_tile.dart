@@ -216,6 +216,7 @@ class ChatPreview extends HookConsumerWidget {
           child: Text(
             switch (messageType) {
               MessageType.text => content,
+              MessageType.emoji => content,
               MessageType.video => context.i18n.common_video,
               MessageType.audio => context.i18n.common_voice_message,
               MessageType.profile => ref
@@ -261,6 +262,7 @@ class RecentChatMessageIcon extends StatelessWidget {
 
   String? _getMessageIcon() => switch (messageType) {
         MessageType.text => null,
+        MessageType.emoji => null,
         MessageType.video => Assets.svg.iconFeedVideos,
         MessageType.audio => Assets.svg.iconChatVoicemessage,
         MessageType.profile => Assets.svg.iconProfileUsertab,

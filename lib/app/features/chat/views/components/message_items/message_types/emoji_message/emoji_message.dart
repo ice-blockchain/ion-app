@@ -1,67 +1,50 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/forwarded_message_info/forwarded_message_info.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-class EmojiMessage extends StatelessWidget {
+class EmojiMessage extends HookConsumerWidget {
   const EmojiMessage({
-    required this.emoji,
-    required this.isMe,
-    required this.createdAt,
-    this.author,
-    this.reactions,
-    this.hasForwardedMessage = false,
+    required this.eventMessage,
     this.isLastMessageFromAuthor = true,
     super.key,
   });
-  final bool isMe;
-  final String emoji;
-  final DateTime createdAt;
-  final List<MessageReactionGroup>? reactions;
+
   final bool isLastMessageFromAuthor;
-  final bool hasForwardedMessage;
-  final MessageAuthor? author;
+  final EventMessage eventMessage;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
+
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+
     return MessageItemWrapper(
       isMe: isMe,
+      messageEvent: eventMessage,
       isLastMessageFromAuthor: isLastMessageFromAuthor,
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: 12.0.s,
-        vertical: 6.0.s,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 6.0.s),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          MessageAuthorNameWidget(author: author),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: (reactions != null || hasForwardedMessage)
-                ? CrossAxisAlignment.end
-                : CrossAxisAlignment.center,
+          Column(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (hasForwardedMessage) ForwardedMessageInfo(isMe: isMe, isPublic: true),
-                  Text(
-                    emoji,
-                    style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                  ),
-                  //TODO: add metadata
-                  //MessageReactions(reactions: reactions),
-                ],
+              Text(
+                entity.data.content,
+                style: context.theme.appTextThemes.headline1.copyWith(height: 1),
               ),
-              //TODO: add metadata
-              // MessageMetaData(isMe: isMe, createdAt: createdAt),
+              MessageReactions(eventMessage: eventMessage, isMe: isMe),
             ],
           ),
+          MessageMetaData(eventMessage: eventMessage),
         ],
       ),
     );

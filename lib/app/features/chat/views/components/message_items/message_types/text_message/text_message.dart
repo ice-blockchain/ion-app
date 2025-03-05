@@ -20,7 +20,6 @@ class TextMessage extends HookConsumerWidget {
   });
 
   final bool isLastMessageFromAuthor;
-  // final RepliedMessage? repliedMessage;
   final EventMessage eventMessage;
 
   @override
@@ -48,14 +47,6 @@ class TextMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //TODO: show when group messages are implemented
-            // MessageAuthorNameWidget(author: author),
-            // if (repliedMessage case final RepliedMessage replied)
-            //   RepliedMessageInfo(
-            //     isMe: isMe,
-            //     sender: replied.author,
-            //     message: replied.message,
-            //   ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,

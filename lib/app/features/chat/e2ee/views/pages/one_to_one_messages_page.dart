@@ -118,14 +118,17 @@ class _MessagesList extends ConsumerWidget {
         ref.watch(conversationMessagesProvider(conversationId!, ConversationType.oneToOne));
 
     return Expanded(
-      child: messages.maybeWhen(
-        data: (messages) {
-          if (messages.isEmpty) {
-            return const E2eeConversationEmptyView();
-          }
-          return OneToOneMessageList(messages);
-        },
-        orElse: E2eeConversationEmptyView.new,
+      child: GestureDetector(
+        onTap: FocusManager.instance.primaryFocus?.unfocus,
+        child: messages.maybeWhen(
+          data: (messages) {
+            if (messages.isEmpty) {
+              return const E2eeConversationEmptyView();
+            }
+            return OneToOneMessageList(messages);
+          },
+          orElse: E2eeConversationEmptyView.new,
+        ),
       ),
     );
   }
