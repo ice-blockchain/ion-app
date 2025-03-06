@@ -15,7 +15,6 @@ import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_asset_form_provider.c.g.dart';
@@ -52,9 +51,16 @@ class SendAssetFormController extends _$SendAssetFormController {
   Future<void> setContact(String? pubkey) async {
     state = state.copyWith(contactPubkey: pubkey);
 
-    if (pubkey != null) {
+    final network = state.network;
+
+    if (pubkey != null && network != null) {
       final contactMetadata = await ref.read(userMetadataProvider(pubkey).future);
-      Logger.info('contact metadata $contactMetadata');
+      final walletAddress = contactMetadata?.data.wallets?[network.id];
+
+      // Assuming that wallet address shouldn't be null because of the check during selection
+      if (walletAddress != null) {
+        state = state.copyWith(receiverAddress: walletAddress);
+      }
     }
   }
 

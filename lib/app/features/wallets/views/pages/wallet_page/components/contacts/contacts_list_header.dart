@@ -31,7 +31,7 @@ class ContactListHeader extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              final pubkey = await NftSelectFriendRoute().push<String>(context);
+              final pubkey = await SelectFriendRoute().push<String>(context);
               if (pubkey != null) {
                 if (context.mounted) {
                   final needToEnable2FA = await ContactRoute(pubkey: pubkey).push<bool>(context);

@@ -20,6 +20,9 @@ class WalletRoutes {
     ...walletManagementRoutes,
     ...nftSendRoutes,
     TypedShellRoute<ModalShellRouteData>(
+      routes: [TypedGoRoute<SelectFriendRoute>(path: 'select-friend')],
+    ),
+    TypedShellRoute<ModalShellRouteData>(
       routes: [TypedGoRoute<ScanWalletRoute>(path: 'scan-wallet')],
     ),
     TypedGoRoute<CoinsDetailsRoute>(path: 'coin-details'),
@@ -221,19 +224,37 @@ class CoinsSendFormRoute extends BaseRouteData {
 }
 
 class CoinsSelectFriendRoute extends BaseRouteData {
-  CoinsSelectFriendRoute()
+  CoinsSelectFriendRoute({required this.networkId})
       : super(
-          child: const FriendsModal(),
+          child: ContactPickerModal(
+            networkId: networkId,
+            validatorType: FriendPickerValidatorType.networkWallet,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String networkId;
+}
+
+class SelectFriendRoute extends BaseRouteData {
+  SelectFriendRoute()
+      : super(
+          child: const ContactPickerModal(),
           type: IceRouteType.bottomSheet,
         );
 }
 
 class NftSelectFriendRoute extends BaseRouteData {
-  NftSelectFriendRoute()
+  NftSelectFriendRoute({required this.networkId})
       : super(
-          child: const FriendsModal(),
+          child: ContactPickerModal(
+            networkId: networkId,
+            validatorType: FriendPickerValidatorType.networkWallet,
+          ),
           type: IceRouteType.bottomSheet,
         );
+
+  final String networkId;
 }
 
 class CoinsSendFormConfirmationRoute extends BaseRouteData {

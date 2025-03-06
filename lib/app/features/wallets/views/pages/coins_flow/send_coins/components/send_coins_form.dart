@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -107,17 +109,25 @@ class SendCoinsForm extends HookConsumerWidget {
                     ContactInputSwitcher(
                       pubkey: selectedContactPubkey,
                       address: formController.receiverAddress,
-                      onClearTap: (pubkey) => notifier.setContact(null),
+                      onClearTap: (pubkey) {
+                        notifier
+                          ..setContact(null)
+                          ..setReceiverAddress('');
+                      },
                       onWalletAddressChanged: (String? value) {
                         if (value != null && value.isNotEmpty) {
                           notifier.setReceiverAddress(value);
                         }
                       },
                       onContactTap: () async {
-                        final pubkey = await CoinsSelectFriendRoute().push<String>(context);
+                        final pubkey = await CoinsSelectFriendRoute(
+                          networkId: formController.network!.id,
+                        ).push<String>(context);
 
                         if (pubkey != null) {
-                          notifier.setContact(pubkey);
+                          unawaited(
+                            notifier.setContact(pubkey),
+                          );
                         }
                       },
                       onScanPressed: () async {
