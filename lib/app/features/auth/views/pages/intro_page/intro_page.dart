@@ -30,7 +30,15 @@ class IntroPage extends HookConsumerWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          if (videoController.value.isInitialized)
+          // Fallback white background if the video isn't initialized or an error occurs.
+          if (!videoController.value.isInitialized || videoController.value.hasError)
+            ColoredBox(
+              color: Colors.white,
+              child: Center(
+                child: Assets.svg.logo.logoCircle.icon(size: 148.0.s),
+              ),
+            )
+          else
             Center(
               child: AspectRatio(
                 aspectRatio: videoController.value.aspectRatio,
