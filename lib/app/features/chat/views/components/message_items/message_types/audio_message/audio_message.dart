@@ -113,6 +113,7 @@ class AudioMessage extends HookConsumerWidget {
       isMe: isMe,
       messageEvent: eventMessage,
       contentPadding: contentPadding,
+      messageEvent: eventMessage,
       child: VisibilityDetector(
         key: ValueKey(audioUrl),
         onVisibilityChanged: (info) {
