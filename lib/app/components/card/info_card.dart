@@ -44,7 +44,7 @@ class InfoCard extends StatelessWidget {
               ),
             ),
           _ => const SizedBox()
-        }
+        },
       ],
     );
   }

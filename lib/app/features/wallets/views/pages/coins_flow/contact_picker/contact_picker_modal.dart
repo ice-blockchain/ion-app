@@ -29,28 +29,30 @@ class ContactPickerModal extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final validator = useCallback((
-      WidgetRef ref,
-      BuildContext context,
-      UserMetadataEntity user,
-    ) async {
-      if (validatorType == ContactPickerValidatorType.none) return true;
-      if (networkId == null) return true;
+    final validator = useCallback(
+      (
+        WidgetRef ref,
+        BuildContext context,
+        UserMetadataEntity user,
+      ) async {
+        if (validatorType == ContactPickerValidatorType.none || networkId == null) return true;
 
-      final network = await ref.read(networkByIdProvider(networkId!).future);
-      if (network == null) return false;
+        final network = await ref.read(networkByIdProvider(networkId!).future);
+        if (network == null) return false;
 
-      final address = user.data.wallets?[network.id];
-      if (address != null) return true;
+        final address = user.data.wallets?[network.id];
+        if (address != null) return true;
 
-      if (context.mounted) {
-        unawaited(
-          showContactWithoutWalletError(context, user: user, network: network),
-        );
-      }
+        if (context.mounted) {
+          unawaited(
+            showContactWithoutWalletError(context, user: user, network: network),
+          );
+        }
 
-      return false;
-    }, [validatorType, networkId]);
+        return false;
+      },
+      [validatorType, networkId],
+    );
 
     return SheetContent(
       topPadding: 0,
