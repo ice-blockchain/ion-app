@@ -6,6 +6,7 @@ enum Permission {
   camera,
   photos,
   cloud,
+  microphone,
 }
 
 enum PermissionStatus {

@@ -2,7 +2,6 @@
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
@@ -13,7 +12,7 @@ class CancelRecordButton extends ConsumerWidget {
     super.key,
   });
 
-  final ObjectRef<RecorderController> recorderController;
+  final RecorderController recorderController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,7 +20,7 @@ class CancelRecordButton extends ConsumerWidget {
       padding: EdgeInsets.only(left: 16.0.s),
       child: GestureDetector(
         onTap: () {
-          recorderController.value.stop();
+          recorderController.stop();
           ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
         },
         child: Text(

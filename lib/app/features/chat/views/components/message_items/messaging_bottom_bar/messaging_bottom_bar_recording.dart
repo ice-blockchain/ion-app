@@ -16,16 +16,14 @@ import 'package:mime/mime.dart';
 class BottomBarRecordingView extends HookConsumerWidget {
   const BottomBarRecordingView({
     required this.onRecordingFinished,
+    required this.recorderController,
     super.key,
   });
 
   final void Function(MediaFile mediaFile) onRecordingFinished;
-
+  final RecorderController recorderController;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recorderController = useRef(
-      RecorderController(),
-    );
     final playerController = useRef(
       PlayerController(),
     );
@@ -45,20 +43,23 @@ class BottomBarRecordingView extends HookConsumerWidget {
 
     useEffect(
       () {
-        recorderController.value.record();
-        recorderController.value.onCurrentDuration.listen((event) {
+        final durationSubscription = recorderController.onCurrentDuration.listen((event) {
           duration.value = formatDuration(event);
         });
 
-        playerController.value.onPlayerStateChanged.listen((event) {
+        final playerStateSubscription = playerController.value.onPlayerStateChanged.listen((event) {
           if (event != PlayerState.stopped) {
             playerState.value = event;
           }
         });
 
+        recorderController.record();
+
         return () {
+          durationSubscription.cancel();
+          playerStateSubscription.cancel();
           playerController.value.dispose();
-          recorderController.value.dispose();
+          recorderController.reset();
         };
       },
       [],
@@ -67,7 +68,7 @@ class BottomBarRecordingView extends HookConsumerWidget {
     useEffect(
       () {
         if (bottomBarState.isVoicePaused) {
-          recorderController.value.stop().then((path) {
+          recorderController.stop().then((path) {
             if (path == null) {
               return;
             }

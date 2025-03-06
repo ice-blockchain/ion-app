@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,6 +20,7 @@ class MessagingBottomBar extends HookConsumerWidget {
 
     final controller = useTextEditingController();
     final recordedMediaFile = useState<MediaFile?>(null);
+    final recorderController = useRef(RecorderController());
 
     return Stack(
       alignment: Alignment.center,
@@ -32,9 +34,11 @@ class MessagingBottomBar extends HookConsumerWidget {
             onRecordingFinished: (mediaFile) {
               recordedMediaFile.value = mediaFile;
             },
+            recorderController: recorderController.value,
           ),
         ActionButton(
           controller: controller,
+          recorderController: recorderController.value,
           onSubmitted: () async {
             if (recordedMediaFile.value != null) {
               await onSubmitted(content: controller.text, mediaFiles: [recordedMediaFile.value!]);
