@@ -98,10 +98,10 @@ packages:
     dependency: "direct main"
     description:
       name: audio_waveforms
-      sha256: "9fbd314cd4f67e8964df960548ea3b56f829716879527caafb8f3d76ee7e6bf0"
+      sha256: "658fef41bbab299184b65ba2fd749e8ec658c1f7d54a21f7cf97fa96b173b4ce"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.3.0"
   back_button_interceptor:
     dependency: "direct main"
     description:

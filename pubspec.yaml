@@ -10,7 +10,7 @@ environment:
   flutter: "3.27.4"
 
 dependencies:
-  audio_waveforms: ^1.1.1
+  audio_waveforms: ^1.3.0
   back_button_interceptor: ^7.0.3
   bech32: ^0.2.2
   cached_network_image: ^3.3.1

@@ -18,7 +18,7 @@ class _PlayPauseButton extends StatelessWidget {
         if (audioPlaybackState.value?.isPlaying ?? false) {
           audioPlaybackController.pausePlayer();
         } else {
-          audioPlaybackController.startPlayer(finishMode: FinishMode.pause);
+          audioPlaybackController.startPlayer();
         }
       },
       child: Container(
