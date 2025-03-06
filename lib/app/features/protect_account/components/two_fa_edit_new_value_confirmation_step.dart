@@ -13,8 +13,10 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/data/models/twofa_type.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_code_input.dart';
+import 'package:ion/app/features/auth/views/pages/recover_user_twofa_page/components/twofa_try_again_page.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/edit_twofa_notifier.c.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 
 class TwoFaEditConfirmNewValueStep extends HookConsumerWidget {
@@ -38,7 +40,22 @@ class TwoFaEditConfirmNewValueStep extends HookConsumerWidget {
 
     final editTwoFaCodeNotifier = ref.watch(editTwoFaCodeNotifierProvider);
 
-    ref.displayErrors(editTwoFaCodeNotifierProvider);
+    ref
+      ..listenError(
+        editTwoFaCodeNotifierProvider,
+        (e) {
+          if (e.runtimeType == InvalidTwoFaCodeException) {
+            showSimpleBottomSheet<void>(
+              context: ref.context,
+              child: const TwoFaTryAgainPage(),
+            );
+          }
+        },
+      )
+      ..displayErrors(
+        editTwoFaCodeNotifierProvider,
+        excludedExceptions: {InvalidTwoFaCodeException},
+      );
 
     return Form(
       key: formKey.value,
