@@ -165,6 +165,7 @@ class _VideoCarousel extends HookWidget {
       itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoPage(
+          key: ValueKey('video_${videos[index].url}'),
           video: post,
           eventReference: eventReference,
           videoUrl: videos[index].url,
