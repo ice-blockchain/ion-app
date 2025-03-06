@@ -28,7 +28,6 @@ class RecoveryKeyCloudBackupNotifier extends _$RecoveryKeyCloudBackupNotifier {
             credentialsString,
             password,
           );
-      // TODO: Additionally encrypt with biometrics if available
       await cloudStorage.uploadFile(
         'ion/${recoveryData.identityKeyName}.json',
         encryptedCredentials,

@@ -70,6 +70,9 @@ import 'package:ion/app/features/protect_account/authenticator/views/pages/setup
 import 'package:ion/app/features/protect_account/backup/views/components/errors/secure_account_error_alert.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_options_page.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/backup_recovery_keys_modal.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/backup_with_cloud_page/backup_with_cloud_page.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/backup_with_cloud_page/backup_with_cloud_success_page.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/backup_with_cloud_page/components/cloud_disabled_modal.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/create_recovery_key_page.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/recovery_keys_success_page.dart';
 import 'package:ion/app/features/protect_account/backup/views/pages/validate_recovery_key_page.dart';

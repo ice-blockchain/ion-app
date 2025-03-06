@@ -15,6 +15,21 @@ final class ICloudStorageService extends CloudStorageService {
   final String containerId;
 
   @override
+  Future<bool> isAvailable() async {
+    try {
+      await ICloudStorage.gather(
+        containerId: containerId,
+      );
+      return true;
+    } catch (e) {
+      if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
+        return false;
+      }
+      throw CloudFilesGatherFailedException(e);
+    }
+  }
+
+  @override
   Future<List<String>> listFilesPaths({String? directory}) async {
     try {
       final fileList = await ICloudStorage.gather(

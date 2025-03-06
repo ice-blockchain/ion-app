@@ -8,6 +8,9 @@ class ProtectAccountRoutes {
     TypedGoRoute<SecureAccountOptionsRoute>(path: 'secure-account-options'),
     TypedGoRoute<SecureAccountErrorRoute>(path: 'secure-account-error'),
     TypedGoRoute<BackupOptionsRoute>(path: 'backup-options'),
+    TypedGoRoute<BackupWithCloudDisabledRoute>(path: 'backup-cloud-disabled'),
+    TypedGoRoute<BackupWithCloudRoute>(path: 'backup-with-cloud'),
+    TypedGoRoute<BackupWithCloudSuccessRoute>(path: 'backup-with-cloud-success'),
     TypedGoRoute<BackupRecoveryKeysRoute>(path: 'backup-recovery-keys'),
     TypedGoRoute<CreateRecoveryKeyRoute>(path: 'recovery-keys-save'),
     TypedGoRoute<ValidateRecoveryKeyRoute>(path: 'recovery-keys-input'),
@@ -56,6 +59,30 @@ class BackupOptionsRoute extends BaseRouteData {
   BackupOptionsRoute()
       : super(
           child: const BackupOptionsPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class BackupWithCloudDisabledRoute extends BaseRouteData {
+  BackupWithCloudDisabledRoute()
+      : super(
+          child: const CloudDisabledModal(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class BackupWithCloudRoute extends BaseRouteData {
+  BackupWithCloudRoute()
+      : super(
+          child: const BackupWithCloudPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class BackupWithCloudSuccessRoute extends BaseRouteData {
+  BackupWithCloudSuccessRoute()
+      : super(
+          child: const BackupWithCloudSuccessPage(),
           type: IceRouteType.bottomSheet,
         );
 }

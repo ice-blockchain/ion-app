@@ -57,7 +57,8 @@ class PermissionHandlerStrategy extends PermissionStrategy {
       Permission.camera => ph.Permission.camera,
       Permission.contacts => ph.Permission.contacts,
       Permission.notifications => ph.Permission.notification,
-      Permission.photos => ph.Permission.photos
+      Permission.photos => ph.Permission.photos,
+      Permission.cloud => ph.Permission.unknown,
     };
 
     return Future.value(permission);
