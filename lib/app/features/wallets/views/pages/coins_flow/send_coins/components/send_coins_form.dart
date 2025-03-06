@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -124,11 +122,7 @@ class SendCoinsForm extends HookConsumerWidget {
                           networkId: formController.network!.id,
                         ).push<String>(context);
 
-                        if (pubkey != null) {
-                          unawaited(
-                            notifier.setContact(pubkey),
-                          );
-                        }
+                        if (pubkey != null) notifier.setContact(pubkey);
                       },
                       onScanPressed: () async {
                         final address = await CoinSendScanRoute().push<String?>(context);

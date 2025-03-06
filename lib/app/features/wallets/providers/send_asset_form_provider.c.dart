@@ -49,11 +49,9 @@ class SendAssetFormController extends _$SendAssetFormController {
     );
   }
 
-  Future<void> setContact(String? pubkey) async {
+  void setContact(String? pubkey) {
     state = state.copyWith(contactPubkey: pubkey);
-    unawaited(
-      _initReceiverAddressFromContact(),
-    );
+    _initReceiverAddressFromContact();
   }
 
   Future<void> _initReceiverAddressFromContact() async {

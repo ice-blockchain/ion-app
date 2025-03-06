@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/utils/image_path.dart';
 
 class NetworkIconWidget extends StatelessWidget {
   const NetworkIconWidget({
@@ -15,13 +16,11 @@ class NetworkIconWidget extends StatelessWidget {
   final String imageUrl;
   final double? size;
 
-  bool get isSvg => imageUrl.toLowerCase().endsWith('.svg');
-
   @override
   Widget build(BuildContext context) {
     final iconSize = size ?? 24.0.s;
 
-    return isSvg
+    return imageUrl.isSvg
         ? SvgPicture.network(
             imageUrl,
             width: iconSize,

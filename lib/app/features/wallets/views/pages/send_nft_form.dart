@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -70,9 +68,8 @@ class SendNftForm extends ConsumerWidget {
                         final pubkey = await NftSelectContactRoute(
                           networkId: formController.network!.id,
                         ).push<String>(context);
-                        unawaited(
-                          pubkey?.let(notifier.setContact),
-                        );
+
+                        pubkey?.let(notifier.setContact);
                       },
                       // TODO
                       onScanPressed: () {},
