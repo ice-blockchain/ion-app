@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -28,7 +29,10 @@ class MediaContentHandler extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allMedia = _filterKnownMedia(post.data.media.values.toList());
+    final allMedia = useMemoized(
+      () => _filterKnownMedia(post.data.media.values.toList()),
+      [post.data.media],
+    );
 
     if (allMedia.isEmpty) {
       return const SizedBox.shrink();
@@ -39,8 +43,10 @@ class MediaContentHandler extends HookConsumerWidget {
 
     final isVideoSelected = selectedMedia.mediaType == MediaType.video;
 
-    final filteredMedia =
-        allMedia.where((media) => media.mediaType == selectedMedia.mediaType).toList();
+    final filteredMedia = useMemoized(
+      () => allMedia.where((media) => media.mediaType == selectedMedia.mediaType).toList(),
+      [allMedia, selectedMedia.mediaType],
+    );
 
     if (filteredMedia.length <= 1) {
       return SingleMediaView(
