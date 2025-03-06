@@ -50,29 +50,19 @@ class RepostListItem extends ConsumerWidget {
             child: RepostAuthorHeader(pubkey: repostEntity.masterPubkey),
           ),
           SizedBox(height: 6.0.s),
-          Padding(
-            padding: EdgeInsetsDirectional.only(end: 16.0.s),
-            child: switch (repostEntity) {
-              RepostEntity() => Padding(
-                  padding: EdgeInsetsDirectional.only(start: 16.0.s),
-                  child: Post(
-                    eventReference: repostEntity.data.eventReference,
-                  ),
-                ),
-              GenericRepostEntity() when repostEntity.data.kind == ModifiablePostEntity.kind =>
-                Padding(
-                  padding: EdgeInsetsDirectional.only(start: 16.0.s),
-                  child: Post(
-                    eventReference: repostEntity.data.eventReference,
-                  ),
-                ),
-              GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind => Padding(
-                  padding: EdgeInsetsDirectional.only(top: 12.0.s),
-                  child: Article(eventReference: repostEntity.data.eventReference),
-                ),
-              _ => const SizedBox.shrink(),
-            },
-          ),
+          switch (repostEntity) {
+            RepostEntity() => Post(
+                eventReference: repostEntity.data.eventReference,
+              ),
+            GenericRepostEntity() when repostEntity.data.kind == ModifiablePostEntity.kind => Post(
+                eventReference: repostEntity.data.eventReference,
+              ),
+            GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind => Padding(
+                padding: EdgeInsetsDirectional.only(top: 12.0.s),
+                child: Article(eventReference: repostEntity.data.eventReference),
+              ),
+            _ => const SizedBox.shrink(),
+          },
         ],
       ),
     );
