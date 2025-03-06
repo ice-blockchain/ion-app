@@ -10,25 +10,27 @@ import 'package:ion/app/router/app_routes.c.dart';
 
 class FollowedByText extends HookConsumerWidget {
   const FollowedByText({
-    required this.pubkeys,
+    required this.pubkey,
+    required this.firstFollowerPubkey,
+    required this.isMoreFollowers,
     super.key,
   });
 
-  final List<String> pubkeys;
+  final String pubkey;
+  final String firstFollowerPubkey;
+  final bool isMoreFollowers;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final firstUserPubkey = pubkeys.first;
-
-    final firstUserMetadata = ref.watch(cachedUserMetadataProvider(firstUserPubkey));
+    final firstUserMetadata = ref.watch(cachedUserMetadataProvider(firstFollowerPubkey));
 
     final userTapRecognizer = useTapGestureRecognizer(
-      onTap: () => ProfileRoute(pubkey: firstUserPubkey).push<void>(context),
+      onTap: () => ProfileRoute(pubkey: firstFollowerPubkey).push<void>(context),
     );
 
     final othersTapRecognizer = useTapGestureRecognizer(
-      onTap: () => FollowListRoute(pubkey: firstUserPubkey, followType: FollowType.followers)
-          .push<void>(context),
+      onTap: () =>
+          FollowListRoute(pubkey: pubkey, followType: FollowType.relevant).push<void>(context),
     );
 
     if (firstUserMetadata == null) {
@@ -56,7 +58,7 @@ class FollowedByText extends HookConsumerWidget {
               style: actionableStyle,
               recognizer: userTapRecognizer,
             ),
-            if (pubkeys.length > 1) ...[
+            if (isMoreFollowers) ...[
               TextSpan(
                 text: context.i18n.profile_followed_by_and,
                 style: defaultStyle,

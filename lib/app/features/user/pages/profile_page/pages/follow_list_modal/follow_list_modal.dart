@@ -23,6 +23,7 @@ class FollowListView extends ConsumerWidget {
       body: switch (followType) {
         FollowType.following => FollowingList(pubkey: pubkey),
         FollowType.followers => FollowersList(pubkey: pubkey),
+        FollowType.relevant => FollowersList.relevant(pubkey: pubkey),
       },
     );
   }

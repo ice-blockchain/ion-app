@@ -14,18 +14,30 @@ import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_search_bar.dart';
 import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.c.dart';
+import 'package:ion/app/features/user/providers/relevant_followers_data_source_provider.c.dart';
 
 class FollowersList extends ConsumerWidget {
-  const FollowersList({required this.pubkey, super.key});
+  const FollowersList({
+    required this.pubkey,
+    this.isRelevantFollowers = false,
+    super.key,
+  });
+
+  factory FollowersList.relevant({required String pubkey}) =>
+      FollowersList(pubkey: pubkey, isRelevantFollowers: true);
 
   final String pubkey;
+  final bool isRelevantFollowers;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: clarify how to get relevant followers count
     final followersCount = ref
         .watch(followersCountProvider(pubkey: pubkey, type: EventCountResultType.followers))
         .valueOrNull;
-    final dataSource = ref.watch(followersDataSourceProvider(pubkey));
+    final dataSource = isRelevantFollowers
+        ? ref.watch(relevantFollowersDataSourceProvider(pubkey, limit: 20))
+        : ref.watch(followersDataSourceProvider(pubkey));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items?.toList();
 
