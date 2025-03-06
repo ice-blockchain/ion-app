@@ -21,11 +21,15 @@ class VideoSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final secondaryBackgroundColor = context.theme.appColors.secondaryBackground;
+    final secondaryTextColor = context.theme.appColors.secondaryText;
+    final trackHeight = 4.0.s;
+
     return SliderTheme(
       data: SliderThemeData(
         thumbShape: SliderComponentShape.noThumb,
         overlayShape: SliderComponentShape.noThumb,
-        trackHeight: 4.0.s,
+        trackHeight: trackHeight,
         trackShape: const RectangularSliderTrackShape(),
       ),
       child: Slider(
@@ -34,8 +38,8 @@ class VideoSlider extends StatelessWidget {
         onChangeStart: onChangeStart,
         onChangeEnd: onChangeEnd,
         onChanged: onChanged,
-        activeColor: context.theme.appColors.secondaryBackground,
-        inactiveColor: context.theme.appColors.secondaryText,
+        activeColor: secondaryBackgroundColor,
+        inactiveColor: secondaryTextColor,
       ),
     );
   }

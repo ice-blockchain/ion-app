@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class PostMediaCarouselHorizontal extends HookConsumerWidget {
   const PostMediaCarouselHorizontal({
@@ -32,12 +33,19 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
           child: PageView(
             onPageChanged: (index) => currentIndex.value = index,
             children: [
-              for (final m in media)
-                ScreenSideOffset.small(
-                  child: PostMediaItem(
-                    mediaItem: m,
-                    aspectRatio: aspectRatio,
-                    eventReference: eventReference,
+              for (int i = 0; i < media.length; i++)
+                GestureDetector(
+                  onTap: () => FullscreenMediaRoute(
+                    eventReference: eventReference.encode(),
+                    initialMediaIndex: i,
+                  ).push<void>(context),
+                  child: ScreenSideOffset.small(
+                    child: PostMediaItem(
+                      mediaItem: media[i],
+                      mediaIndex: i,
+                      aspectRatio: aspectRatio,
+                      eventReference: eventReference,
+                    ),
                   ),
                 ),
             ],

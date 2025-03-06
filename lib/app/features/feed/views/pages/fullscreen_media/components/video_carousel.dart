@@ -1,0 +1,67 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/video/views/pages/video_page.dart';
+import 'package:ion/app/utils/future.dart';
+
+class VideoCarousel extends HookWidget {
+  const VideoCarousel({
+    required this.post,
+    required this.videos,
+    required this.initialIndex,
+    required this.eventReference,
+    super.key,
+  });
+
+  final ModifiablePostEntity post;
+  final List<MediaAttachment> videos;
+  final int initialIndex;
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    final pageController = usePageController(initialPage: initialIndex);
+    final currentPage = useState(initialIndex);
+
+    useEffect(
+      () {
+        void listener() {
+          if (pageController.page != null) {
+            currentPage.value = pageController.page!.round();
+          }
+        }
+
+        pageController.addListener(listener);
+        return () => pageController.removeListener(listener);
+      },
+      [pageController],
+    );
+
+    return PageView.builder(
+      controller: pageController,
+      scrollDirection: Axis.vertical,
+      itemCount: videos.length,
+      itemBuilder: (context, index) {
+        final videoUrl = videos[index].url;
+        return VideoPage(
+          key: ValueKey('video_$videoUrl'),
+          video: post,
+          eventReference: eventReference,
+          videoUrl: videoUrl,
+          onVideoEnded: () {
+            final nextPage = (index + 1) % videos.length;
+            pageController.animateToPage(
+              nextPage,
+              duration: 300.ms,
+              curve: Curves.easeInOut,
+            );
+          },
+        );
+      },
+    );
+  }
+}

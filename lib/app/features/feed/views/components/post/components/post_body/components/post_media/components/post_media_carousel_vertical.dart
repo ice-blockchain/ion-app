@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
-class PostMediaCarouselVertical extends StatelessWidget {
+class PostMediaCarouselVertical extends HookConsumerWidget {
   const PostMediaCarouselVertical({
     required this.media,
     required this.aspectRatio,
@@ -22,8 +24,9 @@ class PostMediaCarouselVertical extends StatelessWidget {
   final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final itemWidth = MediaQuery.sizeOf(context).width * _viewportFraction;
+
     return SizedBox(
       height: itemWidth / aspectRatio,
       child: ListView.separated(
@@ -40,10 +43,17 @@ class PostMediaCarouselVertical extends StatelessWidget {
         itemBuilder: (context, index) {
           return SizedBox(
             width: itemWidth,
-            child: PostMediaItem(
-              mediaItem: media[index],
-              aspectRatio: aspectRatio,
-              eventReference: eventReference,
+            child: GestureDetector(
+              onTap: () => FullscreenMediaRoute(
+                eventReference: eventReference.encode(),
+                initialMediaIndex: index,
+              ).push<void>(context),
+              child: PostMediaItem(
+                mediaItem: media[index],
+                mediaIndex: index,
+                aspectRatio: aspectRatio,
+                eventReference: eventReference,
+              ),
             ),
           );
         },
