@@ -67,7 +67,7 @@ class SendNftForm extends ConsumerWidget {
                       onWalletAddressChanged: (String? value) {},
                       onClearTap: (_) => notifier.setContact(null),
                       onContactTap: () async {
-                        final pubkey = await NftSelectFriendRoute(
+                        final pubkey = await NftSelectContactRoute(
                           networkId: formController.network!.id,
                         ).push<String>(context);
                         unawaited(

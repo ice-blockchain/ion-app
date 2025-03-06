@@ -31,7 +31,7 @@ class ContactListHeader extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              final pubkey = await SelectFriendRoute().push<String>(context);
+              final pubkey = await SelectContactRoute().push<String>(context);
               const dialogCloseAnimationDelay = Duration(milliseconds: 500);
 
               // Wait until close animation finishes

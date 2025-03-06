@@ -120,7 +120,7 @@ class SendCoinsForm extends HookConsumerWidget {
                         }
                       },
                       onContactTap: () async {
-                        final pubkey = await CoinsSelectFriendRoute(
+                        final pubkey = await CoinsSelectContactRoute(
                           networkId: formController.network!.id,
                         ).push<String>(context);
 
