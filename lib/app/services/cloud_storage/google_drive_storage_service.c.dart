@@ -14,6 +14,17 @@ final class GoogleDriveStorageService extends CloudStorageService {
   static const appDataFolder = 'appDataFolder';
 
   @override
+  Future<bool> isAvailable() async {
+    try {
+      // Will throw if google drive not available
+      await _getAuthenticatedDriveApi();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  @override
   Future<List<String>> listFilesPaths({String? directory}) async {
     try {
       final drive = await _getAuthenticatedDriveApi();
@@ -57,11 +68,12 @@ final class GoogleDriveStorageService extends CloudStorageService {
       final directories = pathSegments.sublist(0, pathSegments.length - 1);
       final folderId = await _prepareFolders(drive, directories);
 
-      final googleFile = File()
-        ..name = fileName
-        ..parents = [folderId];
+      final googleFile = File()..name = fileName;
 
       final existingFileId = await _getFileId(drive, fileName, parentId: folderId);
+      if (existingFileId == null) {
+        googleFile.parents = [folderId];
+      }
       final uploadedFile = existingFileId != null
           ? await drive.files.update(googleFile, existingFileId, uploadMedia: content)
           : await drive.files.create(googleFile, uploadMedia: content);

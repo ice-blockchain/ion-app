@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/protect_account/backup/views/components/backup_option.dart';
+import 'package:ion/app/features/protect_account/backup/views/pages/create_recover_key_page/components/cloud_backup_option.dart';
 import 'package:ion/app/features/protect_account/secure_account/providers/security_account_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -60,16 +59,7 @@ class BackupOptionsPage extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 24.0.s),
-                BackupOption(
-                  title: Platform.isIOS
-                      ? locale.backup_option_with_icloud_title
-                      : locale.backup_option_with_google_drive_title,
-                  subtitle: locale.backup_option_with_google_drive_description,
-                  icon: Assets.svg.walletLoginCloud.icon(
-                    size: 48.0.s,
-                  ),
-                  onTap: () {},
-                ),
+                const CloudBackupOption(),
                 SizedBox(height: 16.0.s),
                 BackupOption(
                   title: locale.backup_option_with_recovery_keys_title,

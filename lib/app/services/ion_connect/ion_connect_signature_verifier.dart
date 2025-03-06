@@ -12,7 +12,7 @@ class IonConnectSignatureVerifier extends SchnorrSignatureVerifier {
     required String signature,
     required String message,
     required String publicKey,
-  }) {
+  }) async {
     final signatureParts = signature.split(':');
     if (signatureParts.length == 2) {
       final [prefix, signatureBody] = signatureParts;

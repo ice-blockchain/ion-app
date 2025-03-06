@@ -5,6 +5,7 @@ enum Permission {
   notifications,
   camera,
   photos,
+  cloud,
 }
 
 enum PermissionStatus {
