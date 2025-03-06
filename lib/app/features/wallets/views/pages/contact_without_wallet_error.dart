@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/components/button/button.dart';
