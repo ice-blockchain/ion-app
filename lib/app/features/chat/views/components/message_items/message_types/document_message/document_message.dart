@@ -1,8 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:io';
-
-import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,9 +13,9 @@ import 'package:ion/app/features/chat/views/components/message_items/message_rea
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/app/services/share/share.dart';
+import 'package:ion/app/utils/filesize.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:mime/mime.dart';
-import 'package:share_plus/share_plus.dart';
 
 class DocumentMessage extends HookConsumerWidget {
   const DocumentMessage({
@@ -47,7 +44,7 @@ class DocumentMessage extends HookConsumerWidget {
           (encryptedMedia) {
             if (context.mounted) {
               filePath.value = encryptedMedia.first.path;
-              fileSizeInFormat.value = filesize(File(filePath.value).lengthSync());
+              fileSizeInFormat.value = formattedFileSize(filePath.value);
             }
           },
         );
@@ -57,22 +54,14 @@ class DocumentMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      messageEvent: eventMessage,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
       ),
       child: GestureDetector(
         onTap: () {
-          Share.shareXFiles(
-            [
-              XFile.fromData(
-                File(filePath.value).readAsBytesSync(),
-                mimeType: lookupMimeType(entity.data.content),
-                name: entity.data.content,
-              ),
-            ],
-            subject: entity.data.content,
-          );
+          shareFile(filePath.value, subject: entity.data.content);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
