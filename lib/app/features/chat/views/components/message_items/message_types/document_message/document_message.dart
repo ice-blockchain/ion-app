@@ -33,7 +33,7 @@ class DocumentMessage extends HookConsumerWidget {
     final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
     final filePath = useState<String>('');
-    final fileSizeInFormat = useState<String>('');
+    final fileSizeInFormat = useState<String?>(null);
 
     useOnInit(
       () {
@@ -95,7 +95,7 @@ class DocumentMessage extends HookConsumerWidget {
                               maxLines: 1,
                             ),
                             Text(
-                              fileSizeInFormat.value,
+                              fileSizeInFormat.value ?? '',
                               style: context.theme.appTextThemes.caption2.copyWith(
                                 color: isMe
                                     ? context.theme.appColors.onPrimaryAccent
