@@ -9,7 +9,6 @@ import 'package:ion/app/features/feed/views/components/post/components/post_body
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 
 class PostMediaCarouselHorizontal extends HookConsumerWidget {
   const PostMediaCarouselHorizontal({
@@ -26,7 +25,6 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = useState(0);
-    final heroTag = useMemoized(generateUuid);
 
     return Stack(
       children: [
@@ -40,7 +38,6 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
                   onTap: () => FullscreenMediaRoute(
                     eventReference: eventReference.encode(),
                     initialMediaIndex: i,
-                    heroTag: heroTag,
                   ).push<void>(context),
                   child: ScreenSideOffset.small(
                     child: PostMediaItem(

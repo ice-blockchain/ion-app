@@ -19,7 +19,7 @@ class FullscreenImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top,
+        top: MediaQuery.paddingOf(context).top,
       ),
       child: InteractiveViewer(
         minScale: 0.5,

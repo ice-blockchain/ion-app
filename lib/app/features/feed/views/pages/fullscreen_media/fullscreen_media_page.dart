@@ -16,54 +16,48 @@ class FullscreenMediaPage extends HookConsumerWidget {
   const FullscreenMediaPage({
     required this.eventReference,
     required this.initialMediaIndex,
-    required this.heroTag,
     super.key,
   });
 
   final EventReference eventReference;
   final int initialMediaIndex;
-  final String heroTag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Hero(
-      tag: heroTag,
-      child: Material(
-        color: Colors.transparent,
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarColor: context.theme.appColors.primaryText,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.dark,
-          ),
-          child: Scaffold(
-            backgroundColor: context.theme.appColors.primaryText,
-            // extendBodyBehindAppBar: mediaType != MediaType.image,
-            extendBodyBehindAppBar: true,
-            appBar: NavigationAppBar.screen(
-              backgroundColor: Colors.transparent,
-              leading: NavigationBackButton(
-                () => context.pop(),
-                icon: Assets.svg.iconChatBack.icon(
-                  size: NavigationAppBar.actionButtonSide,
-                  color: context.theme.appColors.onPrimaryAccent,
+    return Material(
+      color: Colors.transparent,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: context.theme.appColors.primaryText,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          backgroundColor: context.theme.appColors.primaryText,
+          extendBodyBehindAppBar: true,
+          appBar: NavigationAppBar.screen(
+            backgroundColor: Colors.transparent,
+            leading: NavigationBackButton(
+              () => context.pop(),
+              icon: Assets.svg.iconChatBack.icon(
+                size: NavigationAppBar.actionButtonSide,
+                color: context.theme.appColors.onPrimaryAccent,
+              ),
+            ),
+            onBackPress: () => context.pop(),
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: 6.0.s),
+                child: UserInfoMenu(
+                  pubkey: eventReference.pubkey,
+                  iconColor: context.theme.appColors.secondaryBackground,
                 ),
               ),
-              onBackPress: () => context.pop(),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(right: 6.0.s),
-                  child: UserInfoMenu(
-                    pubkey: eventReference.pubkey,
-                    iconColor: context.theme.appColors.secondaryBackground,
-                  ),
-                ),
-              ],
-            ),
-            body: AdaptiveMediaView(
-              eventReference: eventReference,
-              initialMediaIndex: initialMediaIndex,
-            ),
+            ],
+          ),
+          body: AdaptiveMediaView(
+            eventReference: eventReference,
+            initialMediaIndex: initialMediaIndex,
           ),
         ),
       ),
