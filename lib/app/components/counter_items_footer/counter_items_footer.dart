@@ -58,7 +58,7 @@ class CounterItemsFooter extends HookConsumerWidget {
                   BookmarkButton(
                     eventReference: eventReference,
                     size: 16.0.s,
-                    color: context.theme.appColors.onTertararyBackground,
+                    color: color ?? context.theme.appColors.onTertararyBackground,
                   ),
                   ShareButton(
                     eventReference: eventReference,
