@@ -20,7 +20,7 @@ final class BackupWithCloudPasswordInputBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recoveryCredentials = ref.read(createRecoveryKeyActionNotifierProvider).valueOrNull;
+    final recoveryCredentials = ref.watch(createRecoveryKeyActionNotifierProvider).valueOrNull;
     if (recoveryCredentials == null) {
       throw Exception('Recovery credentials are required to backup with cloud');
     }
