@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -38,7 +40,9 @@ class ContactPickerModal extends ConsumerWidget {
           if (address != null) return true;
 
           if (context.mounted) {
-            showContactWithoutWalletError(context, user: user, network: network);
+            unawaited(
+              showContactWithoutWalletError(context, user: user, network: network),
+            );
           }
 
           return false;
