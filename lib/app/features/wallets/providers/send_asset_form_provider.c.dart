@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
@@ -50,8 +51,14 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   Future<void> setContact(String? pubkey) async {
     state = state.copyWith(contactPubkey: pubkey);
+    unawaited(
+      _initReceiverAddressFromContact(),
+    );
+  }
 
+  Future<void> _initReceiverAddressFromContact() async {
     final network = state.network;
+    final pubkey = state.contactPubkey;
 
     if (pubkey != null && network != null) {
       final contactMetadata = await ref.read(userMetadataProvider(pubkey).future);
@@ -76,6 +83,10 @@ class SendAssetFormController extends _$SendAssetFormController {
       senderWallet: wallet,
       networkFeeOptions: [],
       selectedNetworkFeeOption: null,
+    );
+
+    unawaited(
+      _initReceiverAddressFromContact(),
     );
 
     if (state.assetData case final CoinAssetData coin) {
