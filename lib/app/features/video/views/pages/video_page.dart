@@ -21,16 +21,18 @@ class VideoPage extends HookConsumerWidget {
     required this.video,
     required this.eventReference,
     this.onVideoEnded,
+    this.videoUrl,
     super.key,
   });
 
   final ModifiablePostEntity video;
   final EventReference eventReference;
   final VoidCallback? onVideoEnded;
+  final String? videoUrl;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoPath = video.data.primaryVideo?.url;
+    final videoPath = videoUrl ?? video.data.primaryVideo?.url;
     if (videoPath == null || videoPath.isEmpty) {
       return Text(context.i18n.video_not_found);
     }

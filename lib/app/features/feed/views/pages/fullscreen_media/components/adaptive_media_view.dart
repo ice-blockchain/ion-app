@@ -143,25 +143,39 @@ class _VideoCarousel extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final pageController = usePageController(initialPage: initialIndex);
+    final currentPage = useState(initialIndex);
+
+    useEffect(
+      () {
+        void listener() {
+          if (pageController.page != null) {
+            currentPage.value = pageController.page!.round();
+          }
+        }
+
+        pageController.addListener(listener);
+        return () => pageController.removeListener(listener);
+      },
+      [pageController],
+    );
 
     return PageView.builder(
       controller: pageController,
       scrollDirection: Axis.vertical,
       itemCount: videos.length,
       itemBuilder: (context, index) {
-        final videoMedia = videos[index];
-
         return VideoPage(
-          video: post.copyWith(
-            data: post.data.copyWith(
-              media: {videoMedia.url: videoMedia},
-            ),
-          ),
+          video: post,
           eventReference: eventReference,
-          onVideoEnded: () => pageController.nextPage(
-            duration: 300.ms,
-            curve: Curves.easeInOut,
-          ),
+          videoUrl: videos[index].url,
+          onVideoEnded: () {
+            final nextPage = (index + 1) % videos.length;
+            pageController.animateToPage(
+              nextPage,
+              duration: 300.ms,
+              curve: Curves.easeInOut,
+            );
+          },
         );
       },
     );
