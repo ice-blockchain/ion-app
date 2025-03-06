@@ -28,6 +28,13 @@ class VideosPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
 
+    final appColors = context.theme.appColors;
+    final primaryTextColor = appColors.primaryText;
+    final onPrimaryAccentColor = appColors.onPrimaryAccent;
+    final secondaryBackgroundColor = appColors.secondaryBackground;
+    final rightPadding = 6.0.s;
+    final animationDuration = 300.ms;
+
     final dataSource = ref.watch(feedVideosDataSourceProvider(eventReference: eventReference));
     final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
 
@@ -46,30 +53,30 @@ class VideosPage extends HookConsumerWidget {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: context.theme.appColors.primaryText,
+        statusBarColor: primaryTextColor,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
-        backgroundColor: context.theme.appColors.primaryText,
+        backgroundColor: primaryTextColor,
         appBar: NavigationAppBar.screen(
           backgroundColor: Colors.transparent,
           leading: NavigationBackButton(
             () => context.pop(),
             icon: Assets.svg.iconChatBack.icon(
               size: NavigationAppBar.actionButtonSide,
-              color: context.theme.appColors.onPrimaryAccent,
+              color: onPrimaryAccentColor,
             ),
           ),
           onBackPress: () => context.pop(),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 6.0.s),
+              padding: EdgeInsets.only(right: rightPadding),
               child: UserInfoMenu(
                 pubkey: eventReference.pubkey,
-                iconColor: context.theme.appColors.secondaryBackground,
+                iconColor: secondaryBackgroundColor,
               ),
             ),
           ],
@@ -83,7 +90,7 @@ class VideosPage extends HookConsumerWidget {
             eventReference: eventReference,
             video: videos[index],
             onVideoEnded: () => userPageController.nextPage(
-              duration: 300.ms,
+              duration: animationDuration,
               curve: Curves.easeInOut,
             ),
           ),

@@ -24,6 +24,11 @@ class ImageCarousel extends HookWidget {
   Widget build(BuildContext context) {
     final pageController = usePageController(initialPage: initialIndex);
 
+    final primaryTextColor = context.theme.appColors.primaryText;
+    final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
+    final sizedBoxHeight = 20.0.s;
+    final horizontalPadding = 16.0.s;
+
     return Column(
       children: [
         Expanded(
@@ -38,16 +43,16 @@ class ImageCarousel extends HookWidget {
             },
           ),
         ),
-        SizedBox(height: 20.0.s),
+        SizedBox(height: sizedBoxHeight),
         ColoredBox(
-          color: context.theme.appColors.primaryText,
+          color: primaryTextColor,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: SafeArea(
               top: false,
               child: CounterItemsFooter(
                 eventReference: eventReference,
-                color: context.theme.appColors.onPrimaryAccent,
+                color: onPrimaryAccentColor,
                 bottomPadding: 0,
                 topPadding: 0,
               ),
