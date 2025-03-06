@@ -41,7 +41,6 @@ class ProfileShareMessage extends HookConsumerWidget {
       messageEvent: eventMessage,
       contentPadding: EdgeInsets.all(12.0.s),
       isMe: isMe,
-      messageEvent: eventMessage,
       child: IntrinsicWidth(
         child: Row(
           mainAxisSize: MainAxisSize.min,

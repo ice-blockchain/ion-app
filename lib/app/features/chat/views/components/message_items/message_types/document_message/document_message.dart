@@ -39,7 +39,7 @@ class DocumentMessage extends HookConsumerWidget {
       () {
         ref
             .read(mediaEncryptionServiceProvider)
-            .retreiveEncryptedMedia(entity.data.media.values.toList())
+            .retrieveEncryptedMedia(entity.data.media.values.toList())
             .then(
           (encryptedMedia) {
             if (context.mounted) {
