@@ -10,7 +10,10 @@ class InfoCard extends StatelessWidget {
     this.description,
     this.descriptionWidget,
     super.key,
-  });
+  }) : assert(
+          description != null || descriptionWidget != null,
+          'Either description or descriptionWidget must be provided.',
+        );
 
   final String iconAsset;
   final String title;
@@ -31,14 +34,17 @@ class InfoCard extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.0.s),
-        descriptionWidget ??
-            Text(
+        switch (descriptionWidget) {
+          Widget() => descriptionWidget!,
+          null when description != null => Text(
               description!,
               textAlign: TextAlign.center,
               style: context.theme.appTextThemes.body2.copyWith(
                 color: context.theme.appColors.secondaryText,
               ),
             ),
+          _ => const SizedBox()
+        }
       ],
     );
   }

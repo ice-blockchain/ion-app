@@ -73,10 +73,12 @@ class NetworkListView extends ConsumerWidget {
             final address = contact?.data.wallets?[network.id];
 
             if (address == null && context.mounted) {
-              await showContactWithoutWalletError(
-                context,
-                user: contact!,
-                network: network,
+              unawaited(
+                showContactWithoutWalletError(
+                  context,
+                  user: contact!,
+                  network: network,
+                ),
               );
               return;
             }

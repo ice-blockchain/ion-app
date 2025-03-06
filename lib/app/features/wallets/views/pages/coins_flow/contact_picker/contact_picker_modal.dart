@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -16,7 +17,7 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 enum ContactPickerValidatorType { none, networkWallet }
 
-class ContactPickerModal extends ConsumerWidget {
+class ContactPickerModal extends HookConsumerWidget {
   const ContactPickerModal({
     super.key,
     this.networkId,
@@ -28,26 +29,29 @@ class ContactPickerModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final validator = switch (validatorType) {
-      ContactPickerValidatorType.none => (user) async => true,
-      ContactPickerValidatorType.networkWallet => (UserMetadataEntity user) async {
-          if (networkId == null) return true;
+    final validator = useCallback((
+      WidgetRef ref,
+      BuildContext context,
+      UserMetadataEntity user,
+    ) async {
+      if (validatorType == ContactPickerValidatorType.none) return true;
+      if (networkId == null) return true;
 
-          final network = await ref.read(networkByIdProvider(networkId!).future);
-          if (network == null) return false;
+      final network = await ref.read(networkByIdProvider(networkId!).future);
+      if (network == null) return false;
 
-          final address = user.data.wallets?[network.id];
-          if (address != null) return true;
+      final address = user.data.wallets?[network.id];
+      if (address != null) return true;
 
-          if (context.mounted) {
-            unawaited(
-              showContactWithoutWalletError(context, user: user, network: network),
-            );
-          }
+      if (context.mounted) {
+        unawaited(
+          showContactWithoutWalletError(context, user: user, network: network),
+        );
+      }
 
-          return false;
-        },
-    };
+      return false;
+    }, [validatorType, networkId]);
+
     return SheetContent(
       topPadding: 0,
       body: UserPickerSheet(
@@ -56,7 +60,7 @@ class ContactPickerModal extends ConsumerWidget {
           actions: const [NavigationCloseButton()],
         ),
         onUserSelected: (user) async {
-          if (await validator(user) && context.mounted) {
+          if (await validator(ref, context, user) && context.mounted) {
             context.pop(user.masterPubkey);
           }
         },
