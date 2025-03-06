@@ -119,6 +119,7 @@ class _SingleMediaView extends StatelessWidget {
         ? VideoPage(
             video: post,
             eventReference: eventReference,
+            looping: true,
           )
         : FullscreenImage(
             imageUrl: media.url,

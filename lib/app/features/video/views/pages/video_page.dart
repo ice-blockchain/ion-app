@@ -22,6 +22,7 @@ class VideoPage extends HookConsumerWidget {
     required this.eventReference,
     this.onVideoEnded,
     this.videoUrl,
+    this.looping = false,
     super.key,
   });
 
@@ -29,6 +30,7 @@ class VideoPage extends HookConsumerWidget {
   final EventReference eventReference;
   final VoidCallback? onVideoEnded;
   final String? videoUrl;
+  final bool looping;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,6 +42,7 @@ class VideoPage extends HookConsumerWidget {
       videoControllerProvider(
         videoPath,
         autoPlay: true,
+        looping: looping,
       ),
     );
 
