@@ -9,7 +9,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
@@ -100,7 +99,6 @@ class VideoMessage extends HookConsumerWidget {
                       ),
               ),
             ),
-            MessageReactions(eventMessage: eventMessage, isMe: isMe),
             _MessageWithTimestamp(eventMessage: eventMessage),
           ],
         ),
