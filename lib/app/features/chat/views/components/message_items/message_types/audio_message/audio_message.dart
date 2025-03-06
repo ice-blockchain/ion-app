@@ -46,7 +46,7 @@ class AudioMessage extends HookConsumerWidget {
         () async {
           final encryptedMedia = await ref
               .read(mediaEncryptionServiceProvider)
-              .retreiveEncryptedMedia([entity.data.primaryAudio!]);
+              .retrieveEncryptedMedia([entity.data.primaryAudio!]);
           return ref.read(compressServiceProvider).compressAudioToWav(encryptedMedia.first.path);
         },
         [],
@@ -111,6 +111,7 @@ class AudioMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      messageEvent: eventMessage,
       contentPadding: contentPadding,
       child: VisibilityDetector(
         key: ValueKey(audioUrl),

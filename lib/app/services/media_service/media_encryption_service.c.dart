@@ -27,7 +27,7 @@ class MediaEncryptionService {
   final FileCacheService fileCacheService;
   final CompressionService compressionService;
 
-  Future<List<File>> retreiveEncryptedMedia(List<MediaAttachment> mediaAttachments) async {
+  Future<List<File>> retrieveEncryptedMedia(List<MediaAttachment> mediaAttachments) async {
     final decryptedDecompressedFiles = <File>[];
 
     try {
