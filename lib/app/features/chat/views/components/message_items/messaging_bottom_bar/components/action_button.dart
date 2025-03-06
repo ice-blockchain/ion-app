@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,17 +11,20 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/messaging_bottom_bar_state.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 
 class ActionButton extends HookConsumerWidget {
   const ActionButton({
     required this.controller,
     required this.onSubmitted,
+    required this.recorderController,
     super.key,
   });
 
   final TextEditingController controller;
   final Future<void> Function()? onSubmitted;
-
+  final RecorderController recorderController;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -49,15 +55,21 @@ class ActionButton extends HookConsumerWidget {
       bottom: 8.0.s + (bottomBarState.isMore ? moreContentHeight : 0),
       right: 14.0.s,
       child: GestureDetector(
-        onLongPressStart: (details) {
+        onLongPressStart: (details) async {
           if (!bottomBarState.isVoice) {
-            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoice();
-            HapticFeedback.lightImpact();
-          }
-        },
-        onTap: () {
-          if (bottomBarState.isVoice) {
-            ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
+            await ref.read(permissionsProvider.notifier).checkPermission(Permission.microphone);
+            final status = ref.read(
+              permissionsProvider.select((value) => value.permissions[Permission.microphone]),
+            );
+
+            if (status == PermissionStatus.granted) {
+              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoice();
+              unawaited(HapticFeedback.lightImpact());
+            } else {
+              unawaited(
+                ref.read(permissionsProvider.notifier).requestPermission(Permission.microphone),
+              );
+            }
           }
         },
         onLongPressMoveUpdate: (details) {
@@ -68,11 +80,13 @@ class ActionButton extends HookConsumerWidget {
           }
         },
         onLongPressEnd: (details) {
-          if (paddingBottom.value > 20) {
-            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoiceLocked();
-            paddingBottom.value = 0;
-          } else {
-            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
+          if (recorderController.elapsedDuration > Duration.zero) {
+            if (paddingBottom.value > 20) {
+              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoiceLocked();
+              paddingBottom.value = 0;
+            } else {
+              ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
+            }
           }
         },
         child: AbsorbPointer(
