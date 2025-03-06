@@ -12,23 +12,23 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-enum FriendPickerValidatorType { none, networkWallet }
+enum ContactPickerValidatorType { none, networkWallet }
 
 class ContactPickerModal extends ConsumerWidget {
   const ContactPickerModal({
     super.key,
     this.networkId,
-    this.validatorType = FriendPickerValidatorType.none,
+    this.validatorType = ContactPickerValidatorType.none,
   });
 
   final String? networkId;
-  final FriendPickerValidatorType validatorType;
+  final ContactPickerValidatorType validatorType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final validator = switch (validatorType) {
-      FriendPickerValidatorType.none => (user) async => true,
-      FriendPickerValidatorType.networkWallet => (UserMetadataEntity user) async {
+      ContactPickerValidatorType.none => (user) async => true,
+      ContactPickerValidatorType.networkWallet => (UserMetadataEntity user) async {
           if (networkId == null) return true;
 
           final network = await ref.read(networkByIdProvider(networkId!).future);

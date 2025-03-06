@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -7,6 +9,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
@@ -15,6 +18,7 @@ import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.d
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/contact_picker/components/contact_without_wallet_error.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -54,7 +58,7 @@ class NetworkListView extends ConsumerWidget {
         ),
     };
 
-    void onTap(NetworkData network) {
+    Future<void> onTap(NetworkData network) async {
       if (onSelectReturnType) {
         Navigator.of(context).pop(network);
         return;
@@ -62,11 +66,29 @@ class NetworkListView extends ConsumerWidget {
 
       switch (type) {
         case NetworkListViewType.send:
-          ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network);
-          CoinsSendFormRoute().push<void>(context);
+          final state = ref.read(sendAssetFormControllerProvider());
+
+          if (state.contactPubkey != null) {
+            final contact = await ref.read(userMetadataProvider(state.contactPubkey!).future);
+            final address = contact?.data.wallets?[network.id];
+
+            if (address == null && context.mounted) {
+              await showContactWithoutWalletError(
+                context,
+                user: contact!,
+                network: network,
+              );
+              return;
+            }
+          }
+
+          if (context.mounted) {
+            unawaited(ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network));
+            unawaited(CoinsSendFormRoute().push<void>(context));
+          }
         case NetworkListViewType.receive:
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
-          ShareAddressRoute().push<void>(context);
+          unawaited(ShareAddressRoute().push<void>(context));
       }
     }
 

@@ -43,6 +43,8 @@ class ContactPage extends ConsumerWidget {
               onReceive: () => ReceiveCoinRoute().push<void>(context),
               onSend: () {
                 ref.invalidate(sendAssetFormControllerProvider());
+                ref.read(sendAssetFormControllerProvider().notifier).setContact(pubkey);
+
                 CoinSendRoute().push<void>(context);
               },
               onNeedToEnable2FA: () => Navigator.of(context).pop(true),
