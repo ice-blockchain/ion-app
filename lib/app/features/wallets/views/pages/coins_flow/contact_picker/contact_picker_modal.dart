@@ -32,17 +32,13 @@ class ContactPickerModal extends ConsumerWidget {
           if (networkId == null) return true;
 
           final network = await ref.read(networkByIdProvider(networkId!).future);
-          if (network != null) {
-            final address = user.data.wallets?[network.id];
-            if (context.mounted) {
-              address != null
-                  ? context.pop(user.masterPubkey)
-                  : showContactWithoutWalletError(
-                      context,
-                      user: user,
-                      network: network,
-                    );
-            }
+          if (network == null) return false;
+
+          final address = user.data.wallets?[network.id];
+          if (address != null) return true;
+
+          if (context.mounted) {
+            showContactWithoutWalletError(context, user: user, network: network);
           }
 
           return false;

@@ -84,13 +84,12 @@ class ContactWithoutWalletError extends StatelessWidget {
   }
 }
 
-void showContactWithoutWalletError(
+Future<void> showContactWithoutWalletError(
   BuildContext context, {
   required NetworkData network,
   required UserMetadataEntity user,
-}) {
-  showSimpleBottomSheet<void>(
-    context: context,
-    child: ContactWithoutWalletError(user: user, network: network),
-  );
-}
+}) =>
+    showSimpleBottomSheet<void>(
+      context: context,
+      child: ContactWithoutWalletError(user: user, network: network),
+    );

@@ -18,9 +18,9 @@ import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.d
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/contact_picker/components/contact_without_wallet_error.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
+import 'package:ion/app/features/wallets/views/pages/contact_without_wallet_error_modal.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
