@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/views/components/message_items/chat_date_header_text/chat_date_header_text.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/audio_message/audio_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/profile_share_message/profile_share_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
@@ -68,6 +69,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                         MessageType.emoji => EmojiMessage(eventMessage: message),
                         MessageType.audio => AudioMessage(eventMessage: message),
                         MessageType.profile => ProfileShareMessage(eventMessage: message),
+                        MessageType.document => DocumentMessage(eventMessage: message),
                       },
                     );
                   },

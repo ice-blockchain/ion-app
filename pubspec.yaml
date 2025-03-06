@@ -38,6 +38,7 @@ dependencies:
   file: ^7.0.1
   file_picker: ^8.1.2
   file_saver: ^0.2.12
+  filesize: ^2.0.1
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0

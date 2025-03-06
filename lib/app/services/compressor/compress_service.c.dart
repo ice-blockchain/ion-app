@@ -24,6 +24,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'compress_service.c.g.dart';
 
+final brotliCodec = BrotliCodec(level: 0);
+
 ///
 /// A service that handles file compression.
 /// - Compresses video, audio and image files using FFmpeg with configurable compression parameters;
@@ -254,20 +256,10 @@ class CompressionService {
   ///
   /// Compresses a file using the Brotli algorithm.
   ///
-  Future<File> compressWithBrotli(File inputFile) async {
+  Future<MediaFile> compressWithBrotli(File inputFile) async {
     try {
-      // The input buffer needs to be larger than 50% of the total file size
-      // for it to be compressed correctly. This is due to this issue:
-      // https://github.com/instantiations/es_compression/issues/53
-      // Once it is fixed, the current solution needs to be reconsidered.
-      const bufferPercentage = 0.6;
-      final fileSize = inputFile.lengthSync();
-
-      final brotliCompressor = BrotliCodec(
-        inputBufferLength: (fileSize * bufferPercentage).ceil(),
-      );
       final inputData = await inputFile.readAsBytes();
-      final compressedData = brotliCompressor.encode(inputData);
+      final compressedData = brotliCodec.encode(inputData);
 
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
@@ -279,27 +271,36 @@ class CompressionService {
   ///
   /// Decompresses a Brotli-compressed file.
   ///
-  Future<File> decompressBrotli(File compressedFile, {String outputExtension = 'txt'}) async {
+  Future<File> decompressBrotli(File compressedFile, {String outputExtension = ''}) async {
     try {
       final compressedData = await compressedFile.readAsBytes();
-      final decompressedData = brotli.decode(
+      final decompressedData = brotliCodec.decode(
         Uint8List.fromList(compressedData),
       );
-      return _saveBytesIntoFile(bytes: decompressedData, extension: outputExtension);
+      final outputFile =
+          await _saveBytesIntoFile(bytes: decompressedData, extension: outputExtension);
+
+      return File(outputFile.path);
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli decompression!', error: error, stackTrace: stackTrace);
       throw DecompressBrotliException();
     }
   }
 
-  Future<File> _saveBytesIntoFile({
+  Future<MediaFile> _saveBytesIntoFile({
     required List<int> bytes,
     required String extension,
   }) async {
     final outputFilePath = await _generateOutputPath(extension: extension);
     final outputFile = File(outputFilePath);
     await outputFile.writeAsBytes(bytes);
-    return outputFile;
+
+    return MediaFile(
+      path: outputFilePath,
+      mimeType: 'application/brotli',
+      width: 0,
+      height: 0,
+    );
   }
 
   ///
