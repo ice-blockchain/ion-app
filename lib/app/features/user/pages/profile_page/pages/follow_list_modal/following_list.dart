@@ -51,14 +51,18 @@ class FollowingList extends HookConsumerWidget {
   }
 }
 
-class _FollowingSearch extends ConsumerWidget {
+class _FollowingSearch extends HookConsumerWidget {
   const _FollowingSearch({required this.query});
 
   final String query;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dataSource = ref.watch(searchFollowingUsersDataSourceProvider(query: query));
+    final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300));
+
+    final dataSource = debouncedQuery != null
+        ? ref.watch(searchFollowingUsersDataSourceProvider(query: debouncedQuery))
+        : null;
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items?.toList();
     final hasMore = entitiesPagedData?.hasMore ?? false;
