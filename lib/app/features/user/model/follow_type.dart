@@ -6,18 +6,19 @@ import 'package:ion/generated/assets.gen.dart';
 
 enum FollowType {
   followers,
-  following;
+  following,
+  relevant;
 
   String get iconAsset {
     return switch (this) {
-      FollowType.followers => Assets.svg.iconSearchFollow,
+      FollowType.followers || FollowType.relevant => Assets.svg.iconSearchFollow,
       FollowType.following => Assets.svg.iconSearchFollowers,
     };
   }
 
   String getTitle(BuildContext context) {
     switch (this) {
-      case FollowType.followers:
+      case FollowType.followers || FollowType.relevant:
         return context.i18n.profile_followers;
       case FollowType.following:
         return context.i18n.profile_following;
@@ -26,7 +27,7 @@ enum FollowType {
 
   String getTitleWithCounter(BuildContext context, int counter) {
     switch (this) {
-      case FollowType.followers:
+      case FollowType.followers || FollowType.relevant:
         return context.i18n.profile_followers_with_counter(counter);
       case FollowType.following:
         return context.i18n.profile_following_with_counter(counter);

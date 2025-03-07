@@ -5,18 +5,17 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
-import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'followers_you_know_data_source_provider.c.g.dart';
+part 'relevant_followers_data_source_provider.c.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? followersYouKnowDataSource(Ref ref, String pubkey) {
+List<EntitiesDataSource>? relevantFollowersDataSource(Ref ref, String pubkey, {int? limit = 3}) {
   return [
     EntitiesDataSource(
       actionSource: ActionSourceUser(pubkey),
-      entityFilter: (entity) => entity is FollowListEntity,
+      entityFilter: (entity) => entity is UserMetadataEntity,
       requestFilters: [
         RequestFilter(
           kinds: const [UserMetadataEntity.kind],
@@ -28,7 +27,7 @@ List<EntitiesDataSource>? followersYouKnowDataSource(Ref ref, String pubkey) {
               MostRelevantFollowersSearchExtension(),
             ],
           ).toString(),
-          limit: 3,
+          limit: limit,
         ),
       ],
     ),

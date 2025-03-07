@@ -28,6 +28,7 @@ class FollowListItem extends ConsumerWidget {
         if (userMetadata == null) {
           return const SizedBox.shrink();
         }
+
         return ListItem.user(
           title: Text(userMetadata.data.displayName),
           trailing: FollowUserButton(pubkey: pubkey),
