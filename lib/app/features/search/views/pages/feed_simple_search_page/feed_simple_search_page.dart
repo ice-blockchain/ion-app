@@ -37,7 +37,7 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
           children: [
             SearchNavigation(
               query: query,
-              loading: debouncedQuery.isNotEmpty && searchResults == null,
+              loading: debouncedQuery.isNotEmpty && searchUsers == null,
               onSubmitted: (String query) {
                 FeedAdvancedSearchRoute(query: query).go(context);
                 ref.read(feedSearchHistoryProvider.notifier).addQueryToTheHistory(query);
