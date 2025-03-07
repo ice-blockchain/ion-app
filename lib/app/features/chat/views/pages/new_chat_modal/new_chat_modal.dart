@@ -32,7 +32,7 @@ class NewChatModal extends HookConsumerWidget {
     );
 
     final hideCommunity =
-        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+        ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
     return SheetContent(
       topPadding: 0,

@@ -36,7 +36,7 @@ class MessageReactionDialog extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contextMenuHeight = useMemoized(() {
       final hideChatBookmark =
-          ref.read(featureFlagsProvider.notifier).get(HideChatBookmark.hideChatBookmark);
+          ref.read(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideChatBookmark);
 
       final heightOfFailedMessageOverlayMenu = 103.0.s;
       final heightOfSuccessMessageOverlayMenu = 184.0.s;
