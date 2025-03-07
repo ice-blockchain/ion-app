@@ -114,8 +114,8 @@ dependencies:
   visibility_detector: ^0.4.0+2
   widgetbook: ^3.7.1
   widgetbook_annotation: ^3.1.0
-  window_manager: ^0.4.2
   html: ^0.15.4
+  window_manager: ^0.4.2
 
 dev_dependencies:
   build_runner: ^2.4.13
