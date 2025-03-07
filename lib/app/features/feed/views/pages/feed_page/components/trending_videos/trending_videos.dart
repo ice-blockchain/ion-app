@@ -32,11 +32,13 @@ class TrendingVideos extends ConsumerWidget {
     final videos = videosData?.data.items?.toList();
 
     if (videos == null) {
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.0.s),
-        child: const TrendingVideosListSkeleton(
-          listOverlay: listOverlay,
-        ),
+      return Column(
+        children: [
+          SizedBox(height: 46.0.s),
+          const TrendingVideosListSkeleton(listOverlay: listOverlay),
+          SizedBox(height: 18.0.s),
+          FeedListSeparator(),
+        ],
       );
     }
 
