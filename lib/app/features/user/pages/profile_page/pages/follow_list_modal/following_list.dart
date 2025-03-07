@@ -61,7 +61,7 @@ class FollowingList extends HookConsumerWidget {
           )
         else
           const FollowListLoading(),
-        SliverPadding(padding: EdgeInsets.only(bottom: 24.0.s)),
+        SliverPadding(padding: EdgeInsets.only(bottom: 32.0.s)),
       ],
     );
   }
