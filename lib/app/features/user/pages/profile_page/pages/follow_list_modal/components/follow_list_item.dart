@@ -23,14 +23,15 @@ class FollowListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataResult = ref.watch(userMetadataProvider(pubkey));
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
     return userMetadataResult.maybeWhen(
       data: (userMetadata) {
         if (userMetadata == null) {
           return const SizedBox.shrink();
         }
-        final isCurrentUser = currentUserPubkey == userMetadata.masterPubkey;
+
+        final isCurrentUser = ref.watch(isCurrentUserSelectorProvider(userMetadata.masterPubkey));
+
         return ListItem.user(
           title: Text(userMetadata.data.displayName),
           trailing: isCurrentUser ? null : FollowUserButton(pubkey: pubkey),

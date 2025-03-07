@@ -21,8 +21,7 @@ class ArticleDetailsHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
-    final isCurrentUser = currentUserPubkey == article.masterPubkey;
+    final isCurrentUser = ref.watch(isCurrentUserSelectorProvider(article.masterPubkey));
 
     return ColoredBox(
       color: context.theme.appColors.onPrimaryAccent,
