@@ -69,22 +69,12 @@ String deltaToMarkdown(Delta delta) {
   return deltaToMd.convert(processedDelta);
 }
 
-Delta markdownToDelta(String markdown) {
-  final html = md.markdownToHtml(
-    markdown,
-    extensionSet: md.ExtensionSet.gitHubFlavored,
-  );
-
-  final document = html_parser.parse(html);
-  final delta = _convertHtmlToDelta(document.body!);
-
+Delta _processTextMatchers(Delta inputDelta) {
   final processedDelta = Delta();
   final textParser = TextParser.allMatchers();
 
-  for (final op in delta.toList()) {
-    if (op.key == 'insert' && op.data is Map) {
-      processedDelta.insert(op.data, op.attributes);
-    } else if (op.key == 'insert') {
+  for (final op in inputDelta.toList()) {
+    if (op.key == 'insert' && op.data is String) {
       final text = op.data.toString();
       final matches = textParser.parse(text);
 
@@ -107,10 +97,86 @@ Delta markdownToDelta(String markdown) {
           );
         }
       }
+    } else {
+      processedDelta.insert(op.data, op.attributes);
     }
   }
 
   return processedDelta;
+}
+
+Delta markdownToDelta(String markdown) {
+  if (markdown.contains('> ')) {
+    return _directBlockquoteToDelta(markdown);
+  }
+
+  final html = md.markdownToHtml(
+    markdown,
+    extensionSet: md.ExtensionSet.gitHubFlavored,
+  );
+
+  final document = html_parser.parse(html);
+  final delta = _convertHtmlToDelta(document.body!);
+
+  return _processTextMatchers(delta);
+}
+
+Delta _directBlockquoteToDelta(String markdown) {
+  final delta = Delta();
+  final lines = markdown.split('\n');
+
+  for (var i = 0; i < lines.length; i++) {
+    final line = lines[i];
+    final trimmedLine = line.trim();
+
+    if (trimmedLine.startsWith('> ')) {
+      final content = trimmedLine.substring(2).trim();
+      if (content.isNotEmpty) {
+        final contentHtml = md.markdownToHtml(
+          content,
+          extensionSet: md.ExtensionSet.gitHubFlavored,
+        );
+        final contentDoc = html_parser.parse(contentHtml);
+        final contentDelta = _processInlineElement(contentDoc.body!);
+
+        final processedContentDelta = _processTextMatchers(contentDelta);
+        for (final op in processedContentDelta.toList()) {
+          delta.insert(op.data, op.attributes);
+        }
+
+        delta.insert('\n', {'blockquote': true});
+      } else {
+        delta.insert('\n', {'blockquote': true});
+      }
+    } else if (trimmedLine.isEmpty) {
+      delta.insert('\n');
+    } else {
+      final partialHtml = md.markdownToHtml(
+        line,
+        extensionSet: md.ExtensionSet.gitHubFlavored,
+      );
+
+      final partialDocument = html_parser.parse(partialHtml);
+      final partialDelta = _convertHtmlToDelta(partialDocument.body!);
+
+      final processedPartialDelta = _processTextMatchers(partialDelta);
+      for (final op in processedPartialDelta.toList()) {
+        delta.insert(op.data, op.attributes);
+      }
+    }
+  }
+
+  return delta;
+}
+
+String cleanText(String text) {
+  var cleaned = text.replaceAll('\r\n', '\n');
+  cleaned = cleaned.replaceAll(RegExp(r'\n{2,}'), ' ');
+  cleaned = cleaned.replaceAll('\n', ' ');
+  cleaned = cleaned.trim();
+  cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ');
+
+  return cleaned;
 }
 
 Delta _convertHtmlToDelta(html.Element element) {
@@ -118,7 +184,7 @@ Delta _convertHtmlToDelta(html.Element element) {
 
   for (final node in element.nodes) {
     if (node is html.Text) {
-      final text = node.text;
+      final text = cleanText(node.text);
       if (text.isNotEmpty) {
         delta.insert(text);
       }
@@ -218,14 +284,14 @@ Delta _processInlineElement(html.Element element) {
   }
 
   if (element.nodes.isEmpty && element.text.isNotEmpty) {
-    final text = element.text;
+    final text = cleanText(element.text);
     delta.insert(text, attributes.isNotEmpty ? attributes : null);
     return delta;
   }
 
   for (final node in element.nodes) {
     if (node is html.Text) {
-      final text = node.text;
+      final text = cleanText(node.text);
       if (text.isNotEmpty) {
         delta.insert(text, attributes.isNotEmpty ? attributes : null);
       }
@@ -257,7 +323,7 @@ Delta _processInlineElement(html.Element element) {
           }
           continue;
         case 'br':
-          delta.insert('\n');
+          delta.insert(' ');
           continue;
         default:
           final innerDelta = _processInlineElement(node);
@@ -275,7 +341,7 @@ Delta _processInlineElement(html.Element element) {
       }
 
       if (node.text.isNotEmpty) {
-        final text = node.text;
+        final text = cleanText(node.text);
         delta.insert(text, childAttributes);
       } else {
         final innerDelta = _processInlineElement(node);
