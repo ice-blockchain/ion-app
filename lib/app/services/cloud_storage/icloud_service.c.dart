@@ -119,6 +119,18 @@ final class ICloudStorageService extends CloudStorageService {
     }
   }
 
+  @override
+  Future<void> deleteFile(String filePath) async {
+    try {
+      await ICloudStorage.delete(
+        containerId: containerId,
+        relativePath: filePath,
+      );
+    } catch (e) {
+      throw CloudFileDeleteFailedException(e);
+    }
+  }
+
   Exception _mapUploadException(dynamic e) {
     if (e is PlatformException && e.code == PlatformExceptionCode.iCloudConnectionOrPermission) {
       return CloudPermissionFailedException();

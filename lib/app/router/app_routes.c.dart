@@ -10,6 +10,8 @@ import 'package:ion/app/features/auth/views/pages/intro_page/intro_page.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/recover_user_page.dart';
 import 'package:ion/app/features/auth/views/pages/recover_user_page/recover_user_success_page.dart';
 import 'package:ion/app/features/auth/views/pages/restore_creds/restore_creds.dart';
+import 'package:ion/app/features/auth/views/pages/restore_from_cloud/components/restore_from_cloud_no_keys_available_modal.dart';
+import 'package:ion/app/features/auth/views/pages/restore_from_cloud/restore_from_cloud_page.dart';
 import 'package:ion/app/features/auth/views/pages/restore_menu/restore_menu.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/select_languages.dart';
 import 'package:ion/app/features/auth/views/pages/sign_up_passkey/sign_up_passkey.dart';
