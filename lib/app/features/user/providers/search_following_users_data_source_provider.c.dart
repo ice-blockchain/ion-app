@@ -14,6 +14,8 @@ part 'search_following_users_data_source_provider.c.g.dart';
 
 @riverpod
 List<EntitiesDataSource>? searchFollowingUsersDataSource(Ref ref, {required String query}) {
+  if (query.isEmpty) return null;
+
   final followingList = ref.watch(currentUserFollowListProvider).valueOrNull;
   if (followingList == null) {
     return null;

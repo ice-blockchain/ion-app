@@ -18,6 +18,8 @@ class SearchUsers extends _$SearchUsers {
   ({List<UserMetadataEntity> users, bool hasMore, List<EntitiesDataSource> dataSource})? build({
     required String query,
   }) {
+    if (query.isEmpty) return null;
+
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final dataSource = ref.watch(searchUsersDataSourceProvider(query: query));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
