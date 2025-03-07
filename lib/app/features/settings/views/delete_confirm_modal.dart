@@ -26,6 +26,7 @@ class ConfirmDeleteModal extends HookConsumerWidget {
     ref.displayErrors(deleteAccountNotifierProvider);
 
     return SimpleModalSheet.alert(
+      isBottomSheet: true,
       iconAsset: Assets.svg.actionCreatepostDeleterole,
       title: context.i18n.confirm_delete_title,
       description: context.i18n.confirm_delete_description,

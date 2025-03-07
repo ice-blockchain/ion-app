@@ -18,6 +18,7 @@ class SimpleModalSheet extends StatelessWidget {
     String? buttonText,
     VoidCallback? onPressed,
     Widget? button,
+    bool isBottomSheet = false,
   }) {
     return SimpleModalSheet._(
       title: title,
@@ -27,6 +28,7 @@ class SimpleModalSheet extends StatelessWidget {
       onPressed: onPressed,
       button: button,
       offsetType: OffsetType.large,
+      isBottomSheet: isBottomSheet,
     );
   }
 
@@ -37,6 +39,7 @@ class SimpleModalSheet extends StatelessWidget {
     String? buttonText,
     VoidCallback? onPressed,
     Widget? button,
+    bool isBottomSheet = false,
   }) {
     return SimpleModalSheet._(
       title: title,
@@ -46,8 +49,10 @@ class SimpleModalSheet extends StatelessWidget {
       onPressed: onPressed,
       button: button,
       offsetType: OffsetType.small,
+      isBottomSheet: isBottomSheet,
     );
   }
+
   const SimpleModalSheet._({
     required this.title,
     required this.description,
@@ -56,6 +61,7 @@ class SimpleModalSheet extends StatelessWidget {
     this.buttonText,
     this.onPressed,
     this.button,
+    this.isBottomSheet = false,
   }) : assert(
           (button != null) || (buttonText != null && onPressed != null),
           'Either button or both buttonText and onPressed must be provided',
@@ -68,33 +74,38 @@ class SimpleModalSheet extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget? button;
   final OffsetType offsetType;
+  final bool isBottomSheet;
 
   @override
   Widget build(BuildContext context) {
-    return SheetContent(
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(height: 20.0.s),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0.s),
-            child: InfoCard(
-              iconAsset: iconAsset,
-              title: title,
-              description: description,
-            ),
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(height: 20.0.s),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0.s),
+          child: InfoCard(
+            iconAsset: iconAsset,
+            title: title,
+            description: description,
           ),
-          SizedBox(height: 20.0.s),
-          button ??
-              _CommonButton(
-                text: buttonText!,
-                onPressed: onPressed!,
-                offsetType: offsetType,
-              ),
-          ScreenBottomOffset(margin: 36.0.s),
-        ],
-      ),
+        ),
+        SizedBox(height: 20.0.s),
+        button ??
+            _CommonButton(
+              text: buttonText!,
+              onPressed: onPressed!,
+              offsetType: offsetType,
+            ),
+        ScreenBottomOffset(margin: 36.0.s),
+      ],
     );
+
+    return isBottomSheet
+        ? content
+        : SheetContent(
+            body: content,
+          );
   }
 }
 
