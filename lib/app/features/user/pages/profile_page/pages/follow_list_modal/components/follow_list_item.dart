@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/user/follow_user_button/follow_user_button.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/utils/username.dart';
@@ -30,11 +29,9 @@ class FollowListItem extends ConsumerWidget {
           return const SizedBox.shrink();
         }
 
-        final isCurrentUser = ref.watch(isCurrentUserSelectorProvider(userMetadata.masterPubkey));
-
         return ListItem.user(
           title: Text(userMetadata.data.displayName),
-          trailing: isCurrentUser ? null : FollowUserButton(pubkey: pubkey),
+          trailing: FollowUserButton(pubkey: pubkey),
           subtitle: Text(
             prefixUsername(
               username: userMetadata.data.name,

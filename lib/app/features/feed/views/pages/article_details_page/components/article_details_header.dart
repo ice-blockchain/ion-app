@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/user/follow_user_button/follow_user_button.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
@@ -21,8 +20,6 @@ class ArticleDetailsHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isCurrentUser = ref.watch(isCurrentUserSelectorProvider(article.masterPubkey));
-
     return ColoredBox(
       color: context.theme.appColors.onPrimaryAccent,
       child: Padding(
@@ -43,7 +40,7 @@ class ArticleDetailsHeader extends ConsumerWidget {
             SizedBox(height: 12.0.s),
             UserInfo(
               pubkey: article.masterPubkey,
-              trailing: isCurrentUser ? null : FollowUserButton(pubkey: article.masterPubkey),
+              trailing: FollowUserButton(pubkey: article.masterPubkey),
             ),
           ],
         ),
