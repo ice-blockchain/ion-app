@@ -11,3 +11,11 @@ class StoryPauseController extends _$StoryPauseController {
 
   set paused(bool value) => state = value;
 }
+
+@riverpod
+class StoryMenuController extends _$StoryMenuController {
+  @override
+  bool build() => false;
+
+  set menuOpen(bool value) => state = value;
+}

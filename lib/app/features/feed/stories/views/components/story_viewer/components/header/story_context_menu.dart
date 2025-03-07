@@ -43,8 +43,14 @@ class StoryContextMenu extends HookConsumerWidget {
     );
 
     return OverlayMenu(
-      onOpen: () => ref.read(storyPauseControllerProvider.notifier).paused = true,
-      onClose: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
+      onOpen: () {
+        ref.read(storyPauseControllerProvider.notifier).paused = true;
+        ref.read(storyMenuControllerProvider.notifier).menuOpen = true;
+      },
+      onClose: () {
+        ref.read(storyPauseControllerProvider.notifier).paused = false;
+        ref.read(storyMenuControllerProvider.notifier).menuOpen = false;
+      },
       menuBuilder: (closeMenu) => OverlayMenuContainer(
         child: Column(
           mainAxisSize: MainAxisSize.min,

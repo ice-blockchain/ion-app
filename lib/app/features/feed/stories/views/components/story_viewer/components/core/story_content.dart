@@ -74,6 +74,9 @@ class StoryContent extends HookConsumerWidget {
     );
 
     final isPaused = ref.watch(storyPauseControllerProvider);
+    final isMenuOpen = ref.watch(storyMenuControllerProvider);
+
+    final shouldShowElements = !isPaused || isMenuOpen;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
@@ -87,7 +90,7 @@ class StoryContent extends HookConsumerWidget {
               StoryViewerHeader(currentPost: post),
             ],
           )
-              .animate(target: isPaused ? 0 : 1)
+              .animate(target: shouldShowElements ? 1 : 0)
               .fade(duration: 300.ms)
               .slideY(begin: -0.1, end: 0, duration: 300.ms),
           Stack(
@@ -108,7 +111,7 @@ class StoryContent extends HookConsumerWidget {
                 ),
             ],
           )
-              .animate(target: isPaused ? 0 : 1)
+              .animate(target: shouldShowElements ? 1 : 0)
               .fade(duration: 300.ms)
               .slideY(begin: 0.1, end: 0, duration: 300.ms),
           if (emojiState.showNotification && emojiState.selectedEmoji != null)

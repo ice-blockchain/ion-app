@@ -37,7 +37,7 @@ class PermissionRequestSheet extends ConsumerWidget {
               ),
             Permission.camera => InfoCard(
                 title: context.i18n.camera_require_access_title(appName),
-                description: context.i18n.camera_require_access_description(appName),
+                description: context.i18n.camera_require_access_description,
                 iconAsset: Assets.svg.walletIconWalletCamera,
               ),
             Permission.notifications => InfoCard(
