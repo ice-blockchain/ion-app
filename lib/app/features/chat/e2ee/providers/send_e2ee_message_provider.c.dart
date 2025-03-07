@@ -290,15 +290,17 @@ class SendE2eeMessageService {
     final messageType = entity.data.messageType;
     final mediaUrl = entity.data.primaryMedia?.url;
     final mediaUri = Uri.tryParse(mediaUrl ?? '');
-    final isMediaAttachmentUploaded =
-        (messageType == MessageType.video || messageType == MessageType.audio) &&
-            mediaUri != null &&
-            mediaUri.hasScheme;
+    final isMediaAttachmentUploaded = (messageType == MessageType.video ||
+            messageType == MessageType.audio ||
+            messageType == MessageType.document) &&
+        mediaUri != null &&
+        mediaUri.hasScheme;
 
-    final isMediaAttachmentNotUploaded =
-        (messageType == MessageType.video || messageType == MessageType.audio) &&
-            mediaUri != null &&
-            !mediaUri.hasScheme;
+    final isMediaAttachmentNotUploaded = (messageType == MessageType.video ||
+            messageType == MessageType.audio ||
+            messageType == MessageType.document) &&
+        mediaUri != null &&
+        !mediaUri.hasScheme;
 
     final messageStatuses =
         await conversationMessageStatusDao.messageStatuses(failedMessageEvent.id);
