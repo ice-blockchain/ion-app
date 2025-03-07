@@ -6,7 +6,9 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
 class FollowSearchBar extends StatelessWidget {
-  const FollowSearchBar({super.key});
+  const FollowSearchBar({super.key, this.onTextChanged});
+
+  final void Function(String)? onTextChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class FollowSearchBar extends StatelessWidget {
             SizedBox(height: 16.0.s),
             ScreenSideOffset.small(
               child: SearchInput(
-                onTextChanged: (String value) {},
+                onTextChanged: onTextChanged,
               ),
             ),
             SizedBox(height: 16.0.s),

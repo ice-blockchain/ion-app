@@ -11,6 +11,7 @@ import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_app_bar.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_loading.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_search_bar.dart';
 import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
 import 'package:ion/app/features/user/providers/followers_data_source_provider.c.dart';
@@ -34,7 +35,7 @@ class FollowersList extends ConsumerWidget {
       const FollowSearchBar(),
       if (entities != null)
         SliverList.separated(
-          separatorBuilder: (_, __) => SizedBox(height: 16.0.s),
+          separatorBuilder: (_, __) => const FollowListSeparator(),
           itemCount: entities.length,
           itemBuilder: (context, index) => ScreenSideOffset.small(
             child: FollowListItem(pubkey: entities[index].masterPubkey),

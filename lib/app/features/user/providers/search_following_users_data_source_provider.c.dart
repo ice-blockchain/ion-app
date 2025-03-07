@@ -10,10 +10,10 @@ import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'following_users_data_source_provider.c.g.dart';
+part 'search_following_users_data_source_provider.c.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? followingUsersDataSource(Ref ref, {required String query}) {
+List<EntitiesDataSource>? searchFollowingUsersDataSource(Ref ref, {required String query}) {
   final followingList = ref.watch(currentUserFollowListProvider).valueOrNull;
   if (followingList == null) {
     return null;

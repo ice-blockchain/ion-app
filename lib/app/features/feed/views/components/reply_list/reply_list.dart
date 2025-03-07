@@ -43,9 +43,6 @@ class ReplyList extends ConsumerWidget {
             separatorHeight: 1.0.s,
           ),
       ],
-      builder: (context, slivers) => CustomScrollView(
-        slivers: slivers,
-      ),
     );
   }
 }
