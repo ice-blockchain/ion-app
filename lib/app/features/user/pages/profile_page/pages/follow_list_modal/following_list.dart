@@ -30,12 +30,10 @@ class FollowingList extends HookConsumerWidget {
     final searchDataSource =
         ref.watch(searchFollowingUsersDataSourceProvider(query: debouncedQuery));
     final searchPagedData = ref.watch(entitiesPagedDataProvider(searchDataSource));
-
-    final searchEntities = searchPagedData?.data.items?.toList();
-    final searchHasMore = searchPagedData?.hasMore ?? false;
+    final searchFollowees = searchPagedData?.data.items?.toList();
 
     return LoadMoreBuilder(
-      hasMore: searchHasMore,
+      hasMore: searchPagedData?.hasMore ?? false,
       onLoadMore: ref.read(entitiesPagedDataProvider(searchDataSource).notifier).fetchEntities,
       slivers: [
         FollowAppBar(
@@ -43,15 +41,15 @@ class FollowingList extends HookConsumerWidget {
         ),
         FollowSearchBar(onTextChanged: (query) => searchQuery.value = query),
         if (searchQuery.value.isNotEmpty)
-          if (searchEntities == null)
+          if (searchFollowees == null)
             const FollowListLoading()
-          else if (searchEntities.isEmpty && !searchHasMore)
+          else if (searchFollowees.isEmpty)
             const NothingIsFound()
           else
             SliverList.builder(
-              itemCount: searchEntities.length,
+              itemCount: searchFollowees.length,
               itemBuilder: (context, index) => ScreenSideOffset.small(
-                child: FollowListItem(pubkey: searchEntities[index].masterPubkey),
+                child: FollowListItem(pubkey: searchFollowees[index].masterPubkey),
               ),
             )
         else if (followeePubkeys != null)
