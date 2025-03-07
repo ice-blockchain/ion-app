@@ -33,21 +33,15 @@ final class LoggerFeatureFlag extends FeatureFlag {
 /// TODO: remove this once before production release
 /// It hides creators without picture from the discover creators page
 ///
-final class HideCreatorsWithoutPicture extends FeatureFlag {
-  const HideCreatorsWithoutPicture._({required super.key});
+final class UsersFeatureFlag extends FeatureFlag {
+  const UsersFeatureFlag._({required super.key});
 
-  static const hideCreatorsWithoutPicture =
-      HideCreatorsWithoutPicture._(key: 'hideCreatorsWithoutPicture');
+  static const hideCreatorsWithoutPicture = UsersFeatureFlag._(key: 'hideCreatorsWithoutPicture');
 }
 
-final class HideCommunityFeatureFlag extends FeatureFlag {
-  const HideCommunityFeatureFlag._({required super.key});
+final class ChatFeatureFlag extends FeatureFlag {
+  const ChatFeatureFlag._({required super.key});
 
-  static const hideCommunity = HideCommunityFeatureFlag._(key: 'hideCommunity');
-}
-
-final class HideChatBookmark extends FeatureFlag {
-  const HideChatBookmark._({required super.key});
-
-  static const hideChatBookmark = HideChatBookmark._(key: 'hideChatBookmark');
+  static const hideCommunity = ChatFeatureFlag._(key: 'hideCommunity');
+  static const hideChatBookmark = ChatFeatureFlag._(key: 'hideChatBookmark');
 }

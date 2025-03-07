@@ -19,7 +19,7 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
   @override
   Stream<void> build() async* {
     final hideCommunity =
-        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+        ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
     if (hideCommunity) {
       yield null;

@@ -23,8 +23,7 @@ part 'community_join_requests_provider.c.g.dart';
 ///
 @riverpod
 FutureOr<CommunityJoinRequestsState> communityJoinRequests(Ref ref) async {
-  final hideCommunity =
-      ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+  final hideCommunity = ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
   if (hideCommunity) {
     return const CommunityJoinRequestsState(

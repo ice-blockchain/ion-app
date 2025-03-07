@@ -18,7 +18,7 @@ class ChatMainModalPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hideCommunity =
-        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+        ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
     final menuItems =
         ConversationType.values.where((type) => !hideCommunity || !type.isCommunity).toList();
