@@ -53,7 +53,7 @@ class MessageReactionContextMenu extends ConsumerWidget {
                           await ref.read(sendE2eeMessageServiceProvider.future);
 
                       unawaited(sendE2eeMessageProvider.resendFailedMessage(messageEvent));
-                      
+
                       if (context.mounted) {
                         context.pop();
                       }
