@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
@@ -47,7 +49,25 @@ class SendAssetFormController extends _$SendAssetFormController {
     );
   }
 
-  void setContact(String? pubkey) => state = state.copyWith(contactPubkey: pubkey);
+  void setContact(String? pubkey) {
+    state = state.copyWith(contactPubkey: pubkey);
+    _initReceiverAddressFromContact();
+  }
+
+  Future<void> _initReceiverAddressFromContact() async {
+    final network = state.network;
+    final pubkey = state.contactPubkey;
+
+    if (pubkey != null && network != null) {
+      final contactMetadata = await ref.read(userMetadataProvider(pubkey).future);
+      final walletAddress = contactMetadata?.data.wallets?[network.id];
+
+      // Assuming that wallet address shouldn't be null because of the check during selection
+      if (walletAddress != null) {
+        state = state.copyWith(receiverAddress: walletAddress);
+      }
+    }
+  }
 
   Future<void> setNetwork(NetworkData network) async {
     final wallets = await ref.read(walletsNotifierProvider.future);
@@ -61,6 +81,10 @@ class SendAssetFormController extends _$SendAssetFormController {
       senderWallet: wallet,
       networkFeeOptions: [],
       selectedNetworkFeeOption: null,
+    );
+
+    unawaited(
+      _initReceiverAddressFromContact(),
     );
 
     if (state.assetData case final CoinAssetData coin) {

@@ -7,13 +7,18 @@ class InfoCard extends StatelessWidget {
   const InfoCard({
     required this.iconAsset,
     required this.title,
-    required this.description,
+    this.description,
+    this.descriptionWidget,
     super.key,
-  });
+  }) : assert(
+          description != null || descriptionWidget != null,
+          'Either description or descriptionWidget must be provided.',
+        );
 
   final String iconAsset;
   final String title;
-  final String description;
+  final String? description;
+  final Widget? descriptionWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +34,17 @@ class InfoCard extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.0.s),
-        Text(
-          description,
-          textAlign: TextAlign.center,
-          style: context.theme.appTextThemes.body2.copyWith(
-            color: context.theme.appColors.secondaryText,
-          ),
-        ),
+        switch (descriptionWidget) {
+          Widget() => descriptionWidget!,
+          null when description != null => Text(
+              description!,
+              textAlign: TextAlign.center,
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: context.theme.appColors.secondaryText,
+              ),
+            ),
+          _ => const SizedBox()
+        },
       ],
     );
   }

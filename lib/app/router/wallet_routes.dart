@@ -12,6 +12,7 @@ class WalletRoutes {
     ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
+        TypedGoRoute<SelectContactRoute>(path: 'select-contact'),
         TypedGoRoute<ContactRoute>(path: 'one-contact/:pubkey'),
         ...coinSendRoutes,
         ...coinReceiveRoutes,
@@ -48,7 +49,7 @@ class WalletRoutes {
         TypedGoRoute<NftSendFormRoute>(
           path: 'nft-send',
           routes: [
-            TypedGoRoute<NftSelectFriendRoute>(path: 'select-friend'),
+            TypedGoRoute<NftSelectContactRoute>(path: 'select-contact-to-send-nft'),
           ],
         ),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
@@ -67,7 +68,7 @@ class WalletRoutes {
         TypedGoRoute<CoinsSendFormRoute>(
           path: 'coin-send-form',
           routes: [
-            TypedGoRoute<CoinsSelectFriendRoute>(path: 'select-friend'),
+            TypedGoRoute<CoinsSelectContactRoute>(path: 'select-contact-to-send_coins'),
             TypedGoRoute<ShareAddressDepositRoute>(path: 'share-address-to-deposit'),
           ],
         ),
@@ -220,20 +221,38 @@ class CoinsSendFormRoute extends BaseRouteData {
         );
 }
 
-class CoinsSelectFriendRoute extends BaseRouteData {
-  CoinsSelectFriendRoute()
+class CoinsSelectContactRoute extends BaseRouteData {
+  CoinsSelectContactRoute({required this.networkId})
       : super(
-          child: const FriendsModal(),
+          child: ContactPickerModal(
+            networkId: networkId,
+            validatorType: ContactPickerValidatorType.networkWallet,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String networkId;
+}
+
+class SelectContactRoute extends BaseRouteData {
+  SelectContactRoute()
+      : super(
+          child: const ContactPickerModal(),
           type: IceRouteType.bottomSheet,
         );
 }
 
-class NftSelectFriendRoute extends BaseRouteData {
-  NftSelectFriendRoute()
+class NftSelectContactRoute extends BaseRouteData {
+  NftSelectContactRoute({required this.networkId})
       : super(
-          child: const FriendsModal(),
+          child: ContactPickerModal(
+            networkId: networkId,
+            validatorType: ContactPickerValidatorType.networkWallet,
+          ),
           type: IceRouteType.bottomSheet,
         );
+
+  final String networkId;
 }
 
 class CoinsSendFormConfirmationRoute extends BaseRouteData {

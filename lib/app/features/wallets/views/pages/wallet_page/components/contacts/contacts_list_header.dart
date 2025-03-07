@@ -31,12 +31,17 @@ class ContactListHeader extends StatelessWidget {
           ),
           TextButton(
             onPressed: () async {
-              final pubkey = await NftSelectFriendRoute().push<String>(context);
+              final pubkey = await SelectContactRoute().push<String>(context);
+              const dialogCloseAnimationDelay = Duration(milliseconds: 500);
+
+              // Wait until close animation finishes
+              await Future<void>.delayed(dialogCloseAnimationDelay);
+
               if (pubkey != null) {
                 if (context.mounted) {
                   final needToEnable2FA = await ContactRoute(pubkey: pubkey).push<bool>(context);
                   if (needToEnable2FA != null && needToEnable2FA == true) {
-                    await Future<void>.delayed(const Duration(seconds: 1));
+                    await Future<void>.delayed(dialogCloseAnimationDelay);
                     if (context.mounted) {
                       await SecureAccountModalRoute().push<void>(context);
                     }

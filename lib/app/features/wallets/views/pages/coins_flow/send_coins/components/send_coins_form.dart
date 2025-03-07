@@ -107,18 +107,22 @@ class SendCoinsForm extends HookConsumerWidget {
                     ContactInputSwitcher(
                       pubkey: selectedContactPubkey,
                       address: formController.receiverAddress,
-                      onClearTap: (pubkey) => notifier.setContact(null),
+                      onClearTap: (pubkey) {
+                        notifier
+                          ..setContact(null)
+                          ..setReceiverAddress('');
+                      },
                       onWalletAddressChanged: (String? value) {
                         if (value != null && value.isNotEmpty) {
                           notifier.setReceiverAddress(value);
                         }
                       },
                       onContactTap: () async {
-                        final pubkey = await CoinsSelectFriendRoute().push<String>(context);
+                        final pubkey = await CoinsSelectContactRoute(
+                          networkId: formController.network!.id,
+                        ).push<String>(context);
 
-                        if (pubkey != null) {
-                          notifier.setContact(pubkey);
-                        }
+                        if (pubkey != null) notifier.setContact(pubkey);
                       },
                       onScanPressed: () async {
                         final address = await CoinSendScanRoute().push<String?>(context);
