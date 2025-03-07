@@ -44,7 +44,7 @@
 		<key>NSContactsUsageDescription</key>
 		<string>Contacts access helps you to invite more friends</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>This app uses the media library to let you add music to videos.</string>
+		<string>Online+ application would like to access the photo library</string>
 		<key>PermissionGroupNotification</key>
 		<string>This app requires access to notifications to keep you informed.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -66,8 +66,6 @@
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false />
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>This app needs access to your photo library to select images.</string>
 		<key>NSCameraUsageDescription</key>
 		<string>This app requires access to the camera for taking photos.</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>

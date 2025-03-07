@@ -611,8 +611,6 @@
   "cancel_creation_article_title": "Cancel article?",
   "photo_library_require_access_title": "Allow media access for {appName}",
   "photo_library_require_access_description": "To upload photos and videos, please grant access to your media gallery.",
-  "camera_require_access_title": "\"{appName} app\" would like to access your camera",
-  "camera_require_access_description": "{appName} application would like to access the camera",
   "push_notifications_require_access_title": "\"{appName} app\" would like to Send You Notifications",
   "push_notifications_require_access_description": "Notifications may include alerts, sounds, and icon badges. These can be configured is Settings.",
   "gallery_permission_headline": "Gallery permission",
