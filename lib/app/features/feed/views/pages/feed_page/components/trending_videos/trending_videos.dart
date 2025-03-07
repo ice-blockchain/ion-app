@@ -34,7 +34,7 @@ class TrendingVideos extends ConsumerWidget {
     if (videos == null) {
       return Column(
         children: [
-          SizedBox(height: 46.0.s),
+          SizedBox(height: 10.0.s),
           const TrendingVideosListSkeleton(listOverlay: listOverlay),
           SizedBox(height: 18.0.s),
           FeedListSeparator(),
