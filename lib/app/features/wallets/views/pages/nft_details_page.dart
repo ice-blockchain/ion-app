@@ -9,20 +9,18 @@ import 'package:ion/app/components/read_more_text/read_more_text.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NftDetailsPage extends ConsumerWidget {
-  const NftDetailsPage({required this.nft, super.key});
+  const NftDetailsPage({required this.tokenId, super.key});
 
-  final NftData nft;
+  final String tokenId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,11 +42,11 @@ class NftDetailsPage extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    NftPicture(imageUrl: nft.iconUrl),
+                    const NftPicture(imageUrl: 'nft.iconUrl'),
                     SizedBox(height: 15.0.s),
-                    NftName(
-                      rank: nft.rank,
-                      name: nft.collectionName,
+                    const NftName(
+                      rank: 'nft.rank'.length,
+                      name: 'nft.collectionName',
                     ),
                     SizedBox(height: 12.0.s),
                     RoundedCard.filled(
@@ -63,8 +61,8 @@ class NftDetailsPage extends ConsumerWidget {
                             ),
                           ),
                           SizedBox(height: 4.0.s),
-                          ReadMoreText(
-                            nft.description,
+                          const ReadMoreText(
+                            'nft.description',
                           ),
                         ],
                       ),
@@ -72,18 +70,18 @@ class NftDetailsPage extends ConsumerWidget {
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
                       title: Text(context.i18n.send_nft_token_network),
-                      value: nft.network.displayName,
+                      value: 'nft.network.displayName',
                       icon: Assets.svg.networks.walletEth.icon(size: 16.0.s),
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_standard),
-                      value: nft.tokenStandard,
+                      value: 'nft.tokenStandard',
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.text(
                       title: Text(context.i18n.send_nft_token_contract_address),
-                      value: nft.contractAddress,
+                      value: 'nft.contractAddress',
                     ),
                     SizedBox(height: 12.0.s),
                     Button(
@@ -95,12 +93,7 @@ class NftDetailsPage extends ConsumerWidget {
                         context.i18n.feed_send,
                       ),
                       onPressed: () {
-                        ref
-                            .read(
-                              sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier,
-                            )
-                            .setNft(nft);
-                        NftSendFormRoute().push<void>(context);
+                        // TODO
                       },
                     ),
                   ],

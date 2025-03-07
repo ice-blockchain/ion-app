@@ -52,11 +52,11 @@ class SendNftForm extends ConsumerWidget {
               ScreenSideOffset.small(
                 child: Column(
                   children: [
-                    NftPicture(imageUrl: selectedNft.iconUrl),
+                    NftPicture(imageUrl: selectedNft.tokenUri),
                     SizedBox(height: 16.0.s),
-                    NftName(
-                      rank: selectedNft.rank,
-                      name: selectedNft.collectionName,
+                    const NftName(
+                      rank: 'selectedNft.rank'.length,
+                      name: 'selectedNft.collectionName',
                     ),
                     SizedBox(height: 16.0.s),
                     ContactInputSwitcher(

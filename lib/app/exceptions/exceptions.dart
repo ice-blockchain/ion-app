@@ -423,3 +423,11 @@ class IncorrectShareableIdentifierException extends IONException {
   IncorrectShareableIdentifierException(dynamic identifier)
       : super(10082, 'Incorrect shareable identifier $identifier');
 }
+
+class NftNotFoundException extends IONException {
+  NftNotFoundException(String tokenId) : super(10083, 'Nft not found: $tokenId');
+}
+
+class CurrentWalletViewNotFoundException extends IONException {
+  CurrentWalletViewNotFoundException() : super(10084, 'Current wallet view not found');
+}

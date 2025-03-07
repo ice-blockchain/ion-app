@@ -41,13 +41,13 @@ class NftPrice extends ConsumerWidget {
       children: [
         Avatar(
           size: 12.0.s,
-          imageUrl: nftData.currencyIconUrl,
+          imageUrl: 'nftData.currencyIconUrl',
         ),
         SizedBox(
           width: 5.0.s,
         ),
         Text(
-          '${nftData.price} ${nftData.currency}',
+          '${'nftData.price'} ${'nftData.currency'}',
           style: textStyle,
         ),
       ],
