@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
@@ -10,7 +11,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/providers/feed_search_history_provider.c.dart'
     show feedSearchHistoryProvider;
 import 'package:ion/app/features/search/views/components/feed_search_history/feed_search_history_user_list_item.dart';
-import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
 import 'package:ion/app/features/search/views/components/search_navigation/search_navigation.dart';

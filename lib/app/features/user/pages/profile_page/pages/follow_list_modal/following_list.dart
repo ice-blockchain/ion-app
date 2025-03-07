@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -60,13 +61,18 @@ class _FollowingSearch extends ConsumerWidget {
     final dataSource = ref.watch(searchFollowingUsersDataSourceProvider(query: query));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final entities = entitiesPagedData?.data.items?.toList();
+    final hasMore = entitiesPagedData?.hasMore ?? false;
 
     if (entities == null) {
-      return const SliverToBoxAdapter(child: SizedBox.shrink()); //TODO: + loading
+      return const FollowListLoading();
+    }
+
+    if (entities.isEmpty && !hasMore) {
+      return const NothingIsFound();
     }
 
     return LoadMoreBuilder(
-      hasMore: entitiesPagedData?.hasMore ?? false,
+      hasMore: hasMore,
       onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
       slivers: [
         SliverList.separated(

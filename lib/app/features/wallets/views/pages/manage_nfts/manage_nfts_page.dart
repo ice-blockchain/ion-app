@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/views/pages/manage_coins/components/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/components/manage_nft_item.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -68,7 +68,7 @@ class ManageNftsPage extends HookConsumerWidget {
                 filteredNftNetworksState.maybeWhen(
                   data: (filteredNftNetworks) {
                     if (filteredNftNetworks.isEmpty) {
-                      return const EmptyState();
+                      return const NothingIsFound();
                     }
                     return SliverPadding(
                       padding: EdgeInsets.only(
@@ -92,7 +92,7 @@ class ManageNftsPage extends HookConsumerWidget {
                     separatorHeight: 12.0.s,
                     listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
                   ),
-                  orElse: () => const EmptyState(),
+                  orElse: () => const NothingIsFound(),
                 ),
               ],
             ),

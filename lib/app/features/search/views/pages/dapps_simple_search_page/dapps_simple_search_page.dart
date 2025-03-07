@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/providers/dapps_search_history_provider.c.dart';
 import 'package:ion/app/features/search/providers/dapps_search_provider.c.dart';
 import 'package:ion/app/features/search/views/components/dapps_search_history/dapps_search_history_list_item.dart';
-import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
 import 'package:ion/app/features/search/views/components/search_navigation/search_navigation.dart';

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
@@ -10,7 +11,6 @@ import 'package:ion/app/features/search/providers/chat_search_history_provider.c
     show chatSearchHistoryProvider;
 import 'package:ion/app/features/search/providers/chat_search_users_provider.c.dart';
 import 'package:ion/app/features/search/views/components/feed_search_history/feed_search_history_user_list_item.dart';
-import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
 import 'package:ion/app/features/search/views/components/search_navigation/search_navigation.dart';
@@ -67,9 +67,7 @@ class ChatSimpleSearchPage extends ConsumerWidget {
                               FeedSearchHistoryUserListItem(pubkey: pubKeys![index]),
                         )
                   : pubKeys.isEmpty
-                      ? NothingIsFound(
-                          title: context.i18n.core_empty_search,
-                        )
+                      ? const NothingIsFound()
                       : ChatSearchResults(pubKeys: pubKeys),
               orElse: SearchResultsSkeleton.new,
             ),
