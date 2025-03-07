@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/followers_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/following_list.dart';
+import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/relevant_followers_list.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
 class FollowListView extends ConsumerWidget {
@@ -23,7 +24,7 @@ class FollowListView extends ConsumerWidget {
       body: switch (followType) {
         FollowType.following => FollowingList(pubkey: pubkey),
         FollowType.followers => FollowersList(pubkey: pubkey),
-        FollowType.relevant => FollowersList.relevant(pubkey: pubkey),
+        FollowType.relevant => RelevantFollowersList(pubkey: pubkey),
       },
     );
   }
