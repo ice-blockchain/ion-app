@@ -15,6 +15,7 @@ class TwoFAStepScaffold extends ConsumerWidget {
     required this.headerDescription,
     required this.headerIcon,
     required this.child,
+    this.bottomPadding = 0,
     this.contentPadding,
     this.onBackPress,
     super.key,
@@ -25,12 +26,13 @@ class TwoFAStepScaffold extends ConsumerWidget {
   final Widget headerIcon;
   final Widget child;
   final double? contentPadding;
+  final double bottomPadding;
   final VoidCallback? onBackPress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
-      bottomPadding: 0,
+      bottomPadding: bottomPadding,
       body: Column(
         children: [
           AppBar(

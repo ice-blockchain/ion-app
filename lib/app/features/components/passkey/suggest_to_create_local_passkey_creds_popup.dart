@@ -57,7 +57,7 @@ class SuggestToCreateLocalPasskeyCredsPopup extends HookConsumerWidget {
               Expanded(
                 child: Button.compact(
                   type: ButtonType.outlined,
-                  label: Text(context.i18n.button_cancel),
+                  label: Text(context.i18n.button_skip),
                   minimumSize: minSize,
                   disabled: rejectToCreateLocalPasskeyCredsState.isLoading ||
                       acceptToCreateLocalPasskeyCredsState.isLoading,
