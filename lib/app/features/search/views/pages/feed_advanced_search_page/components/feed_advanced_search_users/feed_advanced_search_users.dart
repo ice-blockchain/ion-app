@@ -22,22 +22,23 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
     useAutomaticKeepAlive();
 
     final searchResults = ref.watch(searchUsersProvider(query: query));
+    final searchUsers = searchResults?.users;
 
     return PullToRefreshBuilder(
       slivers: [
-        if (searchResults == null)
+        if (searchUsers == null)
           const ListItemsLoadingState(
             padding: EdgeInsets.zero,
             listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
           )
-        else if (searchResults.users.isEmpty && !searchResults.hasMore)
+        else if (searchUsers.isEmpty)
           NothingIsFound(title: context.i18n.search_nothing_found)
         else
           SliverList.separated(
-            itemCount: searchResults.users.length,
+            itemCount: searchUsers.length,
             separatorBuilder: (_, __) => FeedListSeparator(),
             itemBuilder: (context, index) =>
-                FeedAdvancedSearchUserListItem(user: searchResults.users[index]),
+                FeedAdvancedSearchUserListItem(user: searchUsers[index]),
           ),
       ],
       onRefresh: ref.read(searchUsersProvider(query: query).notifier).refresh,

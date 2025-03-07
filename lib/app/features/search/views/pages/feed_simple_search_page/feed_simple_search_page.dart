@@ -29,6 +29,7 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
     final history = ref.watch(feedSearchHistoryProvider);
     final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300)) ?? '';
     final searchResults = ref.watch(searchUsersProvider(query: debouncedQuery));
+    final searchUsers = searchResults?.users;
 
     return Scaffold(
       body: ScreenTopOffset(
@@ -62,20 +63,20 @@ class FeedSimpleSearchPage extends HookConsumerWidget {
               Expanded(
                 child: PullToRefreshBuilder(
                   slivers: [
-                    if (searchResults == null)
+                    if (searchUsers == null)
                       ListItemsLoadingState(
                         padding: EdgeInsets.symmetric(vertical: 20.0.s),
                         listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
                       )
-                    else if (searchResults.users.isEmpty && !searchResults.hasMore)
+                    else if (searchUsers.isEmpty)
                       NothingIsFound(title: context.i18n.search_nothing_found)
                     else
                       SliverPadding(
                         padding: EdgeInsets.symmetric(vertical: 12.0.s),
                         sliver: SliverList.builder(
-                          itemCount: searchResults.users.length,
+                          itemCount: searchUsers.length,
                           itemBuilder: (context, index) =>
-                              FeedSimpleSearchListItem(user: searchResults.users[index]),
+                              FeedSimpleSearchListItem(user: searchUsers[index]),
                         ),
                       ),
                   ],

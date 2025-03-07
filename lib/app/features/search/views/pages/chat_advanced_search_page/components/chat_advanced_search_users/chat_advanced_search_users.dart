@@ -22,22 +22,23 @@ class ChatAdvancedSearchUsers extends HookConsumerWidget {
     useAutomaticKeepAlive();
 
     final searchResults = ref.watch(searchUsersProvider(query: query));
+    final searchUsers = searchResults?.users;
 
     return PullToRefreshBuilder(
       slivers: [
-        if (searchResults == null)
+        if (searchUsers == null)
           ListItemsLoadingState(
             padding: EdgeInsets.symmetric(vertical: 12.0.s),
             listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
           )
-        else if (searchResults.users.isEmpty && !searchResults.hasMore)
+        else if (searchUsers.isEmpty)
           const NothingIsFound()
         else
           SliverList.separated(
-            itemCount: searchResults.users.length,
+            itemCount: searchUsers.length,
             separatorBuilder: (_, __) => const HorizontalSeparator(),
             itemBuilder: (context, index) =>
-                ChatAdvancedSearchUserListItem(user: searchResults.users[index]),
+                ChatAdvancedSearchUserListItem(user: searchUsers[index]),
           ),
       ],
       onRefresh: ref.read(searchUsersProvider(query: query).notifier).refresh,
