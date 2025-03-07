@@ -10,6 +10,7 @@ import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -23,6 +24,7 @@ class MoneyMessage extends HookWidget {
     required this.equivalentUsd,
     required this.chain,
     required this.createdAt,
+    required this.eventMessage,
     this.isLastMessageFromAuthor = true,
     this.author,
     this.reactions,
@@ -36,6 +38,7 @@ class MoneyMessage extends HookWidget {
   final String chain;
   final DateTime createdAt;
   final MessageAuthor? author;
+  final EventMessage eventMessage;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
@@ -84,6 +87,7 @@ class MoneyMessage extends HookWidget {
     );
 
     return MessageItemWrapper(
+      messageEvent: eventMessage,
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,

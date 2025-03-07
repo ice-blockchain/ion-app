@@ -6,16 +6,19 @@ class PollResultMessage extends StatelessWidget {
   const PollResultMessage({
     required this.isMe,
     required this.createdAt,
+    required this.eventMessage,
     super.key,
     this.reactions,
   });
   final bool isMe;
   final DateTime createdAt;
+  final EventMessage eventMessage;
   final List<MessageReactionGroup>? reactions;
 
   @override
   Widget build(BuildContext context) {
     return MessageItemWrapper(
+      messageEvent: eventMessage,
       contentPadding: EdgeInsets.all(
         12.0.s,
       ),

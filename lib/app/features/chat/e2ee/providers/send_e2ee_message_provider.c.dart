@@ -11,6 +11,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -112,130 +113,137 @@ class SendE2eeMessageService {
       if (mediaFiles.isNotEmpty) {
         final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
 
+        // These are used to for uploading state
+        final conversationTagsWithDummyMediaTags = _generateConversationTags(
+          subject: subject,
+          groupImageTag: groupImageTag,
+          conversationId: conversationId,
+          masterPubkeys: participantsMasterPubkeys,
+        )..add([
+            'imeta',
+            'url ${mediaFiles.first.path}',
+            'm ${mediaFiles.first.mimeType}',
+            'alt message',
+            'dim null',
+            'x null',
+            'ox null',
+            'expiration null',
+            'encryption-key null null null aes-gcm',
+          ]);
+
+        final eventMessageWithoutMedia = await _createEventMessage(
+          content: content,
+          signer: eventSigner!,
+          tags: conversationTagsWithDummyMediaTags,
+        );
+
         await Future.wait(
           participantsMasterPubkeys.map((masterPubkey) async {
-            final pubkey = participantsKeysMap[masterPubkey];
+            try {
+              final pubkey = participantsKeysMap[masterPubkey];
 
-            if (pubkey == null) {
-              throw UserPubkeyNotFoundException(masterPubkey);
+              if (pubkey == null) {
+                throw UserPubkeyNotFoundException(masterPubkey);
+              }
+
+              if (masterPubkey == currentUserMasterPubkey) {
+                await conversationDao.add([eventMessageWithoutMedia]);
+                await eventMessageDao.add(eventMessageWithoutMedia);
+              }
+
+              final encryptedMediaFiles =
+                  await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
+
+              final uploadedMediaFilesWithKeys = await Future.wait(
+                encryptedMediaFiles.map((encryptedMediaFile) async {
+                  final mediaFile = encryptedMediaFile.$1;
+                  final secretKey = encryptedMediaFile.$2;
+                  final nonce = encryptedMediaFile.$3;
+                  final mac = encryptedMediaFile.$4;
+
+                  final oneTimeEventSigner = await Ed25519KeyStore.generate();
+
+                  await conversationMessageStatusDao.add(
+                    masterPubkey: masterPubkey,
+                    eventMessageId: eventMessageWithoutMedia.id,
+                    status: MessageDeliveryStatus.created,
+                  );
+
+                  final uploadResult = await ionConnectUploadNotifier.upload(
+                    mediaFile,
+                    alt: FileAlt.message,
+                    customEventSigner: oneTimeEventSigner,
+                  );
+
+                  final fileMetadataEvent = await _generateFileMetadataEvent(
+                    ontTimeEventSigner: oneTimeEventSigner,
+                    fileMetadataEntity: uploadResult.fileMetadata,
+                  );
+
+                  await ionConnectNotifier.sendEvent(
+                    fileMetadataEvent,
+                    actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+                    cache: false,
+                  );
+
+                  return (uploadResult, secretKey, nonce, mac);
+                }),
+              );
+
+              for (final mediaFile in encryptedMediaFiles) {
+                final file = File(mediaFile.$1.path);
+                await file.delete();
+              }
+
+              final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
+
+              final conversationTags = _generateConversationTags(
+                subject: subject,
+                groupImageTag: groupImageTag,
+                conversationId: conversationId,
+                masterPubkeys: participantsMasterPubkeys,
+              )..addAll(imetaTags);
+
+              final eventMessageWithMedia = await _createEventMessage(
+                previousId: eventMessageWithoutMedia.id,
+                content: content,
+                signer: eventSigner!,
+                tags: conversationTags,
+              );
+
+              // We replace existing event message with the one with uploaded media
+              if (masterPubkey == currentUserMasterPubkey) {
+                await eventMessageDao.add(eventMessageWithMedia);
+              }
+
+              final giftWrap = await _createGiftWrap(
+                signer: eventSigner!,
+                receiverPubkey: pubkey,
+                receiverMasterPubkey: masterPubkey,
+                eventMessage: eventMessageWithMedia,
+              );
+
+              await ionConnectNotifier.sendEvent(
+                giftWrap,
+                cache: false,
+                actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+              );
+
+              await conversationMessageStatusDao.add(
+                masterPubkey: masterPubkey,
+                eventMessageId: eventMessageWithMedia.id,
+                status: masterPubkey == currentUserMasterPubkey
+                    ? MessageDeliveryStatus.read
+                    : MessageDeliveryStatus.sent,
+              );
+              // No matter is media upload failed or event message itself
+            } catch (e) {
+              await conversationMessageStatusDao.add(
+                masterPubkey: masterPubkey,
+                eventMessageId: eventMessageWithoutMedia.id,
+                status: MessageDeliveryStatus.failed,
+              );
             }
-
-            // These are used to for uploading state
-            final conversationTagsWithDummyMediaTags = _generateConversationTags(
-              subject: subject,
-              groupImageTag: groupImageTag,
-              conversationId: conversationId,
-              masterPubkeys: participantsMasterPubkeys,
-            )..add([
-                'imeta',
-                'url https://example.com',
-                'm ${mediaFiles.first.mimeType}',
-                'alt message',
-                'dim null',
-                'x null',
-                'ox null',
-                'expiration null',
-                'encryption-key null null null aes-gcm',
-              ]);
-
-            final eventMessageWithoutMedia = await _createEventMessage(
-              content: content,
-              signer: eventSigner!,
-              tags: conversationTagsWithDummyMediaTags,
-            );
-
-            // We need to insert event message to DB before video is uploaded to
-            // retry if upload failed
-            if (masterPubkey == currentUserMasterPubkey) {
-              await conversationDao.add([eventMessageWithoutMedia]);
-              await eventMessageDao.add(eventMessageWithoutMedia);
-            }
-
-            final encryptedMediaFiles =
-                await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
-
-            final uploadedMediaFilesWithKeys = await Future.wait(
-              encryptedMediaFiles.map((encryptedMediaFile) async {
-                final mediaFile = encryptedMediaFile.$1;
-                final secretKey = encryptedMediaFile.$2;
-                final nonce = encryptedMediaFile.$3;
-                final mac = encryptedMediaFile.$4;
-
-                final oneTimeEventSigner = await Ed25519KeyStore.generate();
-
-                await conversationMessageStatusDao.add(
-                  masterPubkey: masterPubkey,
-                  eventMessageId: eventMessageWithoutMedia.id,
-                  status: MessageDeliveryStatus.created,
-                );
-
-                final uploadResult = await ionConnectUploadNotifier.upload(
-                  mediaFile,
-                  alt: FileAlt.message,
-                  customEventSigner: oneTimeEventSigner,
-                );
-
-                final fileMetadataEvent = await _generateFileMetadataEvent(
-                  ontTimeEventSigner: oneTimeEventSigner,
-                  fileMetadataEntity: uploadResult.fileMetadata,
-                );
-
-                await ionConnectNotifier.sendEvent(
-                  fileMetadataEvent,
-                  actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-                  cache: false,
-                );
-
-                return (uploadResult, secretKey, nonce, mac);
-              }),
-            );
-
-            for (final mediaFile in encryptedMediaFiles) {
-              final file = File(mediaFile.$1.path);
-              await file.delete();
-            }
-
-            final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
-
-            final conversationTags = _generateConversationTags(
-              subject: subject,
-              groupImageTag: groupImageTag,
-              conversationId: conversationId,
-              masterPubkeys: participantsMasterPubkeys,
-            )..addAll(imetaTags);
-
-            final eventMessageWithMedia = await _createEventMessage(
-              previousId: eventMessageWithoutMedia.id,
-              content: content,
-              signer: eventSigner!,
-              tags: conversationTags,
-            );
-
-            final giftWrap = await _createGiftWrap(
-              signer: eventSigner!,
-              receiverPubkey: pubkey,
-              receiverMasterPubkey: masterPubkey,
-              eventMessage: eventMessageWithMedia,
-            );
-
-            // We replace existing event message with the one with uploaded media
-            if (masterPubkey == currentUserMasterPubkey) {
-              await eventMessageDao.add(eventMessageWithMedia);
-            }
-
-            await ionConnectNotifier.sendEvent(
-              giftWrap,
-              cache: false,
-              actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-            );
-
-            await conversationMessageStatusDao.add(
-              masterPubkey: masterPubkey,
-              eventMessageId: eventMessageWithMedia.id,
-              status: masterPubkey == currentUserMasterPubkey
-                  ? MessageDeliveryStatus.read
-                  : MessageDeliveryStatus.sent,
-            );
           }),
         );
 
@@ -275,6 +283,23 @@ class SendE2eeMessageService {
   }
 
   Future<void> resendFailedMessage(EventMessage failedMessageEvent) async {
+    final entity = PrivateDirectMessageEntity.fromEventMessage(failedMessageEvent);
+
+    final messageType = entity.data.messageType;
+    final mediaUrl = entity.data.primaryMedia?.url;
+    final mediaUri = Uri.tryParse(mediaUrl ?? '');
+
+    final isMessageWithMedia = [
+      MessageType.video,
+      MessageType.audio,
+      MessageType.document,
+    ].contains(messageType);
+
+    final isMediaAttachmentUploaded = isMessageWithMedia && mediaUri != null && mediaUri.hasScheme;
+
+    final isMediaAttachmentNotUploaded =
+        isMessageWithMedia && mediaUri != null && !mediaUri.hasScheme;
+
     final messageStatuses =
         await conversationMessageStatusDao.messageStatuses(failedMessageEvent.id);
 
@@ -286,36 +311,139 @@ class SendE2eeMessageService {
     final participantsKeysMap =
         await conversationPubkeysNotifier.fetchUsersKeys(failedParticipantsMasterPubkeys);
 
-    await Future.wait(
-      failedParticipantsMasterPubkeys.map((masterPubkey) async {
-        final pubkey = participantsKeysMap[masterPubkey];
+    // If this is message without media or message with media but media was successfully uploaded
+    if (!isMessageWithMedia || isMediaAttachmentUploaded) {
+      await Future.wait(
+        failedParticipantsMasterPubkeys.map((masterPubkey) async {
+          final pubkey = participantsKeysMap[masterPubkey];
 
-        if (pubkey == null) {
-          throw UserPubkeyNotFoundException(masterPubkey);
-        }
+          if (pubkey == null) {
+            throw UserPubkeyNotFoundException(masterPubkey);
+          }
 
-        final giftWrap = await _createGiftWrap(
-          signer: eventSigner!,
-          receiverPubkey: failedMessageEvent.pubkey,
-          eventMessage: failedMessageEvent,
-          receiverMasterPubkey: masterPubkey,
-        );
+          final giftWrap = await _createGiftWrap(
+            signer: eventSigner!,
+            eventMessage: failedMessageEvent,
+            receiverMasterPubkey: masterPubkey,
+            receiverPubkey: failedMessageEvent.pubkey,
+          );
 
-        await ionConnectNotifier.sendEvent(
-          giftWrap,
-          cache: false,
-          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-        );
+          await ionConnectNotifier.sendEvent(
+            giftWrap,
+            cache: false,
+            actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+          );
 
-        await conversationMessageStatusDao.add(
-          masterPubkey: masterPubkey,
-          eventMessageId: failedMessageEvent.id,
-          status: masterPubkey == currentUserMasterPubkey
-              ? MessageDeliveryStatus.read
-              : MessageDeliveryStatus.sent,
-        );
-      }),
-    );
+          await conversationMessageStatusDao.add(
+            masterPubkey: masterPubkey,
+            eventMessageId: failedMessageEvent.id,
+            status: masterPubkey == currentUserMasterPubkey
+                ? MessageDeliveryStatus.read
+                : MessageDeliveryStatus.sent,
+          );
+        }),
+      );
+    } else if (isMediaAttachmentNotUploaded) {
+      // Try to find local path and upload media again
+      final mediaFilesToUpload = entity.data.media.values
+          .map(
+            (media) => MediaFile(
+              path: mediaUrl!,
+              mimeType: entity.data.primaryMedia?.mimeType,
+            ),
+          )
+          .toList();
+
+      final compressedMediaFiles = await _compressMediaFiles(mediaFilesToUpload);
+
+      await Future.wait(
+        failedParticipantsMasterPubkeys.map((masterPubkey) async {
+          final pubkey = participantsKeysMap[masterPubkey];
+
+          if (pubkey == null) {
+            throw UserPubkeyNotFoundException(masterPubkey);
+          }
+
+          final encryptedMediaFiles =
+              await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
+
+          final uploadedMediaFilesWithKeys = await Future.wait(
+            encryptedMediaFiles.map((encryptedMediaFile) async {
+              final mediaFile = encryptedMediaFile.$1;
+              final secretKey = encryptedMediaFile.$2;
+              final nonce = encryptedMediaFile.$3;
+              final mac = encryptedMediaFile.$4;
+
+              final oneTimeEventSigner = await Ed25519KeyStore.generate();
+
+              final uploadResult = await ionConnectUploadNotifier.upload(
+                mediaFile,
+                alt: FileAlt.message,
+                customEventSigner: oneTimeEventSigner,
+              );
+
+              final fileMetadataEvent = await _generateFileMetadataEvent(
+                ontTimeEventSigner: oneTimeEventSigner,
+                fileMetadataEntity: uploadResult.fileMetadata,
+              );
+
+              await ionConnectNotifier.sendEvent(
+                fileMetadataEvent,
+                actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+                cache: false,
+              );
+
+              return (uploadResult, secretKey, nonce, mac);
+            }),
+          );
+
+          for (final mediaFile in encryptedMediaFiles) {
+            final file = File(mediaFile.$1.path);
+            await file.delete();
+          }
+
+          final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
+
+          final conversationTags = _generateConversationTags(
+            conversationId: entity.data.uuid,
+            masterPubkeys: entity.allPubkeys,
+          )..addAll(imetaTags);
+
+          final eventMessageWithMedia = await _createEventMessage(
+            previousId: failedMessageEvent.id,
+            content: failedMessageEvent.content,
+            signer: eventSigner!,
+            tags: conversationTags,
+          );
+
+          // We replace existing event message with the one with uploaded media
+          if (masterPubkey == currentUserMasterPubkey) {
+            await eventMessageDao.add(eventMessageWithMedia);
+          }
+
+          final giftWrap = await _createGiftWrap(
+            signer: eventSigner!,
+            receiverPubkey: pubkey,
+            receiverMasterPubkey: masterPubkey,
+            eventMessage: eventMessageWithMedia,
+          );
+
+          await ionConnectNotifier.sendEvent(
+            giftWrap,
+            cache: false,
+            actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+          );
+
+          await conversationMessageStatusDao.add(
+            masterPubkey: masterPubkey,
+            eventMessageId: eventMessageWithMedia.id,
+            status: masterPubkey == currentUserMasterPubkey
+                ? MessageDeliveryStatus.read
+                : MessageDeliveryStatus.sent,
+          );
+        }),
+      );
+    }
   }
 
   Future<EventMessage> _generateFileMetadataEvent({

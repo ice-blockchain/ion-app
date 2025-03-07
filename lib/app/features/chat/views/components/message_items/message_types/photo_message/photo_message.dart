@@ -8,6 +8,7 @@ import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class PhotoMessage extends HookWidget {
@@ -15,6 +16,7 @@ class PhotoMessage extends HookWidget {
     required this.isMe,
     required this.imageUrl,
     required this.createdAt,
+    required this.eventMessage,
     this.isLastMessageFromAuthor = true,
     this.message,
     this.reactions,
@@ -28,6 +30,7 @@ class PhotoMessage extends HookWidget {
   final String imageUrl;
   final DateTime createdAt;
   final MessageAuthor? author;
+  final EventMessage eventMessage;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
@@ -47,6 +50,7 @@ class PhotoMessage extends HookWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      messageEvent: eventMessage,
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(padding),
       child: LayoutBuilder(

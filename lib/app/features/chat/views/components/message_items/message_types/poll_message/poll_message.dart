@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/poll_message/mock.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 part 'poll_result_message.dart';
 
@@ -16,6 +17,7 @@ class PollMessage extends HookWidget {
   const PollMessage({
     required this.isMe,
     required this.createdAt,
+    required this.eventMessage,
     super.key,
     this.reactions,
     this.author,
@@ -25,6 +27,7 @@ class PollMessage extends HookWidget {
   final bool isMe;
   final DateTime createdAt;
   final MessageAuthor? author;
+  final EventMessage eventMessage;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
@@ -33,10 +36,16 @@ class PollMessage extends HookWidget {
     final selectedId = useState<String?>(null);
 
     if (selectedId.value != null) {
-      return PollResultMessage(isMe: isMe, reactions: reactions, createdAt: createdAt);
+      return PollResultMessage(
+        isMe: isMe,
+        reactions: reactions,
+        createdAt: createdAt,
+        eventMessage: eventMessage,
+      );
     }
 
     return MessageItemWrapper(
+      messageEvent: eventMessage,
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(
         12.0.s,

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -50,7 +52,8 @@ class MessageReactionContextMenu extends ConsumerWidget {
                       final sendE2eeMessageProvider =
                           await ref.read(sendE2eeMessageServiceProvider.future);
 
-                      await sendE2eeMessageProvider.resendFailedMessage(messageEvent);
+                      unawaited(sendE2eeMessageProvider.resendFailedMessage(messageEvent));
+
                       if (context.mounted) {
                         context.pop();
                       }
