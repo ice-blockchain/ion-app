@@ -146,8 +146,6 @@ class SendE2eeMessageService {
                 throw UserPubkeyNotFoundException(masterPubkey);
               }
 
-              // We need to insert event message to DB before video is uploaded to
-              // retry if upload failed
               if (masterPubkey == currentUserMasterPubkey) {
                 await conversationDao.add([eventMessageWithoutMedia]);
                 await eventMessageDao.add(eventMessageWithoutMedia);
@@ -290,17 +288,17 @@ class SendE2eeMessageService {
     final messageType = entity.data.messageType;
     final mediaUrl = entity.data.primaryMedia?.url;
     final mediaUri = Uri.tryParse(mediaUrl ?? '');
-    final isMediaAttachmentUploaded = (messageType == MessageType.video ||
-            messageType == MessageType.audio ||
-            messageType == MessageType.document) &&
-        mediaUri != null &&
-        mediaUri.hasScheme;
 
-    final isMediaAttachmentNotUploaded = (messageType == MessageType.video ||
-            messageType == MessageType.audio ||
-            messageType == MessageType.document) &&
-        mediaUri != null &&
-        !mediaUri.hasScheme;
+    final isMessageWithMedia = [
+      MessageType.video,
+      MessageType.audio,
+      MessageType.document,
+    ].contains(messageType);
+
+    final isMediaAttachmentUploaded = isMessageWithMedia && mediaUri != null && mediaUri.hasScheme;
+
+    final isMediaAttachmentNotUploaded =
+        isMessageWithMedia && mediaUri != null && !mediaUri.hasScheme;
 
     final messageStatuses =
         await conversationMessageStatusDao.messageStatuses(failedMessageEvent.id);
@@ -314,10 +312,7 @@ class SendE2eeMessageService {
         await conversationPubkeysNotifier.fetchUsersKeys(failedParticipantsMasterPubkeys);
 
     // If this is message without media or message with media but media was successfully uploaded
-    if (messageType == MessageType.profile ||
-        messageType == MessageType.emoji ||
-        messageType == MessageType.text ||
-        isMediaAttachmentUploaded) {
+    if (!isMessageWithMedia || isMediaAttachmentUploaded) {
       await Future.wait(
         failedParticipantsMasterPubkeys.map((masterPubkey) async {
           final pubkey = participantsKeysMap[masterPubkey];
