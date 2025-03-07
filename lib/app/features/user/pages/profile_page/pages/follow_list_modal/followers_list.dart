@@ -33,8 +33,7 @@ class FollowersList extends ConsumerWidget {
       FollowAppBar(title: FollowType.followers.getTitleWithCounter(context, followersCount ?? 0)),
       const FollowSearchBar(),
       if (entities != null)
-        SliverList.separated(
-          separatorBuilder: (_, __) => SizedBox(height: 16.0.s),
+        SliverList.builder(
           itemCount: entities.length,
           itemBuilder: (context, index) => ScreenSideOffset.small(
             child: FollowListItem(pubkey: entities[index].masterPubkey),

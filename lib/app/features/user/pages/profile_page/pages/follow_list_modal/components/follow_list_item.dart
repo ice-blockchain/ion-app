@@ -23,28 +23,31 @@ class FollowListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userMetadataResult = ref.watch(userMetadataProvider(pubkey));
 
-    return userMetadataResult.maybeWhen(
-      data: (userMetadata) {
-        if (userMetadata == null) {
-          return const SizedBox.shrink();
-        }
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0.s),
+      child: userMetadataResult.maybeWhen(
+        data: (userMetadata) {
+          if (userMetadata == null) {
+            return const SizedBox.shrink();
+          }
 
-        return ListItem.user(
-          title: Text(userMetadata.data.displayName),
-          trailing: FollowUserButton(pubkey: pubkey),
-          subtitle: Text(
-            prefixUsername(
-              username: userMetadata.data.name,
-              context: context,
+          return ListItem.user(
+            title: Text(userMetadata.data.displayName),
+            trailing: FollowUserButton(pubkey: pubkey),
+            subtitle: Text(
+              prefixUsername(
+                username: userMetadata.data.name,
+                context: context,
+              ),
             ),
-          ),
-          profilePicture: userMetadata.data.picture,
-          onTap: () {
-            Navigator.of(context).pop(userMetadata.masterPubkey);
-          },
-        );
-      },
-      orElse: () => ItemLoadingState(itemHeight: itemHeight),
+            profilePicture: userMetadata.data.picture,
+            onTap: () {
+              Navigator.of(context).pop(userMetadata.masterPubkey);
+            },
+          );
+        },
+        orElse: () => ItemLoadingState(itemHeight: itemHeight),
+      ),
     );
   }
 }

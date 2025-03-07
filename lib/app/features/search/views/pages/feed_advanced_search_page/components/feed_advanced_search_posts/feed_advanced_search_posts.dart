@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -11,7 +12,6 @@ import 'package:ion/app/features/components/entities_list/entities_list_skeleton
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/providers/feed_search_posts_data_source_provider.c.dart';
-import 'package:ion/app/features/search/views/components/nothing_is_found/nothing_is_found.dart';
 
 class FeedAdvancedSearchPosts extends HookConsumerWidget {
   const FeedAdvancedSearchPosts({

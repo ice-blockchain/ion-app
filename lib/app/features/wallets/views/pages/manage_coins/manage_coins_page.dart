@@ -5,11 +5,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
+import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
-import 'package:ion/app/features/wallets/views/pages/manage_coins/components/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/components/import_token_action_button.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/components/manage_coin_item_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_coins/providers/manage_coins_provider.c.dart';
@@ -58,26 +58,26 @@ class ManageCoinsPage extends HookConsumerWidget {
                 if (searchText.value.isEmpty)
                   manageCoins.maybeWhen(
                     data: (coins) {
-                      if (coins.isEmpty) return const EmptyState();
+                      if (coins.isEmpty) return const NothingIsFound();
                       return _CoinsList(
                         itemCount: coins.length,
                         itemProvider: (index) => coins.values.elementAt(index).coinsGroup,
                       );
                     },
                     loading: () => const _ProgressIndicator(),
-                    orElse: () => const EmptyState(),
+                    orElse: () => const NothingIsFound(),
                   )
                 else
                   searchResult.maybeWhen(
                     data: (coins) {
-                      if (coins.isEmpty) return const EmptyState();
+                      if (coins.isEmpty) return const NothingIsFound();
                       return _CoinsList(
                         itemCount: coins.length,
                         itemProvider: (index) => coins.elementAt(index),
                       );
                     },
                     loading: () => const _ProgressIndicator(),
-                    orElse: () => const EmptyState(),
+                    orElse: () => const NothingIsFound(),
                   ),
               ],
             ),

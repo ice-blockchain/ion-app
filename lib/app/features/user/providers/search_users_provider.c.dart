@@ -15,9 +15,11 @@ part 'search_users_provider.c.g.dart';
 @riverpod
 class SearchUsers extends _$SearchUsers {
   @override
-  ({List<UserMetadataEntity> users, bool hasMore, List<EntitiesDataSource> dataSource})? build({
+  ({List<UserMetadataEntity>? users, bool hasMore, List<EntitiesDataSource> dataSource})? build({
     required String query,
   }) {
+    if (query.isEmpty) return null;
+
     final masterPubkey = ref.watch(currentPubkeySelectorProvider);
     final dataSource = ref.watch(searchUsersDataSourceProvider(query: query));
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
@@ -27,10 +29,9 @@ class SearchUsers extends _$SearchUsers {
     }
 
     final users = entitiesPagedData.data.items
-            ?.whereType<UserMetadataEntity>()
-            .whereNot((user) => user.masterPubkey == masterPubkey)
-            .toList() ??
-        [];
+        ?.whereType<UserMetadataEntity>()
+        .whereNot((user) => user.masterPubkey == masterPubkey)
+        .toList();
     return (users: users, hasMore: entitiesPagedData.hasMore, dataSource: dataSource);
   }
 
