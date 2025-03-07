@@ -45,3 +45,9 @@ final class HideCommunityFeatureFlag extends FeatureFlag {
 
   static const hideCommunity = HideCommunityFeatureFlag._(key: 'hideCommunity');
 }
+
+final class HideChatBookmark extends FeatureFlag {
+  const HideChatBookmark._({required super.key});
+
+  static const hideChatBookmark = HideChatBookmark._(key: 'hideChatBookmark');
+}

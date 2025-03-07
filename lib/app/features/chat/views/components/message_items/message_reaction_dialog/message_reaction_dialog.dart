@@ -11,6 +11,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_context_menu.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_emoji_bar.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
@@ -32,7 +34,24 @@ class MessageReactionDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contextMenuHeight = messageStatus == MessageDeliveryStatus.failed ? 103.0.s : 237.0.s;
+    final contextMenuHeight = useMemoized(() {
+      final hideChatBookmark =
+          ref.read(featureFlagsProvider.notifier).get(HideChatBookmark.hideChatBookmark);
+
+      final heightOfFailedMessageOverlayMenu = 103.0.s;
+      final heightOfSuccessMessageOverlayMenu = 184.0.s;
+      final heightOfSuccessMessageOverlayMenuWithBookmark = 203.0.s;
+
+      if (messageStatus == MessageDeliveryStatus.failed) {
+        return heightOfFailedMessageOverlayMenu;
+      }
+
+      if (hideChatBookmark) {
+        return heightOfSuccessMessageOverlayMenu;
+      }
+
+      return heightOfSuccessMessageOverlayMenuWithBookmark;
+    });
 
     final capturedImage = useFuture(
       useMemoized(
