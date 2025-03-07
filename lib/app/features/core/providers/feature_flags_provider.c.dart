@@ -18,6 +18,7 @@ class FeatureFlags extends _$FeatureFlags {
       FeedFeatureFlag.showMentionsSuggestions: true,
       HideCreatorsWithoutPicture.hideCreatorsWithoutPicture: true,
       HideCommunityFeatureFlag.hideCommunity: true,
+      HideChatBookmark.hideChatBookmark: true,
 
       /// Log flags
       if (ref.watch(envProvider.notifier).get(EnvVariable.SHOW_DEBUG_INFO)) ...{
