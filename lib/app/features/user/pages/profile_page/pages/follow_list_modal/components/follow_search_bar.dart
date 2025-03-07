@@ -23,7 +23,7 @@ class FollowSearchBar extends StatelessWidget {
                 onTextChanged: onTextChanged,
               ),
             ),
-            SizedBox(height: 16.0.s),
+            SizedBox(height: 8.0.s),
           ],
         ),
       ),

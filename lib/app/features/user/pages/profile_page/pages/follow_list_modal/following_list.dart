@@ -12,7 +12,6 @@ import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_app_bar.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_loading.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_list_separator.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/components/follow_search_bar.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/search_following_users_data_source_provider.c.dart';
@@ -24,68 +23,48 @@ class FollowingList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pubkeys = ref.watch(followListProvider(pubkey)).valueOrNull?.pubkeys;
+    final followeePubkeys = ref.watch(followListProvider(pubkey)).valueOrNull?.pubkeys;
     final searchQuery = useState('');
+    final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 
-    return CustomScrollView(
+    final searchDataSource =
+        ref.watch(searchFollowingUsersDataSourceProvider(query: debouncedQuery));
+    final searchPagedData = ref.watch(entitiesPagedDataProvider(searchDataSource));
+
+    final searchEntities = searchPagedData?.data.items?.toList();
+    final searchHasMore = searchPagedData?.hasMore ?? false;
+
+    return LoadMoreBuilder(
+      hasMore: searchHasMore,
+      onLoadMore: ref.read(entitiesPagedDataProvider(searchDataSource).notifier).fetchEntities,
       slivers: [
         FollowAppBar(
-          title: FollowType.following.getTitleWithCounter(context, pubkeys?.length ?? 0),
+          title: FollowType.following.getTitleWithCounter(context, followeePubkeys?.length ?? 0),
         ),
         FollowSearchBar(onTextChanged: (query) => searchQuery.value = query),
         if (searchQuery.value.isNotEmpty)
-          _FollowingSearch(query: searchQuery.value)
-        else if (pubkeys != null)
-          SliverList.separated(
-            separatorBuilder: (_, __) => const FollowListSeparator(),
-            itemCount: pubkeys.length,
+          if (searchEntities == null)
+            const FollowListLoading()
+          else if (searchEntities.isEmpty && !searchHasMore)
+            const NothingIsFound()
+          else
+            SliverList.builder(
+              itemCount: searchEntities.length,
+              itemBuilder: (context, index) => ScreenSideOffset.small(
+                child: FollowListItem(pubkey: searchEntities[index].masterPubkey),
+              ),
+            )
+        else if (followeePubkeys != null)
+          SliverList.builder(
+            itemCount: followeePubkeys.length,
             itemBuilder: (context, index) => ScreenSideOffset.small(
-              child: FollowListItem(pubkey: pubkeys[index]),
+              child: FollowListItem(pubkey: followeePubkeys[index]),
             ),
           )
         else
           const FollowListLoading(),
-        SliverPadding(padding: EdgeInsets.only(bottom: 32.0.s)),
+        SliverPadding(padding: EdgeInsets.only(bottom: 24.0.s)),
       ],
-    );
-  }
-}
-
-class _FollowingSearch extends HookConsumerWidget {
-  const _FollowingSearch({required this.query});
-
-  final String query;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final debouncedQuery = useDebounced(query, const Duration(milliseconds: 300)) ?? '';
-
-    final dataSource = ref.watch(searchFollowingUsersDataSourceProvider(query: debouncedQuery));
-    final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final entities = entitiesPagedData?.data.items?.toList();
-    final hasMore = entitiesPagedData?.hasMore ?? false;
-
-    if (entities == null) {
-      return const FollowListLoading();
-    }
-
-    if (entities.isEmpty && !hasMore) {
-      return const NothingIsFound();
-    }
-
-    return LoadMoreBuilder(
-      hasMore: hasMore,
-      onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-      slivers: [
-        SliverList.separated(
-          separatorBuilder: (_, __) => const FollowListSeparator(),
-          itemCount: entities.length,
-          itemBuilder: (context, index) => ScreenSideOffset.small(
-            child: FollowListItem(pubkey: entities[index].masterPubkey),
-          ),
-        ),
-      ],
-      builder: (context, slivers) => SliverMainAxisGroup(slivers: slivers),
     );
   }
 }

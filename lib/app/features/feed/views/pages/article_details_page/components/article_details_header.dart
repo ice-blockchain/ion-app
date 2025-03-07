@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/user/follow_user_button/follow_user_button.dart';
@@ -10,7 +9,7 @@ import 'package:ion/app/features/feed/views/components/article/components/articl
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/utils/algorithm.dart';
 
-class ArticleDetailsHeader extends ConsumerWidget {
+class ArticleDetailsHeader extends StatelessWidget {
   const ArticleDetailsHeader({
     required this.article,
     super.key,
@@ -19,7 +18,7 @@ class ArticleDetailsHeader extends ConsumerWidget {
   final ArticleEntity article;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ColoredBox(
       color: context.theme.appColors.onPrimaryAccent,
       child: Padding(
