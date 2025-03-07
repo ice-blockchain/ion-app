@@ -46,7 +46,7 @@ class TextEditorPreview extends HookWidget {
     return QuillEditor.basic(
       controller: controller,
       config: QuillEditorConfig(
-        enableSelectionToolbar: false,
+        enableSelectionToolbar: enableInteractiveSelection,
         floatingCursorDisabled: true,
         showCursor: false,
         scrollable: scrollable,
@@ -58,7 +58,7 @@ class TextEditorPreview extends HookWidget {
           TextEditorSeparatorBuilder(readOnly: true),
           TextEditorCodeBuilder(readOnly: true),
         ],
-        disableClipboard: true,
+        disableClipboard: !enableInteractiveSelection,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
       ),
     );
