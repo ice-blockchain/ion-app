@@ -12,6 +12,7 @@ import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallets_test_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
@@ -49,6 +50,8 @@ class CoinDetailsPage extends HookConsumerWidget {
     );
 
     final activeNetwork = useState<NetworkData?>(null);
+
+    final test = ref.watch(walletsTestProvider);
 
     useEffect(
       () {

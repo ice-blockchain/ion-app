@@ -26,6 +26,7 @@ import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
+import 'package:ion/app/features/wallets/model/wallet_relays.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_event_parser.c.g.dart';
@@ -55,6 +56,7 @@ class EventParser {
       CommunityDefinitionEntity.kind => CommunityDefinitionEntity.fromEventMessage(eventMessage),
       CommunityUpdateEntity.kind => CommunityUpdateEntity.fromEventMessage(eventMessage),
       CommunityJoinEntity.kind => CommunityJoinEntity.fromEventMessage(eventMessage),
+      WalletRelaysEntity.kind => WalletRelaysEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }
