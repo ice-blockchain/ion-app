@@ -9,6 +9,7 @@ import 'package:ion/app/features/chat/model/message_author.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:ogp_data_extract/ogp_data_extract.dart';
 
@@ -19,6 +20,7 @@ class UrlPreviewMessage extends HookWidget {
     required this.url,
     required this.isMe,
     required this.createdAt,
+    required this.eventMessage,
     this.author,
     this.reactions,
     this.isLastMessageFromAuthor = true,
@@ -29,6 +31,7 @@ class UrlPreviewMessage extends HookWidget {
   final String url;
   final DateTime createdAt;
   final MessageAuthor? author;
+  final EventMessage eventMessage;
   final bool isLastMessageFromAuthor;
   final List<MessageReactionGroup>? reactions;
 
@@ -37,6 +40,7 @@ class UrlPreviewMessage extends HookWidget {
     useAutomaticKeepAlive();
     return MessageItemWrapper(
       isMe: isMe,
+      messageEvent: eventMessage,
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(8.0.s),
       child: UrlPreview(

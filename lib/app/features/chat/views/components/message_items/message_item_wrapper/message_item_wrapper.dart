@@ -15,8 +15,8 @@ class MessageItemWrapper extends HookConsumerWidget {
   const MessageItemWrapper({
     required this.isMe,
     required this.child,
+    required this.messageEvent,
     required this.contentPadding,
-    this.messageEvent,
     this.onReactionSelected,
     this.isLastMessageFromAuthor = true,
     super.key,
