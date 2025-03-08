@@ -11,12 +11,14 @@ import 'package:ion/app/components/separated/separated_column.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/language.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/settings/views/delete_confirm_modal.dart';
 import 'package:ion/app/features/user/model/interest_set.c.dart';
 import 'package:ion/app/features/user/providers/user_interests_set_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class AccountSettingsModal extends HookConsumerWidget {
@@ -113,7 +115,11 @@ class AccountSettingsModal extends HookConsumerWidget {
                     color: context.theme.appColors.attentionRed,
                   ),
                   label: context.i18n.settings_delete,
-                  onTap: () => ConfirmDeleteRoute().push<void>(context),
+                  onTap: () => showSimpleBottomSheet<void>(
+                    context: context,
+                    isDismissible: false,
+                    child: const ConfirmDeleteModal(),
+                  ),
                 ),
               ],
             ),
