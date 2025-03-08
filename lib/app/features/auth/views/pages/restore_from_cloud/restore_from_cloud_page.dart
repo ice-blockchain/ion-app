@@ -42,8 +42,10 @@ class RestoreFromCloudPage extends HookConsumerWidget {
             _restoreKey(context, ref, identityKeyName: identityKeyName, password: password);
           },
           isLoading: ref.watch(
-            recoveryKeyCloudBackupRestoreNotifierProvider.select((it) => it.isLoading),
-          ),
+                recoveryKeyCloudBackupRestoreNotifierProvider.select((it) => it.isLoading),
+              ) ||
+              ref.watch(initUserRecoveryActionNotifierProvider.select((it) => it.isLoading)) ||
+              ref.watch(completeUserRecoveryActionNotifierProvider.select((it) => it.isLoading)),
         ),
       RecoverUserStep.twoFAOptions => ProviderScope(
           overrides: [
@@ -75,8 +77,9 @@ class RestoreFromCloudPage extends HookConsumerWidget {
             },
             onBackPress: () => step.value = RecoverUserStep.twoFAOptions,
             isLoading: ref.watch(
-              initUserRecoveryActionNotifierProvider.select((notifier) => notifier.isLoading),
-            ),
+                  initUserRecoveryActionNotifierProvider.select((it) => it.isLoading),
+                ) ||
+                ref.watch(completeUserRecoveryActionNotifierProvider.select((it) => it.isLoading)),
             titleIcon: Assets.svg.iconLoginRestorecloud.icon(size: 36.0.s),
           ),
         ),
