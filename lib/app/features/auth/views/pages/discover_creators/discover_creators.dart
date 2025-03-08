@@ -38,9 +38,8 @@ class DiscoverCreators extends HookConsumerWidget {
     final dataSource = ref.watch(contentCreatorsDataSourceProvider);
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final contentCreators = entitiesPagedData?.data.items?.whereType<UserMetadataEntity>();
-    final hideCreatorsWithoutPicture = ref
-        .read(featureFlagsProvider.notifier)
-        .get(HideCreatorsWithoutPicture.hideCreatorsWithoutPicture);
+    final hideCreatorsWithoutPicture =
+        ref.read(featureFlagsProvider.notifier).get(UsersFeatureFlag.hideCreatorsWithoutPicture);
 
     final filteredCreators = hideCreatorsWithoutPicture
         ? contentCreators?.where((creator) => creator.data.picture != null)
