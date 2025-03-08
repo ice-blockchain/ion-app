@@ -29,6 +29,7 @@ class TwoFAInputStep extends HookConsumerWidget {
     required this.onContinuePressed,
     required this.onBackPress,
     this.isLoading = false,
+    this.titleIcon,
     super.key,
   });
 
@@ -36,6 +37,7 @@ class TwoFAInputStep extends HookConsumerWidget {
   final void Function(Map<TwoFaType, String>) onContinuePressed;
   final VoidCallback onBackPress;
   final bool isLoading;
+  final Widget? titleIcon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,7 +61,7 @@ class TwoFAInputStep extends HookConsumerWidget {
       body: AuthScrollContainer(
         title: context.i18n.two_fa_title,
         description: context.i18n.two_fa_desc,
-        icon: Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
+        icon: titleIcon ?? Assets.svg.iconWalletProtectFill.icon(size: 36.0.s),
         onBackPress: onBackPress,
         children: [
           Column(

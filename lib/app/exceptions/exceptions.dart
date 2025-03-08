@@ -423,3 +423,8 @@ class IncorrectShareableIdentifierException extends IONException {
   IncorrectShareableIdentifierException(dynamic identifier)
       : super(10082, 'Incorrect shareable identifier $identifier');
 }
+
+class CloudFileDeleteFailedException extends IONException {
+  CloudFileDeleteFailedException(dynamic error)
+      : super(10083, 'File delete from cloud failed, error: $error');
+}

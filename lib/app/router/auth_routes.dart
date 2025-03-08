@@ -16,6 +16,8 @@ class AuthRoutes {
         TypedGoRoute<RestoreMenuRoute>(path: '$authPrefix/restore-menu'),
         TypedGoRoute<RestoreCredsRoute>(path: '$authPrefix/restore-creds'),
         TypedGoRoute<RecoverUserRoute>(path: '$authPrefix/recover-user'),
+        TypedGoRoute<RestoreFromCloudRoute>(path: '$authPrefix/restore-from-cloud'),
+        TypedGoRoute<RestoreFromCloudNoKeysRoute>(path: '$authPrefix/restore-from-cloud-no-keys'),
         TypedGoRoute<RecoverUserSuccessRoute>(path: '$authPrefix/recover-user-success'),
         TypedGoRoute<SelectLanguagesRoute>(path: '$onboardingPrefix/select-languages'),
         TypedGoRoute<FillProfileRoute>(path: '$onboardingPrefix/fill-profile'),
@@ -110,6 +112,22 @@ class RecoverUserRoute extends BaseRouteData {
   RecoverUserRoute()
       : super(
           child: const RecoverUserPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class RestoreFromCloudRoute extends BaseRouteData {
+  RestoreFromCloudRoute()
+      : super(
+          child: const RestoreFromCloudPage(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class RestoreFromCloudNoKeysRoute extends BaseRouteData {
+  RestoreFromCloudNoKeysRoute()
+      : super(
+          child: const RestoreFromCloudNoKeysAvailableModal(),
           type: IceRouteType.bottomSheet,
         );
 }

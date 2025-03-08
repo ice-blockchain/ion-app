@@ -118,6 +118,27 @@ final class GoogleDriveStorageService extends CloudStorageService {
     }
   }
 
+  @override
+  Future<void> deleteFile(String filePath) async {
+    try {
+      final drive = await _getAuthenticatedDriveApi();
+
+      final pathSegments = filePath.split('/');
+      final fileName = pathSegments.last;
+
+      final directory = pathSegments.sublist(0, pathSegments.length - 1).join('/');
+      final directoryId = await _getDirectoryId(drive, directory);
+      final fileId = await _getFileId(drive, fileName, parentId: directoryId);
+      if (fileId == null) {
+        return;
+      }
+
+      await drive.files.delete(fileId);
+    } catch (e) {
+      throw CloudFileDeleteFailedException(e);
+    }
+  }
+
   Future<DriveApi> _getAuthenticatedDriveApi() async {
     final googleSignIn = GoogleSignIn.standard(scopes: [DriveApi.driveAppdataScope]);
     final account = await googleSignIn.signIn();
