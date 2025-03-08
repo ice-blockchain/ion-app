@@ -141,7 +141,7 @@ class MoreContentView extends ConsumerWidget {
                   }
                 },
               ),
-           SizedBox(width: 48.0.s),
+              SizedBox(width: 48.0.s),
             ],
           ),
         ],
