@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'comments_dao.c.g.dart';
 
 @Riverpod(keepAlive: true)
-CommentsDao coinsDao(Ref ref) => CommentsDao(db: ref.watch(notificationsDatabaseProvider));
+CommentsDao commentsDao(Ref ref) => CommentsDao(db: ref.watch(notificationsDatabaseProvider));
 
 @DriftAccessor(tables: [CommentsTable])
 class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$CommentsDaoMixin {
@@ -24,9 +24,9 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
     return select(commentsTable).get();
   }
 
-  Future<void> insert(IonConnectEntity entity) async {
+  Future<void> insert(IonConnectEntity entity, {required CommentType type}) async {
     await into(db.commentsTable).insert(
-      Comment(eventReference: entity.toEventReference(), createdAt: entity.createdAt),
+      Comment(eventReference: entity.toEventReference(), createdAt: entity.createdAt, type: type),
       mode: InsertMode.insertOrReplace,
     );
   }

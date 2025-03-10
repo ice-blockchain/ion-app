@@ -9,9 +9,16 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 class CommentsTable extends Table {
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
   DateTimeColumn get createdAt => dateTime()();
+  IntColumn get type => intEnum<CommentType>()();
 
   @override
   Set<Column> get primaryKey => {eventReference};
+}
+
+enum CommentType {
+  reply,
+  repost,
+  quote,
 }
 
 class EventReferenceConverter extends TypeConverter<EventReference, String>
