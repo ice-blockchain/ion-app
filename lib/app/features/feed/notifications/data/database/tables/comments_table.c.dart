@@ -15,6 +15,8 @@ class CommentsTable extends Table {
   Set<Column> get primaryKey => {eventReference};
 }
 
+// Caution! Add new values only to the end
+// https://drift.simonbinder.eu/type_converters/#implicit-enum-converters
 enum CommentType {
   reply,
   repost,
