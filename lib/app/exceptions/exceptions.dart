@@ -430,9 +430,9 @@ class CloudFileDeleteFailedException extends IONException {
 }
 
 class NftNotFoundException extends IONException {
-  NftNotFoundException(String tokenId) : super(10083, 'Nft not found: $tokenId');
+  NftNotFoundException(String tokenId) : super(10084, 'Nft not found: $tokenId');
 }
 
 class CurrentWalletViewNotFoundException extends IONException {
-  CurrentWalletViewNotFoundException() : super(10084, 'Current wallet view not found');
+  CurrentWalletViewNotFoundException() : super(10085, 'Current wallet view not found');
 }
