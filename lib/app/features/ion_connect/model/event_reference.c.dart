@@ -32,6 +32,14 @@ abstract class EventReference {
     };
   }
 
+  factory EventReference.fromTag(List<String> tag) {
+    return switch (tag.elementAtOrNull(0)) {
+      ImmutableEventReference.tagName => ImmutableEventReference.fromTag(tag),
+      ReplaceableEventReference.tagName => ReplaceableEventReference.fromTag(tag),
+      _ => throw IncorrectEventTagException(tag: tag)
+    };
+  }
+
   String get pubkey;
 
   String encode();
@@ -52,6 +60,14 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
 
   const ImmutableEventReference._();
 
+  factory ImmutableEventReference.fromTag(List<String> tag) {
+    if (tag[0] != tagName) {
+      throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
+    }
+
+    return ImmutableEventReference(pubkey: tag[3], eventId: tag[1]);
+  }
+
   factory ImmutableEventReference.fromShareableIdentifier(ShareableIdentifier identifier) {
     final ShareableIdentifier(:special, :author) = identifier;
 
@@ -64,7 +80,7 @@ class ImmutableEventReference with _$ImmutableEventReference implements EventRef
 
   @override
   List<String> toTag() {
-    return [tagName, eventId];
+    return [tagName, eventId, '', pubkey];
   }
 
   @override

@@ -1,12 +1,40 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
 @DataClassName('Comment')
 class CommentsTable extends Table {
-  late final eventReference = text()();
-  late final createdAt = dateTime()();
+  TextColumn get eventReference => text().map(const EventReferenceConverter())();
+  DateTimeColumn get createdAt => dateTime()();
 
   @override
   Set<Column> get primaryKey => {eventReference};
+}
+
+class EventReferenceConverter extends TypeConverter<EventReference, String>
+    with JsonTypeConverter2<EventReference, String, List<String>> {
+  const EventReferenceConverter();
+
+  @override
+  EventReference fromSql(String fromDb) {
+    return fromJson(jsonDecode(fromDb) as List<String>);
+  }
+
+  @override
+  String toSql(EventReference value) {
+    return jsonEncode(toJson(value));
+  }
+
+  @override
+  EventReference fromJson(List<String> json) {
+    return EventReference.fromTag(json);
+  }
+
+  @override
+  List<String> toJson(EventReference value) {
+    return value.toTag();
+  }
 }

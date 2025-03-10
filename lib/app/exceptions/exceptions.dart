@@ -74,7 +74,7 @@ class UnknownEventException extends IONException {
 }
 
 class IncorrectEventTagException extends IONException {
-  IncorrectEventTagException({required String tag}) : super(10013, 'Incorrect event tag $tag');
+  IncorrectEventTagException({required Object? tag}) : super(10013, 'Incorrect event tag $tag');
 }
 
 class QuillParseException extends IONException {
