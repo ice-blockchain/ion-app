@@ -30,6 +30,7 @@ export 'src/wallets/services/get_wallet_assets/exceptions/get_wallet_assets_exce
 export 'src/wallets/services/get_wallet_assets/models/wallet_asset.c.dart';
 export 'src/wallets/services/get_wallet_assets/models/wallet_assets.c.dart';
 export 'src/wallets/services/get_wallet_history/models/wallet_history.c.dart';
+export 'src/wallets/services/get_wallet_nfts/models/wallet_nft.c.dart';
 export 'src/wallets/services/get_wallet_nfts/models/wallet_nfts.c.dart';
 export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_request.c.dart';
 export 'src/wallets/services/get_wallet_transfer_requests/models/wallet_transfer_requests.c.dart';

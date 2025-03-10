@@ -24,16 +24,16 @@ class NftItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
-      title: Text(nftData.collectionName),
+      title: const Text('nftData.collectionName'),
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('#${nftData.rank}'),
+          const Text('#${'nftData.rank'}'),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               CachedNetworkImage(
-                imageUrl: nftData.currencyIconUrl,
+                imageUrl: 'nftData.currencyIconUrl',
                 width: 12,
                 height: 12,
                 fit: BoxFit.fitWidth,
@@ -41,7 +41,7 @@ class NftItem extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(right: 4.0.s, left: 5.0.s),
                 child: Text(
-                  nftData.currency,
+                  'nftData.currency',
                   style: context.theme.appTextThemes.caption2.copyWith(
                     color: context.theme.appColors.secondaryText,
                   ),
@@ -55,7 +55,7 @@ class NftItem extends StatelessWidget {
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
         child: CachedNetworkImage(
-          imageUrl: nftData.iconUrl,
+          imageUrl: 'nftData.iconUrl',
           width: imageWidth,
           height: imageHeight,
           fit: BoxFit.fitWidth,
