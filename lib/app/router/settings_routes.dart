@@ -12,7 +12,6 @@ class SettingsRoutes {
     TypedGoRoute<ContentLanguagesRoute>(path: 'content-language'),
     TypedGoRoute<BlockedUsersRoute>(path: 'blocked-users'),
     TypedGoRoute<ConfirmLogoutRoute>(path: 'confirm-logout'),
-    TypedGoRoute<ConfirmDeleteRoute>(path: 'confirm-delete'),
     ...ProtectAccountRoutes.routes,
   ];
 }
@@ -81,12 +80,4 @@ class ConfirmLogoutRoute extends BaseRouteData {
         );
 
   final String pubkey;
-}
-
-class ConfirmDeleteRoute extends BaseRouteData {
-  ConfirmDeleteRoute()
-      : super(
-          child: const ConfirmDeleteModal(),
-          type: IceRouteType.bottomSheet,
-        );
 }
