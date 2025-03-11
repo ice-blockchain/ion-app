@@ -9,17 +9,20 @@ import 'package:ion/app/features/feed/stories/views/components/story_viewer/comp
 
 class StoryProgressBarContainer extends ConsumerWidget {
   const StoryProgressBarContainer({
+    required this.pubkey,
     super.key,
   });
 
+  final String pubkey;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyState = ref.watch(storyViewingControllerProvider);
-    final userStories = ref.watch(storyViewingControllerProvider.select((s) => s.userStories));
+    final storyState = ref.watch(storyViewingControllerProvider(pubkey));
+    final userStories = ref.watch(storyViewingControllerProvider(pubkey).select((s) => s.userStories));
     final currentStoryIndex =
-        ref.watch(storyViewingControllerProvider.select((s) => s.currentStoryIndex));
+        ref.watch(storyViewingControllerProvider(pubkey).select((s) => s.currentStoryIndex));
     final currentUserIndex =
-        ref.watch(storyViewingControllerProvider.select((s) => s.currentUserIndex));
+        ref.watch(storyViewingControllerProvider(pubkey).select((s) => s.currentUserIndex));
 
     final posts = userStories.isNotEmpty ? userStories[currentUserIndex].stories : null;
 
@@ -39,7 +42,7 @@ class StoryProgressBarContainer extends ConsumerWidget {
               isCurrent: index == currentStoryIndex,
               isPreviousStory: index < currentStoryIndex,
               onCompleted: () {
-                final notifier = ref.read(storyViewingControllerProvider.notifier);
+                final notifier = ref.read(storyViewingControllerProvider(pubkey).notifier);
 
                 if (storyState.hasNextStory) {
                   notifier.moveToNextStory();

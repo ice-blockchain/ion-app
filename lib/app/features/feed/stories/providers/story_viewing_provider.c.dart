@@ -3,6 +3,7 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/feed/providers/counters/likes_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/data/models/models.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_viewing_provider.c.g.dart';
@@ -14,17 +15,11 @@ part 'story_viewing_provider.c.g.dart';
 @riverpod
 class StoryViewingController extends _$StoryViewingController {
   @override
-  StoryViewerState build() {
-    return const StoryViewerState(
-      userStories: [],
-      currentUserIndex: 0,
-      currentStoryIndex: 0,
-    );
-  }
+  StoryViewerState build(String pubkey) {
+    final userStories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
 
-  void updateStories(List<UserStories> stories) {
-    state = StoryViewerState(
-      userStories: stories,
+    return StoryViewerState(
+      userStories: userStories,
       currentUserIndex: 0,
       currentStoryIndex: 0,
     );

@@ -39,6 +39,7 @@ StoryProgressControllerResult useStoryProgressController({
     isCurrent: isCurrent,
     isPaused: isPaused,
     onCompleted: onCompleted,
+    ref: ref,
   );
 
   final videoUrl = media?.url ?? '';

@@ -22,9 +22,10 @@ class StoriesSwiper extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pubkey = userStories[currentUserIndex].pubkey;
     final userPageController = usePageController(initialPage: currentUserIndex);
 
-    ref.listen<StoryViewerState>(storyViewingControllerProvider, (previous, next) {
+    ref.listen<StoryViewerState>(storyViewingControllerProvider(pubkey), (previous, next) {
       if (previous?.currentUserIndex != next.currentUserIndex) {
         userPageController.animateToPage(
           next.currentUserIndex,
@@ -37,12 +38,12 @@ class StoriesSwiper extends HookConsumerWidget {
     return CubePageView.builder(
       controller: userPageController,
       itemCount: userStories.length,
-      onPageChanged: ref.read(storyViewingControllerProvider.notifier).moveToUser,
+      onPageChanged: ref.read(storyViewingControllerProvider(pubkey).notifier).moveToUser,
       itemBuilder: (context, userIndex, pageNotifier) {
         final userStory = userStories[userIndex];
         final isCurrentUser = userIndex == currentUserIndex;
 
-        final storyNotifier = ref.read(storyViewingControllerProvider.notifier);
+        final storyNotifier = ref.read(storyViewingControllerProvider(pubkey).notifier);
 
         return CubeWidget(
           index: userIndex,

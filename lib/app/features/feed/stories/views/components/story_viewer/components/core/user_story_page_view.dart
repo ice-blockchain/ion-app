@@ -28,7 +28,8 @@ class UserStoryPageView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final storyState = ref.watch(storyViewingControllerProvider);
+    final pubkey = userStory.pubkey;
+    final storyState = ref.watch(storyViewingControllerProvider(pubkey));
 
     final currentStory =
         isCurrentUser ? userStory.stories[storyState.currentStoryIndex] : userStory.stories[0];
