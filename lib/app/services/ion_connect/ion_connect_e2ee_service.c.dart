@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+
 import 'package:convert/convert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -34,6 +35,7 @@ Future<IonConnectE2eeService> ionConnectE2eeService(Ref ref) async {
   );
 }
 
+// TODO: Move to the core and rename to EncryptedMessageService
 class IonConnectE2eeService {
   IonConnectE2eeService({required this.eventSigner, required this.currentUserPubkey});
 

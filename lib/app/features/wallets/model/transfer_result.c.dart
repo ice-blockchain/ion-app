@@ -10,7 +10,7 @@ part 'transfer_result.c.g.dart';
 class TransferResult with _$TransferResult {
   const factory TransferResult({
     required String id,
-    required String txHash,
+    required String? txHash,
     required String walletId,
     required TransferStatus status,
     required Map<String, dynamic> requester,
@@ -20,6 +20,7 @@ class TransferResult with _$TransferResult {
     required DateTime? dateConfirmed,
     required DateTime? dateBroadcasted,
     required String network,
+    required String? reason,
   }) = _TransferResult;
 
   factory TransferResult.fromJson(Map<String, dynamic> json) => _$TransferResultFromJson(json);

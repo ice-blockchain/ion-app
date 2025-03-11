@@ -436,3 +436,8 @@ class NftNotFoundException extends IONException {
 class CurrentWalletViewNotFoundException extends IONException {
   CurrentWalletViewNotFoundException() : super(10085, 'Current wallet view not found');
 }
+
+class FailedToSendCryptoAssetsException extends IONException {
+  FailedToSendCryptoAssetsException(String? reason)
+      : super(10086, reason ?? 'Failed to send crypto assets');
+}
