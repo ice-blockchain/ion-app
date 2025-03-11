@@ -115,8 +115,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         content: encoded,
         networkId: details.network.id,
         assetClass: '', // ???
-        // contract address ?? coinAssetData.selectedOption!.coin.contractAddress;
-        assetAddress: '',
+        assetAddress: coinAssetData.selectedOption!.coin.contractAddress,
         // TODO: Need to discuss. It can be null, if user sends money not to contact, but by the wallet address directly
         pubkey: details.receiverPubkey!,
       ),
