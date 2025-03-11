@@ -6,11 +6,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notification.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/utils/date.dart';
 import 'package:ion/l10n/i10n.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationInfo extends HookConsumerWidget {
   const NotificationInfo({
@@ -20,10 +21,9 @@ class NotificationInfo extends HookConsumerWidget {
 
   final IonConnectNotification notification;
 
-  TextSpan _getDateTextSpan(BuildContext context) {
+  TextSpan _getDateTextSpan(BuildContext context, {required Locale locale}) {
     return TextSpan(
-      text:
-          ' • ${timeago.format(notification.timestamp, locale: 'en_short').replaceFirst('~', '')}', //TODO
+      text: ' • ${formatShortTimestamp(notification.timestamp, locale: locale)}',
       style: context.theme.appTextThemes.body2.copyWith(
         color: context.theme.appColors.tertararyText,
       ),
@@ -32,6 +32,7 @@ class NotificationInfo extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(appLocaleProvider);
     final userDatas =
         notification.pubkeys.take(notification.pubkeys.length == 2 ? 2 : 1).map((pubkey) {
       return ref.watch(userMetadataProvider(pubkey)).valueOrNull;
@@ -84,7 +85,7 @@ class NotificationInfo extends HookConsumerWidget {
     );
 
     return Text.rich(
-      TextSpan(children: [textSpan, _getDateTextSpan(context)]),
+      TextSpan(children: [textSpan, _getDateTextSpan(context, locale: locale)]),
       textScaler: MediaQuery.textScalerOf(context),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,

@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/notifications/views/notifications_history_
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_type_icon.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/user_avatar.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class NotificationItem extends StatelessWidget {
   const NotificationItem({
@@ -29,11 +30,11 @@ class NotificationItem extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0.s),
-      child: ScreenSideOffset.small(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ScreenSideOffset.small(
+            child: Row(
               children: [
                 NotificationTypeIcon(
                   notificationsType: notification.type,
@@ -50,18 +51,26 @@ class NotificationItem extends StatelessWidget {
                 }),
               ],
             ),
-            SizedBox(height: 8.0.s),
-            NotificationInfo(notification: notification),
-            if (notification.eventReference != null) ...[
-              SizedBox(height: 8.0.s),
-              Post(
+          ),
+          SizedBox(height: 8.0.s),
+          ScreenSideOffset.small(
+            child: NotificationInfo(notification: notification),
+          ),
+          if (notification.eventReference != null)
+            GestureDetector(
+              onTap: () {
+                PostDetailsRoute(eventReference: notification.eventReference!.encode())
+                    .push<void>(context);
+              },
+              child: Post(
                 eventReference: notification.eventReference!,
                 header: const SizedBox.shrink(),
                 footer: const SizedBox.shrink(),
+                topOffset: 6.0.s,
+                headerOffset: 0,
               ),
-            ],
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
