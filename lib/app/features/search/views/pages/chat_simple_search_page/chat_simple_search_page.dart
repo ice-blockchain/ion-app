@@ -29,7 +29,7 @@ class ChatSimpleSearchPage extends ConsumerWidget {
     final usersSearchResults = ref.watch(chatSearchUsersProvider(query));
 
     final hideCommunity =
-        ref.watch(featureFlagsProvider.notifier).get(HideCommunityFeatureFlag.hideCommunity);
+        ref.watch(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideCommunity);
 
     return Scaffold(
       body: ScreenTopOffset(

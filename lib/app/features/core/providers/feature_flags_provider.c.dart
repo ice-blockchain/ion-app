@@ -16,8 +16,9 @@ class FeatureFlags extends _$FeatureFlags {
       WalletFeatureFlag.dappsEnabled: false,
       FeedFeatureFlag.showTrendingVideo: true,
       FeedFeatureFlag.showMentionsSuggestions: true,
-      HideCreatorsWithoutPicture.hideCreatorsWithoutPicture: true,
-      HideCommunityFeatureFlag.hideCommunity: true,
+      UsersFeatureFlag.hideCreatorsWithoutPicture: true,
+      ChatFeatureFlag.hideCommunity: true,
+      ChatFeatureFlag.hideChatBookmark: true,
 
       /// Log flags
       if (ref.watch(envProvider.notifier).get(EnvVariable.SHOW_DEBUG_INFO)) ...{
