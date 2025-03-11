@@ -6,6 +6,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/notifications/providers/notification_quotes_subscription_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notification_replies_subscription_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_reposts_subscription_provider.c.dart';
 
 class NavigationButton extends ConsumerWidget {
   const NavigationButton({
@@ -23,8 +24,10 @@ class NavigationButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(notificationRepliesSubscriptionProvider);
-    ref.watch(notificationQuotesSubscriptionProvider);
+    ref
+      ..watch(notificationRepliesSubscriptionProvider)
+      ..watch(notificationQuotesSubscriptionProvider)
+      ..watch(notificationRepostsSubscriptionProvider);
 
     return Button.icon(
       type: ButtonType.menuInactive,

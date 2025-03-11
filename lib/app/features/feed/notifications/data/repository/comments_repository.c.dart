@@ -3,6 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/comments_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notification.c.dart';
@@ -28,6 +29,8 @@ class CommentsRepository {
     final type = switch (entity) {
       ModifiablePostEntity() when entity.data.quotedEvent != null => CommentType.quote,
       ModifiablePostEntity() when entity.data.parentEvent != null => CommentType.reply,
+      GenericRepostEntity() when entity.data.kind == ModifiablePostEntity.kind =>
+        CommentType.repost,
       _ => throw UnknownNotificationCommentException(entity),
     };
     return _commentsDao.insert(entity, type: type);
@@ -36,13 +39,13 @@ class CommentsRepository {
   Future<List<IonConnectNotification>> getComments() async {
     final comments = await _commentsDao.getAll();
     return comments.map((comment) {
-      final mappedType = switch (comment.type) {
+      final type = switch (comment.type) {
         CommentType.quote => NotificationsType.quote,
         CommentType.reply => NotificationsType.reply,
         CommentType.repost => NotificationsType.repost,
       };
       return IonConnectNotification(
-        type: mappedType,
+        type: type,
         pubkeys: [comment.eventReference.pubkey],
         timestamp: comment.createdAt,
         eventReference: comment.eventReference,
