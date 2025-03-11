@@ -11,7 +11,6 @@ import 'package:ion/app/features/settings/model/privacy_options.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -56,7 +55,9 @@ class PrivacySettingsModal extends ConsumerWidget {
                     title: context.i18n.privacy_group_wallet_address_title,
                     selected: [walletPrivacy],
                     options: WalletAddressPrivacyOption.values,
-                    onSelected: (option) => _onWalletPrivacyOptionSelected(ref, metadata, option),
+                    onSelected: (option) => ref
+                        .read(updateUserMetadataNotifierProvider.notifier)
+                        .publishWallets(option),
                   ),
                   SelectableOptionsGroup(
                     title: context.i18n.privacy_group_who_can_message_you_title,
@@ -78,29 +79,6 @@ class PrivacySettingsModal extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _onWalletPrivacyOptionSelected(
-    WidgetRef ref,
-    UserMetadataEntity metadata,
-    WalletAddressPrivacyOption option,
-  ) async {
-    Map<String, String>? wallets;
-    if (option == WalletAddressPrivacyOption.public) {
-      final walletsList = await ref.read(walletViewsDataNotifierProvider.future);
-      final coins =
-          walletsList.expand((view) => view.coinGroups).expand((group) => group.coins).toList();
-      wallets = Map.fromEntries(
-        coins.map((coin) {
-          if (coin.walletId == null) {
-            return null;
-          }
-          return MapEntry(coin.coin.network.id, coin.walletId!);
-        }).nonNulls,
-      );
-    }
-    final updatedMetadata = metadata.data.copyWith(wallets: wallets);
-    await ref.read(updateUserMetadataNotifierProvider.notifier).publish(updatedMetadata);
   }
 
   void _onMessagingPrivacyOptionSelected(

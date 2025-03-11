@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
+import 'package:ion/app/features/settings/model/privacy_options.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -50,6 +54,43 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
 
       await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([...files, data]);
     });
+  }
+
+  Future<void> publishWallets(WalletAddressPrivacyOption option) async {
+    Map<String, String>? wallets;
+    if (option == WalletAddressPrivacyOption.public) {
+      final walletViews = await ref.read(walletViewsDataNotifierProvider.future);
+      final coins =
+          walletViews.expand((view) => view.coinGroups).expand((group) => group.coins).toList();
+
+      wallets = Map.fromEntries(
+        coins.map((coin) {
+          if (coin.walletId == null) return null;
+          return MapEntry(coin.coin.network.id, coin.walletId!);
+        }).nonNulls,
+      );
+    }
+    final userMetadata = await ref.read(currentUserMetadataProvider.future);
+    if (userMetadata != null) {
+      // Compare the current wallets with the newly computed wallets.
+      final currentWallets = userMetadata.data.wallets;
+      const equality = DeepCollectionEquality();
+      if (equality.equals(currentWallets, wallets)) {
+        return;
+      }
+      final updatedMetadata = userMetadata.data.copyWith(wallets: wallets);
+      await publish(updatedMetadata);
+    }
+  }
+
+  Future<void> updatePublishedWallets() async {
+    final userMetadata = await ref.read(currentUserMetadataProvider.future);
+    if (userMetadata != null) {
+      final walletPrivacy = WalletAddressPrivacyOption.fromWalletsMap(userMetadata.data.wallets);
+      if (walletPrivacy == WalletAddressPrivacyOption.public) {
+        await publishWallets(WalletAddressPrivacyOption.public);
+      }
+    }
   }
 
   Future<UploadResult?> _upload(MediaFile? file, {required FileAlt alt}) {
