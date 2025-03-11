@@ -15,7 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_replies_subscription_provider.c.g.dart';
 
 @riverpod
-Future<void> notificationsRepliesSubscription(Ref ref) async {
+Future<void> notificationRepliesSubscription(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final commentsRepository = ref.watch(commentsRepositoryProvider);
   final eventParser = ref.watch(eventParserProvider);

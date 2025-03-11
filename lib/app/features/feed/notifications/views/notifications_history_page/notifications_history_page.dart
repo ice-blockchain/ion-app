@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/notifications/notifications_tab_type.dart';
-import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/tabs/tab_content.dart';
-import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/tabs_header/tabs_header.dart';
+import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
+import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/tab_content.dart';
+import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs_header/tabs_header.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class NotificationsHistoryPage extends StatelessWidget {

@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/notifications/notifications_tab_type.dart';
-import 'package:ion/app/features/feed/views/pages/notifications_history_page/components/tabs_header/tabs_header_tab.dart';
+import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
+import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs_header/tabs_header_tab.dart';
 
 class NotificationsHistoryTabsHeader extends ConsumerWidget {
   const NotificationsHistoryTabsHeader({

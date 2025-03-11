@@ -22,7 +22,7 @@ class NavigationButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(notificationsRepliesSubscriptionProvider);
+    ref.watch(notificationRepliesSubscriptionProvider);
 
     return Button.icon(
       type: ButtonType.menuInactive,

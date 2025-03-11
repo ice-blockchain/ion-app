@@ -57,7 +57,7 @@ import 'package:ion/app/features/feed/views/pages/articles_from_topic_page/artic
 import 'package:ion/app/features/feed/views/pages/feed_main_modal/feed_main_modal_page.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/feed_page.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/fullscreen_media_page.dart';
-import 'package:ion/app/features/feed/views/pages/notifications_history_page/notifications_history_page.dart';
+import 'package:ion/app/features/feed/notifications/views/notifications_history_page/notifications_history_page.dart';
 import 'package:ion/app/features/feed/views/pages/post_details_page/post_details_page.dart';
 import 'package:ion/app/features/feed/views/pages/repost_options_modal/repost_options_modal.dart';
 import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';

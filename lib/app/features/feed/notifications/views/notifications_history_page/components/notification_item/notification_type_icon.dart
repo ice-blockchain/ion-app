@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
+import 'package:ion/app/features/feed/notifications/data/model/notifications_type.dart';
 
 class NotificationTypeIcon extends StatelessWidget {
   const NotificationTypeIcon({

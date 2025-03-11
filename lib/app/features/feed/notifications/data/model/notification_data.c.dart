@@ -2,7 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/data/models/notifications/notifications_type.dart';
+import 'package:ion/app/features/feed/notifications/data/model/notifications_type.dart';
 
 part 'notification_data.c.freezed.dart';
 
