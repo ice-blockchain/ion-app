@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_command/flutter_command.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/wallets/data/nfts/use_cases/load_nfts_use_case.dart';
+import 'package:ion/app/features/wallets/domain/nfts/use_cases/load_nfts_use_case.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/command/command.dart';
