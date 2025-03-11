@@ -26,7 +26,8 @@ class CommentsRepository {
 
   Future<void> save(IonConnectEntity entity) {
     final type = switch (entity) {
-      ModifiablePostEntity() => CommentType.reply,
+      ModifiablePostEntity() when entity.data.quotedEvent != null => CommentType.quote,
+      ModifiablePostEntity() when entity.data.parentEvent != null => CommentType.reply,
       _ => throw UnknownNotificationCommentException(entity),
     };
     return _commentsDao.insert(entity, type: type);
@@ -35,15 +36,17 @@ class CommentsRepository {
   Future<List<IonConnectNotification>> getComments() async {
     final comments = await _commentsDao.getAll();
     return comments.map((comment) {
-      return switch (comment.type) {
-        CommentType.reply => IonConnectNotification(
-            type: NotificationsType.reply,
-            pubkeys: [comment.eventReference.pubkey],
-            timestamp: comment.createdAt,
-            eventReference: comment.eventReference,
-          ),
-        _ => throw UnimplementedError() //TODO:
+      final mappedType = switch (comment.type) {
+        CommentType.quote => NotificationsType.quote,
+        CommentType.reply => NotificationsType.reply,
+        CommentType.repost => NotificationsType.repost,
       };
+      return IonConnectNotification(
+        type: mappedType,
+        pubkeys: [comment.eventReference.pubkey],
+        timestamp: comment.createdAt,
+        eventReference: comment.eventReference,
+      );
     }).toList();
   }
 }

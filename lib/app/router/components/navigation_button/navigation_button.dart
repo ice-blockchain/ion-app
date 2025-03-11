@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/feed/notifications/providers/notification_quotes_subscription_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/providers/notification_replies_subscription_provider.c.dart';
 
 class NavigationButton extends ConsumerWidget {
@@ -23,6 +24,7 @@ class NavigationButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(notificationRepliesSubscriptionProvider);
+    ref.watch(notificationQuotesSubscriptionProvider);
 
     return Button.icon(
       type: ButtonType.menuInactive,
