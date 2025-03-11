@@ -23,7 +23,9 @@ Future<void> notificationQuotesSubscription(Ref ref) async {
   final requestFilter = RequestFilter(
     kinds: const [ModifiablePostEntity.kind],
     tags: {
-      '#Q': [null, null, currentPubkey],
+      '#Q': [
+        [null, null, currentPubkey],
+      ],
     },
   );
   final requestMessage = RequestMessage()..addFilter(requestFilter);
