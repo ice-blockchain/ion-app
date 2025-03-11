@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/notifications/data/model/notification_data.c.dart';
+import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notification.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/l10n/i10n.dart';
@@ -14,16 +14,16 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class NotificationInfo extends HookConsumerWidget {
   const NotificationInfo({
-    required this.notificationData,
+    required this.notification,
     super.key,
   });
 
-  final NotificationData notificationData;
+  final IonConnectNotification notification;
 
   TextSpan _getDateTextSpan(BuildContext context) {
     return TextSpan(
       text:
-          ' • ${timeago.format(notificationData.timestamp, locale: 'en_short').replaceFirst('~', '')}',
+          ' • ${timeago.format(notification.timestamp, locale: 'en_short').replaceFirst('~', '')}', //TODO
       style: context.theme.appTextThemes.body2.copyWith(
         color: context.theme.appColors.tertararyText,
       ),
@@ -33,7 +33,7 @@ class NotificationInfo extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userDatas =
-        notificationData.pubkeys.take(notificationData.pubkeys.length == 2 ? 2 : 1).map((pubkey) {
+        notification.pubkeys.take(notification.pubkeys.length == 2 ? 2 : 1).map((pubkey) {
       return ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     }).toList();
 
@@ -51,10 +51,10 @@ class NotificationInfo extends HookConsumerWidget {
 
     final newTapRecognizers = <TapGestureRecognizer>[];
     final textSpan = replaceString(
-      notificationData.type.getDescription(context, notificationData.pubkeys),
+      notification.type.getDescription(context, notification.pubkeys),
       tagRegex('username'),
       (String text, int index) {
-        final pubkey = notificationData.pubkeys[index];
+        final pubkey = notification.pubkeys[index];
         final userData = userDatas[index];
         if (userData == null) {
           return const TextSpan(text: '');

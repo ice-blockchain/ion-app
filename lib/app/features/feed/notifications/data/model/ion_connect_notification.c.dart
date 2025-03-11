@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/notifications_type.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
-part 'notification_data.c.freezed.dart';
+part 'ion_connect_notification.c.freezed.dart';
 
 @freezed
-class NotificationData with _$NotificationData {
-  const factory NotificationData({
-    required String id,
+class IonConnectNotification with _$IonConnectNotification {
+  const factory IonConnectNotification({
     required NotificationsType type,
     required List<String> pubkeys,
     required DateTime timestamp,
-    ModifiablePostEntity? postEntity,
-  }) = _NotificationData;
+    EventReference? eventReference,
+  }) = _IonConnectNotification;
 }

@@ -29,7 +29,7 @@ class EventReferenceConverter extends TypeConverter<EventReference, String>
 
   @override
   EventReference fromSql(String fromDb) {
-    return fromJson(jsonDecode(fromDb) as List<String>);
+    return fromJson(jsonDecode(fromDb) as List<dynamic>);
   }
 
   @override
@@ -38,8 +38,8 @@ class EventReferenceConverter extends TypeConverter<EventReference, String>
   }
 
   @override
-  EventReference fromJson(List<String> json) {
-    return EventReference.fromTag(json);
+  EventReference fromJson(List<dynamic> json) {
+    return EventReference.fromTag(List<String>.from(json));
   }
 
   @override
