@@ -43,10 +43,7 @@ class MoreContentView extends ConsumerWidget {
                 title: context.i18n.common_media,
                 //TODO: remove this
                 onTap: () async {
-                  final mediaFiles = await MediaPickerRoute(
-                    maxSelection: 1,
-                    mediaPickerType: MediaPickerType.video,
-                  ).push<List<MediaFile>>(context);
+                  final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
                   if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                     final selectedFile = mediaFiles.first;
 

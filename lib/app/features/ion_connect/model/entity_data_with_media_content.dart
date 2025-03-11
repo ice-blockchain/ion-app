@@ -12,6 +12,9 @@ mixin EntityDataWithMediaContent {
 
   MediaAttachment? get primaryMedia => media.values.firstOrNull;
 
+  MediaAttachment? get primaryPhoto =>
+      media.values.firstWhereOrNull((media) => media.mediaType == MediaType.image);
+
   MediaAttachment? get primaryVideo =>
       media.values.firstWhereOrNull((media) => media.mediaType == MediaType.video);
 
