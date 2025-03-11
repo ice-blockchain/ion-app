@@ -7,8 +7,8 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/views/pages/manage_nfts/model/manage_nft_network_data.c.dart';
-import 'package:ion/app/features/wallets/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/view_models/nft_networks_view_model.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -18,49 +18,50 @@ class NftHeaderSelectAction extends ConsumerWidget {
   });
 
   String joinSelectedNetworks(
-    List<ManageNftNetworkData>? selectedNftNetworks,
+    Set<NetworkData> selectedNftNetworks,
     BuildContext context,
   ) {
-    if (selectedNftNetworks == null) {
-      return '';
+    if (selectedNftNetworks.isEmpty) {
+      return context.i18n.core_all;
     }
 
-    // TODO: All item is not implemented
-    return selectedNftNetworks.map((e) => e.network.displayName).join(', ');
-    // return selectedNftNetworks.any(
-    //   (ManageNftNetworkData network) => network.networkType == NetworkType.all,
-    // )
-    //     ? context.i18n.core_all
-    //     : selectedNftNetworks.map((e) => e.networkType.name.toUpperCase()).join(', ');
+    return selectedNftNetworks.map((e) => e.displayName).join(', ');
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedNftNetworks = ref.watch(selectedNftsNetworksProvider).value;
-    final color = context.theme.appColors.secondaryText;
+    final colors = context.theme.appColors;
 
-    return TextButton(
-      onPressed: () {
-        ManageNftsRoute().go(context);
+    final viewModel = ref.watch(nftNetworksViewModelProvider);
+
+    return ValueListenableBuilder(
+      valueListenable: viewModel.selectedNetworks,
+      builder: (context, selectedNftNetworks, _) {
+        return TextButton(
+          onPressed: () {
+            ManageNftsRoute().go(context);
+          },
+          child: Padding(
+            padding: EdgeInsets.all(UiConstants.hitSlop),
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    '${context.i18n.core_chain}: ${joinSelectedNetworks(selectedNftNetworks, context)}',
+                    style:
+                        context.theme.appTextThemes.caption.copyWith(color: colors.secondaryText),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(
+                  width: 5.0.s,
+                ),
+                Assets.svg.iconArrowDown.icon(size: 20.0.s, color: colors.secondaryText),
+              ],
+            ),
+          ),
+        );
       },
-      child: Padding(
-        padding: EdgeInsets.all(UiConstants.hitSlop),
-        child: Row(
-          children: [
-            Flexible(
-              child: Text(
-                '${context.i18n.core_chain}: ${joinSelectedNetworks(selectedNftNetworks, context)}',
-                style: context.theme.appTextThemes.caption.copyWith(color: color),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            SizedBox(
-              width: 5.0.s,
-            ),
-            Assets.svg.iconArrowDown.icon(size: 20.0.s, color: color),
-          ],
-        ),
-      ),
     );
   }
 }
