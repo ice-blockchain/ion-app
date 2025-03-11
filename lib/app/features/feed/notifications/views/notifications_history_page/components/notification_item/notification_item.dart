@@ -83,7 +83,7 @@ class _NotificationItemEvent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity == null) {
       return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
