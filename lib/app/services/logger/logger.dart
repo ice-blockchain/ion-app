@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter_command/flutter_command.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -47,6 +48,10 @@ class Logger {
         },
       ),
     );
+
+    Command.globalExceptionHandler = (error, stackTrace) {
+      _talker?.error('Command error', error, stackTrace);
+    };
   }
 
   static Talker? get talker => _talker;
@@ -54,8 +59,6 @@ class Logger {
   static TalkerDioLogger? get talkerDioLogger => TalkerDioLogger(
         talker: talker,
         settings: TalkerDioLoggerSettings(
-          printRequestHeaders: true,
-          printResponseHeaders: true,
           requestPen: AnsiPen()..cyan(),
           responsePen: AnsiPen()..green(),
           errorPen: AnsiPen()..red(),

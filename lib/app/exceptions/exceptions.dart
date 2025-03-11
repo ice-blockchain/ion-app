@@ -428,3 +428,11 @@ class CloudFileDeleteFailedException extends IONException {
   CloudFileDeleteFailedException(dynamic error)
       : super(10083, 'File delete from cloud failed, error: $error');
 }
+
+class NftNotFoundException extends IONException {
+  NftNotFoundException(String tokenId) : super(10084, 'Nft not found: $tokenId');
+}
+
+class CurrentWalletViewNotFoundException extends IONException {
+  CurrentWalletViewNotFoundException() : super(10085, 'Current wallet view not found');
+}

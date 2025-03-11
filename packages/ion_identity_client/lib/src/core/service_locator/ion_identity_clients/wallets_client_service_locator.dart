@@ -127,8 +127,8 @@ class WalletsClientServiceLocator {
     required IONIdentityConfig config,
   }) {
     return GetWalletNftsService(
-      username,
       GetWalletNftsDataSource(
+        username,
         IONIdentityServiceLocator.networkClient(config: config),
         IONIdentityServiceLocator.tokenStorage(),
       ),

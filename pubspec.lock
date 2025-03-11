@@ -788,6 +788,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  flutter_command:
+    dependency: "direct main"
+    description:
+      name: flutter_command
+      sha256: e6e77c60ac104aec297ccf7c90d186d0409bbcd8665df7c0ff43f34d9d538067
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.2.2"
   flutter_dotenv:
     dependency: "direct main"
     description:
@@ -1115,6 +1123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  functional_listener:
+    dependency: "direct main"
+    description:
+      name: functional_listener
+      sha256: c096db771b4ce7ba0f886cc4a761044b11e8276a7bc24cfc812dc4b2bc6f5b16
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   get:
     dependency: transitive
     description:

@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/filtered_wallet_coins_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/filtered_wallet_nfts_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/providers/search_visibility_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 
@@ -22,9 +21,8 @@ class WalletSearchBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coinsResult = ref.watch(filteredWalletCoinsProvider);
-    final nftsResult = ref.watch(filteredWalletNftsProvider);
 
-    final isLoading = coinsResult.isLoading || nftsResult.isLoading;
+    final isLoading = coinsResult.isLoading;
 
     final searchVisibleProvider = walletSearchVisibilityProvider(tabType);
     final searchQueryProvider = walletSearchQueryControllerProvider(tabType.walletAssetType);

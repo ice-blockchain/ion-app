@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
+import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 
-class NftNetwork extends StatelessWidget {
+class NftNetwork extends ConsumerWidget {
   const NftNetwork({
     required this.nftData,
     required this.layoutType,
@@ -20,19 +22,21 @@ class NftNetwork extends StatelessWidget {
   final NftLayoutType layoutType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final network = ref.watch(networkByIdProvider(nftData.network)).valueOrNull;
+
     return Row(
       children: [
         Avatar(
           size: 12.0.s,
           imageWidget: NetworkIconWidget(
             size: 12.0.s,
-            imageUrl: nftData.network.image,
+            imageUrl: network?.image ?? '',
           ),
         ),
         SizedBox(width: 5.0.s),
         Text(
-          nftData.network.displayName,
+          network?.displayName ?? '',
           style: context.theme.appTextThemes.caption3
               .copyWith(color: context.theme.appColors.quaternaryText),
         ),

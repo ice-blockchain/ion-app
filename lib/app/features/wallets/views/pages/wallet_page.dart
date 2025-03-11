@@ -8,11 +8,7 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
-import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/nfts_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';
@@ -20,12 +16,11 @@ import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coin
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/contacts/contacts_list.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/header/header.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/loaders/grid_loader.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/components/loaders/list_loader.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/view_models/wallet_nfts_view_model.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
@@ -39,18 +34,6 @@ class WalletPage extends HookConsumerWidget {
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);
-    final nftsState = ref.watch(filteredNftsProvider);
-    final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
-
-    Widget getActiveTabContent() {
-      if (activeTab.value == WalletTabType.coins) {
-        return const CoinsTab();
-      }
-      if (nftsState.isLoading) {
-        return nftLayoutType == NftLayoutType.list ? const ListLoader() : const GridLoader();
-      }
-      return const NftsTab();
-    }
 
     final showFriends = ref.watch(shouldShowFriendsSelectorProvider).valueOrNull ?? true;
 
@@ -83,10 +66,12 @@ class WalletPage extends HookConsumerWidget {
               ),
             ),
             if (activeTab.value == WalletTabType.nfts)
-              const NftsTabHeader()
+              const SliverToBoxAdapter(
+                child: NftsTabHeader(),
+              )
             else
               const CoinsTabHeader(),
-            getActiveTabContent(),
+            _ActiveTabContent(activeTab: activeTab.value),
           ],
           onRefresh: () async {
             final currentUserFollowList = ref.read(currentUserFollowListProvider).valueOrNull;
@@ -95,8 +80,9 @@ class WalletPage extends HookConsumerWidget {
             }
             ref
               ..invalidate(walletViewsDataNotifierProvider)
-              ..invalidate(coinsInWalletProvider)
-              ..invalidate(nftsDataProvider);
+              ..invalidate(coinsInWalletProvider);
+
+            ref.read(walletNftsViewModelProvider).loadNftsCommand();
           },
           builder: (context, slivers) => CustomScrollView(
             controller: scrollController,
@@ -105,5 +91,21 @@ class WalletPage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _ActiveTabContent extends StatelessWidget {
+  const _ActiveTabContent({
+    required this.activeTab,
+  });
+
+  final WalletTabType activeTab;
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (activeTab) {
+      WalletTabType.coins => const CoinsTab(),
+      WalletTabType.nfts => const NftsTab(),
+    };
   }
 }
