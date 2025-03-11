@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
@@ -22,6 +23,7 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
     final walletViewsService = await ref.watch(walletViewsServiceProvider.future);
 
     final initialViews = await walletViewsService.fetch();
+    unawaited(ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets());
 
     await _listenForPriceUpdates(initialViews);
 
