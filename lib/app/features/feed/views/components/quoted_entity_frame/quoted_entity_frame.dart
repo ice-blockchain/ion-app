@@ -37,14 +37,17 @@ class QuotedEntityFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.0.s),
-        border: Border.all(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
-      ),
-      child: Padding(
-        padding: padding,
-        child: child,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16.0.s),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.0.s),
+          border: Border.all(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
+        ),
+        child: Padding(
+          padding: padding,
+          child: child,
+        ),
       ),
     );
   }
