@@ -28,8 +28,8 @@ enum NotificationsType {
         NotificationsType.like => context.theme.appColors.attentionRed,
         NotificationsType.reply => context.theme.appColors.purple,
         NotificationsType.likeReply => context.theme.appColors.orangePeel,
-        NotificationsType.quote => const Color(0xFF4340FF),
-        NotificationsType.repost => const Color(0xFFA640FF),
+        NotificationsType.quote => context.theme.appColors.medBlue,
+        NotificationsType.repost => context.theme.appColors.pink,
       };
 
   String getDescription(

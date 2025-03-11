@@ -29,6 +29,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.lightBlue,
     required this.quaternaryText,
     required this.attentionBlock,
+    required this.pink,
+    required this.medBlue,
   });
 
   factory AppColorsExtension.fromTemplate(TemplateColors templateColors) {
@@ -57,6 +59,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       lightBlue: templateColors.lightBlue,
       quaternaryText: templateColors.quaternaryText,
       attentionBlock: templateColors.attentionBlock,
+      pink: templateColors.pink,
+      medBlue: templateColors.medBlue,
     );
   }
 
@@ -86,6 +90,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       lightBlue: const Color(0xFF1B9CF0),
       quaternaryText: const Color(0xFF727689),
       attentionBlock: const Color(0xFFEEF1FF),
+      pink: const Color(0xFFA640FF),
+      medBlue: const Color(0xFF4340FF),
     );
   }
 
@@ -113,6 +119,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color lightBlue;
   final Color quaternaryText;
   final Color attentionBlock;
+  final Color pink;
+  final Color medBlue;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -140,6 +148,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? lightBlue,
     Color? quaternaryText,
     Color? attentionBlock,
+    Color? pink,
+    Color? medBlue,
   }) {
     return AppColorsExtension(
       primaryAccent: primaryAccent ?? this.primaryAccent,
@@ -166,6 +176,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       lightBlue: lightBlue ?? this.lightBlue,
       quaternaryText: quaternaryText ?? this.quaternaryText,
       attentionBlock: attentionBlock ?? this.attentionBlock,
+      pink: pink ?? this.pink,
+      medBlue: medBlue ?? this.medBlue,
     );
   }
 
@@ -203,6 +215,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       lightBlue: Color.lerp(lightBlue, other.lightBlue, t)!,
       quaternaryText: Color.lerp(quaternaryText, other.quaternaryText, t)!,
       attentionBlock: Color.lerp(attentionBlock, other.attentionBlock, t)!,
+      pink: Color.lerp(pink, other.pink, t)!,
+      medBlue: Color.lerp(medBlue, other.medBlue, t)!,
     );
   }
 }

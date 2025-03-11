@@ -25,7 +25,9 @@
         "darkBlue": "#1D46EB",
         "lightBlue": "#1B9CF0",
         "quaternaryText": "#727689",
-        "attentionBlock": "#EEF1FF"
+        "attentionBlock": "#EEF1FF",
+        "pink": "#A640FF",
+        "medBlue": "#4340FF"
       },
       "dark": {
         "primaryAccent": "#0166FF",
@@ -51,7 +53,9 @@
         "darkBlue": "#1D46EB",
         "lightBlue": "#1B9CF0",
         "quaternaryText": "#727689",
-        "attentionBlock": "#EEF1FF"
+        "attentionBlock": "#EEF1FF",
+        "pink": "#A640FF",
+        "medBlue": "#4340FF"
       }
     },
     "textThemes": {
