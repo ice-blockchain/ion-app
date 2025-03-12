@@ -32,7 +32,7 @@ Future<List<String>> archivedConversations(Ref ref) async {
           );
 
   final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
-  final encryptedMessageService = await ref.read(encryptedMessageServiceProvider.future);
+  final encryptedMessageService = await ref.watch(encryptedMessageServiceProvider.future);
 
   if (currentUserPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
