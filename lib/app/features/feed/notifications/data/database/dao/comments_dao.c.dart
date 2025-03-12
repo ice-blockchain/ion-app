@@ -32,11 +32,19 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
         .get();
   }
 
+  // ..addColumns([eventMessageTable.createdAt.max(),])
   Future<Comment?> getLast(CommentType type) async {
     final query = select(commentsTable)
       ..where((t) => t.type.equalsValue(type))
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
       ..limit(1);
     return query.getSingleOrNull();
+  }
+
+  Stream<int> watchUnreadCount() {
+    final totalCount = commentsTable.eventReference.count();
+    final query =
+        select(commentsTable).addColumns([totalCount]).map((row) => row.read(totalCount)!);
+    return query.watchSingle();
   }
 }

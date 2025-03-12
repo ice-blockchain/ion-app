@@ -46,6 +46,8 @@ class UserPreferencesService {
     final userKey = _getUserKey(key);
     if (T == bool) {
       return _localStorage.getBool(userKey) as T?;
+    } else if (T == int) {
+      return _localStorage.getInt(userKey) as T?;
     } else if (T == double) {
       return _localStorage.getDouble(userKey) as T?;
     } else if (T == String) {
