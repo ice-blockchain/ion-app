@@ -13,7 +13,8 @@ part 'ion_connect_seal_service.c.g.dart';
 
 @riverpod
 Future<IonConnectSealService> ionConnectSealService(Ref ref) async => IonConnectSealServiceImpl(
-    encryptedMessageService: await ref.read(encryptedMessageServiceProvider.future));
+      encryptedMessageService: await ref.read(encryptedMessageServiceProvider.future),
+    );
 
 abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
