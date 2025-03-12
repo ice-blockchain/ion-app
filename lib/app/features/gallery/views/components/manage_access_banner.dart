@@ -1,18 +1,27 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:photo_manager/photo_manager.dart';
 
-class ManageAccessBanner extends StatelessWidget {
-  const ManageAccessBanner({super.key});
+class ManageAccessBanner extends ConsumerWidget {
+  const ManageAccessBanner({
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Extract theme values to variables to avoid repeated theme calls
+    final appColors = context.theme.appColors;
+    final appTextThemes = context.theme.appTextThemes;
+    final primaryAccent = appColors.primaryAccent;
+
     return ColoredBox(
-      color: context.theme.appColors.tertararyBackground,
+      color: appColors.tertararyBackground,
       child: Padding(
         padding: EdgeInsets.symmetric(
           vertical: 8.0.s,
@@ -23,21 +32,21 @@ class ManageAccessBanner extends StatelessWidget {
             Expanded(
               child: Text(
                 context.i18n.gallery_access_description,
-                style: context.theme.appTextThemes.caption2,
+                style: appTextThemes.caption2,
               ),
             ),
             Button(
-              onPressed: PhotoManager.openSetting,
+              onPressed: ref.read(permissionStrategyProvider(Permission.photos)).openSettings,
               type: ButtonType.outlined,
-              tintColor: context.theme.appColors.primaryAccent,
+              tintColor: primaryAccent,
               leadingIcon: Assets.svg.iconButtonManagecoin.icon(
-                color: context.theme.appColors.primaryAccent,
+                color: primaryAccent,
                 size: 16.0.s,
               ),
               label: Text(
                 context.i18n.gallery_manage,
-                style: context.theme.appTextThemes.caption.copyWith(
-                  color: context.theme.appColors.primaryAccent,
+                style: appTextThemes.caption.copyWith(
+                  color: primaryAccent,
                 ),
               ),
               style: OutlinedButton.styleFrom(
