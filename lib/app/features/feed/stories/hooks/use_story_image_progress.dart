@@ -25,12 +25,8 @@ UseImageStoryResult useImageStoryProgress({
 
   final wasCurrentRef = useRef<bool>(false);
 
-  final isLoading = isImage &&
-      ref.watch(
-        storyImagesLoadStatusControllerProvider.select(
-          (loadedStories) => !(loadedStories[storyId] ?? false),
-        ),
-      );
+  final isImageLoaded = ref.watch(storyImageLoadStatusProvider(storyId));
+  final isLoading = isImage && !isImageLoaded;
 
   useEffect(
     () {

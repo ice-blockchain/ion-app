@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
-import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
@@ -26,9 +25,6 @@ class StoryViewerPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
-
-    // Keep the StoryImagesLoadStatusController alive while stories are open.
-    ref.watch(storyImagesLoadStatusControllerProvider);
 
     final storyViewerState = ref.watch(storyViewingControllerProvider(pubkey));
 

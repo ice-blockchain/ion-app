@@ -11,24 +11,17 @@ const _kStoryCacheKey = 'story_image_cache';
 
 /// A provider to track loading states for story images
 @riverpod
-class StoryImagesLoadStatusController extends _$StoryImagesLoadStatusController {
+class StoryImageLoadStatus extends _$StoryImageLoadStatus {
   @override
-  Map<String, bool> build() => <String, bool>{};
+  bool build(String storyId) => false;
 
-  void markLoaded(String storyId) {
-    state = {
-      ...state,
-      storyId: true,
-    };
-  }
-
-  bool isLoaded(String storyId) => state[storyId] ?? false;
+  void markLoaded() => state = true;
 }
 
 @Riverpod(keepAlive: true)
 BaseCacheManager storyImageCacheManager(Ref ref) {
   final expirationHours =
-      ref.read(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS);
+      ref.watch(envProvider.notifier).get<int>(EnvVariable.STORY_EXPIRATION_HOURS);
 
   return CacheManager(
     Config(

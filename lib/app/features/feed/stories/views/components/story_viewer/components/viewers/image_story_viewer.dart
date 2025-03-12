@@ -33,7 +33,7 @@ class ImageStoryViewer extends ConsumerWidget {
       imageBuilder: (context, imageProvider) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {
-            ref.read(storyImagesLoadStatusControllerProvider.notifier).markLoaded(storyId);
+            ref.read(storyImageLoadStatusProvider(storyId).notifier).markLoaded();
           }
         });
 
