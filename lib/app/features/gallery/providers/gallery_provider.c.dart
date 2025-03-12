@@ -50,7 +50,7 @@ class GalleryNotifier extends _$GalleryNotifier {
   @override
   Future<GalleryState> build({MediaPickerType type = MediaPickerType.common}) async {
     final mediaService = ref.watch(mediaServiceProvider);
-    final hasPermission = ref.read(hasPermissionProvider(Permission.photos));
+    final hasPermission = ref.watch(hasPermissionProvider(Permission.photos));
 
     if (!hasPermission) {
       Logger.log('Photos Permission denied');

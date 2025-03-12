@@ -5,9 +5,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
+import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/components/manage_access_banner.dart';
 import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -36,6 +39,7 @@ class MediaPickerPage extends HookConsumerWidget {
     final selectedMedia = ref.watch(
       mediaSelectionNotifierProvider.select((state) => state.selectedMedia),
     );
+    final hasLimitedPermission = ref.watch(hasLimitedPermissionProvider(Permission.photos));
 
     final isAll = galleryState.valueOrNull?.selectedAlbum?.isAll ?? false;
     final albumName = galleryState.valueOrNull?.selectedAlbum?.name ?? type.title(context);
@@ -87,6 +91,13 @@ class MediaPickerPage extends HookConsumerWidget {
         automaticallyImplyLeading: false,
         pinned: true,
       ),
+      if (hasLimitedPermission)
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 12.0.s),
+            child: const ManageAccessBanner(),
+          ),
+        ),
       GalleryGridView(
         type: type,
         showSelectionBadge: maxSelection > 1,
