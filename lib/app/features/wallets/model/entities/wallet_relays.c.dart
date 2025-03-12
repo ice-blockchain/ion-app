@@ -9,12 +9,12 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/encrypted_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
-import 'package:ion/app/features/wallets/model/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/wallet_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/wallet_flag_tag.c.dart';
 
@@ -72,7 +72,7 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
 
     return WalletAssetData(
       content: eventMessage.content,
-      pubkey: tags[PubkeyTag.tagName]?.map(PubkeyTag.fromTag).first.value,
+      pubkey: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).first.value,
       networkId: tags[NetworkTag.tagName]!.map(NetworkTag.fromTag).first.value,
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,
       assetAddress: tags[AssetAddressTag.tagName]!.map(AssetAddressTag.fromTag).first.value,
@@ -96,7 +96,7 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
         AssetClassTag(value: assetClass).toTag(),
         AssetAddressTag(value: assetAddress).toTag(),
         if (pubkey != null)
-          PubkeyTag(value: pubkey).toTag()
+          RelatedPubkey(value: pubkey!).toTag()
         else if (walletAddress != null) ...[
           const WalletFlagTag().toTag(),
           WalletAddressTag(value: walletAddress!).toTag(),
