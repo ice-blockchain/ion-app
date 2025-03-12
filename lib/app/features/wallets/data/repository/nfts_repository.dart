@@ -13,12 +13,16 @@ final nftsRepositoryProvider = Provider.autoDispose((ref) {
   );
 });
 
+typedef NftCacheKey = ({String contract, String tokenId});
+
 class NftsRepository {
   NftsRepository({
     required IONIdentityClient ionIdentityClient,
   }) : _ionIdentityClient = ionIdentityClient;
 
   final IONIdentityClient _ionIdentityClient;
+
+  final Map<NftCacheKey, NftData> _nftCache = {};
 
   Future<List<NftData>> getNfts({
     required String walletViewId,
@@ -29,6 +33,28 @@ class NftsRepository {
       return [];
     }
 
-    return nfts.nfts.map((nft) => nft.toNft(network: nfts.network)).toList();
+    final nftList = nfts.nfts.map((nft) => nft.toNft(network: nfts.network)).toList();
+
+    for (final nft in nftList) {
+      _nftCache[_createNftCacheKey(nft.contract, nft.tokenId)] = nft;
+    }
+
+    return nftList;
+  }
+
+  Future<NftData> getNft(NftCacheKey tokenKey) async {
+    if (_nftCache.containsKey(tokenKey)) {
+      return _nftCache[tokenKey]!;
+    }
+
+    // TODO
+    // If not in cache, we need to fetch it
+    // Currently we don't have endpoint for that
+    // For now, we'll throw an exception as the NFT
+    throw Exception('NFT not found in cache');
+  }
+
+  NftCacheKey _createNftCacheKey(String contract, String tokenId) {
+    return (contract: contract, tokenId: tokenId);
   }
 }

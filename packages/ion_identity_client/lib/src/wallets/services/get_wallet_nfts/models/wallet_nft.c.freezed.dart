@@ -25,6 +25,7 @@ mixin _$WalletNft {
   String get symbol => throw _privateConstructorUsedError;
   String get tokenId => throw _privateConstructorUsedError;
   String get tokenUri => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
 
   /// Serializes this WalletNft to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,7 +47,8 @@ abstract class $WalletNftCopyWith<$Res> {
       String contract,
       String symbol,
       String tokenId,
-      String tokenUri});
+      String tokenUri,
+      String description});
 }
 
 /// @nodoc
@@ -69,6 +71,7 @@ class _$WalletNftCopyWithImpl<$Res, $Val extends WalletNft>
     Object? symbol = null,
     Object? tokenId = null,
     Object? tokenUri = null,
+    Object? description = null,
   }) {
     return _then(_value.copyWith(
       kind: null == kind
@@ -91,6 +94,10 @@ class _$WalletNftCopyWithImpl<$Res, $Val extends WalletNft>
           ? _value.tokenUri
           : tokenUri // ignore: cast_nullable_to_non_nullable
               as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -108,7 +115,8 @@ abstract class _$$WalletNftImplCopyWith<$Res>
       String contract,
       String symbol,
       String tokenId,
-      String tokenUri});
+      String tokenUri,
+      String description});
 }
 
 /// @nodoc
@@ -129,6 +137,7 @@ class __$$WalletNftImplCopyWithImpl<$Res>
     Object? symbol = null,
     Object? tokenId = null,
     Object? tokenUri = null,
+    Object? description = null,
   }) {
     return _then(_$WalletNftImpl(
       kind: null == kind
@@ -151,6 +160,10 @@ class __$$WalletNftImplCopyWithImpl<$Res>
           ? _value.tokenUri
           : tokenUri // ignore: cast_nullable_to_non_nullable
               as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -163,7 +176,8 @@ class _$WalletNftImpl implements _WalletNft {
       required this.contract,
       required this.symbol,
       required this.tokenId,
-      required this.tokenUri});
+      required this.tokenUri,
+      required this.description});
 
   factory _$WalletNftImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletNftImplFromJson(json);
@@ -178,10 +192,12 @@ class _$WalletNftImpl implements _WalletNft {
   final String tokenId;
   @override
   final String tokenUri;
+  @override
+  final String description;
 
   @override
   String toString() {
-    return 'WalletNft(kind: $kind, contract: $contract, symbol: $symbol, tokenId: $tokenId, tokenUri: $tokenUri)';
+    return 'WalletNft(kind: $kind, contract: $contract, symbol: $symbol, tokenId: $tokenId, tokenUri: $tokenUri, description: $description)';
   }
 
   @override
@@ -195,13 +211,15 @@ class _$WalletNftImpl implements _WalletNft {
             (identical(other.symbol, symbol) || other.symbol == symbol) &&
             (identical(other.tokenId, tokenId) || other.tokenId == tokenId) &&
             (identical(other.tokenUri, tokenUri) ||
-                other.tokenUri == tokenUri));
+                other.tokenUri == tokenUri) &&
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, kind, contract, symbol, tokenId, tokenUri);
+  int get hashCode => Object.hash(
+      runtimeType, kind, contract, symbol, tokenId, tokenUri, description);
 
   /// Create a copy of WalletNft
   /// with the given fields replaced by the non-null parameter values.
@@ -225,7 +243,8 @@ abstract class _WalletNft implements WalletNft {
       required final String contract,
       required final String symbol,
       required final String tokenId,
-      required final String tokenUri}) = _$WalletNftImpl;
+      required final String tokenUri,
+      required final String description}) = _$WalletNftImpl;
 
   factory _WalletNft.fromJson(Map<String, dynamic> json) =
       _$WalletNftImpl.fromJson;
@@ -240,6 +259,8 @@ abstract class _WalletNft implements WalletNft {
   String get tokenId;
   @override
   String get tokenUri;
+  @override
+  String get description;
 
   /// Create a copy of WalletNft
   /// with the given fields replaced by the non-null parameter values.

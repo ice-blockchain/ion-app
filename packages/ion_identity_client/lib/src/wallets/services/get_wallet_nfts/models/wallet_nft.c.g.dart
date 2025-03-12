@@ -13,6 +13,7 @@ _$WalletNftImpl _$$WalletNftImplFromJson(Map<String, dynamic> json) =>
       symbol: json['symbol'] as String,
       tokenId: json['tokenId'] as String,
       tokenUri: json['tokenUri'] as String,
+      description: json['description'] as String,
     );
 
 Map<String, dynamic> _$$WalletNftImplToJson(_$WalletNftImpl instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$$WalletNftImplToJson(_$WalletNftImpl instance) =>
       'symbol': instance.symbol,
       'tokenId': instance.tokenId,
       'tokenUri': instance.tokenUri,
+      'description': instance.description,
     };

@@ -89,7 +89,10 @@ class NftsTab extends ConsumerWidget {
                     child: NftListItem(
                       nftData: nfts[index],
                       onTap: () {
-                        NftDetailsRoute(tokenId: nfts[index].tokenId).push<void>(context);
+                        NftDetailsRoute(
+                          contract: nfts[index].contract,
+                          tokenId: nfts[index].tokenId,
+                        ).push<void>(context);
                       },
                     ),
                   ),

@@ -12,33 +12,30 @@ class NftName extends StatelessWidget {
   });
 
   final String name;
-  final int rank;
+  final String rank;
 
   @override
   Widget build(BuildContext context) {
     return RoundedCard.filled(
-      child: Column(
+      padding: EdgeInsets.all(22.0.s),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 4.0.s),
-                child: Text(
-                  name,
-                  maxLines: 2,
-                  style: context.theme.appTextThemes.subtitle.copyWith(
-                    color: context.theme.appColors.primaryText,
-                  ),
-                ),
+          Padding(
+            padding: EdgeInsets.only(right: 4.0.s),
+            child: Text(
+              name,
+              maxLines: 2,
+              style: context.theme.appTextThemes.subtitle.copyWith(
+                color: context.theme.appColors.primaryText,
               ),
-              Text(
-                '#$rank',
-                style: context.theme.appTextThemes.subtitle2.copyWith(
-                  color: context.theme.appColors.tertararyText,
-                ),
-              ),
-            ],
+            ),
+          ),
+          Text(
+            '#$rank',
+            style: context.theme.appTextThemes.subtitle2.copyWith(
+              color: context.theme.appColors.tertararyText,
+            ),
           ),
         ],
       ),
