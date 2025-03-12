@@ -32,10 +32,11 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
         .get();
   }
 
-  Future<Comment?> getLast() async {
-    return (select(commentsTable)
-          ..orderBy([(t) => OrderingTerm.desc(commentsTable.createdAt)])
-          ..limit(1))
-        .getSingleOrNull();
+  Future<Comment?> getLast(CommentType type) async {
+    final query = select(commentsTable)
+      ..where((t) => t.type.equalsValue(type))
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+      ..limit(1);
+    return query.getSingleOrNull();
   }
 }

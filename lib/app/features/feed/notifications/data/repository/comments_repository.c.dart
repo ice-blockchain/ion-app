@@ -53,8 +53,14 @@ class CommentsRepository {
     }).toList();
   }
 
-  Future<DateTime?> lastCommentCreatedAt() async {
-    final lastComment = await _commentsDao.getLast();
+  Future<DateTime?> lastCommentCreatedAt(NotificationsType type) async {
+    final commentType = switch (type) {
+      NotificationsType.quote => CommentType.quote,
+      NotificationsType.reply => CommentType.reply,
+      NotificationsType.repost => CommentType.repost,
+      _ => throw UnknownNotificationCommentException(type)
+    };
+    final lastComment = await _commentsDao.getLast(commentType);
     return lastComment?.createdAt;
   }
 }
