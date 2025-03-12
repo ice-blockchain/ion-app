@@ -44,6 +44,10 @@ class MediaFile with _$MediaFile {
 typedef CropImageUiSettings = List<PlatformUiSettings>;
 
 class MediaService {
+  Future<void> presentLimitedGallery(RequestType type) async {
+    return PhotoManager.presentLimited(type: type);
+  }
+
   Future<List<MediaFile>> fetchGalleryMedia({
     required int page,
     required int size,
