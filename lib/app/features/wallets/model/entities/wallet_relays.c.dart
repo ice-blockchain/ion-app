@@ -10,8 +10,11 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
+import 'package:ion/app/features/wallets/model/entities/tags/encrypted_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/pubkey_tag.c.dart';
+import 'package:ion/app/features/wallets/model/entities/tags/wallet_address_tag.c.dart';
+import 'package:ion/app/features/wallets/model/entities/tags/wallet_flag_tag.c.dart';
 
 part 'wallet_relays.c.freezed.dart';
 part 'wallet_relays.c.g.dart';
@@ -55,7 +58,8 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
     @JsonKey(name: 'network') required String networkId,
     required String assetClass,
     required String assetAddress,
-    required String pubkey,
+    String? walletAddress,
+    String? pubkey,
     String? request, // TODO: Not implemented
   }) = _WalletAssetData;
 
@@ -66,10 +70,11 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
 
     return WalletAssetData(
       content: eventMessage.content,
-      pubkey: tags[PubkeyTag.tagName]!.map(PubkeyTag.fromTag).first.value,
+      pubkey: tags[PubkeyTag.tagName]?.map(PubkeyTag.fromTag).first.value,
       networkId: tags[NetworkTag.tagName]!.map(NetworkTag.fromTag).first.value,
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,
       assetAddress: tags[AssetAddressTag.tagName]!.map(AssetAddressTag.fromTag).first.value,
+      walletAddress: tags[WalletAddressTag.tagName]?.map(WalletAddressTag.fromTag).first.value,
     );
   }
 
@@ -85,10 +90,16 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
       kind: WalletAssetRelaysEntity.kind,
       tags: [
         ...tags,
-        PubkeyTag(value: pubkey).toTag(),
         NetworkTag(value: networkId).toTag(),
         AssetClassTag(value: assetClass).toTag(),
         AssetAddressTag(value: assetAddress).toTag(),
+        if (pubkey != null)
+          PubkeyTag(value: pubkey).toTag()
+        else if (walletAddress != null) ...[
+          const WalletFlagTag().toTag(),
+          WalletAddressTag(value: walletAddress!).toTag(),
+        ],
+        const EncryptedTag().toTag(),
       ],
       content: content,
     );

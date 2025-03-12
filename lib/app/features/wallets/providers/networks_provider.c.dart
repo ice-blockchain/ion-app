@@ -8,11 +8,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'networks_provider.c.g.dart';
 
 @riverpod
-Future<List<NetworkData>> networks(Ref ref) async {
+Future<List<NetworkData>> networks(Ref ref) {
   return ref.watch(networksRepositoryProvider).getAll();
 }
 
 @riverpod
-Future<NetworkData?> networkById(Ref ref, String id) async {
+Future<NetworkData?> networkById(Ref ref, String id) {
   return ref.watch(networksRepositoryProvider).getById(id);
 }

@@ -114,10 +114,10 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       WalletAssetData(
         content: encoded,
         networkId: details.network.id,
-        assetClass: '', // ???
+        assetClass: sendableAsset.kind,
         assetAddress: coinAssetData.selectedOption!.coin.contractAddress,
-        // TODO: Need to discuss. It can be null, if user sends money not to contact, but by the wallet address directly
-        pubkey: details.receiverPubkey!,
+        pubkey: details.receiverPubkey,
+        walletAddress: details.receiverAddress,
       ),
     ]);
   }

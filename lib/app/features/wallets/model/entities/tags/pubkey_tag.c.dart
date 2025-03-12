@@ -4,9 +4,10 @@ import 'package:ion/app/exceptions/exceptions.dart';
 part 'pubkey_tag.c.freezed.dart';
 
 @freezed
+@freezed
 class PubkeyTag with _$PubkeyTag {
   const factory PubkeyTag({
-    required String value,
+    required String? value,
   }) = _PubkeyTag;
 
   const PubkeyTag._();
@@ -15,6 +16,7 @@ class PubkeyTag with _$PubkeyTag {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
+
     if (tag.length != 2) {
       throw IncorrectEventTagException(tag: tag.toString());
     }
@@ -25,6 +27,9 @@ class PubkeyTag with _$PubkeyTag {
   static const String tagName = 'p';
 
   List<String> toTag() {
-    return [tagName, value];
+    if (value == null) {
+      throw IncorrectEventTagValueException(tag: tagName, value: value);
+    }
+    return [tagName, value!];
   }
 }
