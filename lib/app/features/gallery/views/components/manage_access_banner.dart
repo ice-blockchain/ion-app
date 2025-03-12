@@ -6,6 +6,7 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
+import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ManageAccessBanner extends ConsumerWidget {
@@ -19,6 +20,7 @@ class ManageAccessBanner extends ConsumerWidget {
     final appColors = context.theme.appColors;
     final appTextThemes = context.theme.appTextThemes;
     final primaryAccent = appColors.primaryAccent;
+    final appName = ref.watch(appInfoProvider).value?.appName ?? '';
 
     return ColoredBox(
       color: appColors.tertararyBackground,
@@ -44,7 +46,7 @@ class ManageAccessBanner extends ConsumerWidget {
                 size: 16.0.s,
               ),
               label: Text(
-                context.i18n.gallery_manage,
+                context.i18n.button_manage,
                 style: appTextThemes.caption.copyWith(
                   color: primaryAccent,
                 ),
