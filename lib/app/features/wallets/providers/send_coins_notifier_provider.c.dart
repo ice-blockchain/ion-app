@@ -12,7 +12,7 @@ import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_result.c.dart';
 import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -108,8 +108,8 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       from: details.senderAddress,
       to: details.receiverAddress,
     );
-    final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
-    final encoded = await e2eeService.encryptMessage(jsonEncode(walletAssetContent));
+    final encryptedMessageService = await ref.read(encryptedMessageServiceProvider.future);
+    final encoded = await encryptedMessageService.encryptMessage(jsonEncode(walletAssetContent));
     await ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData([
       WalletAssetData(
         content: encoded,

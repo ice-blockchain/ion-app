@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 
 void main() {
@@ -17,11 +17,13 @@ void main() {
   setUp(() async {
     senderSigner = await Ed25519KeyStore.generate();
     receiverSigner = await Ed25519KeyStore.generate();
-    final e2eeService = IonConnectE2eeService(
+    final encryptedMessageService = EncryptedMessageService(
       eventSigner: senderSigner,
       currentUserPubkey: senderSigner.publicKey,
     );
-    giftWrapService = IonConnectGiftWrapServiceImpl(e2eeService: e2eeService);
+    giftWrapService = IonConnectGiftWrapServiceImpl(
+      encryptedMessageService: encryptedMessageService,
+    );
   });
 
   group('IonConnectGiftWrapService', () {

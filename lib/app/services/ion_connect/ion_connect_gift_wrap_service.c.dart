@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,7 +16,7 @@ part 'ion_connect_gift_wrap_service.c.g.dart';
 @riverpod
 Future<IonConnectGiftWrapService> ionConnectGiftWrapService(Ref ref) async =>
     IonConnectGiftWrapServiceImpl(
-      e2eeService: await ref.read(ionConnectE2eeServiceProvider.future),
+      encryptedMessageService: await ref.read(encryptedMessageServiceProvider.future),
     );
 
 abstract class IonConnectGiftWrapService {
@@ -37,11 +37,11 @@ abstract class IonConnectGiftWrapService {
 
 class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   const IonConnectGiftWrapServiceImpl({
-    required IonConnectE2eeService e2eeService,
-  }) : _e2eeService = e2eeService;
+    required EncryptedMessageService encryptedMessageService,
+  }) : _encryptedMessageService = encryptedMessageService;
 
   static const int kind = 1059;
-  final IonConnectE2eeService _e2eeService;
+  final EncryptedMessageService _encryptedMessageService;
 
   @override
   Future<EventMessage> createWrap({
@@ -53,7 +53,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
   }) async {
     final oneTimeSigner = await Ed25519KeyStore.generate();
 
-    final encryptedEvent = await _e2eeService.encryptMessage(
+    final encryptedEvent = await _encryptedMessageService.encryptMessage(
       jsonEncode(event.toJson().last),
       publicKey: receiverPubkey,
       privateKey: oneTimeSigner.privateKey,
@@ -82,7 +82,7 @@ class IonConnectGiftWrapServiceImpl implements IonConnectGiftWrapService {
     required String senderPubkey,
     required String privateKey,
   }) async {
-    final decryptedContent = await _e2eeService.decryptMessage(
+    final decryptedContent = await _encryptedMessageService.decryptMessage(
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,

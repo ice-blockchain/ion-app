@@ -2,17 +2,18 @@
 
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_seal_service.c.g.dart';
 
 @riverpod
-Future<IonConnectSealService> ionConnectSealService(Ref ref) async =>
-    IonConnectSealServiceImpl(e2eeService: await ref.read(ionConnectE2eeServiceProvider.future));
+Future<IonConnectSealService> ionConnectSealService(Ref ref) async => IonConnectSealServiceImpl(
+    encryptedMessageService: await ref.read(encryptedMessageServiceProvider.future));
 
 abstract class IonConnectSealService {
   Future<EventMessage> createSeal(
@@ -30,12 +31,12 @@ abstract class IonConnectSealService {
 
 class IonConnectSealServiceImpl implements IonConnectSealService {
   const IonConnectSealServiceImpl({
-    required IonConnectE2eeService e2eeService,
-  }) : _e2eeService = e2eeService;
+    required EncryptedMessageService encryptedMessageService,
+  }) : _encryptedMessageService = encryptedMessageService;
 
   static const int kind = 13;
 
-  final IonConnectE2eeService _e2eeService;
+  final EncryptedMessageService _encryptedMessageService;
 
   @override
   Future<EventMessage> createSeal(
@@ -45,7 +46,7 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
   ) async {
     final encodedRumor = jsonEncode(rumor.toJson().last);
 
-    final encryptedRumor = await _e2eeService.encryptMessage(
+    final encryptedRumor = await _encryptedMessageService.encryptMessage(
       encodedRumor,
       publicKey: receiverPubkey,
       privateKey: signer.privateKey,
@@ -69,7 +70,7 @@ class IonConnectSealServiceImpl implements IonConnectSealService {
     String senderPubkey,
     String privateKey,
   ) async {
-    final decryptedContent = await _e2eeService.decryptMessage(
+    final decryptedContent = await _encryptedMessageService.decryptMessage(
       content,
       publicKey: senderPubkey,
       privateKey: privateKey,
