@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_quotes_subscription_provider.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_replies_subscription_provider.c.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_reposts_subscription_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/notifications_subscription_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/unread_notifications_count_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -13,10 +12,7 @@ class FeedNotificationsButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref
-      ..watch(notificationRepliesSubscriptionProvider)
-      ..watch(notificationQuotesSubscriptionProvider)
-      ..watch(notificationRepostsSubscriptionProvider);
+    ref.watch(notificationsSubscriptionProvider);
 
     return Stack(
       clipBehavior: Clip.none,
@@ -33,22 +29,28 @@ class FeedNotificationsButton extends ConsumerWidget {
   }
 }
 
-class _UnreadCounter extends StatelessWidget {
+class _UnreadCounter extends ConsumerWidget {
   const _UnreadCounter();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadCount = ref.watch(unreadNotificationsCountProvider).valueOrNull;
+
+    if (unreadCount == null || unreadCount == 0) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
-      padding: EdgeInsets.only(left: 1.5.s, right: 2.5.s, top: 2.5.s, bottom: 2.5.s),
+      padding: EdgeInsets.symmetric(horizontal: 1.5.s, vertical: 2.5.s),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0.s),
         color: context.theme.appColors.attentionRed,
       ),
-      constraints: BoxConstraints(minWidth: 15.0.s),
+      constraints: BoxConstraints(minWidth: 14.0.s),
       child: Text(
         '1',
         textAlign: TextAlign.center,
-        style: context.theme.appTextThemes.caption4.copyWith(
+        style: context.theme.appTextThemes.notificationCaption.copyWith(
           color: context.theme.appColors.primaryBackground,
         ),
       ),
