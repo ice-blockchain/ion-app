@@ -58,7 +58,6 @@ class GalleryNotifier extends _$GalleryNotifier {
         mediaData: [],
         currentPage: 0,
         hasMore: false,
-        limitedAccess: false,
         type: type,
       );
     }
@@ -69,14 +68,12 @@ class GalleryNotifier extends _$GalleryNotifier {
       type: type,
     );
 
-    final hasLimitedPermission = ref.watch(hasLimitedPermissionProvider(Permission.photos));
     final hasMore = mediaData.length == _pageSize;
 
     return GalleryState(
       mediaData: mediaData,
       currentPage: 1,
       hasMore: hasMore,
-      limitedAccess: hasLimitedPermission,
       type: type,
     );
   }
