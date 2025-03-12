@@ -1,18 +1,16 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
-import 'package:ion/app/components/list_items_loading_state/list_items_loading_state.dart';
 import 'package:ion/app/components/nothing_is_found/nothing_is_found.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/views/pages/manage_nfts/components/all_chains_item.dart';
 import 'package:ion/app/features/wallets/views/pages/manage_nfts/components/manage_nft_item.dart';
-import 'package:ion/app/features/wallets/views/pages/manage_nfts/providers/manage_nfts_provider.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/features/wallets/views/pages/wallet_page/view_models/nft_networks_view_model.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -23,19 +21,7 @@ class ManageNftsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchText = useState('');
-
-    final filteredNftNetworksState = ref.watch(
-      filteredNftsNetworkNotifierProvider(searchText: searchText.value),
-    );
-
-    useOnInit(
-      () {
-        final notifier = filteredNftsNetworkNotifierProvider(searchText: searchText.value).notifier;
-        ref.read(notifier).filter(searchText: searchText.value);
-      },
-      [searchText.value],
-    );
+    final viewModel = ref.watch(nftNetworksViewModelProvider);
 
     return SheetContent(
       body: Column(
@@ -60,39 +46,34 @@ class ManageNftsPage extends HookConsumerWidget {
                   height: SearchInput.height,
                   child: ScreenSideOffset.small(
                     child: SearchInput(
-                      onTextChanged: (String value) => searchText.value = value,
-                      loading: filteredNftNetworksState.isLoading,
+                      onTextChanged: viewModel.searchQueryCommand.execute,
                     ),
                   ),
                 ),
-                filteredNftNetworksState.maybeWhen(
-                  data: (filteredNftNetworks) {
-                    if (filteredNftNetworks.isEmpty) {
+                ValueListenableBuilder(
+                  valueListenable: viewModel.filteredNetworks,
+                  builder: (context, filteredNetworks, _) {
+                    if (filteredNetworks.isEmpty) {
                       return const NothingIsFound();
                     }
+
                     return SliverPadding(
                       padding: EdgeInsets.only(
                         bottom: ScreenBottomOffset.defaultMargin,
                       ),
                       sliver: SliverList.separated(
-                        itemCount: filteredNftNetworks.length,
+                        itemCount: filteredNetworks.length + 1,
                         separatorBuilder: (_, __) => SizedBox(height: 12.0.s),
-                        itemBuilder: (BuildContext context, int index) {
-                          return ScreenSideOffset.small(
-                            child: ManageNftNetworkItem(
-                              networkType: filteredNftNetworks.elementAt(index).network,
-                            ),
-                          );
-                        },
+                        itemBuilder: (context, index) => ScreenSideOffset.small(
+                          child: index == 0
+                              ? const AllChainsItem()
+                              : ManageNftNetworkItem(
+                                  network: filteredNetworks.elementAt(index - 1),
+                                ),
+                        ),
                       ),
                     );
                   },
-                  loading: () => ListItemsLoadingState(
-                    itemsCount: 7,
-                    separatorHeight: 12.0.s,
-                    listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
-                  ),
-                  orElse: () => const NothingIsFound(),
                 ),
               ],
             ),
