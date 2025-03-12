@@ -23,7 +23,7 @@ class FeedNotificationsButton extends ConsumerWidget {
             color: context.theme.appColors.primaryText,
           ),
         ),
-        Positioned(top: -4.0.s, right: -4.0.s, child: const _UnreadCounter()),
+        Positioned(top: -5.0.s, right: -5.0.s, child: const _UnreadCounter()),
       ],
     );
   }
@@ -41,7 +41,7 @@ class _UnreadCounter extends ConsumerWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 1.5.s, vertical: 2.5.s),
+      padding: EdgeInsets.symmetric(horizontal: 3.5.s, vertical: 2.5.s),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0.s),
         color: context.theme.appColors.attentionRed,
@@ -50,7 +50,7 @@ class _UnreadCounter extends ConsumerWidget {
       child: Text(
         unreadCount.toString(),
         textAlign: TextAlign.center,
-        style: context.theme.appTextThemes.caption4.copyWith(
+        style: context.theme.appTextThemes.caption5.copyWith(
           color: context.theme.appColors.primaryBackground,
         ),
       ),

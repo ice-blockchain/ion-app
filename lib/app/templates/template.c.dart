@@ -122,7 +122,6 @@ class TemplateTextThemes with _$TemplateTextThemes {
   const factory TemplateTextThemes(
     TemplateTextTheme headline1,
     TemplateTextTheme headline2,
-    TemplateTextTheme inputFieldText,
     TemplateTextTheme title,
     TemplateTextTheme subtitle,
     TemplateTextTheme subtitle2,
@@ -133,6 +132,7 @@ class TemplateTextThemes with _$TemplateTextThemes {
     TemplateTextTheme caption2,
     TemplateTextTheme caption3,
     TemplateTextTheme caption4,
+    TemplateTextTheme caption5,
     TemplateTextTheme notificationCaption,
   ) = _TemplateTextThemes;
 

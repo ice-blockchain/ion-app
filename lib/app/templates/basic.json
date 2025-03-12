@@ -67,10 +67,6 @@
         "fontSize": 24,
         "fontWeight": 700
       },
-      "inputFieldText": {
-        "fontSize": 25,
-        "fontWeight": 700
-      },
       "title": {
         "fontSize": 17,
         "fontWeight": 600
@@ -110,6 +106,11 @@
         "fontWeight": 400
       },
       "caption4": {
+        "fontSize": 11,
+        "height": 1.45,
+        "fontWeight": 600
+      },
+      "caption5": {
         "fontSize": 10,
         "fontWeight": 500
       },
