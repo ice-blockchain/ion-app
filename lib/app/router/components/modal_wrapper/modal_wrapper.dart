@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
@@ -14,9 +15,17 @@ class ModalWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationSheet(
-      transitionObserver: transitionObserver,
-      child: child,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop && Navigator.of(context).canPop()) {
+          context.pop();
+        }
+      },
+      child: NavigationSheet(
+        transitionObserver: transitionObserver,
+        child: child,
+      ),
     );
   }
 }
