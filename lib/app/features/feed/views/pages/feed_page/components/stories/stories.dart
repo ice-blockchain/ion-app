@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
@@ -27,8 +28,9 @@ class Stories extends HookConsumerWidget {
         if (stories != null && stories.isNotEmpty) {
           stories
               .expand((userStory) => userStory.stories)
-              .map((story) => story.data.primaryMedia?.url)
-              .whereType<String>()
+              .map((story) => story.data.primaryMedia)
+              .where((media) => media != null && media.mediaType == MediaType.image)
+              .map((media) => media!.url)
               .forEach((url) async => ref.read(storyImageCacheManagerProvider).downloadFile(url));
         }
       },

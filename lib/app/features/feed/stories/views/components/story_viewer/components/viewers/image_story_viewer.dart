@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 // views/components/story_viewer/components/viewers/image_story_viewer.dart
 
 import 'package:cached_network_image/cached_network_image.dart';
