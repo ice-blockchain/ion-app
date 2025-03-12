@@ -40,11 +40,13 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
   }
 
   Stream<int> watchUnreadCount({required DateTime? after}) {
-    final totalCount = commentsTable.eventReference.count();
-    final query = select(commentsTable);
+    final unreadCount = commentsTable.eventReference.count();
+    final query = selectOnly(commentsTable)..addColumns([unreadCount]);
+
     if (after != null) {
-      query.where((t) => t.createdAt.isBiggerThanValue(after));
+      query.where(commentsTable.createdAt.isBiggerThanValue(after));
     }
-    return query.addColumns([totalCount]).map((row) => row.read(totalCount)!).watchSingle();
+
+    return query.map((row) => row.read(unreadCount)!).watchSingle();
   }
 }
