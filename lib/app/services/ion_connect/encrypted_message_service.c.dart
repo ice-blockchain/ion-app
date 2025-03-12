@@ -35,7 +35,6 @@ Future<EncryptedMessageService> encryptedMessageService(Ref ref) async {
   );
 }
 
-// TODO: Move to the core and rename to EncryptedMessageService
 class EncryptedMessageService {
   EncryptedMessageService({required this.eventSigner, required this.currentUserPubkey});
 

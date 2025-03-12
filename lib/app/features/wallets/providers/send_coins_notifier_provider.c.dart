@@ -6,7 +6,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_relays.c.dart';
+import 'package:ion/app/features/wallets/model/entities/wallet_entity.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_result.c.dart';

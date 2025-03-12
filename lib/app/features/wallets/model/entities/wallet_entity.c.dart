@@ -18,29 +18,29 @@ import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart'
 import 'package:ion/app/features/wallets/model/entities/tags/wallet_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/wallet_flag_tag.c.dart';
 
-part 'wallet_relays.c.freezed.dart';
-part 'wallet_relays.c.g.dart';
+part 'wallet_entity.c.freezed.dart';
+part 'wallet_entity.c.g.dart';
 
 @Freezed(equal: false)
-class WalletAssetRelaysEntity
-    with IonConnectEntity, CacheableEntity, ImmutableEntity, _$WalletAssetRelaysEntity {
-  const factory WalletAssetRelaysEntity({
+class WalletAssetEntity
+    with IonConnectEntity, CacheableEntity, ImmutableEntity, _$WalletAssetEntity {
+  const factory WalletAssetEntity({
     required String id,
     required String pubkey,
     required String masterPubkey,
     required String signature,
     required DateTime createdAt,
     required WalletAssetData data,
-  }) = _WalletAssetRelaysEntity;
+  }) = _WalletAssetEntity;
 
-  const WalletAssetRelaysEntity._();
+  const WalletAssetEntity._();
 
-  factory WalletAssetRelaysEntity.fromEventMessage(EventMessage eventMessage) {
+  factory WalletAssetEntity.fromEventMessage(EventMessage eventMessage) {
     if (eventMessage.kind != kind) {
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
-    return WalletAssetRelaysEntity(
+    return WalletAssetEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
       masterPubkey: eventMessage.masterPubkey,
@@ -89,7 +89,7 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
     return EventMessage.fromData(
       signer: signer,
       createdAt: createdAt,
-      kind: WalletAssetRelaysEntity.kind,
+      kind: WalletAssetEntity.kind,
       tags: [
         ...tags,
         NetworkTag(value: networkId).toTag(),

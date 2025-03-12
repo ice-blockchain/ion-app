@@ -15,10 +15,6 @@ class EncryptedTag with _$EncryptedTag {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
-    if (tag.length != 2) {
-      throw IncorrectEventTagException(tag: tag.toString());
-    }
-
     return const EncryptedTag();
   }
 
