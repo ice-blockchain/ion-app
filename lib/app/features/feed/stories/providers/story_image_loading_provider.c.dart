@@ -7,6 +7,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'story_image_loading_provider.c.g.dart';
 
+const _kStoryCacheKey = 'story_image_cache';
+
 /// A provider to track loading states for story images
 @riverpod
 class StoryImagesLoadStatusController extends _$StoryImagesLoadStatusController {
@@ -30,7 +32,7 @@ BaseCacheManager storyImageCacheManager(Ref ref) {
 
   return CacheManager(
     Config(
-      'story_image_cache',
+      _kStoryCacheKey,
       stalePeriod: Duration(hours: expirationHours),
       maxNrOfCacheObjects: 100,
     ),
