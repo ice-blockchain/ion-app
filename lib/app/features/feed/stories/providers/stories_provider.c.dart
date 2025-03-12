@@ -56,7 +56,6 @@ List<UserStories>? stories(Ref ref) {
   return userStoriesList;
 }
 
-// @Riverpod(keepAlive: true)
 @riverpod
 List<UserStories> filteredStoriesByPubkey(Ref ref, String pubkey) {
   final stories = ref.watch(storiesProvider) ?? [];
