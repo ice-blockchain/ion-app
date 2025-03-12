@@ -31,7 +31,7 @@ class ManageAccessBanner extends ConsumerWidget {
           children: [
             Expanded(
               child: Text(
-                context.i18n.gallery_access_description,
+                context.i18n.gallery_access_description(appName),
                 style: appTextThemes.caption2,
               ),
             ),
