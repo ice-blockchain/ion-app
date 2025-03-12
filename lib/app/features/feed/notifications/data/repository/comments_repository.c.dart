@@ -60,7 +60,6 @@ class CommentsRepository {
       NotificationsType.repost => CommentType.repost,
       _ => throw UnknownNotificationCommentException(type)
     };
-    final lastComment = await _commentsDao.getLast(commentType);
-    return lastComment?.createdAt;
+    return _commentsDao.getLastCreatedAt(commentType);
   }
 }

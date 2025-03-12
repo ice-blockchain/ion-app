@@ -21,6 +21,7 @@ class NotificationsHistoryPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useOnInit(() {
       ref.read(unreadNotificationsCountProvider.notifier).readAll();
+      //TODO:add again ?
     });
 
     return Scaffold(
