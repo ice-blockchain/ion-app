@@ -31,9 +31,21 @@ class UnreadCountRepository {
   final UserPreferencesService _userPreferencesService;
   final CommentsDao _commentsDao;
 
-  Stream<int> watch() {
+  Stream<int> watch({required DateTime? after}) {
+    return _commentsDao.watchUnreadCount(after: after);
+  }
+
+  DateTime? getLastReadTime() {
     final readTimestamp = _userPreferencesService.getValue<int>(_storeKey);
-    return _commentsDao.watchUnreadCount();
+    if (readTimestamp != null) {
+      return DateTime.fromMillisecondsSinceEpoch(readTimestamp);
+    } else {
+      return null;
+    }
+  }
+
+  void saveLastReadTime(DateTime time) {
+    _userPreferencesService.setValue<int>(_storeKey, time.millisecondsSinceEpoch);
   }
 
   static const String _storeKey = 'unread_notifications_read_timestamp';
