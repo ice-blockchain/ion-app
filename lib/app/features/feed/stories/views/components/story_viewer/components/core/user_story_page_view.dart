@@ -16,6 +16,7 @@ class UserStoryPageView extends ConsumerWidget {
     required this.onPreviousStory,
     required this.onNextUser,
     required this.onPreviousUser,
+    required this.pubkey,
     super.key,
   });
 
@@ -25,10 +26,9 @@ class UserStoryPageView extends ConsumerWidget {
   final VoidCallback onPreviousStory;
   final VoidCallback onNextUser;
   final VoidCallback onPreviousUser;
-
+  final String pubkey;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pubkey = userStory.pubkey;
     final storyState = ref.watch(storyViewingControllerProvider(pubkey));
 
     final currentStory =

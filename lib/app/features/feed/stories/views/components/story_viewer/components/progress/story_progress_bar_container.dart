@@ -18,7 +18,8 @@ class StoryProgressBarContainer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storyState = ref.watch(storyViewingControllerProvider(pubkey));
-    final userStories = ref.watch(storyViewingControllerProvider(pubkey).select((s) => s.userStories));
+    final userStories =
+        ref.watch(storyViewingControllerProvider(pubkey).select((s) => s.userStories));
     final currentStoryIndex =
         ref.watch(storyViewingControllerProvider(pubkey).select((s) => s.currentStoryIndex));
     final currentUserIndex =

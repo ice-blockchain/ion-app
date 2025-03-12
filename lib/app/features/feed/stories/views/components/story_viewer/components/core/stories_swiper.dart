@@ -50,6 +50,7 @@ class StoriesSwiper extends HookConsumerWidget {
           index: userIndex,
           pageNotifier: pageNotifier,
           child: UserStoryPageView(
+            pubkey: pubkey,
             userStory: userStory,
             isCurrentUser: isCurrentUser,
             onNextStory: storyNotifier.moveToNextStory,
