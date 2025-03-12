@@ -8,13 +8,16 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
 import 'package:ion/app/features/gallery/providers/providers.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/components/manage_access_banner.dart';
 import 'package:ion/app/features/gallery/views/pages/album_selection_page.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class MediaPickerPage extends HookConsumerWidget {
   const MediaPickerPage({
@@ -87,6 +90,13 @@ class MediaPickerPage extends HookConsumerWidget {
         automaticallyImplyLeading: false,
         pinned: true,
       ),
+      if (galleryState.valueOrNull?.limitedAccess ?? false)
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 12.0.s),
+            child: const ManageAccessBanner(),
+          ),
+        ),
       GalleryGridView(
         type: type,
         showSelectionBadge: maxSelection > 1,
@@ -95,6 +105,7 @@ class MediaPickerPage extends HookConsumerWidget {
               mediaData: [],
               currentPage: 0,
               hasMore: true,
+              limitedAccess: false,
               type: type,
             ),
       ),

@@ -45,6 +45,8 @@
 		<string>Contacts access helps you to invite more friends</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>Online+ application would like to access the photo library</string>
+		<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+		<true/>
 		<key>PermissionGroupNotification</key>
 		<string>This app requires access to notifications to keep you informed.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>

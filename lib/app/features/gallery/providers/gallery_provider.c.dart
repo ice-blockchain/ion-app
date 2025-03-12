@@ -50,7 +50,7 @@ class GalleryNotifier extends _$GalleryNotifier {
   @override
   Future<GalleryState> build({MediaPickerType type = MediaPickerType.common}) async {
     final mediaService = ref.watch(mediaServiceProvider);
-    final hasPermission = ref.read(hasPermissionProvider(Permission.photos));
+    final hasPermission = ref.watch(hasPermissionProvider(Permission.photos));
 
     if (!hasPermission) {
       Logger.log('Photos Permission denied');
@@ -58,6 +58,7 @@ class GalleryNotifier extends _$GalleryNotifier {
         mediaData: [],
         currentPage: 0,
         hasMore: false,
+        limitedAccess: false,
         type: type,
       );
     }
@@ -68,12 +69,14 @@ class GalleryNotifier extends _$GalleryNotifier {
       type: type,
     );
 
+    final hasLimitedPermission = ref.watch(hasLimitedPermissionProvider(Permission.photos));
     final hasMore = mediaData.length == _pageSize;
 
     return GalleryState(
       mediaData: mediaData,
       currentPage: 1,
       hasMore: hasMore,
+      limitedAccess: hasLimitedPermission,
       type: type,
     );
   }

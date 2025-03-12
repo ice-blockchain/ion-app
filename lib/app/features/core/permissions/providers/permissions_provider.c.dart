@@ -77,6 +77,13 @@ bool hasPermission(Ref ref, Permission permissionType) {
 }
 
 @riverpod
+bool hasLimitedPermission(Ref ref, Permission permissionType) {
+  final permissionStatus = ref.watch(permissionStatusProvider(permissionType));
+
+  return permissionStatus == PermissionStatus.limited;
+}
+
+@riverpod
 bool isPermanentlyDenied(Ref ref, Permission permissionType) {
   final permissionStatus = ref.watch(permissionStatusProvider(permissionType));
 

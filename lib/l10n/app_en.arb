@@ -599,6 +599,8 @@
   "gallery_all_photos_title": "All photos",
   "gallery_all_media_title": "All media",
   "gallery_albums_select_title": "Select album",
+  "gallery_access_description": "Online+ can only access selected photos and videos",
+  "gallery_manage": "Manage",
   "camera": "Camera",
   "who_can_reply_settings_title_video": "Who can reply to this video",
   "who_can_reply_settings_title_post": "Who can reply to this post",

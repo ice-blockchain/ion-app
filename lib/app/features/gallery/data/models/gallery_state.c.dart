@@ -13,6 +13,7 @@ class GalleryState with _$GalleryState {
     required List<MediaFile> mediaData,
     required int currentPage,
     required bool hasMore,
+    required bool limitedAccess,
     required MediaPickerType type,
     AlbumData? selectedAlbum,
   }) = _GalleryState;

@@ -44,18 +44,6 @@ class MediaFile with _$MediaFile {
 typedef CropImageUiSettings = List<PlatformUiSettings>;
 
 class MediaService {
-  Future<MediaFile?> captureImageFromCamera({bool saveToGallery = false}) async {
-    final image = await ImagePicker().pickImage(source: ImageSource.camera);
-
-    if (image == null) return null;
-
-    if (!saveToGallery) {
-      return MediaFile(path: image.path, mimeType: image.mimeType);
-    }
-
-    return saveImageToGallery(File(image.path));
-  }
-
   Future<List<MediaFile>> fetchGalleryMedia({
     required int page,
     required int size,

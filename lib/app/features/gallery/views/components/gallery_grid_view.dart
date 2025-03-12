@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/data/models/gallery_state.c.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
+import 'package:ion/app/features/gallery/views/components/media/add_media_cell.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 
 class GalleryGridView extends StatelessWidget {
@@ -23,7 +24,8 @@ class GalleryGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalCount = galleryState.mediaData.length + 1; // +1 for CameraCell
+    final indexOffset = galleryState.limitedAccess ? 2 : 1; // +1 for CameraCell, +1 for AddCell
+    final totalCount = galleryState.mediaData.length + indexOffset;
 
     return SliverGrid(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -37,7 +39,13 @@ class GalleryGridView extends StatelessWidget {
             return CameraCell(type: type);
           }
 
-          final mediaData = galleryState.mediaData[index - 1];
+          if (index == 1 && galleryState.limitedAccess) {
+            return AddMediaCell(type: type);
+          }
+
+          final indexOffset = galleryState.limitedAccess ? 2 : 1;
+
+          final mediaData = galleryState.mediaData[index - indexOffset];
           return GalleryGridCell(
             key: ValueKey(mediaData.path),
             mediaFile: mediaData,
