@@ -31,4 +31,11 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
     return (select(commentsTable)..orderBy([(t) => OrderingTerm.desc(commentsTable.createdAt)]))
         .get();
   }
+
+  Future<Comment?> getLast() async {
+    return (select(commentsTable)
+          ..orderBy([(t) => OrderingTerm.desc(commentsTable.createdAt)])
+          ..limit(1))
+        .getSingleOrNull();
+  }
 }

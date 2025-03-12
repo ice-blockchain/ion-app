@@ -52,4 +52,9 @@ class CommentsRepository {
       );
     }).toList();
   }
+
+  Future<DateTime?> lastCommentCreatedAt() async {
+    final lastComment = await _commentsDao.getLast();
+    return lastComment?.createdAt;
+  }
 }

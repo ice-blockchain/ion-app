@@ -6,6 +6,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/comments_notifications.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs_header/tabs_header.dart';
+import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class NotificationsHistoryPage extends StatelessWidget {
@@ -25,6 +26,7 @@ class NotificationsHistoryPage extends StatelessWidget {
           child: Column(
             children: [
               const NotificationsHistoryTabsHeader(),
+              FeedListSeparator(),
               Expanded(
                 child: TabBarView(
                   children: NotificationsTabType.values.map((type) {
