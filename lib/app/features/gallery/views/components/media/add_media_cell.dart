@@ -7,7 +7,6 @@ import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 class AddMediaCell extends ConsumerWidget {
   const AddMediaCell({
@@ -21,7 +20,7 @@ class AddMediaCell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () async {
-        await ref.read(mediaServiceProvider).presentLimitedGallery(RequestType.image);
+        await ref.read(mediaServiceProvider).presentLimitedGallery(type.toRequestType());
         ref.invalidate(galleryNotifierProvider(type: type));
       },
       child: ColoredBox(
