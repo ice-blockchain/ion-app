@@ -73,6 +73,7 @@ class StoryViewerPage extends HookConsumerWidget {
                     children: [
                       Expanded(
                         child: StoriesSwiper(
+                          pubkey: pubkey,
                           userStories: storyViewerState.userStories,
                           currentUserIndex: storyViewerState.currentUserIndex,
                         ),

@@ -32,9 +32,9 @@ class ImageStoryViewer extends ConsumerWidget {
       errorWidget: (_, __, ___) => const SizedBox.shrink(),
       imageBuilder: (context, imageProvider) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          // if (context.mounted) {
-          ref.read(storyImagesLoadStatusControllerProvider.notifier).markLoaded(storyId);
-          // }
+          if (context.mounted) {
+            ref.read(storyImagesLoadStatusControllerProvider.notifier).markLoaded(storyId);
+          }
         });
 
         return DecoratedBox(

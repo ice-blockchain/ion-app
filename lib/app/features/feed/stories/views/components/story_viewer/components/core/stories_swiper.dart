@@ -14,15 +14,16 @@ class StoriesSwiper extends HookConsumerWidget {
   const StoriesSwiper({
     required this.userStories,
     required this.currentUserIndex,
+    required this.pubkey,
     super.key,
   });
 
   final List<UserStories> userStories;
   final int currentUserIndex;
+  final String pubkey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pubkey = userStories[currentUserIndex].pubkey;
     final userPageController = usePageController(initialPage: currentUserIndex);
 
     ref.listen<StoryViewerState>(storyViewingControllerProvider(pubkey), (previous, next) {
