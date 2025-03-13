@@ -28,7 +28,7 @@ class FollowingList extends HookConsumerWidget {
     final debouncedQuery = useDebounced(searchQuery.value, const Duration(milliseconds: 300)) ?? '';
 
     final searchDataSource =
-        ref.watch(searchFollowingUsersDataSourceProvider(query: debouncedQuery));
+        ref.watch(searchFollowingUsersDataSourceProvider(pubkey, query: debouncedQuery));
     final searchPagedData = ref.watch(entitiesPagedDataProvider(searchDataSource));
     final searchFollowees = searchPagedData?.data.items?.toList();
 
