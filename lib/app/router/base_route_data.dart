@@ -13,6 +13,7 @@ enum IceRouteType {
   slideFromLeft,
   fade,
   mainModalSheet,
+  simpleModalSheet,
 }
 
 abstract class BaseRouteData extends GoRouteData {
@@ -34,6 +35,8 @@ abstract class BaseRouteData extends GoRouteData {
       IceRouteType.fade => FadeTransitionPage(child: child, state: state),
       IceRouteType.mainModalSheet =>
         MainModalSheetPage(child: child, state: state, context: context),
+      IceRouteType.simpleModalSheet =>
+        ScrollableModalSheetPageRoute(child: child, state: state, context: context),
     };
   }
 }
@@ -119,6 +122,26 @@ class MainModalSheetPage extends ModalSheetPage<void> {
           child: DraggableSheet(
             controller: DefaultSheetController.of(context),
             physics: const ClampingSheetPhysics(),
+            child: MainModalContent(
+              state: state,
+              child: child,
+            ),
+          ),
+        );
+}
+
+class ScrollableModalSheetPageRoute extends ModalSheetPage<void> {
+  ScrollableModalSheetPageRoute({
+    required Widget child,
+    required GoRouterState state,
+    required BuildContext context,
+  }) : super(
+          swipeDismissible: true,
+          barrierColor: context.theme.appColors.backgroundSheet,
+          key: state.pageKey,
+          child: ScrollableSheet(
+            controller: DefaultSheetController.of(context),
+            physics: const SnappingSheetPhysics(),
             child: MainModalContent(
               state: state,
               child: child,
