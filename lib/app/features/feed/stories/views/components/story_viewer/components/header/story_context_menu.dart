@@ -35,11 +35,58 @@ class StoryContextMenu extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final menuWidth = useState<double>(100.0.s);
+    final isDeletingStory = useState(false);
 
     final updateWidth = useCallback(
       (Size size) {
         if (size.width > menuWidth.value) {
           menuWidth.value = size.width;
+        }
+      },
+      [],
+    );
+
+    final handleDeleteConfirmation = useCallback(
+      () async {
+        isDeletingStory.value = true;
+        final confirmed = await showSimpleBottomSheet<bool>(
+          context: context,
+          child: SimpleModalSheet.alert(
+            isBottomSheet: true,
+            title: context.i18n.delete_story_title,
+            description: context.i18n.delete_story_description,
+            iconAsset: Assets.svg.actionCreatePostDeletepost,
+            button: ScreenSideOffset.small(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Button.compact(
+                      type: ButtonType.outlined,
+                      label: Text(context.i18n.button_cancel),
+                      minimumSize: Size(56.0.s, 56.0.s),
+                      onPressed: () => context.pop(false),
+                    ),
+                  ),
+                  SizedBox(width: 16.0.s),
+                  Expanded(
+                    child: Button.compact(
+                      label: Text(context.i18n.button_delete),
+                      minimumSize: Size(56.0.s, 56.0.s),
+                      backgroundColor: context.theme.appColors.attentionRed,
+                      onPressed: () => context.pop(true),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        isDeletingStory.value = false;
+        if (!confirmed.falseOrValue) {
+          // Снимаем паузу только если пользователь отменил удаление
+          ref.read(storyPauseControllerProvider.notifier).paused = false;
         }
       },
       [],
@@ -51,10 +98,10 @@ class StoryContextMenu extends HookConsumerWidget {
         ref.read(storyMenuControllerProvider.notifier).menuOpen = true;
       },
       onClose: () {
-        ref.read(storyPauseControllerProvider.notifier).paused = false;
-        if (!isCurrentUser) {
-          ref.read(storyMenuControllerProvider.notifier).menuOpen = false;
+        if (!isDeletingStory.value) {
+          ref.read(storyPauseControllerProvider.notifier).paused = false;
         }
+        ref.read(storyMenuControllerProvider.notifier).menuOpen = false;
       },
       menuBuilder: (closeMenu) => OverlayMenuContainer(
         child: _StoryContextMenuContent(
@@ -62,6 +109,10 @@ class StoryContextMenu extends HookConsumerWidget {
           isCurrentUser: isCurrentUser,
           onUpdateWidth: updateWidth,
           onClose: closeMenu,
+          onDeleteRequest: () {
+            closeMenu();
+            handleDeleteConfirmation();
+          },
         ),
       ),
       child: child,
@@ -75,12 +126,14 @@ class _StoryContextMenuContent extends HookConsumerWidget {
     required this.isCurrentUser,
     required this.onUpdateWidth,
     required this.onClose,
+    required this.onDeleteRequest,
   });
 
   final String pubkey;
   final bool isCurrentUser;
   final void Function(Size) onUpdateWidth;
   final VoidCallback onClose;
+  final VoidCallback onDeleteRequest;
 
   List<Widget> _buildMenuItems(BuildContext context, WidgetRef ref) {
     final i18n = context.i18n;
@@ -93,47 +146,7 @@ class _StoryContextMenuContent extends HookConsumerWidget {
         ContextMenuItem(
           label: i18n.button_delete,
           iconAsset: Assets.svg.iconBlockDelete,
-          onPressed: () {
-            // ref.read(storyPauseControllerProvider.notifier).paused = true;
-            onClose();
-            showSimpleBottomSheet<void>(
-              context: context,
-              child: SimpleModalSheet.alert(
-                isBottomSheet: true,
-                title: i18n.delete_story_title,
-                description: i18n.delete_story_description,
-                iconAsset: Assets.svg.actionCreatePostDeletepost,
-                button: ScreenSideOffset.small(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Button.compact(
-                          type: ButtonType.outlined,
-                          label: Text(context.i18n.button_cancel),
-                          minimumSize: minSize,
-                          onPressed: () => context.pop(false),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 16.0.s,
-                      ),
-                      Expanded(
-                        child: Button.compact(
-                          label: Text(context.i18n.button_delete),
-                          minimumSize: minSize,
-                          backgroundColor: context.theme.appColors.attentionRed,
-                          onPressed: () {
-                            context.pop(true);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+          onPressed: onDeleteRequest,
           onLayout: onUpdateWidth,
           textColor: colors.attentionRed,
           iconColor: colors.attentionRed,
@@ -172,8 +185,6 @@ class _StoryContextMenuContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: _buildMenuItems(context, ref),
