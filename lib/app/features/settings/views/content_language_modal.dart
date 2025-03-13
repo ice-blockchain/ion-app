@@ -29,9 +29,11 @@ class ContentLanguageModal extends HookConsumerWidget {
           } else {
             updatedLanguages.add(lang);
           }
-          ref
-              .read(currentUserInterestsSetProvider(InterestSetType.languages).notifier)
-              .set(updatedLanguages.toList());
+          if (updatedLanguages.isNotEmpty) {
+            ref
+                .read(currentUserInterestsSetProvider(InterestSetType.languages).notifier)
+                .set(updatedLanguages.toList());
+          }
         }
       },
       selectedLanguages: selectedLanguages ?? [],
