@@ -26,6 +26,7 @@ class HeaderActions extends ConsumerWidget {
       children: [
         StoryContextMenu(
           pubkey: post.masterPubkey,
+          post: post,
           isCurrentUser: isCurrentUser,
           child: SvgShadow(
             child: Assets.svg.iconMoreStories.icon(color: iconMoreColor),

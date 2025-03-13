@@ -11,16 +11,20 @@ import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/stories/providers/delete_story_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class StoryContextMenu extends HookConsumerWidget {
   const StoryContextMenu({
     required this.pubkey,
+    required this.post,
     required this.child,
     this.isCurrentUser = false,
     this.opacity = 1,
@@ -28,6 +32,7 @@ class StoryContextMenu extends HookConsumerWidget {
   });
 
   final String pubkey;
+  final ModifiablePostEntity post;
   final Widget child;
   final bool isCurrentUser;
   final double opacity;
@@ -83,11 +88,25 @@ class StoryContextMenu extends HookConsumerWidget {
           ),
         );
 
-        isDeletingStory.value = false;
-        if (!confirmed.falseOrValue) {
-          // Снимаем паузу только если пользователь отменил удаление
+        if (confirmed.falseOrValue) {
+          final success = await ref
+              .read(deleteStoryControllerProvider.notifier)
+              .deleteStory(post.toEventReference());
+
+          if (success) {
+            if (context.mounted) {
+              context.pop();
+            }
+          } else {
+            Logger.error('Failed to delete story');
+
+            ref.read(storyPauseControllerProvider.notifier).paused = false;
+          }
+        } else {
           ref.read(storyPauseControllerProvider.notifier).paused = false;
         }
+
+        isDeletingStory.value = false;
       },
       [],
     );
@@ -139,7 +158,7 @@ class _StoryContextMenuContent extends HookConsumerWidget {
     final i18n = context.i18n;
     final colors = context.theme.appColors;
     final isMuted = ref.watch(globalMuteProvider);
-    final minSize = Size(56.0.s, 56.0.s);
+    // final minSize = Size(56.0.s, 56.0.s);
 
     if (isCurrentUser) {
       return [
