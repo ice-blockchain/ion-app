@@ -16,10 +16,6 @@ CommentsDao commentsDao(Ref ref) => CommentsDao(db: ref.watch(notificationsDatab
 class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$CommentsDaoMixin {
   CommentsDao({required NotificationsDatabase db}) : super(db);
 
-  Future<void> clear() async {
-    await delete(commentsTable).go();
-  }
-
   Future<void> insert(IonConnectEntity entity, {required CommentType type}) async {
     await into(db.commentsTable).insert(
       Comment(eventReference: entity.toEventReference(), createdAt: entity.createdAt, type: type),
@@ -34,7 +30,9 @@ class CommentsDao extends DatabaseAccessor<NotificationsDatabase> with _$Comment
 
   Future<DateTime?> getLastCreatedAt(CommentType type) async {
     final maxCreatedAt = commentsTable.createdAt.max();
-    return (selectOnly(commentsTable)..addColumns([maxCreatedAt]))
+    return (selectOnly(commentsTable)
+          ..addColumns([maxCreatedAt])
+          ..where(commentsTable.type.equalsValue(type)))
         .map((row) => row.read(maxCreatedAt))
         .getSingleOrNull();
   }
