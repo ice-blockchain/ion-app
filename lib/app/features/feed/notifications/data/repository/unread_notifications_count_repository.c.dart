@@ -6,23 +6,23 @@ import 'package:ion/app/features/feed/notifications/data/database/dao/comments_d
 import 'package:ion/app/services/storage/user_preferences_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'unread_count_repository.c.g.dart';
+part 'unread_notifications_count_repository.c.g.dart';
 
 @Riverpod(keepAlive: true)
-UnreadCountRepository? unreadCountRepository(Ref ref) {
+UnreadNotificationsCountRepository? unreadNotificationsCountRepository(Ref ref) {
   final identityKeyName = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (identityKeyName == null) {
     return null;
   }
-  return UnreadCountRepository(
+  return UnreadNotificationsCountRepository(
     userPreferencesService:
         ref.watch(userPreferencesServiceProvider(identityKeyName: identityKeyName)),
     commentsDao: ref.watch(commentsDaoProvider),
   );
 }
 
-class UnreadCountRepository {
-  UnreadCountRepository({
+class UnreadNotificationsCountRepository {
+  UnreadNotificationsCountRepository({
     required UserPreferencesService userPreferencesService,
     required CommentsDao commentsDao,
   })  : _userPreferencesService = userPreferencesService,
