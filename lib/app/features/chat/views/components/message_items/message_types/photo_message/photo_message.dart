@@ -12,7 +12,6 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -20,6 +19,7 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class PhotoMessage extends HookConsumerWidget {
   const PhotoMessage({
@@ -63,7 +63,7 @@ class PhotoMessage extends HookConsumerWidget {
                 mainAxisSpacing: 4.0.s,
                 crossAxisSpacing: 4.0.s,
                 children: List.generate(
-                  entity.data.visualMedias.length,
+                  entity.data.visualMedias.take(4).length,
                   (index) {
                     final isLastItem = index == entity.data.visualMedias.length - 1;
                     final isOddLength = entity.data.visualMedias.length.isOdd;
@@ -84,9 +84,6 @@ class PhotoMessage extends HookConsumerWidget {
               ),
             SizedBox(height: 8.0.s),
             _MessageContent(
-              isMe: isMe,
-              reactions: const [],
-              message: eventMessage.content,
               eventMessage: eventMessage,
             ),
           ],
@@ -131,17 +128,20 @@ class _MediaContent extends HookConsumerWidget {
     );
 
     return _PhotoContent(
-      imageUrl: originalImageOrThumbnail.data?.path,
+      mediaPath: originalImageOrThumbnail.data?.path,
+      isThumbnail: media.thumb != null,
     );
   }
 }
 
 class _PhotoContent extends StatelessWidget {
   const _PhotoContent({
-    this.imageUrl,
+    required this.mediaPath,
+    required this.isThumbnail,
   });
 
-  final String? imageUrl;
+  final String? mediaPath;
+  final bool isThumbnail;
 
   @override
   Widget build(BuildContext context) {
@@ -150,13 +150,31 @@ class _PhotoContent extends StatelessWidget {
         maxHeight: PhotoMessage.maxHeight,
         minHeight: PhotoMessage.maxHeight,
       ),
-      child: imageUrl != null
+      child: mediaPath != null
           ? ClipRRect(
               borderRadius: BorderRadius.circular(12.0.s),
-              child: Image.file(
-                File(imageUrl!),
-                fit: BoxFit.cover,
-                height: PhotoMessage.maxHeight,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.file(
+                    File(mediaPath!),
+                    fit: BoxFit.cover,
+                    height: PhotoMessage.maxHeight,
+                  ),
+                  if (isThumbnail)
+                    Align(
+                      child: Container(
+                        padding: EdgeInsets.all(6.0.s),
+                        decoration: BoxDecoration(
+                          color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(12.0.s),
+                        ),
+                        child: Assets.svg.iconVideoPlay.icon(
+                          size: 16.0.s,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             )
           : const CenteredLoadingIndicator(),
@@ -166,18 +184,14 @@ class _PhotoContent extends StatelessWidget {
 
 class _MessageContent extends HookConsumerWidget {
   const _MessageContent({
-    required this.isMe,
-    required this.reactions,
-    required this.message,
     required this.eventMessage,
   });
 
-  final bool isMe;
-  final List<MessageReactionGroup>? reactions;
-  final String message;
   final EventMessage eventMessage;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+    final message = eventMessage.content;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
