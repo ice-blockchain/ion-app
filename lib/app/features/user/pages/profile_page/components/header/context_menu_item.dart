@@ -12,6 +12,8 @@ class ContextMenuItem extends HookConsumerWidget {
     required this.iconAsset,
     required this.onPressed,
     required this.onLayout,
+    this.textColor,
+    this.iconColor,
     super.key,
   });
 
@@ -21,6 +23,8 @@ class ContextMenuItem extends HookConsumerWidget {
   final String iconAsset;
   final VoidCallback onPressed;
   final void Function(Size) onLayout;
+  final Color? textColor;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,12 +53,17 @@ class ContextMenuItem extends HookConsumerWidget {
                 label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: textStyles.subtitle3.copyWith(color: colors.primaryText),
+                style: textStyles.subtitle3.copyWith(
+                  color: textColor ?? colors.primaryText,
+                ),
               ),
               SizedBox(
                 width: 12.0.s,
               ),
-              iconAsset.icon(size: iconSize, color: colors.quaternaryText),
+              iconAsset.icon(
+                size: iconSize,
+                color: iconColor ?? colors.quaternaryText,
+              ),
             ],
           ),
         ),

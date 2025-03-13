@@ -18,20 +18,19 @@ class StoryContextMenu extends HookConsumerWidget {
   const StoryContextMenu({
     required this.pubkey,
     required this.child,
+    this.isCurrentUser = false,
     this.opacity = 1,
     super.key,
   });
 
   final String pubkey;
   final Widget child;
+  final bool isCurrentUser;
   final double opacity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMuted = ref.watch(globalMuteProvider);
     final menuWidth = useState<double>(100.0.s);
-
-    final i18n = context.i18n;
 
     final updateWidth = useCallback(
       (Size size) {
@@ -52,40 +51,83 @@ class StoryContextMenu extends HookConsumerWidget {
         ref.read(storyMenuControllerProvider.notifier).menuOpen = false;
       },
       menuBuilder: (closeMenu) => OverlayMenuContainer(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ContextMenuItem(
-              label: i18n.button_report,
-              iconAsset: Assets.svg.iconReport,
-              onPressed: () {
-                showSimpleBottomSheet<void>(
-                  context: context,
-                  child: ReportUserModal(pubkey: pubkey),
-                );
-              },
-              onLayout: updateWidth,
-            ),
-            const ContextMenuItemDivider(),
-            ContextMenuItem(
-              label: isMuted ? i18n.button_unmute : i18n.button_mute,
-              iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
-              onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
-              onLayout: updateWidth,
-            ),
-            const ContextMenuItemDivider(),
-            ContextMenuItem(
-              label: i18n.button_unfollow,
-              iconAsset: Assets.svg.iconCategoriesUnflow,
-              onPressed: () {
-                closeMenu();
-              },
-              onLayout: updateWidth,
-            ),
-          ],
+        child: _StoryContextMenuContent(
+          pubkey: pubkey,
+          isCurrentUser: isCurrentUser,
+          onUpdateWidth: updateWidth,
+          onClose: closeMenu,
         ),
       ),
       child: child,
+    );
+  }
+}
+
+class _StoryContextMenuContent extends HookConsumerWidget {
+  const _StoryContextMenuContent({
+    required this.pubkey,
+    required this.isCurrentUser,
+    required this.onUpdateWidth,
+    required this.onClose,
+  });
+
+  final String pubkey;
+  final bool isCurrentUser;
+  final void Function(Size) onUpdateWidth;
+  final VoidCallback onClose;
+
+  List<Widget> _buildMenuItems(BuildContext context, WidgetRef ref) {
+    final i18n = context.i18n;
+    final colors = context.theme.appColors;
+    final isMuted = ref.watch(globalMuteProvider);
+
+    if (isCurrentUser) {
+      return [
+        ContextMenuItem(
+          label: i18n.button_delete,
+          iconAsset: Assets.svg.iconBlockDelete,
+          onPressed: onClose,
+          onLayout: onUpdateWidth,
+          textColor: colors.attentionRed,
+          iconColor: colors.attentionRed,
+        ),
+      ];
+    }
+
+    return [
+      ContextMenuItem(
+        label: i18n.button_report,
+        iconAsset: Assets.svg.iconReport,
+        onPressed: () {
+          showSimpleBottomSheet<void>(
+            context: context,
+            child: ReportUserModal(pubkey: pubkey),
+          );
+        },
+        onLayout: onUpdateWidth,
+      ),
+      const ContextMenuItemDivider(),
+      ContextMenuItem(
+        label: isMuted ? i18n.button_unmute : i18n.button_mute,
+        iconAsset: isMuted ? Assets.svg.iconChannelUnmute : Assets.svg.iconChannelMute,
+        onPressed: () => ref.read(globalMuteProvider.notifier).toggle(),
+        onLayout: onUpdateWidth,
+      ),
+      const ContextMenuItemDivider(),
+      ContextMenuItem(
+        label: i18n.button_unfollow,
+        iconAsset: Assets.svg.iconCategoriesUnflow,
+        onPressed: onClose,
+        onLayout: onUpdateWidth,
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: _buildMenuItems(context, ref),
     );
   }
 }
