@@ -96,7 +96,7 @@ class AccountSettingsModal extends HookConsumerWidget {
                           _RemainingLanguagesLabel(
                             value: contentLanguages.length,
                           )
-                        else
+                        else if (contentLanguages.isNotEmpty)
                           Text(
                             contentLanguages.first.name,
                             style:
