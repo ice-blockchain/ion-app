@@ -39,11 +39,11 @@ class DocumentMessage extends HookConsumerWidget {
       () {
         ref
             .read(mediaEncryptionServiceProvider)
-            .retrieveEncryptedMedia(entity.data.media.values.toList())
+            .retrieveEncryptedMedia(entity.data.media.values.first)
             .then(
           (encryptedMedia) {
             if (context.mounted) {
-              filePath.value = encryptedMedia.first.path;
+              filePath.value = encryptedMedia.path;
               fileSizeInFormat.value = formattedFileSize(filePath.value);
             }
           },

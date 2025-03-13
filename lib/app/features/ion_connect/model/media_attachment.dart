@@ -97,6 +97,36 @@ class MediaAttachment {
     );
   }
 
+  //add for all props tojson and fromjson
+  factory MediaAttachment.fromJson(Map<String, dynamic> json) => MediaAttachment(
+        url: json['url'] as String,
+        mimeType: json['mimeType'] as String,
+        dimension: json['dimension'] as String,
+        alt: EnumExtensions.fromShortString(FileAlt.values, json['alt'] as String),
+        torrentInfoHash: json['torrentInfoHash'] as String,
+        fileHash: json['fileHash'] as String,
+        originalFileHash: json['originalFileHash'] as String,
+        encryptionKey: json['encryptionKey'] as String?,
+        encryptionNonce: json['encryptionNonce'] as String?,
+        encryptionMac: json['encryptionMac'] as String?,
+        thumb: json['thumb'] as String?,
+        image: json['image'] as String?,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'url': url,
+        'mimeType': mimeType,
+        'dimension': dimension,
+        'alt': alt.toShortString(),
+        'torrentInfoHash': torrentInfoHash,
+        'fileHash': fileHash,
+        'originalFileHash': originalFileHash,
+        'encryptionKey': encryptionKey,
+        'encryptionNonce': encryptionNonce,
+        'encryptionMac': encryptionMac,
+        'thumb': thumb,
+      };
+
   final String url;
 
   final String mimeType;

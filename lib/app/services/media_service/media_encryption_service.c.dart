@@ -27,17 +27,11 @@ class MediaEncryptionService {
   final FileCacheService fileCacheService;
   final CompressionService compressionService;
 
-  Future<List<File>> retrieveEncryptedMedia(List<MediaAttachment> mediaAttachments) async {
-    final decryptedDecompressedFiles = <File>[];
-
+  Future<File> retrieveEncryptedMedia(MediaAttachment attachment) async {
     try {
-      for (final attachment in mediaAttachments) {
-        if (attachment.encryptionKey == null ||
-            attachment.encryptionNonce == null ||
-            attachment.encryptionMac == null) {
-          continue;
-        }
-
+      if (attachment.encryptionKey != null &&
+          attachment.encryptionNonce != null &&
+          attachment.encryptionMac != null) {
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
@@ -74,16 +68,16 @@ class MediaEncryptionService {
         if (attachment.mediaType == MediaType.unknown) {
           final decompressedFile = await compressionService.decompressBrotli(decryptedFile);
 
-          decryptedDecompressedFiles.add(decompressedFile);
+          return decompressedFile;
         } else {
-          decryptedDecompressedFiles.add(decryptedFile);
+          return decryptedFile;
         }
+      } else {
+        throw FailedToDecryptFileException();
       }
     } catch (e) {
       throw FailedToDecryptFileException();
     }
-
-    return decryptedDecompressedFiles;
   }
 
   Future<List<(MediaFile, String, String, String)>> encryptMediaFiles(

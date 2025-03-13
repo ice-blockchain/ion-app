@@ -41,17 +41,14 @@ class MoreContentView extends ConsumerWidget {
               _MoreContentItem(
                 iconPath: Assets.svg.walletChatPhotos,
                 title: context.i18n.common_media,
-                //TODO: remove this
                 onTap: () async {
                   final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
                   if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
-                    final selectedFile = mediaFiles.first;
-
                     final convertedMediaFiles = await ref
                         .read(mediaServiceProvider)
-                        .convertAssetIdsToMediaFiles(ref, mediaFiles: [selectedFile]);
+                        .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
-                    unawaited(onSubmitted(mediaFiles: [convertedMediaFiles.first]));
+                    unawaited(onSubmitted(mediaFiles: convertedMediaFiles));
 
                     ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                   }

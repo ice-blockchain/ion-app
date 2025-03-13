@@ -258,10 +258,10 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
         ref.watch(getUnreadMessagesCountProvider(conversation.conversationId));
 
     final groupImageFile = useFuture(
-      ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia([
-        entity.primaryMedia!,
-      ]),
-    ).data?.firstOrNull;
+      ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia(
+            entity.primaryMedia!,
+          ),
+    ).data;
 
     return RecentChatTile(
       conversation: conversation,

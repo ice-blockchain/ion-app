@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -17,7 +18,6 @@ class MessageItemWrapper extends HookConsumerWidget {
     required this.child,
     required this.messageEvent,
     required this.contentPadding,
-    this.onReactionSelected,
     this.isLastMessageFromAuthor = true,
     super.key,
   });
@@ -27,7 +27,6 @@ class MessageItemWrapper extends HookConsumerWidget {
   final EventMessage? messageEvent;
   final bool isLastMessageFromAuthor;
   final EdgeInsetsGeometry contentPadding;
-  final void Function(String reaction)? onReactionSelected;
 
   /// The maximum width of the message content in the chat
   static double get maxWidth => 282.0.s;
@@ -65,7 +64,11 @@ class MessageItemWrapper extends HookConsumerWidget {
           );
 
           if (emoji != null) {
-            onReactionSelected?.call(emoji);
+            final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
+            await e2eeMessageService.sendReaction(
+              content: emoji,
+              kind14Rumor: messageEvent!,
+            );
           }
 
           await subscription.cancel();

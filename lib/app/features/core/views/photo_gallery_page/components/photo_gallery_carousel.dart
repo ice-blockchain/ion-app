@@ -39,8 +39,8 @@ class PhotoGalleryCarousel extends HookWidget {
       children: List.generate(photoUrls.length, (index) {
         return Hero(
           tag: photoUrls[index],
-          child: CachedNetworkImage(
-            imageUrl: photoUrls[index],
+          child: Image.file(
+            File(photoUrls[index]),
             fit: BoxFit.contain,
             width: double.infinity,
             height: double.infinity,

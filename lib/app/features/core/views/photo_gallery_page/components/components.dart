@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dart';
