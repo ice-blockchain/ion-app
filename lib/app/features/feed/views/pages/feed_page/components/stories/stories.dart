@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/feed/providers/feed_stories_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_item_content.dart';
@@ -20,6 +22,20 @@ class Stories extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stories = ref.watch(storiesProvider);
+
+    useOnInit(
+      () async {
+        if (stories != null && stories.isNotEmpty) {
+          stories
+              .expand((userStory) => userStory.stories)
+              .map((story) => story.data.primaryMedia)
+              .where((media) => media != null && media.mediaType == MediaType.image)
+              .map((media) => media!.url)
+              .forEach((url) async => ref.read(storyImageCacheManagerProvider).downloadFile(url));
+        }
+      },
+      [stories],
+    );
 
     useOnInit(() {
       if (stories != null) {

@@ -3,11 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
-import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
@@ -28,17 +26,14 @@ class StoryViewerPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
 
-    final storyState = ref.watch(storyViewingControllerProvider);
-    final stories = ref.watch(filteredStoriesByPubkeyProvider(pubkey));
-
-    useOnInit(() => ref.read(storyViewingControllerProvider.notifier).updateStories(stories));
+    final storyViewerState = ref.watch(storyViewingControllerProvider(pubkey));
 
     useRoutePresence(
       onBecameInactive: () => ref.read(storyPauseControllerProvider.notifier).paused = true,
       onBecameActive: () => ref.read(storyPauseControllerProvider.notifier).paused = false,
     );
 
-    final currentStory = storyState.currentStory;
+    final currentStory = storyViewerState.currentStory;
 
     useOnInit(
       () {
@@ -70,21 +65,20 @@ class StoryViewerPage extends HookConsumerWidget {
                 resizeToAvoidBottomInset: false,
                 backgroundColor: context.theme.appColors.primaryText,
                 body: SafeArea(
-                  child: storyState.userStories.isEmpty
-                      ? const CenteredLoadingIndicator()
-                      : Column(
-                          children: [
-                            Expanded(
-                              child: StoriesSwiper(
-                                userStories: storyState.userStories,
-                                currentUserIndex: storyState.currentUserIndex,
-                              ),
-                            ),
-                            SizedBox(height: 28.0.s),
-                            const StoryProgressBarContainer(),
-                            ScreenBottomOffset(margin: 16.0.s),
-                          ],
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: StoriesSwiper(
+                          pubkey: pubkey,
+                          userStories: storyViewerState.userStories,
+                          currentUserIndex: storyViewerState.currentUserIndex,
                         ),
+                      ),
+                      SizedBox(height: 28.0.s),
+                      StoryProgressBarContainer(pubkey: pubkey),
+                      ScreenBottomOffset(margin: 16.0.s),
+                    ],
+                  ),
                 ),
               ),
             ),

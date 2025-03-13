@@ -2,6 +2,8 @@
 
 import 'package:flutter/animation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
 class UseImageStoryResult {
   UseImageStoryResult({required this.controller});
@@ -14,6 +16,7 @@ UseImageStoryResult useImageStoryProgress({
   required bool isCurrent,
   required bool isPaused,
   required VoidCallback onCompleted,
+  required WidgetRef ref,
 }) {
   final animationController = useAnimationController(
     duration: const Duration(seconds: 5),
@@ -21,6 +24,9 @@ UseImageStoryResult useImageStoryProgress({
   );
 
   final wasCurrentRef = useRef<bool>(false);
+
+  final isImageLoaded = ref.watch(storyImageLoadStatusProvider(storyId));
+  final isLoading = isImage && !isImageLoaded;
 
   useEffect(
     () {
@@ -42,9 +48,10 @@ UseImageStoryResult useImageStoryProgress({
       wasCurrentRef.value = isCurrent;
 
       if (justBecameCurrent) {
-        animationController
-          ..reset()
-          ..forward(from: 0);
+        animationController.reset();
+        if (!isLoading && !isPaused) {
+          animationController.forward(from: 0);
+        }
       } else if (becameInactive) {
         if (animationController.isAnimating || animationController.value > 0) {
           animationController
@@ -54,7 +61,7 @@ UseImageStoryResult useImageStoryProgress({
       }
 
       if (isCurrent) {
-        if (isPaused) {
+        if (isPaused || isLoading) {
           animationController.stop();
         } else if (!animationController.isAnimating) {
           animationController.forward();
@@ -62,7 +69,7 @@ UseImageStoryResult useImageStoryProgress({
       }
       return null;
     },
-    [isImage, isCurrent, isPaused],
+    [isImage, isCurrent, isPaused, isLoading],
   );
 
   useEffect(
