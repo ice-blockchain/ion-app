@@ -11,7 +11,7 @@ enum TimestampFormat { short, detailed }
 class TimeAgo extends ConsumerWidget {
   const TimeAgo({
     required this.time,
-    required this.timeFormat,
+    this.timeFormat = TimestampFormat.short,
     super.key,
     this.style,
   });

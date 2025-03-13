@@ -3,14 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/extensions/asset_gen_image.dart';
-import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
-import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_button.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_navigation/feed_notifications_button.dart';
 import 'package:ion/app/router/app_routes.c.dart';
-import 'package:ion/app/router/components/navigation_button/navigation_button.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class FeedNavigation extends StatelessWidget {
   const FeedNavigation({
@@ -29,19 +25,10 @@ class FeedNavigation extends StatelessWidget {
               child: const IgnorePointer(child: SearchInput()),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 12.0.s),
-            child: NavigationButton(
-              onPressed: () => NotificationsHistoryRoute().push<void>(context),
-              icon: Assets.svg.iconHomeNotification.icon(
-                color: context.theme.appColors.primaryText,
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 12.0.s),
-            child: const FeedFiltersMenuButton(),
-          ),
+          SizedBox(width: 12.0.s),
+          const FeedNotificationsButton(),
+          SizedBox(width: 12.0.s),
+          const FeedFiltersMenuButton(),
         ],
       ),
     );

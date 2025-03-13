@@ -7,7 +7,6 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   const AppTextThemesExtension({
     required this.headline1,
     required this.headline2,
-    required this.inputFieldText,
     required this.title,
     required this.subtitle,
     required this.subtitle2,
@@ -18,6 +17,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     required this.caption2,
     required this.caption3,
     required this.caption4,
+    required this.caption5,
     required this.notificationCaption,
   });
 
@@ -25,7 +25,6 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     return AppTextThemesExtension(
       headline1: TemplateTextStyle.fromTemplate(textThemes.headline1),
       headline2: TemplateTextStyle.fromTemplate(textThemes.headline2),
-      inputFieldText: TemplateTextStyle.fromTemplate(textThemes.inputFieldText),
       title: TemplateTextStyle.fromTemplate(textThemes.title),
       subtitle: TemplateTextStyle.fromTemplate(textThemes.subtitle),
       subtitle2: TemplateTextStyle.fromTemplate(textThemes.subtitle2),
@@ -36,6 +35,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption2: TemplateTextStyle.fromTemplate(textThemes.caption2),
       caption3: TemplateTextStyle.fromTemplate(textThemes.caption3),
       caption4: TemplateTextStyle.fromTemplate(textThemes.caption4),
+      caption5: TemplateTextStyle.fromTemplate(textThemes.caption5),
       notificationCaption: TemplateTextStyle.fromTemplate(textThemes.notificationCaption),
     );
   }
@@ -44,7 +44,6 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     return const AppTextThemesExtension(
       headline1: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
       headline2: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-      inputFieldText: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
       title: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
       subtitle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       subtitle2: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
@@ -54,14 +53,14 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
       caption2: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
       caption3: TextStyle(fontSize: 11, height: 1.63, fontWeight: FontWeight.w400),
-      caption4: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+      caption4: TextStyle(fontSize: 11, height: 1.45, fontWeight: FontWeight.w500),
+      caption5: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
       notificationCaption: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
     );
   }
 
   final TextStyle headline1;
   final TextStyle headline2;
-  final TextStyle inputFieldText;
   final TextStyle title;
   final TextStyle subtitle;
   final TextStyle subtitle2;
@@ -72,13 +71,13 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
   final TextStyle caption2;
   final TextStyle caption3;
   final TextStyle caption4;
+  final TextStyle caption5;
   final TextStyle notificationCaption;
 
   @override
   ThemeExtension<AppTextThemesExtension> copyWith({
     TextStyle? headline1,
     TextStyle? headline2,
-    TextStyle? inputFieldText,
     TextStyle? title,
     TextStyle? subtitle,
     TextStyle? subtitle2,
@@ -89,12 +88,12 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     TextStyle? caption2,
     TextStyle? caption3,
     TextStyle? caption4,
+    TextStyle? caption5,
     TextStyle? notificationCaption,
   }) {
     return AppTextThemesExtension(
       headline1: headline1 ?? this.headline1,
       headline2: headline2 ?? this.headline2,
-      inputFieldText: inputFieldText ?? this.inputFieldText,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
       subtitle2: subtitle2 ?? this.subtitle2,
@@ -105,6 +104,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption2: caption2 ?? this.caption2,
       caption3: caption3 ?? this.caption3,
       caption4: caption4 ?? this.caption4,
+      caption5: caption5 ?? this.caption5,
       notificationCaption: notificationCaption ?? this.notificationCaption,
     );
   }
@@ -121,7 +121,6 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
     return AppTextThemesExtension(
       headline1: TextStyle.lerp(headline1, other.headline1, t)!,
       headline2: TextStyle.lerp(headline2, other.headline2, t)!,
-      inputFieldText: TextStyle.lerp(inputFieldText, other.inputFieldText, t)!,
       title: TextStyle.lerp(title, other.title, t)!,
       subtitle: TextStyle.lerp(subtitle, other.subtitle, t)!,
       subtitle2: TextStyle.lerp(subtitle2, other.subtitle2, t)!,
@@ -132,6 +131,7 @@ class AppTextThemesExtension extends ThemeExtension<AppTextThemesExtension> {
       caption2: TextStyle.lerp(caption2, other.caption2, t)!,
       caption3: TextStyle.lerp(caption3, other.caption3, t)!,
       caption4: TextStyle.lerp(caption4, other.caption4, t)!,
+      caption5: TextStyle.lerp(caption5, other.caption5, t)!,
       notificationCaption: TextStyle.lerp(notificationCaption, other.notificationCaption, t)!,
     );
   }

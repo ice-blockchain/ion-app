@@ -32,6 +32,8 @@ class Post extends ConsumerWidget {
     required this.eventReference,
     this.framedEventType = FramedEventType.quoted,
     this.timeFormat = TimestampFormat.short,
+    this.topOffset,
+    this.headerOffset,
     this.header,
     this.footer,
     this.onDelete,
@@ -42,6 +44,8 @@ class Post extends ConsumerWidget {
 
   final EventReference eventReference;
   final FramedEventType framedEventType;
+  final double? topOffset;
+  final double? headerOffset;
   final Widget? header;
   final Widget? footer;
   final TimestampFormat timeFormat;
@@ -54,7 +58,7 @@ class Post extends ConsumerWidget {
     final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity == null) {
-      return const Skeleton(child: PostSkeleton());
+      return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
     }
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
@@ -69,7 +73,7 @@ class Post extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 12.0.s),
+        SizedBox(height: topOffset ?? 12.0.s),
         ScreenSideOffset.small(
           child: header ??
               UserInfo(
@@ -83,7 +87,7 @@ class Post extends ConsumerWidget {
                     : UserInfoMenu(pubkey: eventReference.pubkey),
               ),
         ),
-        SizedBox(height: 10.0.s),
+        SizedBox(height: headerOffset ?? 10.0.s),
         PostBody(
           entity: entity,
           isTextSelectable: isTextSelectable,

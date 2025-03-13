@@ -37,11 +37,15 @@ class TemplateColors with _$TemplateColors {
     Color lightBlue,
     Color quaternaryText,
     Color attentionBlock,
+    Color pink,
+    Color medBlue,
   ) = _TemplateColors;
 
   factory TemplateColors.fromJson(Map<String, dynamic> json) => _$TemplateColorsFromJson(json);
 
   factory TemplateColors.empty() => const TemplateColors(
+        Colors.transparent,
+        Colors.transparent,
         Colors.transparent,
         Colors.transparent,
         Colors.transparent,
@@ -118,7 +122,6 @@ class TemplateTextThemes with _$TemplateTextThemes {
   const factory TemplateTextThemes(
     TemplateTextTheme headline1,
     TemplateTextTheme headline2,
-    TemplateTextTheme inputFieldText,
     TemplateTextTheme title,
     TemplateTextTheme subtitle,
     TemplateTextTheme subtitle2,
@@ -129,6 +132,7 @@ class TemplateTextThemes with _$TemplateTextThemes {
     TemplateTextTheme caption2,
     TemplateTextTheme caption3,
     TemplateTextTheme caption4,
+    TemplateTextTheme caption5,
     TemplateTextTheme notificationCaption,
   ) = _TemplateTextThemes;
 
