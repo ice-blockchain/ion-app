@@ -39,10 +39,13 @@ class VideoMessage extends HookConsumerWidget {
       () {
         if (eventMessage.kind == PrivateDirectMessageEntity.kind) {
           final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-          ref.read(mediaEncryptionServiceProvider).retrieveEncryptedMedia(
-            [entity.data.primaryVideo!],
-          ).then((value) {
-            if (context.mounted) videoUrl.value = value.first.path;
+          ref
+              .read(mediaEncryptionServiceProvider)
+              .retrieveEncryptedMedia(
+                entity.data.visualMedias.first,
+              )
+              .then((value) {
+            if (context.mounted) videoUrl.value = value.path;
           });
         }
         return null;

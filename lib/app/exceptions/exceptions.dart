@@ -446,3 +446,7 @@ class UnknownNotificationCommentException extends IONException {
   UnknownNotificationCommentException([Object? info])
       : super(10087, 'Unknown notification comment type $info');
 }
+
+class MediaThumbnailNotFoundException extends IONException {
+  MediaThumbnailNotFoundException() : super(10088, 'Media thumbnail not found');
+}

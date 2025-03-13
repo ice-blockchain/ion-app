@@ -1,172 +1,223 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/chat/model/message_author.c.dart';
-import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/generated/assets.gen.dart';
 
-class PhotoMessage extends HookWidget {
+class PhotoMessage extends HookConsumerWidget {
   const PhotoMessage({
-    required this.isMe,
-    required this.imageUrl,
-    required this.createdAt,
     required this.eventMessage,
-    this.isLastMessageFromAuthor = true,
-    this.message,
-    this.reactions,
-    this.author,
     super.key,
   });
 
-  final bool isMe;
-
-  final String? message;
-  final String imageUrl;
-  final DateTime createdAt;
-  final MessageAuthor? author;
   final EventMessage eventMessage;
-  final bool isLastMessageFromAuthor;
-  final List<MessageReactionGroup>? reactions;
 
   static double get padding => 8.0.s;
 
   static double get maxHeight => 300.0.s;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    /// Key to get the width of the content container
-    final contentContainerKey = useRef<GlobalKey>(GlobalKey());
-
-    /// Width of the image
-    final imageWidth = useState<double>(0);
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
     return MessageItemWrapper(
       isMe: isMe,
       messageEvent: eventMessage,
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(padding),
-      child: LayoutBuilder(
-        builder: (context, _) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            /// Update the minimum width of the image based on the content container width
-            if (message == null && reactions == null) {
-              imageWidth.value = double.infinity;
-            } else {
-              imageWidth.value = contentContainerKey.value.currentContext?.size?.width ?? 0;
-            }
-          });
-          return GestureDetector(
-            onTap: () {
-              PhotoGalleryRoute(
-                photoUrls: [imageUrl],
-                title: message ?? '',
-                senderName: 'Selena Marquez',
-                sentAt: DateTime.now(),
-              ).push<void>(context);
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MessageAuthorNameWidget(author: author),
-                _PhotoContent(
-                  imageUrl: imageUrl,
-                  width: imageWidth.value,
-                ),
-                SizedBox(height: 8.0.s),
-                _MessageContent(
-                  createdAt: createdAt,
-                  key: contentContainerKey.value,
-                  message: message,
-                  isMe: isMe,
-                  reactions: reactions,
-                ),
-              ],
-            ),
-          );
+      child: GestureDetector(
+        onTap: () {
+          //TODO: Implement photo gallery
+          // PhotoGalleryRoute(
+          //   photoUrls: entity.data.visualMedias.map((e) => e).toList(),
+          //   title: entity.data.content,
+          //   senderName: 'Selena Marquez',
+          //   sentAt: eventMessage.createdAt,
+          // ).push<void>(context);
         },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (entity.data.visualMedias.length > 1)
+              StaggeredGrid.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 4.0.s,
+                crossAxisSpacing: 4.0.s,
+                children: List.generate(
+                  entity.data.visualMedias.take(4).length,
+                  (index) {
+                    final isLastItem = index == entity.data.visualMedias.length - 1;
+                    final isOddLength = entity.data.visualMedias.length.isOdd;
+
+                    return StaggeredGridTile.count(
+                      crossAxisCellCount: (isLastItem && isOddLength) ? 2 : 1,
+                      mainAxisCellCount: 1,
+                      child: _MediaContent(
+                        media: entity.data.visualMedias[index],
+                      ),
+                    );
+                  },
+                ).reversed.toList(),
+              )
+            else
+              _MediaContent(
+                media: entity.data.visualMedias.first,
+              ),
+            SizedBox(height: 8.0.s),
+            _MessageContent(
+              eventMessage: eventMessage,
+            ),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _MediaContent extends HookConsumerWidget {
+  const _MediaContent({
+    required this.media,
+  });
+
+  final MediaAttachment media;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final originalImageOrThumbnail = useFuture(
+      useMemoized(
+        () async {
+          final mediaType = MediaType.fromMimeType(media.mimeType);
+          if (mediaType == MediaType.image) {
+            return ref.read(mediaEncryptionServiceProvider).retrieveEncryptedMedia(media);
+          } else {
+            final thumbnail = media.thumb;
+
+            if (thumbnail == null) {
+              throw MediaThumbnailNotFoundException();
+            }
+
+            final mediaAttachment =
+                MediaAttachment.fromJson(jsonDecode(thumbnail) as Map<String, dynamic>);
+            final encryptedThumbnail = await ref
+                .read(mediaEncryptionServiceProvider)
+                .retrieveEncryptedMedia(mediaAttachment);
+
+            return encryptedThumbnail;
+          }
+        },
+        [media],
+      ),
+    );
+
+    return _PhotoContent(
+      mediaPath: originalImageOrThumbnail.data?.path,
+      isThumbnail: media.thumb != null,
     );
   }
 }
 
 class _PhotoContent extends StatelessWidget {
   const _PhotoContent({
-    required this.imageUrl,
-    required this.width,
+    required this.mediaPath,
+    required this.isThumbnail,
   });
 
-  final String imageUrl;
-  final double width;
+  final String? mediaPath;
+  final bool isThumbnail;
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: width,
         maxHeight: PhotoMessage.maxHeight,
+        minHeight: PhotoMessage.maxHeight,
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12.0.s),
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          fit: BoxFit.fitWidth,
-          width: width,
-        ),
-      ),
+      child: mediaPath != null
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(12.0.s),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.file(
+                    File(mediaPath!),
+                    fit: BoxFit.cover,
+                    height: PhotoMessage.maxHeight,
+                  ),
+                  if (isThumbnail)
+                    Align(
+                      child: Container(
+                        padding: EdgeInsets.all(6.0.s),
+                        decoration: BoxDecoration(
+                          color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(12.0.s),
+                        ),
+                        child: Assets.svg.iconVideoPlay.icon(
+                          size: 16.0.s,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            )
+          : const CenteredLoadingIndicator(),
     );
   }
 }
 
-class _MessageContent extends StatelessWidget {
+class _MessageContent extends HookConsumerWidget {
   const _MessageContent({
-    required this.isMe,
-    required this.createdAt,
-    this.message,
-    this.reactions,
-    super.key,
+    required this.eventMessage,
   });
 
-  final String? message;
-  final bool isMe;
-  final DateTime createdAt;
-  final List<MessageReactionGroup>? reactions;
-
+  final EventMessage eventMessage;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+    final message = eventMessage.content;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          fit: (message == null && reactions == null) ? FlexFit.tight : FlexFit.loose,
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (message != null)
+              if (message.isNotEmpty)
                 Text(
-                  message!,
+                  message,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: isMe
                         ? context.theme.appColors.onPrimaryAccent
                         : context.theme.appColors.primaryText,
                   ),
                 ),
-              //TODO: add metadata
-              //MessageReactions(reactions: reactions),
+              MessageReactions(
+                isMe: isMe,
+                eventMessage: eventMessage,
+              ),
             ],
           ),
         ),
-        //TODO: add metadata
-        // MessageMetaData(isMe: isMe, createdAt: createdAt),
+        MessageMetaData(eventMessage: eventMessage),
       ],
     );
   }

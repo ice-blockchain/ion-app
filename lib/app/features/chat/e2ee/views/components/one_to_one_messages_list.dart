@@ -11,9 +11,9 @@ import 'package:ion/app/features/chat/views/components/message_items/chat_date_h
 import 'package:ion/app/features/chat/views/components/message_items/message_types/audio_message/audio_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/photo_message/photo_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/profile_share_message/profile_share_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/video_message/video_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
@@ -65,11 +65,11 @@ class OneToOneMessageList extends HookConsumerWidget {
                       ),
                       child: switch (entity.data.messageType) {
                         MessageType.text => TextMessage(eventMessage: message),
-                        MessageType.video => VideoMessage(eventMessage: message),
                         MessageType.emoji => EmojiMessage(eventMessage: message),
                         MessageType.audio => AudioMessage(eventMessage: message),
                         MessageType.profile => ProfileShareMessage(eventMessage: message),
                         MessageType.document => DocumentMessage(eventMessage: message),
+                        MessageType.visualMedia => PhotoMessage(eventMessage: message),
                       },
                     );
                   },

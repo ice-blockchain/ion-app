@@ -132,14 +132,14 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
   }
 
   MessageType get messageType {
-    if (primaryVideo != null) {
-      return MessageType.video;
-    } else if (primaryAudio != null) {
+    if (primaryAudio != null) {
       return MessageType.audio;
     } else if (IonConnectProtocolIdentifierTypeValidator.isProfileIdentifier(content)) {
       return MessageType.profile;
     } else if (content.isEmoji) {
       return MessageType.emoji;
+    } else if (visualMedias.isNotEmpty) {
+      return MessageType.visualMedia;
     } else if (media.isNotEmpty) {
       return MessageType.document;
     }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -119,17 +120,22 @@ class SendE2eeMessageService {
           groupImageTag: groupImageTag,
           conversationId: conversationId,
           masterPubkeys: participantsMasterPubkeys,
-        )..add([
+        );
+
+        for (final mediaFile in compressedMediaFiles) {
+          conversationTagsWithDummyMediaTags.add([
             'imeta',
-            'url ${mediaFiles.first.path}',
-            'm ${mediaFiles.first.mimeType}',
+            'url ${mediaFile.path}',
+            'm ${mediaFile.mimeType}',
             'alt message',
             'dim null',
             'x null',
             'ox null',
             'expiration null',
             'encryption-key null null null aes-gcm',
+            if (mediaFile.thumb != null) 'thumb ${mediaFile.thumb}',
           ]);
+        }
 
         final eventMessageWithoutMedia = await _createEventMessage(
           content: content,
@@ -163,6 +169,50 @@ class SendE2eeMessageService {
 
                   final oneTimeEventSigner = await Ed25519KeyStore.generate();
 
+                  String? thumbUrl;
+
+                  final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
+
+                  if (mediaType == MediaType.video) {
+                    final index = encryptedMediaFiles.indexOf(encryptedMediaFile);
+                    final originalMediaFile = compressedMediaFiles[index];
+
+                    final encryptedThumb = await mediaEncryptionService.encryptMediaFiles([
+                      MediaFile(
+                        path: originalMediaFile.thumb!,
+                        mimeType: 'image/webp',
+                        width: originalMediaFile.width,
+                        height: originalMediaFile.height,
+                      ),
+                    ]);
+                    final thumbUploadResult = await ionConnectUploadNotifier.upload(
+                      encryptedThumb.first.$1,
+                      alt: FileAlt.message,
+                      customEventSigner: oneTimeEventSigner,
+                    );
+
+                    final thumbFileMetadataEvent = await _generateFileMetadataEvent(
+                      ontTimeEventSigner: oneTimeEventSigner,
+                      fileMetadataEntity: thumbUploadResult.fileMetadata,
+                    );
+
+                    await ionConnectNotifier.sendEvent(
+                      thumbFileMetadataEvent,
+                      actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+                      cache: false,
+                    );
+
+                    thumbUrl = jsonEncode(
+                      thumbUploadResult.mediaAttachment
+                          .copyWith(
+                            encryptionKey: encryptedThumb.first.$2,
+                            encryptionNonce: encryptedThumb.first.$3,
+                            encryptionMac: encryptedThumb.first.$4,
+                          )
+                          .toJson(),
+                    );
+                  }
+
                   await conversationMessageStatusDao.add(
                     masterPubkey: masterPubkey,
                     eventMessageId: eventMessageWithoutMedia.id,
@@ -186,14 +236,9 @@ class SendE2eeMessageService {
                     cache: false,
                   );
 
-                  return (uploadResult, secretKey, nonce, mac);
+                  return (uploadResult, secretKey, nonce, mac, thumbUrl);
                 }),
               );
-
-              for (final mediaFile in encryptedMediaFiles) {
-                final file = File(mediaFile.$1.path);
-                await file.delete();
-              }
 
               final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
 
@@ -246,11 +291,6 @@ class SendE2eeMessageService {
             }
           }),
         );
-
-        for (final mediaFile in compressedMediaFiles) {
-          final file = File(mediaFile.path);
-          unawaited(file.delete());
-        }
       } else {
         final conversationTags = _generateConversationTags(
           subject: subject,
@@ -290,7 +330,7 @@ class SendE2eeMessageService {
     final mediaUri = Uri.tryParse(mediaUrl ?? '');
 
     final isMessageWithMedia = [
-      MessageType.video,
+      MessageType.visualMedia,
       MessageType.audio,
       MessageType.document,
     ].contains(messageType);
@@ -393,14 +433,9 @@ class SendE2eeMessageService {
                 cache: false,
               );
 
-              return (uploadResult, secretKey, nonce, mac);
+              return (uploadResult, secretKey, nonce, mac, null);
             }),
           );
-
-          for (final mediaFile in encryptedMediaFiles) {
-            final file = File(mediaFile.$1.path);
-            await file.delete();
-          }
 
           final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
 
@@ -717,7 +752,8 @@ class SendE2eeMessageService {
           final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
           final compressedMediaFile = switch (mediaType) {
-            MediaType.video => await compressionService.compressVideo(mediaFile),
+            MediaType.video =>
+              await compressionService.compressVideo(mediaFile, generateThumbnail: true),
             MediaType.image => await compressionService.compressImage(
                 mediaFile,
                 width: mediaFile.width,
@@ -736,7 +772,7 @@ class SendE2eeMessageService {
   }
 
   List<List<String>> _generateImetaTags(
-    List<(UploadResult, String, String, String)> uploadResults,
+    List<(UploadResult, String, String, String, String?)> uploadResults,
   ) {
     final expiration = EntityExpiration(
       value: DateTime.now().add(
@@ -750,6 +786,7 @@ class SendE2eeMessageService {
       final secretKey = uploadResult.$2;
       final nonce = uploadResult.$3;
       final mac = uploadResult.$4;
+      final thumbUrl = uploadResult.$5;
 
       return [
         'imeta',
@@ -761,6 +798,7 @@ class SendE2eeMessageService {
         'ox ${fileMetadata.originalFileHash}',
         'expiration ${expiration.value.millisecondsSinceEpoch ~/ 1000}',
         'encryption-key $secretKey $nonce $mac aes-gcm',
+        if (thumbUrl != null) 'thumb $thumbUrl',
       ];
     }).toList();
   }
