@@ -53,7 +53,7 @@ void main() {
       );
 
       final decodedSeal = await sealService.decodeSeal(
-        seal.content,
+        seal.content!,
         senderSigner.publicKey,
         senderSigner.privateKey,
       );
@@ -74,7 +74,7 @@ void main() {
       );
 
       final decodedSeal = await sealService.decodeSeal(
-        seal.content,
+        seal.content!,
         senderSigner.publicKey,
         receiverSigner.privateKey,
       );
