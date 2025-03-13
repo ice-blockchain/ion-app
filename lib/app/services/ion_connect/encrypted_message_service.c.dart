@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:typed_data';
+
 import 'package:convert/convert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -13,10 +14,10 @@ import 'package:nip44/nip44.dart';
 import 'package:pinenacl/tweetnacl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'ion_connect_e2ee_service.c.g.dart';
+part 'encrypted_message_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<IonConnectE2eeService> ionConnectE2eeService(Ref ref) async {
+Future<EncryptedMessageService> encryptedMessageService(Ref ref) async {
   final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
   final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
@@ -28,14 +29,14 @@ Future<IonConnectE2eeService> ionConnectE2eeService(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  return IonConnectE2eeService(
+  return EncryptedMessageService(
     eventSigner: eventSigner,
     currentUserPubkey: currentUserPubkey,
   );
 }
 
-class IonConnectE2eeService {
-  IonConnectE2eeService({required this.eventSigner, required this.currentUserPubkey});
+class EncryptedMessageService {
+  EncryptedMessageService({required this.eventSigner, required this.currentUserPubkey});
 
   final EventSigner eventSigner;
   final String currentUserPubkey;

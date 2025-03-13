@@ -7,7 +7,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifi
 import 'package:ion/app/features/settings/model/privacy_options.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/url.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -59,14 +59,11 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
   Future<void> publishWallets(WalletAddressPrivacyOption option) async {
     Map<String, String>? wallets;
     if (option == WalletAddressPrivacyOption.public) {
-      final walletViews = await ref.read(walletViewsDataNotifierProvider.future);
-      final coins =
-          walletViews.expand((view) => view.coinGroups).expand((group) => group.coins).toList();
-
+      final cryptoWallets = await ref.read(connectedCryptoWalletsProvider.future);
       wallets = Map.fromEntries(
-        coins.map((coin) {
-          if (coin.walletId == null) return null;
-          return MapEntry(coin.coin.network.id, coin.walletId!);
+        cryptoWallets.map((wallet) {
+          if (wallet.address == null) return null;
+          return MapEntry(wallet.network, wallet.address!);
         }).nonNulls,
       );
     }

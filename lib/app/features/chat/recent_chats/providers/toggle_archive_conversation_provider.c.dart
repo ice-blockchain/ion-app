@@ -12,7 +12,7 @@ import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'toggle_archive_conversation_provider.c.g.dart';
@@ -51,7 +51,7 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
   Future<List<List<String>>?> _decryptContent(String content) async {
     if (content.isEmpty) return null;
 
-    final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+    final e2eeService = await ref.read(encryptedMessageServiceProvider.future);
     final decryptedContent = await e2eeService.decryptMessage(content);
 
     if (decryptedContent.isEmpty) return null;
@@ -108,10 +108,10 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
       }
     }
 
-    final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+    final encryptedMessageService = await ref.read(encryptedMessageServiceProvider.future);
     final encodedContent = updatedContent.isEmpty ? '' : jsonEncode(updatedContent);
     final encryptedContent = encodedContent.isNotEmpty
-        ? await e2eeService.encryptMessage(encodedContent)
+        ? await encryptedMessageService.encryptMessage(encodedContent)
         : encodedContent;
 
     return bookmarkSet.copyWith(content: encryptedContent);

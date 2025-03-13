@@ -10,7 +10,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/community_i
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/feed/data/models/bookmarks/bookmarks_set.c.dart';
 import 'package:ion/app/features/feed/providers/bookmarks_notifier.c.dart';
-import 'package:ion/app/services/ion_connect/ion_connect_e2ee_service.c.dart';
+import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'archived_conversations_provider.c.g.dart';
@@ -32,7 +32,7 @@ Future<List<String>> archivedConversations(Ref ref) async {
           );
 
   final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
-  final e2eeService = await ref.read(ionConnectE2eeServiceProvider.future);
+  final encryptedMessageService = await ref.watch(encryptedMessageServiceProvider.future);
 
   if (currentUserPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
@@ -41,7 +41,7 @@ Future<List<String>> archivedConversations(Ref ref) async {
   final content = archivedConversationBookmarksSetData.content;
 
   final decryptedContent = content.isNotEmpty
-      ? await e2eeService.decryptMessage(
+      ? await encryptedMessageService.decryptMessage(
           archivedConversationBookmarksSetData.content,
         )
       : archivedConversationBookmarksSetData.content;
