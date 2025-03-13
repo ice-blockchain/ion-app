@@ -441,3 +441,8 @@ class FailedToSendCryptoAssetsException extends IONException {
   FailedToSendCryptoAssetsException(String? reason)
       : super(10086, reason ?? 'Failed to send crypto assets');
 }
+
+class UnknownNotificationCommentException extends IONException {
+  UnknownNotificationCommentException([Object? info])
+      : super(10087, 'Unknown notification comment type $info');
+}

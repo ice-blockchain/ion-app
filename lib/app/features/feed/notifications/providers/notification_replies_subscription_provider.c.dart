@@ -38,14 +38,18 @@ Future<void> notificationsRepliesSubscription(Ref ref) async {
   );
   final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-  ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
+  final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
     requestMessage,
     subscriptionBuilder: (requestMessage, relay) {
       final subscription = relay.subscribe(requestMessage);
       ref.onDispose(() => relay.unsubscribe(subscription.id));
       return subscription.messages;
     },
-  ).listen((eventMessage) {
+  );
+
+  final subscription = events.listen((eventMessage) {
     commentsRepository.save(eventParser.parse(eventMessage));
   });
+
+  ref.onDispose(subscription.cancel);
 }
