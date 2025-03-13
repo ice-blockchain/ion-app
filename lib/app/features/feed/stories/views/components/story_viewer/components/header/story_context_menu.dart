@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
@@ -56,8 +55,8 @@ class StoryContextMenu extends HookConsumerWidget {
           child: DeleteStoryModal(eventReference: post.toEventReference()),
         );
 
-        if (confirmed.falseOrValue && context.mounted) {
-          context.pop();
+        if ((confirmed ?? false) && context.mounted) {
+          Navigator.of(context).pop();
         } else {
           ref.read(storyPauseControllerProvider.notifier).paused = false;
         }

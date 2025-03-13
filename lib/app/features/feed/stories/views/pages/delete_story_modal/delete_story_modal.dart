@@ -11,10 +11,9 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/stories/providers/delete_story_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class DeleteStoryModal extends ConsumerWidget {
+class DeleteStoryModal extends HookConsumerWidget {
   const DeleteStoryModal({
     required this.eventReference,
     super.key,
@@ -27,6 +26,18 @@ class DeleteStoryModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final buttonMinimalSize = Size(buttonsSize, buttonsSize);
+    final deleteState = ref.watch(deleteStoryControllerProvider);
+
+    ref
+      ..displayErrors(deleteStoryControllerProvider)
+      ..listenSuccess(
+        deleteStoryControllerProvider,
+        (_) {
+          if (context.mounted) {
+            Navigator.of(context).pop(true);
+          }
+        },
+      );
 
     return ScreenSideOffset.small(
       child: Column(
@@ -50,6 +61,7 @@ class DeleteStoryModal extends ConsumerWidget {
                     ref.read(storyPauseControllerProvider.notifier).paused = false;
                     context.pop(false);
                   },
+                  disabled: deleteState.isLoading,
                   minimumSize: buttonMinimalSize,
                 ),
               ),
@@ -58,20 +70,11 @@ class DeleteStoryModal extends ConsumerWidget {
                 child: Button.compact(
                   label: Text(context.i18n.button_delete),
                   onPressed: () async {
-                    final success = await ref.read(deleteStoryProvider(eventReference).future);
-
-                    if (success) {
-                      if (context.mounted) {
-                        context.pop(true);
-                      }
-                    } else {
-                      Logger.error('Failed to delete story');
-                      if (context.mounted) {
-                        context.pop(false);
-                      }
-                      ref.read(storyPauseControllerProvider.notifier).paused = false;
-                    }
+                    await ref
+                        .read(deleteStoryControllerProvider.notifier)
+                        .deleteStory(eventReference);
                   },
+                  disabled: deleteState.isLoading,
                   minimumSize: buttonMinimalSize,
                   backgroundColor: context.theme.appColors.attentionRed,
                 ),
