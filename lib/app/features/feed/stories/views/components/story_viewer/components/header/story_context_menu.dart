@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -86,7 +87,21 @@ class _StoryContextMenuContent extends HookConsumerWidget {
         ContextMenuItem(
           label: i18n.button_delete,
           iconAsset: Assets.svg.iconBlockDelete,
-          onPressed: onClose,
+          onPressed: () {
+            onClose();
+            showSimpleBottomSheet<void>(
+              context: context,
+              child: SimpleModalSheet.alert(
+                title: i18n.delete_story_title,
+                description: i18n.delete_story_description,
+                iconAsset: Assets.svg.actionCreatePostDeletepost,
+                buttonText: i18n.button_delete,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            );
+          },
           onLayout: onUpdateWidth,
           textColor: colors.attentionRed,
           iconColor: colors.attentionRed,
