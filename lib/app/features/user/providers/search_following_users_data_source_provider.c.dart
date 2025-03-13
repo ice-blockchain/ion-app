@@ -13,10 +13,14 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'search_following_users_data_source_provider.c.g.dart';
 
 @riverpod
-List<EntitiesDataSource>? searchFollowingUsersDataSource(Ref ref, {required String query}) {
+List<EntitiesDataSource>? searchFollowingUsersDataSource(
+  Ref ref,
+  String pubkey, {
+  required String query,
+}) {
   if (query.isEmpty) return null;
 
-  final followingList = ref.watch(currentUserFollowListProvider).valueOrNull;
+  final followingList = ref.watch(followListProvider(pubkey)).valueOrNull;
   if (followingList == null) {
     return null;
   }
