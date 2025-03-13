@@ -2,10 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/modal_sheets/simple_modal_sheet.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
+import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
@@ -49,7 +52,9 @@ class StoryContextMenu extends HookConsumerWidget {
       },
       onClose: () {
         ref.read(storyPauseControllerProvider.notifier).paused = false;
-        ref.read(storyMenuControllerProvider.notifier).menuOpen = false;
+        if (!isCurrentUser) {
+          ref.read(storyMenuControllerProvider.notifier).menuOpen = false;
+        }
       },
       menuBuilder: (closeMenu) => OverlayMenuContainer(
         child: _StoryContextMenuContent(
@@ -81,6 +86,7 @@ class _StoryContextMenuContent extends HookConsumerWidget {
     final i18n = context.i18n;
     final colors = context.theme.appColors;
     final isMuted = ref.watch(globalMuteProvider);
+    final minSize = Size(56.0.s, 56.0.s);
 
     if (isCurrentUser) {
       return [
@@ -88,17 +94,43 @@ class _StoryContextMenuContent extends HookConsumerWidget {
           label: i18n.button_delete,
           iconAsset: Assets.svg.iconBlockDelete,
           onPressed: () {
+            // ref.read(storyPauseControllerProvider.notifier).paused = true;
             onClose();
             showSimpleBottomSheet<void>(
               context: context,
               child: SimpleModalSheet.alert(
+                isBottomSheet: true,
                 title: i18n.delete_story_title,
                 description: i18n.delete_story_description,
                 iconAsset: Assets.svg.actionCreatePostDeletepost,
-                buttonText: i18n.button_delete,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                button: ScreenSideOffset.small(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Button.compact(
+                          type: ButtonType.outlined,
+                          label: Text(context.i18n.button_cancel),
+                          minimumSize: minSize,
+                          onPressed: () => context.pop(false),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 16.0.s,
+                      ),
+                      Expanded(
+                        child: Button.compact(
+                          label: Text(context.i18n.button_delete),
+                          minimumSize: minSize,
+                          backgroundColor: context.theme.appColors.attentionRed,
+                          onPressed: () {
+                            context.pop(true);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             );
           },
@@ -140,6 +172,8 @@ class _StoryContextMenuContent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: _buildMenuItems(context, ref),
