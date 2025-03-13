@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_info.dart';
@@ -89,11 +90,19 @@ class _NotificationItemEvent extends ConsumerWidget {
       return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
     }
 
+    final mainEventReference = switch (entity) {
+      GenericRepostEntity() => entity.data.eventReference,
+      _ => eventReference,
+    };
+
+    final framedEventType = switch (entity) {
+      ModifiablePostEntity() when entity.data.parentEvent != null => FramedEventType.parent,
+      _ => FramedEventType.quoted,
+    };
+
     return Post(
-      eventReference: switch (entity) {
-        GenericRepostEntity() => entity.data.eventReference,
-        _ => eventReference,
-      },
+      eventReference: mainEventReference,
+      framedEventType: framedEventType,
       header: const SizedBox.shrink(),
       footer: const SizedBox.shrink(),
       topOffset: 6.0.s,
