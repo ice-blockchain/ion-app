@@ -26,8 +26,6 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
   return database;
 }
 
-// DO NOT create or use database directly, use proxy notifier
-// [IONDatabaseNotifier] methods instead
 @DriftDatabase(
   tables: [
     CommentsTable,
