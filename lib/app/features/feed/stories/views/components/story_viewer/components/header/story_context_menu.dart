@@ -89,9 +89,7 @@ class StoryContextMenu extends HookConsumerWidget {
         );
 
         if (confirmed.falseOrValue) {
-          final success = await ref
-              .read(deleteStoryControllerProvider.notifier)
-              .deleteStory(post.toEventReference());
+          final success = await ref.read(deleteStoryProvider(post.toEventReference()).future);
 
           if (success) {
             if (context.mounted) {
