@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -10,6 +9,7 @@ import 'package:ion/app/features/feed/notifications/providers/unread_notificatio
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/comments_notifications.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class NotificationsHistoryPage extends HookConsumerWidget {
@@ -19,12 +19,8 @@ class NotificationsHistoryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        ref.read(unreadNotificationsCountProvider.notifier).readAll();
-        return ref.read(unreadNotificationsCountProvider.notifier).readAll;
-      },
-      [],
+    useOnInit(
+      ref.read(unreadNotificationsCountProvider.notifier).readAll,
     );
 
     return Scaffold(
