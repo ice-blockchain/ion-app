@@ -40,7 +40,6 @@ class NotificationsHistoryPage extends HookConsumerWidget {
                     return switch (type) {
                       _ => const CommentsNotifications(),
                     };
-                    // return TabContent(tabType: notificationTabType);
                   }).toList(),
                 ),
               ),
