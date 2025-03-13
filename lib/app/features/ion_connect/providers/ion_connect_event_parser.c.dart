@@ -26,7 +26,7 @@ import 'package:ion/app/features/user/model/user_chat_relays.c.dart';
 import 'package:ion/app/features/user/model/user_delegation.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_entity.c.dart';
+import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_event_parser.c.g.dart';

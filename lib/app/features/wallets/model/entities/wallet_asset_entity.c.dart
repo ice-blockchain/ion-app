@@ -18,8 +18,8 @@ import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart'
 import 'package:ion/app/features/wallets/model/entities/tags/wallet_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/wallet_flag_tag.c.dart';
 
-part 'wallet_entity.c.freezed.dart';
-part 'wallet_entity.c.g.dart';
+part 'wallet_asset_entity.c.freezed.dart';
+part 'wallet_asset_entity.c.g.dart';
 
 @Freezed(equal: false)
 class WalletAssetEntity
