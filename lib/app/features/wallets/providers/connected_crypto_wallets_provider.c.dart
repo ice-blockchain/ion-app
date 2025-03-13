@@ -10,10 +10,10 @@ part 'connected_crypto_wallets_provider.c.g.dart';
 
 @riverpod
 Future<List<Wallet>> connectedCryptoWallets(Ref ref) async {
-  final walletsFromWalletViews = await ref.watch(walletViewsDataNotifierProvider.future);
+  final walletViews = await ref.watch(walletViewsDataNotifierProvider.future);
   final cryptoWallets = await ref.watch(walletsNotifierProvider.future);
 
-  final walletIds = walletsFromWalletViews
+  final walletIds = walletViews
       .expand((view) => view.coinGroups)
       .expand((group) => group.coins)
       .map((coin) => coin.walletId)
