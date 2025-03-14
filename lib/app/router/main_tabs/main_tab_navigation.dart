@@ -32,26 +32,34 @@ class MainTabNavigation extends HookConsumerWidget {
       ref.read(userChatRelaysManagerProvider.notifier).sync();
     });
 
-    return Scaffold(
-      body: MainTabNavigationContainer(
-        tabPressStream: tabPressStreamController.stream,
-        child: shell,
-      ),
-      bottomNavigationBar: state.shouldHideBottomBar
-          ? null
-          : _BottomNavBarContent(
-              state: state,
-              currentTab: currentTab,
-              onTabPressed: (tabItem) {
-                tabPressStreamController.add((current: currentTab, pressed: tabItem));
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop && Navigator.of(ref.context).canPop()) {
+          context.pop();
+        }
+      },
+      child: Scaffold(
+        body: MainTabNavigationContainer(
+          tabPressStream: tabPressStreamController.stream,
+          child: shell,
+        ),
+        bottomNavigationBar: state.shouldHideBottomBar
+            ? null
+            : _BottomNavBarContent(
+                state: state,
+                currentTab: currentTab,
+                onTabPressed: (tabItem) {
+                  tabPressStreamController.add((current: currentTab, pressed: tabItem));
 
-                if (tabItem == TabItem.main) {
-                  _handleMainButtonTap(context, currentTab);
-                } else {
-                  _navigateToTab(context, tabItem, initialLocation: currentTab == tabItem);
-                }
-              },
-            ),
+                  if (tabItem == TabItem.main) {
+                    _handleMainButtonTap(context, currentTab);
+                  } else {
+                    _navigateToTab(context, tabItem, initialLocation: currentTab == tabItem);
+                  }
+                },
+              ),
+      ),
     );
   }
 

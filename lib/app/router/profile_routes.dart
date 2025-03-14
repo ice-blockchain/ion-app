@@ -6,9 +6,9 @@ class ProfileRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<ProfileRoute>(path: 'user/:pubkey'),
     TypedGoRoute<ProfileEditRoute>(path: 'profile_edit'),
+    TypedGoRoute<FollowListRoute>(path: 'follow-list-fullstack'),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
-        TypedGoRoute<FollowListRoute>(path: 'follow-list'),
         TypedGoRoute<CategorySelectRoute>(path: 'category-selector'),
         TypedGoRoute<SelectCoinRoute>(path: 'coin-selector'),
         TypedGoRoute<SelectNetworkRoute>(path: 'network-selector'),
@@ -46,7 +46,7 @@ class FollowListRoute extends BaseRouteData {
             followType: followType,
             pubkey: pubkey,
           ),
-          type: IceRouteType.bottomSheet,
+          type: IceRouteType.simpleModalSheet,
         );
 
   final FollowType followType;

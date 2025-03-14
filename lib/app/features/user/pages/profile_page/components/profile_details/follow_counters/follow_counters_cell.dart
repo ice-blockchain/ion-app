@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -39,15 +37,12 @@ class FollowCountersCell extends ConsumerWidget {
     }
 
     return GestureDetector(
-      onTap: () async {
+      onTap: () {
         if (usersNumber > 0) {
-          final selectedPubkey = await FollowListRoute(
+          FollowListRoute(
             pubkey: pubkey,
             followType: followType,
           ).push<String>(context);
-          if (selectedPubkey != null && context.mounted) {
-            unawaited(ProfileRoute(pubkey: selectedPubkey).push<void>(context));
-          }
         }
       },
       child: Center(
