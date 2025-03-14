@@ -16,7 +16,7 @@ void main() {
         signer: keyStore,
         kind: 3,
         tags: const [
-          ['b', ''],
+          ['b', 'value'],
           ['p', '91cf9..4e5ca', 'wss://alicerelay.com/', 'alice'],
           ['p', '14aeb..8dad4', 'wss://bobrelay.com/ionConnect', 'bob'],
           ['p', '612ae..e610f', 'ws://carolrelay.com/ws', 'carol'],
