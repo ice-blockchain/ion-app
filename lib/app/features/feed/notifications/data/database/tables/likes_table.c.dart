@@ -3,20 +3,11 @@
 import 'package:drift/drift.dart';
 import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
 
-@DataClassName('Comment')
-class CommentsTable extends Table {
+@DataClassName('Like')
+class LikesTable extends Table {
   TextColumn get eventReference => text().map(const EventReferenceConverter())();
   DateTimeColumn get createdAt => dateTime()();
-  IntColumn get type => intEnum<CommentType>()();
 
   @override
   Set<Column> get primaryKey => {eventReference};
-}
-
-// Caution! Add new values only to the end
-// https://drift.simonbinder.eu/type_converters/#implicit-enum-converters
-enum CommentType {
-  reply,
-  repost,
-  quote,
 }

@@ -24,7 +24,7 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final since = await commentsRepository.lastCommentCreatedAt(NotificationsType.repost);
+  final since = await commentsRepository.lastCreatedAt(NotificationsType.repost);
 
   final requestFilter = RequestFilter(
     kinds: const [GenericRepostEntity.kind],
