@@ -24,13 +24,14 @@ class HeaderActions extends ConsumerWidget {
 
     return Row(
       children: [
-        if (!isCurrentUser)
-          StoryContextMenu(
-            pubkey: post.masterPubkey,
-            child: SvgShadow(
-              child: Assets.svg.iconMoreStories.icon(color: iconMoreColor),
-            ),
+        StoryContextMenu(
+          pubkey: post.masterPubkey,
+          post: post,
+          isCurrentUser: isCurrentUser,
+          child: SvgShadow(
+            child: Assets.svg.iconMoreStories.icon(color: iconMoreColor),
           ),
+        ),
         SizedBox(width: 16.0.s),
         GestureDetector(
           child: SvgShadow(

@@ -149,6 +149,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         quotedEvent: null,
         media: {}, //TODO: consider removing media from the storage
         settings: null,
+        expiration: null,
       );
 
       await _sendPostEntities([postData]);

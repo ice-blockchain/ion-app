@@ -428,7 +428,7 @@ SPEC CHECKSUMS:
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   external_app_launcher: 3411245965270a74040a3de17e27bd02b8abb905
-  ffmpeg-kit-ios-full-gpl: d8fd8d021e82787cf8fb502bcba6e258d8a35abb
+  ffmpeg-kit-ios-full-gpl: bad8891f08264ec79e741259ebd36240cdbb3f1b
   ffmpeg_kit_flutter_full_gpl: 70e43c864657d5dc8a6568481786f635a1e375b2
   file_picker: 9b3292d7c8bc68c8a7bf8eb78f730e49c8efc517
   file_saver: 6cdbcddd690cb02b0c1a0c225b37cd805c2bf8b6
