@@ -108,25 +108,36 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
   }
 }
 
-@Freezed(toJson: true, fromJson: true)
-class WalletAssetContent with _$WalletAssetContent {
-  const factory WalletAssetContent({
-    // the url of the transaction from an explorer
-    required String txUrl,
-    required String from, // address
-    required String to, // address
-    // the identifier of the NFT in the collection; used only for NFTs
-    String? assetId,
-    // the transfer amount in native discriminator:I.E. if bitcoin, amount is in Satoshi; used only for coins/fungible tokens
-    String? amount,
-    // the decimal value amount priced in USD at the time of the transfer; used only for coins/fungible tokens
-    String? amountUsd,
-    // the current balance of the user in that coin; only for coins/fungible tokens
-    String? balance,
-  }) = _WalletAssetContent;
+@JsonSerializable(createToJson: true, includeIfNull: false)
+class WalletAssetContent {
+  const WalletAssetContent({
+    required this.txUrl,
+    required this.from,
+    required this.to,
+    this.assetId,
+    this.amount,
+    this.amountUsd,
+    this.balance,
+  });
 
   factory WalletAssetContent.fromJson(Map<String, dynamic> json) =>
       _$WalletAssetContentFromJson(json);
 
-  const WalletAssetContent._();
+  final String txUrl;
+  final String from; // address
+  final String to; // address
+
+  /// the identifier of the NFT in the collection; used only for NFTs
+  final String? assetId;
+
+  /// the transfer amount in native discriminator:I.E. if bitcoin, amount is in Satoshi; used only for coins/fungible tokens
+  final String? amount;
+
+  /// the decimal value amount priced in USD at the time of the transfer; used only for coins/fungible tokens
+  final String? amountUsd;
+
+  /// the current balance of the user in that coin; only for coins/fungible tokens
+  final String? balance;
+
+  Map<String, dynamic> toJson() => _$WalletAssetContentToJson(this);
 }

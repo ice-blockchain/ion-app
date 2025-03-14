@@ -141,7 +141,7 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
   }
 }
 
-@JsonSerializable(createToJson: true)
+@JsonSerializable(createToJson: true, includeIfNull: false)
 class UserDataEventMessageContent {
   UserDataEventMessageContent({
     this.name,

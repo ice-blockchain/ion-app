@@ -17,7 +17,7 @@ void main() {
         signer: keyStore,
         kind: 10015,
         tags: const [
-          ['b', ''],
+          ['b', 'value'],
           ['t', 'tag'],
           ['a', '2:13:123'],
           ['a', '3:222:123'],
