@@ -8,7 +8,6 @@ import 'package:ion/app/features/components/entities_list/entities_list_skeleton
 import 'package:ion/app/features/feed/notifications/providers/notification_comments_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_item.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/empty_list.dart';
-import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 
 class CommentsNotifications extends HookConsumerWidget {
   const CommentsNotifications({
@@ -28,8 +27,7 @@ class CommentsNotifications extends HookConsumerWidget {
         else if (comments.isEmpty)
           const EmptyState()
         else
-          SliverList.separated(
-            separatorBuilder: (context, index) => FeedListSeparator(),
+          SliverList.builder(
             itemCount: comments.length,
             itemBuilder: (context, index) {
               return NotificationItem(notification: comments[index]);

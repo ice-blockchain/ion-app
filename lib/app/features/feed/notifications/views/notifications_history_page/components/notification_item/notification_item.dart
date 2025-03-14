@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
@@ -11,13 +10,13 @@ import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notif
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_info.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_type_icon.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/user_avatar.dart';
+import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
-import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
-class NotificationItem extends StatelessWidget {
+class NotificationItem extends ConsumerWidget {
   const NotificationItem({
     required this.notification,
     super.key,
@@ -30,73 +29,80 @@ class NotificationItem extends StatelessWidget {
   static int get iconsCount => 10;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final iconSize = ((MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2) -
             separator * (iconsCount - 1)) /
         iconsCount;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0.s),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ScreenSideOffset.small(
-            child: Row(
-              children: [
-                NotificationTypeIcon(
-                  notificationsType: notification.type,
-                  iconSize: iconSize,
-                ),
-                ...notification.pubkeys.take(iconsCount - 1).map((pubkey) {
-                  return Padding(
-                    padding: EdgeInsets.only(left: separator),
-                    child: UserAvatar(
-                      pubkey: pubkey,
-                      avatarSize: iconSize,
-                    ),
-                  );
-                }),
-              ],
-            ),
+    final eventReference = notification.eventReference;
+    IonConnectEntity? entity;
+
+    if (eventReference != null) {
+      // Wait for entity to be loaded, because it might be not found,
+      // for example when repost / post is deleted.
+      // Do not show the item in this case.
+      entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+      if (entity == null || (entity is ModifiablePostEntity && entity.isDeleted)) {
+        return const SizedBox.shrink();
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16.0.s),
+        ScreenSideOffset.small(
+          child: Row(
+            children: [
+              NotificationTypeIcon(
+                notificationsType: notification.type,
+                iconSize: iconSize,
+              ),
+              ...notification.pubkeys.take(iconsCount - 1).map((pubkey) {
+                return Padding(
+                  padding: EdgeInsets.only(left: separator),
+                  child: UserAvatar(
+                    pubkey: pubkey,
+                    avatarSize: iconSize,
+                  ),
+                );
+              }),
+            ],
           ),
-          SizedBox(height: 8.0.s),
-          ScreenSideOffset.small(
-            child: NotificationInfo(notification: notification),
+        ),
+        SizedBox(height: 8.0.s),
+        ScreenSideOffset.small(
+          child: NotificationInfo(notification: notification),
+        ),
+        if (entity != null)
+          GestureDetector(
+            onTap: () {
+              PostDetailsRoute(eventReference: entity!.toEventReference().encode())
+                  .push<void>(context);
+            },
+            child: _NotificationItemEvent(entity: entity),
           ),
-          if (notification.eventReference != null)
-            GestureDetector(
-              onTap: () {
-                PostDetailsRoute(eventReference: notification.eventReference!.encode())
-                    .push<void>(context);
-              },
-              child: _NotificationItemEvent(eventReference: notification.eventReference!),
-            ),
-        ],
-      ),
+        SizedBox(height: 16.0.s),
+        FeedListSeparator(),
+      ],
     );
   }
 }
 
 class _NotificationItemEvent extends ConsumerWidget {
-  const _NotificationItemEvent({required this.eventReference});
+  const _NotificationItemEvent({required this.entity});
 
-  final EventReference eventReference;
+  final IonConnectEntity entity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
-
-    if (entity == null) {
-      return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
-    }
-
     final mainEventReference = switch (entity) {
-      GenericRepostEntity() => entity.data.eventReference,
-      _ => eventReference,
+      final GenericRepostEntity repost => repost.data.eventReference,
+      _ => entity.toEventReference(),
     };
 
     final framedEventType = switch (entity) {
-      ModifiablePostEntity() when entity.data.parentEvent != null => FramedEventType.parent,
+      final ModifiablePostEntity post when post.data.parentEvent != null => FramedEventType.parent,
       _ => FramedEventType.quoted,
     };
 
