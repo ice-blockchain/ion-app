@@ -63,7 +63,7 @@ void main() {
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
-        content: wrap.content!,
+        content: wrap.content,
         senderPubkey: wrap.pubkey,
         privateKey: senderSigner.privateKey,
       );
@@ -85,7 +85,7 @@ void main() {
       );
 
       final decodedWrap = await giftWrapService.decodeWrap(
-        content: wrap.content!,
+        content: wrap.content,
         senderPubkey: wrap.pubkey,
         privateKey: receiverSigner.privateKey,
       );
