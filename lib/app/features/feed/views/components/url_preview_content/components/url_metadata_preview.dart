@@ -52,6 +52,7 @@ class _UrlMetadataImage extends StatelessWidget {
         imageUrl: imageUrl,
         width: double.infinity,
         fit: BoxFit.cover,
+        fadeInDuration: Duration.zero,
         errorWidget: (context, url, error) => const SizedBox.shrink(),
       ),
     );
@@ -75,6 +76,7 @@ class _UrlMetadataSiteInfo extends StatelessWidget {
         children: [
           CachedNetworkImage(
             imageUrl: favIconUrl,
+            fadeInDuration: Duration.zero,
             imageBuilder: (context, imageProvider) => Row(
               children: [
                 Image(

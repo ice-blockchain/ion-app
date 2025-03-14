@@ -45,6 +45,7 @@ class NftGridItem extends StatelessWidget {
               width: imageWidth,
               height: imageWidth * 1.13,
               fit: BoxFit.fitHeight,
+              fadeInDuration: Duration.zero,
             ),
           ),
           Text(

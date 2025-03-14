@@ -73,6 +73,7 @@ class ArticlesCarouselItem extends StatelessWidget {
                           ? CachedNetworkImage(
                               imageUrl: article.data.image!,
                               fit: BoxFit.cover,
+                              fadeInDuration: Duration.zero,
                             )
                           : const ColoredBox(color: Colors.grey),
                     ),

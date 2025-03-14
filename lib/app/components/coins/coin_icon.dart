@@ -23,6 +23,7 @@ class CoinIconWidget extends StatelessWidget {
       imageUrl: imageUrl,
       width: iconSize,
       height: iconSize,
+      fadeInDuration: Duration.zero,
       errorWidget: (_, __, ___) => Assets.svg.walletEmptyicon.icon(size: iconSize),
       imageBuilder: (context, imageProvider) => Container(
         width: iconSize,
