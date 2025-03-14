@@ -62,7 +62,7 @@ class Post extends ConsumerWidget {
     }
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
-      return DeletedEntity(entityType: DeletedEntityType.post);
+      return ScreenSideOffset.small(child: DeletedEntity(entityType: DeletedEntityType.post));
     }
 
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));

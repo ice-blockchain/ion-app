@@ -96,8 +96,8 @@ class FollowListData with _$FollowListData implements EventSerializable, Replace
 class Followee with _$Followee {
   const factory Followee({
     required String pubkey,
-    @Default('') String relayUrl,
-    @Default('') String petname,
+    String? relayUrl,
+    String? petname,
   }) = _Followee;
 
   const Followee._();
@@ -106,11 +106,15 @@ class Followee with _$Followee {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
-    return Followee(pubkey: tag[1], relayUrl: tag[2], petname: tag[3]);
+    return Followee(
+      pubkey: tag[1],
+      relayUrl: tag.elementAtOrNull(2),
+      petname: tag.elementAtOrNull(3),
+    );
   }
 
   List<String> toTag() {
-    return [tagName, pubkey, relayUrl, petname];
+    return [tagName, pubkey, if (relayUrl != null) relayUrl!, if (petname != null) petname!];
   }
 
   static const String tagName = 'p';
