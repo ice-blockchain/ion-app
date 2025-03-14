@@ -5,8 +5,11 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notifications_database.c.g.dart';
@@ -30,6 +33,7 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
   tables: [
     CommentsTable,
     LikesTable,
+    FollowersTable,
   ],
 )
 class NotificationsDatabase extends _$NotificationsDatabase {

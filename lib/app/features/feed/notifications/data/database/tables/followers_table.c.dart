@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:drift/drift.dart';
+import 'package:ion/app/features/feed/notifications/data/database/converters/event_reference_converter.c.dart';
+
+@DataClassName('Follower')
+class FollowersTable extends Table {
+  TextColumn get eventReference => text().map(const EventReferenceConverter())();
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {eventReference};
+}

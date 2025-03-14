@@ -53,7 +53,7 @@ class CommentsRepository {
     }).toList();
   }
 
-  Future<DateTime?> lastCommentCreatedAt(NotificationsType type) async {
+  Future<DateTime?> lastCreatedAt(NotificationsType type) async {
     final commentType = switch (type) {
       NotificationsType.quote => CommentType.quote,
       NotificationsType.reply => CommentType.reply,
