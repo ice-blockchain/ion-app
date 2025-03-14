@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -91,8 +92,7 @@ class _EntityListItem extends ConsumerWidget {
   }
 
   bool _isDeleted(WidgetRef ref, IonConnectEntity entity) {
-    return (entity is ModifiablePostEntity && entity.isDeleted) ||
-        (entity is ArticleEntity && entity.isDeleted);
+    return entity is SoftDeletableEntity && entity.isDeleted;
   }
 
   bool _isRepostedEntityDeleted(WidgetRef ref, IonConnectEntity entity) {
@@ -101,8 +101,7 @@ class _EntityListItem extends ConsumerWidget {
       final repostedEntity =
           ref.watch(ionConnectSyncEntityProvider(eventReference: repostedEventReference));
       return repostedEntity == null ||
-          (repostedEntity is ModifiablePostEntity && repostedEntity.isDeleted) ||
-          (repostedEntity is ArticleEntity && repostedEntity.isDeleted);
+          (repostedEntity is SoftDeletableEntity && repostedEntity.isDeleted);
     }
     return false;
   }

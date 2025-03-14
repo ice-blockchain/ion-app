@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/notifications/views/notifications_history_
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
@@ -40,7 +41,7 @@ class NotificationItem extends ConsumerWidget {
     if (eventReference != null) {
       // Hide the item if repost / post is deleted.
       entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
-      if (entity == null || (entity is ModifiablePostEntity && entity.isDeleted)) {
+      if (entity == null || (entity is SoftDeletableEntity && entity.isDeleted)) {
         return const SizedBox.shrink();
       }
 
@@ -49,7 +50,7 @@ class NotificationItem extends ConsumerWidget {
         final repostedEntity =
             ref.watch(ionConnectSyncEntityProvider(eventReference: entity.data.eventReference));
         if (repostedEntity == null ||
-            (repostedEntity is ModifiablePostEntity && repostedEntity.isDeleted)) {
+            (repostedEntity is SoftDeletableEntity && repostedEntity.isDeleted)) {
           return const SizedBox.shrink();
         }
       }
