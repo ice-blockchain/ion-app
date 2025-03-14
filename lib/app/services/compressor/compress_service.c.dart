@@ -4,9 +4,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:cross_file/cross_file.dart';
 import 'package:es_compression/brotli.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -36,7 +36,7 @@ final brotliCodec = BrotliCodec(level: 0);
 class CompressionService {
   ///
   /// Compresses a video file to a new file with the same name in the application cache directory.
-  /// If success, returns a new [XFile] with the compressed video.
+  /// If success, returns a new [MediaFile] with the compressed video.
   /// If fails, throws an exception.
   ///
   Future<MediaFile> compressVideo(
@@ -78,42 +78,32 @@ class CompressionService {
 
       final session = await FFmpegKit.executeWithArguments(args);
       final returnCode = await session.getReturnCode();
-      final logs = await session.getAllLogsAsString();
-
-      if (logs == null) {
-        throw CompressVideoException('no-logs');
-      }
-
-      final match = RegExp(r'Stream.*Video:.* (\d+)x(\d+)').firstMatch(logs);
-
-      if (match == null) {
-        Logger.log('Failed to compress video. Dimension not found. Logs: $logs');
-        throw CompressVideoException('no-dim');
-      }
-
       if (!ReturnCode.isSuccess(returnCode)) {
+        final logs = await session.getAllLogsAsString();
         final stackTrace = await session.getFailStackTrace();
         Logger.log('Failed to compress video. Logs: $logs, StackTrace: $stackTrace');
         throw CompressVideoException(returnCode);
       }
 
-      MediaFile? thumbnail;
+      final (width: outWidth, height: outHeight) = await _getVideoDimensions(output);
 
+      MediaFile? thumbnail;
       if (generateThumbnail) {
         thumbnail = await getThumbnail(
           MediaFile(
-            path: inputFile.path,
-            width: int.parse(match.group(1)!),
-            height: int.parse(match.group(2)!),
+            path: output,
+            width: outWidth,
+            height: outHeight,
           ),
         );
       }
 
+      // Return the final compressed video file info
       return MediaFile(
         path: output,
         mimeType: 'video/mp4',
-        width: int.parse(match.group(1)!),
-        height: int.parse(match.group(2)!),
+        width: outWidth,
+        height: outHeight,
         thumb: thumbnail?.path,
       );
     } catch (error, stackTrace) {
@@ -146,11 +136,13 @@ class CompressionService {
         quality.toString(),
         output,
       ]);
+
       final returnCode = await session.getReturnCode();
       if (!ReturnCode.isSuccess(returnCode)) {
         throw CompressImageException(returnCode);
       }
 
+      // For images, we can easily decode to get actual width/height
       final outputDimension = await getImageDimension(path: output);
 
       return MediaFile(
@@ -172,22 +164,31 @@ class CompressionService {
   ///
   Future<MediaFile> compressAudio(String inputPath) async {
     final outputPath = await _generateOutputPath(extension: 'opus');
-    return FFmpegKit.executeWithArguments([
-      '-i',
-      inputPath,
-      '-c:a',
-      'libopus',
-      outputPath,
-    ]).then((session) async {
+    try {
+      final session = await FFmpegKit.executeWithArguments([
+        '-i',
+        inputPath,
+        '-c:a',
+        'libopus',
+        outputPath,
+      ]);
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
-        return MediaFile(path: outputPath, mimeType: 'audio/ogg', width: 0, height: 0);
+        return MediaFile(
+          path: outputPath,
+          mimeType: 'audio/ogg',
+          width: 0,
+          height: 0,
+        );
       }
       final logs = await session.getAllLogsAsString();
       final stackTrace = await session.getFailStackTrace();
       Logger.log('Failed to convert audio to opus. Logs: $logs, StackTrace: $stackTrace');
       throw CompressAudioException();
-    });
+    } catch (error, stackTrace) {
+      Logger.log('Error during audio compression!', error: error, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   ///
@@ -197,14 +198,14 @@ class CompressionService {
   ///
   Future<String> compressAudioToWav(String inputPath) async {
     final outputPath = await _generateOutputPath(extension: 'wav');
-
-    return FFmpegKit.executeWithArguments([
-      '-i',
-      inputPath,
-      '-c:a',
-      'pcm_s16le',
-      outputPath,
-    ]).then((session) async {
+    try {
+      final session = await FFmpegKit.executeWithArguments([
+        '-i',
+        inputPath,
+        '-c:a',
+        'pcm_s16le',
+        outputPath,
+      ]);
       final returnCode = await session.getReturnCode();
       if (ReturnCode.isSuccess(returnCode)) {
         return outputPath;
@@ -213,7 +214,10 @@ class CompressionService {
       final stackTrace = await session.getFailStackTrace();
       Logger.log('Failed to convert audio to wav. Logs: $logs, StackTrace: $stackTrace');
       throw CompressAudioToWavException();
-    });
+    } catch (error, stackTrace) {
+      Logger.log('Error during audio compression!', error: error, stackTrace: stackTrace);
+      rethrow;
+    }
   }
 
   ///
@@ -221,12 +225,15 @@ class CompressionService {
   /// If success, returns a new [MediaFile] with the thumbnail.
   /// If fails, throws an exception.
   ///
-  Future<MediaFile> getThumbnail(MediaFile videoFile, {String? thumb}) async {
+  Future<MediaFile> getThumbnail(
+    MediaFile videoFile, {
+    String? thumb,
+  }) async {
     try {
       const maxDimension = 720;
-
       var thumbPath = thumb;
 
+      // If no external thumb was provided, extract a single frame from the video
       if (thumbPath == null) {
         final outputPath = await _generateOutputPath();
         final session = await FFmpegKit.executeWithArguments([
@@ -243,19 +250,22 @@ class CompressionService {
         if (!ReturnCode.isSuccess(returnCode)) {
           throw ExtractThumbnailException(returnCode);
         }
-
         thumbPath = outputPath;
       }
 
-      final MediaFile(:width, :height) = videoFile;
-
-      if (height == null || width == null) {
-        throw UnknownFileResolutionException();
+      // If width/height are null, let's probe the video
+      var (width, height) = (videoFile.width, videoFile.height);
+      if (width == null || height == null) {
+        final dims = await _getVideoDimensions(videoFile.path);
+        width = dims.width;
+        height = dims.height;
       }
 
+      // We only pass one dimension to keep aspect ratio
+      // If the video is wider, specify the max width;
+      // otherwise specify the max height
       final compressedImage = await compressImage(
         MediaFile(path: thumbPath),
-        // Do not pass the second dimension to keep the aspect ratio
         width: width > height ? maxDimension : null,
         height: height > width ? maxDimension : null,
       );
@@ -274,7 +284,6 @@ class CompressionService {
     try {
       final inputData = await inputFile.readAsBytes();
       final compressedData = brotliCodec.encode(inputData);
-
       return _saveBytesIntoFile(bytes: compressedData, extension: 'br');
     } catch (error, stackTrace) {
       Logger.log('Error during Brotli compression!', error: error, stackTrace: stackTrace);
@@ -330,22 +339,55 @@ class CompressionService {
 
     // Join temp directory with the generated filename
     final outputPath = path.join(tempDir.path, outputFileName);
-
     return outputPath;
   }
 
   ///
-  /// Get width and height for the given image path
+  /// Get width and height for a bitmap image (PNG, JPEG, WebP, etc.)
   ///
   Future<({int width, int height})> getImageDimension({required String path}) async {
     final file = File(path);
     final imageBytes = await file.readAsBytes();
-
     final codec = await instantiateImageCodec(imageBytes);
     final frame = await codec.getNextFrame();
     final image = frame.image;
 
     return (width: image.width, height: image.height);
+  }
+
+  ///
+  /// Get width and height for a video file by probing it with FFprobeKit.
+  ///
+  Future<({int width, int height})> _getVideoDimensions(String videoPath) async {
+    final infoSession = await FFprobeKit.getMediaInformation(videoPath);
+    final info = infoSession.getMediaInformation();
+    if (info == null) {
+      throw UnknownFileResolutionException(
+        'No media information found for: $videoPath',
+      );
+    }
+    final streams = info.getStreams();
+    if (streams.isEmpty) {
+      throw UnknownFileResolutionException(
+        'No streams found in media: $videoPath',
+      );
+    }
+
+    final videoStream = streams.firstWhere(
+      (s) => s.getType() == 'video',
+      orElse: () => throw UnknownFileResolutionException(
+        'No video stream found in file: $videoPath',
+      ),
+    );
+
+    final width = videoStream.getWidth();
+    final height = videoStream.getHeight();
+    if (width == null || height == null) {
+      throw UnknownFileResolutionException(
+        'Could not determine video resolution for: $videoPath',
+      );
+    }
+    return (width: width, height: height);
   }
 }
 
