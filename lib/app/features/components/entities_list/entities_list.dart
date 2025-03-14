@@ -67,9 +67,10 @@ class _EntityListItem extends ConsumerWidget {
     final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity == null ||
-        isBlockedOrBlocking(ref, entity) ||
-        isDeleted(ref, entity) ||
-        !hasMetadata(ref, entity)) {
+        _isBlockedOrBlocking(ref, entity) ||
+        _isDeleted(ref, entity) ||
+        _isRepostedEntityDeleted(ref, entity) ||
+        !_hasMetadata(ref, entity)) {
       return const SizedBox.shrink();
     }
 
@@ -89,12 +90,24 @@ class _EntityListItem extends ConsumerWidget {
     );
   }
 
-  bool isDeleted(WidgetRef ref, IonConnectEntity entity) {
+  bool _isDeleted(WidgetRef ref, IonConnectEntity entity) {
     return (entity is ModifiablePostEntity && entity.isDeleted) ||
         (entity is ArticleEntity && entity.isDeleted);
   }
 
-  bool isBlockedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
+  bool _isRepostedEntityDeleted(WidgetRef ref, IonConnectEntity entity) {
+    if (entity is GenericRepostEntity) {
+      final repostedEventReference = entity.data.eventReference;
+      final repostedEntity =
+          ref.watch(ionConnectSyncEntityProvider(eventReference: repostedEventReference));
+      return repostedEntity == null ||
+          (repostedEntity is ModifiablePostEntity && repostedEntity.isDeleted) ||
+          (repostedEntity is ArticleEntity && repostedEntity.isDeleted);
+    }
+    return false;
+  }
+
+  bool _isBlockedOrBlocking(WidgetRef ref, IonConnectEntity entity) {
     return ref.watch(isEntityBlockedOrBlockingProvider(entity));
   }
 
@@ -103,7 +116,7 @@ class _EntityListItem extends ConsumerWidget {
   /// main request.
   /// In such cases, we just have to wait until the metadata and block list appears
   /// in cache and then show the post (or not, if author is blocked/blocking).
-  bool hasMetadata(WidgetRef ref, IonConnectEntity entity) {
+  bool _hasMetadata(WidgetRef ref, IonConnectEntity entity) {
     final userMetadata = ref.watch(cachedUserMetadataProvider(entity.masterPubkey));
     return userMetadata != null;
   }

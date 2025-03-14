@@ -38,12 +38,20 @@ class NotificationItem extends ConsumerWidget {
     IonConnectEntity? entity;
 
     if (eventReference != null) {
-      // Wait for entity to be loaded, because it might be not found,
-      // for example when repost / post is deleted.
-      // Do not show the item in this case.
+      // Hide the item if repost / post is deleted.
       entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
       if (entity == null || (entity is ModifiablePostEntity && entity.isDeleted)) {
         return const SizedBox.shrink();
+      }
+
+      // Hide the item if reposted event is deleted.
+      if (entity is GenericRepostEntity) {
+        final repostedEntity =
+            ref.watch(ionConnectSyncEntityProvider(eventReference: entity.data.eventReference));
+        if (repostedEntity == null ||
+            (repostedEntity is ModifiablePostEntity && repostedEntity.isDeleted)) {
+          return const SizedBox.shrink();
+        }
       }
     }
 
