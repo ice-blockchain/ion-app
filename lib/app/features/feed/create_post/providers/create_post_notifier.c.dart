@@ -282,11 +282,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   List<RelatedPubkey> _buildRelatedPubkeys(IonConnectEntity parentEntity) {
-    return [
+    return <RelatedPubkey>{
       RelatedPubkey(value: parentEntity.masterPubkey),
       if (parentEntity is ModifiablePostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
       if (parentEntity is PostEntity) ...(parentEntity.data.relatedPubkeys ?? []),
-    ];
+    }.toList();
   }
 
   Future<({List<FileMetadata> fileMetadatas, MediaAttachment mediaAttachment})> _uploadMedia(
