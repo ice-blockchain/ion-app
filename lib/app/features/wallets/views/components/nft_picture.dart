@@ -24,6 +24,7 @@ class NftPicture extends StatelessWidget {
         width: imageWidth,
         height: imageHeight,
         fit: BoxFit.fitWidth,
+        fadeInDuration: Duration.zero,
       ),
     );
   }

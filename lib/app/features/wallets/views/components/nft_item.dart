@@ -37,6 +37,7 @@ class NftItem extends StatelessWidget {
                 width: 12,
                 height: 12,
                 fit: BoxFit.fitWidth,
+                fadeInDuration: Duration.zero,
               ),
               Padding(
                 padding: EdgeInsets.only(right: 4.0.s, left: 5.0.s),
@@ -59,6 +60,7 @@ class NftItem extends StatelessWidget {
           width: imageWidth,
           height: imageHeight,
           fit: BoxFit.fitWidth,
+          fadeInDuration: Duration.zero,
         ),
       ),
     );

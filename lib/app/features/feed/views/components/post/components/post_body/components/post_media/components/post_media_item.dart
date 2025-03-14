@@ -39,6 +39,7 @@ class PostMediaItem extends HookWidget {
             MediaType.image => CachedNetworkImage(
                 imageUrl: mediaItem.url,
                 fit: BoxFit.cover,
+                fadeInDuration: Duration.zero,
                 errorWidget: (context, url, error) => const SizedBox.shrink(),
               ),
             MediaType.video => VideoPreview(
