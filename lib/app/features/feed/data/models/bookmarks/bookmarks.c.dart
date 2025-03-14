@@ -81,6 +81,7 @@ class BookmarksData with _$BookmarksData implements EventSerializable, Replaceab
         ...bookmarksSetRefs.map((ref) => ref.toTag()),
         ...ids.map((id) => ['e', id]),
       ],
+      content: '',
     );
   }
 

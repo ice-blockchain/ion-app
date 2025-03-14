@@ -23,8 +23,7 @@ class TextMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final content =
-        useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage).data.content);
+    final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
@@ -48,15 +47,14 @@ class TextMessage extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (content != null)
-                        Text(
-                          content,
-                          style: context.theme.appTextThemes.body2.copyWith(
-                            color: isMe
-                                ? context.theme.appColors.onPrimaryAccent
-                                : context.theme.appColors.primaryText,
-                          ),
+                      Text(
+                        entity.data.content,
+                        style: context.theme.appTextThemes.body2.copyWith(
+                          color: isMe
+                              ? context.theme.appColors.onPrimaryAccent
+                              : context.theme.appColors.primaryText,
                         ),
+                      ),
                       MessageReactions(eventMessage: eventMessage, isMe: isMe),
                     ],
                   ),

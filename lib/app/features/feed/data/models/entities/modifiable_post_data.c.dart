@@ -77,10 +77,10 @@ class ModifiablePostData
         _$ModifiablePostData
     implements EventSerializable, ReplaceableEntityData {
   const factory ModifiablePostData({
+    required String content,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
-    String? content,
     EntityEditingEndedAt? editingEndedAt,
     EntityExpiration? expiration,
     QuotedEvent? quotedEvent,

@@ -226,12 +226,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
     try {
       final seal = await giftWrapService.decodeWrap(
         privateKey: privateKey,
-        content: giftWrap.content!,
+        content: giftWrap.content,
         senderPubkey: giftWrap.pubkey,
       );
 
       return await sealService.decodeSeal(
-        seal.content!,
+        seal.content,
         seal.pubkey,
         privateKey,
       );

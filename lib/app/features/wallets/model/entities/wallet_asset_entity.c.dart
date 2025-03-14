@@ -70,13 +70,8 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
   factory WalletAssetData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
 
-    final content = eventMessage.content;
-    if (content == null) {
-      throw IncorrectEventContentException(eventId: eventMessage.id);
-    }
-
     return WalletAssetData(
-      content: content,
+      content: eventMessage.content,
       pubkey: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).first.value,
       networkId: tags[NetworkTag.tagName]!.map(NetworkTag.fromTag).first.value,
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,

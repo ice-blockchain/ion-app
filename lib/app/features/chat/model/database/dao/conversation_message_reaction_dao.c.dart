@@ -19,11 +19,6 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     required String kind14EventId,
     required EventMessage newReactionEvent,
   }) async {
-    final content = newReactionEvent.content;
-    if (content == null) {
-      throw IncorrectEventContentException(eventId: newReactionEvent.id);
-    }
-
     final eventMessageDao = ref.watch(eventMessageDaoProvider);
 
     final kind14EventMessage = await (select(db.eventMessageTable)
@@ -33,7 +28,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     if (kind14EventMessage == null) return;
 
     final existingReactionRow = await (select(reactionTable)
-          ..where((table) => table.content.equals(content))
+          ..where((table) => table.content.equals(newReactionEvent.content))
           ..where((table) => table.masterPubkey.equals(masterPubkey))
           ..where((table) => table.kind14Id.equals(kind14EventId)))
         .getSingleOrNull();
@@ -45,7 +40,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
           id: Value(newReactionEvent.id),
           kind14Id: Value(kind14EventId),
           masterPubkey: Value(masterPubkey),
-          content: Value(content),
+          content: Value(newReactionEvent.content),
         ),
         mode: InsertMode.insertOrIgnore,
       );

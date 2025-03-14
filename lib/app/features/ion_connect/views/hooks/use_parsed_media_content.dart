@@ -22,11 +22,6 @@ import 'package:ion/app/services/markdown/quill.dart';
   required EntityDataWithMediaContent data,
 }) {
   final EntityDataWithMediaContent(:content, :media) = data;
-
-  if (content == null) {
-    return (content: Delta(), media: []);
-  }
-
   final markdownContentDelta = markdownToDelta(content);
   final plainTextContentDelta = plainTextToDelta(content);
 

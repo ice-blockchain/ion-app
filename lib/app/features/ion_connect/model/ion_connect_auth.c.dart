@@ -46,6 +46,7 @@ class IonConnectAuth with _$IonConnectAuth implements EventSerializable {
       createdAt: createdAt,
       kind: kind,
       tags: eventTags,
+      content: '',
     );
   }
 

@@ -12,7 +12,6 @@ class _MessageWithTimestamp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
-    final message = eventMessage.content;
 
     return Padding(
       padding: EdgeInsets.only(top: 8.0.s),
@@ -25,9 +24,9 @@ class _MessageWithTimestamp extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (message != null && message.isNotEmpty)
+                if (eventMessage.content.isNotEmpty)
                   Text(
-                    message,
+                    eventMessage.content,
                     style: context.theme.appTextThemes.body2.copyWith(
                       color: isMe
                           ? context.theme.appColors.onPrimaryAccent

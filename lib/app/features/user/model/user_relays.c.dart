@@ -79,6 +79,7 @@ class UserRelaysData with _$UserRelaysData implements EventSerializable, Replace
         ...tags,
         ...list.map((relay) => relay.toTag()),
       ],
+      content: '',
     );
   }
 

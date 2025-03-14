@@ -89,15 +89,10 @@ class ReactionData with _$ReactionData implements EventSerializable {
       throw IncorrectEventTagsException(eventId: eventMessage.id);
     }
 
-    final content = eventMessage.content;
-    if (content == null) {
-      throw IncorrectEventContentException(eventId: eventMessage.id);
-    }
-
     return ReactionData(
       kind: kind,
       eventReference: eventReference,
-      content: content,
+      content: eventMessage.content,
     );
   }
 

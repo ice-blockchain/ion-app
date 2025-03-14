@@ -100,7 +100,7 @@ class CreateArticle extends _$CreateArticle {
         title: null,
         summary: null,
         image: null,
-        content: null,
+        content: '',
         relatedHashtags: [],
         media: {},
         colorLabel: null,

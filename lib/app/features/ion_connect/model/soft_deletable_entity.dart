@@ -7,12 +7,11 @@ mixin SoftDeletableEntity<T extends SoftDeletableEntityData> {
   DateTime get createdAt;
 
   bool get isDeleted {
-    final content = data.content;
-    return (content == null || content.isEmpty) && createdAt != data.publishedAt.value;
+    return data.content.isEmpty && createdAt != data.publishedAt.value;
   }
 }
 
 mixin SoftDeletableEntityData {
-  String? get content;
+  String get content;
   EntityPublishedAt get publishedAt;
 }

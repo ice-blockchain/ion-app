@@ -153,6 +153,7 @@ class CommunityDefinitionData with _$CommunityDefinitionData implements EventSer
           ...moderators.map((moderator) => CommunityModeratorTag(value: moderator).toTag()),
         if (admins.isNotEmpty) ...admins.map((admin) => CommunityAdminTag(value: admin).toTag()),
       ],
+      content: '',
     );
   }
 

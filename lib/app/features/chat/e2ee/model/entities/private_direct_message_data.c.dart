@@ -65,9 +65,9 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 @freezed
 class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMediaContent {
   const factory PrivateDirectMessageData({
+    required String content,
     required Map<String, MediaAttachment> media,
     required String uuid,
-    String? content,
     String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
     List<RelatedEvent>? relatedEvents,
@@ -136,7 +136,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       return MessageType.audio;
     } else if (IonConnectProtocolIdentifierTypeValidator.isProfileIdentifier(content)) {
       return MessageType.profile;
-    } else if (content != null && content!.isEmoji) {
+    } else if (content.isEmoji) {
       return MessageType.emoji;
     } else if (visualMedias.isNotEmpty) {
       return MessageType.visualMedia;

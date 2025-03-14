@@ -28,6 +28,7 @@ class DeletionRequest with _$DeletionRequest implements EventSerializable {
       signer: signer,
       createdAt: createdAt,
       kind: kind,
+      content: '',
       tags: [
         ...tags,
         for (final event in events) ...event.toTags(),

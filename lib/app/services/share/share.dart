@@ -9,7 +9,7 @@ void shareContent(String text, {String? subject}) {
   Share.share(text, subject: subject);
 }
 
-void shareFile(String path, {String? subject}) {
+void shareFile(String path, {String subject = ''}) {
   Share.shareXFiles(
     [
       XFile.fromData(

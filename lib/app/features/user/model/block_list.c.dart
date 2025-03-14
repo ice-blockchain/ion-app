@@ -73,6 +73,7 @@ class BlockListData with _$BlockListData implements EventSerializable, Replaceab
         ...tags,
         ...pubkeys.map((pubkey) => ['p', pubkey]),
       ],
+      content: '',
     );
   }
 

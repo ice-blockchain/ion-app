@@ -120,7 +120,7 @@ class EventCountResultData with _$EventCountResultData {
     }
 
     return EventCountResultData(
-      content: jsonDecode(eventMessage.content ?? ''),
+      content: jsonDecode(eventMessage.content),
       request: request,
       eventReference: eventReference,
       pubkey: pubkey,

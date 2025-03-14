@@ -105,11 +105,7 @@ Delta _processTextMatchers(Delta inputDelta) {
   return processedDelta;
 }
 
-Delta markdownToDelta(String? markdown) {
-  if (markdown == null) {
-    return Delta();
-  }
-
+Delta markdownToDelta(String markdown) {
   if (markdown.contains('> ')) {
     return _directBlockquoteToDelta(markdown);
   }
