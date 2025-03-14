@@ -9,8 +9,10 @@ import 'package:ion/app/components/list_items_loading_state/list_items_loading_s
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
+import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transactions_history_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
@@ -24,9 +26,10 @@ import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class CoinDetailsPage extends HookConsumerWidget {
-  const CoinDetailsPage({required this.symbolGroup, super.key});
+  CoinDetailsPage({required this.symbolGroup, super.key});
 
   final String symbolGroup;
+  final Set<WalletAssetEntity> entities = {};
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,6 +52,24 @@ class CoinDetailsPage extends HookConsumerWidget {
     );
 
     final activeNetwork = useState<NetworkData?>(null);
+
+    // Test section
+    // final dataSource = ref.watch(transactionsHistoryDataSourceProvider).value;
+    // if (dataSource != null) {
+    //   final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
+    //   final notifier = ref.watch(entitiesPagedDataProvider(dataSource).notifier);
+    //   final items = entitiesPagedData?.data.items?.whereType<WalletAssetEntity>().nonNulls.toList();
+    //   if (items != null) {
+    //     entities.addAll(items);
+
+    //     if (!(entitiesPagedData?.hasMore ?? false)) {
+    //       print('Done');
+    //     } else if (entitiesPagedData != null && entitiesPagedData.hasMore) {
+    //       notifier.fetchEntities();
+    //     }
+    //   }
+    // }
+    final result = ref.watch(transactionsHistoryNotifierProvider);
 
     useEffect(
       () {
@@ -86,6 +107,7 @@ class CoinDetailsPage extends HookConsumerWidget {
     }
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
       appBar: NavigationAppBar.screen(
         title: Row(
           mainAxisSize: MainAxisSize.min,
