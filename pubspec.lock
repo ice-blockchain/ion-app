@@ -1687,11 +1687,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.0.28"
-      resolved-ref: c567b3ce70aa70a7c473e17761ab09d5714ce05b
+      ref: "0.0.29"
+      resolved-ref: f26efafe4214cca4599a509bf4e7167669fc375f
       url: "https://github.com/ice-blockchain/nostr-dart"
     source: git
-    version: "0.0.28"
+    version: "0.0.29"
   octo_image:
     dependency: transitive
     description:
