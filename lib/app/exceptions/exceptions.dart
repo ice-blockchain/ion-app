@@ -130,7 +130,7 @@ class FileUploadException extends IONException {
 }
 
 class UnknownFileResolutionException extends IONException {
-  UnknownFileResolutionException() : super(10026, 'Unknown upload file resolution');
+  UnknownFileResolutionException(String reason) : super(10026, 'Unknown file resolution: $reason');
 }
 
 class CompressImageException extends IONException {

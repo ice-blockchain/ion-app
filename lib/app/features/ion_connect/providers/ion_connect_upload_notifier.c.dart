@@ -36,7 +36,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     EventSigner? customEventSigner,
   }) async {
     if (file.width == null || file.height == null) {
-      throw UnknownFileResolutionException();
+      throw UnknownFileResolutionException('File dimensions are missing');
     }
 
     final dimension = '${file.width}x${file.height}';
