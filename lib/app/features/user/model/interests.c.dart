@@ -81,7 +81,6 @@ class InterestsData with _$InterestsData implements EventSerializable, Replaceab
         ...interestSetRefs.map((ref) => ref.toTag()),
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],
-      content: '',
     );
   }
 

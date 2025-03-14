@@ -202,7 +202,6 @@ class CreateGroupModal extends HookConsumerWidget {
 
                       await conversationMessageManagementService.sendMessage(
                         conversationId: generateUuid(),
-                        content: '',
                         participantsMasterPubkeys: participantsMasterkeys,
                         subject: createGroupForm.name,
                         mediaFiles: [groupPicture!],

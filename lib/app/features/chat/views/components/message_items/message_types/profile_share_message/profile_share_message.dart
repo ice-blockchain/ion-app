@@ -28,8 +28,13 @@ class ProfileShareMessage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
-    final profilePubkey = EventReference.fromEncoded(entity.data.content).pubkey;
+    final content = PrivateDirectMessageEntity.fromEventMessage(eventMessage).data.content;
+
+    if (content == null) {
+      return const SizedBox.shrink();
+    }
+
+    final profilePubkey = EventReference.fromEncoded(content).pubkey;
 
     final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
 

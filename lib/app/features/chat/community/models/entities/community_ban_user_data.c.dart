@@ -76,7 +76,6 @@ class CommunityBanUserData with _$CommunityBanUserData implements EventSerializa
         ...tags,
         CommunityIdentifierTag(value: uuid).toTag(),
       ],
-      content: '',
     );
   }
 }

@@ -31,6 +31,7 @@ class DocumentMessage extends HookConsumerWidget {
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final message = entity.data.content;
 
     final filePath = useState<String>('');
     final fileSizeInFormat = useState<String?>(null);
@@ -84,16 +85,17 @@ class DocumentMessage extends HookConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              entity.data.content,
-                              style: context.theme.appTextThemes.body2.copyWith(
-                                color: isMe
-                                    ? context.theme.appColors.onPrimaryAccent
-                                    : context.theme.appColors.primaryText,
+                            if (message != null)
+                              Text(
+                                message,
+                                style: context.theme.appTextThemes.body2.copyWith(
+                                  color: isMe
+                                      ? context.theme.appColors.onPrimaryAccent
+                                      : context.theme.appColors.primaryText,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
                             Text(
                               fileSizeInFormat.value ?? '',
                               style: context.theme.appTextThemes.caption2.copyWith(

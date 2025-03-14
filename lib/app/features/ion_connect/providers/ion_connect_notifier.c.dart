@@ -223,7 +223,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       createdAt: createdAt,
       kind: kind,
       tags: tags,
-      content: '',
     );
 
     final signResponse =
@@ -249,7 +248,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
       createdAt: createdAt,
       kind: kind,
       tags: tags,
-      content: '',
       sig: signature,
     );
   }

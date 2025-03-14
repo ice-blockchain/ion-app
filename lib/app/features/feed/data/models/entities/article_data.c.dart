@@ -64,10 +64,10 @@ class ArticleData
     with SoftDeletableEntityData, EntityDataWithSettings, _$ArticleData
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
-    required String content,
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
+    String? content,
     String? title,
     String? image,
     String? summary,

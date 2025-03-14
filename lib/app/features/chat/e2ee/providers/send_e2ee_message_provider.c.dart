@@ -96,9 +96,9 @@ class SendE2eeMessageService {
   final ConversationMessageDataDao conversationMessageStatusDao;
 
   Future<void> sendMessage({
-    required String content,
     required String conversationId,
     required List<String> participantsMasterPubkeys,
+    String? content,
     String? subject,
     List<String>? groupImageTag,
     List<MediaFile> mediaFiles = const [],
@@ -612,9 +612,9 @@ class SendE2eeMessageService {
 
   Future<void> _sendKind14Message({
     required String pubkey,
-    required String content,
     required String masterPubkey,
     required List<List<String>> conversationTags,
+    String? content,
   }) async {
     final eventMessage = await _createEventMessage(
       content: content,
@@ -681,9 +681,9 @@ class SendE2eeMessageService {
   }
 
   Future<EventMessage> _createEventMessage({
-    required String content,
     required EventSigner signer,
     required List<List<String>> tags,
+    String? content,
     String? previousId,
     int kind = PrivateDirectMessageEntity.kind,
   }) async {

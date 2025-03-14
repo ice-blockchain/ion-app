@@ -83,7 +83,7 @@ class BookmarksSetData with _$BookmarksSetData implements EventSerializable, Rep
     }
 
     return BookmarksSetData(
-      content: eventMessage.content,
+      content: eventMessage.content ?? '',
       postsRefs: eventMessage.tags
           .where((tag) => tag[0] == ReplaceableEventReference.tagName)
           .map(ReplaceableEventReference.fromTag)

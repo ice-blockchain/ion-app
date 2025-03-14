@@ -50,8 +50,8 @@ class PrivateMessageReactionEntity with _$PrivateMessageReactionEntity {
 class PrivateMessageReactionEntityData with _$PrivateMessageReactionEntityData {
   const factory PrivateMessageReactionEntityData({
     required String pubkey,
-    required String content,
     required String eventId,
+    String? content,
   }) = _PrivateMessageReactionEntityData;
 
   const PrivateMessageReactionEntityData._();

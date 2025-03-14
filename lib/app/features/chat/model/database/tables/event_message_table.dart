@@ -9,7 +9,7 @@ class EventMessageTable extends Table {
   TextColumn get tags => text()();
   TextColumn get pubkey => text()();
   IntColumn get kind => integer()();
-  TextColumn get content => text()();
+  TextColumn get content => text().nullable()();
   DateTimeColumn get createdAt => dateTime()();
 
   @override
@@ -23,8 +23,8 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
     required this.kind,
     required this.tags,
     required this.pubkey,
-    required this.content,
     required this.createdAt,
+    this.content,
     this.sig,
     this.conversationId,
   });
@@ -59,7 +59,7 @@ class EventMessageRowClass implements Insertable<EventMessageRowClass> {
   final String id;
   final String tags;
   final String pubkey;
-  final String content;
+  final String? content;
   final String? sig;
   final String? conversationId;
   final DateTime createdAt;

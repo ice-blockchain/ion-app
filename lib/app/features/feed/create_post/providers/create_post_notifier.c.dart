@@ -142,7 +142,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       }
 
       final postData = entity.data.copyWith(
-        content: '',
+        content: null,
         editingEndedAt: null,
         relatedHashtags: [],
         relatedPubkeys: [],

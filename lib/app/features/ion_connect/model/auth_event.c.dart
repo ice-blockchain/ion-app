@@ -37,7 +37,6 @@ class AuthEvent with _$AuthEvent implements EventSerializable {
       signer: signer,
       createdAt: createdAt,
       kind: kind,
-      content: '',
       tags: authTags,
     );
   }

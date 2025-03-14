@@ -61,8 +61,8 @@ class PostData
     with _$PostData, EntityDataWithMediaContent, EntityDataWithSettings, EntityDataWithRelatedEvents
     implements EventSerializable {
   const factory PostData({
-    required String content,
     required Map<String, MediaAttachment> media,
+    String? content,
     EntityExpiration? expiration,
     QuotedEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,

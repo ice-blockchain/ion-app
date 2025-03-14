@@ -450,3 +450,8 @@ class UnknownNotificationCommentException extends IONException {
 class MediaThumbnailNotFoundException extends IONException {
   MediaThumbnailNotFoundException() : super(10088, 'Media thumbnail not found');
 }
+
+class IncorrectEventContentException extends IONException {
+  IncorrectEventContentException({required String eventId})
+      : super(10089, 'Incorrect event content $eventId');
+}

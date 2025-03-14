@@ -70,7 +70,6 @@ class NotAuthoritativeEventData with _$NotAuthoritativeEventData implements Even
         ...tags,
         ...pubkeys.map((pubkey) => ['p', pubkey]),
       ],
-      content: '',
     );
   }
 }

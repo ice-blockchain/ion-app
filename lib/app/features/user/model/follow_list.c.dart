@@ -79,7 +79,6 @@ class FollowListData with _$FollowListData implements EventSerializable, Replace
         ...tags,
         ...list.map((followee) => followee.toTag()),
       ],
-      content: '',
     );
   }
 

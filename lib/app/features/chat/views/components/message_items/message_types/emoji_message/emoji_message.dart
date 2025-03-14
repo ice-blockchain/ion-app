@@ -23,7 +23,8 @@ class EmojiMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
+    final content =
+        useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage).data.content);
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
@@ -37,10 +38,11 @@ class EmojiMessage extends HookConsumerWidget {
         children: [
           Column(
             children: [
-              Text(
-                entity.data.content,
-                style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-              ),
+              if (content != null)
+                Text(
+                  content,
+                  style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+                ),
               MessageReactions(eventMessage: eventMessage, isMe: isMe),
             ],
           ),

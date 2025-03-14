@@ -82,7 +82,6 @@ class UserChatRelaysData
         ...tags,
         ...list.map(toRelayTag),
       ],
-      content: '',
     );
   }
 

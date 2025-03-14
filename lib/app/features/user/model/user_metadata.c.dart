@@ -70,8 +70,13 @@ class UserMetadata with _$UserMetadata implements EventSerializable, Replaceable
   const UserMetadata._();
 
   factory UserMetadata.fromEventMessage(EventMessage eventMessage) {
+    final content = eventMessage.content;
+    if (content == null) {
+      throw IncorrectEventContentException(eventId: eventMessage.id);
+    }
+
     final userDataContent = UserDataEventMessageContent.fromJson(
-      json.decode(eventMessage.content) as Map<String, dynamic>,
+      json.decode(content) as Map<String, dynamic>,
     );
 
     final media = eventMessage.tags.fold(<String, MediaAttachment>{}, (res, tag) {

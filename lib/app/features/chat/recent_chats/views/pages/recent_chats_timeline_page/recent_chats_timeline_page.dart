@@ -269,8 +269,7 @@ class EncryptedGroupRecentChatTile extends HookConsumerWidget {
       avatarWidget: groupImageFile != null ? Image.file(groupImageFile) : null,
       defaultAvatar: Assets.svg.iconChannelEmptychannel.icon(size: 40.0.s),
       lastMessageAt: conversation.latestMessage?.createdAt ?? conversation.joinedAt,
-      lastMessageContent:
-          entity.content.isEmpty ? context.i18n.empty_message_history : entity.content,
+      lastMessageContent: entity.content ?? context.i18n.empty_message_history,
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       //TODO: add message type
       messageType: MessageType.text,

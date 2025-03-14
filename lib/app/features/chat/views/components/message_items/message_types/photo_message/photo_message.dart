@@ -191,7 +191,7 @@ class _MessageContent extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
-    final message = eventMessage.content;
+    final content = eventMessage.content;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -201,9 +201,9 @@ class _MessageContent extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (message.isNotEmpty)
+              if (content != null && content.isNotEmpty)
                 Text(
-                  message,
+                  content,
                   style: context.theme.appTextThemes.body2.copyWith(
                     color: isMe
                         ? context.theme.appColors.onPrimaryAccent

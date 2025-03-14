@@ -88,7 +88,6 @@ class InterestSetData with _$InterestSetData implements EventSerializable, Repla
         ReplaceableEventIdentifier(value: type.toShortString()).toTag(),
         ...hashtags.map((hashtag) => ['t', hashtag]),
       ],
-      content: '',
     );
   }
 
