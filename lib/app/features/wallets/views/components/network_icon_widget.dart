@@ -30,6 +30,7 @@ class NetworkIconWidget extends StatelessWidget {
             imageUrl: imageUrl,
             width: iconSize,
             height: iconSize,
+            fadeInDuration: Duration.zero,
             imageBuilder: (context, imageProvider) => Container(
               width: iconSize,
               height: iconSize,

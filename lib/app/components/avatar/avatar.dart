@@ -40,6 +40,7 @@ class Avatar extends StatelessWidget {
             width: size,
             height: size,
             fit: fit,
+            fadeInDuration: Duration.zero,
             errorWidget: (context, url, error) => defaultAvatar ?? DefaultAvatar(size: size),
           )
         : imageWidget != null
