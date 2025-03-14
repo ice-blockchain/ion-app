@@ -11,7 +11,7 @@ class UnreadNotificationsCount extends _$UnreadNotificationsCount {
   Stream<int> build() async* {
     final unreadCountRepository = ref.watch(unreadNotificationsCountRepositoryProvider);
     if (unreadCountRepository != null) {
-      yield* unreadCountRepository.watch(after: unreadCountRepository.getLastReadTime());
+      yield* unreadCountRepository.watch();
     }
   }
 

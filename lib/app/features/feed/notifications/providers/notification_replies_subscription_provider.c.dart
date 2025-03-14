@@ -27,7 +27,7 @@ Future<void> notificationRepliesSubscription(Ref ref) async {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final since = await commentsRepository.lastCommentCreatedAt(NotificationsType.reply);
+  final since = await commentsRepository.lastCreatedAt(NotificationsType.reply);
 
   final requestFilter = RequestFilter(
     kinds: const [ModifiablePostEntity.kind],
