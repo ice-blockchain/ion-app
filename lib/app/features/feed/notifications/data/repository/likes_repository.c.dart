@@ -38,7 +38,7 @@ class LikesRepository {
     }).toList();
   }
 
-  Future<DateTime?> lastLikeCreatedAt(NotificationsType type) async {
+  Future<DateTime?> lastLikeCreatedAt() async {
     return _likesDao.getLastCreatedAt();
   }
 }
