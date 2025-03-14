@@ -17,6 +17,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
@@ -68,6 +69,7 @@ class ArticleData
     required Map<String, MediaAttachment> media,
     required ReplaceableEventIdentifier replaceableEventId,
     required EntityPublishedAt publishedAt,
+    RichText? richText,
     String? title,
     String? image,
     String? summary,
@@ -86,6 +88,9 @@ class ArticleData
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
+    final richTextTag = tags[RichText.tagName]?.firstOrNull;
+    final richText = richTextTag != null ? RichText.fromTag(richTextTag) : null;
+
     return ArticleData(
       content: eventMessage.content,
       media: mediaAttachments,
@@ -98,6 +103,7 @@ class ArticleData
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
       colorLabel: ColorLabel.fromTags(tags, eventId: eventMessage.id),
+      richText: richText,
     );
   }
 
@@ -111,6 +117,7 @@ class ArticleData
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
     String? imageColor,
+    RichText? richText,
   }) {
     return ArticleData(
       content: content,
@@ -123,6 +130,7 @@ class ArticleData
       relatedHashtags: relatedHashtags,
       settings: settings,
       colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
+      richText: richText,
     );
   }
 
@@ -148,6 +156,7 @@ class ArticleData
         if (colorLabel != null) colorLabel!.toValueTag(),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
+        if (richText != null) richText!.toTag(),
       ],
       content: content,
     );
