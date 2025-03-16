@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/feed_videos_data_source_provider.c.dart';
+import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
@@ -35,9 +35,6 @@ class VideosPage extends HookConsumerWidget {
     final rightPadding = 6.0.s;
     final animationDuration = 300.ms;
 
-    final dataSource = ref.watch(feedVideosDataSourceProvider(eventReference: eventReference));
-    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
-
     final ionConnectEntity =
         ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
     if (ionConnectEntity is! ModifiablePostEntity) {
@@ -46,10 +43,17 @@ class VideosPage extends HookConsumerWidget {
       );
     }
 
-    final videosItems = videosData?.data.items?.whereType<ModifiablePostEntity>().toList() ?? [];
-    final videos = [ionConnectEntity, ...videosItems];
+    final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
+    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
+    final trendingVideos =
+        videosData?.data.items?.whereType<ModifiablePostEntity>().toList() ?? [];
 
-    final userPageController = usePageController();
+    final videos = trendingVideos.isEmpty ? [ionConnectEntity] : trendingVideos;
+
+    final initialPage = trendingVideos.indexWhere((video) => video.id == ionConnectEntity.id);
+    final startPage = initialPage >= 0 ? initialPage : 0;
+
+    final userPageController = usePageController(initialPage: startPage);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -87,12 +91,16 @@ class VideosPage extends HookConsumerWidget {
           scrollDirection: Axis.vertical,
           onPageChanged: (index) => _loadMore(ref, index, videos.length),
           itemBuilder: (_, index) => VideoPage(
-            eventReference: eventReference,
+            eventReference: videos[index].toEventReference(),
             video: videos[index],
-            onVideoEnded: () => userPageController.nextPage(
-              duration: animationDuration,
-              curve: Curves.easeInOut,
-            ),
+            onVideoEnded: () {
+              if (index < videos.length - 1) {
+                userPageController.nextPage(
+                  duration: animationDuration,
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
           ),
         ),
       ),
@@ -105,7 +113,7 @@ class VideosPage extends HookConsumerWidget {
       ref
           .read(
             entitiesPagedDataProvider(
-              ref.read(feedVideosDataSourceProvider(eventReference: eventReference)),
+              ref.read(feedTrendingVideosDataSourceProvider),
             ).notifier,
           )
           .fetchEntities();
