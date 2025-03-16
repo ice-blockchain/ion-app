@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/router/components/modal_wrapper/dismissible_content.dart';
 import 'package:ion/app/router/components/sheet_content/main_modal_content.dart';
+import 'package:ion/app/utils/future.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 
 enum IceRouteType {
@@ -14,6 +17,7 @@ enum IceRouteType {
   fade,
   mainModalSheet,
   simpleModalSheet,
+  swipeDismissible,
 }
 
 abstract class BaseRouteData extends GoRouteData {
@@ -37,6 +41,7 @@ abstract class BaseRouteData extends GoRouteData {
         MainModalSheetPage(child: child, state: state, context: context),
       IceRouteType.simpleModalSheet =>
         ScrollableModalSheetPageRoute(child: child, state: state, context: context),
+      IceRouteType.swipeDismissible => SwipeDismissiblePageRoute(child: child, state: state),
     };
   }
 }
@@ -146,6 +151,30 @@ class ScrollableModalSheetPageRoute extends ModalSheetPage<void> {
               state: state,
               child: child,
             ),
+          ),
+        );
+}
+
+class SwipeDismissiblePageRoute extends CustomTransitionPage<void> {
+  SwipeDismissiblePageRoute({
+    required Widget child,
+    required GoRouterState state,
+  }) : super(
+          key: state.pageKey,
+          fullscreenDialog: true,
+          opaque: false,
+          barrierColor: Colors.transparent,
+          transitionDuration: 250.ms,
+          reverseTransitionDuration: 250.ms,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          child: DismissibleContent(
+            state: state,
+            child: child,
           ),
         );
 }

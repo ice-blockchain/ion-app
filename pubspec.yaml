@@ -24,6 +24,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   device_info_plus: ^10.1.2
   dio: ^5.7.0
+  dismissible_page: ^1.0.2
   dlibphonenumber: ^1.1.26
   dotted_border: ^2.1.0
   drift: ^2.24.0

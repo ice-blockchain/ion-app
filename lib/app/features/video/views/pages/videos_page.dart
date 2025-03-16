@@ -45,8 +45,7 @@ class VideosPage extends HookConsumerWidget {
 
     final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
     final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final trendingVideos =
-        videosData?.data.items?.whereType<ModifiablePostEntity>().toList() ?? [];
+    final trendingVideos = videosData?.data.items?.whereType<ModifiablePostEntity>().toList() ?? [];
 
     final videos = trendingVideos.isEmpty ? [ionConnectEntity] : trendingVideos;
 
