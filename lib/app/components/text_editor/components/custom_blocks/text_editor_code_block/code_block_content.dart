@@ -25,7 +25,7 @@ class CodeBlockContent extends HookConsumerWidget {
     final focusNode = useFocusNode();
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.0.s, top: 8.0.s, left: 12.0.s, right: 12.0.s),
+      padding: EdgeInsets.only(bottom: 12.0.s, top: 0.0.s, left: 12.0.s, right: 12.0.s),
       child: KeyboardListener(
         focusNode: focusNode,
         onKeyEvent: (KeyEvent event) {

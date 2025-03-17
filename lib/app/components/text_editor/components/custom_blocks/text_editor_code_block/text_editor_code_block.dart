@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_content.dart';
-import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_types_toolbar.dart';
 import 'package:ion/app/components/text_editor/utils/remove_block.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
@@ -54,7 +53,6 @@ class TextEditorCodeBuilder extends EmbedBuilder {
       ),
       child: Column(
         children: [
-          if (!readOnly) const CodeBlockTypesToolbar(),
           CodeBlockContent(
             content: content,
             readOnly: readOnly,
