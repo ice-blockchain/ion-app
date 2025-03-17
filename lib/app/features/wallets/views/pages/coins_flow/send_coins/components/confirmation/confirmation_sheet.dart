@@ -11,10 +11,12 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
@@ -37,11 +39,13 @@ class ConfirmationSheet extends ConsumerWidget {
     final locale = context.i18n;
 
     final formData = ref.watch(sendAssetFormControllerProvider());
-    final coin = formData.assetData.as<CoinAssetData>()!;
+    final coin = formData.assetData.as<CoinAssetData>();
 
     ref
       ..displayErrors(sendCoinsNotifierProvider)
       ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) {
+        ref.invalidate(walletViewsDataNotifierProvider);
+
         if (context.mounted && transactionDetails != null) {
           ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
           CoinTransactionResultRoute().go(context);
@@ -66,54 +70,58 @@ class ConfirmationSheet extends ConsumerWidget {
               child: Column(
                 children: [
                   SizedBox(height: 16.0.s),
-                  TransactionAmountSummary(
-                    amount: coin.amount,
-                    currency: coin.coinsGroup.abbreviation,
-                    usdAmount: coin.priceUSD,
-                    icon: CoinIconWidget(
-                      imageUrl: coin.coinsGroup.iconUrl,
-                      size: 36.0.s,
+                  if (coin != null)
+                    TransactionAmountSummary(
+                      amount: coin.amount,
+                      currency: coin.coinsGroup.abbreviation,
+                      usdAmount: coin.priceUSD,
+                      icon: CoinIconWidget(
+                        imageUrl: coin.coinsGroup.iconUrl,
+                        size: 36.0.s,
+                      ),
                     ),
-                  ),
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
                     address: formData.receiverAddress,
                     pubkey: formData.contactPubkey,
                   ),
                   SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_asset),
-                    value: coin.coinsGroup.name,
-                    icon: CoinIconWidget(
-                      imageUrl: coin.coinsGroup.iconUrl,
-                      size: ScreenSideOffset.defaultSmallMargin,
-                    ),
-                  ),
-                  SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_title),
-                    value: formData.wallet.name,
-                    icon: Assets.svg.walletWalletblue.icon(
-                      size: ScreenSideOffset.defaultSmallMargin,
-                    ),
-                    secondary: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        formData.senderWallet!.address!,
-                        textAlign: TextAlign.right,
-                        style: context.theme.appTextThemes.caption3.copyWith(),
+                  if (coin != null)
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_asset),
+                      value: coin.coinsGroup.name,
+                      icon: CoinIconWidget(
+                        imageUrl: coin.coinsGroup.iconUrl,
+                        size: ScreenSideOffset.defaultSmallMargin,
                       ),
                     ),
-                  ),
                   SizedBox(height: 16.0.s),
-                  ListItem.textWithIcon(
-                    title: Text(locale.wallet_network),
-                    value: formData.network!.displayName,
-                    icon: NetworkIconWidget(
-                      size: 16.0.s,
-                      imageUrl: formData.network!.image,
+                  if (formData.senderWallet?.address case final String address)
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_title),
+                      value: formData.wallet.name,
+                      icon: Assets.svg.walletWalletblue.icon(
+                        size: ScreenSideOffset.defaultSmallMargin,
+                      ),
+                      secondary: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          address,
+                          textAlign: TextAlign.right,
+                          style: context.theme.appTextThemes.caption3.copyWith(),
+                        ),
+                      ),
                     ),
-                  ),
+                  SizedBox(height: 16.0.s),
+                  if (formData.network case final NetworkData network)
+                    ListItem.textWithIcon(
+                      title: Text(locale.wallet_network),
+                      value: network.displayName,
+                      icon: NetworkIconWidget(
+                        size: 16.0.s,
+                        imageUrl: network.image,
+                      ),
+                    ),
                   SizedBox(height: 16.0.s),
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
                     ListItemArrivalTime(

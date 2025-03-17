@@ -26,7 +26,7 @@ class TransactionResultSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formData = ref.watch(sendAssetFormControllerProvider(type: type));
+    final transactionData = ref.watch(transactionNotifierProvider);
 
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
@@ -57,26 +57,28 @@ class TransactionResultSheet extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 24.0.s),
-                formData.assetData.maybeMap(
-                  coin: (coin) => TransactionAmountSummary(
-                    amount: coin.amount,
-                    currency: coin.coinsGroup.abbreviation,
-                    usdAmount: coin.priceUSD,
-                    icon: CoinIconWidget(
-                      imageUrl: coin.coinsGroup.iconUrl,
-                    ),
-                  ),
-                  nft: (nft) => Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 52.0.s,
-                    ),
-                    child: NftItem(
-                      nftData: nft.nft,
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
-                  orElse: () => const SizedBox.shrink(),
-                ),
+                transactionData!.assetData.maybeMap(
+                      coin: (coin) => TransactionAmountSummary(
+                        amount: coin.amount,
+                        currency: coin.coinsGroup.abbreviation,
+                        usdAmount: coin.priceUSD,
+                        icon: CoinIconWidget(
+                          imageUrl: coin.coinsGroup.iconUrl,
+                        ),
+                      ),
+                      // TODO: Recheck the nft part during implementation
+                      nft: (nft) => Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 52.0.s,
+                        ),
+                        child: NftItem(
+                          nftData: nft.nft,
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ),
+                      orElse: () => const SizedBox(),
+                    ) ??
+                    const SizedBox(),
                 SizedBox(height: 24.0.s),
                 Row(
                   children: [

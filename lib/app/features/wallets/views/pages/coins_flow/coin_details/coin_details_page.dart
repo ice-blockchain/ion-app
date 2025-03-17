@@ -11,19 +11,16 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
-import 'package:ion/app/features/wallets/providers/synced_coins_by_symbol_group_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/transactions_history_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/coin_transactions_form_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_section_header.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/coin_transactions_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/hooks/use_transactions_by_date.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
+import 'package:ion/app/utils/date.dart';
 
 class CoinDetailsPage extends HookConsumerWidget {
   CoinDetailsPage({required this.symbolGroup, super.key});
@@ -33,81 +30,22 @@ class CoinDetailsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletView = ref.watch(currentWalletViewDataProvider).valueOrNull;
-    final coinsGroup = walletView?.coinGroups.firstWhereOrNull((e) => e.symbolGroup == symbolGroup);
-
-    final walletId = ref.watch(currentWalletViewIdProvider).valueOrNull;
     final scrollController = useScrollController();
-    final coinTransactionsMap = useTransactionsByDate(context, ref);
-    final isLoading = ref.watch(
-      coinTransactionsNotifierProvider.select((data) => data.isLoading),
-    );
-    final networks = ref.watch(
-      syncedCoinsBySymbolGroupProvider(symbolGroup).select(
-        (value) => value.maybeWhen(
-          data: (list) => list.map((e) => e.coin.network).toList(),
-          orElse: () => const <NetworkData>[],
-        ),
+    final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
+    final coinsGroup = walletView.coinGroups.firstWhere((e) => e.symbolGroup == symbolGroup);
+    final form = ref.watch(coinTransactionsFormNotifierProvider(symbolGroup: symbolGroup));
+
+    final isTransactionsLoading = form == null;
+
+    final coinTransactionsMap = useMemoized(
+      () => groupBy(
+        form?.transactions ?? <CoinTransactionData>[],
+        (CoinTransactionData tx) => toPastDateDisplayValue(tx.timestamp, context),
       ),
+      [form, context],
     );
-
-    final activeNetwork = useState<NetworkData?>(null);
-
-    // Test section
-    // final dataSource = ref.watch(transactionsHistoryDataSourceProvider).value;
-    // if (dataSource != null) {
-    //   final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
-    //   final notifier = ref.watch(entitiesPagedDataProvider(dataSource).notifier);
-    //   final items = entitiesPagedData?.data.items?.whereType<WalletAssetEntity>().nonNulls.toList();
-    //   if (items != null) {
-    //     entities.addAll(items);
-
-    //     if (!(entitiesPagedData?.hasMore ?? false)) {
-    //       print('Done');
-    //     } else if (entitiesPagedData != null && entitiesPagedData.hasMore) {
-    //       notifier.fetchEntities();
-    //     }
-    //   }
-    // }
-    final result = ref.watch(transactionsHistoryNotifierProvider);
-
-    useEffect(
-      () {
-        if (activeNetwork.value == null && networks.isNotEmpty) {
-          activeNetwork.value = networks.first;
-        }
-        return null;
-      },
-      [networks],
-    );
-
-    useOnInit(
-      () {
-        if (walletId != null &&
-            walletId.isNotEmpty &&
-            coinsGroup != null &&
-            activeNetwork.value != null) {
-          ref.read(coinTransactionsNotifierProvider.notifier).fetch(
-                walletId: walletId,
-                coinId: coinsGroup.symbolGroup,
-                network: activeNetwork.value!,
-              );
-        }
-      },
-      <Object?>[walletId, coinsGroup?.symbolGroup, activeNetwork.value],
-    );
-
-    // TODO: add proper loading and error handling
-    if (coinsGroup == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {}),
       appBar: NavigationAppBar.screen(
         title: Row(
           mainAxisSize: MainAxisSize.min,
@@ -122,35 +60,41 @@ class CoinDetailsPage extends HookConsumerWidget {
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                const Delimiter(),
-                if (activeNetwork.value != null)
+          if (form?.selectedNetwork case final NetworkData selectedNetwork)
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const Delimiter(),
                   Balance(
                     coinsGroup: coinsGroup,
-                    network: activeNetwork.value!,
+                    network: selectedNetwork,
                   ),
-                const Delimiter(),
-              ],
-            ),
-          ),
-          if (activeNetwork.value != null)
-            SliverToBoxAdapter(
-              child: TransactionListHeader(
-                networks: networks,
-                selectedNetwork: activeNetwork.value!,
-                onNetworkTypeSelect: (NetworkData newNetwork) => activeNetwork.value = newNetwork,
+                  const Delimiter(),
+                ],
               ),
             ),
-          if (coinTransactionsMap.isEmpty && !isLoading) const EmptyState(),
-          if (isLoading)
+          if (form != null)
+            SliverToBoxAdapter(
+              child: TransactionListHeader(
+                networks: form.networks,
+                selectedNetwork: form.selectedNetwork,
+                onNetworkTypeSelect: (NetworkData newNetwork) {
+                  ref
+                      .read(
+                        coinTransactionsFormNotifierProvider(symbolGroup: symbolGroup).notifier,
+                      )
+                      .network = newNetwork;
+                },
+              ),
+            ),
+          if (coinTransactionsMap.isEmpty && !isTransactionsLoading) const EmptyState(),
+          if (isTransactionsLoading)
             ListItemsLoadingState(
               itemsCount: 7,
               separatorHeight: 12.0.s,
               listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
             ),
-          if (coinTransactionsMap.isNotEmpty && !isLoading)
+          if (coinTransactionsMap.isNotEmpty && !isTransactionsLoading)
             for (final MapEntry<String, List<CoinTransactionData>>(
                   key: String date,
                   value: List<CoinTransactionData> transactions
@@ -162,13 +106,8 @@ class CoinDetailsPage extends HookConsumerWidget {
               ),
               SliverList.separated(
                 itemCount: transactions.length,
-                separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(
-                    height: 12.0.s,
-                  );
-                },
+                separatorBuilder: (BuildContext context, int index) => SizedBox(height: 12.0.s),
                 itemBuilder: (BuildContext context, int index) {
-                  // TODO: Transactions is not implemented
                   return ScreenSideOffset.small(
                     child: TransactionListItem(
                       transactionData: transactions[index],

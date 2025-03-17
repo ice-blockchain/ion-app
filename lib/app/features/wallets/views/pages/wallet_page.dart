@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transactions_history_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';
@@ -29,8 +30,10 @@ class WalletPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scrollController = useScrollController();
+    // Init loading of the transactions history so it is ready when needed
+    ref.watch(transactionsHistoryNotifierProvider);
 
+    final scrollController = useScrollController();
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);

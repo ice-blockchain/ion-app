@@ -14,9 +14,9 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart'
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/encrypted_tag.c.dart';
+import 'package:ion/app/features/wallets/model/entities/tags/label_namespace_tag.c.dart';
+import 'package:ion/app/features/wallets/model/entities/tags/label_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
-import 'package:ion/app/features/wallets/model/entities/tags/wallet_address_tag.c.dart';
-import 'package:ion/app/features/wallets/model/entities/tags/wallet_flag_tag.c.dart';
 
 part 'wallet_asset_entity.c.freezed.dart';
 part 'wallet_asset_entity.c.g.dart';
@@ -75,8 +75,9 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
       pubkey: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).first.value,
       networkId: tags[NetworkTag.tagName]!.map(NetworkTag.fromTag).first.value,
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,
-      assetAddress: tags[AssetAddressTag.tagName]!.map(AssetAddressTag.fromTag).first.value,
-      walletAddress: tags[WalletAddressTag.tagName]?.map(WalletAddressTag.fromTag).first.value,
+      // Can be empty string for native coins of the network
+      assetAddress: tags[AssetAddressTag.tagName]?.map(AssetAddressTag.fromTag).first.value ?? '',
+      walletAddress: tags[LabelTag.tagName]?.map(LabelTag.fromTag).first.value,
     );
   }
 
@@ -98,8 +99,8 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
         if (pubkey != null)
           RelatedPubkey(value: pubkey!).toTag()
         else if (walletAddress != null) ...[
-          const WalletFlagTag().toTag(),
-          WalletAddressTag(value: walletAddress!).toTag(),
+          LabelNamespaceTag.walletAddress().toTag(),
+          LabelTag(value: walletAddress!).toTag(),
         ],
         const EncryptedTag().toTag(),
       ],
