@@ -9,6 +9,7 @@ import 'package:ion/app/components/inputs/hooks/use_text_changed.dart';
 import 'package:ion/app/components/inputs/text_input/components/text_input_clear_button.dart';
 import 'package:ion/app/components/inputs/text_input/text_input.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
+import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/countries.c.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -88,24 +89,27 @@ class PhoneInputStep extends HookConsumerWidget {
                   ),
                 ),
                 const Spacer(),
-                Button(
-                  mainAxisSize: MainAxisSize.max,
-                  label: Text(locale.button_next),
-                  disabled: isRequestingCode,
-                  trailingIcon: isRequestingCode ? const IONLoadingIndicator() : null,
-                  onPressed: () async {
-                    final isFormValid = formKey.value.currentState?.validate() ?? false;
-                    if (!isFormValid) {
-                      return;
-                    }
+                ScreenBottomOffset(
+                  margin: 48.0.s,
+                  child: Button(
+                    mainAxisSize: MainAxisSize.max,
+                    label: Text(locale.button_next),
+                    disabled: isRequestingCode,
+                    trailingIcon: isRequestingCode ? const IONLoadingIndicator() : null,
+                    onPressed: () async {
+                      final isFormValid = formKey.value.currentState?.validate() ?? false;
+                      if (!isFormValid) {
+                        return;
+                      }
 
-                    final phoneNumber = formatPhoneNumber(
-                      country.iddCode,
-                      phoneController.text.trim(),
-                    );
+                      final phoneNumber = formatPhoneNumber(
+                        country.iddCode,
+                        phoneController.text.trim(),
+                      );
 
-                    onNext(phoneNumber);
-                  },
+                      onNext(phoneNumber);
+                    },
+                  ),
                 ),
               ],
             ),
