@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ion/app/components/image/app_cached_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/utils/image_path.dart';
 
@@ -26,11 +26,10 @@ class NetworkIconWidget extends StatelessWidget {
             width: iconSize,
             height: iconSize,
           )
-        : CachedNetworkImage(
+        : AppCachedNetworkImage(
             imageUrl: imageUrl,
             width: iconSize,
             height: iconSize,
-            fadeInDuration: Duration.zero,
             imageBuilder: (context, imageProvider) => Container(
               width: iconSize,
               height: iconSize,

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/image/app_cached_network_image.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -32,12 +32,11 @@ class NftItem extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CachedNetworkImage(
+              AppCachedNetworkImage(
                 imageUrl: 'nftData.currencyIconUrl',
                 width: 12,
                 height: 12,
                 fit: BoxFit.fitWidth,
-                fadeInDuration: Duration.zero,
               ),
               Padding(
                 padding: EdgeInsets.only(right: 4.0.s, left: 5.0.s),
@@ -55,12 +54,11 @@ class NftItem extends StatelessWidget {
       backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
-        child: CachedNetworkImage(
+        child: AppCachedNetworkImage(
           imageUrl: 'nftData.iconUrl',
           width: imageWidth,
           height: imageHeight,
           fit: BoxFit.fitWidth,
-          fadeInDuration: Duration.zero,
         ),
       ),
     );

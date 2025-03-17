@@ -2,9 +2,9 @@
 
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/image/app_cached_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -32,11 +32,10 @@ class UserBanner extends ConsumerWidget {
       child: bannerFile != null
           ? Image.file(File(bannerFile!.path))
           : banner != null
-              ? CachedNetworkImage(
+              ? AppCachedNetworkImage(
                   imageUrl: banner,
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
-                  fadeInDuration: Duration.zero,
                   errorWidget: (context, url, error) => const SizedBox.shrink(),
                 )
               : ColoredBox(

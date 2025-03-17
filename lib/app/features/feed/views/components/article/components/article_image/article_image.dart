@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/image/app_cached_network_image.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/read_time_tile.dart';
 import 'package:ion/app/features/feed/views/components/article/constants.dart';
@@ -30,10 +30,9 @@ class ArticleImage extends StatelessWidget {
           AspectRatio(
             aspectRatio: ArticleConstants.headerImageAspectRation,
             child: imageUrl != null
-                ? CachedNetworkImage(
+                ? AppCachedNetworkImage(
                     imageUrl: imageUrl!,
                     fit: BoxFit.fill,
-                    fadeInDuration: Duration.zero,
                   )
                 : const ColoredBox(color: Colors.grey),
           ),

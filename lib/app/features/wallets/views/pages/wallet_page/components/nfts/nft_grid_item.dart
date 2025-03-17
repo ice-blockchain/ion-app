@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/image/app_cached_network_image.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
@@ -40,12 +40,11 @@ class NftGridItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: borderRadius,
-            child: CachedNetworkImage(
+            child: AppCachedNetworkImage(
               imageUrl: nftData.tokenUri,
               width: imageWidth,
               height: imageWidth * 1.13,
               fit: BoxFit.fitHeight,
-              fadeInDuration: Duration.zero,
             ),
           ),
           Text(

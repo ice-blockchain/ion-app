@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/image/app_cached_network_image.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 
@@ -24,11 +24,10 @@ class FullscreenImage extends StatelessWidget {
       child: InteractiveViewer(
         minScale: 0.5,
         maxScale: 4,
-        child: CachedNetworkImage(
+        child: AppCachedNetworkImage(
           imageUrl: imageUrl,
           width: MediaQuery.sizeOf(context).width,
           fit: BoxFit.fitWidth,
-          fadeInDuration: Duration.zero,
           placeholder: (context, url) => const CenteredLoadingIndicator(),
         ),
       ),

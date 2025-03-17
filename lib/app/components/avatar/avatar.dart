@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/default_avatar.dart';
+import 'package:ion/app/components/image/app_cached_network_image.dart';
 import 'package:ion/app/components/shapes/hexagon_path.dart';
 import 'package:ion/app/components/shapes/shape.dart';
 
@@ -35,12 +35,11 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = imageUrl != null
-        ? CachedNetworkImage(
+        ? AppCachedNetworkImage(
             imageUrl: imageUrl!,
             width: size,
             height: size,
             fit: fit,
-            fadeInDuration: Duration.zero,
             errorWidget: (context, url, error) => defaultAvatar ?? DefaultAvatar(size: size),
           )
         : imageWidget != null
