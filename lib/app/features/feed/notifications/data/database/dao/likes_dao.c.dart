@@ -1,12 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/queries/get_aggregated_by_day.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,47 +24,10 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
     );
   }
 
-  Future<List<String>> getAggregatedByDay() {
-    return customSelect('''
-      WITH RowsByDate AS (
-          SELECT
-              *,
-              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS Date,
-              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')) ORDER BY created_at DESC) AS RowNum
-          FROM 
-              likes_table
-      ),
-      DailyCount AS (
-          SELECT 
-              Date,
-              COUNT(*) AS CountByDate
-          FROM 
-              RowsByDate
-          GROUP BY 
-              Date
-      )
-      SELECT 
-          r.Date,
-          GROUP_CONCAT(r.event_reference, ',' ORDER BY r.created_at DESC) AS LastReferences,
-          d.CountByDate
-      FROM 
-          RowsByDate r
-      JOIN 
-          DailyCount d ON r.Date = d.Date
-      WHERE 
-          r.RowNum <= 10
-      GROUP BY 
-          r.Date
-      ORDER BY
-          r.created_at DESC;
-    ''').map((row) {
-      final day = row.read<String>('Date');
-      final concatenatedReferences = row.read<String>('LastReferences');
-      final tags = jsonDecode('[$concatenatedReferences]') as List<dynamic>;
-      final eventReferences =
-          tags.map((tag) => EventReference.fromTag(List<String>.from(tag as List<dynamic>)));
-      return day;
-    }).get();
+  Future<List<AggregatedByDayRow>> getAggregatedByDay() {
+    return customSelect(getAggregatedByDayQuery(table: likesTable.actualTableName))
+        .map(AggregatedByDayRow.fromQueryRow)
+        .get();
   }
 
   Future<DateTime?> getLastCreatedAt() async {

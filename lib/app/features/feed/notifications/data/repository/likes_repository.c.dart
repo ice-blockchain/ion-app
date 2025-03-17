@@ -23,9 +23,9 @@ class LikesRepository {
     return _likesDao.insert(entity);
   }
 
-  Future<void> getComments() async {
-    final res = await _likesDao.getAggregatedByDay();
-    print(res);
+  Future<void> getAggregated() async {
+    final aggregatedByDay = await _likesDao.getAggregatedByDay();
+    print(aggregatedByDay);
   }
 
   Future<DateTime?> lastCreatedAt() async {
