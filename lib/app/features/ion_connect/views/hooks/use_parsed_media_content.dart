@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
@@ -20,6 +22,7 @@ import 'package:ion/app/services/markdown/quill.dart';
 
 ({Delta content, List<MediaAttachment> media}) parseMediaContent({
   required EntityDataWithMediaContent data,
+  String? richTextContent,
 }) {
   final EntityDataWithMediaContent(:content, :media) = data;
   final markdownContentDelta = markdownToDelta(content);
@@ -82,4 +85,21 @@ import 'package:ion/app/services/markdown/quill.dart';
   }
 
   return (content: Delta.fromOperations(nonMediaOperations), media: mediaFromContent);
+}
+
+Delta? useRichTextContentToDelta({
+  required String? deltaContent,
+}) {
+  return useMemoized(
+    () {
+      try {
+        if (deltaContent == null) return null;
+        final delta = Delta.fromJson(jsonDecode(deltaContent) as List<dynamic>);
+        return convertTextWithImageAttributesToEmbeds(delta);
+      } catch (e) {
+        return null;
+      }
+    },
+    [deltaContent],
+  );
 }

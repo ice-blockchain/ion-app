@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
@@ -19,6 +20,7 @@ import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -61,6 +63,11 @@ class CreateArticle extends _$CreateArticle {
 
       final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
 
+      final richText = RichText(
+        protocol: 'quill_delta',
+        content: jsonEncode(updatedContent.toJson()),
+      );
+
       final relatedHashtags = [
         ...topics.map((topic) => RelatedHashtag(value: topic.toShortString())),
         ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
@@ -78,6 +85,7 @@ class CreateArticle extends _$CreateArticle {
         publishedAt: publishedAt,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
+        richText: richText,
       );
 
       await _sendArticleEntities([...files, articleData]);
@@ -105,6 +113,7 @@ class CreateArticle extends _$CreateArticle {
         media: {},
         colorLabel: null,
         settings: null,
+        richText: null,
       );
 
       await _sendArticleEntities([articleData]);

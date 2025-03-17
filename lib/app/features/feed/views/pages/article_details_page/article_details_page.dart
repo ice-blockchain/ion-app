@@ -45,10 +45,15 @@ class ArticleDetailsPage extends HookConsumerWidget {
 
     final scrollController = useScrollController();
     final progress = useScrollIndicator(scrollController);
-    final content = useMemoized(
-      () => markdownToDelta(articleEntity.data.content),
-      [articleEntity.data.content],
+
+    final delta = useMemoized(
+      () => parseAndConvertDelta(
+        articleEntity.data.richText?.content,
+        articleEntity.data.content,
+      ),
+      [articleEntity.data.richText?.content, articleEntity.data.content],
     );
+
     final topics = articleEntity.data.topics;
 
     if (articleEntity.isDeleted) {
@@ -89,7 +94,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
                       if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
                       ScreenSideOffset.small(
                         child: TextEditorPreview(
-                          content: content,
+                          content: delta,
                           media: articleEntity.data.media,
                         ),
                       ),

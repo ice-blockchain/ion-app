@@ -24,6 +24,7 @@ import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
@@ -89,12 +90,16 @@ class ModifiablePostData
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
     String? communityId,
+    RichText? richText,
   }) = _ModifiablePostData;
 
   factory ModifiablePostData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
     final quotedEventTag =
         tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
+
+    final richTextTag = tags[RichText.tagName]?.firstOrNull;
+    final richText = richTextTag != null ? RichText.fromTag(richTextTag) : null;
 
     return ModifiablePostData(
       content: eventMessage.content,
@@ -115,6 +120,7 @@ class ModifiablePostData
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
       communityId:
           tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).first.value,
+      richText: richText,
     );
   }
 
@@ -144,6 +150,7 @@ class ModifiablePostData
         if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
         if (communityId != null) CommunityIdentifierTag(value: communityId!).toTag(),
+        if (richText != null) richText!.toTag(),
       ],
     );
   }
