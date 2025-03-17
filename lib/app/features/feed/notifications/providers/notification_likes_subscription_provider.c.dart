@@ -18,6 +18,8 @@ Future<void> notificationLikesSubscription(Ref ref) async {
   final likesRepository = ref.watch(likesRepositoryProvider);
   final eventParser = ref.watch(eventParserProvider);
 
+  likesRepository.getComments();
+
   if (currentPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
   }

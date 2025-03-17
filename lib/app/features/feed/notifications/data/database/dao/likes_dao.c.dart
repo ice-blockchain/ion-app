@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,41 +28,44 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
 
   Future<List<String>> getAggregatedByDay() {
     return customSelect('''
-      WITH RankedRows AS (
+      WITH RowsByDate AS (
           SELECT
               *,
-              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS LocalDay,
+              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS Date,
               ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')) ORDER BY created_at DESC) AS RowNum
           FROM 
               likes_table
       ),
-      DailyCounts AS (
+      DailyCount AS (
           SELECT 
-              LocalDay AS Day, 
-              COUNT(*) AS NumberOfRows
+              Date,
+              COUNT(*) AS CountByDate
           FROM 
-              RankedRows
+              RowsByDate
           GROUP BY 
-              LocalDay
+              Date
       )
       SELECT 
-          r.LocalDay AS Day,
-          GROUP_CONCAT(r.event_reference, ', ' ORDER BY r.created_at DESC) AS ConcatenatedResults,
-          d.NumberOfRows
+          r.Date,
+          GROUP_CONCAT(r.event_reference, ',' ORDER BY r.created_at DESC) AS LastReferences,
+          d.CountByDate
       FROM 
-          RankedRows r
+          RowsByDate r
       JOIN 
-          DailyCounts d ON r.LocalDay = d.Day
+          DailyCount d ON r.Date = d.Date
       WHERE 
-          r.RowNum <= 4
+          r.RowNum <= 10
       GROUP BY 
-          r.LocalDay
-      ORDER BY 
+          r.Date
+      ORDER BY
           r.created_at DESC;
     ''').map((row) {
-      final foo = row.read<String>('Day');
-      // print(DateTime.fromMillisecondsSinceEpoch(foo));
-      return foo;
+      final day = row.read<String>('Date');
+      final concatenatedReferences = row.read<String>('LastReferences');
+      final tags = jsonDecode('[$concatenatedReferences]') as List<dynamic>;
+      final eventReferences =
+          tags.map((tag) => EventReference.fromTag(List<String>.from(tag as List<dynamic>)));
+      return day;
     }).get();
   }
 
