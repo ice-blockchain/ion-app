@@ -32,7 +32,7 @@ class PaymentSelectionModal extends HookConsumerWidget {
           paymentType: paymentType,
           pubkey: pubkey,
           selectCoinModalType: SelectCoinModalType.select,
-        ).replace(context);
+        ).push<void>(context);
       },
       [],
     );

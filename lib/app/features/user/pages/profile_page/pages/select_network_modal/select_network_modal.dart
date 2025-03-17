@@ -58,14 +58,14 @@ class SelectNetworkModal extends ConsumerWidget {
                     networkId: network.id,
                     coinSymbolGroup: coinSymbolGroup,
                     coinAbbreviation: coinAbbreviation,
-                  ).replace(context);
+                  ).push<void>(context);
                 case PaymentType.receive:
                   RequestCoinsFormRoute(
                     pubkey: pubkey,
                     networkId: network.id,
                     coinSymbolGroup: coinSymbolGroup,
                     coinAbbreviation: coinAbbreviation,
-                  ).replace(context);
+                  ).push<void>(context);
               }
             case SelectNetworkModalType.update:
               context.pop(network);
