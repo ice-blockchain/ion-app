@@ -20,6 +20,7 @@ import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/features/user/model/user_relays.c.dart';
 import 'package:ion/app/features/user/providers/current_user_identity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -49,7 +50,8 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
 
         final uploadedAvatar = await _uploadAvatar();
 
-        final userMetadata = _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
+        final userMetadata =
+            await _buildUserMetadata(avatarAttachment: uploadedAvatar?.mediaAttachment);
 
         final (:interestSetData, :interestsData) = _buildUserLanguages();
 
@@ -104,7 +106,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
     return userRelaysEvent;
   }
 
-  UserMetadata _buildUserMetadata({MediaAttachment? avatarAttachment}) {
+  Future<UserMetadata> _buildUserMetadata({MediaAttachment? avatarAttachment}) async {
     final OnboardingState(:name, :displayName) = ref.read(onboardingDataProvider);
 
     if (name == null) {
@@ -115,12 +117,25 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
       throw RequiredFieldIsEmptyException(field: 'displayName');
     }
 
+    final wallets = await _buildUserWallets();
+
     return UserMetadata(
       name: name,
       displayName: displayName,
       registeredAt: DateTime.now(),
       picture: avatarAttachment?.url,
       media: avatarAttachment != null ? {avatarAttachment.url: avatarAttachment} : {},
+      wallets: wallets,
+    );
+  }
+
+  Future<Map<String, String>> _buildUserWallets() async {
+    final cryptoWallets = await ref.read(connectedCryptoWalletsProvider.future);
+    return Map.fromEntries(
+      cryptoWallets.map((wallet) {
+        if (wallet.address == null) return null;
+        return MapEntry(wallet.network, wallet.address!);
+      }).nonNulls,
     );
   }
 
