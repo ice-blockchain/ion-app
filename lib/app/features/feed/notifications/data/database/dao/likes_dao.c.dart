@@ -23,8 +23,44 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
     );
   }
 
-  Future<List<Like>> getAll() async {
-    return (select(likesTable)..orderBy([(t) => OrderingTerm.desc(likesTable.createdAt)])).get();
+  Future<List<String>> getAggregatedByDay() {
+    return customSelect('''
+      WITH RankedRows AS (
+          SELECT
+              *,
+              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS LocalDay,
+              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')) ORDER BY created_at DESC) AS RowNum
+          FROM 
+              likes_table
+      ),
+      DailyCounts AS (
+          SELECT 
+              LocalDay AS Day, 
+              COUNT(*) AS NumberOfRows
+          FROM 
+              RankedRows
+          GROUP BY 
+              LocalDay
+      )
+      SELECT 
+          r.LocalDay AS Day,
+          GROUP_CONCAT(r.event_reference, ', ' ORDER BY r.created_at DESC) AS ConcatenatedResults,
+          d.NumberOfRows
+      FROM 
+          RankedRows r
+      JOIN 
+          DailyCounts d ON r.LocalDay = d.Day
+      WHERE 
+          r.RowNum <= 4
+      GROUP BY 
+          r.LocalDay
+      ORDER BY 
+          r.created_at DESC;
+    ''').map((row) {
+      final foo = row.read<String>('Day');
+      // print(DateTime.fromMillisecondsSinceEpoch(foo));
+      return foo;
+    }).get();
   }
 
   Future<DateTime?> getLastCreatedAt() async {

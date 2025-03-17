@@ -2,8 +2,6 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/followers_dao.c.dart';
-import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notification.c.dart';
-import 'package:ion/app/features/feed/notifications/data/model/notifications_type.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,17 +23,9 @@ class FollowersRepository {
     return _followersDao.insert(entity);
   }
 
-  Future<List<IonConnectNotification>> getComments() async {
-    //TODO:aggregation
-    final followers = await _followersDao.getAll();
-    return followers.map((follower) {
-      return IonConnectNotification(
-        type: NotificationsType.follow,
-        pubkeys: [follower.eventReference.pubkey],
-        timestamp: follower.createdAt,
-        eventReference: follower.eventReference,
-      );
-    }).toList();
+  Future<void> getComments() async {
+    final res = await _followersDao.getAggregatedByDay();
+    print(res);
   }
 
   Future<DateTime?> lastCreatedAt() async {
