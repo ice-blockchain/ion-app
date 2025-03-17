@@ -280,6 +280,7 @@ class VideosRoute extends BaseRouteData {
           child: VideosPage(
             EventReference.fromEncoded(eventReference),
           ),
+          type: IceRouteType.swipeDismissible,
         );
 
   final String eventReference;
@@ -294,7 +295,7 @@ class FullscreenMediaRoute extends BaseRouteData {
             initialMediaIndex: initialMediaIndex,
             eventReference: EventReference.fromEncoded(eventReference),
           ),
-          type: IceRouteType.fade,
+          type: IceRouteType.swipeDismissible,
         );
 
   final int initialMediaIndex;

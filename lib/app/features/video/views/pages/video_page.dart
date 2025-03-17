@@ -38,6 +38,7 @@ class VideoPage extends HookConsumerWidget {
     if (videoPath == null || videoPath.isEmpty) {
       return Text(context.i18n.video_not_found);
     }
+
     final playerController = ref.watch(
       videoControllerProvider(
         videoPath,
@@ -55,13 +56,15 @@ class VideoPage extends HookConsumerWidget {
       onVideoEnded: onVideoEnded,
     );
 
-    ref.listen(appLifecycleProvider, (_, current) async {
+    ref.listen(appLifecycleProvider, (_, current) {
+      if (!context.mounted) return;
+
       if (current == AppLifecycleState.resumed) {
-        await playerController.play();
+        playerController.play();
       } else if (current == AppLifecycleState.inactive ||
           current == AppLifecycleState.paused ||
           current == AppLifecycleState.hidden) {
-        await playerController.pause();
+        playerController.pause();
       }
     });
 
