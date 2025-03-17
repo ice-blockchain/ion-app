@@ -87,9 +87,6 @@ class CoinTransactionsNotifier extends _$CoinTransactionsNotifier {
                 : TransactionType.receive,
             coinAmount: amount,
             usdAmount: double.tryParse(walletAssetContent.amountUsd ?? '') ?? 0,
-            // Links to origins
-            entity: entity,
-            content: walletAssetContent,
           );
         }),
       );
