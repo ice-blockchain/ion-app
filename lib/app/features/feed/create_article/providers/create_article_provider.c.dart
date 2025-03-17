@@ -150,6 +150,26 @@ class CreateArticle extends _$CreateArticle {
 
     var updatedContent = content;
 
+    final draftArticle = ref.read(draftArticleProvider);
+    final codeBlocks = draftArticle.codeBlocks;
+
+    updatedContent = Delta.fromOperations(
+      updatedContent.toList().map((operation) {
+        if (operation.isInsert && operation.data is Map<String, dynamic>) {
+          final mapData = operation.data! as Map<String, dynamic>;
+          if (mapData.containsKey('text-editor-code')) {
+            final blockId = mapData['text-editor-code'];
+            if (codeBlocks.containsKey(blockId)) {
+              return Operation.insert({
+                'text-editor-code': codeBlocks[blockId],
+              });
+            }
+          }
+        }
+        return operation;
+      }).toList(),
+    );
+
     if (mediaIds != null && mediaIds.isNotEmpty) {
       await Future.wait(
         mediaIds.map((assetId) async {
