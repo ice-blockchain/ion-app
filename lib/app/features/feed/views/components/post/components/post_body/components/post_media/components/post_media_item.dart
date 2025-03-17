@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:ion/app/components/image/app_cached_network_image.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/video_preview/video_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -36,7 +36,7 @@ class PostMediaItem extends HookWidget {
         child: AspectRatio(
           aspectRatio: aspectRatio,
           child: switch (mediaItem.mediaType) {
-            MediaType.image => AppCachedNetworkImage(
+            MediaType.image => IonNetworkImage(
                 imageUrl: mediaItem.url,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) => const SizedBox.shrink(),

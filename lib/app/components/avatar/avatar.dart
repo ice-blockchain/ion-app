@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/components/avatar/default_avatar.dart';
-import 'package:ion/app/components/image/app_cached_network_image.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/shapes/hexagon_path.dart';
 import 'package:ion/app/components/shapes/shape.dart';
 
@@ -35,7 +35,7 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = imageUrl != null
-        ? AppCachedNetworkImage(
+        ? IonNetworkImage(
             imageUrl: imageUrl!,
             width: size,
             height: size,

@@ -2,8 +2,8 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 
-class AppCachedNetworkImage extends CachedNetworkImage {
-  AppCachedNetworkImage({
+class IonNetworkImage extends CachedNetworkImage {
+  IonNetworkImage({
     required super.imageUrl,
     super.key,
     super.imageBuilder,

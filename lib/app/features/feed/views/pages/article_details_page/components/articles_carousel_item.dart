@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/image/app_cached_network_image.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
@@ -70,7 +70,7 @@ class ArticlesCarouselItem extends StatelessWidget {
                       width: 96.0.s,
                       height: 87.0.s,
                       child: article.data.image != null
-                          ? AppCachedNetworkImage(
+                          ? IonNetworkImage(
                               imageUrl: article.data.image!,
                               fit: BoxFit.cover,
                             )

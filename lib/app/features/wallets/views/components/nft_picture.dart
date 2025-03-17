@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:ion/app/components/image/app_cached_network_image.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/num.dart';
 
 class NftPicture extends StatelessWidget {
@@ -19,7 +19,7 @@ class NftPicture extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
-      child: AppCachedNetworkImage(
+      child: IonNetworkImage(
         imageUrl: imageUrl,
         width: imageWidth,
         height: imageHeight,
