@@ -5,8 +5,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class PullToRefreshBuilder extends StatelessWidget {
+class PullToRefreshBuilder extends HookWidget {
   const PullToRefreshBuilder({
     required this.builder,
     required this.slivers,
@@ -28,6 +29,12 @@ class PullToRefreshBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRefreshing = useState(false);
+    final refreshIndicatorKey = useMemoized(
+      GlobalKey<RefreshIndicatorState>.new,
+      [],
+    );
+
     if (!kIsWeb && Platform.isIOS) {
       return builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
@@ -36,10 +43,23 @@ class PullToRefreshBuilder extends StatelessWidget {
       ]);
     }
 
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      edgeOffset: refreshIndicatorEdgeOffset,
-      child: builder(context, [if (sliverAppBar != null) sliverAppBar!, ...slivers]),
+    return GestureDetector(
+      // fallback for when refresh indicator doesn't intercept pull gesture itself
+      onVerticalDragUpdate: (details) {
+        if (!isRefreshing.value && details.primaryDelta != null && details.primaryDelta! > 10) {
+          isRefreshing.value = true;
+          refreshIndicatorKey.currentState?.show().whenComplete(() => isRefreshing.value = false);
+        }
+      },
+      child: RefreshIndicator(
+        key: refreshIndicatorKey,
+        onRefresh: onRefresh,
+        edgeOffset: refreshIndicatorEdgeOffset,
+        child: builder(context, [
+          if (sliverAppBar != null) sliverAppBar!,
+          ...slivers,
+        ]),
+      ),
     );
   }
 }
