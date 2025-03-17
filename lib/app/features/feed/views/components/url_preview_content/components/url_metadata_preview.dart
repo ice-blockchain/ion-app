@@ -48,7 +48,7 @@ class _UrlMetadataImage extends StatelessWidget {
         topLeft: Radius.circular(12.0.s),
         topRight: Radius.circular(12.0.s),
       ),
-      child: CachedNetworkImage(
+      child: IonNetworkImage(
         imageUrl: imageUrl,
         width: double.infinity,
         fit: BoxFit.cover,
@@ -73,7 +73,7 @@ class _UrlMetadataSiteInfo extends StatelessWidget {
       padding: EdgeInsets.only(left: 12.0.s, right: 12.0.s, top: 12.0.s),
       child: Row(
         children: [
-          CachedNetworkImage(
+          IonNetworkImage(
             imageUrl: favIconUrl,
             imageBuilder: (context, imageProvider) => Row(
               children: [

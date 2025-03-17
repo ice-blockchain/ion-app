@@ -77,7 +77,7 @@ class _MetaImage extends StatelessWidget {
       padding: EdgeInsets.only(top: 8.0.s),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
-        child: CachedNetworkImage(
+        child: IonNetworkImage(
           imageUrl: imageUrl,
           width: double.infinity,
           fit: BoxFit.cover,
@@ -105,7 +105,7 @@ class _MetaSiteInfo extends StatelessWidget {
       padding: EdgeInsets.only(top: 8.0.s),
       child: Row(
         children: [
-          CachedNetworkImage(
+          IonNetworkImage(
             imageUrl: favIconUrl,
             width: 16.0.s,
             height: 16.0.s,

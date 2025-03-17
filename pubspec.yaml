@@ -13,7 +13,7 @@ dependencies:
   audio_waveforms: ^1.1.1
   back_button_interceptor: ^7.0.3
   bech32: ^0.2.2
-  cached_network_image: ^3.3.1
+  cached_network_image: ^3.4.1
   cached_video_player_plus: ^3.0.3
   camera: ^0.11.0+2
   charcode: ^1.4.0

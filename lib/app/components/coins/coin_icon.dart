@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -19,7 +19,7 @@ class CoinIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconSize = size ?? 24.0.s;
 
-    return CachedNetworkImage(
+    return IonNetworkImage(
       imageUrl: imageUrl,
       width: iconSize,
       height: iconSize,

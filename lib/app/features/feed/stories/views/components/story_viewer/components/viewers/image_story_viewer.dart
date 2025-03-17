@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/feed/stories/providers/story_image_loading_provider.c.dart';
 
@@ -20,11 +20,9 @@ class ImageStoryViewer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cacheManager = ref.watch(storyImageCacheManagerProvider);
 
-    return CachedNetworkImage(
+    return IonNetworkImage(
       imageUrl: path,
-      fit: BoxFit.cover,
       cacheManager: cacheManager,
-      fadeInDuration: Duration.zero,
       fadeOutDuration: Duration.zero,
       placeholderFadeInDuration: Duration.zero,
       filterQuality: FilterQuality.high,
