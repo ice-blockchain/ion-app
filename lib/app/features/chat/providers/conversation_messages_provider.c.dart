@@ -17,7 +17,7 @@ class ConversationMessages extends _$ConversationMessages {
     if (currentUserMasterPubkey == null) {
       return const Stream.empty();
     }
-    
+
     final stream = ref.watch(conversationMessageDaoProvider).getMessages(
           conversationId: conversationId,
           currentUserMasterPubkey: currentUserMasterPubkey,
