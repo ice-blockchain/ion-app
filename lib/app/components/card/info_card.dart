@@ -9,6 +9,7 @@ class InfoCard extends StatelessWidget {
     required this.title,
     this.description,
     this.descriptionWidget,
+    this.descriptionTextAlign = TextAlign.center,
     super.key,
   }) : assert(
           description != null || descriptionWidget != null,
@@ -19,6 +20,7 @@ class InfoCard extends StatelessWidget {
   final String title;
   final String? description;
   final Widget? descriptionWidget;
+  final TextAlign descriptionTextAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class InfoCard extends StatelessWidget {
           Widget() => descriptionWidget!,
           null when description != null => Text(
               description!,
-              textAlign: TextAlign.center,
+              textAlign: descriptionTextAlign,
               style: context.theme.appTextThemes.body2.copyWith(
                 color: context.theme.appColors.secondaryText,
               ),

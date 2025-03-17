@@ -2,8 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/info_type.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/views/pages/info/info_modal.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/utils/num.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -25,18 +28,28 @@ class NetworkFeeOptionWidget extends StatelessWidget {
             color: context.theme.appColors.primaryText,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 6.0.s),
-          child: IconTheme(
-            data: IconThemeData(
-              size: 16.0.s,
-            ),
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                context.theme.appColors.tertararyText,
-                BlendMode.srcIn,
+        GestureDetector(
+          onTap: () {
+            showSimpleBottomSheet<void>(
+              context: context,
+              child: const InfoModal(
+                infoType: InfoType.networkFee,
               ),
-              child: Assets.svg.iconBlockInformation.icon(size: 16.0.s),
+            );
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 6.0.s),
+            child: IconTheme(
+              data: IconThemeData(
+                size: 16.0.s,
+              ),
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  context.theme.appColors.tertararyText,
+                  BlendMode.srcIn,
+                ),
+                child: Assets.svg.iconBlockInformation.icon(size: 16.0.s),
+              ),
             ),
           ),
         ),
