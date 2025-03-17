@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -49,21 +46,12 @@ class ArticleDetailsPage extends HookConsumerWidget {
     final scrollController = useScrollController();
     final progress = useScrollIndicator(scrollController);
 
-    final deltaContent = articleEntity.data.richText?.content;
-    Delta? delta;
-
-    try {
-      if (deltaContent != null) {
-        delta = Delta.fromJson(jsonDecode(deltaContent) as List<dynamic>);
-      }
-    } catch (e) {
-      delta = null;
-    }
-
-    // TODO: Remove this fallback and keep only rich text option
-    delta ??= useMemoized(
-      () => markdownToDelta(articleEntity.data.content),
-      [articleEntity.data.content],
+    final delta = useMemoized(
+      () => parseAndConvertDelta(
+        articleEntity.data.richText?.content,
+        articleEntity.data.content,
+      ),
+      [articleEntity.data.richText?.content, articleEntity.data.content],
     );
 
     final topics = articleEntity.data.topics;
@@ -104,13 +92,12 @@ class ArticleDetailsPage extends HookConsumerWidget {
                         article: articleEntity,
                       ),
                       if (articleEntity.data.content.isNotEmpty) SizedBox(height: 20.0.s),
-                      if (delta != null)
-                        ScreenSideOffset.small(
-                          child: TextEditorPreview(
-                            content: delta,
-                            media: articleEntity.data.media,
-                          ),
+                      ScreenSideOffset.small(
+                        child: TextEditorPreview(
+                          content: delta,
+                          media: articleEntity.data.media,
                         ),
+                      ),
                     ],
                     ScreenSideOffset.small(
                       child: CounterItemsFooter(eventReference: eventReference),

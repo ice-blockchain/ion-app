@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:convert';
+
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
@@ -136,4 +138,35 @@ Delta markdownToDelta(String markdown) {
   }
 
   return processedDelta;
+}
+
+Delta convertTextWithImageAttributesToEmbeds(Delta delta) {
+  final newDelta = Delta();
+
+  for (final op in delta.operations) {
+    if (op.data is String && (op.attributes?.containsKey('text-editor-single-image') ?? false)) {
+      final imageUrl = op.attributes!['text-editor-single-image'] as String;
+      newDelta.insert({'text-editor-single-image': imageUrl});
+    } else {
+      newDelta.insert(op.data, op.attributes);
+    }
+  }
+
+  return newDelta;
+}
+
+Delta parseAndConvertDelta(String? deltaContent, String fallbackMarkdown) {
+  Delta? delta;
+
+  try {
+    if (deltaContent != null) {
+      delta = Delta.fromJson(jsonDecode(deltaContent) as List<dynamic>);
+      delta = convertTextWithImageAttributesToEmbeds(delta);
+    }
+  } catch (e) {
+    delta = null;
+  }
+
+  // Fallback to markdown if delta parsing failed
+  return delta ?? markdownToDelta(fallbackMarkdown);
 }
