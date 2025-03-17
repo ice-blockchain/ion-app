@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -34,6 +35,7 @@ import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -72,6 +74,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
 
+      final richText = RichText(
+        protocol: 'quill_delta',
+        content: jsonEncode(postContent.toJson()),
+      );
+
       final postData = ModifiablePostData(
         content: _buildContentWithMediaLinks(content: postContent, media: media.values.toList()),
         media: media,
@@ -85,6 +92,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
+        richText: richText,
       );
 
       final posts = await _sendPostEntities([...files, postData]);
