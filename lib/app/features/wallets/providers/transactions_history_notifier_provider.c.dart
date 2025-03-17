@@ -41,7 +41,7 @@ class TransactionsHistoryNotifier extends _$TransactionsHistoryNotifier {
       return result;
     }
 
-    // Load the the next page
+    // Load the next page
     Future.microtask(() {
       unawaited(
         notifier.fetchEntities(),
