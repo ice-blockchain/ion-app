@@ -8,6 +8,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
@@ -89,6 +90,8 @@ class CreateArticle extends _$CreateArticle {
       );
 
       await _sendArticleEntities([...files, articleData]);
+
+      ref.read(draftArticleProvider.notifier).clear();
     });
   }
 

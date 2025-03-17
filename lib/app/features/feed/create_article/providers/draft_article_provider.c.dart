@@ -23,6 +23,7 @@ class DraftArticleState with _$DraftArticleState {
     MediaFile? image,
     @Default('') String title,
     String? imageColor,
+    @Default({}) Map<String, String> codeBlocks,
   }) = _DraftArticleState;
 }
 
@@ -52,6 +53,28 @@ class DraftArticle extends _$DraftArticle {
     );
   }
 
+  void updateCodeBlock(String id, String content) {
+    final updatedCodeBlocks = Map<String, String>.from(state.codeBlocks);
+    updatedCodeBlocks[id] = content;
+
+    state = state.copyWith(
+      codeBlocks: updatedCodeBlocks,
+    );
+  }
+
+  void removeCodeBlock(String id) {
+    final updatedCodeBlocks = Map<String, String>.from(state.codeBlocks)..remove(id);
+    state = state.copyWith(codeBlocks: updatedCodeBlocks);
+  }
+
+  String? getCodeBlockContent(String id) {
+    return state.codeBlocks[id];
+  }
+
+  Map<String, String> getAllCodeBlocks() {
+    return state.codeBlocks;
+  }
+
   Future<String?> _extractDominantColorFromImage(MediaFile? image) async {
     if (image == null) return null;
 
@@ -60,5 +83,9 @@ class DraftArticle extends _$DraftArticle {
     final dominantColor = paletteGenerator.dominantColor?.color;
 
     return dominantColor != null ? toHexColor(dominantColor) : null;
+  }
+
+  void clear() {
+    state = DraftArticleState(content: Delta());
   }
 }

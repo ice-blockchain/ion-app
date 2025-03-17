@@ -2,16 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar_button/actions_toolbar_button.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:uuid/uuid.dart';
 
-class ToolbarCodeButton extends StatelessWidget {
+String generateCodeBlockId() => const Uuid().v4();
+
+const String codeBlockIdAttr = 'code-block-id';
+
+class ToolbarCodeButton extends ConsumerWidget {
   const ToolbarCodeButton({required this.textEditorController, super.key});
   final QuillController textEditorController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ActionsToolbarButton(
       icon: Assets.svg.iconArticleCode,
       onPressed: () {
@@ -24,9 +31,13 @@ class ToolbarCodeButton extends StatelessWidget {
           index += 1;
         }
 
+        final codeBlockId = generateCodeBlockId();
+
+        ref.read(draftArticleProvider.notifier).updateCodeBlock(codeBlockId, '');
+
         textEditorController.document.insert(
           index,
-          TextEditorCodeEmbed(content: ''),
+          TextEditorCodeEmbed.code(codeBlockId),
         );
 
         textEditorController.document.insert(index + 1, '\n');
