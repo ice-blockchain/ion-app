@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -27,6 +28,15 @@ class StoryViewerPage extends HookConsumerWidget {
     useStatusBarColor();
 
     final storyViewerState = ref.watch(storyViewingControllerProvider(pubkey));
+
+    useOnInit(
+      () {
+        if (storyViewerState.userStories.isEmpty && context.mounted && context.canPop()) {
+          context.pop();
+        }
+      },
+      [storyViewerState.userStories.length],
+    );
 
     useRoutePresence(
       onBecameInactive: () => ref.read(storyPauseControllerProvider.notifier).paused = true,
