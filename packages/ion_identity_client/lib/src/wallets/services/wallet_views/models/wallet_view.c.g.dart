@@ -11,6 +11,9 @@ _$WalletViewImpl _$$WalletViewImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       name: json['name'] as String,
       coins: const CoinInWalletListConverter().fromJson(json['coins'] as List),
+      nfts: (json['nfts'] as List<dynamic>)
+          .map((e) => WalletNft.fromJson(e as Map<String, dynamic>))
+          .toList(),
       aggregation: (json['aggregation'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k,
                 WalletViewAggregationItem.fromJson(e as Map<String, dynamic>)),
@@ -33,6 +36,7 @@ Map<String, dynamic> _$$WalletViewImplToJson(_$WalletViewImpl instance) =>
       'id': instance.id,
       'name': instance.name,
       'coins': const CoinInWalletListConverter().toJson(instance.coins),
+      'nfts': instance.nfts.map((e) => e.toJson()).toList(),
       'aggregation':
           instance.aggregation.map((k, e) => MapEntry(k, e.toJson())),
       'symbolGroups': instance.symbolGroups,
