@@ -269,6 +269,7 @@ class StoryViewerRoute extends BaseRouteData {
   StoryViewerRoute({required this.pubkey})
       : super(
           child: StoryViewerPage(pubkey: pubkey),
+          type: IceRouteType.swipeDismissible,
         );
 
   final String pubkey;

@@ -46,39 +46,36 @@ class StoryViewerPage extends HookConsumerWidget {
 
     final drag = usePageDismiss(context);
 
-    return Hero(
-      tag: 'story-$pubkey',
-      child: Material(
-        color: Colors.transparent,
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle(
-            statusBarColor: context.theme.appColors.primaryText,
-            statusBarIconBrightness: Brightness.light,
-            statusBarBrightness: Brightness.dark,
-          ),
-          child: GestureDetector(
-            onVerticalDragUpdate: drag.onDragUpdate,
-            onVerticalDragEnd: drag.onDragEnd,
-            child: Transform.translate(
-              offset: Offset(0, drag.offset),
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                backgroundColor: context.theme.appColors.primaryText,
-                body: SafeArea(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: StoriesSwiper(
-                          pubkey: pubkey,
-                          userStories: storyViewerState.userStories,
-                          currentUserIndex: storyViewerState.currentUserIndex,
-                        ),
+    return Material(
+      color: Colors.transparent,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: context.theme.appColors.primaryText,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
+        child: GestureDetector(
+          onVerticalDragUpdate: drag.onDragUpdate,
+          onVerticalDragEnd: drag.onDragEnd,
+          child: Transform.translate(
+            offset: Offset(0, drag.offset),
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              backgroundColor: context.theme.appColors.primaryText,
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: StoriesSwiper(
+                        pubkey: pubkey,
+                        userStories: storyViewerState.userStories,
+                        currentUserIndex: storyViewerState.currentUserIndex,
                       ),
-                      SizedBox(height: 28.0.s),
-                      StoryProgressBarContainer(pubkey: pubkey),
-                      ScreenBottomOffset(margin: 16.0.s),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 28.0.s),
+                    StoryProgressBarContainer(pubkey: pubkey),
+                    ScreenBottomOffset(margin: 16.0.s),
+                  ],
                 ),
               ),
             ),

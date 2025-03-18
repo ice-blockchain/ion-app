@@ -17,7 +17,11 @@ class DismissibleContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DismissiblePage(
-      onDismissed: () => context.pop(),
+      onDismissed: () {
+        if (context.canPop()) {
+          context.pop();
+        }
+      },
       direction: DismissiblePageDismissDirection.multi,
       child: child,
     );
