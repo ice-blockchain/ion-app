@@ -41,25 +41,25 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
       WITH DailyLikes AS (
           SELECT
               DATE(datetime(created_at, 'unixepoch', 'localtime')) AS event_date,
-              event_id,
+              event_reference,
               pubkey,
               created_at,
-              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')), event_id 
+              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')), event_reference 
                   ORDER BY created_at DESC) AS rn
           FROM
               likes_table
       )
       SELECT
           event_date,
-          event_id,
+          event_reference,
           GROUP_CONCAT(CASE WHEN rn <= 10 THEN pubkey END, ',') AS latest_pubkeys,
           COUNT(DISTINCT pubkey) AS unique_pubkey_count
       FROM
           DailyLikes
       GROUP BY
-          event_date, event_id
+          event_date, event_reference
       ORDER BY
-          event_date DESC, event_id DESC;
+          event_date DESC, event_reference DESC;
     ''',
   },
 )
