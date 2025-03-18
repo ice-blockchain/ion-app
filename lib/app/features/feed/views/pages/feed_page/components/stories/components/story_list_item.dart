@@ -36,17 +36,14 @@ class StoryListItem extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return Hero(
-      tag: 'story-$pubkey',
-      child: Material(
-        color: Colors.transparent,
-        child: StoryItemContent(
-          imageUrl: userMetadata.data.picture,
-          name: userMetadata.data.name,
-          gradient: gradient,
-          isViewed: allStoriesViewed,
-          onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
-        ),
+    return Material(
+      color: Colors.transparent,
+      child: StoryItemContent(
+        imageUrl: userMetadata.data.picture,
+        name: userMetadata.data.name,
+        gradient: gradient,
+        isViewed: allStoriesViewed,
+        onTap: () => StoryViewerRoute(pubkey: pubkey).push<void>(context),
       ),
     );
   }

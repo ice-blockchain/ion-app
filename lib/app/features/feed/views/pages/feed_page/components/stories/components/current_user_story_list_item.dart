@@ -2,18 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
-import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
 import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_icon.dart';
-import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/story_item_content.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/current_user_avatar_with_permission.dart';
+import 'package:ion/app/features/feed/views/pages/feed_page/components/stories/components/plus_button_with_permission.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 
 class CurrentUserStoryListItem extends HookConsumerWidget {
   const CurrentUserStoryListItem({
@@ -24,8 +18,6 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
 
   final String pubkey;
   final Gradient? gradient;
-
-  static double get plusSize => 18.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,36 +37,22 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
       data: (userMetadata) {
         if (userMetadata == null) return const SizedBox.shrink();
 
-        return PermissionAwareWidget(
-          permissionType: Permission.camera,
-          onGrantedPredicate: () =>
-              GoRouter.of(context).state?.fullPath?.startsWith(FeedRoute().location) ?? false,
-          onGranted: () => hasStories
-              ? StoryViewerRoute(pubkey: pubkey).push<void>(context)
-              : StoryRecordRoute().push<void>(context),
-          requestDialog: const PermissionRequestSheet(permission: Permission.camera),
-          settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
-          builder: (context, onPressed) {
-            return Hero(
-              tag: 'story-$pubkey',
-              child: Material(
-                color: Colors.transparent,
-                child: StoryItemContent(
-                  imageUrl: userMetadata.data.picture,
-                  name: context.i18n.common_you,
-                  gradient: hasStories ? gradient : null,
-                  isViewed: allStoriesViewed,
-                  onTap: onPressed,
-                  child: !hasStories
-                      ? Positioned(
-                          bottom: -plusSize / 2,
-                          child: PlusIcon(size: plusSize),
-                        )
-                      : null,
-                ),
+        return Material(
+          color: Colors.transparent,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              CurrentUserAvatarWithPermission(
+                pubkey: pubkey,
+                hasStories: hasStories,
+                gradient: gradient,
+                isViewed: allStoriesViewed,
+                imageUrl: userMetadata.data.picture,
               ),
-            );
-          },
+              const PlusButtonWithPermission(),
+            ],
+          ),
         );
       },
       orElse: () => const SizedBox.shrink(),

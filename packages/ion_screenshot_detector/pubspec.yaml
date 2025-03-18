@@ -1,7 +1,6 @@
 name: ion_screenshot_detector
 description: "A new Flutter plugin project."
 version: 0.0.1
-homepage:
 
 environment:
   sdk: '>=3.3.4 <4.0.0'

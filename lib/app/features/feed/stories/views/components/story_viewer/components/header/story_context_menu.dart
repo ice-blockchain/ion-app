@@ -7,6 +7,7 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
+import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/pages/delete_story_modal/delete_story_modal.dart';
@@ -196,7 +197,13 @@ class _OtherUserMenuItems extends ConsumerWidget {
         ContextMenuItem(
           label: i18n.button_unfollow,
           iconAsset: Assets.svg.iconCategoriesUnflow,
-          onPressed: onClose,
+          onPressed: () {
+            onClose();
+            showSimpleBottomSheet<void>(
+              context: context,
+              child: UnfollowUserModal(pubkey: pubkey),
+            );
+          },
           onLayout: onUpdateWidth,
         ),
       ],
