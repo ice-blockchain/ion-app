@@ -20,6 +20,7 @@ class FollowersNotificationsList extends HookConsumerWidget {
 
     final followers = ref.watch(followersNotificationsProvider).valueOrNull;
 
+    //TODO:list to common component
     return PullToRefreshBuilder(
       slivers: [
         if (followers == null)

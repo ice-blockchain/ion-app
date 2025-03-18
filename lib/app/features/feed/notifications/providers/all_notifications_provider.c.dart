@@ -15,6 +15,7 @@ Future<List<IonNotification>> allNotifications(Ref ref) async {
   final commentsRepository = ref.watch(commentsRepositoryProvider);
   final followersRepository = ref.watch(followersRepositoryProvider);
   final likesRepository = ref.watch(likesRepositoryProvider);
+  //TODO:parallel
   final comments = await commentsRepository.getComments();
   final likes = await likesRepository.getAggregated();
   final followers = await followersRepository.getAggregated();
