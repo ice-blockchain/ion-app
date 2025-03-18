@@ -26,39 +26,30 @@ class AggregatedByDayRow {
 
 String getAggregatedByDayQuery({
   required String table,
-  int maxNumOfRowsPerDay = 10,
+  int maxPubkeysPerItem = 10,
 }) {
   return '''
-      WITH RowsByDate AS (
+      WITH DailyLikes AS (
           SELECT
-              *,
-              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS Date,
-              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')) ORDER BY created_at DESC) AS RowNum
-          FROM 
+              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS event_date,
+              event_id,
+              pubkey,
+              created_at,
+              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')), event_id 
+                  ORDER BY created_at DESC) AS rn
+          FROM
               $table
-      ),
-      DailyCount AS (
-          SELECT 
-              Date,
-              COUNT(*) AS Count
-          FROM 
-              RowsByDate
-          GROUP BY 
-              Date
       )
       SELECT 
-          r.Date,
-          GROUP_CONCAT(r.event_reference, ',' ORDER BY r.created_at DESC) AS LastReferences,
-          d.Count
+          event_date,
+          event_id,
+          GROUP_CONCAT(CASE WHEN rn <= $maxPubkeysPerItem THEN pubkey END, ',') AS latest_pubkeys,
+          COUNT(DISTINCT pubkey) AS unique_pubkey_count
       FROM 
-          RowsByDate r
-      JOIN 
-          DailyCount d ON r.Date = d.Date
-      WHERE 
-          r.RowNum <= $maxNumOfRowsPerDay
+          DailyLikes
       GROUP BY 
-          r.Date
+          event_date, event_id
       ORDER BY
-          r.created_at DESC;
+          event_date DESC, event_id DESC;
     ''';
 }
