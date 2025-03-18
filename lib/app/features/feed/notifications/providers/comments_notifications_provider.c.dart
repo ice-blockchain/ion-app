@@ -6,10 +6,10 @@ import 'package:ion/app/features/feed/notifications/data/repository/comments_rep
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_comments_provider.c.g.dart';
+part 'comments_notifications_provider.c.g.dart';
 
 @riverpod
-Future<List<CommentIonNotification>> notificationComments(Ref ref) async {
+Future<List<CommentIonNotification>> commentsNotifications(Ref ref) async {
   final commentsRepository = ref.watch(commentsRepositoryProvider);
   return commentsRepository.getComments();
 }

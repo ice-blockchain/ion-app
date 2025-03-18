@@ -6,10 +6,10 @@ import 'package:ion/app/features/feed/notifications/data/repository/likes_reposi
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_likes_provider.c.g.dart';
+part 'likes_notifications_provider.c.g.dart';
 
 @riverpod
-Future<List<LikesIonNotification>> notificationLikes(Ref ref) async {
+Future<List<LikesIonNotification>> likesNotifications(Ref ref) async {
   final likesRepository = ref.watch(likesRepositoryProvider);
   return likesRepository.getAggregated();
 }

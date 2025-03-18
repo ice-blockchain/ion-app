@@ -5,12 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_comments_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/providers/comments_notifications_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_item.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/empty_list.dart';
 
-class CommentsNotifications extends HookConsumerWidget {
-  const CommentsNotifications({
+class CommentsNotificationsList extends HookConsumerWidget {
+  const CommentsNotificationsList({
     super.key,
   });
 
@@ -18,7 +18,7 @@ class CommentsNotifications extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final comments = ref.watch(notificationCommentsProvider).valueOrNull;
+    final comments = ref.watch(commentsNotificationsProvider).valueOrNull;
 
     return PullToRefreshBuilder(
       slivers: [
@@ -34,7 +34,7 @@ class CommentsNotifications extends HookConsumerWidget {
             },
           ),
       ],
-      onRefresh: () async => ref.invalidate(notificationCommentsProvider),
+      onRefresh: () async => ref.invalidate(commentsNotificationsProvider),
       builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
   }

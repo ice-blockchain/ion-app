@@ -6,10 +6,10 @@ import 'package:ion/app/features/feed/notifications/data/repository/followers_re
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'notification_followers_provider.c.g.dart';
+part 'followers_notifications_provider.c.g.dart';
 
 @riverpod
-Future<List<FollowersIonNotification>> notificationFollowers(Ref ref) async {
+Future<List<FollowersIonNotification>> followersNotifications(Ref ref) async {
   final followersRepository = ref.watch(followersRepositoryProvider);
   return followersRepository.getAggregated();
 }
