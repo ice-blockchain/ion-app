@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'notification_comments_provider.c.g.dart';
 
 @riverpod
-Future<List<IonConnectNotification>> notificationComments(Ref ref) async {
+Future<List<CommentIonNotification>> notificationComments(Ref ref) async {
   final commentsRepository = ref.watch(commentsRepositoryProvider);
   return commentsRepository.getComments();
 }

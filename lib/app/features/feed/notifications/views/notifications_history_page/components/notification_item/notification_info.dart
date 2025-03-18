@@ -19,7 +19,7 @@ class NotificationInfo extends HookConsumerWidget {
     super.key,
   });
 
-  final IonConnectNotification notification;
+  final IonNotification notification;
 
   TextSpan _getDateTextSpan(BuildContext context, {required Locale locale}) {
     return TextSpan(
@@ -52,7 +52,7 @@ class NotificationInfo extends HookConsumerWidget {
 
     final newTapRecognizers = <TapGestureRecognizer>[];
     final textSpan = replaceString(
-      notification.type.getDescription(context, notification.pubkeys),
+      notification.getDescription(context),
       tagRegex('username'),
       (String text, int index) {
         final pubkey = notification.pubkeys[index];

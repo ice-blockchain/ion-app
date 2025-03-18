@@ -7,7 +7,6 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/comments_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/comments_table.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notification.c.dart';
-import 'package:ion/app/features/feed/notifications/data/model/notifications_type.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,29 +35,27 @@ class CommentsRepository {
     return _commentsDao.insert(entity, type: type);
   }
 
-  Future<List<IonConnectNotification>> getComments() async {
+  Future<List<CommentIonNotification>> getComments() async {
     final comments = await _commentsDao.getAll();
     return comments.map((comment) {
       final type = switch (comment.type) {
-        CommentType.quote => NotificationsType.quote,
-        CommentType.reply => NotificationsType.reply,
-        CommentType.repost => NotificationsType.repost,
+        CommentType.quote => CommentIonNotificationType.quote,
+        CommentType.reply => CommentIonNotificationType.reply,
+        CommentType.repost => CommentIonNotificationType.repost,
       };
-      return IonConnectNotification(
+      return CommentIonNotification(
         type: type,
-        pubkeys: [comment.eventReference.pubkey],
-        timestamp: comment.createdAt,
         eventReference: comment.eventReference,
+        timestamp: comment.createdAt,
       );
     }).toList();
   }
 
-  Future<DateTime?> lastCreatedAt(NotificationsType type) async {
+  Future<DateTime?> lastCreatedAt(CommentIonNotificationType type) async {
     final commentType = switch (type) {
-      NotificationsType.quote => CommentType.quote,
-      NotificationsType.reply => CommentType.reply,
-      NotificationsType.repost => CommentType.repost,
-      _ => throw UnknownNotificationCommentException(type)
+      CommentIonNotificationType.quote => CommentType.quote,
+      CommentIonNotificationType.reply => CommentType.reply,
+      CommentIonNotificationType.repost => CommentType.repost,
     };
     return _commentsDao.getLastCreatedAt(commentType);
   }

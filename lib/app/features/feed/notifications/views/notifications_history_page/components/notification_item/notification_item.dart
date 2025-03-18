@@ -7,8 +7,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_connect_notification.c.dart';
+import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_icon.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_info.dart';
-import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_type_icon.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/user_avatar.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
@@ -23,7 +23,7 @@ class NotificationItem extends ConsumerWidget {
     super.key,
   });
 
-  final IonConnectNotification notification;
+  final IonNotification notification;
 
   static double get separator => 4.0.s;
 
@@ -35,24 +35,25 @@ class NotificationItem extends ConsumerWidget {
             separator * (iconsCount - 1)) /
         iconsCount;
 
-    final eventReference = notification.eventReference;
+    //TODO:refactor!
+    final eventReference = switch (notification) {
+      final CommentIonNotification comment => comment.eventReference,
+    };
     IonConnectEntity? entity;
 
-    if (eventReference != null) {
-      // Hide the item if repost / post is deleted.
-      entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
-      if (entity == null || (entity is SoftDeletableEntity && entity.isDeleted)) {
-        return const SizedBox.shrink();
-      }
+    // Hide the item if repost / post is deleted.
+    entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+    if (entity == null || (entity is SoftDeletableEntity && entity.isDeleted)) {
+      return const SizedBox.shrink();
+    }
 
-      // Hide the item if reposted event is deleted.
-      if (entity is GenericRepostEntity) {
-        final repostedEntity =
-            ref.watch(ionConnectSyncEntityProvider(eventReference: entity.data.eventReference));
-        if (repostedEntity == null ||
-            (repostedEntity is SoftDeletableEntity && repostedEntity.isDeleted)) {
-          return const SizedBox.shrink();
-        }
+    // Hide the item if reposted event is deleted.
+    if (entity is GenericRepostEntity) {
+      final repostedEntity =
+          ref.watch(ionConnectSyncEntityProvider(eventReference: entity.data.eventReference));
+      if (repostedEntity == null ||
+          (repostedEntity is SoftDeletableEntity && repostedEntity.isDeleted)) {
+        return const SizedBox.shrink();
       }
     }
 
@@ -63,9 +64,10 @@ class NotificationItem extends ConsumerWidget {
         ScreenSideOffset.small(
           child: Row(
             children: [
-              NotificationTypeIcon(
-                notificationsType: notification.type,
-                iconSize: iconSize,
+              NotificationIcon(
+                asset: notification.asset,
+                backgroundColor: notification.getBackgroundColor(context),
+                size: iconSize,
               ),
               ...notification.pubkeys.take(iconsCount - 1).map((pubkey) {
                 return Padding(
@@ -83,14 +85,13 @@ class NotificationItem extends ConsumerWidget {
         ScreenSideOffset.small(
           child: NotificationInfo(notification: notification),
         ),
-        if (entity != null)
-          GestureDetector(
-            onTap: () {
-              PostDetailsRoute(eventReference: entity!.toEventReference().encode())
-                  .push<void>(context);
-            },
-            child: _NotificationItemEvent(entity: entity),
-          ),
+        GestureDetector(
+          onTap: () {
+            PostDetailsRoute(eventReference: entity!.toEventReference().encode())
+                .push<void>(context);
+          },
+          child: _NotificationItemEvent(entity: entity),
+        ),
         SizedBox(height: 16.0.s),
         FeedListSeparator(),
       ],
