@@ -48,11 +48,6 @@ MediaAspectRatioResult attachedMediaAspectRatio(Iterable<MediaAspectRatio> ratio
     return const MediaAspectRatioResult(0);
   }
 
-  if (ratioProviders.length == 1) {
-    final MediaAspectRatio(:aspectRatio) = ratioProviders.first;
-    return MediaAspectRatioResult(aspectRatio ?? 0);
-  }
-
   final horizontalRatios = <double>[];
   final verticalRatios = <double>[];
 
