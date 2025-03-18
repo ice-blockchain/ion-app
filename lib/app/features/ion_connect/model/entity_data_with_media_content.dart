@@ -7,6 +7,7 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 mixin EntityDataWithMediaContent {
   String get content;
   Map<String, MediaAttachment> get media;
+  String? get richText;
 
   bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
 

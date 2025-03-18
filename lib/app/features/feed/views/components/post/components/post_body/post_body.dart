@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
@@ -16,7 +15,6 @@ import 'package:ion/app/features/feed/views/components/post/components/post_body
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 
 class PostBody extends HookConsumerWidget {
@@ -43,22 +41,7 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final richTextContent = (postData is ModifiablePostData) ? postData.richText?.content : null;
-    final richTextDelta = useRichTextContentToDelta(deltaContent: richTextContent);
-
-    final ({Delta content, List<MediaAttachment> media}) parsedContent = useMemoized(
-      () {
-        if (richTextDelta != null) {
-          return (content: richTextDelta, media: postData.media.values.toList());
-        } else {
-          return useParsedMediaContent(data: postData);
-        }
-      },
-      [richTextDelta, postData],
-    );
-
-    final content = parsedContent.content;
-    final media = parsedContent.media;
+    final (:content, :media) = useParsedMediaContent(data: postData);
 
     final firstLinkOperation = useMemoized(
       () => content.operations.firstWhereOrNull(
