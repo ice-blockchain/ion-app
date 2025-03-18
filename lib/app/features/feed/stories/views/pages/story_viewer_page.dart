@@ -35,7 +35,7 @@ class StoryViewerPage extends HookConsumerWidget {
           context.pop();
         }
       },
-      [storyViewerState.userStories.length],
+      [storyViewerState.userStories.isEmpty],
     );
 
     useRoutePresence(
