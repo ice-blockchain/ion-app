@@ -7,7 +7,6 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
-import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_network.dart';
 
 class NftListItem extends StatelessWidget {
@@ -23,7 +22,7 @@ class NftListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
-      title: Text(nftData.symbol),
+      title: Text(nftData.name),
       onTap: onTap,
       subtitle: Text('#${nftData.tokenId}'),
       backgroundColor: context.theme.appColors.tertararyBackground,
@@ -35,10 +34,7 @@ class NftListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           const Text(''),
-          NftNetwork(
-            nftData: nftData,
-            layoutType: NftLayoutType.list,
-          ),
+          NftNetwork(network: nftData.network),
         ],
       ),
     );

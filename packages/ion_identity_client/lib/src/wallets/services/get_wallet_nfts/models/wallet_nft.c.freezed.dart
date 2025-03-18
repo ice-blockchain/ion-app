@@ -26,6 +26,10 @@ mixin _$WalletNft {
   String get tokenId => throw _privateConstructorUsedError;
   String get tokenUri => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get network => throw _privateConstructorUsedError;
+  String get collectionImageUri => throw _privateConstructorUsedError;
+  String? get walletId => throw _privateConstructorUsedError;
 
   /// Serializes this WalletNft to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,7 +52,11 @@ abstract class $WalletNftCopyWith<$Res> {
       String symbol,
       String tokenId,
       String tokenUri,
-      String description});
+      String description,
+      String name,
+      String network,
+      String collectionImageUri,
+      String? walletId});
 }
 
 /// @nodoc
@@ -72,6 +80,10 @@ class _$WalletNftCopyWithImpl<$Res, $Val extends WalletNft>
     Object? tokenId = null,
     Object? tokenUri = null,
     Object? description = null,
+    Object? name = null,
+    Object? network = null,
+    Object? collectionImageUri = null,
+    Object? walletId = freezed,
   }) {
     return _then(_value.copyWith(
       kind: null == kind
@@ -98,6 +110,22 @@ class _$WalletNftCopyWithImpl<$Res, $Val extends WalletNft>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      network: null == network
+          ? _value.network
+          : network // ignore: cast_nullable_to_non_nullable
+              as String,
+      collectionImageUri: null == collectionImageUri
+          ? _value.collectionImageUri
+          : collectionImageUri // ignore: cast_nullable_to_non_nullable
+              as String,
+      walletId: freezed == walletId
+          ? _value.walletId
+          : walletId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -116,7 +144,11 @@ abstract class _$$WalletNftImplCopyWith<$Res>
       String symbol,
       String tokenId,
       String tokenUri,
-      String description});
+      String description,
+      String name,
+      String network,
+      String collectionImageUri,
+      String? walletId});
 }
 
 /// @nodoc
@@ -138,6 +170,10 @@ class __$$WalletNftImplCopyWithImpl<$Res>
     Object? tokenId = null,
     Object? tokenUri = null,
     Object? description = null,
+    Object? name = null,
+    Object? network = null,
+    Object? collectionImageUri = null,
+    Object? walletId = freezed,
   }) {
     return _then(_$WalletNftImpl(
       kind: null == kind
@@ -164,6 +200,22 @@ class __$$WalletNftImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      network: null == network
+          ? _value.network
+          : network // ignore: cast_nullable_to_non_nullable
+              as String,
+      collectionImageUri: null == collectionImageUri
+          ? _value.collectionImageUri
+          : collectionImageUri // ignore: cast_nullable_to_non_nullable
+              as String,
+      walletId: freezed == walletId
+          ? _value.walletId
+          : walletId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -177,7 +229,11 @@ class _$WalletNftImpl implements _WalletNft {
       required this.symbol,
       required this.tokenId,
       required this.tokenUri,
-      required this.description});
+      required this.description,
+      required this.name,
+      required this.network,
+      required this.collectionImageUri,
+      required this.walletId});
 
   factory _$WalletNftImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletNftImplFromJson(json);
@@ -194,10 +250,18 @@ class _$WalletNftImpl implements _WalletNft {
   final String tokenUri;
   @override
   final String description;
+  @override
+  final String name;
+  @override
+  final String network;
+  @override
+  final String collectionImageUri;
+  @override
+  final String? walletId;
 
   @override
   String toString() {
-    return 'WalletNft(kind: $kind, contract: $contract, symbol: $symbol, tokenId: $tokenId, tokenUri: $tokenUri, description: $description)';
+    return 'WalletNft(kind: $kind, contract: $contract, symbol: $symbol, tokenId: $tokenId, tokenUri: $tokenUri, description: $description, name: $name, network: $network, collectionImageUri: $collectionImageUri, walletId: $walletId)';
   }
 
   @override
@@ -213,13 +277,19 @@ class _$WalletNftImpl implements _WalletNft {
             (identical(other.tokenUri, tokenUri) ||
                 other.tokenUri == tokenUri) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.network, network) || other.network == network) &&
+            (identical(other.collectionImageUri, collectionImageUri) ||
+                other.collectionImageUri == collectionImageUri) &&
+            (identical(other.walletId, walletId) ||
+                other.walletId == walletId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, kind, contract, symbol, tokenId, tokenUri, description);
+  int get hashCode => Object.hash(runtimeType, kind, contract, symbol, tokenId,
+      tokenUri, description, name, network, collectionImageUri, walletId);
 
   /// Create a copy of WalletNft
   /// with the given fields replaced by the non-null parameter values.
@@ -244,7 +314,11 @@ abstract class _WalletNft implements WalletNft {
       required final String symbol,
       required final String tokenId,
       required final String tokenUri,
-      required final String description}) = _$WalletNftImpl;
+      required final String description,
+      required final String name,
+      required final String network,
+      required final String collectionImageUri,
+      required final String? walletId}) = _$WalletNftImpl;
 
   factory _WalletNft.fromJson(Map<String, dynamic> json) =
       _$WalletNftImpl.fromJson;
@@ -261,6 +335,14 @@ abstract class _WalletNft implements WalletNft {
   String get tokenUri;
   @override
   String get description;
+  @override
+  String get name;
+  @override
+  String get network;
+  @override
+  String get collectionImageUri;
+  @override
+  String? get walletId;
 
   /// Create a copy of WalletNft
   /// with the given fields replaced by the non-null parameter values.

@@ -6,37 +6,31 @@ import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
-import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
-import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 
 class NftNetwork extends ConsumerWidget {
   const NftNetwork({
-    required this.nftData,
-    required this.layoutType,
+    required this.network,
     super.key,
   });
 
-  final NftData nftData;
-  final NftLayoutType layoutType;
+  final NetworkData network;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final network = ref.watch(networkByIdProvider(nftData.network)).valueOrNull;
-
     return Row(
       children: [
         Avatar(
           size: 12.0.s,
           imageWidget: NetworkIconWidget(
             size: 12.0.s,
-            imageUrl: network?.image ?? '',
+            imageUrl: network.image,
           ),
         ),
         SizedBox(width: 5.0.s),
         Text(
-          network?.displayName ?? '',
+          network.displayName,
           style: context.theme.appTextThemes.caption3
               .copyWith(color: context.theme.appColors.quaternaryText),
         ),

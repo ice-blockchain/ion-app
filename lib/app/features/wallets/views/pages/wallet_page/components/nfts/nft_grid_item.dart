@@ -7,7 +7,6 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
-import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_network.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -56,7 +55,7 @@ class NftGridItem extends StatelessWidget {
               ),
             ),
             Text(
-              nftData.symbol,
+              nftData.name,
               style: context.theme.appTextThemes.body2.copyWith(
                 color: context.theme.appColors.primaryText,
               ),
@@ -72,10 +71,7 @@ class NftGridItem extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                NftNetwork(
-                  nftData: nftData,
-                  layoutType: NftLayoutType.grid,
-                ),
+                NftNetwork(network: nftData.network),
               ],
             ),
           ],

@@ -7,15 +7,18 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 
 class NftItem extends StatelessWidget {
   const NftItem({
     required this.nftData,
     this.backgroundColor,
+    this.showNetwork = true,
     super.key,
   });
 
   final NftData nftData;
+  final bool showNetwork;
   final Color? backgroundColor;
 
   static double get imageWidth => 54.0.s;
@@ -24,38 +27,37 @@ class NftItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
-      title: const Text('nftData.collectionName'),
+      title: Text(nftData.name),
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('#${'nftData.rank'}'),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IonNetworkImage(
-                imageUrl: 'nftData.currencyIconUrl',
-                width: 12,
-                height: 12,
-                fit: BoxFit.fitWidth,
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 4.0.s, left: 5.0.s),
-                child: Text(
-                  'nftData.currency',
-                  style: context.theme.appTextThemes.caption2.copyWith(
-                    color: context.theme.appColors.secondaryText,
+          Text('#${nftData.tokenId}'),
+          if (showNetwork)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NetworkIconWidget(
+                  imageUrl: nftData.network.image,
+                  size: 12.0.s,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 4.0.s, left: 5.0.s),
+                  child: Text(
+                    nftData.network.displayName,
+                    style: context.theme.appTextThemes.caption2.copyWith(
+                      color: context.theme.appColors.secondaryText,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
       backgroundColor: backgroundColor ?? context.theme.appColors.tertararyBackground,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(16.0.s),
         child: IonNetworkImage(
-          imageUrl: 'nftData.iconUrl',
+          imageUrl: nftData.tokenUri,
           width: imageWidth,
           height: imageHeight,
           fit: BoxFit.fitWidth,

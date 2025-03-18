@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 
 part 'nft_data.c.freezed.dart';
 
@@ -12,7 +13,9 @@ class NftData with _$NftData {
     required String symbol,
     required String tokenId,
     required String tokenUri,
-    required String network,
     required String description,
+    required String name,
+    required String collectionImageUri,
+    required NetworkData network,
   }) = _NftData;
 }

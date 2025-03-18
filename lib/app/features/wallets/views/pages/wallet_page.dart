@@ -8,7 +8,6 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';
@@ -20,7 +19,6 @@ import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_tab_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/tabs/tabs_header.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
-import 'package:ion/app/features/wallets/views/pages/wallet_page/view_models/wallet_nfts_view_model.dart';
 import 'package:ion/app/hooks/use_scroll_top_on_tab_press.dart';
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 
@@ -77,11 +75,7 @@ class WalletPage extends HookConsumerWidget {
             if (currentUserFollowList != null) {
               ref.read(ionConnectCacheProvider.notifier).remove(currentUserFollowList.cacheKey);
             }
-            ref
-              ..invalidate(walletViewsDataNotifierProvider)
-              ..invalidate(coinsInWalletProvider);
-
-            ref.read(walletNftsViewModelProvider).loadNftsCommand();
+            ref.invalidate(walletViewsDataNotifierProvider);
           },
           builder: (context, slivers) => CustomScrollView(
             controller: scrollController,
