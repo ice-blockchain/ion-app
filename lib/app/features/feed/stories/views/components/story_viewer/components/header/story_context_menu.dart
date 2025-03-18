@@ -7,12 +7,14 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
+import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/views/pages/delete_story_modal/delete_story_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
+import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -170,6 +172,7 @@ class _OtherUserMenuItems extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final i18n = context.i18n;
     final isMuted = ref.watch(globalMuteProvider);
+    final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -194,9 +197,19 @@ class _OtherUserMenuItems extends ConsumerWidget {
         ),
         const ContextMenuItemDivider(),
         ContextMenuItem(
-          label: i18n.button_unfollow,
-          iconAsset: Assets.svg.iconCategoriesUnflow,
-          onPressed: onClose,
+          label: following ? i18n.button_unfollow : i18n.button_follow,
+          iconAsset: Assets.svg.iconFollowuser,
+          onPressed: () {
+            onClose();
+            if (following) {
+              showSimpleBottomSheet<void>(
+                context: context,
+                child: UnfollowUserModal(pubkey: pubkey),
+              );
+            } else {
+              ref.read(followListManagerProvider.notifier).toggleFollow(pubkey);
+            }
+          },
           onLayout: onUpdateWidth,
         ),
       ],
