@@ -8,9 +8,10 @@ import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
+import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
-import 'package:ion/app/features/feed/stories/views/pages/delete_story_modal/delete_story_modal.dart';
+import 'package:ion/app/features/feed/views/pages/entity_delete_confirmation_modal/entity_delete_confirmation_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
@@ -53,7 +54,10 @@ class StoryContextMenu extends HookConsumerWidget {
 
         final confirmed = await showSimpleBottomSheet<bool>(
           context: context,
-          child: DeleteStoryModal(eventReference: post.toEventReference()),
+          child: EntityDeleteConfirmationModal(
+            eventReference: post.toEventReference(),
+            deleteConfirmationType: DeleteConfirmationType.story,
+          ),
         );
 
         if ((confirmed ?? false) && context.mounted) {

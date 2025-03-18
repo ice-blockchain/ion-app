@@ -82,7 +82,9 @@ class RepostOptionsModal extends HookConsumerWidget {
 
                           case RepostOptionAction.undoRepost:
                             if (repostReference != null) {
-                              await ref.read(deleteEntityProvider(repostReference).future);
+                              await ref
+                                  .read(deleteEntityControllerProvider.notifier)
+                                  .deleteEntity(eventReference);
                               if (context.mounted) {
                                 context.pop();
                               }
