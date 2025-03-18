@@ -5,18 +5,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-// part 'ion_connect_notification.c.freezed.dart';
-
-// @freezed
-// class IonConnectNotification with _$IonConnectNotification {
-//   const factory IonConnectNotification({
-//     required NotificationsType type,
-//     required List<String> pubkeys,
-//     required DateTime timestamp,
-//     EventReference? eventReference,
-//   }) = _IonConnectNotification;
-// }
-
 sealed class IonNotification {
   IonNotification({required this.timestamp, required this.pubkeys});
 
