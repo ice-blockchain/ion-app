@@ -45,6 +45,7 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
   final titleController = useTextEditingController();
   final titleFocusNode = useFocusNode();
   final isTitleFocused = useState(false);
+  final isTextValid = useState(false);
 
   const titleMaxLength = 120;
 
@@ -109,13 +110,30 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
     [titleController],
   );
 
+  useEffect(
+    () {
+      void listener() {
+        isTextValid.value = textEditorController.document.toPlainText().trim().isNotEmpty;
+      }
+
+      textEditorController.addListener(listener);
+      return () => textEditorController.removeListener(listener);
+    },
+    [textEditorController],
+  );
+
   void onNext() {
     ref
         .read(draftArticleProvider.notifier)
         .updateArticleDetails(textEditorController, selectedImage.value, titleController.text);
   }
 
-  final isButtonEnabled = selectedImage.value != null && titleFilled.value;
+  final isButtonEnabled = useMemoized(
+    () {
+      return selectedImage.value != null && titleFilled.value && isTextValid.value;
+    },
+    [selectedImage.value, titleFilled.value, isTextValid.value],
+  );
 
   return CreateArticleState(
     selectedImage: selectedImage,
