@@ -6,6 +6,7 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/core/model/paged.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
@@ -26,8 +27,6 @@ class TransactionsHistoryNotifier extends _$TransactionsHistoryNotifier {
     final dataSource = ref.watch(transactionsHistoryDataSourceProvider).value;
     if (dataSource == null) return null;
 
-    final notifier = ref.read(entitiesPagedDataProvider(dataSource).notifier);
-
     final entitiesPagedData = ref.watch(entitiesPagedDataProvider(dataSource));
     final items =
         entitiesPagedData?.data.items?.whereType<WalletAssetEntity>().nonNulls.toList() ?? [];
@@ -35,18 +34,11 @@ class TransactionsHistoryNotifier extends _$TransactionsHistoryNotifier {
 
     if (entitiesPagedData == null) return null;
 
-    if (!entitiesPagedData.hasMore) {
+    if (entitiesPagedData.data is! PagedLoading) {
       final result = _allItems.sortedBy((e) => e.createdAt);
       Logger.info('Transaction history loaded. Size of the history is ${result.length}.');
       return result;
     }
-
-    // Load the next page
-    Future.microtask(() {
-      unawaited(
-        notifier.fetchEntities(),
-      );
-    });
 
     return null;
   }
@@ -69,18 +61,21 @@ Future<List<EntitiesDataSource>> transactionsHistoryDataSource(Ref ref) async {
       requestFilters: [
         RequestFilter(
           kinds: const [WalletAssetEntity.kind],
+          limit: 20,
           tags: {
             '#p': [currentPubkey],
           },
         ),
         RequestFilter(
           kinds: const [WalletAssetEntity.kind],
+          limit: 20,
           tags: {
             'authors': [currentPubkey],
           },
         ),
         RequestFilter(
           kinds: const [WalletAssetEntity.kind],
+          limit: 20,
           tags: {
             '#L': [LabelNamespaceTag.walletAddress().value],
             '#l': walletAddresses.map((wallet) => "loggedInUser'$wallet").toList(),
