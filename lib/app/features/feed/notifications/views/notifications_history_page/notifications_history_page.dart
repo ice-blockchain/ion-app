@@ -7,6 +7,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
 import 'package:ion/app/features/feed/notifications/providers/unread_notifications_count_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/comments_notifications.dart';
+import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/likes_notifications.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
@@ -38,6 +39,7 @@ class NotificationsHistoryPage extends HookConsumerWidget {
                 child: TabBarView(
                   children: NotificationsTabType.values.map((type) {
                     return switch (type) {
+                      NotificationsTabType.likes => const LikesNotifications(),
                       _ => const CommentsNotifications(),
                     };
                   }).toList(),

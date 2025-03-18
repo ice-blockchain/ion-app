@@ -3,7 +3,6 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
-import 'package:ion/app/features/feed/notifications/data/database/queries/get_aggregated_by_day.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/likes_table.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,15 +18,13 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
 
   Future<void> insert(IonConnectEntity entity) async {
     await into(db.likesTable).insert(
-      Like(eventReference: entity.toEventReference(), createdAt: entity.createdAt),
+      Like(eventId: entity.id, pubkey: entity.masterPubkey, createdAt: entity.createdAt),
       mode: InsertMode.insertOrReplace,
     );
   }
 
-  Future<List<AggregatedByDayRow>> getAggregatedByDay() {
-    return customSelect(getAggregatedByDayQuery(table: likesTable.actualTableName))
-        .map(AggregatedByDayRow.fromQueryRow)
-        .get();
+  Future<List<AggregatedLikesResult>> getAggregated() {
+    return db.aggregatedLikes().get();
   }
 
   Future<DateTime?> getLastCreatedAt() async {
@@ -38,7 +35,7 @@ class LikesDao extends DatabaseAccessor<NotificationsDatabase> with _$LikesDaoMi
   }
 
   Stream<int> watchUnreadCount({required DateTime? after}) {
-    final unreadCount = likesTable.eventReference.count();
+    final unreadCount = likesTable.eventId.count();
     final query = selectOnly(likesTable)..addColumns([unreadCount]);
 
     if (after != null) {

@@ -38,6 +38,7 @@ class NotificationItem extends ConsumerWidget {
     //TODO:refactor!
     final eventReference = switch (notification) {
       final CommentIonNotification comment => comment.eventReference,
+      final LikesIonNotification likes => likes.eventReference,
     };
     IonConnectEntity? entity;
 

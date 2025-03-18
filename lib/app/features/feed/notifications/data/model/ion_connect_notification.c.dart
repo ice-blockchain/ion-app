@@ -69,3 +69,30 @@ final class CommentIonNotification extends IonNotification {
     };
   }
 }
+
+final class LikesIonNotification extends IonNotification {
+  LikesIonNotification({
+    required this.eventReference,
+    required super.timestamp,
+    required super.pubkeys,
+  });
+
+  final EventReference eventReference;
+
+  @override
+  String get asset => Assets.svg.iconVideoLikeOff;
+
+  @override
+  Color getBackgroundColor(BuildContext context) => context.theme.appColors.attentionRed;
+
+  @override
+  String getDescription(BuildContext context) {
+    if (pubkeys.length == 1) {
+      return context.i18n.notifications_liked_one;
+    }
+    if (pubkeys.length == 2) {
+      return context.i18n.notifications_liked_two;
+    }
+    return context.i18n.notifications_liked_many(pubkeys.length - 1);
+  }
+}

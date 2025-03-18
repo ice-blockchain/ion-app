@@ -24,8 +24,8 @@ class FollowersRepository {
   }
 
   Future<void> getComments() async {
-    final res = await _followersDao.getAggregatedByDay();
-    print(res);
+    // final res = await _followersDao.getAggregatedByDay();
+    // print(res);
   }
 
   Future<DateTime?> lastCreatedAt() async {

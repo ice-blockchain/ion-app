@@ -16,45 +16,47 @@ part 'notification_followers_subscription_provider.c.g.dart';
 
 @riverpod
 Future<void> notificationFollowersSubscription(Ref ref) async {
-  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-  final followersRepository = ref.watch(followersRepositoryProvider);
-  final eventParser = ref.watch(eventParserProvider);
+  return;
 
-  if (currentPubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
-  }
+//   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+//   final followersRepository = ref.watch(followersRepositoryProvider);
+//   final eventParser = ref.watch(eventParserProvider);
 
-  final since = await followersRepository.lastCreatedAt();
+//   if (currentPubkey == null) {
+//     throw UserMasterPubkeyNotFoundException();
+//   }
 
-  final requestFilter = RequestFilter(
-    kinds: const [FollowListEntity.kind],
-    tags: {
-      '#p': [currentPubkey],
-    },
-    search: SearchExtensions(
-      [
-        GenericIncludeSearchExtension(
-          forKind: FollowListEntity.kind,
-          includeKind: UserMetadataEntity.kind,
-        ),
-      ],
-    ).toString(),
-    since: since?.subtract(const Duration(seconds: 2)),
-  );
-  final requestMessage = RequestMessage()..addFilter(requestFilter);
+//   final since = await followersRepository.lastCreatedAt();
 
-  final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
-    requestMessage,
-    subscriptionBuilder: (requestMessage, relay) {
-      final subscription = relay.subscribe(requestMessage);
-      ref.onDispose(() => relay.unsubscribe(subscription.id));
-      return subscription.messages;
-    },
-  );
+//   final requestFilter = RequestFilter(
+//     kinds: const [FollowListEntity.kind],
+//     tags: {
+//       '#p': [currentPubkey],
+//     },
+//     search: SearchExtensions(
+//       [
+//         GenericIncludeSearchExtension(
+//           forKind: FollowListEntity.kind,
+//           includeKind: UserMetadataEntity.kind,
+//         ),
+//       ],
+//     ).toString(),
+//     since: since?.subtract(const Duration(seconds: 2)),
+//   );
+//   final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-  final subscription = events.listen((eventMessage) {
-    followersRepository.save(eventParser.parse(eventMessage));
-  });
+//   final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
+//     requestMessage,
+//     subscriptionBuilder: (requestMessage, relay) {
+//       final subscription = relay.subscribe(requestMessage);
+//       ref.onDispose(() => relay.unsubscribe(subscription.id));
+//       return subscription.messages;
+//     },
+//   );
 
-  ref.onDispose(subscription.cancel);
+//   final subscription = events.listen((eventMessage) {
+//     followersRepository.save(eventParser.parse(eventMessage));
+//   });
+
+//   ref.onDispose(subscription.cancel);
 }

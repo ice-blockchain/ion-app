@@ -3,7 +3,6 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
-import 'package:ion/app/features/feed/notifications/data/database/queries/get_aggregated_by_day.dart';
 import 'package:ion/app/features/feed/notifications/data/database/tables/followers_table.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -36,11 +35,11 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
     return query.map((r) => r.read(count)).get();
   }
 
-  Future<List<AggregatedByDayRow>> getAggregatedByDay() {
-    return customSelect(getAggregatedByDayQuery(table: followersTable.actualTableName))
-        .map(AggregatedByDayRow.fromQueryRow)
-        .get();
-  }
+  // Future<List<AggregatedByDayRow>> getAggregatedByDay() {
+  // return customSelect(getAggregatedByDayQuery(table: followersTable.actualTableName))
+  //     .map(AggregatedByDayRow.fromQueryRow)
+  //     .get();
+  // }
 
   Future<DateTime?> getLastCreatedAt() async {
     final maxCreatedAt = followersTable.createdAt.max();

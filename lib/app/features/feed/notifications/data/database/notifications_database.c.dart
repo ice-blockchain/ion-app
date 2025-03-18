@@ -36,6 +36,32 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
     LikesTable,
     FollowersTable,
   ],
+  queries: {
+    'aggregatedLikes': '''
+      WITH DailyLikes AS (
+          SELECT
+              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS event_date,
+              event_id,
+              pubkey,
+              created_at,
+              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')), event_id 
+                  ORDER BY created_at DESC) AS rn
+          FROM
+              likes_table
+      )
+      SELECT
+          event_date,
+          event_id,
+          GROUP_CONCAT(CASE WHEN rn <= 10 THEN pubkey END, ',') AS latest_pubkeys,
+          COUNT(DISTINCT pubkey) AS unique_pubkey_count
+      FROM
+          DailyLikes
+      GROUP BY
+          event_date, event_id
+      ORDER BY
+          event_date DESC, event_id DESC;
+    ''',
+  },
 )
 class NotificationsDatabase extends _$NotificationsDatabase {
   NotificationsDatabase(this.pubkey) : super(_openConnection(pubkey));
