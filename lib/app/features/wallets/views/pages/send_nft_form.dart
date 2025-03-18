@@ -55,7 +55,7 @@ class SendNftForm extends ConsumerWidget {
                     NftPicture(imageUrl: selectedNft.tokenUri),
                     SizedBox(height: 16.0.s),
                     const NftName(
-                      rank: 'selectedNft.rank'.length,
+                      rank: 'selectedNft.rank',
                       name: 'selectedNft.collectionName',
                     ),
                     SizedBox(height: 16.0.s),

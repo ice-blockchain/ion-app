@@ -10,6 +10,7 @@ import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/constants.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_network.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class NftGridItem extends StatelessWidget {
   const NftGridItem({
@@ -28,49 +29,57 @@ class NftGridItem extends StatelessWidget {
             ScreenSideOffset.defaultSmallMargin * 2) /
         2;
 
-    return Container(
-      padding: EdgeInsets.all(NftConstants.cellPadding),
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        color: context.theme.appColors.tertararyBackground,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ClipRRect(
-            borderRadius: borderRadius,
-            child: IonNetworkImage(
-              imageUrl: nftData.tokenUri,
-              width: imageWidth,
-              height: imageWidth * 1.13,
-              fit: BoxFit.fitHeight,
+    return GestureDetector(
+      onTap: () {
+        NftDetailsRoute(
+          contract: nftData.contract,
+          tokenId: nftData.tokenId,
+        ).push<void>(context);
+      },
+      child: Container(
+        padding: EdgeInsets.all(NftConstants.cellPadding),
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          color: context.theme.appColors.tertararyBackground,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ClipRRect(
+              borderRadius: borderRadius,
+              child: IonNetworkImage(
+                imageUrl: nftData.tokenUri,
+                width: imageWidth,
+                height: imageWidth * 1.13,
+                fit: BoxFit.fitHeight,
+              ),
             ),
-          ),
-          Text(
-            nftData.symbol,
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: context.theme.appColors.primaryText,
+            Text(
+              nftData.symbol,
+              style: context.theme.appTextThemes.body2.copyWith(
+                color: context.theme.appColors.primaryText,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Row(
-            children: [
-              Text(
-                '#${nftData.tokenId}',
-                style: context.theme.appTextThemes.subtitle3.copyWith(
-                  color: context.theme.appColors.secondaryText,
+            Row(
+              children: [
+                Text(
+                  '#${nftData.tokenId}',
+                  style: context.theme.appTextThemes.subtitle3.copyWith(
+                    color: context.theme.appColors.secondaryText,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              NftNetwork(
-                nftData: nftData,
-                layoutType: NftLayoutType.grid,
-              ),
-            ],
-          ),
-        ],
+                const Spacer(),
+                NftNetwork(
+                  nftData: nftData,
+                  layoutType: NftLayoutType.grid,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

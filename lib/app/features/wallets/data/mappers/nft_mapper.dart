@@ -14,6 +14,7 @@ extension WalletNftMapper on WalletNft {
       tokenId: tokenId,
       tokenUri: tokenUri,
       network: network,
+      description: description,
     );
   }
 }
