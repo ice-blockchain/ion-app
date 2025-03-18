@@ -3,11 +3,12 @@
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 
 mixin EntityDataWithMediaContent {
   String get content;
   Map<String, MediaAttachment> get media;
-  String? get richText;
+  RichText? get richText;
 
   bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
 
