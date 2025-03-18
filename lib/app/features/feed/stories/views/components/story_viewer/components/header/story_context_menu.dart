@@ -196,7 +196,7 @@ class _OtherUserMenuItems extends ConsumerWidget {
         const ContextMenuItemDivider(),
         ContextMenuItem(
           label: i18n.button_unfollow,
-          iconAsset: Assets.svg.iconFollowuser,
+          iconAsset: Assets.svg.iconCategoriesUnflow,
           onPressed: () {
             onClose();
             showSimpleBottomSheet<void>(
