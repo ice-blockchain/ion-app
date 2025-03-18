@@ -65,17 +65,24 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     return query.watch().map((rows) => rows.length);
   }
 
-  Stream<Map<DateTime, List<EventMessage>>> getMessages(String conversationId) {
+  Stream<Map<DateTime, List<EventMessage>>> getMessages({
+    required String conversationId,
+    required String currentUserMasterPubkey,
+  }) {
     final query = select(conversationMessageTable).join([
       innerJoin(
         eventMessageTable,
         eventMessageTable.id.equalsExp(conversationMessageTable.eventMessageId),
       ),
+      innerJoin(
+        messageStatusTable,
+        messageStatusTable.eventMessageId.equalsExp(conversationMessageTable.eventMessageId),
+      ),
     ])
       ..where(conversationMessageTable.conversationId.equals(conversationId))
-      ..orderBy([
-        OrderingTerm.desc(eventMessageTable.createdAt),
-      ]);
+      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
+      ..where(messageStatusTable.status.isNotIn([MessageDeliveryStatus.deleted.index]))
+      ..orderBy([OrderingTerm.desc(eventMessageTable.createdAt)]);
 
     return query.watch().map((rows) {
       final groupedMessages = <DateTime, List<EventMessage>>{};
