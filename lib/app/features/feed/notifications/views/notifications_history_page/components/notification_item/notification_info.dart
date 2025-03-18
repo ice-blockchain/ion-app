@@ -44,7 +44,7 @@ class NotificationInfo extends HookConsumerWidget {
           color: Colors.white,
           child: SizedBox(
             width: 240.0.s,
-            height: 20.0.s,
+            height: 19.0.s,
           ),
         ),
       );
