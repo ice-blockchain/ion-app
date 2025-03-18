@@ -12,10 +12,9 @@ import 'package:ion/app/router/app_routes.c.dart';
 class PlusButtonWithPermission extends StatelessWidget {
   const PlusButtonWithPermission({super.key});
 
-  static double get plusSize => 24.0.s;
-
   @override
   Widget build(BuildContext context) {
+    final plusSize = 24.0.s;
     final iconPosition = plusSize - 8.0.s;
 
     return Positioned(
