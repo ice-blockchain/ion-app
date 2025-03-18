@@ -49,6 +49,8 @@ Stream<T> withRetryStream<T>(
     try {
       await for (final event in task(error: lastError)) {
         yield event;
+        attempt = 0;
+        delay = initialDelay;
       }
       return;
     } catch (e) {
