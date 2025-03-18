@@ -54,6 +54,7 @@ class TrendingVideos extends ConsumerWidget {
           },
           title: context.i18n.feed_trending_videos,
           leadingIcon: const VideosIcon(),
+          leadingIconOffset: 8.0.s,
         ),
         LoadMoreBuilder(
           slivers: [

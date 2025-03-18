@@ -13,21 +13,17 @@ class VideosIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 30.0.s,
-      height: 29.0.s,
+      width: 35.0.s,
+      height: 24.0.s,
       alignment: Alignment.center,
-      transform: Matrix4.translationValues(-2.0.s, 0, 0),
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: Assets.images.bg.iconStroke.provider(),
-          fit: BoxFit.cover,
-        ),
+        color: context.theme.appColors.primaryAccent,
+        borderRadius: BorderRadius.circular(8.0.s),
       ),
       child: Padding(
         padding: EdgeInsets.fromLTRB(2.0.s, 1.0.s, 0, 0),
         child: Assets.svg.iconVideosTrading.icon(
           color: context.theme.appColors.secondaryBackground,
-          size: 20.0.s,
         ),
       ),
     );
