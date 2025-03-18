@@ -16,47 +16,45 @@ part 'notification_followers_subscription_provider.c.g.dart';
 
 @riverpod
 Future<void> notificationFollowersSubscription(Ref ref) async {
-  return;
+  final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+  final followersRepository = ref.watch(followersRepositoryProvider);
+  final eventParser = ref.watch(eventParserProvider);
 
-//   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-//   final followersRepository = ref.watch(followersRepositoryProvider);
-//   final eventParser = ref.watch(eventParserProvider);
+  if (currentPubkey == null) {
+    throw UserMasterPubkeyNotFoundException();
+  }
 
-//   if (currentPubkey == null) {
-//     throw UserMasterPubkeyNotFoundException();
-//   }
+  final since = await followersRepository.lastCreatedAt();
 
-//   final since = await followersRepository.lastCreatedAt();
+  final requestFilter = RequestFilter(
+    kinds: const [FollowListEntity.kind],
+    tags: {
+      '#p': [currentPubkey],
+    },
+    search: SearchExtensions(
+      [
+        GenericIncludeSearchExtension(
+          forKind: FollowListEntity.kind,
+          includeKind: UserMetadataEntity.kind,
+        ),
+      ],
+    ).toString(),
+    since: since?.subtract(const Duration(seconds: 2)),
+  );
+  final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-//   final requestFilter = RequestFilter(
-//     kinds: const [FollowListEntity.kind],
-//     tags: {
-//       '#p': [currentPubkey],
-//     },
-//     search: SearchExtensions(
-//       [
-//         GenericIncludeSearchExtension(
-//           forKind: FollowListEntity.kind,
-//           includeKind: UserMetadataEntity.kind,
-//         ),
-//       ],
-//     ).toString(),
-//     since: since?.subtract(const Duration(seconds: 2)),
-//   );
-//   final requestMessage = RequestMessage()..addFilter(requestFilter);
+  final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
+    requestMessage,
+    subscriptionBuilder: (requestMessage, relay) {
+      final subscription = relay.subscribe(requestMessage);
+      ref.onDispose(() => relay.unsubscribe(subscription.id));
+      return subscription.messages;
+    },
+  );
 
-//   final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
-//     requestMessage,
-//     subscriptionBuilder: (requestMessage, relay) {
-//       final subscription = relay.subscribe(requestMessage);
-//       ref.onDispose(() => relay.unsubscribe(subscription.id));
-//       return subscription.messages;
-//     },
-//   );
+  final subscription = events.listen((eventMessage) {
+    followersRepository.save(eventParser.parse(eventMessage));
+  });
 
-//   final subscription = events.listen((eventMessage) {
-//     followersRepository.save(eventParser.parse(eventMessage));
-//   });
-
-//   ref.onDispose(subscription.cancel);
+  ref.onDispose(subscription.cancel);
 }

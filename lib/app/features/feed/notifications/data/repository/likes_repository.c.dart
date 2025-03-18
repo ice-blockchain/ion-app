@@ -2,7 +2,6 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/likes_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
@@ -15,18 +14,14 @@ part 'likes_repository.c.g.dart';
 @Riverpod(keepAlive: true)
 LikesRepository likesRepository(Ref ref) => LikesRepository(
       likesDao: ref.watch(likesDaoProvider),
-      currentUserPubkey: ref.watch(currentPubkeySelectorProvider),
     );
 
 class LikesRepository {
   LikesRepository({
     required LikesDao likesDao,
-    required String? currentUserPubkey,
-  })  : _likesDao = likesDao,
-        _currentUserPubkey = currentUserPubkey;
+  }) : _likesDao = likesDao;
 
   final LikesDao _likesDao;
-  final String? _currentUserPubkey;
 
   Future<void> save(IonConnectEntity entity) {
     if (entity is! ReactionEntity) {
@@ -41,10 +36,6 @@ class LikesRepository {
   }
 
   Future<List<LikesIonNotification>> getAggregated() async {
-    if (_currentUserPubkey == null) {
-      return [];
-    }
-
     final aggregated = await _likesDao.getAggregated();
     return aggregated
         .map(

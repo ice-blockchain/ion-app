@@ -61,6 +61,28 @@ NotificationsDatabase notificationsDatabase(Ref ref) {
       ORDER BY
           event_date DESC, event_reference DESC;
     ''',
+    'aggregatedFollowers': '''
+      WITH DailyFollowers AS (
+          SELECT
+              DATE(datetime(created_at, 'unixepoch', 'localtime')) AS event_date,
+              pubkey,
+              created_at,
+              ROW_NUMBER() OVER (PARTITION BY DATE(datetime(created_at, 'unixepoch', 'localtime')) 
+                  ORDER BY created_at DESC) AS rn
+          FROM
+              followers_table
+      )
+      SELECT
+          event_date,
+          GROUP_CONCAT(CASE WHEN rn <= 10 THEN pubkey END, ',') AS latest_pubkeys,
+          COUNT(DISTINCT pubkey) AS unique_pubkey_count
+      FROM
+          DailyFollowers
+      GROUP BY
+          event_date
+      ORDER BY
+          event_date DESC;
+    ''',
   },
 )
 class NotificationsDatabase extends _$NotificationsDatabase {

@@ -18,28 +18,14 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
 
   Future<void> insert(IonConnectEntity entity) async {
     await into(db.followersTable).insert(
-      Follower(eventReference: entity.toEventReference(), createdAt: entity.createdAt),
+      Follower(pubkey: entity.pubkey, createdAt: entity.createdAt),
       mode: InsertMode.insertOrReplace,
     );
   }
 
-  Future<List<int?>> getCount() async {
-    final count = followersTable.eventReference.count();
-    final localTimezoneDay =
-        followersTable.createdAt.modify(const DateTimeModifier.localTime()).day;
-    final query = selectOnly(followersTable)
-      ..addColumns([count])
-      ..groupBy([localTimezoneDay])
-      ..orderBy([OrderingTerm.asc(localTimezoneDay)]);
-
-    return query.map((r) => r.read(count)).get();
+  Future<List<AggregatedFollowersResult>> getAggregated() {
+    return db.aggregatedFollowers().get();
   }
-
-  // Future<List<AggregatedByDayRow>> getAggregatedByDay() {
-  // return customSelect(getAggregatedByDayQuery(table: followersTable.actualTableName))
-  //     .map(AggregatedByDayRow.fromQueryRow)
-  //     .get();
-  // }
 
   Future<DateTime?> getLastCreatedAt() async {
     final maxCreatedAt = followersTable.createdAt.max();
@@ -49,7 +35,7 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
   }
 
   Stream<int> watchUnreadCount({required DateTime? after}) {
-    final unreadCount = followersTable.eventReference.count();
+    final unreadCount = followersTable.pubkey.count();
     final query = selectOnly(followersTable)..addColumns([unreadCount]);
 
     if (after != null) {

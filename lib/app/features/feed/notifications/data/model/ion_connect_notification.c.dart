@@ -70,6 +70,7 @@ final class CommentIonNotification extends IonNotification {
   }
 }
 
+//TODO:add total
 final class LikesIonNotification extends IonNotification {
   LikesIonNotification({
     required this.eventReference,
@@ -94,5 +95,29 @@ final class LikesIonNotification extends IonNotification {
       return context.i18n.notifications_liked_two;
     }
     return context.i18n.notifications_liked_many(pubkeys.length - 1);
+  }
+}
+
+final class FollowersIonNotification extends IonNotification {
+  FollowersIonNotification({
+    required super.timestamp,
+    required super.pubkeys,
+  });
+
+  @override
+  String get asset => Assets.svg.iconSearchFollow;
+
+  @override
+  Color getBackgroundColor(BuildContext context) => context.theme.appColors.primaryAccent;
+
+  @override
+  String getDescription(BuildContext context) {
+    if (pubkeys.length == 1) {
+      return context.i18n.notifications_followed_one;
+    }
+    if (pubkeys.length == 2) {
+      return context.i18n.notifications_followed_two;
+    }
+    return context.i18n.notifications_followed_many(pubkeys.length - 1);
   }
 }
