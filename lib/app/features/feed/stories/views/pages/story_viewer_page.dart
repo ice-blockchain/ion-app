@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/stories/hooks/use_page_dismiss.dart';
 import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/story_viewing_provider.c.dart';
 import 'package:ion/app/features/feed/stories/providers/viewed_stories_provider.c.dart';
@@ -54,8 +53,6 @@ class StoryViewerPage extends HookConsumerWidget {
       [currentStory?.id],
     );
 
-    final drag = usePageDismiss(context);
-
     return Material(
       color: Colors.transparent,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -64,30 +61,23 @@ class StoryViewerPage extends HookConsumerWidget {
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
         ),
-        child: GestureDetector(
-          onVerticalDragUpdate: drag.onDragUpdate,
-          onVerticalDragEnd: drag.onDragEnd,
-          child: Transform.translate(
-            offset: Offset(0, drag.offset),
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: context.theme.appColors.primaryText,
-              body: SafeArea(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: StoriesSwiper(
-                        pubkey: pubkey,
-                        userStories: storyViewerState.userStories,
-                        currentUserIndex: storyViewerState.currentUserIndex,
-                      ),
-                    ),
-                    SizedBox(height: 28.0.s),
-                    StoryProgressBarContainer(pubkey: pubkey),
-                    ScreenBottomOffset(margin: 16.0.s),
-                  ],
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: context.theme.appColors.primaryText,
+          body: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: StoriesSwiper(
+                    pubkey: pubkey,
+                    userStories: storyViewerState.userStories,
+                    currentUserIndex: storyViewerState.currentUserIndex,
+                  ),
                 ),
-              ),
+                SizedBox(height: 28.0.s),
+                StoryProgressBarContainer(pubkey: pubkey),
+                ScreenBottomOffset(margin: 16.0.s),
+              ],
             ),
           ),
         ),
