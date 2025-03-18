@@ -40,6 +40,7 @@ class ArticleMainToolbar extends StatelessWidget {
           textEditorKey: textEditorKey,
         ),
         ToolbarSeparatorButton(textEditorController: textEditorController),
+        ToolbarCodeButton(textEditorController: textEditorController),
       ],
     );
   }

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_content.dart';
-import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/code_block_types_toolbar.dart';
 import 'package:ion/app/components/text_editor/utils/remove_block.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
@@ -12,17 +11,11 @@ const textEditorCodeKey = 'text-editor-code';
 ///
 /// Embeds a code block in the text editor.
 ///
+
 class TextEditorCodeEmbed extends CustomBlockEmbed {
-  TextEditorCodeEmbed({required String content}) : super(textEditorCodeKey, content);
+  TextEditorCodeEmbed(String codeBlockId) : super(textEditorCodeKey, codeBlockId);
 
-  static BlockEmbed code({required String content}) => TextEditorCodeEmbed(content: content);
-
-  String get content => data as String;
-
-  @override
-  Map<String, dynamic> toJson() => {
-        textEditorCodeKey: content,
-      };
+  static BlockEmbed code(String codeBlockId) => TextEditorCodeEmbed(codeBlockId);
 }
 
 ///
@@ -41,7 +34,7 @@ class TextEditorCodeBuilder extends EmbedBuilder {
     BuildContext context,
     EmbedContext embedContext,
   ) {
-    final content = embedContext.node.value.data as String? ?? '';
+    final data = embedContext.node.value.data as String;
 
     return Container(
       padding: EdgeInsets.only(top: 12.0.s),
@@ -54,9 +47,9 @@ class TextEditorCodeBuilder extends EmbedBuilder {
       ),
       child: Column(
         children: [
-          if (!readOnly) const CodeBlockTypesToolbar(),
           CodeBlockContent(
-            content: content,
+            content: readOnly ? data : '',
+            codeBlockId: data,
             readOnly: readOnly,
             onRemoveBlock: () => removeBlock(embedContext.controller, embedContext.node),
           ),

@@ -5,33 +5,39 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 
 class CodeBlockContent extends HookConsumerWidget {
   const CodeBlockContent({
     required this.onRemoveBlock,
     required this.content,
+    this.codeBlockId,
     this.readOnly = false,
     super.key,
   });
 
   final VoidCallback onRemoveBlock;
   final String content;
+  final String? codeBlockId;
   final bool readOnly;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final codeText = useState(content);
-    final textController = useTextEditingController(text: codeText.value);
+    final textController = useTextEditingController(text: content);
     final focusNode = useFocusNode();
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.0.s, top: 8.0.s, left: 12.0.s, right: 12.0.s),
+      padding: EdgeInsets.only(bottom: 12.0.s, top: 0.0.s, left: 12.0.s, right: 12.0.s),
       child: KeyboardListener(
         focusNode: focusNode,
         onKeyEvent: (KeyEvent event) {
           if (event is KeyDownEvent &&
               event.logicalKey == LogicalKeyboardKey.backspace &&
               codeText.value.trim().isEmpty) {
+            if (!readOnly && codeBlockId != null) {
+              ref.read(draftArticleProvider.notifier).removeCodeBlock(codeBlockId!);
+            }
             onRemoveBlock();
           }
         },
@@ -40,6 +46,9 @@ class CodeBlockContent extends HookConsumerWidget {
           readOnly: readOnly,
           onChanged: (value) {
             codeText.value = value;
+            if (!readOnly && codeBlockId != null) {
+              ref.read(draftArticleProvider.notifier).updateCodeBlock(codeBlockId!, value);
+            }
           },
           maxLines: null,
           cursorColor: context.theme.appColors.primaryAccent,
