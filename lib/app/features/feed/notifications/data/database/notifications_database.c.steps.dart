@@ -50,10 +50,10 @@ final class Schema2 extends i0.VersionedSchema {
         withoutRowId: false,
         isStrict: false,
         tableConstraints: [
-          'PRIMARY KEY(event_reference)',
+          'PRIMARY KEY(pubkey)',
         ],
         columns: [
-          _column_0,
+          _column_3,
           _column_1,
         ],
         attachedDatabase: database,
@@ -97,8 +97,8 @@ i1.GeneratedColumn<String> _column_3(String aliasedName) =>
 
 class Shape2 extends i0.VersionedTable {
   Shape2({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get eventReference =>
-      columnsByName['event_reference']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get pubkey =>
+      columnsByName['pubkey']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get createdAt =>
       columnsByName['created_at']! as i1.GeneratedColumn<DateTime>;
 }
