@@ -22,18 +22,26 @@ import 'package:ion/app/services/markdown/quill.dart';
 
 ({Delta content, List<MediaAttachment> media}) parseMediaContent({
   required EntityDataWithMediaContent data,
-  String? richTextContent,
 }) {
-  final EntityDataWithMediaContent(:content, :media) = data;
+  final EntityDataWithMediaContent(:content, :media, :richText) = data;
+
+  Delta? delta;
+
+  if (richText != null) {
+    final richTextDecoded = Delta.fromJson(jsonDecode(richText.content) as List<dynamic>);
+    final richTextDelta = convertTextWithImageAttributesToEmbeds(richTextDecoded);
+    return _parseMediaContentDelta(delta: richTextDelta, media: media);
+  }
+
   final markdownContentDelta = markdownToDelta(content);
   final plainTextContentDelta = plainTextToDelta(content);
 
-  final contentDelta =
+  delta =
       markdownContentDelta.length == 1 && markdownContentDelta.operations.first.attributes == null
           ? plainTextContentDelta
           : markdownContentDelta;
 
-  return _parseMediaContentDelta(delta: contentDelta, media: media);
+  return _parseMediaContentDelta(delta: delta, media: media);
 }
 
 /// Parses the provided [delta] content to extract media links and separate them from non-media content.
@@ -85,21 +93,4 @@ import 'package:ion/app/services/markdown/quill.dart';
   }
 
   return (content: Delta.fromOperations(nonMediaOperations), media: mediaFromContent);
-}
-
-Delta? useRichTextContentToDelta({
-  required String? deltaContent,
-}) {
-  return useMemoized(
-    () {
-      try {
-        if (deltaContent == null) return null;
-        final delta = Delta.fromJson(jsonDecode(deltaContent) as List<dynamic>);
-        return convertTextWithImageAttributesToEmbeds(delta);
-      } catch (e) {
-        return null;
-      }
-    },
-    [deltaContent],
-  );
 }

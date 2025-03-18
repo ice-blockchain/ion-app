@@ -74,11 +74,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
 
-      final richText = RichText(
-        protocol: 'quill_delta',
-        content: jsonEncode(postContent.toJson()),
-      );
-
       final postData = ModifiablePostData(
         content: _buildContentWithMediaLinks(content: postContent, media: media.values.toList()),
         media: media,
@@ -92,7 +87,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
-        richText: richText,
+        richText:
+            _buildRichTextContentWithMediaLinks(content: postContent, media: media.values.toList()),
       );
 
       final posts = await _sendPostEntities([...files, postData]);
@@ -124,6 +120,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       final postData = modifiedEntity.data.copyWith(
         content: _buildContentWithMediaLinks(
+          content: postContent,
+          media: modifiedEntity.data.media.values.toList(),
+        ),
+        richText: _buildRichTextContentWithMediaLinks(
           content: postContent,
           media: modifiedEntity.data.media.values.toList(),
         ),
@@ -240,18 +240,39 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     };
   }
 
+  RichText _buildRichTextContentWithMediaLinks({
+    required Delta content,
+    required List<MediaAttachment> media,
+  }) {
+    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
+
+    final richText = RichText(
+      protocol: 'quill_delta',
+      content: jsonEncode(contentWithMedia.toJson()),
+    );
+
+    return richText;
+  }
+
   String _buildContentWithMediaLinks({
     required Delta content,
     required List<MediaAttachment> media,
   }) {
-    final contentWithMedia = Delta.fromOperations(
+    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
+    return deltaToMarkdown(contentWithMedia);
+  }
+
+  Delta _buildContentWithMediaLinksDelta({
+    required Delta content,
+    required List<MediaAttachment> media,
+  }) {
+    return Delta.fromOperations(
       media
           .map(
             (mediaItem) => Operation.insert(mediaItem.url, {Attribute.link.key: mediaItem.url}),
           )
           .toList(),
     ).concat(content);
-    return deltaToMarkdown(contentWithMedia);
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {

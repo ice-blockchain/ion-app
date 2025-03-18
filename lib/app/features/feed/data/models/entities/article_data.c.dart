@@ -88,9 +88,6 @@ class ArticleData
     final summary = tags['summary']?.firstOrNull?.elementAtOrNull(1);
     final mediaAttachments = _buildMedia(tags[MediaAttachment.tagName]);
 
-    final richTextTag = tags[RichText.tagName]?.firstOrNull;
-    final richText = richTextTag != null ? RichText.fromTag(richTextTag) : null;
-
     return ArticleData(
       content: eventMessage.content,
       media: mediaAttachments,
@@ -103,7 +100,8 @@ class ArticleData
       relatedHashtags: tags[RelatedHashtag.tagName]?.map(RelatedHashtag.fromTag).toList(),
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
       colorLabel: ColorLabel.fromTags(tags, eventId: eventMessage.id),
-      richText: richText,
+      richText:
+          tags[RichText.tagName] != null ? RichText.fromTag(tags[RichText.tagName]!.first) : null,
     );
   }
 

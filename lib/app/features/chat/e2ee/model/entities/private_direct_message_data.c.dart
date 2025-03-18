@@ -13,6 +13,7 @@ import 'package:ion/app/features/ion_connect/model/entity_data_with_media_conten
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/string.dart';
@@ -68,6 +69,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     required String content,
     required Map<String, MediaAttachment> media,
     required String uuid,
+    RichText? richText,
     String? relatedGroupImagePath,
     RelatedSubject? relatedSubject,
     List<RelatedEvent>? relatedEvents,

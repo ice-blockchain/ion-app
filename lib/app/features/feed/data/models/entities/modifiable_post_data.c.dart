@@ -98,9 +98,6 @@ class ModifiablePostData
     final quotedEventTag =
         tags[QuotedImmutableEvent.tagName] ?? tags[QuotedReplaceableEvent.tagName];
 
-    final richTextTag = tags[RichText.tagName]?.firstOrNull;
-    final richText = richTextTag != null ? RichText.fromTag(richTextTag) : null;
-
     return ModifiablePostData(
       content: eventMessage.content,
       media: EntityDataWithMediaContent.parseImeta(tags[MediaAttachment.tagName]),
@@ -120,7 +117,8 @@ class ModifiablePostData
       settings: tags[EventSetting.settingTagName]?.map(EventSetting.fromTag).toList(),
       communityId:
           tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).first.value,
-      richText: richText,
+      richText:
+          tags[RichText.tagName] != null ? RichText.fromTag(tags[RichText.tagName]!.first) : null,
     );
   }
 

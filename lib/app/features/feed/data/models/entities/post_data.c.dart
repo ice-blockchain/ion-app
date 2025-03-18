@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -20,6 +19,7 @@ import 'package:ion/app/features/ion_connect/model/quoted_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 
 part 'post_data.c.freezed.dart';
@@ -63,6 +63,7 @@ class PostData
   const factory PostData({
     required String content,
     required Map<String, MediaAttachment> media,
+    RichText? richText,
     EntityExpiration? expiration,
     QuotedEvent? quotedEvent,
     List<RelatedEvent>? relatedEvents,

@@ -41,9 +41,6 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final richTextContent = (postData is ModifiablePostData) ? postData.richText?.content : null;
-    final richTextDelta = useRichTextContentToDelta(deltaContent: richTextContent);
-
     final (:content, :media) = useParsedMediaContent(data: postData);
 
     final firstLinkOperation = useMemoized(
@@ -85,7 +82,7 @@ class PostBody extends HookConsumerWidget {
                       child: SizedBox(
                         height: maxHeight,
                         child: TextEditorPreview(
-                          content: richTextDelta ?? content,
+                          content: content,
                           enableInteractiveSelection: isTextSelectable,
                           scrollable: false,
                         ),
