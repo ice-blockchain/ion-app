@@ -29,7 +29,7 @@ class _EmojisGridView extends ConsumerWidget {
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 8,
           mainAxisSpacing: 16.0.s,
-          crossAxisSpacing: 16.0.s,
+          crossAxisSpacing: 8.0.s,
           children: emojis
               .map(
                 (emoji) => Center(

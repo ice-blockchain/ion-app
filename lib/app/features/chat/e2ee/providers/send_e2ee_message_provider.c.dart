@@ -157,6 +157,12 @@ class SendE2eeMessageService {
                 await eventMessageDao.add(eventMessageWithoutMedia);
               }
 
+              await conversationMessageStatusDao.add(
+                masterPubkey: masterPubkey,
+                eventMessageId: eventMessageWithoutMedia.id,
+                status: MessageDeliveryStatus.created,
+              );
+
               final encryptedMediaFiles =
                   await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
 
@@ -212,12 +218,6 @@ class SendE2eeMessageService {
                           .toJson(),
                     );
                   }
-
-                  await conversationMessageStatusDao.add(
-                    masterPubkey: masterPubkey,
-                    eventMessageId: eventMessageWithoutMedia.id,
-                    status: MessageDeliveryStatus.created,
-                  );
 
                   final uploadResult = await ionConnectUploadNotifier.upload(
                     mediaFile,
@@ -326,8 +326,8 @@ class SendE2eeMessageService {
     final entity = PrivateDirectMessageEntity.fromEventMessage(failedMessageEvent);
 
     final messageType = entity.data.messageType;
-    final mediaUrl = entity.data.primaryMedia?.url;
-    final mediaUri = Uri.tryParse(mediaUrl ?? '');
+
+    final mediaUri = entity.data.media.values.map((media) => Uri.tryParse(media.url));
 
     final isMessageWithMedia = [
       MessageType.visualMedia,
@@ -335,10 +335,11 @@ class SendE2eeMessageService {
       MessageType.document,
     ].contains(messageType);
 
-    final isMediaAttachmentUploaded = isMessageWithMedia && mediaUri != null && mediaUri.hasScheme;
+    final isMediaUploaded =
+        isMessageWithMedia && mediaUri.every((uri) => uri != null && uri.hasScheme);
 
-    final isMediaAttachmentNotUploaded =
-        isMessageWithMedia && mediaUri != null && !mediaUri.hasScheme;
+    final isMediaNotUploaded =
+        isMessageWithMedia && mediaUri.any((uri) => uri != null && !uri.hasScheme);
 
     final messageStatuses =
         await conversationMessageStatusDao.messageStatuses(failedMessageEvent.id);
@@ -352,7 +353,7 @@ class SendE2eeMessageService {
         await conversationPubkeysNotifier.fetchUsersKeys(failedParticipantsMasterPubkeys);
 
     // If this is message without media or message with media but media was successfully uploaded
-    if (!isMessageWithMedia || isMediaAttachmentUploaded) {
+    if (!isMessageWithMedia || isMediaUploaded) {
       await Future.wait(
         failedParticipantsMasterPubkeys.map((masterPubkey) async {
           final pubkey = participantsKeysMap[masterPubkey];
@@ -383,13 +384,13 @@ class SendE2eeMessageService {
           );
         }),
       );
-    } else if (isMediaAttachmentNotUploaded) {
+    } else if (isMediaNotUploaded) {
       // Try to find local path and upload media again
       final mediaFilesToUpload = entity.data.media.values
           .map(
             (media) => MediaFile(
-              path: mediaUrl!,
-              mimeType: entity.data.primaryMedia?.mimeType,
+              path: media.url,
+              mimeType: media.mimeType,
             ),
           )
           .toList();
@@ -429,8 +430,8 @@ class SendE2eeMessageService {
 
               await ionConnectNotifier.sendEvent(
                 fileMetadataEvent,
-                actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
                 cache: false,
+                actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
               );
 
               return (uploadResult, secretKey, nonce, mac, null);
@@ -445,10 +446,10 @@ class SendE2eeMessageService {
           )..addAll(imetaTags);
 
           final eventMessageWithMedia = await _createEventMessage(
-            previousId: failedMessageEvent.id,
-            content: failedMessageEvent.content,
             signer: eventSigner!,
             tags: conversationTags,
+            previousId: failedMessageEvent.id,
+            content: failedMessageEvent.content,
           );
 
           // We replace existing event message with the one with uploaded media
