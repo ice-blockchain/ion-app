@@ -18,7 +18,7 @@ class FollowersDao extends DatabaseAccessor<NotificationsDatabase> with _$Follow
 
   Future<void> insert(IonConnectEntity entity) async {
     await into(db.followersTable).insert(
-      Follower(pubkey: entity.pubkey, createdAt: entity.createdAt),
+      Follower(pubkey: entity.masterPubkey, createdAt: entity.createdAt),
       mode: InsertMode.insertOrReplace,
     );
   }
