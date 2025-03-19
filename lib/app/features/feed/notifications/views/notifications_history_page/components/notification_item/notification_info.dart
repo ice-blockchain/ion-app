@@ -22,8 +22,14 @@ class NotificationInfo extends HookConsumerWidget {
   final IonNotification notification;
 
   TextSpan _getDateTextSpan(BuildContext context, {required Locale locale}) {
+    final isToday = isSameDay(notification.timestamp, DateTime.now());
+    final time = notification is CommentIonNotification
+        ? formatShortTimestamp(notification.timestamp, locale: locale)
+        : isToday
+            ? context.i18n.date_today
+            : formatShortTimestamp(notification.timestamp, locale: locale);
     return TextSpan(
-      text: ' • ${formatShortTimestamp(notification.timestamp, locale: locale)}',
+      text: ' • $time',
       style: context.theme.appTextThemes.body2.copyWith(
         color: context.theme.appColors.tertararyText,
       ),

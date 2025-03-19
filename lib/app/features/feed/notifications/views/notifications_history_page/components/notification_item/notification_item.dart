@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_icon.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_info.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/user_avatar.dart';
+import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -114,6 +116,16 @@ class _NotificationItemEvent extends ConsumerWidget {
       final GenericRepostEntity repost => repost.data.eventReference,
       _ => entity.toEventReference(),
     };
+
+    if (entity is ArticleEntity) {
+      return Padding(
+        padding: EdgeInsets.only(top: 12.0.s, bottom: 12.0.s, right: 16.0.s),
+        child: Article(
+          eventReference: mainEventReference,
+          header: const SizedBox.shrink(),
+        ),
+      );
+    }
 
     return Post(
       eventReference: mainEventReference,
