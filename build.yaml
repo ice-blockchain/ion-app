@@ -23,7 +23,7 @@ targets:
       drift_dev:
         generate_for:
           include:
-            - lib/**.c.dart
+            - lib/**/database/**.c.dart
         options:
           use_sql_column_name_as_json_key : true
           databases:
