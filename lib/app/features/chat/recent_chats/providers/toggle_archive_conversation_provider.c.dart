@@ -107,7 +107,8 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
         conversations.map((conversation) => conversation.conversationId).toList();
 
     for (final conversation in conversations) {
-      final isAlreadyArchived = initialBookmarkSet.communitiesIds.contains(conversation.conversationId);
+      final isAlreadyArchived =
+          initialBookmarkSet.communitiesIds.contains(conversation.conversationId);
 
       await ref
           .read(conversationDaoProvider)
