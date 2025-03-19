@@ -1,22 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/build_context.dart';
-import 'package:ion/app/features/feed/data/models/delete/delete_service.dart';
-import 'package:ion/app/features/feed/data/models/delete/entity_delete_service.dart';
-import 'package:ion/app/features/feed/data/models/delete/story_delete_service.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 enum DeleteConfirmationType {
-  story(StoryDeleteService()),
-  video(EntityDeleteService()),
-  post(EntityDeleteService()),
-  article(EntityDeleteService());
-
-  const DeleteConfirmationType(this.service);
-
-  final DeleteService<AsyncValue<void>> service;
+  story,
+  video,
+  post,
+  article;
 
   String getTitle(BuildContext context) {
     return switch (this) {

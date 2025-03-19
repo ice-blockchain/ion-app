@@ -10,7 +10,10 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
+import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
+import 'package:ion/app/features/feed/stories/providers/stories_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class EntityDeleteConfirmationModal extends HookConsumerWidget {
   const EntityDeleteConfirmationModal({
@@ -28,13 +31,12 @@ class EntityDeleteConfirmationModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final buttonMinimalSize = Size(buttonsSize, buttonsSize);
 
-    final deleteService = deleteConfirmationType.service;
-    final deleteState = ref.watch(deleteService.provider);
+    final deleteState = ref.watch(deleteEntityControllerProvider);
 
     ref
-      ..displayErrors(deleteService.provider)
+      ..displayErrors(deleteEntityControllerProvider)
       ..listenSuccess(
-        deleteService.provider,
+        deleteEntityControllerProvider,
         (_) {
           if (context.mounted) {
             Navigator.of(context).pop(true);
@@ -73,7 +75,10 @@ class EntityDeleteConfirmationModal extends HookConsumerWidget {
                   label: Text(context.i18n.button_delete),
                   trailingIcon: deleteState.isLoading ? const IONLoadingIndicator() : null,
                   onPressed: () async {
-                    await deleteService.delete(ref, eventReference);
+                    await ref.read(deleteEntityControllerProvider.notifier).deleteEntity(
+                          eventReference,
+                          onDelete: _getOnDeleteCallback(ref),
+                        );
                   },
                   disabled: deleteState.isLoading,
                   minimumSize: buttonMinimalSize,
@@ -86,5 +91,12 @@ class EntityDeleteConfirmationModal extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+  FutureOr<void> Function()? _getOnDeleteCallback(WidgetRef ref) {
+    return switch (deleteConfirmationType) {
+      DeleteConfirmationType.story => () => ref.invalidate(storiesProvider),
+      _ => null,
+    };
   }
 }
