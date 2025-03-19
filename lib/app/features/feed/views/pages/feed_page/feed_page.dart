@@ -47,6 +47,8 @@ class FeedPage extends HookConsumerWidget {
             if (feedCategory != FeedCategory.articles) const Stories(),
             if (feedCategory == FeedCategory.feed && showTrendingVideos.value)
               const TrendingVideos(),
+            if (feedCategory == FeedCategory.videos && showTrendingVideos.value)
+              const TrendingVideos(),
           ],
         ),
       ),
