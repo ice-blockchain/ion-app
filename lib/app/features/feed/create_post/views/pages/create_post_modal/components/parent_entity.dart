@@ -49,36 +49,65 @@ class ParentEntity extends ConsumerWidget {
           ),
         ),
         SizedBox(height: 8.0.s),
-        Padding(
-          padding: EdgeInsets.only(left: 15.0.s),
-          child: DottedBorder(
-            color: context.theme.appColors.onTerararyFill,
-            dashPattern: [5.0.s, 5.0.s],
-            customPath: (size) {
-              return Path()
-                ..moveTo(0, 0)
-                ..lineTo(0, size.height);
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 22.0.s),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  switch (parentEntity) {
-                    PostEntity() || ModifiablePostEntity() => PostBody(entity: parentEntity),
-                    ArticleEntity() =>
-                      Article(eventReference: eventReference, header: const SizedBox.shrink()),
-                    _ => const SizedBox.shrink(),
-                  },
-                  SizedBox(height: 12.0.s),
-                  ReplyingTo(name: userMetadata.data.name),
-                  SizedBox(height: 16.0.s),
-                ],
-              ),
-            ),
+        ParentDottedLine(
+          padding: EdgeInsetsDirectional.only(
+            start: 15.0.s,
+            end: 22.0.s,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              switch (parentEntity) {
+                PostEntity() || ModifiablePostEntity() => PostBody(entity: parentEntity),
+                ArticleEntity() =>
+                  Article(eventReference: eventReference, header: const SizedBox.shrink()),
+                _ => const SizedBox.shrink(),
+              },
+              SizedBox(height: 12.0.s),
+              ReplyingTo(name: userMetadata.data.name),
+              SizedBox(height: 16.0.s),
+            ],
           ),
         ),
+        SizedBox(height: 8.0.s),
       ],
+    );
+  }
+}
+
+class ParentDottedLine extends StatelessWidget {
+  const ParentDottedLine({
+    required this.child,
+    this.padding,
+    this.visible = true,
+    super.key,
+  });
+
+  final Widget child;
+  final EdgeInsetsDirectional? padding;
+  final bool visible;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!visible) return child;
+
+    return Padding(
+      padding: EdgeInsetsDirectional.only(
+        start: padding?.start ?? 0,
+        top: padding?.top ?? 0,
+        bottom: padding?.bottom ?? 0,
+      ),
+      child: DottedBorder(
+        color: context.theme.appColors.onTerararyFill,
+        dashPattern: [5.0.s, 5.0.s],
+        padding: EdgeInsets.only(left: padding?.end ?? 0),
+        customPath: (size) {
+          return Path()
+            ..moveTo(0, 0)
+            ..lineTo(0, size.height);
+        },
+        child: child,
+      ),
     );
   }
 }

@@ -33,8 +33,10 @@ class TabEntitiesList extends ConsumerWidget {
       key: key,
       type: TabEntityType.replies,
       pubkey: pubkey,
-      builder: (entities) =>
-          EntitiesList(entities: entities.toList(), framedEventType: FramedEventType.parent),
+      builder: (entities) => EntitiesList(
+        entities: entities.toList(),
+        framedEventType: FramedEventType.parent,
+      ),
     );
   }
 

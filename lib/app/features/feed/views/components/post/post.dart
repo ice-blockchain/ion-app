@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
@@ -39,6 +40,7 @@ class Post extends ConsumerWidget {
     this.onDelete,
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
+    this.contentWrapper,
     super.key,
   });
 
@@ -52,6 +54,7 @@ class Post extends ConsumerWidget {
   final VoidCallback? onDelete;
   final bool isTextSelectable;
   final int? bodyMaxLines;
+  final Widget Function(Widget content)? contentWrapper;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -70,10 +73,32 @@ class Post extends ConsumerWidget {
     final framedEventReference =
         _getFramedEventReference(entity: entity, framedEventType: framedEventType);
 
+    final content = Column(
+      children: [
+        SizedBox(height: headerOffset ?? 10.0.s),
+        PostBody(
+          entity: entity,
+          isTextSelectable: isTextSelectable,
+          maxLines: bodyMaxLines,
+        ),
+        ScreenSideOffset.small(
+          child: Column(
+            children: [
+              if (framedEventType == FramedEventType.quoted)
+                _QuotedEvent(eventReference: framedEventReference),
+              footer ?? CounterItemsFooter(eventReference: eventReference),
+            ],
+          ),
+        ),
+      ],
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: topOffset ?? 12.0.s),
+        if (framedEventType == FramedEventType.parent)
+          _ParentEvent(eventReference: framedEventReference),
         ScreenSideOffset.small(
           child: header ??
               UserInfo(
@@ -87,23 +112,7 @@ class Post extends ConsumerWidget {
                     : UserInfoMenu(pubkey: eventReference.pubkey),
               ),
         ),
-        SizedBox(height: headerOffset ?? 10.0.s),
-        PostBody(
-          entity: entity,
-          isTextSelectable: isTextSelectable,
-          maxLines: bodyMaxLines,
-        ),
-        ScreenSideOffset.small(
-          child: Column(
-            children: [
-              if (framedEventReference != null) _FramedEvent(eventReference: framedEventReference),
-              footer ??
-                  CounterItemsFooter(
-                    eventReference: eventReference,
-                  ),
-            ],
-          ),
-        ),
+        if (contentWrapper != null) contentWrapper!(content) else content,
       ],
     );
   }
@@ -124,30 +133,94 @@ class Post extends ConsumerWidget {
   }
 }
 
-class _FramedEvent extends HookConsumerWidget {
-  const _FramedEvent({required this.eventReference});
+class _QuotedEvent extends StatelessWidget {
+  const _QuotedEvent({required this.eventReference});
+
+  final EventReference? eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    final eventReference = this.eventReference;
+    if (eventReference == null) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: EdgeInsets.only(top: 12.0.s),
+      child: _FramedEvent(
+        eventReference: eventReference,
+        postWidget: _QuotedPost(eventReference: eventReference),
+        articleWidget: _QuotedArticle(eventReference: eventReference),
+      ),
+    );
+  }
+}
+
+final class _ParentEvent extends StatelessWidget {
+  const _ParentEvent({required this.eventReference});
+
+  final EventReference? eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    final eventReference = this.eventReference;
+    if (eventReference == null) {
+      return const SizedBox.shrink();
+    }
+    return _FramedEvent(
+      eventReference: eventReference,
+      addPadding: true,
+      postWidget: _ParentPost(eventReference: eventReference),
+      articleWidget: _ParentArticle(eventReference: eventReference),
+    );
+  }
+}
+
+final class _FramedEvent extends HookConsumerWidget {
+  const _FramedEvent({
+    required this.eventReference,
+    required this.postWidget,
+    required this.articleWidget,
+    this.addPadding = false,
+  });
 
   final EventReference eventReference;
+  final Widget postWidget;
+  final Widget articleWidget;
+  final bool addPadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
-      return DeletedEntity(entityType: DeletedEntityType.post, bottomPadding: 0);
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: addPadding ? 16.0.s : 0),
+        child: DeletedEntity(
+          entityType: DeletedEntityType.post,
+          bottomPadding: addPadding ? 12.0.s : 0,
+          topPadding: 0,
+        ),
+      );
     }
 
     if (entity is ArticleEntity && entity.isDeleted) {
-      return DeletedEntity(entityType: DeletedEntityType.article, bottomPadding: 0);
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: addPadding ? 16.0.s : 0),
+        child: DeletedEntity(
+          entityType: DeletedEntityType.article,
+          bottomPadding: addPadding ? 12.0.s : 0,
+          topPadding: 0,
+        ),
+      );
     }
 
-    final quotedEntity = useMemoized(
+    final repliedEntity = useMemoized(
       () {
         switch (entity) {
           case ModifiablePostEntity() || PostEntity():
-            return _QuotedPost(eventReference: eventReference);
+            return postWidget;
           case ArticleEntity():
-            return _QuotedArticle(eventReference: eventReference);
+            return articleWidget;
           default:
             return const SizedBox.shrink();
         }
@@ -155,10 +228,7 @@ class _FramedEvent extends HookConsumerWidget {
       [entity],
     );
 
-    return Padding(
-      padding: EdgeInsets.only(top: 10.0.s),
-      child: quotedEntity,
-    );
+    return repliedEntity;
   }
 }
 
@@ -207,6 +277,59 @@ final class _QuotedArticle extends StatelessWidget {
           ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
         },
         child: AbsorbPointer(child: Article.quoted(eventReference: eventReference)),
+      ),
+    );
+  }
+}
+
+final class _ParentPost extends StatelessWidget {
+  const _ParentPost({required this.eventReference});
+
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
+      },
+      child: Post(
+        eventReference: eventReference,
+        framedEventType: FramedEventType.none,
+        headerOffset: 0,
+        topOffset: 0,
+        contentWrapper: (content) {
+          return ParentDottedLine(
+            padding: EdgeInsetsDirectional.only(
+              start: 31.0.s,
+              top: 8.0.s,
+              end: 8.0.s,
+              bottom: 4.0.s,
+            ),
+            child: content,
+          );
+        },
+      ),
+    );
+  }
+}
+
+final class _ParentArticle extends StatelessWidget {
+  const _ParentArticle({required this.eventReference});
+
+  final EventReference eventReference;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        ArticleDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
+      },
+      child: AbsorbPointer(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0.s),
+          child: Article.replied(eventReference: eventReference),
+        ),
       ),
     );
   }

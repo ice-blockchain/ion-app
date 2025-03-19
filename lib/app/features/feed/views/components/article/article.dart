@@ -7,6 +7,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
@@ -27,6 +28,7 @@ class Article extends ConsumerWidget {
     this.showActionButtons = true,
     this.timeFormat = TimestampFormat.short,
     this.header,
+    this.isReplied = false,
     super.key,
   });
 
@@ -36,10 +38,21 @@ class Article extends ConsumerWidget {
     return Article(eventReference: eventReference, showActionButtons: false);
   }
 
+  factory Article.replied({
+    required EventReference eventReference,
+  }) {
+    return Article(
+      eventReference: eventReference,
+      showActionButtons: false,
+      isReplied: true,
+    );
+  }
+
   final EventReference eventReference;
   final bool showActionButtons;
   final TimestampFormat timeFormat;
   final Widget? header;
+  final bool isReplied;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,64 +74,104 @@ class Article extends ConsumerWidget {
 
     return ColoredBox(
       color: context.theme.appColors.onPrimaryAccent,
-      child: IntrinsicHeight(
-        child: Row(
-          children: [
-            Container(
-              clipBehavior: Clip.antiAlias,
-              width: 4.0.s,
-              decoration: BoxDecoration(
-                color: entity.data.colorLabel != null
-                    ? fromHexColor(entity.data.colorLabel!.value)
-                    : context.theme.appColors.primaryAccent,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(4.0.s),
-                  bottomRight: Radius.circular(4.0.s),
-                ),
-              ),
+      child: Column(
+        children: [
+          if (isReplied && header != null)
+            header!
+          else if (isReplied) ...[
+            UserInfo(
+              pubkey: eventReference.pubkey,
+              createdAt: entity.data.publishedAt.value,
+              timeFormat: timeFormat,
+              trailing: showActionButtons
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BookmarkButton(eventReference: eventReference),
+                        if (isOwnedByCurrentUser)
+                          OwnEntityMenu(eventReference: eventReference)
+                        else
+                          UserInfoMenu(pubkey: eventReference.pubkey),
+                      ],
+                    )
+                  : null,
             ),
-            SizedBox(width: 12.0.s),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (header != null)
-                    header!
-                  else ...[
-                    UserInfo(
-                      pubkey: eventReference.pubkey,
-                      createdAt: entity.data.publishedAt.value,
-                      timeFormat: timeFormat,
-                      trailing: showActionButtons
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                BookmarkButton(eventReference: eventReference),
-                                if (isOwnedByCurrentUser)
-                                  OwnEntityMenu(eventReference: eventReference)
-                                else
-                                  UserInfoMenu(pubkey: eventReference.pubkey),
-                              ],
-                            )
-                          : null,
-                    ),
-                    SizedBox(height: 10.0.s),
-                  ],
-                  ArticleImage(
-                    imageUrl: entity.data.image,
-                    minutesToRead: calculateReadingTime(entity.data.content),
-                  ),
-                  SizedBox(height: 10.0.s),
-                  ArticleFooter(text: entity.data.title ?? ''),
-                  CounterItemsFooter(
-                    eventReference: eventReference,
-                    bottomPadding: 0,
-                  ),
-                ],
-              ),
-            ),
+            SizedBox(height: 10.0.s),
           ],
-        ),
+          ParentDottedLine(
+            visible: isReplied,
+            padding: EdgeInsetsDirectional.only(
+              start: 15.0.s,
+              end: 22.0.s,
+              bottom: 4.0.s,
+            ),
+            child: Column(
+              children: [
+                IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Container(
+                        clipBehavior: Clip.antiAlias,
+                        width: 4.0.s,
+                        decoration: BoxDecoration(
+                          color: entity.data.colorLabel != null
+                              ? fromHexColor(entity.data.colorLabel!.value)
+                              : context.theme.appColors.primaryAccent,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(4.0.s),
+                            bottomRight: Radius.circular(4.0.s),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.0.s),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (!isReplied && header != null)
+                              header!
+                            else if (!isReplied) ...[
+                              UserInfo(
+                                pubkey: eventReference.pubkey,
+                                createdAt: entity.data.publishedAt.value,
+                                timeFormat: timeFormat,
+                                trailing: showActionButtons
+                                    ? Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          BookmarkButton(eventReference: eventReference),
+                                          if (isOwnedByCurrentUser)
+                                            OwnEntityMenu(eventReference: eventReference)
+                                          else
+                                            UserInfoMenu(pubkey: eventReference.pubkey),
+                                        ],
+                                      )
+                                    : null,
+                              ),
+                              SizedBox(height: 10.0.s),
+                            ],
+                            ArticleImage(
+                              imageUrl: entity.data.image,
+                              minutesToRead: calculateReadingTime(entity.data.content),
+                            ),
+                            SizedBox(height: 10.0.s),
+                            ArticleFooter(text: entity.data.title ?? ''),
+                            if (!isReplied)
+                              CounterItemsFooter(
+                                eventReference: eventReference,
+                                bottomPadding: 0,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (isReplied) CounterItemsFooter(eventReference: eventReference),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
