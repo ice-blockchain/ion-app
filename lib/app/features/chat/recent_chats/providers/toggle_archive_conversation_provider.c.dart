@@ -24,16 +24,23 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
     return;
   }
 
-  Future<void> toogleConversation(List<ConversationListItem> conversations) async {
+  Future<void> toggleConversations(List<ConversationListItem> conversations) async {
     final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentUserPubkey == null) {
       throw UserMasterPubkeyNotFoundException();
     }
 
     final bookmarkSet = await _getInitialBookmarkSet();
-    final updatedBookmarkSet = await _processConversations(conversations, bookmarkSet);
 
-    await _updateBookmarks(updatedBookmarkSet, currentUserPubkey);
+    final updatedBookmarkSet = await _processConversations(
+      initialBookmarkSet: bookmarkSet,
+      conversations: conversations,
+    );
+
+    await _updateBookmarks(
+      bookmarkSet: updatedBookmarkSet,
+      masterPubkey: currentUserPubkey,
+    );
   }
 
   Future<BookmarksSetData> _getInitialBookmarkSet() async {
@@ -42,9 +49,9 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
 
     return archivedConversationBookmarksSet?.data ??
         const BookmarksSetData(
-          type: BookmarksSetType.chats,
           postsRefs: [],
           articlesRefs: [],
+          type: BookmarksSetType.chats,
         );
   }
 
@@ -61,84 +68,118 @@ class ToggleArchivedConversations extends _$ToggleArchivedConversations {
         .toList();
   }
 
-  Future<BookmarksSetData> _processCommunityConversation(
-    ConversationListItem conversation,
-    BookmarksSetData bookmarkSet,
-  ) async {
-    final isArchived = bookmarkSet.communitiesIds.contains(conversation.conversationId);
-    await ref
-        .read(conversationDaoProvider)
-        .setArchived(conversation.conversationId, isArchived: !isArchived);
+  Future<BookmarksSetData> _processConversations({
+    required BookmarksSetData initialBookmarkSet,
+    required List<ConversationListItem> conversations,
+  }) async {
+    var updatedBookmarkSet = initialBookmarkSet;
 
-    if (isArchived) {
-      return bookmarkSet.copyWith(
-        communitiesIds:
-            bookmarkSet.communitiesIds.where((id) => id != conversation.conversationId).toList(),
-      );
-    } else {
-      return bookmarkSet.copyWith(
-        communitiesIds: [...bookmarkSet.communitiesIds, conversation.conversationId],
+    final e2eeConversations = conversations
+        .where((conversation) => conversation.type == ConversationType.oneToOne)
+        .toList();
+
+    final communityConversations = conversations
+        .where((conversation) => conversation.type == ConversationType.community)
+        .toList();
+
+    if (e2eeConversations.isNotEmpty) {
+      updatedBookmarkSet = await _generateE2eeBookmarkSet(
+        initialBookmarkSet: initialBookmarkSet,
+        conversations: e2eeConversations,
       );
     }
-  }
 
-  Future<BookmarksSetData> _processPrivateConversation(
-    ConversationListItem conversation,
-    BookmarksSetData bookmarkSet,
-    List<List<String>>? parsedContent,
-  ) async {
-    final encryptedGroupIds = CommunityIdentifierTag(value: conversation.conversationId).toTag();
-    List<List<String>> updatedContent;
-
-    if (parsedContent == null) {
-      await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
-      updatedContent = [encryptedGroupIds];
-    } else {
-      final existItem = parsedContent
-          .firstWhereOrNull((element) => element.toString() == encryptedGroupIds.toString());
-
-      if (existItem == null) {
-        await ref.read(conversationDaoProvider).setArchived(conversation.conversationId);
-        updatedContent = [...parsedContent, encryptedGroupIds];
-      } else {
-        await ref
-            .read(conversationDaoProvider)
-            .setArchived(conversation.conversationId, isArchived: false);
-        updatedContent = parsedContent..remove(existItem);
-      }
-    }
-
-    final encryptedMessageService = await ref.read(encryptedMessageServiceProvider.future);
-    final encodedContent = updatedContent.isEmpty ? '' : jsonEncode(updatedContent);
-    final encryptedContent = encodedContent.isNotEmpty
-        ? await encryptedMessageService.encryptMessage(encodedContent)
-        : encodedContent;
-
-    return bookmarkSet.copyWith(content: encryptedContent);
-  }
-
-  Future<BookmarksSetData> _processConversations(
-    List<ConversationListItem> conversations,
-    BookmarksSetData bookmarkSet,
-  ) async {
-    var updatedBookmarkSet = bookmarkSet;
-    final parsedContent = await _decryptContent(bookmarkSet.content);
-
-    for (final conversation in conversations) {
-      if (conversation.type == ConversationType.community) {
-        updatedBookmarkSet = await _processCommunityConversation(conversation, updatedBookmarkSet);
-      } else {
-        updatedBookmarkSet =
-            await _processPrivateConversation(conversation, updatedBookmarkSet, parsedContent);
-      }
+    if (communityConversations.isNotEmpty) {
+      updatedBookmarkSet = await _generateCommunityConversationSet(
+        initialBookmarkSet: updatedBookmarkSet,
+        conversations: communityConversations,
+      );
     }
 
     return updatedBookmarkSet;
   }
 
-  Future<void> _updateBookmarks(BookmarksSetData bookmarkSet, String masterPubkey) async {
-    await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(
-          bookmarkSet..toReplaceableEventReference(masterPubkey),
+  Future<BookmarksSetData> _generateCommunityConversationSet({
+    required BookmarksSetData initialBookmarkSet,
+    required List<ConversationListItem> conversations,
+  }) async {
+    final conversationsIds =
+        conversations.map((conversation) => conversation.conversationId).toList();
+
+    for (final conversation in conversations) {
+      final isAlreadyArchived = initialBookmarkSet.communitiesIds.contains(conversation.conversationId);
+
+      await ref
+          .read(conversationDaoProvider)
+          .setArchived(conversationsIds, isArchived: !isAlreadyArchived);
+
+      if (isAlreadyArchived) {
+        return initialBookmarkSet.copyWith(
+          communitiesIds: initialBookmarkSet.communitiesIds
+              .where((id) => id != conversation.conversationId)
+              .toList(),
         );
+      } else {
+        return initialBookmarkSet.copyWith(
+          communitiesIds: [...initialBookmarkSet.communitiesIds, conversation.conversationId],
+        );
+      }
+    }
+
+    return initialBookmarkSet;
+  }
+
+  Future<BookmarksSetData> _generateE2eeBookmarkSet({
+    required BookmarksSetData initialBookmarkSet,
+    required List<ConversationListItem> conversations,
+  }) async {
+    var updatedTags = <List<String>>[];
+
+    final decryptedTags = await _decryptContent(initialBookmarkSet.content);
+    final conversationIds = conversations.map((e) => e.conversationId).toList();
+    final allConversationTags = conversations
+        .map((conversation) => CommunityIdentifierTag(value: conversation.conversationId).toTag())
+        .toList();
+
+    if (decryptedTags == null) {
+      await ref.read(conversationDaoProvider).setArchived(conversationIds);
+      updatedTags = allConversationTags;
+    } else {
+      for (final conversation in conversations) {
+        final conversationTag = CommunityIdentifierTag(value: conversation.conversationId).toTag();
+
+        final archivedConversationTag = decryptedTags.firstWhereOrNull(
+          (tag) => tag.equals(conversationTag),
+        );
+
+        if (archivedConversationTag == null) {
+          await ref.read(conversationDaoProvider).setArchived([conversation.conversationId]);
+          updatedTags = [...decryptedTags, conversationTag];
+        } else {
+          await ref
+              .read(conversationDaoProvider)
+              .setArchived([conversation.conversationId], isArchived: false);
+
+          updatedTags = decryptedTags..remove(archivedConversationTag);
+        }
+      }
+    }
+
+    final encryptedMessageService = await ref.read(encryptedMessageServiceProvider.future);
+    final encodedContent = updatedTags.isEmpty ? '' : jsonEncode(updatedTags);
+    final encryptedContent = encodedContent.isNotEmpty
+        ? await encryptedMessageService.encryptMessage(encodedContent)
+        : encodedContent;
+
+    return initialBookmarkSet.copyWith(content: encryptedContent);
+  }
+
+  Future<void> _updateBookmarks({
+    required String masterPubkey,
+    required BookmarksSetData bookmarkSet,
+  }) async {
+    await ref
+        .read(ionConnectNotifierProvider.notifier)
+        .sendEntityData(bookmarkSet..toReplaceableEventReference(masterPubkey));
   }
 }

@@ -45,7 +45,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                   onPressed: () {
                     ref
                         .read(toggleArchivedConversationsProvider.notifier)
-                        .toogleConversation([conversation]);
+                        .toggleConversations([conversation]);
                     Navigator.of(context).pop();
                   },
                   minWidth: 128.0.s,

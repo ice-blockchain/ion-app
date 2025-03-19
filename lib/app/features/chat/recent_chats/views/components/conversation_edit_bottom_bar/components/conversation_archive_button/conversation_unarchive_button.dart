@@ -33,7 +33,7 @@ class ConversationUnarchiveButton extends ConsumerWidget {
       onTap: () async {
         await ref
             .read(toggleArchivedConversationsProvider.notifier)
-            .toogleConversation(conversationsToManage);
+            .toggleConversations(conversationsToManage);
         ref.read(conversationsEditModeProvider.notifier).editMode = false;
         ref.read(selectedConversationsProvider.notifier).clear();
         if (context.mounted && context.canPop()) {
