@@ -1,5 +1,6 @@
 targets:
   $default:
+    auto_apply_builders: false
     builders:         
       freezed:freezed:
         generate_for:
@@ -17,6 +18,8 @@ targets:
         generate_for:
           include:
             - lib/app/router/**.c.dart
+      flutter_gen_runner:
+        enabled: true
       drift_dev:
         generate_for:
           include:
