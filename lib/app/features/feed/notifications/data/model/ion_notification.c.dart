@@ -78,13 +78,11 @@ final class LikesIonNotification extends IonNotification {
 
   @override
   String getDescription(BuildContext context) {
-    if (pubkeys.length == 1) {
-      return context.i18n.notifications_liked_one;
-    }
-    if (pubkeys.length == 2) {
-      return context.i18n.notifications_liked_two;
-    }
-    return context.i18n.notifications_liked_many(total);
+    return switch (pubkeys.length) {
+      1 => context.i18n.notifications_liked_one,
+      2 => context.i18n.notifications_liked_two,
+      _ => context.i18n.notifications_liked_many(total - 1)
+    };
   }
 }
 
@@ -105,12 +103,10 @@ final class FollowersIonNotification extends IonNotification {
 
   @override
   String getDescription(BuildContext context) {
-    if (pubkeys.length == 1) {
-      return context.i18n.notifications_followed_one;
-    }
-    if (pubkeys.length == 2) {
-      return context.i18n.notifications_followed_two;
-    }
-    return context.i18n.notifications_followed_many(total);
+    return switch (pubkeys.length) {
+      1 => context.i18n.notifications_followed_one,
+      2 => context.i18n.notifications_followed_two,
+      _ => context.i18n.notifications_followed_many(total - 1)
+    };
   }
 }
