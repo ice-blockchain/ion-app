@@ -89,7 +89,6 @@ String deltaToMarkdown(Delta delta) {
 Delta markdownToDelta(String markdown) {
   final delta = _mdToDelta.convert(markdown);
   final processedDelta = Delta();
-  final textParser = TextParser.allMatchers();
 
   for (final op in delta.toList()) {
     if (op.key == 'insert' && op.data is Map) {
@@ -107,39 +106,46 @@ Delta markdownToDelta(String markdown) {
         processedDelta.insert(op.data, op.attributes);
       }
     } else {
-      final text = op.data.toString();
-      final matches = textParser.parse(text);
-
-      if (matches.isEmpty) {
-        processedDelta.insert(op.data, op.attributes);
-      } else {
-        for (final match in matches) {
-          processedDelta.insert(
-            match.text,
-            {
-              ...?op.attributes,
-              ...switch (match.matcher) {
-                HashtagMatcher() => {HashtagAttribute.attributeKey: match.text},
-                MentionMatcher() => {MentionAttribute.attributeKey: match.text},
-                CashtagMatcher() => {CashtagAttribute.attributeKey: match.text},
-                UrlMatcher() => {Attribute.link.key: match.text},
-                _ => {},
-              },
-            },
-          );
-        }
-      }
+      _processMatches(op, processedDelta);
     }
   }
 
   return processedDelta;
 }
 
-Delta convertTextWithImageAttributesToEmbeds(Delta delta) {
+void _processMatches(Operation op, Delta processedDelta) {
+  final textParser = TextParser.allMatchers();
+  final text = op.data.toString();
+  final matches = textParser.parse(text);
+
+  if (matches.isEmpty) {
+    processedDelta.insert(op.data, op.attributes);
+  } else {
+    for (final match in matches) {
+      processedDelta.insert(
+        match.text,
+        {
+          ...?op.attributes,
+          ...switch (match.matcher) {
+            HashtagMatcher() => {HashtagAttribute.attributeKey: match.text},
+            MentionMatcher() => {MentionAttribute.attributeKey: match.text},
+            CashtagMatcher() => {CashtagAttribute.attributeKey: match.text},
+            UrlMatcher() => {Attribute.link.key: match.text},
+            _ => {},
+          },
+        },
+      );
+    }
+  }
+}
+
+Delta processDelta(Delta delta) {
   final newDelta = Delta();
 
   for (final op in delta.operations) {
-    if (op.data is String && (op.attributes?.containsKey('text-editor-single-image') ?? false)) {
+    if (op.data is String) {
+      _processMatches(op, newDelta);
+    } else if (op.attributes?.containsKey('text-editor-single-image') ?? false) {
       final imageUrl = op.attributes!['text-editor-single-image'] as String;
       newDelta.insert({'text-editor-single-image': imageUrl});
     } else {
@@ -156,7 +162,7 @@ Delta parseAndConvertDelta(String? deltaContent, String fallbackMarkdown) {
   try {
     if (deltaContent != null) {
       delta = Delta.fromJson(jsonDecode(deltaContent) as List<dynamic>);
-      delta = convertTextWithImageAttributesToEmbeds(delta);
+      delta = processDelta(delta);
     }
   } catch (e) {
     delta = null;
