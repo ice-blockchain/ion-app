@@ -7,7 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/date.dart';
@@ -21,21 +26,6 @@ class NotificationInfo extends HookConsumerWidget {
 
   final IonNotification notification;
 
-  TextSpan _getDateTextSpan(BuildContext context, {required Locale locale}) {
-    final isToday = isSameDay(notification.timestamp, DateTime.now());
-    final time = notification is CommentIonNotification
-        ? formatShortTimestamp(notification.timestamp, locale: locale)
-        : isToday
-            ? context.i18n.date_today
-            : formatShortTimestamp(notification.timestamp, locale: locale);
-    return TextSpan(
-      text: ' • $time',
-      style: context.theme.appTextThemes.body2.copyWith(
-        color: context.theme.appColors.tertararyText,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(appLocaleProvider);
@@ -44,21 +34,23 @@ class NotificationInfo extends HookConsumerWidget {
       return ref.watch(userMetadataProvider(pubkey)).valueOrNull;
     }).toList();
 
+    final eventTypeLabel = _getEventTypeLabel(ref, notification: notification);
+
     if (userDatas.contains(null)) {
-      return Skeleton(
-        child: ColoredBox(
-          color: Colors.white,
-          child: SizedBox(
-            width: 240.0.s,
-            height: 19.0.s,
-          ),
-        ),
-      );
+      return const _Loading();
     }
+
+    final description = switch (notification) {
+      final LikesIonNotification notification =>
+        notification.getDescription(context, eventTypeLabel),
+      final CommentIonNotification notification =>
+        notification.getDescription(context, eventTypeLabel),
+      _ => notification.getDescription(context)
+    };
 
     final newTapRecognizers = <TapGestureRecognizer>[];
     final textSpan = replaceString(
-      notification.getDescription(context),
+      description,
       tagRegex('username'),
       (String text, int index) {
         final pubkey = notification.pubkeys[index];
@@ -97,6 +89,83 @@ class NotificationInfo extends HookConsumerWidget {
       overflow: TextOverflow.ellipsis,
       style: context.theme.appTextThemes.body2.copyWith(
         color: context.theme.appColors.primaryText,
+      ),
+    );
+  }
+
+  TextSpan _getDateTextSpan(BuildContext context, {required Locale locale}) {
+    final isToday = isSameDay(notification.timestamp, DateTime.now());
+    final time = notification is CommentIonNotification
+        ? formatShortTimestamp(notification.timestamp, locale: locale)
+        : isToday
+            ? context.i18n.date_today
+            : formatShortTimestamp(notification.timestamp, locale: locale);
+    return TextSpan(
+      text: ' • $time',
+      style: context.theme.appTextThemes.body2.copyWith(
+        color: context.theme.appColors.tertararyText,
+      ),
+    );
+  }
+
+  String _getEventTypeLabel(WidgetRef ref, {required IonNotification notification}) {
+    final eventReference = switch (notification) {
+      CommentIonNotification() => notification.eventReference,
+      LikesIonNotification() => notification.eventReference,
+      _ => null,
+    };
+
+    if (eventReference == null) {
+      return '';
+    }
+
+    final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+
+    if (entity == null) {
+      return '';
+    }
+
+    if (notification is LikesIonNotification) {
+      if (entity is ModifiablePostEntity) {
+        return entity.data.parentEvent == null
+            ? ref.context.i18n.common_post
+            : ref.context.i18n.common_reply;
+      } else if (entity is ArticleEntity) {
+        return ref.context.i18n.common_article;
+      }
+    } else if (notification is CommentIonNotification) {
+      if (entity is ModifiablePostEntity) {
+        final relatedEventReference =
+            entity.data.parentEvent?.eventReference ?? entity.data.quotedEvent?.eventReference;
+        if (relatedEventReference != null && relatedEventReference is ReplaceableEventReference) {
+          return switch (relatedEventReference.kind) {
+            ArticleEntity.kind => ref.context.i18n.common_article,
+            _ => ref.context.i18n.common_post,
+          };
+        }
+      } else if (entity is GenericRepostEntity) {
+        return switch (entity.data.kind) {
+          ArticleEntity.kind => ref.context.i18n.common_article,
+          _ => ref.context.i18n.common_post,
+        };
+      }
+    }
+    return ref.context.i18n.common_post;
+  }
+}
+
+class _Loading extends StatelessWidget {
+  const _Loading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeleton(
+      child: ColoredBox(
+        color: Colors.white,
+        child: SizedBox(
+          width: 240.0.s,
+          height: 19.0.s,
+        ),
       ),
     );
   }

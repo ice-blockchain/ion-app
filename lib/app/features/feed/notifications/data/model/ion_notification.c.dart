@@ -49,11 +49,11 @@ final class CommentIonNotification extends IonNotification {
   }
 
   @override
-  String getDescription(BuildContext context) {
+  String getDescription(BuildContext context, [String eventTypeLabel = '']) {
     return switch (type) {
-      CommentIonNotificationType.reply => context.i18n.notifications_reply,
-      CommentIonNotificationType.quote => context.i18n.notifications_share,
-      CommentIonNotificationType.repost => context.i18n.notifications_repost
+      CommentIonNotificationType.reply => context.i18n.notifications_reply(eventTypeLabel),
+      CommentIonNotificationType.quote => context.i18n.notifications_share(eventTypeLabel),
+      CommentIonNotificationType.repost => context.i18n.notifications_repost(eventTypeLabel),
     };
   }
 }
@@ -77,11 +77,11 @@ final class LikesIonNotification extends IonNotification {
   Color getBackgroundColor(BuildContext context) => context.theme.appColors.attentionRed;
 
   @override
-  String getDescription(BuildContext context) {
+  String getDescription(BuildContext context, [String eventTypeLabel = '']) {
     return switch (pubkeys.length) {
-      1 => context.i18n.notifications_liked_one,
-      2 => context.i18n.notifications_liked_two,
-      _ => context.i18n.notifications_liked_many(total - 1)
+      1 => context.i18n.notifications_liked_one(eventTypeLabel),
+      2 => context.i18n.notifications_liked_two(eventTypeLabel),
+      _ => context.i18n.notifications_liked_many(total - 1, eventTypeLabel),
     };
   }
 }
