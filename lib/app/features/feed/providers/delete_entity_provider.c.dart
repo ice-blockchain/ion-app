@@ -23,46 +23,64 @@ import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provi
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'delete_entity_provider.c.g.dart';
 
 @riverpod
-Future<void> deleteEntity(
-  Ref ref,
-  EventReference eventReference,
-) async {
-  final entity = await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
-  if (entity == null) {
-    throw EntityNotFoundException(eventReference);
-  }
+class DeleteEntityController extends _$DeleteEntityController {
+  @override
+  AsyncValue<void> build() => const AsyncValue.data(null);
 
-  switch (entity) {
-    case GenericRepostEntity() || RepostEntity() || PostEntity():
-      {
-        await _deleteFromServer(ref, entity);
-        _deleteFromDataSources(ref, entity);
-        _deleteFromCache(ref, entity);
-        _deleteFromCounters(ref, entity);
-        _deleteFromProviders(ref, entity);
+  Future<void> deleteEntity(
+    EventReference eventReference, {
+    FutureOr<void> Function()? onDelete,
+  }) async {
+    state = const AsyncValue.loading();
+    try {
+      final entity =
+          await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+      if (entity == null) {
+        throw EntityNotFoundException(eventReference);
       }
-    case ModifiablePostEntity():
-      {
-        _deleteFromCounters(ref, entity);
-        await ref
-            .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
-            .softDelete(eventReference: eventReference);
+      switch (entity) {
+        case GenericRepostEntity() || RepostEntity() || PostEntity():
+          {
+            await _deleteFromServer(ref, entity);
+            _deleteFromDataSources(ref, entity);
+            _deleteFromCache(ref, entity);
+            _deleteFromCounters(ref, entity);
+            _deleteFromProviders(ref, entity);
+          }
+        case ModifiablePostEntity():
+          {
+            _deleteFromCounters(ref, entity);
+            await ref
+                .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
+                .softDelete(eventReference: eventReference);
+          }
+        case ArticleEntity():
+          {
+            await ref
+                .read(createArticleProvider(CreateArticleOption.softDelete).notifier)
+                .softDelete(eventReference: eventReference);
+          }
+        default:
+          {
+            throw DeleteEntityUnsupportedTypeException();
+          }
       }
-    case ArticleEntity():
-      {
-        await ref
-            .read(createArticleProvider(CreateArticleOption.softDelete).notifier)
-            .softDelete(eventReference: eventReference);
-      }
-    default:
-      {
-        throw DeleteEntityUnsupportedTypeException();
-      }
+      await onDelete?.call();
+      state = const AsyncValue.data(null);
+    } catch (e, stackTrace) {
+      Logger.error(
+        'Failed to delete entity',
+        stackTrace: stackTrace,
+      );
+      state = AsyncValue.error(e, stackTrace);
+      rethrow;
+    }
   }
 }
 

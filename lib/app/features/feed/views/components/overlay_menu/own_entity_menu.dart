@@ -10,13 +10,15 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/delete_entity_provider.c.dart';
+import 'package:ion/app/features/feed/views/pages/entity_delete_confirmation_modal/entity_delete_confirmation_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class OwnEntityMenu extends ConsumerWidget {
@@ -76,8 +78,17 @@ class OwnEntityMenu extends ConsumerWidget {
                   ),
                   onPressed: () async {
                     closeMenu();
-                    await ref.read(deleteEntityProvider(eventReference).future);
-                    onDelete?.call();
+                    final confirmed = await showSimpleBottomSheet<bool>(
+                      context: context,
+                      child: EntityDeleteConfirmationModal(
+                        eventReference: eventReference,
+                        deleteConfirmationType: _getDeleteConfirmationType(entity),
+                      ),
+                    );
+
+                    if ((confirmed ?? false) && context.mounted) {
+                      onDelete?.call();
+                    }
                   },
                 ),
               ],
@@ -89,6 +100,15 @@ class OwnEntityMenu extends ConsumerWidget {
         color: iconColor ?? context.theme.appColors.onTertararyBackground,
       ),
     );
+  }
+
+  DeleteConfirmationType _getDeleteConfirmationType(IonConnectEntity entity) {
+    if (entity is ArticleEntity) {
+      return DeleteConfirmationType.article;
+    } else if (entity is ModifiablePostEntity && entity.data.hasVideo) {
+      return DeleteConfirmationType.video;
+    }
+    return DeleteConfirmationType.post;
   }
 
   bool _isEntityEditable(IonConnectEntity entity) {
