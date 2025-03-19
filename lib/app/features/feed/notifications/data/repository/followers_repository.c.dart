@@ -29,6 +29,7 @@ class FollowersRepository {
     return aggregated
         .map(
           (result) => FollowersIonNotification(
+            total: result.uniquePubkeyCount,
             timestamp: DateTime.parse(result.eventDate),
             pubkeys: result.latestPubkeys?.split(',') ?? [],
           ),

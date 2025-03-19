@@ -40,6 +40,7 @@ class LikesRepository {
     return aggregated
         .map(
           (result) => LikesIonNotification(
+            total: result.uniquePubkeyCount,
             eventReference: result.eventReference,
             timestamp: DateTime.parse(result.eventDate),
             pubkeys: result.latestPubkeys?.split(',') ?? [],

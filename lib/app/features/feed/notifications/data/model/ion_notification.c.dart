@@ -58,15 +58,17 @@ final class CommentIonNotification extends IonNotification {
   }
 }
 
-//TODO:add total
 final class LikesIonNotification extends IonNotification {
   LikesIonNotification({
     required this.eventReference,
+    required this.total,
     required super.timestamp,
     required super.pubkeys,
   });
 
   final EventReference eventReference;
+
+  final int total;
 
   @override
   String get asset => Assets.svg.iconVideoLikeOff;
@@ -82,15 +84,18 @@ final class LikesIonNotification extends IonNotification {
     if (pubkeys.length == 2) {
       return context.i18n.notifications_liked_two;
     }
-    return context.i18n.notifications_liked_many(pubkeys.length - 1);
+    return context.i18n.notifications_liked_many(total);
   }
 }
 
 final class FollowersIonNotification extends IonNotification {
   FollowersIonNotification({
+    required this.total,
     required super.timestamp,
     required super.pubkeys,
   });
+
+  final int total;
 
   @override
   String get asset => Assets.svg.iconSearchFollow;
@@ -106,6 +111,6 @@ final class FollowersIonNotification extends IonNotification {
     if (pubkeys.length == 2) {
       return context.i18n.notifications_followed_two;
     }
-    return context.i18n.notifications_followed_many(pubkeys.length - 1);
+    return context.i18n.notifications_followed_many(total);
   }
 }
