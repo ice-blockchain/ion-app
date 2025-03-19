@@ -32,6 +32,7 @@ class MediaFile with _$MediaFile {
     int? height,
     String? mimeType,
     String? thumb,
+    String? blurhash,
   }) = _MediaFile;
 
   const MediaFile._();

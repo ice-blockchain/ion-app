@@ -42,7 +42,9 @@ class MoreContentView extends ConsumerWidget {
                 iconPath: Assets.svg.walletChatPhotos,
                 title: context.i18n.common_media,
                 onTap: () async {
-                  final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
+                  final mediaFiles = await MediaPickerRoute(
+                    maxSelection: 10,
+                  ).push<List<MediaFile>>(context);
                   if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                     final convertedMediaFiles = await ref
                         .read(mediaServiceProvider)

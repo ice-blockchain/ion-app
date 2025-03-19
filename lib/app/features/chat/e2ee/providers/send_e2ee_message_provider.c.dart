@@ -4,6 +4,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:blurhash_ffi/blurhash_ffi.dart';
+import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -59,6 +62,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
     mediaEncryptionService: ref.watch(mediaEncryptionServiceProvider),
     conversationMessageStatusDao: ref.watch(conversationMessageDataDaoProvider),
     conversationDao: ref.watch(conversationDaoProvider),
+    messageMediaDao: ref.watch(messageMediaDaoProvider),
   );
 }
 
@@ -78,6 +82,7 @@ class SendE2eeMessageService {
     required this.eventMessageDao,
     required this.conversationMessageStatusDao,
     required this.conversationDao,
+    required this.messageMediaDao,
   });
 
   final Env env;
@@ -94,7 +99,7 @@ class SendE2eeMessageService {
   final ConversationDao conversationDao;
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageDataDao conversationMessageStatusDao;
-
+  final MessageMediaDao messageMediaDao;
   Future<void> sendMessage({
     required String content,
     required String conversationId,
@@ -112,8 +117,6 @@ class SendE2eeMessageService {
           await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
       if (mediaFiles.isNotEmpty) {
-        final compressedMediaFiles = await _compressMediaFiles(mediaFiles);
-
         // These are used to for uploading state
         final conversationTagsWithDummyMediaTags = _generateConversationTags(
           subject: subject,
@@ -122,18 +125,30 @@ class SendE2eeMessageService {
           masterPubkeys: participantsMasterPubkeys,
         );
 
-        for (final mediaFile in compressedMediaFiles) {
+        final mediaFilesWithBlurhash = <MediaFile>[];
+
+        for (final mediaFile in mediaFiles) {
+          final isImage = mediaFile.mimeType?.startsWith('image/') ?? false;
+          if (isImage) {
+            final image = FileImage(File(mediaFile.path));
+            final blurhash = await BlurhashFFI.encode(image);
+            mediaFilesWithBlurhash.add(mediaFile.copyWith(blurhash: blurhash));
+          }
+        }
+
+        for (final mediaFile in mediaFilesWithBlurhash) {
           conversationTagsWithDummyMediaTags.add([
             'imeta',
-            'url ${mediaFile.path}',
+            'url null',
             'm ${mediaFile.mimeType}',
             'alt message',
-            'dim null',
             'x null',
+            'dim ${mediaFile.width}x${mediaFile.height}',
             'ox null',
             'expiration null',
             'encryption-key null null null aes-gcm',
             if (mediaFile.thumb != null) 'thumb ${mediaFile.thumb}',
+            if (mediaFile.blurhash != null) 'blurhash ${mediaFile.blurhash}',
           ]);
         }
 
@@ -142,6 +157,24 @@ class SendE2eeMessageService {
           signer: eventSigner!,
           tags: conversationTagsWithDummyMediaTags,
         );
+
+        await conversationDao.add([eventMessageWithoutMedia]);
+        await eventMessageDao.add(eventMessageWithoutMedia);
+
+        final messageMediaIds = await Future.wait(
+          mediaFilesWithBlurhash.map(
+            (mediaFile) async {
+              final data = MessageMediaTableCompanion(
+                eventMessageId: Value(eventMessageWithoutMedia.id),
+                status: const Value(MessageMediaStatus.processing),
+                remoteUrl: Value(mediaFile.path),
+              );
+              return messageMediaDao.add(data);
+            },
+          ).toList(),
+        );
+
+        final compressedMediaFiles = await _compressMediaFiles(mediaFilesWithBlurhash);
 
         await Future.wait(
           participantsMasterPubkeys.map((masterPubkey) async {
@@ -168,31 +201,27 @@ class SendE2eeMessageService {
 
               final uploadedMediaFilesWithKeys = await Future.wait(
                 encryptedMediaFiles.map((encryptedMediaFile) async {
-                  final mediaFile = encryptedMediaFile.$1;
-                  final secretKey = encryptedMediaFile.$2;
-                  final nonce = encryptedMediaFile.$3;
-                  final mac = encryptedMediaFile.$4;
-
                   final oneTimeEventSigner = await Ed25519KeyStore.generate();
 
                   String? thumbUrl;
 
-                  final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
+                  final mediaType =
+                      MediaType.fromMimeType(encryptedMediaFile.mediaFile.mimeType ?? '');
+                  final index = encryptedMediaFiles.indexOf(encryptedMediaFile);
 
                   if (mediaType == MediaType.video) {
-                    final index = encryptedMediaFiles.indexOf(encryptedMediaFile);
                     final originalMediaFile = compressedMediaFiles[index];
 
-                    final encryptedThumb = await mediaEncryptionService.encryptMediaFiles([
+                    final encryptedThumb = await mediaEncryptionService.encryptMediaFile(
                       MediaFile(
                         path: originalMediaFile.thumb!,
                         mimeType: 'image/webp',
                         width: originalMediaFile.width,
                         height: originalMediaFile.height,
                       ),
-                    ]);
+                    );
                     final thumbUploadResult = await ionConnectUploadNotifier.upload(
-                      encryptedThumb.first.$1,
+                      encryptedThumb.mediaFile,
                       alt: FileAlt.message,
                       customEventSigner: oneTimeEventSigner,
                     );
@@ -211,23 +240,28 @@ class SendE2eeMessageService {
                     thumbUrl = jsonEncode(
                       thumbUploadResult.mediaAttachment
                           .copyWith(
-                            encryptionKey: encryptedThumb.first.$2,
-                            encryptionNonce: encryptedThumb.first.$3,
-                            encryptionMac: encryptedThumb.first.$4,
+                            encryptionKey: encryptedThumb.secretKey,
+                            encryptionNonce: encryptedThumb.nonce,
+                            encryptionMac: encryptedThumb.mac,
                           )
                           .toJson(),
                     );
                   }
 
                   final uploadResult = await ionConnectUploadNotifier.upload(
-                    mediaFile,
+                    encryptedMediaFile.mediaFile,
                     alt: FileAlt.message,
                     customEventSigner: oneTimeEventSigner,
                   );
 
+                  final originalMediaFile = mediaFilesWithBlurhash[index];
+
+                  final messageMediaId = messageMediaIds[index];
+
                   final fileMetadataEvent = await _generateFileMetadataEvent(
                     ontTimeEventSigner: oneTimeEventSigner,
-                    fileMetadataEntity: uploadResult.fileMetadata,
+                    fileMetadataEntity:
+                        uploadResult.fileMetadata.copyWith(blurhash: originalMediaFile.blurhash),
                   );
 
                   await ionConnectNotifier.sendEvent(
@@ -236,7 +270,24 @@ class SendE2eeMessageService {
                     cache: false,
                   );
 
-                  return (uploadResult, secretKey, nonce, mac, thumbUrl);
+                  if (masterPubkey == currentUserMasterPubkey) {
+                    await messageMediaDao.updateById(
+                      messageMediaId,
+                      MessageMediaTableCompanion(
+                        remoteUrl: Value(uploadResult.mediaAttachment.url),
+                        status: const Value(MessageMediaStatus.completed),
+                      ),
+                    );
+                  }
+
+                  return (
+                    uploadResult,
+                    encryptedMediaFile.secretKey,
+                    encryptedMediaFile.nonce,
+                    encryptedMediaFile.mac,
+                    thumbUrl,
+                    originalMediaFile.blurhash
+                  );
                 }),
               );
 
@@ -410,10 +461,10 @@ class SendE2eeMessageService {
 
           final uploadedMediaFilesWithKeys = await Future.wait(
             encryptedMediaFiles.map((encryptedMediaFile) async {
-              final mediaFile = encryptedMediaFile.$1;
-              final secretKey = encryptedMediaFile.$2;
-              final nonce = encryptedMediaFile.$3;
-              final mac = encryptedMediaFile.$4;
+              final mediaFile = encryptedMediaFile.mediaFile;
+              final secretKey = encryptedMediaFile.secretKey;
+              final nonce = encryptedMediaFile.nonce;
+              final mac = encryptedMediaFile.mac;
 
               final oneTimeEventSigner = await Ed25519KeyStore.generate();
 
@@ -434,7 +485,7 @@ class SendE2eeMessageService {
                 actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
               );
 
-              return (uploadResult, secretKey, nonce, mac, null);
+              return (uploadResult, secretKey, nonce, mac, null, null);
             }),
           );
 
@@ -773,7 +824,7 @@ class SendE2eeMessageService {
   }
 
   List<List<String>> _generateImetaTags(
-    List<(UploadResult, String, String, String, String?)> uploadResults,
+    List<(UploadResult, String, String, String, String?, String?)> uploadResults,
   ) {
     final expiration = EntityExpiration(
       value: DateTime.now().add(
@@ -788,7 +839,7 @@ class SendE2eeMessageService {
       final nonce = uploadResult.$3;
       final mac = uploadResult.$4;
       final thumbUrl = uploadResult.$5;
-
+      final blurhash = uploadResult.$6;
       return [
         'imeta',
         'url ${fileMetadata.url}',
@@ -800,6 +851,7 @@ class SendE2eeMessageService {
         'expiration ${expiration.value.millisecondsSinceEpoch ~/ 1000}',
         'encryption-key $secretKey $nonce $mac aes-gcm',
         if (thumbUrl != null) 'thumb $thumbUrl',
+        if (blurhash != null) 'blurhash $blurhash',
       ];
     }).toList();
   }

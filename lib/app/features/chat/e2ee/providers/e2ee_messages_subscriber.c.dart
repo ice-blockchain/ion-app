@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:drift/drift.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
@@ -119,6 +120,19 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             await ref.watch(conversationDaoProvider).add([rumor]);
             // Add message if that doesn't exist
             await ref.watch(conversationEventMessageDaoProvider).add(rumor);
+
+            final entity = PrivateDirectMessageEntity.fromEventMessage(rumor);
+            if (entity.data.media.isNotEmpty) {
+              for (final media in entity.data.media.values) {
+                await ref.watch(messageMediaDaoProvider).add(
+                      MessageMediaTableCompanion(
+                        eventMessageId: Value(rumor.id),
+                        status: const Value(MessageMediaStatus.completed),
+                        remoteUrl: Value(media.url),
+                      ),
+                    );
+              }
+            }
             // If user received another user message add "received" status
             // for them both into the database, we don't know anything about
             // other users in the conversation

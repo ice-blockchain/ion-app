@@ -11,9 +11,9 @@ import 'package:ion/app/features/chat/views/components/message_items/chat_date_h
 import 'package:ion/app/features/chat/views/components/message_items/message_types/audio_message/audio_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/document_message/document_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/emoji_message/emoji_message.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/photo_message/photo_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/profile_share_message/profile_share_message.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/text_message/text_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 class OneToOneMessageList extends HookConsumerWidget {
@@ -42,8 +42,8 @@ class OneToOneMessageList extends HookConsumerWidget {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   findChildIndexCallback: (key) {
-                    final valueKey = key as ValueKey<EventMessage>;
-                    return entry.value.indexOf(valueKey.value);
+                    final valueKey = key as ValueKey<String>;
+                    return entry.value.indexWhere((e) => e.id == valueKey.value);
                   },
                   (context, msgIndex) {
                     final message = entry.value[msgIndex];
@@ -55,7 +55,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                         previousMessage == null || previousMessage.pubkey == message.pubkey;
 
                     return Padding(
-                      key: ValueKey(message),
+                      key: ValueKey(message.id),
                       padding: EdgeInsets.only(
                         bottom: isLastMessage
                             ? 20.0.s
@@ -69,7 +69,7 @@ class OneToOneMessageList extends HookConsumerWidget {
                         MessageType.audio => AudioMessage(eventMessage: message),
                         MessageType.profile => ProfileShareMessage(eventMessage: message),
                         MessageType.document => DocumentMessage(eventMessage: message),
-                        MessageType.visualMedia => PhotoMessage(eventMessage: message),
+                        MessageType.visualMedia => VisualMediaMessage(eventMessage: message),
                       },
                     );
                   },

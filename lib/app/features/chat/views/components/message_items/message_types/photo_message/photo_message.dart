@@ -1,25 +1,24 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:blurhash_ffi/blurhashffi_widget.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 class PhotoMessage extends HookConsumerWidget {
   const PhotoMessage({
@@ -37,8 +36,21 @@ class PhotoMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
+    final isMe = useMemoized(
+      () => ref.read(isCurrentUserSelectorProvider(eventMessage.masterPubkey)),
+      [eventMessage.masterPubkey],
+    );
+
+    final messageMediasStream = useMemoized(
+      () => ref.read(messageMediaDaoProvider).watchByEventId(eventMessage.id),
+      [eventMessage.id],
+    );
+
+    final messageMedias = useStream(messageMediasStream);
+
+    if (messageMedias.data?.isEmpty ?? true) {
+      return const SizedBox.shrink();
+    }
 
     return MessageItemWrapper(
       isMe: isMe,
@@ -57,35 +69,33 @@ class PhotoMessage extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (entity.data.visualMedias.length > 1)
+            if (messageMedias.data!.length > 1)
               StaggeredGrid.count(
                 crossAxisCount: 2,
                 mainAxisSpacing: 4.0.s,
                 crossAxisSpacing: 4.0.s,
                 children: List.generate(
-                  entity.data.visualMedias.take(4).length,
+                  messageMedias.data!.length,
                   (index) {
-                    final isLastItem = index == entity.data.visualMedias.length - 1;
-                    final isOddLength = entity.data.visualMedias.length.isOdd;
+                    final isLastItem = index == messageMedias.data!.length - 1;
+                    final isOddLength = messageMedias.data!.length.isOdd;
 
                     return StaggeredGridTile.count(
                       crossAxisCellCount: (isLastItem && isOddLength) ? 2 : 1,
                       mainAxisCellCount: 1,
-                      child: _MediaContent(
-                        media: entity.data.visualMedias[index],
+                      child: MediaContent(
+                        media: messageMedias.data![index],
+                        eventMessage: eventMessage,
                       ),
                     );
                   },
                 ).reversed.toList(),
               )
             else
-              _MediaContent(
-                media: entity.data.visualMedias.first,
+              MediaContent(
+                media: messageMedias.data!.first,
+                eventMessage: eventMessage,
               ),
-            SizedBox(height: 8.0.s),
-            _MessageContent(
-              eventMessage: eventMessage,
-            ),
           ],
         ),
       ),
@@ -93,91 +103,173 @@ class PhotoMessage extends HookConsumerWidget {
   }
 }
 
-class _MediaContent extends HookConsumerWidget {
-  const _MediaContent({
+class MediaContent extends HookConsumerWidget {
+  const MediaContent({
     required this.media,
+    required this.eventMessage,
+    super.key,
   });
 
-  final MediaAttachment media;
+  final MessageMediaTableData media;
+  final EventMessage eventMessage;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final originalImageOrThumbnail = useFuture(
-      useMemoized(
-        () async {
-          final mediaType = MediaType.fromMimeType(media.mimeType);
-          if (mediaType == MediaType.image) {
-            return ref.read(mediaEncryptionServiceProvider).retrieveEncryptedMedia(media);
-          } else {
-            final thumbnail = media.thumb;
+    final fileCurrent = useState<File?>(null);
+    final file = fileCurrent.value;
 
-            if (thumbnail == null) {
-              throw MediaThumbnailNotFoundException();
-            }
+    final entity = PrivateDirectMessageData.fromEventMessage(eventMessage);
+    final mediaAttachment = entity.visualMedias.where((e) => e.url == media.remoteUrl).firstOrNull;
 
-            final mediaAttachment =
-                MediaAttachment.fromJson(jsonDecode(thumbnail) as Map<String, dynamic>);
-            final encryptedThumbnail = await ref
-                .read(mediaEncryptionServiceProvider)
-                .retrieveEncryptedMedia(mediaAttachment);
+    final blurhashCurrent = mediaAttachment?.blurhash;
 
-            return encryptedThumbnail;
-          }
-        },
-        [media],
-      ),
+    final dimensionsCurrent = useMemoized(
+      () {
+        if (mediaAttachment == null) {
+          return null;
+        }
+
+        try {
+          final dimensions = mediaAttachment.dimension.split('x').map(int.parse).toList();
+          return Size(dimensions.first.toDouble(), dimensions.last.toDouble());
+        } catch (e) {
+          return Size(PhotoMessage.maxHeight, PhotoMessage.maxHeight);
+        }
+      },
+      [mediaAttachment?.dimension],
     );
 
-    return _PhotoContent(
-      mediaPath: originalImageOrThumbnail.data?.path,
-      isThumbnail: media.thumb != null,
+    useEffect(
+      () {
+        if (mediaAttachment == null) {
+          return;
+        }
+
+        if (fileCurrent.value != null) {
+          return;
+        }
+
+        if (mediaAttachment.url.isEmpty) {
+          return;
+        }
+
+        final mediaType = MediaType.fromMimeType(mediaAttachment.mimeType);
+        if (mediaType == MediaType.image) {
+          ref
+              .read(mediaEncryptionServiceProvider)
+              .retrieveEncryptedMedia(mediaAttachment)
+              .then((encryptedMedia) {
+            fileCurrent.value = encryptedMedia;
+            ref.read(messageMediaDaoProvider).updateByRemoteUrl(
+                  media.remoteUrl!,
+                  MessageMediaTableCompanion(
+                    eventMessageId: drift.Value(eventMessage.id),
+                    status: const drift.Value(MessageMediaStatus.completed),
+                  ),
+                );
+          });
+        } else {
+          //todo: handle video
+        }
+        return null;
+      },
+      [
+        media.remoteUrl,
+        eventMessage.id,
+        fileCurrent.value,
+        blurhashCurrent,
+        dimensionsCurrent,
+      ],
+    );
+
+    return Stack(
+      children: [
+        Stack(
+          children: <Widget>[
+            if (media.status == MessageMediaStatus.processing)
+              const Positioned.fill(
+                child: Center(
+                  child: IONLoadingIndicator(),
+                ),
+              ),
+            Column(
+              children: <Widget>[
+                _PhotoContent(
+                  file: file,
+                  blurhash: blurhashCurrent,
+                  dimensions: dimensionsCurrent,
+                  eventMessage: eventMessage,
+                ),
+                SizedBox(height: 8.0.s),
+                _MessageContent(eventMessage: eventMessage),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
 
-class _PhotoContent extends StatelessWidget {
+class _PhotoContent extends HookConsumerWidget {
   const _PhotoContent({
-    required this.mediaPath,
-    required this.isThumbnail,
+    required this.file,
+    required this.blurhash,
+    required this.dimensions,
+    required this.eventMessage,
   });
 
-  final String? mediaPath;
-  final bool isThumbnail;
-
+  final File? file;
+  final String? blurhash;
+  final Size? dimensions;
+  final EventMessage eventMessage;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: PhotoMessage.maxHeight,
         minHeight: PhotoMessage.maxHeight,
       ),
-      child: mediaPath != null
-          ? ClipRRect(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (blurhash != null)
+            ClipRRect(
               borderRadius: BorderRadius.circular(12.0.s),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.file(
-                    File(mediaPath!),
-                    fit: BoxFit.cover,
-                    height: PhotoMessage.maxHeight,
-                  ),
-                  if (isThumbnail)
-                    Align(
-                      child: Container(
-                        padding: EdgeInsets.all(6.0.s),
-                        decoration: BoxDecoration(
-                          color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
-                          borderRadius: BorderRadius.circular(12.0.s),
-                        ),
-                        child: Assets.svg.iconVideoPlay.icon(
-                          size: 16.0.s,
-                        ),
-                      ),
-                    ),
-                ],
+              child: BlurhashFfi(
+                decodingWidth: dimensions?.width.toInt() ?? PhotoMessage.maxHeight.toInt(),
+                decodingHeight: dimensions?.height.toInt() ?? PhotoMessage.maxHeight.toInt(),
+                hash: blurhash!,
+                color: isMe
+                    ? context.theme.appColors.primaryAccent
+                    : context.theme.appColors.onPrimaryAccent,
               ),
-            )
-          : const CenteredLoadingIndicator(),
+            ),
+          if (file != null)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.0.s),
+              child: Image.file(
+                file!,
+                fit: BoxFit.cover,
+                height: PhotoMessage.maxHeight,
+              ),
+            ),
+          // if (false)
+          //   Align(
+          //     child: Container(
+          //       padding: EdgeInsets.all(6.0.s),
+          //       decoration: BoxDecoration(
+          //         color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
+          //         borderRadius: BorderRadius.circular(12.0.s),
+          //       ),
+          //       child: Assets.svg.iconVideoPlay.icon(
+          //         size: 16.0.s,
+          //       ),
+          //     ),
+          //   ),
+        ],
+      ),
     );
   }
 }
