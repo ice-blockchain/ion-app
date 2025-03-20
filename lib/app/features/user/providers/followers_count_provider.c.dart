@@ -42,6 +42,7 @@ FutureOr<int?> followersCount(
       relay: relay,
       type: type,
       filters: filters,
+      noCache: true,
     ).future,
   ) as FutureOr<int?>;
 }
