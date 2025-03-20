@@ -11,7 +11,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_metadata.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-class VisualMediaMessage extends ConsumerWidget {
+class VisualMediaMessage extends HookConsumerWidget {
   const VisualMediaMessage({
     required this.eventMessage,
     super.key,
