@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
+import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -56,17 +57,23 @@ class VideoPage extends HookConsumerWidget {
       onVideoEnded: onVideoEnded,
     );
 
-    ref.listen(appLifecycleProvider, (_, current) {
-      if (!context.mounted) return;
+    ref
+      ..listen(appLifecycleProvider, (_, current) {
+        if (!context.mounted) return;
 
-      if (current == AppLifecycleState.resumed) {
-        playerController.play();
-      } else if (current == AppLifecycleState.inactive ||
-          current == AppLifecycleState.paused ||
-          current == AppLifecycleState.hidden) {
-        playerController.pause();
-      }
-    });
+        if (current == AppLifecycleState.resumed) {
+          playerController.play();
+        } else if (current == AppLifecycleState.inactive ||
+            current == AppLifecycleState.paused ||
+            current == AppLifecycleState.hidden) {
+          playerController.pause();
+        }
+      })
+      ..listen(globalMuteProvider, (_, isMuted) {
+        if (playerController.value.isInitialized) {
+          playerController.setVolume(isMuted ? 0 : 1);
+        }
+      });
 
     return VisibilityDetector(
       key: ValueKey(videoPath),
