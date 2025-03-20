@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -43,7 +44,13 @@ class VideoPreview extends HookConsumerWidget {
       },
     );
 
-    final isMuted = useState(true);
+    final isMuted = ref.watch(globalMuteProvider);
+
+    ref.listen(globalMuteProvider, (_, isMuted) {
+      if (controller.value.isInitialized) {
+        controller.setVolume(isMuted ? 0 : 1);
+      }
+    });
 
     final handleVisibilityChanged = useCallback(
       (VisibilityInfo info) {
@@ -58,13 +65,12 @@ class VideoPreview extends HookConsumerWidget {
 
         if (shouldBeActive) {
           ref.read(activeVideoProvider.notifier).activeVideo = controller.dataSource;
-          controller.play();
+          controller
+            ..play()
+            ..setVolume(isMuted ? 0 : 1);
         } else if (shouldBePaused) {
           ref.read(activeVideoProvider.notifier).activeVideo = null;
-          controller
-            ..pause()
-            ..setVolume(0);
-          isMuted.value = true;
+          controller.pause();
         }
       },
       [controller, isMuted],
@@ -106,10 +112,9 @@ class VideoPreview extends HookConsumerWidget {
               children: [
                 _VideoDurationLabel(controller: controller),
                 _MuteButton(
-                  isMuted: isMuted.value,
+                  isMuted: isMuted,
                   onToggle: () {
-                    isMuted.value = !isMuted.value;
-                    controller.setVolume(isMuted.value ? 0 : 1);
+                    ref.read(globalMuteProvider.notifier).toggle();
                   },
                 ),
               ],
