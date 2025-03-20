@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/ui.dart';
@@ -12,7 +13,7 @@ import 'package:ion/app/features/wallets/views/pages/wallet_page/components/sear
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/view_models/wallet_nfts_view_model.dart';
 
-class NftsTabHeader extends ConsumerWidget {
+class NftsTabHeader extends HookConsumerWidget {
   const NftsTabHeader({super.key});
 
   @override
@@ -31,6 +32,8 @@ class NftsTabHeader extends ConsumerWidget {
 
     final viewModel = ref.watch(walletNftsViewModelProvider);
 
+    final padding = useMemoized(() => ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop);
+
     return ValueListenableBuilder(
       valueListenable: viewModel.filteredNfts,
       builder: (context, nfts, _) {
@@ -46,8 +49,8 @@ class NftsTabHeader extends ConsumerWidget {
         return Padding(
           padding: EdgeInsets.only(
             bottom: 16.0.s - UiConstants.hitSlop,
-            left: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
-            right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
+            left: padding,
+            right: padding,
           ),
           child: Column(
             children: [
