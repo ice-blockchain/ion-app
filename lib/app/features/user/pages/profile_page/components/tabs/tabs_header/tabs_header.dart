@@ -8,16 +8,12 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_he
 
 class ProfileTabsHeader extends ConsumerWidget {
   const ProfileTabsHeader({
-    this.controller,
     super.key,
   });
-
-  final TabController? controller;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TabBar(
-      controller: controller,
       padding: EdgeInsets.symmetric(
         horizontal: 6.0.s,
       ),
