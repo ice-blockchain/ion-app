@@ -15,11 +15,10 @@ import 'package:ion/app/features/feed/stories/views/components/story_preview/act
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_image_preview.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_preview/media/story_video_preview.dart';
 import 'package:ion/app/features/feed/views/pages/who_can_reply_settings_modal/who_can_reply_settings_modal.dart';
-import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
-import 'package:ion/app/services/media_service/image_proccessing_config.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -119,17 +118,22 @@ class StoryPreviewPage extends HookConsumerWidget {
                               mediaFiles: [MediaFile(path: path, mimeType: mimeType)],
                               whoCanReply: whoCanReply,
                             );
-                          } else {
-                            final processedState = ref.read(
-                              imageProcessorNotifierProvider(ImageProcessingType.story),
-                            );
+                          } else if (mediaType == MediaType.image) {
+                            final dimension = await ref
+                                .read(compressServiceProvider)
+                                .getImageDimension(path: path);
 
-                            if (processedState case ImageProcessorStateProcessed(:final file)) {
-                              await createPostNotifier.create(
-                                mediaFiles: [file],
-                                whoCanReply: whoCanReply,
-                              );
-                            }
+                            await createPostNotifier.create(
+                              mediaFiles: [
+                                MediaFile(
+                                  path: path,
+                                  mimeType: mimeType,
+                                  width: dimension.width,
+                                  height: dimension.height,
+                                ),
+                              ],
+                              whoCanReply: whoCanReply,
+                            );
                           }
 
                           if (context.mounted) {
