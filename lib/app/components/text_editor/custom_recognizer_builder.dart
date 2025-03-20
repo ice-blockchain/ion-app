@@ -8,7 +8,8 @@ GestureRecognizer? customRecognizerBuilder(
   BuildContext context,
   Attribute<dynamic> attribute,
 ) {
-  if (attribute.key == HashtagAttribute.attributeKey) {
+  if (attribute.key == HashtagAttribute.attributeKey ||
+      attribute.key == CashtagAttribute.attributeKey) {
     return TapGestureRecognizer()
       ..onTap = () {
         FeedAdvancedSearchRoute(query: attribute.value as String).go(context);
