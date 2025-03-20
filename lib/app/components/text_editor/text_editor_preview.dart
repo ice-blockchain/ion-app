@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -9,6 +10,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class TextEditorPreview extends HookWidget {
   const TextEditorPreview({
@@ -58,6 +60,12 @@ class TextEditorPreview extends HookWidget {
           TextEditorSeparatorBuilder(readOnly: true),
           TextEditorCodeBuilder(readOnly: true),
         ],
+        customRecognizerBuilder: (attribute, leaf) {
+          return TapGestureRecognizer()
+            ..onTap = () {
+              FeedAdvancedSearchRoute(query: 'foo').go(context);
+            };
+        },
         disableClipboard: !enableInteractiveSelection,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
       ),
