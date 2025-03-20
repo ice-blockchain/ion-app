@@ -3,15 +3,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 
-part 'wallet_address_tag.c.freezed.dart';
+part 'label_tag.c.freezed.dart';
 
 @freezed
-class WalletAddressTag with _$WalletAddressTag {
-  const factory WalletAddressTag({required String value}) = _WalletAddressTag;
+class LabelTag with _$LabelTag {
+  const factory LabelTag({required String value}) = _LabelTag;
 
-  const WalletAddressTag._();
+  const LabelTag._();
 
-  factory WalletAddressTag.fromTag(List<String> tag) {
+  factory LabelTag.fromTag(List<String> tag) {
     if (tag[0] != tagName) {
       throw IncorrectEventTagNameException(actual: tag[0], expected: tagName);
     }
@@ -19,7 +19,7 @@ class WalletAddressTag with _$WalletAddressTag {
       throw IncorrectEventTagException(tag: tag.toString());
     }
 
-    return WalletAddressTag(value: tag[1]);
+    return LabelTag(value: tag[1]);
   }
 
   static const String tagName = 'l';

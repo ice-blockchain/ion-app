@@ -30,7 +30,6 @@ class WalletPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useScrollController();
-
     useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final activeTab = useState<WalletTabType>(WalletTabType.coins);

@@ -42,21 +42,23 @@ class NetworkListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coinsGroup = switch (type) {
       NetworkListViewType.send =>
-        ref.watch(sendAssetFormControllerProvider()).assetData.as<CoinAssetData>()!.coinsGroup,
+        ref.watch(sendAssetFormControllerProvider()).assetData.as<CoinAssetData>()?.coinsGroup,
       NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin!,
     };
 
-    final coinsState = switch (type) {
-      NetworkListViewType.send => ref.watch(
-          syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup),
-        ),
-      NetworkListViewType.receive => ref.watch(
-          coinsByFiltersProvider(
-            symbol: coinsGroup.abbreviation,
-            symbolGroup: coinsGroup.symbolGroup,
-          ),
-        ),
-    };
+    final coinsState = coinsGroup == null
+        ? const AsyncValue<List<CoinInWalletData>>.loading()
+        : switch (type) {
+            NetworkListViewType.send => ref.watch(
+                syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup),
+              ),
+            NetworkListViewType.receive => ref.watch(
+                coinsByFiltersProvider(
+                  symbol: coinsGroup.abbreviation,
+                  symbolGroup: coinsGroup.symbolGroup,
+                ),
+              ),
+          };
 
     Future<void> onTap(NetworkData network) async {
       if (onSelectReturnType) {

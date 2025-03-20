@@ -54,4 +54,6 @@ class CoinData with _$CoinData {
   }
 
   const CoinData._();
+
+  bool get isNative => contractAddress.isEmpty;
 }
