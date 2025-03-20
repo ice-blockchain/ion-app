@@ -26,9 +26,19 @@ class ChatRoutes {
   ];
 }
 
+class ChatProfileRoute extends BaseRouteData {
+  ChatProfileRoute({required this.pubkey})
+      : super(
+          child: ProfilePage(pubkey: pubkey),
+        );
+
+  final String pubkey;
+}
+
 @TypedGoRoute<ConversationRoute>(
   path: '/conversation',
   routes: [
+    TypedGoRoute<ChatProfileRoute>(path: 'chat-profile/:pubkey'),
     TypedGoRoute<ChannelDetailRoute>(path: 'channel-detail'),
     TypedGoRoute<EditChannelRoute>(path: 'edit-channel'),
   ],

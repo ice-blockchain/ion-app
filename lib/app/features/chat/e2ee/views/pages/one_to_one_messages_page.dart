@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/providers/conversation_messages_provider.c
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/username.dart';
@@ -82,6 +83,7 @@ class _Header extends HookConsumerWidget {
   const _Header({required this.receiverMasterPubKey});
 
   final String receiverMasterPubKey;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final receiver = ref.watch(userMetadataProvider(receiverMasterPubKey)).valueOrNull;
@@ -93,6 +95,7 @@ class _Header extends HookConsumerWidget {
     return MessagingHeader(
       imageUrl: receiver.data.picture,
       name: receiver.data.displayName,
+      onTap: () => ChatProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
       subtitle: Text(
         prefixUsername(username: receiver.data.name, context: context),
         style: context.theme.appTextThemes.caption.copyWith(

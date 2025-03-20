@@ -32,7 +32,7 @@ class ConversationArchiveButton extends ConsumerWidget {
       onTap: () async {
         await ref
             .read(toggleArchivedConversationsProvider.notifier)
-            .toogleConversation(conversationsToManage);
+            .toggleConversations(conversationsToManage);
 
         ref.read(selectedConversationsProvider.notifier).clear();
         ref.read(conversationsEditModeProvider.notifier).editMode = false;

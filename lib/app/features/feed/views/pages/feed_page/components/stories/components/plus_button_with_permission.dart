@@ -22,7 +22,7 @@ class PlusButtonWithPermission extends StatelessWidget {
       child: PermissionAwareWidget(
         permissionType: Permission.camera,
         onGrantedPredicate: () =>
-            GoRouter.of(context).state?.fullPath?.startsWith(FeedRoute().location) ?? false,
+            GoRouter.of(context).state.fullPath?.startsWith(FeedRoute().location) ?? false,
         onGranted: () => StoryRecordRoute().push<void>(context),
         requestDialog: const PermissionRequestSheet(permission: Permission.camera),
         settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),

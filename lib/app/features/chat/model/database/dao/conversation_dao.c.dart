@@ -191,8 +191,8 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
   /// Takes a conversation [conversationId] and an optional [isArchived] boolean parameter
   /// Updates the conversation's archived status in the database.
   ///
-  Future<void> setArchived(String conversationId, {bool isArchived = true}) async {
-    await (update(conversationTable)..where((t) => t.id.equals(conversationId)))
+  Future<void> setArchived(List<String> conversationIds, {bool isArchived = true}) async {
+    await (update(conversationTable)..where((t) => t.id.isIn(conversationIds)))
         .write(ConversationTableCompanion(isArchived: Value(isArchived)));
   }
 
