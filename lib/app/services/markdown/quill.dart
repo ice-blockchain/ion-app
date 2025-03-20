@@ -114,6 +114,11 @@ Delta markdownToDelta(String markdown) {
 }
 
 void _processMatches(Operation op, Delta processedDelta) {
+  if (op.data is Map) {
+    processedDelta.insert(op.data, op.attributes);
+    return;
+  }
+
   final textParser = TextParser.allMatchers();
   final text = op.data.toString();
   final matches = textParser.parse(text);
@@ -143,9 +148,7 @@ Delta processDelta(Delta delta) {
   final newDelta = Delta();
 
   for (final op in delta.operations) {
-    if (op.data is String) {
-      _processMatches(op, newDelta);
-    } else if (op.attributes?.containsKey('text-editor-single-image') ?? false) {
+    if (op.data is String && (op.attributes?.containsKey('text-editor-single-image') ?? false)) {
       final imageUrl = op.attributes!['text-editor-single-image'] as String;
       newDelta.insert({'text-editor-single-image': imageUrl});
     } else {
@@ -163,6 +166,7 @@ Delta parseAndConvertDelta(String? deltaContent, String fallbackMarkdown) {
     if (deltaContent != null) {
       delta = Delta.fromJson(jsonDecode(deltaContent) as List<dynamic>);
       delta = processDelta(delta);
+      delta = processDeltaMatches(delta);
     }
   } catch (e) {
     delta = null;
@@ -170,4 +174,12 @@ Delta parseAndConvertDelta(String? deltaContent, String fallbackMarkdown) {
 
   // Fallback to markdown if delta parsing failed
   return delta ?? markdownToDelta(fallbackMarkdown);
+}
+
+Delta processDeltaMatches(Delta delta) {
+  final newDelta = Delta();
+  for (final op in delta.operations) {
+    _processMatches(op, newDelta);
+  }
+  return newDelta;
 }

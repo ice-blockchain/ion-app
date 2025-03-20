@@ -30,7 +30,8 @@ import 'package:ion/app/services/markdown/quill.dart';
   if (richText != null) {
     final richTextDecoded = Delta.fromJson(jsonDecode(richText.content) as List<dynamic>);
     final richTextDelta = processDelta(richTextDecoded);
-    return _parseMediaContentDelta(delta: richTextDelta, media: media);
+    final mediaDelta = _parseMediaContentDelta(delta: richTextDelta, media: media);
+    return (content: processDeltaMatches(mediaDelta.content), media: mediaDelta.media);
   }
 
   final markdownContentDelta = markdownToDelta(content);
