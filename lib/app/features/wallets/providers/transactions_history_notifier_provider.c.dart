@@ -112,8 +112,8 @@ Future<List<EntitiesDataSource>> transactionsHistoryDataSource(
         RequestFilter(
           kinds: const [WalletAssetEntity.kind],
           limit: pageSize,
+          authors: [currentPubkey],
           tags: {
-            'authors': [currentPubkey],
             ...generalTags,
           },
         ),

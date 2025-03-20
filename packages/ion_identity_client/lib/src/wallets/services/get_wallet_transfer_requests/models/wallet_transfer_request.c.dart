@@ -21,6 +21,7 @@ class WalletTransferRequest with _$WalletTransferRequest {
     String? fee,
     DateTime? dateBroadcasted,
     DateTime? dateConfirmed,
+    String? reason,
   }) = _WalletTransferRequest;
 
   factory WalletTransferRequest.fromJson(Map<String, dynamic> json) =>

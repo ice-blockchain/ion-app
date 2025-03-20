@@ -63,6 +63,18 @@ class CoinsService {
         );
   }
 
+  Future<TransferResult> getTransfer({
+    required String walletId,
+    required String transferId,
+  }) async {
+    final result = await _ionIdentityClient.wallets.getWalletTransferRequestById(
+      transferId: transferId,
+      walletId: walletId,
+    );
+
+    return TransferResult.fromDTO(result);
+  }
+
   Future<TransferResult> send({
     required double amount,
     required Wallet senderWallet,

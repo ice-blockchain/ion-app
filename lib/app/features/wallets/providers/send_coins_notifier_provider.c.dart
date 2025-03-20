@@ -14,6 +14,7 @@ import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/utils/retry.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,7 +53,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     state = await AsyncValue.guard(() async {
       final service = await ref.read(coinsServiceProvider.future);
 
-      final result = await service.send(
+      var result = await service.send(
         amount: coinAssetData.amount,
         senderWallet: senderWallet,
         sendableAsset: sendableAsset,
@@ -62,6 +63,18 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       if (result.status == TransferStatus.failed || result.status == TransferStatus.rejected) {
         throw FailedToSendCryptoAssetsException(result.reason);
+      } else {
+        // if (result.status == TransferStatus.executing) {
+        result = await withRetry<TransferResult>(
+          ({Object? error}) => service.getTransfer(
+            walletId: senderWallet.id,
+            transferId: result.id,
+          ),
+          initialDelay: const Duration(seconds: 1),
+          retryWhen: (result) {
+            return result is! TransferResult || result.status == TransferStatus.executing;
+          },
+        );
       }
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
@@ -76,7 +89,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         dateBroadcasted: result.dateBroadcasted,
         assetData: coinAssetData,
         walletViewName: form.wallet.name,
-        senderAddress: form.senderWallet!.address!,
+        senderAddress: senderWallet.address!,
         receiverAddress: form.receiverAddress,
         receiverPubkey: form.contactPubkey,
         type: TransactionType.send,
@@ -92,6 +105,11 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       return details;
     });
+
+    if (state.hasError) {
+      // Log error to get the stack trace
+      Logger.error(state.error!, stackTrace: state.stackTrace);
+    }
   }
 
   Future<void> _sendTransactionEntity({
