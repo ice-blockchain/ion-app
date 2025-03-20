@@ -6,6 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/nft_layout_type.dart';
 import 'package:ion/app/features/wallets/model/wallet_data_with_loading_state.c.dart';
+import 'package:ion/app/features/wallets/providers/current_nfts_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_user_preferences/user_preferences_selectors.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/empty_state/empty_state.dart';
@@ -32,75 +33,75 @@ class NftsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final nftLayoutType = ref.watch(nftLayoutTypeSelectorProvider);
 
+    final currentNftsState = ref.watch(currentNftsProvider);
     final viewModel = ref.watch(walletNftsViewModelProvider);
 
-    ref.listen(walletSearchQueryControllerProvider(WalletAssetType.nft), (prev, next) {
-      viewModel.searchQueryCommand(next);
-    });
+    ref
+      ..listen(walletSearchQueryControllerProvider(WalletAssetType.nft), (_, next) {
+        viewModel.searchQueryCommand(next);
+      })
+      ..listen(currentNftsProvider, (_, next) {
+        next.whenData(viewModel.setNftsCommand.execute);
+      });
+
+    if (currentNftsState.isLoading) {
+      return nftLayoutType == NftLayoutType.list ? const ListLoader() : const GridLoader();
+    }
 
     return ValueListenableBuilder(
-      valueListenable: viewModel.loadNftsCommand.isExecuting,
-      builder: (context, isLoading, _) {
-        if (isLoading) {
-          return nftLayoutType == NftLayoutType.list ? const ListLoader() : const GridLoader();
+      valueListenable: viewModel.filteredNfts,
+      builder: (context, nfts, _) {
+        if (nfts.isEmpty) {
+          return EmptyState(
+            tabType: tabType,
+            onBottomActionTap: () {},
+          );
         }
 
-        return ValueListenableBuilder(
-          valueListenable: viewModel.filteredNfts,
-          builder: (context, nfts, _) {
-            if (nfts.isEmpty) {
-              return EmptyState(
-                tabType: tabType,
-                onBottomActionTap: () {},
-              );
-            }
-
-            if (nftLayoutType == NftLayoutType.grid) {
-              return SliverMainAxisGroup(
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSideOffset.defaultSmallMargin,
-                    ),
-                    sliver: SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: NftConstants.gridSpacing,
-                        mainAxisSpacing: NftConstants.gridSpacing,
-                        childAspectRatio: aspectRatio,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => NftGridItem(nftData: nfts[index]),
-                        childCount: nfts.length,
-                      ),
-                    ),
+        if (nftLayoutType == NftLayoutType.grid) {
+          return SliverMainAxisGroup(
+            slivers: [
+              SliverPadding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenSideOffset.defaultSmallMargin,
+                ),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: NftConstants.gridSpacing,
+                    mainAxisSpacing: NftConstants.gridSpacing,
+                    childAspectRatio: aspectRatio,
                   ),
-                  const NftsTabFooter(),
-                ],
-              );
-            }
-
-            return SliverMainAxisGroup(
-              slivers: [
-                SliverList.separated(
-                  itemCount: nfts.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
-                  itemBuilder: (context, index) => ScreenSideOffset.small(
-                    child: NftListItem(
-                      nftData: nfts[index],
-                      onTap: () {
-                        NftDetailsRoute(
-                          contract: nfts[index].contract,
-                          tokenId: nfts[index].tokenId,
-                        ).push<void>(context);
-                      },
-                    ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => NftGridItem(nftData: nfts[index]),
+                    childCount: nfts.length,
                   ),
                 ),
-                const NftsTabFooter(),
-              ],
-            );
-          },
+              ),
+              const NftsTabFooter(),
+            ],
+          );
+        }
+
+        return SliverMainAxisGroup(
+          slivers: [
+            SliverList.separated(
+              itemCount: nfts.length,
+              separatorBuilder: (context, index) => SizedBox(height: 12.0.s),
+              itemBuilder: (context, index) => ScreenSideOffset.small(
+                child: NftListItem(
+                  nftData: nfts[index],
+                  onTap: () {
+                    NftDetailsRoute(
+                      contract: nfts[index].contract,
+                      tokenId: nfts[index].tokenId,
+                    ).push<void>(context);
+                  },
+                ),
+              ),
+            ),
+            const NftsTabFooter(),
+          ],
         );
       },
     );

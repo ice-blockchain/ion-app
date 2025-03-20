@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
+import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 
 part 'wallet_view_data.c.freezed.dart';
 
@@ -14,6 +15,7 @@ class WalletViewData with _$WalletViewData {
     required String name,
     required List<CoinsGroup> coinGroups,
     required Set<String> symbolGroups,
+    required List<NftData> nfts,
     required double usdBalance,
     required String createdAt,
     required String updatedAt,

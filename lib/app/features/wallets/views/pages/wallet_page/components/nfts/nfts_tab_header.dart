@@ -1,27 +1,43 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/constants/ui.dart';
 import 'package:ion/app/extensions/num.dart';
+import 'package:ion/app/features/wallets/providers/current_nfts_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_header_layout_action.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/nfts/nfts_header_select_action.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/search_bar/search_bar.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/tab_type.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/view_models/wallet_nfts_view_model.dart';
 
-class NftsTabHeader extends ConsumerWidget {
+class NftsTabHeader extends HookConsumerWidget {
   const NftsTabHeader({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nftsViewModel = ref.watch(walletNftsViewModelProvider);
+    final currentNftsState = ref.watch(currentNftsProvider);
+    final isLoading = currentNftsState.isLoading;
+
+    if (isLoading) {
+      return ScreenSideOffset.small(
+        child: WalletSearchBar(
+          padding: EdgeInsets.only(top: UiConstants.hitSlop),
+          tabType: WalletTabType.nfts,
+        ),
+      );
+    }
+
+    final viewModel = ref.watch(walletNftsViewModelProvider);
+
+    final padding = useMemoized(() => ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop);
 
     return ValueListenableBuilder(
-      valueListenable: nftsViewModel.loadNftsCommand.isExecuting,
-      builder: (context, isLoading, _) {
-        if (isLoading) {
+      valueListenable: viewModel.filteredNfts,
+      builder: (context, nfts, _) {
+        if (nfts.isEmpty) {
           return ScreenSideOffset.small(
             child: WalletSearchBar(
               padding: EdgeInsets.only(top: UiConstants.hitSlop),
@@ -30,46 +46,32 @@ class NftsTabHeader extends ConsumerWidget {
           );
         }
 
-        return ValueListenableBuilder(
-          valueListenable: nftsViewModel.filteredNfts,
-          builder: (context, nfts, _) {
-            if (nfts.isEmpty) {
-              return ScreenSideOffset.small(
-                child: WalletSearchBar(
-                  padding: EdgeInsets.only(top: UiConstants.hitSlop),
-                  tabType: WalletTabType.nfts,
-                ),
-              );
-            }
-
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: 16.0.s - UiConstants.hitSlop,
-                left: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
-                right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
-              ),
-              child: Column(
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: 16.0.s - UiConstants.hitSlop,
+            left: padding,
+            right: padding,
+          ),
+          child: Column(
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(child: NftHeaderSelectAction()),
-                      NftHeaderLayoutAction(),
-                    ],
-                  ),
-                  WalletSearchBar(
-                    padding: EdgeInsets.only(
-                      left: UiConstants.hitSlop,
-                      right: UiConstants.hitSlop,
-                      top: 16.0.s - UiConstants.hitSlop,
-                      bottom: UiConstants.hitSlop,
-                    ),
-                    tabType: WalletTabType.nfts,
-                  ),
+                  Expanded(child: NftHeaderSelectAction()),
+                  NftHeaderLayoutAction(),
                 ],
               ),
-            );
-          },
+              WalletSearchBar(
+                padding: EdgeInsets.only(
+                  left: UiConstants.hitSlop,
+                  right: UiConstants.hitSlop,
+                  top: 16.0.s - UiConstants.hitSlop,
+                  bottom: UiConstants.hitSlop,
+                ),
+                tabType: WalletTabType.nfts,
+              ),
+            ],
+          ),
         );
       },
     );

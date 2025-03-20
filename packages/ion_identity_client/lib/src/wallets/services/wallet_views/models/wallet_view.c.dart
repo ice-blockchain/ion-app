@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion_identity_client/src/coins/models/coin.c.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/coin_in_wallet.c.dart';
-import 'package:ion_identity_client/src/wallets/services/wallet_views/models/wallet_view_aggregation_item.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 part 'wallet_view.c.freezed.dart';
 part 'wallet_view.c.g.dart';
@@ -13,19 +11,16 @@ class WalletView with _$WalletView {
   const factory WalletView({
     required String id,
     required String name,
-    @CoinInWalletListConverter()
-    required List<CoinInWallet> coins,
-    @JsonKey(defaultValue: {})
-    required Map<String, WalletViewAggregationItem> aggregation,
-    @JsonKey(defaultValue: [])
-    required List<String> symbolGroups,
+    @CoinInWalletListConverter() required List<CoinInWallet> coins,
+    required List<WalletNft> nfts,
+    @JsonKey(defaultValue: {}) required Map<String, WalletViewAggregationItem> aggregation,
+    @JsonKey(defaultValue: []) required List<String> symbolGroups,
     required String createdAt,
     required String updatedAt,
     required String userId,
   }) = _WalletView;
 
-  factory WalletView.fromJson(Map<String, dynamic> json) =>
-      _$WalletViewFromJson(json);
+  factory WalletView.fromJson(Map<String, dynamic> json) => _$WalletViewFromJson(json);
 }
 
 class CoinInWalletListConverter implements JsonConverter<List<CoinInWallet>, List<dynamic>> {

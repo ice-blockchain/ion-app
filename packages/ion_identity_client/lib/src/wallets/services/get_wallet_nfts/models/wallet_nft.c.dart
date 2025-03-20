@@ -14,6 +14,10 @@ class WalletNft with _$WalletNft {
     required String tokenId,
     required String tokenUri,
     required String description,
+    required String name,
+    required String network,
+    required String collectionImageUri,
+    required String? walletId,
   }) = _WalletNft;
 
   factory WalletNft.fromJson(Map<String, dynamic> json) => _$WalletNftFromJson(json);

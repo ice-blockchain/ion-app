@@ -8,37 +8,29 @@ import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/read_more_text/read_more_text.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/providers/networks_provider.c.dart';
+import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
 import 'package:ion/app/features/wallets/views/pages/nft_details/components/nft_details_loading.dart';
-import 'package:ion/app/features/wallets/views/pages/nft_details/providers/nft_details_provider.dart';
+import 'package:ion/app/features/wallets/views/pages/nft_details/providers/nft_details_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NftDetails extends ConsumerWidget {
   const NftDetails({
-    required this.contract,
-    required this.tokenId,
+    required this.nftIdentifier,
     super.key,
   });
 
-  final String contract;
-  final String tokenId;
+  final NftIdentifier nftIdentifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nftData = ref
-        .watch(
-          nftDetailsProvider((contract: contract, tokenId: tokenId)),
-        )
-        .valueOrNull;
+    final nftData = ref.watch(nftDetailsProvider(nftIdentifier));
 
     if (nftData == null) {
       return const NftDetailsLoading();
     }
-
-    final network = ref.watch(networkByIdProvider(nftData.network)).valueOrNull;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -47,7 +39,7 @@ class NftDetails extends ConsumerWidget {
         SizedBox(height: 15.0.s),
         NftName(
           rank: nftData.tokenId,
-          name: nftData.symbol,
+          name: nftData.name,
         ),
         SizedBox(height: 12.0.s),
         RoundedCard.filled(
@@ -69,12 +61,12 @@ class NftDetails extends ConsumerWidget {
         SizedBox(height: 12.0.s),
         ListItem.textWithIcon(
           title: Text(context.i18n.send_nft_token_network),
-          value: network?.displayName,
+          value: nftData.network.displayName,
           icon: Avatar(
             size: 12.0.s,
             imageWidget: NetworkIconWidget(
               size: 12.0.s,
-              imageUrl: network?.image ?? '',
+              imageUrl: nftData.network.image,
             ),
           ),
         ),

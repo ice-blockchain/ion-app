@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
+import 'package:ion/app/features/wallets/data/mappers/nft_mapper.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
@@ -58,14 +59,14 @@ class WalletViewsService {
     final viewsDetailsDTO = await Future.wait(
       shortViews.map((e) => _identity.wallets.getWalletView(e.id)),
     );
-    final networks = await _networksRepository.getAll();
+    final networks = await _networksRepository.getAllAsMap();
 
     return viewsDetailsDTO.map((viewDTO) => _parseWalletView(viewDTO, networks)).toList();
   }
 
   Future<WalletViewData> create(String name) async {
     final request = _CreateUpdateRequestBuilder().build(name: name);
-    final networks = await _networksRepository.getAll();
+    final networks = await _networksRepository.getAllAsMap();
     final walletView = await _identity.wallets
         .createWalletView(request)
         .then((viewDTO) => _parseWalletView(viewDTO, networks));
@@ -77,7 +78,7 @@ class WalletViewsService {
     String? updatedName,
     List<CoinData>? updatedCoinsList,
   }) async {
-    final networks = await _networksRepository.getAll();
+    final networks = await _networksRepository.getAllAsMap();
     final request = _CreateUpdateRequestBuilder().build(
       name: updatedName,
       walletView: walletView,
@@ -94,7 +95,7 @@ class WalletViewsService {
     return _identity.wallets.deleteWalletView(walletViewId);
   }
 
-  WalletViewData _parseWalletView(WalletView viewDTO, List<NetworkData> networks) {
+  WalletViewData _parseWalletView(WalletView viewDTO, Map<String, NetworkData> networks) {
     final coinGroups = <String, CoinsGroup>{};
     final symbolGroups = <String>{};
 
@@ -103,7 +104,7 @@ class WalletViewsService {
 
     for (final coinInWalletDTO in viewDTO.coins) {
       final coinDTO = coinInWalletDTO.coin;
-      final network = networks.firstWhere((network) => network.id == coinDTO.network);
+      final network = networks[coinDTO.network]!;
 
       var coinAmount = 0.0;
       var coinBalanceUSD = 0.0;
@@ -165,6 +166,7 @@ class WalletViewsService {
       id: viewDTO.id,
       name: viewDTO.name,
       symbolGroups: symbolGroups,
+      nfts: viewDTO.nfts.map((nft) => nft.toNft(networks[nft.network]!)).toList(),
       createdAt: viewDTO.createdAt,
       updatedAt: viewDTO.updatedAt,
       usdBalance: totalViewBalanceUSD,
