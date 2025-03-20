@@ -7,7 +7,6 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_message_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
@@ -52,18 +51,13 @@ class OneToOneMessagesPage extends HookConsumerWidget {
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }
-        await ref
-            .read(
-              sendChatMessageNotifierProvider(
-                conversationId.value!,
-                [receiverPubKey, currentPubkey],
-                content ?? '',
-                mediaFiles ?? [],
-                null,
-                null,
-              ).notifier,
-            )
-            .sendMessage();
+        final sendE2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
+        await sendE2eeMessageService.sendMessage(
+          conversationId: conversationId.value!,
+          participantsMasterPubkeys: [receiverPubKey, currentPubkey],
+          content: content ?? '',
+          mediaFiles: mediaFiles ?? [],
+        );
       },
       [receiverPubKey],
     );

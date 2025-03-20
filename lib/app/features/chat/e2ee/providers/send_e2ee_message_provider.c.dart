@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:blurhash_ffi/blurhash_ffi.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -13,6 +10,7 @@ import 'package:ion/app/features/chat/community/models/entities/tags/community_i
 import 'package:ion/app/features/chat/community/models/entities/tags/pubkey_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_message_reaction_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
@@ -62,6 +60,7 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
     conversationMessageStatusDao: ref.watch(conversationMessageDataDaoProvider),
     conversationDao: ref.watch(conversationDaoProvider),
     messageMediaDao: ref.watch(messageMediaDaoProvider),
+    sendChatMessageNotifier: ref.watch(sendChatMessageNotifierProvider.notifier),
   );
 }
 
@@ -82,6 +81,7 @@ class SendE2eeMessageService {
     required this.conversationMessageStatusDao,
     required this.conversationDao,
     required this.messageMediaDao,
+    required this.sendChatMessageNotifier,
   });
 
   final Env env;
@@ -99,6 +99,7 @@ class SendE2eeMessageService {
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageDataDao conversationMessageStatusDao;
   final MessageMediaDao messageMediaDao;
+  final SendChatMessageNotifier sendChatMessageNotifier;
   Future<void> sendMessage({
     required String content,
     required String conversationId,
@@ -107,253 +108,12 @@ class SendE2eeMessageService {
     List<String>? groupImageTag,
     List<MediaFile> mediaFiles = const [],
   }) async {
-    try {
-      if (eventSigner == null) {
-        throw EventSignerNotFoundException();
-      }
-
-      final participantsKeysMap =
-          await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
-
-      if (mediaFiles.isNotEmpty) {
-        // These are used to for uploading state
-        final conversationTagsWithDummyMediaTags = _generateConversationTags(
-          subject: subject,
-          groupImageTag: groupImageTag,
-          conversationId: conversationId,
-          masterPubkeys: participantsMasterPubkeys,
-        );
-
-        final mediaFilesWithBlurhash = <MediaFile>[];
-
-        for (final mediaFile in mediaFiles) {
-          final isImage = mediaFile.mimeType?.startsWith('image/') ?? false;
-          if (isImage) {
-            final image = FileImage(File(mediaFile.path));
-            final blurhash = await BlurhashFFI.encode(image);
-            mediaFilesWithBlurhash.add(mediaFile.copyWith(blurhash: blurhash));
-          }
-        }
-
-        for (final mediaFile in mediaFilesWithBlurhash) {
-          conversationTagsWithDummyMediaTags.add([
-            'imeta',
-            'url null',
-            'm ${mediaFile.mimeType}',
-            'alt message',
-            'x null',
-            'dim ${mediaFile.width}x${mediaFile.height}',
-            'ox null',
-            'expiration null',
-            'encryption-key null null null aes-gcm',
-            if (mediaFile.thumb != null) 'thumb ${mediaFile.thumb}',
-            if (mediaFile.blurhash != null) 'blurhash ${mediaFile.blurhash}',
-          ]);
-        }
-
-        final eventMessageWithoutMedia = await _createEventMessage(
-          content: content,
-          signer: eventSigner!,
-          tags: conversationTagsWithDummyMediaTags,
-        );
-
-        await conversationDao.add([eventMessageWithoutMedia]);
-        await eventMessageDao.add(eventMessageWithoutMedia);
-
-        final compressedMediaFiles = await _compressMediaFiles(mediaFilesWithBlurhash);
-
-        await Future.wait(
-          participantsMasterPubkeys.map((masterPubkey) async {
-            try {
-              final pubkey = participantsKeysMap[masterPubkey];
-
-              if (pubkey == null) {
-                throw UserPubkeyNotFoundException(masterPubkey);
-              }
-
-              if (masterPubkey == currentUserMasterPubkey) {
-                await conversationDao.add([eventMessageWithoutMedia]);
-                await eventMessageDao.add(eventMessageWithoutMedia);
-              }
-
-              await conversationMessageStatusDao.add(
-                masterPubkey: masterPubkey,
-                eventMessageId: eventMessageWithoutMedia.id,
-                status: MessageDeliveryStatus.created,
-              );
-
-              final encryptedMediaFiles =
-                  await mediaEncryptionService.encryptMediaFiles(compressedMediaFiles);
-
-              final uploadedMediaFilesWithKeys = await Future.wait(
-                encryptedMediaFiles.map((encryptedMediaFile) async {
-                  final oneTimeEventSigner = await Ed25519KeyStore.generate();
-
-                  String? thumbUrl;
-
-                  final mediaType =
-                      MediaType.fromMimeType(encryptedMediaFile.mediaFile.mimeType ?? '');
-                  final index = encryptedMediaFiles.indexOf(encryptedMediaFile);
-
-                  if (mediaType == MediaType.video) {
-                    final originalMediaFile = compressedMediaFiles[index];
-
-                    final encryptedThumb = await mediaEncryptionService.encryptMediaFile(
-                      MediaFile(
-                        path: originalMediaFile.thumb!,
-                        mimeType: 'image/webp',
-                        width: originalMediaFile.width,
-                        height: originalMediaFile.height,
-                      ),
-                    );
-                    final thumbUploadResult = await ionConnectUploadNotifier.upload(
-                      encryptedThumb.mediaFile,
-                      alt: FileAlt.message,
-                      customEventSigner: oneTimeEventSigner,
-                    );
-
-                    final thumbFileMetadataEvent = await _generateFileMetadataEvent(
-                      ontTimeEventSigner: oneTimeEventSigner,
-                      fileMetadataEntity: thumbUploadResult.fileMetadata,
-                    );
-
-                    await ionConnectNotifier.sendEvent(
-                      thumbFileMetadataEvent,
-                      actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-                      cache: false,
-                    );
-
-                    thumbUrl = jsonEncode(
-                      thumbUploadResult.mediaAttachment
-                          .copyWith(
-                            encryptionKey: encryptedThumb.secretKey,
-                            encryptionNonce: encryptedThumb.nonce,
-                            encryptionMac: encryptedThumb.mac,
-                          )
-                          .toJson(),
-                    );
-                  }
-
-                  final uploadResult = await ionConnectUploadNotifier.upload(
-                    encryptedMediaFile.mediaFile,
-                    alt: FileAlt.message,
-                    customEventSigner: oneTimeEventSigner,
-                  );
-
-                  final originalMediaFile = mediaFilesWithBlurhash[index];
-
-                  final fileMetadataEvent = await _generateFileMetadataEvent(
-                    ontTimeEventSigner: oneTimeEventSigner,
-                    fileMetadataEntity:
-                        uploadResult.fileMetadata.copyWith(blurhash: originalMediaFile.blurhash),
-                  );
-
-                  await ionConnectNotifier.sendEvent(
-                    fileMetadataEvent,
-                    actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-                    cache: false,
-                  );
-
-                  if (masterPubkey == currentUserMasterPubkey) {
-                    // await messageMediaDao.updateById(
-                    //   messageMediaId,
-                    //   eventMessageWithoutMedia.id,
-                    //   f
-
-                    // );
-                  }
-
-                  return (
-                    uploadResult,
-                    encryptedMediaFile.secretKey,
-                    encryptedMediaFile.nonce,
-                    encryptedMediaFile.mac,
-                    thumbUrl,
-                    originalMediaFile.blurhash
-                  );
-                }),
-              );
-
-              final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
-
-              final conversationTags = _generateConversationTags(
-                subject: subject,
-                groupImageTag: groupImageTag,
-                conversationId: conversationId,
-                masterPubkeys: participantsMasterPubkeys,
-              )..addAll(imetaTags);
-
-              final eventMessageWithMedia = await _createEventMessage(
-                previousId: eventMessageWithoutMedia.id,
-                content: content,
-                signer: eventSigner!,
-                tags: conversationTags,
-              );
-
-              // We replace existing event message with the one with uploaded media
-              if (masterPubkey == currentUserMasterPubkey) {
-                await eventMessageDao.add(eventMessageWithMedia);
-              }
-
-              final giftWrap = await _createGiftWrap(
-                signer: eventSigner!,
-                receiverPubkey: pubkey,
-                receiverMasterPubkey: masterPubkey,
-                eventMessage: eventMessageWithMedia,
-              );
-
-              await ionConnectNotifier.sendEvent(
-                giftWrap,
-                cache: false,
-                actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-              );
-
-              await conversationMessageStatusDao.add(
-                masterPubkey: masterPubkey,
-                eventMessageId: eventMessageWithMedia.id,
-                status: masterPubkey == currentUserMasterPubkey
-                    ? MessageDeliveryStatus.read
-                    : MessageDeliveryStatus.sent,
-              );
-              // No matter is media upload failed or event message itself
-            } catch (e) {
-              await conversationMessageStatusDao.add(
-                masterPubkey: masterPubkey,
-                eventMessageId: eventMessageWithoutMedia.id,
-                status: MessageDeliveryStatus.failed,
-              );
-            }
-          }),
-        );
-      } else {
-        final conversationTags = _generateConversationTags(
-          subject: subject,
-          groupImageTag: groupImageTag,
-          conversationId: conversationId,
-          masterPubkeys: participantsMasterPubkeys,
-        );
-
-        // Send copy of the message to each participant
-        await Future.wait(
-          participantsMasterPubkeys.map((masterPubkey) async {
-            final pubkey = participantsKeysMap[masterPubkey];
-
-            if (pubkey == null) {
-              throw UserPubkeyNotFoundException(masterPubkey);
-            }
-
-            await _sendKind14Message(
-              pubkey: pubkey,
-              content: content,
-              masterPubkey: masterPubkey,
-              conversationTags: conversationTags,
-            );
-          }).toList(),
-        );
-      }
-    } catch (e) {
-      throw SendEventException(e.toString());
-    }
+    await sendChatMessageNotifier.sendMessage(
+      conversationId: conversationId,
+      participantsMasterPubkeys: participantsMasterPubkeys,
+      content: content,
+      mediaFiles: mediaFiles,
+    );
   }
 
   Future<void> resendFailedMessage(EventMessage failedMessageEvent) async {
@@ -396,7 +156,7 @@ class SendE2eeMessageService {
             throw UserPubkeyNotFoundException(masterPubkey);
           }
 
-          final giftWrap = await _createGiftWrap(
+          final giftWrap = await createGiftWrap(
             signer: eventSigner!,
             eventMessage: failedMessageEvent,
             receiverMasterPubkey: masterPubkey,
@@ -429,7 +189,7 @@ class SendE2eeMessageService {
           )
           .toList();
 
-      final compressedMediaFiles = await _compressMediaFiles(mediaFilesToUpload);
+      final compressedMediaFiles = await compressMediaFiles(mediaFilesToUpload);
 
       await Future.wait(
         failedParticipantsMasterPubkeys.map((masterPubkey) async {
@@ -457,7 +217,7 @@ class SendE2eeMessageService {
                 customEventSigner: oneTimeEventSigner,
               );
 
-              final fileMetadataEvent = await _generateFileMetadataEvent(
+              final fileMetadataEvent = await generateFileMetadataEvent(
                 ontTimeEventSigner: oneTimeEventSigner,
                 fileMetadataEntity: uploadResult.fileMetadata,
               );
@@ -472,14 +232,14 @@ class SendE2eeMessageService {
             }),
           );
 
-          final imetaTags = _generateImetaTags(uploadedMediaFilesWithKeys);
+          final imetaTags = generateImetaTags(uploadedMediaFilesWithKeys);
 
-          final conversationTags = _generateConversationTags(
+          final conversationTags = generateConversationTags(
             conversationId: entity.data.uuid,
             masterPubkeys: entity.allPubkeys,
           )..addAll(imetaTags);
 
-          final eventMessageWithMedia = await _createEventMessage(
+          final eventMessageWithMedia = await createEventMessage(
             signer: eventSigner!,
             tags: conversationTags,
             previousId: failedMessageEvent.id,
@@ -491,7 +251,7 @@ class SendE2eeMessageService {
             await eventMessageDao.add(eventMessageWithMedia);
           }
 
-          final giftWrap = await _createGiftWrap(
+          final giftWrap = await createGiftWrap(
             signer: eventSigner!,
             receiverPubkey: pubkey,
             receiverMasterPubkey: masterPubkey,
@@ -516,7 +276,7 @@ class SendE2eeMessageService {
     }
   }
 
-  Future<EventMessage> _generateFileMetadataEvent({
+  Future<EventMessage> generateFileMetadataEvent({
     required Ed25519KeyStore ontTimeEventSigner,
     required EventSerializable fileMetadataEntity,
   }) async {
@@ -531,7 +291,7 @@ class SendE2eeMessageService {
     );
   }
 
-  static const allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
+  final allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
 
   Future<void> sendMessageStatus(
     EventMessage kind14Rumor,
@@ -541,7 +301,7 @@ class SendE2eeMessageService {
       return;
     }
 
-    final eventMessage = await _createEventMessage(
+    final eventMessage = await createEventMessage(
       content: status.name,
       signer: eventSigner!,
       kind: PrivateMessageReactionEntity.kind,
@@ -574,7 +334,7 @@ class SendE2eeMessageService {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        final giftWrap = await _createGiftWrap(
+        final giftWrap = await createGiftWrap(
           signer: eventSigner!,
           eventMessage: eventMessage,
           receiverMasterPubkey: masterPubkey,
@@ -595,7 +355,7 @@ class SendE2eeMessageService {
     required String content,
     required EventMessage kind14Rumor,
   }) async {
-    final eventMessage = await _createEventMessage(
+    final eventMessage = await createEventMessage(
       content: content,
       signer: eventSigner!,
       kind: PrivateMessageReactionEntity.kind,
@@ -628,7 +388,7 @@ class SendE2eeMessageService {
           throw UserPubkeyNotFoundException(masterPubkey);
         }
 
-        final giftWrap = await _createGiftWrap(
+        final giftWrap = await createGiftWrap(
           signer: eventSigner!,
           eventMessage: eventMessage,
           receiverMasterPubkey: masterPubkey,
@@ -645,20 +405,20 @@ class SendE2eeMessageService {
     );
   }
 
-  Future<void> _sendKind14Message({
+  Future<void> sendKind14Message({
     required String pubkey,
     required String content,
     required String masterPubkey,
     required List<List<String>> conversationTags,
   }) async {
-    final eventMessage = await _createEventMessage(
+    final eventMessage = await createEventMessage(
       content: content,
       signer: eventSigner!,
       tags: conversationTags,
     );
 
     try {
-      final giftWrap = await _createGiftWrap(
+      final giftWrap = await createGiftWrap(
         signer: eventSigner!,
         receiverPubkey: pubkey,
         eventMessage: eventMessage,
@@ -698,7 +458,7 @@ class SendE2eeMessageService {
     }
   }
 
-  List<List<String>> _generateConversationTags({
+  List<List<String>> generateConversationTags({
     required String conversationId,
     required List<String> masterPubkeys,
     String? subject,
@@ -715,7 +475,7 @@ class SendE2eeMessageService {
     return tags;
   }
 
-  Future<EventMessage> _createEventMessage({
+  Future<EventMessage> createEventMessage({
     required String content,
     required EventSigner signer,
     required List<List<String>> tags,
@@ -746,7 +506,7 @@ class SendE2eeMessageService {
     return eventMessage;
   }
 
-  Future<EventMessage> _createGiftWrap({
+  Future<EventMessage> createGiftWrap({
     required String receiverPubkey,
     required String receiverMasterPubkey,
     required EventSigner signer,
@@ -776,7 +536,7 @@ class SendE2eeMessageService {
     return wrap;
   }
 
-  Future<List<MediaFile>> _compressMediaFiles(
+  Future<List<MediaFile>> compressMediaFiles(
     List<MediaFile> mediaFiles,
   ) async {
     // Would be better to compress all media files in isolates when this one is
@@ -806,7 +566,7 @@ class SendE2eeMessageService {
     return compressedMediaFiles;
   }
 
-  List<List<String>> _generateImetaTags(
+  List<List<String>> generateImetaTags(
     List<(UploadResult, String, String, String, String?, String?)> uploadResults,
   ) {
     final expiration = EntityExpiration(

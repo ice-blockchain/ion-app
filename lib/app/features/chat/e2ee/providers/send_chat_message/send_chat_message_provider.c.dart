@@ -32,18 +32,18 @@ part 'send_chat_message_provider.c.g.dart';
 @riverpod
 class SendChatMessageNotifier extends _$SendChatMessageNotifier {
   @override
-  Future<void> build(
-    String conversationId,
-    List<String> participantsMasterPubkeys,
-    String content,
-    List<MediaFile> mediaFiles,
-    String? subject,
-    List<String>? groupImageTag,
-  ) async {
+  Future<void> build() async {
     return;
   }
 
-  Future<void> sendMessage() async {
+  Future<void> sendMessage({
+    required String conversationId,
+    required List<String> participantsMasterPubkeys,
+    required String content,
+    required List<MediaFile> mediaFiles,
+    String? subject,
+    List<String>? groupImageTag,
+  }) async {
     try {
       final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
       final conversationPubkeysNotifier = ref.watch(conversationPubkeysProvider.notifier);
