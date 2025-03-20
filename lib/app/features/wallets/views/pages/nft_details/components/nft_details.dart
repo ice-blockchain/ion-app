@@ -8,30 +8,25 @@ import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/read_more_text/read_more_text.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
 import 'package:ion/app/features/wallets/views/pages/nft_details/components/nft_details_loading.dart';
-import 'package:ion/app/features/wallets/views/pages/nft_details/providers/nft_details_provider.dart';
+import 'package:ion/app/features/wallets/views/pages/nft_details/providers/nft_details_provider.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NftDetails extends ConsumerWidget {
   const NftDetails({
-    required this.contract,
-    required this.tokenId,
+    required this.nftIdentifier,
     super.key,
   });
 
-  final String contract;
-  final String tokenId;
+  final NftIdentifier nftIdentifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nftData = ref
-        .watch(
-          nftDetailsProvider((contract: contract, tokenId: tokenId)),
-        )
-        .valueOrNull;
+    final nftData = ref.watch(nftDetailsProvider(nftIdentifier));
 
     if (nftData == null) {
       return const NftDetailsLoading();

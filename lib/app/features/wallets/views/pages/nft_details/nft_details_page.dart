@@ -36,8 +36,7 @@ class NftDetailsPage extends ConsumerWidget {
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(top: 10.0.s),
                 child: NftDetails(
-                  contract: contract,
-                  tokenId: tokenId,
+                  nftIdentifier: (contract: contract, tokenId: tokenId),
                 ),
               ),
             ),

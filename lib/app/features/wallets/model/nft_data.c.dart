@@ -5,6 +5,8 @@ import 'package:ion/app/features/wallets/model/network_data.c.dart';
 
 part 'nft_data.c.freezed.dart';
 
+typedef NftIdentifier = ({String contract, String tokenId});
+
 @freezed
 class NftData with _$NftData {
   const factory NftData({
@@ -18,4 +20,9 @@ class NftData with _$NftData {
     required String collectionImageUri,
     required NetworkData network,
   }) = _NftData;
+  const NftData._();
+
+  NftIdentifier get identifier => (contract: contract, tokenId: tokenId);
+
+  bool matchesIdentifier(NftIdentifier identifier) => this.identifier == identifier;
 }
