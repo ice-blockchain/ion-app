@@ -75,11 +75,16 @@ class VideoPreview extends HookConsumerWidget {
       onVisibilityChanged: handleVisibilityChanged,
       child: Stack(
         children: [
+          Positioned.fill(
+            child: ColoredBox(
+              color: context.theme.appColors.primaryBackground,
+            ),
+          ),
           if (thumbnailUrl != null)
             Positioned.fill(
               child: _BlurredThumbnail(
                 thumbnailUrl: thumbnailUrl!,
-                isVisible: !controller.value.isInitialized,
+                isLoading: !controller.value.isInitialized,
               ),
             ),
           Positioned.fill(
@@ -179,15 +184,14 @@ class _MuteButton extends StatelessWidget {
 class _BlurredThumbnail extends HookWidget {
   const _BlurredThumbnail({
     required this.thumbnailUrl,
-    required this.isVisible,
+    required this.isLoading,
   });
 
   final String thumbnailUrl;
-  final bool isVisible;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    final imageAspectRatio = useState<double?>(null);
     final isImageLoaded = useState(false);
 
     useEffect(
@@ -195,8 +199,6 @@ class _BlurredThumbnail extends HookWidget {
         final imageStream = Image.network(thumbnailUrl).image.resolve(ImageConfiguration.empty);
         final listener = ImageStreamListener((info, _) {
           if (!context.mounted) return;
-
-          imageAspectRatio.value = info.image.width / info.image.height;
           isImageLoaded.value = true;
         });
 
@@ -206,40 +208,33 @@ class _BlurredThumbnail extends HookWidget {
       [thumbnailUrl],
     );
 
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 300),
-      opacity: isVisible ? 1 : 0,
-      curve: Curves.easeInOut,
-      child: AspectRatio(
-        aspectRatio: imageAspectRatio.value ?? 16 / 9,
-        child: Stack(
-          children: [
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: isImageLoaded.value ? 1 : 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(thumbnailUrl),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+    return Stack(
+      children: [
+        AnimatedOpacity(
+          duration: const Duration(milliseconds: 100),
+          opacity: isImageLoaded.value ? 1 : 0,
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(thumbnailUrl),
+                fit: BoxFit.cover,
               ),
             ),
-            ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+        if (isLoading)
+          ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
