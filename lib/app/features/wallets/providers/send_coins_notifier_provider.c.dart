@@ -61,20 +61,28 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         receiverAddress: form.receiverAddress,
       );
 
-      if (result.status == TransferStatus.failed || result.status == TransferStatus.rejected) {
-        throw FailedToSendCryptoAssetsException(result.reason);
-      } else {
-        // if (result.status == TransferStatus.executing) {
-        result = await withRetry<TransferResult>(
-          ({Object? error}) => service.getTransfer(
-            walletId: senderWallet.id,
-            transferId: result.id,
-          ),
-          initialDelay: const Duration(seconds: 1),
-          retryWhen: (result) {
-            return result is! TransferResult || result.status == TransferStatus.executing;
-          },
-        );
+      switch (result.status) {
+        case TransferStatus.executing:
+        case TransferStatus.pending:
+          // When executing or pending, txHash is still null, so we need to wait a bit
+          result = await withRetry<TransferResult>(
+            ({Object? error}) => service.getTransfer(
+              walletId: senderWallet.id,
+              transferId: result.id,
+            ),
+            maxRetries: 5,
+            initialDelay: const Duration(seconds: 1),
+            retryWhen: (result) =>
+                result is TransferResult &&
+                (result.status == TransferStatus.pending ||
+                    result.status == TransferStatus.executing),
+          );
+        case TransferStatus.failed:
+        case TransferStatus.rejected:
+          throw FailedToSendCryptoAssetsException(result.reason);
+        case TransferStatus.broadcasted:
+        case TransferStatus.confirmed:
+        // Do nothing, everything is okay
       }
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
@@ -107,7 +115,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     });
 
     if (state.hasError) {
-      // Log error to get the stack trace
+      // Log to get the error stack trace
       Logger.error(state.error!, stackTrace: state.stackTrace);
     }
   }

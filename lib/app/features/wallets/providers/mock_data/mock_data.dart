@@ -6,15 +6,15 @@ import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 const String mockWalletIconUrl =
     'https://ice-staging.b-cdn.net/profile/default-profile-picture-16.png';
 
-const mockedWalletDataArray = <WalletViewData>[
+final mockedWalletDataArray = <WalletViewData>[
   WalletViewData(
     id: '1',
     name: 'ice.wallet',
     usdBalance: 36594.33,
     coinGroups: [],
     nfts: [],
-    createdAt: '',
-    updatedAt: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
     symbolGroups: {},
     isMainWalletView: false,
   ),
@@ -24,8 +24,8 @@ const mockedWalletDataArray = <WalletViewData>[
     usdBalance: 48,
     coinGroups: [],
     nfts: [],
-    createdAt: '',
-    updatedAt: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
     symbolGroups: {},
     isMainWalletView: false,
   ),
@@ -35,8 +35,8 @@ const mockedWalletDataArray = <WalletViewData>[
     usdBalance: 279.99,
     coinGroups: [],
     nfts: [],
-    createdAt: '',
-    updatedAt: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
     symbolGroups: {},
     isMainWalletView: false,
   ),

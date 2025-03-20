@@ -5,7 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'transfer_request_body.c.freezed.dart';
 part 'transfer_request_body.c.g.dart';
 
-@freezed
+@Freezed(unionKey: 'kind')
 class TransferRequestBody with _$TransferRequestBody {
   @FreezedUnionValue('Native')
   const factory TransferRequestBody.native({

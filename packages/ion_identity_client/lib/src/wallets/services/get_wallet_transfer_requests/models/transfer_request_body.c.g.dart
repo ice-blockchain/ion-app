@@ -12,7 +12,6 @@ _$NativeTransferRequestBodyImpl _$$NativeTransferRequestBodyImplFromJson(
       kind: json['kind'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$NativeTransferRequestBodyImplToJson(
@@ -21,7 +20,6 @@ Map<String, dynamic> _$$NativeTransferRequestBodyImplToJson(
       'kind': instance.kind,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Erc721TransferRequestBodyImpl _$$Erc721TransferRequestBodyImplFromJson(
@@ -31,7 +29,6 @@ _$Erc721TransferRequestBodyImpl _$$Erc721TransferRequestBodyImplFromJson(
       contract: json['contract'] as String,
       to: json['to'] as String,
       tokenId: json['tokenId'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Erc721TransferRequestBodyImplToJson(
@@ -41,7 +38,6 @@ Map<String, dynamic> _$$Erc721TransferRequestBodyImplToJson(
       'contract': instance.contract,
       'to': instance.to,
       'tokenId': instance.tokenId,
-      'runtimeType': instance.$type,
     };
 
 _$AsaTransferRequestBodyImpl _$$AsaTransferRequestBodyImplFromJson(
@@ -51,7 +47,6 @@ _$AsaTransferRequestBodyImpl _$$AsaTransferRequestBodyImplFromJson(
       assetId: json['assetId'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$AsaTransferRequestBodyImplToJson(
@@ -61,7 +56,6 @@ Map<String, dynamic> _$$AsaTransferRequestBodyImplToJson(
       'assetId': instance.assetId,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Erc20TransferRequestBodyImpl _$$Erc20TransferRequestBodyImplFromJson(
@@ -71,7 +65,6 @@ _$Erc20TransferRequestBodyImpl _$$Erc20TransferRequestBodyImplFromJson(
       contract: json['contract'] as String,
       amount: json['amount'] as String,
       to: json['to'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Erc20TransferRequestBodyImplToJson(
@@ -81,7 +74,6 @@ Map<String, dynamic> _$$Erc20TransferRequestBodyImplToJson(
       'contract': instance.contract,
       'amount': instance.amount,
       'to': instance.to,
-      'runtimeType': instance.$type,
     };
 
 _$SplTransferRequestBodyImpl _$$SplTransferRequestBodyImplFromJson(
@@ -91,7 +83,6 @@ _$SplTransferRequestBodyImpl _$$SplTransferRequestBodyImplFromJson(
       mint: json['mint'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$SplTransferRequestBodyImplToJson(
@@ -101,7 +92,6 @@ Map<String, dynamic> _$$SplTransferRequestBodyImplToJson(
       'mint': instance.mint,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Spl2022TransferRequestBodyImpl _$$Spl2022TransferRequestBodyImplFromJson(
@@ -111,7 +101,6 @@ _$Spl2022TransferRequestBodyImpl _$$Spl2022TransferRequestBodyImplFromJson(
       mint: json['mint'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Spl2022TransferRequestBodyImplToJson(
@@ -121,7 +110,6 @@ Map<String, dynamic> _$$Spl2022TransferRequestBodyImplToJson(
       'mint': instance.mint,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Sep41TransferRequestBodyImpl _$$Sep41TransferRequestBodyImplFromJson(
@@ -132,7 +120,6 @@ _$Sep41TransferRequestBodyImpl _$$Sep41TransferRequestBodyImplFromJson(
       assetCode: json['assetCode'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Sep41TransferRequestBodyImplToJson(
@@ -143,7 +130,6 @@ Map<String, dynamic> _$$Sep41TransferRequestBodyImplToJson(
       'assetCode': instance.assetCode,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Tep74TransferRequestBodyImpl _$$Tep74TransferRequestBodyImplFromJson(
@@ -153,7 +139,6 @@ _$Tep74TransferRequestBodyImpl _$$Tep74TransferRequestBodyImplFromJson(
       master: json['master'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Tep74TransferRequestBodyImplToJson(
@@ -163,7 +148,6 @@ Map<String, dynamic> _$$Tep74TransferRequestBodyImplToJson(
       'master': instance.master,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Trc10TransferRequestBodyImpl _$$Trc10TransferRequestBodyImplFromJson(
@@ -173,7 +157,6 @@ _$Trc10TransferRequestBodyImpl _$$Trc10TransferRequestBodyImplFromJson(
       tokenId: json['tokenId'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Trc10TransferRequestBodyImplToJson(
@@ -183,7 +166,6 @@ Map<String, dynamic> _$$Trc10TransferRequestBodyImplToJson(
       'tokenId': instance.tokenId,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Trc20TransferRequestBodyImpl _$$Trc20TransferRequestBodyImplFromJson(
@@ -193,7 +175,6 @@ _$Trc20TransferRequestBodyImpl _$$Trc20TransferRequestBodyImplFromJson(
       contract: json['contract'] as String,
       to: json['to'] as String,
       amount: json['amount'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Trc20TransferRequestBodyImplToJson(
@@ -203,7 +184,6 @@ Map<String, dynamic> _$$Trc20TransferRequestBodyImplToJson(
       'contract': instance.contract,
       'to': instance.to,
       'amount': instance.amount,
-      'runtimeType': instance.$type,
     };
 
 _$Trc721TransferRequestBodyImpl _$$Trc721TransferRequestBodyImplFromJson(
@@ -213,7 +193,6 @@ _$Trc721TransferRequestBodyImpl _$$Trc721TransferRequestBodyImplFromJson(
       contract: json['contract'] as String,
       to: json['to'] as String,
       tokenId: json['tokenId'] as String,
-      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$Trc721TransferRequestBodyImplToJson(
@@ -223,5 +202,4 @@ Map<String, dynamic> _$$Trc721TransferRequestBodyImplToJson(
       'contract': instance.contract,
       'to': instance.to,
       'tokenId': instance.tokenId,
-      'runtimeType': instance.$type,
     };

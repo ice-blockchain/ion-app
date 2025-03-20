@@ -15,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 TransferRequestBody _$TransferRequestBodyFromJson(Map<String, dynamic> json) {
-  switch (json['runtimeType']) {
+  switch (json['kind']) {
     case 'Native':
       return NativeTransferRequestBody.fromJson(json);
     case 'Erc721':
@@ -40,8 +40,8 @@ TransferRequestBody _$TransferRequestBodyFromJson(Map<String, dynamic> json) {
       return Trc721TransferRequestBody.fromJson(json);
 
     default:
-      throw CheckedFromJsonException(json, 'runtimeType', 'TransferRequestBody',
-          'Invalid union type "${json['runtimeType']}"!');
+      throw CheckedFromJsonException(json, 'kind', 'TransferRequestBody',
+          'Invalid union type "${json['kind']}"!');
   }
 }
 
@@ -284,11 +284,7 @@ class __$$NativeTransferRequestBodyImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
   const _$NativeTransferRequestBodyImpl(
-      {required this.kind,
-      required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Native';
+      {required this.kind, required this.to, required this.amount});
 
   factory _$NativeTransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$NativeTransferRequestBodyImplFromJson(json);
@@ -299,9 +295,6 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -578,9 +571,7 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
       {required this.kind,
       required this.contract,
       required this.to,
-      required this.tokenId,
-      final String? $type})
-      : $type = $type ?? 'Erc721';
+      required this.tokenId});
 
   factory _$Erc721TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$Erc721TransferRequestBodyImplFromJson(json);
@@ -593,9 +584,6 @@ class _$Erc721TransferRequestBodyImpl implements Erc721TransferRequestBody {
   final String to;
   @override
   final String tokenId;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -876,9 +864,7 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
       {required this.kind,
       required this.assetId,
       required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Asa';
+      required this.amount});
 
   factory _$AsaTransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$AsaTransferRequestBodyImplFromJson(json);
@@ -891,9 +877,6 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -1173,9 +1156,7 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
       {required this.kind,
       required this.contract,
       required this.amount,
-      required this.to,
-      final String? $type})
-      : $type = $type ?? 'Erc20';
+      required this.to});
 
   factory _$Erc20TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$Erc20TransferRequestBodyImplFromJson(json);
@@ -1188,9 +1169,6 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
   final String amount;
   @override
   final String to;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -1471,9 +1449,7 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
       {required this.kind,
       required this.mint,
       required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Spl';
+      required this.amount});
 
   factory _$SplTransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$SplTransferRequestBodyImplFromJson(json);
@@ -1486,9 +1462,6 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -1768,9 +1741,7 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
       {required this.kind,
       required this.mint,
       required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Spl2022';
+      required this.amount});
 
   factory _$Spl2022TransferRequestBodyImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -1784,9 +1755,6 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -2073,9 +2041,7 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
       required this.issuer,
       required this.assetCode,
       required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Sep41';
+      required this.amount});
 
   factory _$Sep41TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$Sep41TransferRequestBodyImplFromJson(json);
@@ -2090,9 +2056,6 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -2377,9 +2340,7 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
       {required this.kind,
       required this.master,
       required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Tep74';
+      required this.amount});
 
   factory _$Tep74TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$Tep74TransferRequestBodyImplFromJson(json);
@@ -2392,9 +2353,6 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -2674,9 +2632,7 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
       {required this.kind,
       required this.tokenId,
       required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Trc10';
+      required this.amount});
 
   factory _$Trc10TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$Trc10TransferRequestBodyImplFromJson(json);
@@ -2689,9 +2645,6 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -2971,9 +2924,7 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
       {required this.kind,
       required this.contract,
       required this.to,
-      required this.amount,
-      final String? $type})
-      : $type = $type ?? 'Trc20';
+      required this.amount});
 
   factory _$Trc20TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$Trc20TransferRequestBodyImplFromJson(json);
@@ -2986,9 +2937,6 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
   final String to;
   @override
   final String amount;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
@@ -3269,9 +3217,7 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
       {required this.kind,
       required this.contract,
       required this.to,
-      required this.tokenId,
-      final String? $type})
-      : $type = $type ?? 'Trc721';
+      required this.tokenId});
 
   factory _$Trc721TransferRequestBodyImpl.fromJson(Map<String, dynamic> json) =>
       _$$Trc721TransferRequestBodyImplFromJson(json);
@@ -3284,9 +3230,6 @@ class _$Trc721TransferRequestBodyImpl implements Trc721TransferRequestBody {
   final String to;
   @override
   final String tokenId;
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
 
   @override
   String toString() {
