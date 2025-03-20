@@ -44,7 +44,7 @@ class UnreadNotificationsCountRepository {
   final FollowersDao _followersDao;
 
   Stream<int> watch() {
-    final lastReadTime = _getLastReadTime();
+    final lastReadTime = _getOrInitLastReadTime();
     final likesStream = _likesDao.watchUnreadCount(after: lastReadTime);
     final commentsStream = _commentsDao.watchUnreadCount(after: lastReadTime);
     final followersStream = _followersDao.watchUnreadCount(after: lastReadTime);
@@ -55,12 +55,14 @@ class UnreadNotificationsCountRepository {
     _userPreferencesService.setValue<int>(_storeKey, time.millisecondsSinceEpoch);
   }
 
-  DateTime? _getLastReadTime() {
+  DateTime _getOrInitLastReadTime() {
     final readTimestamp = _userPreferencesService.getValue<int>(_storeKey);
     if (readTimestamp != null) {
       return DateTime.fromMillisecondsSinceEpoch(readTimestamp);
     } else {
-      return null;
+      final now = DateTime.now();
+      saveLastReadTime(now);
+      return now;
     }
   }
 
