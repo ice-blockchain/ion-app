@@ -33,6 +33,7 @@ mixin _$WalletTransferRequest {
   DateTime? get dateBroadcasted => throw _privateConstructorUsedError;
   DateTime? get dateConfirmed => throw _privateConstructorUsedError;
   String? get reason => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
   /// Serializes this WalletTransferRequest to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -62,7 +63,8 @@ abstract class $WalletTransferRequestCopyWith<$Res> {
       String? fee,
       DateTime? dateBroadcasted,
       DateTime? dateConfirmed,
-      String? reason});
+      String? reason,
+      Map<String, dynamic>? metadata});
 
   $RequesterCopyWith<$Res> get requester;
   $TransferRequestBodyCopyWith<$Res> get requestBody;
@@ -96,6 +98,7 @@ class _$WalletTransferRequestCopyWithImpl<$Res,
     Object? dateBroadcasted = freezed,
     Object? dateConfirmed = freezed,
     Object? reason = freezed,
+    Object? metadata = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -146,6 +149,10 @@ class _$WalletTransferRequestCopyWithImpl<$Res,
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
               as String?,
+      metadata: freezed == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ) as $Val);
   }
 
@@ -191,7 +198,8 @@ abstract class _$$WalletTransferRequestImplCopyWith<$Res>
       String? fee,
       DateTime? dateBroadcasted,
       DateTime? dateConfirmed,
-      String? reason});
+      String? reason,
+      Map<String, dynamic>? metadata});
 
   @override
   $RequesterCopyWith<$Res> get requester;
@@ -225,6 +233,7 @@ class __$$WalletTransferRequestImplCopyWithImpl<$Res>
     Object? dateBroadcasted = freezed,
     Object? dateConfirmed = freezed,
     Object? reason = freezed,
+    Object? metadata = freezed,
   }) {
     return _then(_$WalletTransferRequestImpl(
       id: null == id
@@ -275,6 +284,10 @@ class __$$WalletTransferRequestImplCopyWithImpl<$Res>
           ? _value.reason
           : reason // ignore: cast_nullable_to_non_nullable
               as String?,
+      metadata: freezed == metadata
+          ? _value._metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
     ));
   }
 }
@@ -294,7 +307,9 @@ class _$WalletTransferRequestImpl implements _WalletTransferRequest {
       this.fee,
       this.dateBroadcasted,
       this.dateConfirmed,
-      this.reason});
+      this.reason,
+      final Map<String, dynamic>? metadata})
+      : _metadata = metadata;
 
   factory _$WalletTransferRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletTransferRequestImplFromJson(json);
@@ -323,10 +338,19 @@ class _$WalletTransferRequestImpl implements _WalletTransferRequest {
   final DateTime? dateConfirmed;
   @override
   final String? reason;
+  final Map<String, dynamic>? _metadata;
+  @override
+  Map<String, dynamic>? get metadata {
+    final value = _metadata;
+    if (value == null) return null;
+    if (_metadata is EqualUnmodifiableMapView) return _metadata;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'WalletTransferRequest(id: $id, walletId: $walletId, network: $network, requester: $requester, requestBody: $requestBody, status: $status, dateRequested: $dateRequested, txHash: $txHash, fee: $fee, dateBroadcasted: $dateBroadcasted, dateConfirmed: $dateConfirmed, reason: $reason)';
+    return 'WalletTransferRequest(id: $id, walletId: $walletId, network: $network, requester: $requester, requestBody: $requestBody, status: $status, dateRequested: $dateRequested, txHash: $txHash, fee: $fee, dateBroadcasted: $dateBroadcasted, dateConfirmed: $dateConfirmed, reason: $reason, metadata: $metadata)';
   }
 
   @override
@@ -351,7 +375,8 @@ class _$WalletTransferRequestImpl implements _WalletTransferRequest {
                 other.dateBroadcasted == dateBroadcasted) &&
             (identical(other.dateConfirmed, dateConfirmed) ||
                 other.dateConfirmed == dateConfirmed) &&
-            (identical(other.reason, reason) || other.reason == reason));
+            (identical(other.reason, reason) || other.reason == reason) &&
+            const DeepCollectionEquality().equals(other._metadata, _metadata));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -369,7 +394,8 @@ class _$WalletTransferRequestImpl implements _WalletTransferRequest {
       fee,
       dateBroadcasted,
       dateConfirmed,
-      reason);
+      reason,
+      const DeepCollectionEquality().hash(_metadata));
 
   /// Create a copy of WalletTransferRequest
   /// with the given fields replaced by the non-null parameter values.
@@ -401,7 +427,8 @@ abstract class _WalletTransferRequest implements WalletTransferRequest {
       final String? fee,
       final DateTime? dateBroadcasted,
       final DateTime? dateConfirmed,
-      final String? reason}) = _$WalletTransferRequestImpl;
+      final String? reason,
+      final Map<String, dynamic>? metadata}) = _$WalletTransferRequestImpl;
 
   factory _WalletTransferRequest.fromJson(Map<String, dynamic> json) =
       _$WalletTransferRequestImpl.fromJson;
@@ -430,6 +457,8 @@ abstract class _WalletTransferRequest implements WalletTransferRequest {
   DateTime? get dateConfirmed;
   @override
   String? get reason;
+  @override
+  Map<String, dynamic>? get metadata;
 
   /// Create a copy of WalletTransferRequest
   /// with the given fields replaced by the non-null parameter values.

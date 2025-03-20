@@ -33,11 +33,11 @@ class TransferResult with _$TransferResult {
         status: $enumDecode(_$TransferStatusEnumMap, request.status),
         requester: request.requester.toJson(),
         requestBody: request.requestBody.toJson(),
-        metadata: {}, // TODO: Not implemented
+        metadata: request.metadata ?? {},
         dateRequested: request.dateRequested,
         dateConfirmed: request.dateConfirmed,
         dateBroadcasted: request.dateBroadcasted,
         network: request.network,
-        reason: '', // TODO: Not implemented
+        reason: request.reason,
       );
 }
