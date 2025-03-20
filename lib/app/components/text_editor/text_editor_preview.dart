@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_code_block/text_editor_code_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
@@ -61,10 +62,15 @@ class TextEditorPreview extends HookWidget {
           TextEditorCodeBuilder(readOnly: true),
         ],
         customRecognizerBuilder: (attribute, leaf) {
-          return TapGestureRecognizer()
-            ..onTap = () {
-              FeedAdvancedSearchRoute(query: 'foo').go(context);
-            };
+          //TODO:make reusable and apply to every QuillEditor
+          //TODO:check if it doesn't break the default recognizer e.g. for links
+          if (attribute.key == HashtagAttribute.attributeKey) {
+            return TapGestureRecognizer()
+              ..onTap = () {
+                FeedAdvancedSearchRoute(query: attribute.value as String).go(context);
+              };
+          }
+          return null;
         },
         disableClipboard: !enableInteractiveSelection,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
