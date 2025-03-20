@@ -11,7 +11,7 @@ import 'package:ion/app/features/chat/views/components/message_items/message_typ
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_metadata.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-class VisualMediaMessage extends HookConsumerWidget {
+class VisualMediaMessage extends ConsumerWidget {
   const VisualMediaMessage({
     required this.eventMessage,
     super.key,
@@ -25,14 +25,8 @@ class VisualMediaMessage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final isMe = useMemoized(
-      () => ref.read(isCurrentUserSelectorProvider(eventMessage.masterPubkey)),
-      [eventMessage.masterPubkey],
-    );
-
-    final messageMediasStream = ref.watch(chatMediasProvider(eventMessage.id));
-
-    final messageMedias = messageMediasStream.valueOrNull ?? [];
+    final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
+    final messageMedias = ref.watch(chatMediasProvider(eventMessage.id)).valueOrNull ?? [];
 
     return MessageItemWrapper(
       isMe: isMe,

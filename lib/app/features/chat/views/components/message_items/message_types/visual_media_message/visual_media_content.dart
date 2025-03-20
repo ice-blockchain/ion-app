@@ -74,12 +74,9 @@ class VisualMediaContent extends HookConsumerWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(5.0.s),
             child: SizedBox(
-              // width: width,
               height: height,
               child: BlurhashFfi(
                 hash: mediaAttachment!.blurhash!,
-                // decodingHeight: height.toInt(),
-                // decodingWidth: width.toInt(),
               ),
             ),
           ),
@@ -89,7 +86,6 @@ class VisualMediaContent extends HookConsumerWidget {
             child: Image.file(
               localFile.value!,
               fit: BoxFit.cover,
-              // width: width,
               width: double.infinity,
               height: height,
             ),
@@ -136,7 +132,6 @@ class CancelButton extends ConsumerWidget {
               child: CircularProgressIndicator(
                 strokeWidth: 1.5,
                 color: context.theme.appColors.onPrimaryAccent,
-                // value: 0.5,
                 strokeCap: StrokeCap.round,
               ),
             ),
