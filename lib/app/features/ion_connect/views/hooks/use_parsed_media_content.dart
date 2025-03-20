@@ -29,7 +29,7 @@ import 'package:ion/app/services/markdown/quill.dart';
 
   if (richText != null) {
     final richTextDecoded = Delta.fromJson(jsonDecode(richText.content) as List<dynamic>);
-    final richTextDelta = convertTextWithImageAttributesToEmbeds(richTextDecoded);
+    final richTextDelta = processDelta(richTextDecoded);
     return _parseMediaContentDelta(delta: richTextDelta, media: media);
   }
 
