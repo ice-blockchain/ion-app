@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-GenerateSignatureResponse _$GenerateSignatureResponseFromJson(
-    Map<String, dynamic> json) {
+GenerateSignatureResponse _$GenerateSignatureResponseFromJson(Map<String, dynamic> json) {
   return _GenerateSignatureResponse.fromJson(json);
 }
 
@@ -44,8 +43,8 @@ mixin _$GenerateSignatureResponse {
 
 /// @nodoc
 abstract class $GenerateSignatureResponseCopyWith<$Res> {
-  factory $GenerateSignatureResponseCopyWith(GenerateSignatureResponse value,
-          $Res Function(GenerateSignatureResponse) then) =
+  factory $GenerateSignatureResponseCopyWith(
+          GenerateSignatureResponse value, $Res Function(GenerateSignatureResponse) then) =
       _$GenerateSignatureResponseCopyWithImpl<$Res, GenerateSignatureResponse>;
   @useResult
   $Res call(
@@ -64,8 +63,7 @@ abstract class $GenerateSignatureResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GenerateSignatureResponseCopyWithImpl<$Res,
-        $Val extends GenerateSignatureResponse>
+class _$GenerateSignatureResponseCopyWithImpl<$Res, $Val extends GenerateSignatureResponse>
     implements $GenerateSignatureResponseCopyWith<$Res> {
   _$GenerateSignatureResponseCopyWithImpl(this._value, this._then);
 
@@ -148,8 +146,7 @@ class _$GenerateSignatureResponseCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$GenerateSignatureResponseImplCopyWith<$Res>
     implements $GenerateSignatureResponseCopyWith<$Res> {
-  factory _$$GenerateSignatureResponseImplCopyWith(
-          _$GenerateSignatureResponseImpl value,
+  factory _$$GenerateSignatureResponseImplCopyWith(_$GenerateSignatureResponseImpl value,
           $Res Function(_$GenerateSignatureResponseImpl) then) =
       __$$GenerateSignatureResponseImplCopyWithImpl<$Res>;
   @override
@@ -172,12 +169,10 @@ abstract class _$$GenerateSignatureResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$GenerateSignatureResponseImplCopyWithImpl<$Res>
-    extends _$GenerateSignatureResponseCopyWithImpl<$Res,
-        _$GenerateSignatureResponseImpl>
+    extends _$GenerateSignatureResponseCopyWithImpl<$Res, _$GenerateSignatureResponseImpl>
     implements _$$GenerateSignatureResponseImplCopyWith<$Res> {
   __$$GenerateSignatureResponseImplCopyWithImpl(
-      _$GenerateSignatureResponseImpl _value,
-      $Res Function(_$GenerateSignatureResponseImpl) _then)
+      _$GenerateSignatureResponseImpl _value, $Res Function(_$GenerateSignatureResponseImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of GenerateSignatureResponse
@@ -306,20 +301,15 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
             other is _$GenerateSignatureResponseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.keyId, keyId) || other.keyId == keyId) &&
-            (identical(other.walletId, walletId) ||
-                other.walletId == walletId) &&
+            (identical(other.walletId, walletId) || other.walletId == walletId) &&
             (identical(other.network, network) || other.network == network) &&
-            (identical(other.requester, requester) ||
-                other.requester == requester) &&
-            const DeepCollectionEquality()
-                .equals(other._requestBody, _requestBody) &&
+            (identical(other.requester, requester) || other.requester == requester) &&
+            const DeepCollectionEquality().equals(other._requestBody, _requestBody) &&
             (identical(other.status, status) || other.status == status) &&
-            const DeepCollectionEquality()
-                .equals(other._signature, _signature) &&
+            const DeepCollectionEquality().equals(other._signature, _signature) &&
             (identical(other.dateRequested, dateRequested) ||
                 other.dateRequested == dateRequested) &&
-            (identical(other.dateSigned, dateSigned) ||
-                other.dateSigned == dateSigned));
+            (identical(other.dateSigned, dateSigned) || other.dateSigned == dateSigned));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -342,9 +332,9 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$GenerateSignatureResponseImplCopyWith<_$GenerateSignatureResponseImpl>
-      get copyWith => __$$GenerateSignatureResponseImplCopyWithImpl<
-          _$GenerateSignatureResponseImpl>(this, _$identity);
+  _$$GenerateSignatureResponseImplCopyWith<_$GenerateSignatureResponseImpl> get copyWith =>
+      __$$GenerateSignatureResponseImplCopyWithImpl<_$GenerateSignatureResponseImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -395,6 +385,6 @@ abstract class _GenerateSignatureResponse implements GenerateSignatureResponse {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$GenerateSignatureResponseImplCopyWith<_$GenerateSignatureResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$GenerateSignatureResponseImplCopyWith<_$GenerateSignatureResponseImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

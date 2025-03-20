@@ -3,7 +3,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:drift/drift.dart';
+import 'package:collection/collection.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:file_saver/file_saver.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -19,6 +20,7 @@ import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -62,7 +64,9 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
         masterPubkeys: participantsMasterPubkeys,
       );
 
-      final mediaAttachments = mediaFiles.map(MediaAttachment.fromMediaFile).toList();
+      final mediaAttachments = mediaFiles.map((m) {
+        return MediaAttachment.fromMediaFile(m);
+      }).toList();
 
       final eventMessage = await _createEventMessage(
         content: content,
@@ -71,6 +75,8 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
       );
 
       //TODO: use transaction
+      final messageMediaIds = <int>[];
+
       await ref.read(conversationDaoProvider).add([eventMessage]);
       await ref.read(conversationEventMessageDaoProvider).add(eventMessage);
       await ref.read(conversationMessageDataDaoProvider).add(
@@ -79,16 +85,24 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
             status: MessageDeliveryStatus.created,
           );
 
-      final messageMediaIds = <int>[];
       for (final mediaFile in mediaFiles) {
         final file = File(mediaFile.path);
         final fileName = generateUuid();
-        await FileSaver.instance.saveFileOnly(name: fileName, file: file);
+
+        final isVideo = mediaFile.mimeType?.startsWith('video/') ?? false;
+
+        if (isVideo) {
+          final thumb = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
+          await FileSaver.instance.saveFileOnly(name: fileName, file: File(thumb.path));
+        } else {
+          await FileSaver.instance.saveFileOnly(name: fileName, file: file);
+        }
+
         final id = await ref.read(messageMediaDaoProvider).add(
               MessageMediaTableCompanion(
-                status: const Value(MessageMediaStatus.processing),
-                eventMessageId: Value(eventMessage.id),
-                localPath: Value(fileName),
+                status: const drift.Value(MessageMediaStatus.processing),
+                eventMessageId: drift.Value(eventMessage.id),
+                cacheKey: drift.Value(fileName),
               ),
             );
 
@@ -102,6 +116,7 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
         mediaFiles,
         participantsMasterPubkeys,
         messageMediaIds,
+        eventMessage.id,
       );
 
       await Future.wait(
@@ -171,27 +186,31 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
     List<MediaFile> mediaFiles,
     List<String> participantsMasterPubkeys,
     List<int> eventMessageIds,
+    String eventMessageId,
   ) async {
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
     final mediaAttachmentsUsersBased = <String, List<MediaAttachment>>{};
 
     final mediaAttachmentsFutures = mediaFiles.map(
       (mediaFile) async {
-        final sendResult = await ref
-            .read(sendChatMediaProvider(mediaFile).notifier)
-            .sendChatMedia(participantsMasterPubkeys);
-
         final indexOfMediaFile = mediaFiles.indexOf(mediaFile);
         final id = eventMessageIds[indexOfMediaFile];
 
-        final currentUserSendResult = sendResult.firstWhere((a) => a.$1 == currentUserMasterPubkey);
+        final sendResult = await ref
+            .read(sendChatMediaProvider(id).notifier)
+            .sendChatMedia(participantsMasterPubkeys, mediaFile);
+
+        final currentUserSendResult =
+            sendResult.firstWhereOrNull((a) => a.$1 == currentUserMasterPubkey);
+        if (currentUserSendResult == null) {
+          return sendResult;
+        }
 
         await ref.read(messageMediaDaoProvider).updateById(
               id,
-              MessageMediaTableCompanion(
-                status: const Value(MessageMediaStatus.completed),
-                remoteUrl: Value(currentUserSendResult.$2.url),
-              ),
+              eventMessageId,
+              currentUserSendResult.$2.first.url,
+              MessageMediaStatus.completed,
             );
 
         return sendResult;
@@ -204,8 +223,8 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
       for (final (pubkey, attachment) in mediaAttachments) {
         mediaAttachmentsUsersBased.update(
           pubkey,
-          (attachments) => [...attachments, attachment],
-          ifAbsent: () => [attachment],
+          (attachments) => [...attachments, ...attachment],
+          ifAbsent: () => attachment,
         );
       }
     }

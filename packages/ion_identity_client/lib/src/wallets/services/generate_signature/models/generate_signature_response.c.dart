@@ -6,6 +6,7 @@ import 'package:ion_identity_client/src/wallets/models/requester.c.dart';
 part 'generate_signature_response.c.freezed.dart';
 part 'generate_signature_response.c.g.dart';
 
+//
 @freezed
 class GenerateSignatureResponse with _$GenerateSignatureResponse {
   const factory GenerateSignatureResponse({

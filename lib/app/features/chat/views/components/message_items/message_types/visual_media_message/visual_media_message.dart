@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_metadata.dart';
@@ -30,16 +30,9 @@ class VisualMediaMessage extends HookConsumerWidget {
       [eventMessage.masterPubkey],
     );
 
-    final messageMediasStream = useMemoized(
-      () => ref.read(messageMediaDaoProvider).watchByEventId(eventMessage.id),
-      [eventMessage.id],
-    );
+    final messageMediasStream = ref.watch(chatMediasProvider(eventMessage.id));
 
-    final messageMedias = useStream(messageMediasStream, preserveState: false);
-
-    if (messageMedias.data?.isEmpty ?? true) {
-      return const SizedBox.shrink();
-    }
+    final messageMedias = messageMediasStream.valueOrNull ?? [];
 
     return MessageItemWrapper(
       isMe: isMe,
@@ -48,12 +41,12 @@ class VisualMediaMessage extends HookConsumerWidget {
       child: GestureDetector(
         onTap: () {},
         child: SizedBox(
-          width: messageMedias.data!.length > 1 ? double.infinity : 146.0.s,
+          width: messageMedias.length > 1 ? double.infinity : 146.0.s,
           child: IntrinsicWidth(
             child: Column(
               children: [
                 VisualMediaCustomGrid(
-                  messageMedias: messageMedias.data!,
+                  messageMedias: messageMedias,
                   eventMessage: eventMessage,
                 ),
                 SizedBox(height: 8.0.s),

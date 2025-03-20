@@ -26,6 +26,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
 
     if (mediaCount == 1) {
       return VisualMediaContent(
+        key: ValueKey(messageMedias.first.id),
         messageMediaTableData: messageMedias.first,
         eventMessage: eventMessage,
         height: height1,
@@ -37,6 +38,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
         children: [
           Expanded(
             child: VisualMediaContent(
+              key: ValueKey(messageMedias.first.id),
               messageMediaTableData: messageMedias.first,
               eventMessage: eventMessage,
               height: height1,
@@ -45,6 +47,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
           SizedBox(width: 4.0.s),
           Expanded(
             child: VisualMediaContent(
+              key: ValueKey(messageMedias.last.id),
               messageMediaTableData: messageMedias.last,
               eventMessage: eventMessage,
               height: height1,
@@ -61,6 +64,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
             children: <Widget>[
               Expanded(
                 child: VisualMediaContent(
+                  key: ValueKey(messageMedias[0].id),
                   messageMediaTableData: messageMedias[0],
                   eventMessage: eventMessage,
                   height: height1,
@@ -73,6 +77,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
             children: <Widget>[
               Expanded(
                 child: VisualMediaContent(
+                  key: ValueKey(messageMedias[1].id),
                   messageMediaTableData: messageMedias[1],
                   eventMessage: eventMessage,
                   height: height1,
@@ -81,6 +86,7 @@ class VisualMediaCustomGrid extends HookConsumerWidget {
               SizedBox(width: 4.0.s),
               Expanded(
                 child: VisualMediaContent(
+                  key: ValueKey(messageMedias[2].id),
                   messageMediaTableData: messageMedias[2],
                   eventMessage: eventMessage,
                   height: height1,

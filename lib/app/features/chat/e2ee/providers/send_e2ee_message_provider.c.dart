@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:blurhash_ffi/blurhash_ffi.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -161,19 +160,6 @@ class SendE2eeMessageService {
         await conversationDao.add([eventMessageWithoutMedia]);
         await eventMessageDao.add(eventMessageWithoutMedia);
 
-        final messageMediaIds = await Future.wait(
-          mediaFilesWithBlurhash.map(
-            (mediaFile) async {
-              final data = MessageMediaTableCompanion(
-                eventMessageId: Value(eventMessageWithoutMedia.id),
-                status: const Value(MessageMediaStatus.processing),
-                remoteUrl: Value(mediaFile.path),
-              );
-              return messageMediaDao.add(data);
-            },
-          ).toList(),
-        );
-
         final compressedMediaFiles = await _compressMediaFiles(mediaFilesWithBlurhash);
 
         await Future.wait(
@@ -256,8 +242,6 @@ class SendE2eeMessageService {
 
                   final originalMediaFile = mediaFilesWithBlurhash[index];
 
-                  final messageMediaId = messageMediaIds[index];
-
                   final fileMetadataEvent = await _generateFileMetadataEvent(
                     ontTimeEventSigner: oneTimeEventSigner,
                     fileMetadataEntity:
@@ -271,13 +255,12 @@ class SendE2eeMessageService {
                   );
 
                   if (masterPubkey == currentUserMasterPubkey) {
-                    await messageMediaDao.updateById(
-                      messageMediaId,
-                      MessageMediaTableCompanion(
-                        remoteUrl: Value(uploadResult.mediaAttachment.url),
-                        status: const Value(MessageMediaStatus.completed),
-                      ),
-                    );
+                    // await messageMediaDao.updateById(
+                    //   messageMediaId,
+                    //   eventMessageWithoutMedia.id,
+                    //   f
+
+                    // );
                   }
 
                   return (
