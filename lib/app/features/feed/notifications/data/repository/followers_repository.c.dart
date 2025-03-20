@@ -2,7 +2,9 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/notifications/data/database/dao/followers_dao.c.dart';
+import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,7 +15,7 @@ FollowersRepository followersRepository(Ref ref) => FollowersRepository(
       followersDao: ref.watch(followersDaoProvider),
     );
 
-class FollowersRepository {
+class FollowersRepository implements IonNotificationRepository {
   FollowersRepository({
     required FollowersDao followersDao,
   }) : _followersDao = followersDao;
@@ -21,10 +23,13 @@ class FollowersRepository {
   final FollowersDao _followersDao;
 
   Future<void> save(IonConnectEntity entity) {
-    return _followersDao.insert(entity);
+    return _followersDao.insert(
+      Follower(pubkey: entity.masterPubkey, createdAt: entity.createdAt),
+    );
   }
 
-  Future<List<FollowersIonNotification>> getAggregated() async {
+  @override
+  Future<List<FollowersIonNotification>> getNotifications() async {
     final aggregated = await _followersDao.getAggregated();
     return aggregated
         .map(

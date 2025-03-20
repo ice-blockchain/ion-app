@@ -6,6 +6,7 @@ import 'package:ion/app/features/feed/data/models/entities/reaction_data.c.dart'
 import 'package:ion/app/features/feed/notifications/data/database/dao/likes_dao.c.dart';
 import 'package:ion/app/features/feed/notifications/data/database/notifications_database.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
+import 'package:ion/app/features/feed/notifications/data/repository/ion_notification_repository.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,7 +17,7 @@ LikesRepository likesRepository(Ref ref) => LikesRepository(
       likesDao: ref.watch(likesDaoProvider),
     );
 
-class LikesRepository {
+class LikesRepository implements IonNotificationRepository {
   LikesRepository({
     required LikesDao likesDao,
   }) : _likesDao = likesDao;
@@ -35,7 +36,8 @@ class LikesRepository {
     return _likesDao.insert(like);
   }
 
-  Future<List<LikesIonNotification>> getAggregated() async {
+  @override
+  Future<List<LikesIonNotification>> getNotifications() async {
     final aggregated = await _likesDao.getAggregated();
     return aggregated
         .map(

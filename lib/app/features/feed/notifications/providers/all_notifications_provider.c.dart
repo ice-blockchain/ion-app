@@ -16,9 +16,9 @@ Future<List<IonNotification>> allNotifications(Ref ref) async {
   final followersRepository = ref.watch(followersRepositoryProvider);
   final likesRepository = ref.watch(likesRepositoryProvider);
   final (comments, likes, followers) = await (
-    commentsRepository.getComments(),
-    likesRepository.getAggregated(),
-    followersRepository.getAggregated()
+    commentsRepository.getNotifications(),
+    likesRepository.getNotifications(),
+    followersRepository.getNotifications()
   ).wait;
   return [...comments, ...likes, ...followers]..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 }

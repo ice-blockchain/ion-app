@@ -11,5 +11,5 @@ part 'likes_notifications_provider.c.g.dart';
 @riverpod
 Future<List<LikesIonNotification>> likesNotifications(Ref ref) async {
   final likesRepository = ref.watch(likesRepositoryProvider);
-  return likesRepository.getAggregated();
+  return likesRepository.getNotifications();
 }

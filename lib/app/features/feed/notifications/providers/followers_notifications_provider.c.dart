@@ -11,5 +11,5 @@ part 'followers_notifications_provider.c.g.dart';
 @riverpod
 Future<List<FollowersIonNotification>> followersNotifications(Ref ref) async {
   final followersRepository = ref.watch(followersRepositoryProvider);
-  return followersRepository.getAggregated();
+  return followersRepository.getNotifications();
 }
