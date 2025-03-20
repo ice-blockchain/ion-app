@@ -24,7 +24,6 @@ mixin _$WalletView {
   String get name => throw _privateConstructorUsedError;
   @CoinInWalletListConverter()
   List<CoinInWallet> get coins => throw _privateConstructorUsedError;
-  List<WalletNft> get nfts => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: {})
   Map<String, WalletViewAggregationItem> get aggregation =>
       throw _privateConstructorUsedError;
@@ -33,6 +32,7 @@ mixin _$WalletView {
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
+  List<WalletNft>? get nfts => throw _privateConstructorUsedError;
 
   /// Serializes this WalletView to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,13 +54,13 @@ abstract class $WalletViewCopyWith<$Res> {
       {String id,
       String name,
       @CoinInWalletListConverter() List<CoinInWallet> coins,
-      List<WalletNft> nfts,
       @JsonKey(defaultValue: {})
       Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) List<String> symbolGroups,
       String createdAt,
       String updatedAt,
-      String userId});
+      String userId,
+      List<WalletNft>? nfts});
 }
 
 /// @nodoc
@@ -81,12 +81,12 @@ class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView>
     Object? id = null,
     Object? name = null,
     Object? coins = null,
-    Object? nfts = null,
     Object? aggregation = null,
     Object? symbolGroups = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? userId = null,
+    Object? nfts = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -101,10 +101,6 @@ class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView>
           ? _value.coins
           : coins // ignore: cast_nullable_to_non_nullable
               as List<CoinInWallet>,
-      nfts: null == nfts
-          ? _value.nfts
-          : nfts // ignore: cast_nullable_to_non_nullable
-              as List<WalletNft>,
       aggregation: null == aggregation
           ? _value.aggregation
           : aggregation // ignore: cast_nullable_to_non_nullable
@@ -125,6 +121,10 @@ class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
+      nfts: freezed == nfts
+          ? _value.nfts
+          : nfts // ignore: cast_nullable_to_non_nullable
+              as List<WalletNft>?,
     ) as $Val);
   }
 }
@@ -141,13 +141,13 @@ abstract class _$$WalletViewImplCopyWith<$Res>
       {String id,
       String name,
       @CoinInWalletListConverter() List<CoinInWallet> coins,
-      List<WalletNft> nfts,
       @JsonKey(defaultValue: {})
       Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) List<String> symbolGroups,
       String createdAt,
       String updatedAt,
-      String userId});
+      String userId,
+      List<WalletNft>? nfts});
 }
 
 /// @nodoc
@@ -166,12 +166,12 @@ class __$$WalletViewImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? coins = null,
-    Object? nfts = null,
     Object? aggregation = null,
     Object? symbolGroups = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? userId = null,
+    Object? nfts = freezed,
   }) {
     return _then(_$WalletViewImpl(
       id: null == id
@@ -186,10 +186,6 @@ class __$$WalletViewImplCopyWithImpl<$Res>
           ? _value._coins
           : coins // ignore: cast_nullable_to_non_nullable
               as List<CoinInWallet>,
-      nfts: null == nfts
-          ? _value._nfts
-          : nfts // ignore: cast_nullable_to_non_nullable
-              as List<WalletNft>,
       aggregation: null == aggregation
           ? _value._aggregation
           : aggregation // ignore: cast_nullable_to_non_nullable
@@ -210,6 +206,10 @@ class __$$WalletViewImplCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
+      nfts: freezed == nfts
+          ? _value._nfts
+          : nfts // ignore: cast_nullable_to_non_nullable
+              as List<WalletNft>?,
     ));
   }
 }
@@ -221,17 +221,17 @@ class _$WalletViewImpl implements _WalletView {
       {required this.id,
       required this.name,
       @CoinInWalletListConverter() required final List<CoinInWallet> coins,
-      required final List<WalletNft> nfts,
       @JsonKey(defaultValue: {})
       required final Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) required final List<String> symbolGroups,
       required this.createdAt,
       required this.updatedAt,
-      required this.userId})
+      required this.userId,
+      final List<WalletNft>? nfts})
       : _coins = coins,
-        _nfts = nfts,
         _aggregation = aggregation,
-        _symbolGroups = symbolGroups;
+        _symbolGroups = symbolGroups,
+        _nfts = nfts;
 
   factory _$WalletViewImpl.fromJson(Map<String, dynamic> json) =>
       _$$WalletViewImplFromJson(json);
@@ -247,14 +247,6 @@ class _$WalletViewImpl implements _WalletView {
     if (_coins is EqualUnmodifiableListView) return _coins;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_coins);
-  }
-
-  final List<WalletNft> _nfts;
-  @override
-  List<WalletNft> get nfts {
-    if (_nfts is EqualUnmodifiableListView) return _nfts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_nfts);
   }
 
   final Map<String, WalletViewAggregationItem> _aggregation;
@@ -281,10 +273,19 @@ class _$WalletViewImpl implements _WalletView {
   final String updatedAt;
   @override
   final String userId;
+  final List<WalletNft>? _nfts;
+  @override
+  List<WalletNft>? get nfts {
+    final value = _nfts;
+    if (value == null) return null;
+    if (_nfts is EqualUnmodifiableListView) return _nfts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'WalletView(id: $id, name: $name, coins: $coins, nfts: $nfts, aggregation: $aggregation, symbolGroups: $symbolGroups, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId)';
+    return 'WalletView(id: $id, name: $name, coins: $coins, aggregation: $aggregation, symbolGroups: $symbolGroups, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, nfts: $nfts)';
   }
 
   @override
@@ -295,7 +296,6 @@ class _$WalletViewImpl implements _WalletView {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             const DeepCollectionEquality().equals(other._coins, _coins) &&
-            const DeepCollectionEquality().equals(other._nfts, _nfts) &&
             const DeepCollectionEquality()
                 .equals(other._aggregation, _aggregation) &&
             const DeepCollectionEquality()
@@ -304,7 +304,8 @@ class _$WalletViewImpl implements _WalletView {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.userId, userId) || other.userId == userId));
+            (identical(other.userId, userId) || other.userId == userId) &&
+            const DeepCollectionEquality().equals(other._nfts, _nfts));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -314,12 +315,12 @@ class _$WalletViewImpl implements _WalletView {
       id,
       name,
       const DeepCollectionEquality().hash(_coins),
-      const DeepCollectionEquality().hash(_nfts),
       const DeepCollectionEquality().hash(_aggregation),
       const DeepCollectionEquality().hash(_symbolGroups),
       createdAt,
       updatedAt,
-      userId);
+      userId,
+      const DeepCollectionEquality().hash(_nfts));
 
   /// Create a copy of WalletView
   /// with the given fields replaced by the non-null parameter values.
@@ -342,13 +343,13 @@ abstract class _WalletView implements WalletView {
       {required final String id,
       required final String name,
       @CoinInWalletListConverter() required final List<CoinInWallet> coins,
-      required final List<WalletNft> nfts,
       @JsonKey(defaultValue: {})
       required final Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) required final List<String> symbolGroups,
       required final String createdAt,
       required final String updatedAt,
-      required final String userId}) = _$WalletViewImpl;
+      required final String userId,
+      final List<WalletNft>? nfts}) = _$WalletViewImpl;
 
   factory _WalletView.fromJson(Map<String, dynamic> json) =
       _$WalletViewImpl.fromJson;
@@ -361,8 +362,6 @@ abstract class _WalletView implements WalletView {
   @CoinInWalletListConverter()
   List<CoinInWallet> get coins;
   @override
-  List<WalletNft> get nfts;
-  @override
   @JsonKey(defaultValue: {})
   Map<String, WalletViewAggregationItem> get aggregation;
   @override
@@ -374,6 +373,8 @@ abstract class _WalletView implements WalletView {
   String get updatedAt;
   @override
   String get userId;
+  @override
+  List<WalletNft>? get nfts;
 
   /// Create a copy of WalletView
   /// with the given fields replaced by the non-null parameter values.

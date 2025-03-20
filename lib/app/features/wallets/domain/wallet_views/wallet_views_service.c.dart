@@ -166,7 +166,7 @@ class WalletViewsService {
       id: viewDTO.id,
       name: viewDTO.name,
       symbolGroups: symbolGroups,
-      nfts: viewDTO.nfts.map((nft) => nft.toNft(networks[nft.network]!)).toList(),
+      nfts: viewDTO.nfts?.map((nft) => nft.toNft(networks[nft.network]!)).toList() ?? [],
       createdAt: viewDTO.createdAt,
       updatedAt: viewDTO.updatedAt,
       usdBalance: totalViewBalanceUSD,

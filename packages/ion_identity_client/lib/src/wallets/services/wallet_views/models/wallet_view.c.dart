@@ -12,12 +12,12 @@ class WalletView with _$WalletView {
     required String id,
     required String name,
     @CoinInWalletListConverter() required List<CoinInWallet> coins,
-    required List<WalletNft> nfts,
     @JsonKey(defaultValue: {}) required Map<String, WalletViewAggregationItem> aggregation,
     @JsonKey(defaultValue: []) required List<String> symbolGroups,
     required String createdAt,
     required String updatedAt,
     required String userId,
+    List<WalletNft>? nfts,
   }) = _WalletView;
 
   factory WalletView.fromJson(Map<String, dynamic> json) => _$WalletViewFromJson(json);
