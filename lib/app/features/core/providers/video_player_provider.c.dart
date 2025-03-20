@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'video_player_provider.c.g.dart';
@@ -22,9 +23,15 @@ Raw<CachedVideoPlayerPlusController> videoController(
   void handleInitialized() {
     if (!isInitialized && controller.value.isInitialized) {
       isInitialized = true;
-      controller
-        ..setLooping(looping)
-        ..setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
+      controller.setLooping(looping);
+
+      if (kIsWeb) {
+        controller.setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
+      } else {
+        final isMuted = ref.read(globalMuteProvider);
+        controller.setVolume(isMuted ? 0 : 1);
+      }
+
       if (autoPlay) {
         controller.play();
       }
