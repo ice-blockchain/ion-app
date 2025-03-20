@@ -26,21 +26,24 @@ class Count extends _$Count {
     required EventCountResultType type,
     required List<RequestFilter> filters,
     Duration? cacheExpirationDuration,
+    bool cache = true,
   }) async {
-    final countEntity = ref.watch(
-      ionConnectCacheProvider.select(
-        cacheSelector<EventCountResultEntity>(
-          EventCountResultEntity.cacheKeyBuilder(
-            key: key,
-            type: type,
+    if (cache) {
+      final countEntity = ref.watch(
+        ionConnectCacheProvider.select(
+          cacheSelector<EventCountResultEntity>(
+            EventCountResultEntity.cacheKeyBuilder(
+              key: key,
+              type: type,
+            ),
+            expirationDuration: cacheExpirationDuration,
           ),
-          expirationDuration: cacheExpirationDuration,
         ),
-      ),
-    );
+      );
 
-    if (countEntity != null) {
-      return countEntity.data.content as int;
+      if (countEntity != null) {
+        return countEntity.data.content as int;
+      }
     }
 
     return _fetchCount(key: key, relay: relay, filters: filters);

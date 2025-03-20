@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_top_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
@@ -17,6 +18,8 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/content
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_entities_list.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
+import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -32,6 +35,14 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useOnInit(
+      () {
+        ref.invalidate(
+          followersCountProvider(pubkey: pubkey, type: EventCountResultType.followers),
+        );
+      },
+    );
+
     final scrollController = useScrollController();
     final (:opacity) = useAnimatedOpacityOnScroll(scrollController, topOffset: paddingTop);
 
