@@ -10,8 +10,8 @@ import 'package:ion/generated/assets.gen.dart';
 class AddressInputField extends HookWidget {
   const AddressInputField({
     required this.onOpenContactList,
-    required this.onScanPressed,
     required this.onAddressChanged,
+    this.onScanPressed,
     this.initialValue,
     super.key,
   });
@@ -19,7 +19,7 @@ class AddressInputField extends HookWidget {
   static const int maxLines = 2;
 
   final VoidCallback onOpenContactList;
-  final VoidCallback onScanPressed;
+  final VoidCallback? onScanPressed;
   final ValueChanged<String> onAddressChanged;
   final String? initialValue;
 
@@ -41,16 +41,17 @@ class AddressInputField extends HookWidget {
             icon: Assets.svg.iconContactList.icon(),
             onPressed: onOpenContactList,
           ),
-          IconButton(
-            icon: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                context.theme.appColors.primaryAccent,
-                BlendMode.srcIn,
+          if (onScanPressed != null)
+            IconButton(
+              icon: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  context.theme.appColors.primaryAccent,
+                  BlendMode.srcIn,
+                ),
+                child: Assets.svg.iconHeaderScan1.icon(),
               ),
-              child: Assets.svg.iconHeaderScan1.icon(),
+              onPressed: onScanPressed,
             ),
-            onPressed: onScanPressed,
-          ),
         ],
         hasLeftDivider: true,
       ),

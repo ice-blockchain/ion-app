@@ -13,7 +13,7 @@ class ContactInputSwitcher extends ConsumerWidget {
     required this.onContactTap,
     required this.onClearTap,
     required this.onWalletAddressChanged,
-    required this.onScanPressed,
+    this.onScanPressed,
     super.key,
   });
 
@@ -22,7 +22,7 @@ class ContactInputSwitcher extends ConsumerWidget {
   final VoidCallback onContactTap;
   final ValueChanged<String?> onClearTap;
   final ValueChanged<String?> onWalletAddressChanged;
-  final VoidCallback onScanPressed;
+  final VoidCallback? onScanPressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

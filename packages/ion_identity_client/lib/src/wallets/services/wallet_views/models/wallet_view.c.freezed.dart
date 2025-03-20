@@ -25,7 +25,8 @@ mixin _$WalletView {
   @CoinInWalletListConverter()
   List<CoinInWallet> get coins => throw _privateConstructorUsedError;
   @JsonKey(defaultValue: {})
-  Map<String, WalletViewAggregationItem> get aggregation => throw _privateConstructorUsedError;
+  Map<String, WalletViewAggregationItem> get aggregation =>
+      throw _privateConstructorUsedError;
   @JsonKey(defaultValue: [])
   List<String> get symbolGroups => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -39,19 +40,22 @@ mixin _$WalletView {
   /// Create a copy of WalletView
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $WalletViewCopyWith<WalletView> get copyWith => throw _privateConstructorUsedError;
+  $WalletViewCopyWith<WalletView> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $WalletViewCopyWith<$Res> {
-  factory $WalletViewCopyWith(WalletView value, $Res Function(WalletView) then) =
+  factory $WalletViewCopyWith(
+          WalletView value, $Res Function(WalletView) then) =
       _$WalletViewCopyWithImpl<$Res, WalletView>;
   @useResult
   $Res call(
       {String id,
       String name,
       @CoinInWalletListConverter() List<CoinInWallet> coins,
-      @JsonKey(defaultValue: {}) Map<String, WalletViewAggregationItem> aggregation,
+      @JsonKey(defaultValue: {})
+      Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) List<String> symbolGroups,
       DateTime createdAt,
       DateTime updatedAt,
@@ -60,7 +64,8 @@ abstract class $WalletViewCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView> implements $WalletViewCopyWith<$Res> {
+class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView>
+    implements $WalletViewCopyWith<$Res> {
   _$WalletViewCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -125,8 +130,10 @@ class _$WalletViewCopyWithImpl<$Res, $Val extends WalletView> implements $Wallet
 }
 
 /// @nodoc
-abstract class _$$WalletViewImplCopyWith<$Res> implements $WalletViewCopyWith<$Res> {
-  factory _$$WalletViewImplCopyWith(_$WalletViewImpl value, $Res Function(_$WalletViewImpl) then) =
+abstract class _$$WalletViewImplCopyWith<$Res>
+    implements $WalletViewCopyWith<$Res> {
+  factory _$$WalletViewImplCopyWith(
+          _$WalletViewImpl value, $Res Function(_$WalletViewImpl) then) =
       __$$WalletViewImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -134,7 +141,8 @@ abstract class _$$WalletViewImplCopyWith<$Res> implements $WalletViewCopyWith<$R
       {String id,
       String name,
       @CoinInWalletListConverter() List<CoinInWallet> coins,
-      @JsonKey(defaultValue: {}) Map<String, WalletViewAggregationItem> aggregation,
+      @JsonKey(defaultValue: {})
+      Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) List<String> symbolGroups,
       DateTime createdAt,
       DateTime updatedAt,
@@ -143,9 +151,11 @@ abstract class _$$WalletViewImplCopyWith<$Res> implements $WalletViewCopyWith<$R
 }
 
 /// @nodoc
-class __$$WalletViewImplCopyWithImpl<$Res> extends _$WalletViewCopyWithImpl<$Res, _$WalletViewImpl>
+class __$$WalletViewImplCopyWithImpl<$Res>
+    extends _$WalletViewCopyWithImpl<$Res, _$WalletViewImpl>
     implements _$$WalletViewImplCopyWith<$Res> {
-  __$$WalletViewImplCopyWithImpl(_$WalletViewImpl _value, $Res Function(_$WalletViewImpl) _then)
+  __$$WalletViewImplCopyWithImpl(
+      _$WalletViewImpl _value, $Res Function(_$WalletViewImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of WalletView
@@ -211,7 +221,8 @@ class _$WalletViewImpl implements _WalletView {
       {required this.id,
       required this.name,
       @CoinInWalletListConverter() required final List<CoinInWallet> coins,
-      @JsonKey(defaultValue: {}) required final Map<String, WalletViewAggregationItem> aggregation,
+      @JsonKey(defaultValue: {})
+      required final Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) required final List<String> symbolGroups,
       required this.createdAt,
       required this.updatedAt,
@@ -222,7 +233,8 @@ class _$WalletViewImpl implements _WalletView {
         _symbolGroups = symbolGroups,
         _nfts = nfts;
 
-  factory _$WalletViewImpl.fromJson(Map<String, dynamic> json) => _$$WalletViewImplFromJson(json);
+  factory _$WalletViewImpl.fromJson(Map<String, dynamic> json) =>
+      _$$WalletViewImplFromJson(json);
 
   @override
   final String id;
@@ -284,10 +296,14 @@ class _$WalletViewImpl implements _WalletView {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             const DeepCollectionEquality().equals(other._coins, _coins) &&
-            const DeepCollectionEquality().equals(other._aggregation, _aggregation) &&
-            const DeepCollectionEquality().equals(other._symbolGroups, _symbolGroups) &&
-            (identical(other.createdAt, createdAt) || other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._aggregation, _aggregation) &&
+            const DeepCollectionEquality()
+                .equals(other._symbolGroups, _symbolGroups) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             const DeepCollectionEquality().equals(other._nfts, _nfts));
   }
@@ -327,14 +343,16 @@ abstract class _WalletView implements WalletView {
       {required final String id,
       required final String name,
       @CoinInWalletListConverter() required final List<CoinInWallet> coins,
-      @JsonKey(defaultValue: {}) required final Map<String, WalletViewAggregationItem> aggregation,
+      @JsonKey(defaultValue: {})
+      required final Map<String, WalletViewAggregationItem> aggregation,
       @JsonKey(defaultValue: []) required final List<String> symbolGroups,
       required final DateTime createdAt,
       required final DateTime updatedAt,
       required final String userId,
       final List<WalletNft>? nfts}) = _$WalletViewImpl;
 
-  factory _WalletView.fromJson(Map<String, dynamic> json) = _$WalletViewImpl.fromJson;
+  factory _WalletView.fromJson(Map<String, dynamic> json) =
+      _$WalletViewImpl.fromJson;
 
   @override
   String get id;
@@ -362,5 +380,6 @@ abstract class _WalletView implements WalletView {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$WalletViewImplCopyWith<_$WalletViewImpl> get copyWith => throw _privateConstructorUsedError;
+  _$$WalletViewImplCopyWith<_$WalletViewImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

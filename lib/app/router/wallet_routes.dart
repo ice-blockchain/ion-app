@@ -52,6 +52,7 @@ class WalletRoutes {
             TypedGoRoute<NftSelectContactRoute>(path: 'select-contact-to-send-nft'),
           ],
         ),
+        TypedGoRoute<NftSendScanRoute>(path: 'scan-receiver-wallet'),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
         TypedGoRoute<NftTransactionResultRoute>(path: 'nft-transaction-result'),
         TypedGoRoute<NftTransactionDetailsRoute>(path: 'nft-transaction-details'),
@@ -201,14 +202,6 @@ class ShareAddressRoute extends BaseRouteData {
   ShareAddressRoute()
       : super(
           child: const ShareAddressView(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
-class NftSendFormRoute extends BaseRouteData {
-  NftSendFormRoute()
-      : super(
-          child: const SendNftForm(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -388,6 +381,22 @@ class NftDetailsRoute extends BaseRouteData {
 
   final String contract;
   final String tokenId;
+}
+
+class NftSendFormRoute extends BaseRouteData {
+  NftSendFormRoute()
+      : super(
+          child: const SendNftForm(),
+          type: IceRouteType.bottomSheet,
+        );
+}
+
+class NftSendScanRoute extends BaseRouteData {
+  NftSendScanRoute()
+      : super(
+          child: const WalletScanModalPage(),
+          type: IceRouteType.bottomSheet,
+        );
 }
 
 class SendNftConfirmRoute extends BaseRouteData {

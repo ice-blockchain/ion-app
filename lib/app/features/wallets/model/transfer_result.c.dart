@@ -16,7 +16,7 @@ class TransferResult with _$TransferResult {
     required TransferStatus status,
     required Map<String, dynamic> requester,
     required Map<String, dynamic> requestBody,
-    required Map<String, dynamic> metadata,
+    required Map<String, dynamic>? metadata,
     required DateTime dateRequested,
     required DateTime? dateConfirmed,
     required DateTime? dateBroadcasted,
