@@ -4,7 +4,7 @@ class MessageMediaTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get status => intEnum<MessageMediaStatus>()();
   TextColumn get remoteUrl => text().nullable()();
-  TextColumn get localPath => text().nullable()();
+  TextColumn get cacheKey => text().nullable()();
   TextColumn get eventMessageId => text().references(EventMessageTable, #id)();
 }
 

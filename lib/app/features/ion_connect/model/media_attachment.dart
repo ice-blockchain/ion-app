@@ -39,7 +39,7 @@ class MediaAttachment {
       originalFileHash: '',
       image: mediaFile.path,
       blurhash: mediaFile.blurhash,
-      thumb: mediaFile.thumb,
+      thumb: mediaFile.path,
     );
   }
 

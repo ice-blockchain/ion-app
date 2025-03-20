@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:blurhash_ffi/blurhashffi_widget.dart';
-import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -160,13 +159,6 @@ class MediaContent extends HookConsumerWidget {
               .retrieveEncryptedMedia(mediaAttachment)
               .then((encryptedMedia) {
             fileCurrent.value = encryptedMedia;
-            ref.read(messageMediaDaoProvider).updateByRemoteUrl(
-                  media.remoteUrl!,
-                  MessageMediaTableCompanion(
-                    eventMessageId: drift.Value(eventMessage.id),
-                    status: const drift.Value(MessageMediaStatus.completed),
-                  ),
-                );
           });
         } else {
           //todo: handle video

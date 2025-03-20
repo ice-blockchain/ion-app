@@ -14,34 +14,43 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
   MessageMediaDao(super.db);
 
   Future<int> add(MessageMediaTableCompanion messageMedia) async {
-    final existRecord = await (select(db.messageMediaTable)
+    final existRecord = await (select(messageMediaTable)
           ..where((t) => t.eventMessageId.equals(messageMedia.eventMessageId.value))
           ..where((t) => t.remoteUrl.equals(messageMedia.remoteUrl.value ?? '')))
         .getSingleOrNull();
 
     if (existRecord != null) {
+      await updateById(
+        existRecord.id,
+        existRecord.eventMessageId,
+        existRecord.remoteUrl ?? '',
+        existRecord.status,
+      );
       return existRecord.id;
     }
-    return into(db.messageMediaTable).insert(messageMedia, mode: InsertMode.insertOrReplace);
+    return into(messageMediaTable).insert(messageMedia, mode: InsertMode.insertOrReplace);
   }
 
   Stream<List<MessageMediaTableData>> watchByEventId(String eventId) {
-    return (select(db.messageMediaTable)..where((t) => t.eventMessageId.equals(eventId))).watch();
+    return (select(messageMediaTable)..where((t) => t.eventMessageId.equals(eventId))).watch();
   }
 
-  Future<void> updateById(int id, MessageMediaTableCompanion messageMedia) async {
-    final existRecord =
-        await (select(db.messageMediaTable)..where((t) => t.id.equals(id))).getSingleOrNull();
-
-    if (existRecord == null) {
-      return;
-    }
-
-    await (update(db.messageMediaTable)..where((t) => t.id.equals(id))).write(messageMedia);
+  Future<void> updateById(
+    int id,
+    String eventMessageId,
+    String remoteUrl,
+    MessageMediaStatus status,
+  ) async {
+    await (update(messageMediaTable)..where((t) => t.id.equals(id))).write(
+      MessageMediaTableCompanion(
+        eventMessageId: Value(eventMessageId),
+        remoteUrl: Value(remoteUrl),
+        status: Value(status),
+      ),
+    );
   }
 
-  Future<void> updateByRemoteUrl(String remoteUrl, MessageMediaTableCompanion messageMedia) async {
-    await (update(db.messageMediaTable)..where((t) => t.remoteUrl.equals(remoteUrl)))
-        .write(messageMedia);
+  Future<void> cancel(int id) async {
+    await (delete(messageMediaTable)..where((t) => t.id.equals(id))).go();
   }
 }

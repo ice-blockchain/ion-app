@@ -124,6 +124,12 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             final entity = PrivateDirectMessageEntity.fromEventMessage(rumor);
             if (entity.data.media.isNotEmpty) {
               for (final media in entity.data.media.values) {
+                final isThumb =
+                    entity.data.media.values.any((m) => m.url != media.url && m.thumb == media.url);
+
+                if (isThumb) {
+                  continue;
+                }
                 await ref.watch(messageMediaDaoProvider).add(
                       MessageMediaTableCompanion(
                         eventMessageId: Value(rumor.id),

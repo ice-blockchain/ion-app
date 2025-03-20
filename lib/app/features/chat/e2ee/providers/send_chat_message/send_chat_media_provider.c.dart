@@ -1,9 +1,12 @@
-import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 
+import 'package:async/async.dart';
 import 'package:blurhash_ffi/blurhash.dart';
+import 'package:cryptography/cryptography.dart';
 import 'package:flutter/material.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/compress_media_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
@@ -21,39 +24,73 @@ part 'send_chat_media_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class SendChatMedia extends _$SendChatMedia {
+  // Operation that can be cancelled during media processing
+  CancelableOperation<AsyncValue<List<MediaAttachment>>>? _cancellableOperation;
+
   @override
-  Future<List<MediaAttachment>> build(
-    MediaFile mediaFile,
-  ) async {
+  Future<List<MediaAttachment>> build(int id) async {
+    // Initial empty state
     return [];
   }
 
-  Future<List<(String, MediaAttachment)>> sendChatMedia(
+  /// Processes and sends media files to multiple participants
+  ///
+  /// Takes a list of participant public keys and a media file to send.
+  /// Returns a list of tuples containing the participant key and their processed media attachments.
+  Future<List<(String, List<MediaAttachment>)>> sendChatMedia(
     List<String> participantsMasterPubkeys,
+    MediaFile mediaFile,
   ) async {
     final mediaAttachments = <MediaAttachment>[];
-    final result = <(String, MediaAttachment)>[];
+    final result = <(String, List<MediaAttachment>)>[];
+
+    // Set loading state
 
     state = const AsyncLoading();
 
-    state = await AsyncValue.guard(
-      () async {
-        final blurHash = await _getBlurhash(mediaFile);
+    // Create cancellable operation for media processing
+    _cancellableOperation = CancelableOperation.fromFuture(
+      AsyncValue.guard(() async {
+        // Compress the media file first
+        final compressedMediaFile = await ref.read(
+          compressMediaFileProvider(mediaFile).future,
+        );
 
-        final compressedMediaFile = (await ref.read(compressMediaFileProvider(mediaFile).future))
-            .copyWith(blurhash: blurHash);
+        // Process media for each participant
+        for (final participantKey in participantsMasterPubkeys) {
+          // Check if operation was cancelled
+          if (_cancellableOperation?.isCanceled ?? false) {
+            return [];
+          }
 
-        for (final participantMasterPubkey in participantsMasterPubkeys) {
-          final mediaAttachment = await processMedia(compressedMediaFile, participantMasterPubkey);
-          mediaAttachments.add(mediaAttachment);
-          result.add((participantMasterPubkey, mediaAttachment));
+          // Process media for this participant
+          final processedAttachments = await processMedia(
+            compressedMediaFile,
+            participantKey,
+          );
+
+          mediaAttachments.addAll(processedAttachments);
+          result.add((participantKey, processedAttachments));
         }
 
         return mediaAttachments;
-      },
+      }),
     );
 
+    // Handle cancellation
+    final operation = await _cancellableOperation?.valueOrCancellation(
+      const AsyncValue.data([]),
+    );
+
+    state = operation!;
+
     return result;
+  }
+
+  Future<void> cancel() async {
+    await _cancellableOperation?.cancel();
+
+    await ref.read(messageMediaDaoProvider).cancel(id);
   }
 
   Future<String?> _getBlurhash(MediaFile mediaFile) async {
@@ -66,19 +103,29 @@ class SendChatMedia extends _$SendChatMedia {
     return null;
   }
 
-  Future<MediaAttachment> processMedia(
+  Future<List<MediaAttachment>> processMedia(
     MediaFile mediaFile,
-    String masterPubkey,
-  ) async {
+    String masterPubkey, {
+    SecretKey? secretKey,
+    List<int>? nonceBytes,
+  }) async {
+    final mediaAttachments = <MediaAttachment>[];
     final oneTimeEventSigner = await Ed25519KeyStore.generate();
     final env = ref.read(envProvider.notifier);
 
     final isVideo = mediaFile.mimeType?.startsWith('video/') ?? false;
+    final isImage = mediaFile.mimeType?.startsWith('image/') ?? false;
 
-    MediaAttachment? thumbnailAttachment;
+    var blurHash = await _getBlurhash(mediaFile);
+    MediaAttachment? thumbMediaAttachment;
+    String? thumbUrl;
+
     if (isVideo) {
-      final thumbnail = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
-      thumbnailAttachment = await processMedia(thumbnail, masterPubkey);
+      final thumbMediaFile = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
+      blurHash = await _getBlurhash(thumbMediaFile);
+      thumbMediaAttachment = (await processMedia(thumbMediaFile, masterPubkey)).first;
+      mediaAttachments.add(thumbMediaAttachment);
+      thumbUrl = thumbMediaAttachment.url;
     }
 
     final encryptedMediaFile = await ref.read(mediaEncryptionServiceProvider).encryptMediaFile(
@@ -91,17 +138,14 @@ class SendChatMedia extends _$SendChatMedia {
           customEventSigner: oneTimeEventSigner,
         );
 
-    final mediaAttachment = uploadResult.mediaAttachment.copyWith(
-      blurhash: mediaFile.blurhash,
-      encryptionKey: encryptedMediaFile.secretKey,
-      encryptionNonce: encryptedMediaFile.nonce,
-      encryptionMac: encryptedMediaFile.mac,
-      thumb: thumbnailAttachment != null ? jsonEncode(thumbnailAttachment.toJson()) : null,
-    );
+    if (isImage) {
+      thumbUrl = uploadResult.mediaAttachment.url;
+    }
 
     final mediaMetadataEvent = await uploadResult.fileMetadata
         .copyWith(
-      blurhash: mediaFile.blurhash,
+      blurhash: blurHash,
+      thumb: thumbUrl,
     )
         .toEventMessage(
       oneTimeEventSigner,
@@ -114,12 +158,24 @@ class SendChatMedia extends _$SendChatMedia {
       ],
     );
 
-    await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
-          mediaMetadataEvent,
-          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-          cache: false,
-        );
+    unawaited(
+      ref.read(ionConnectNotifierProvider.notifier).sendEvent(
+            mediaMetadataEvent,
+            actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+            cache: false,
+          ),
+    );
 
-    return mediaAttachment;
+    final mediaAttachment = uploadResult.mediaAttachment.copyWith(
+      blurhash: blurHash,
+      encryptionKey: encryptedMediaFile.secretKey,
+      encryptionNonce: encryptedMediaFile.nonce,
+      encryptionMac: encryptedMediaFile.mac,
+      thumb: thumbUrl,
+    );
+    return [
+      mediaAttachment,
+      ...mediaAttachments,
+    ];
   }
 }

@@ -29,22 +29,23 @@ class MediaEncryptionService {
   final FileCacheService fileCacheService;
   final CompressionService compressionService;
 
-  Future<File> retrieveEncryptedMedia(MediaAttachment attachment) async {
+  Future<File> retrieveEncryptedMedia(MediaAttachment attachment, {String? key}) async {
     try {
       if (attachment.encryptionKey != null &&
           attachment.encryptionNonce != null &&
           attachment.encryptionMac != null) {
+        final url = key ?? attachment.url;
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);
 
-        final cacheFileInfo = await fileCacheService.getFileFromCache(attachment.url);
+        final cacheFileInfo = await fileCacheService.getFileFromCache(url);
 
         if (cacheFileInfo != null) {
           return cacheFileInfo.file;
         }
 
-        final file = await fileCacheService.getFile(attachment.url);
+        final file = await fileCacheService.getFile(url);
 
         final fileBytes = await compute(
           (file) {
@@ -71,14 +72,13 @@ class MediaEncryptionService {
 
         //remove the file from storage
         await file.delete();
-        await fileCacheService.removeFile(attachment.url);
+        await fileCacheService.removeFile(url);
 
         final decryptedFile = await fileCacheService.putFile(
-          url: attachment.url,
+          url: url,
           bytes: decryptedFileBytes,
           fileExtension: fileExtension,
         );
-        // final getFile = await fileCacheService.getFile(attachment.url);
 
         if (attachment.mediaType == MediaType.unknown) {
           final decompressedFile = await compressionService.decompressBrotli(decryptedFileBytes);
@@ -110,7 +110,7 @@ class MediaEncryptionService {
   }
 
   Future<EncryptedMediaFile> encryptMediaFile(
-    MediaFile compressedMediaFile,
+    MediaFile mediaFile,
   ) async {
     final documentsDir = await getApplicationDocumentsDirectory();
     final encryptedFiles = <File>[];
@@ -121,7 +121,7 @@ class MediaEncryptionService {
         final secretKeyBytes = await secretKey.extractBytes();
         final secretKeyString = base64Encode(secretKeyBytes);
 
-        final compressedMediaFileBytes = await File(compressedMediaFile.path).readAsBytes();
+        final compressedMediaFileBytes = await File(mediaFile.path).readAsBytes();
 
         final secretBox = await AesGcm.with256bits().encrypt(
           compressedMediaFileBytes,
@@ -141,9 +141,9 @@ class MediaEncryptionService {
 
         final compressedEncryptedMediaFile = MediaFile(
           path: compressedEncryptedFile.path,
-          width: compressedMediaFile.width,
-          height: compressedMediaFile.height,
-          mimeType: compressedMediaFile.mimeType,
+          width: mediaFile.width,
+          height: mediaFile.height,
+          mimeType: mediaFile.mimeType,
         );
 
         return EncryptedMediaFile(
