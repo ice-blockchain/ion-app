@@ -101,7 +101,7 @@ class NotificationInfo extends HookConsumerWidget {
             ? context.i18n.date_today
             : formatShortTimestamp(notification.timestamp, locale: locale);
     return TextSpan(
-      text: ' • $time',
+      children: [const TextSpan(text: ' • '), TextSpan(text: time)],
       style: context.theme.appTextThemes.body2.copyWith(
         color: context.theme.appColors.tertararyText,
       ),
