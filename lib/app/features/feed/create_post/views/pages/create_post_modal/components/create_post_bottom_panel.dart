@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
+import 'package:ion/app/features/feed/create_post/views/components/character_limit_exceed_indicator/character_limit_exceed_indicator.dart';
 import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
@@ -156,16 +157,25 @@ class _ActionsSection extends StatelessWidget {
           ToolbarItalicButton(textEditorController: textEditorController),
           ToolbarBoldButton(textEditorController: textEditorController),
         ],
-        trailing: PostSubmitButton(
-          textEditorController: textEditorController,
-          parentEvent: parentEvent,
-          quotedEvent: quotedEvent,
-          modifiedEvent: modifiedEvent,
-          mediaFiles: [
-            ...attachedMediaNotifier.value,
-            if (attachedVideoNotifier.value != null) attachedVideoNotifier.value!,
+        trailing: Row(
+          children: [
+            CharacterLimitExceedIndicator(
+              maxCharacters: ModifiablePostEntity.contentCharacterLimit,
+              textEditorController: textEditorController,
+            ),
+            SizedBox(width: 8.0.s),
+            PostSubmitButton(
+              textEditorController: textEditorController,
+              parentEvent: parentEvent,
+              quotedEvent: quotedEvent,
+              modifiedEvent: modifiedEvent,
+              mediaFiles: [
+                ...attachedMediaNotifier.value,
+                if (attachedVideoNotifier.value != null) attachedVideoNotifier.value!,
+              ],
+              createOption: createOption,
+            ),
           ],
-          createOption: createOption,
         ),
       ),
     );
