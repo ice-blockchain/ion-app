@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/components/text_editor/utils/is_attributed_operation.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -22,12 +21,14 @@ class PostBody extends HookConsumerWidget {
     required this.entity,
     this.isTextSelectable = false,
     this.maxLines = 6,
+    this.sidePadding,
     super.key,
   });
 
   final IonConnectEntity entity;
   final bool isTextSelectable;
   final int? maxLines;
+  final double? sidePadding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -74,7 +75,8 @@ class PostBody extends HookConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ScreenSideOffset.small(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s),
               child: Column(
                 children: [
                   if (content.isNotEmpty)
@@ -107,14 +109,14 @@ class PostBody extends HookConsumerWidget {
                 child: PostMedia(
                   media: media,
                   eventReference: entity.toEventReference(),
+                  sidePadding: sidePadding,
                 ),
               ),
             if (media.isEmpty && urlPreview != null)
-              ScreenSideOffset.small(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 10.0.s),
-                  child: urlPreview,
-                ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s) +
+                    EdgeInsets.only(top: 10.0.s),
+                child: urlPreview,
               ),
           ],
         );
