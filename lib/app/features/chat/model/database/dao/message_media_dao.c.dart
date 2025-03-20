@@ -22,9 +22,9 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
     if (existRecord != null) {
       await updateById(
         existRecord.id,
-        existRecord.eventMessageId,
-        existRecord.remoteUrl ?? '',
-        existRecord.status,
+        messageMedia.eventMessageId.value,
+        messageMedia.remoteUrl.value ?? '',
+        messageMedia.status.value,
       );
       return existRecord.id;
     }

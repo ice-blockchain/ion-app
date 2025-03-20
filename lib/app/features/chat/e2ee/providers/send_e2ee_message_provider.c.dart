@@ -59,7 +59,6 @@ Future<SendE2eeMessageService> sendE2eeMessageService(
     mediaEncryptionService: ref.watch(mediaEncryptionServiceProvider),
     conversationMessageStatusDao: ref.watch(conversationMessageDataDaoProvider),
     conversationDao: ref.watch(conversationDaoProvider),
-    messageMediaDao: ref.watch(messageMediaDaoProvider),
     sendChatMessageNotifier: ref.watch(sendChatMessageNotifierProvider.notifier),
   );
 }
@@ -80,7 +79,6 @@ class SendE2eeMessageService {
     required this.eventMessageDao,
     required this.conversationMessageStatusDao,
     required this.conversationDao,
-    required this.messageMediaDao,
     required this.sendChatMessageNotifier,
   });
 
@@ -98,7 +96,6 @@ class SendE2eeMessageService {
   final ConversationDao conversationDao;
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageDataDao conversationMessageStatusDao;
-  final MessageMediaDao messageMediaDao;
   final SendChatMessageNotifier sendChatMessageNotifier;
   Future<void> sendMessage({
     required String content,

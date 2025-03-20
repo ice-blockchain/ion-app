@@ -29,12 +29,12 @@ class MediaEncryptionService {
   final FileCacheService fileCacheService;
   final CompressionService compressionService;
 
-  Future<File> retrieveEncryptedMedia(MediaAttachment attachment, {String? key}) async {
+  Future<File> retrieveEncryptedMedia(MediaAttachment attachment) async {
     try {
       if (attachment.encryptionKey != null &&
           attachment.encryptionNonce != null &&
           attachment.encryptionMac != null) {
-        final url = key ?? attachment.url;
+        final url = attachment.url;
         final mac = base64Decode(attachment.encryptionMac!);
         final nonce = base64Decode(attachment.encryptionNonce!);
         final secretKey = base64Decode(attachment.encryptionKey!);

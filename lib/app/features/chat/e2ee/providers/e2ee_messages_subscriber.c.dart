@@ -121,24 +121,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
             // Add message if that doesn't exist
             await ref.watch(conversationEventMessageDaoProvider).add(rumor);
 
-            final entity = PrivateDirectMessageEntity.fromEventMessage(rumor);
-            if (entity.data.media.isNotEmpty) {
-              for (final media in entity.data.media.values) {
-                final isThumb =
-                    entity.data.media.values.any((m) => m.url != media.url && m.thumb == media.url);
+            await _addMediaToDatabase(rumor);
 
-                if (isThumb) {
-                  continue;
-                }
-                await ref.watch(messageMediaDaoProvider).add(
-                      MessageMediaTableCompanion(
-                        eventMessageId: Value(rumor.id),
-                        status: const Value(MessageMediaStatus.completed),
-                        remoteUrl: Value(media.url),
-                      ),
-                    );
-              }
-            }
             // If user received another user message add "received" status
             // for them both into the database, we don't know anything about
             // other users in the conversation
@@ -257,6 +241,29 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
       );
     } catch (e) {
       throw DecodeE2EMessageException(giftWrap.id);
+    }
+  }
+
+  Future<void> _addMediaToDatabase(
+    EventMessage rumor,
+  ) async {
+    final entity = PrivateDirectMessageEntity.fromEventMessage(rumor);
+    if (entity.data.media.isNotEmpty) {
+      for (final media in entity.data.media.values) {
+        final isThumb =
+            entity.data.media.values.any((m) => m.url != media.url && m.thumb == media.url);
+
+        if (isThumb) {
+          continue;
+        }
+        await ref.watch(messageMediaDaoProvider).add(
+              MessageMediaTableCompanion(
+                eventMessageId: Value(rumor.id),
+                status: const Value(MessageMediaStatus.completed),
+                remoteUrl: Value(media.url),
+              ),
+            );
+      }
     }
   }
 }

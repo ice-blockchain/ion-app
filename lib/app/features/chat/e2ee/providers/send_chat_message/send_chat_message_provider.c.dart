@@ -45,9 +45,9 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
     List<String>? groupImageTag,
   }) async {
     try {
-      final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
-      final conversationPubkeysNotifier = ref.watch(conversationPubkeysProvider.notifier);
-      final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+      final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+      final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
+      final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
       if (eventSigner == null) {
         throw EventSignerNotFoundException();
@@ -74,7 +74,6 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
         tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
       );
 
-      //TODO: use transaction
       final messageMediaIds = <int>[];
 
       await ref.read(conversationDaoProvider).add([eventMessage]);
@@ -262,7 +261,7 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
     String? subject,
     List<String>? groupImageTag,
   }) {
-    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
     final tags = [
       if (subject != null) ['subject', subject],
@@ -313,9 +312,9 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
     required EventMessage eventMessage,
     int kind = PrivateDirectMessageEntity.kind,
   }) async {
-    final env = ref.watch(envProvider.notifier);
-    final sealService = await ref.watch(ionConnectSealServiceProvider.future);
-    final wrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
+    final env = ref.read(envProvider.notifier);
+    final sealService = await ref.read(ionConnectSealServiceProvider.future);
+    final wrapService = await ref.read(ionConnectGiftWrapServiceProvider.future);
 
     final expirationTag = EntityExpiration(
       value: DateTime.now().add(

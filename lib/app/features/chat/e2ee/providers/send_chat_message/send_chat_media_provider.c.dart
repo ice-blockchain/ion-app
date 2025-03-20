@@ -26,19 +26,13 @@ part 'send_chat_media_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 class SendChatMedia extends _$SendChatMedia {
-  // Operation that can be cancelled during media processing
   CancelableOperation<AsyncValue<List<MediaAttachment>>>? _cancellableOperation;
 
   @override
   Future<List<MediaAttachment>> build(int id) async {
-    // Initial empty state
     return [];
   }
 
-  /// Processes and sends media files to multiple participants
-  ///
-  /// Takes a list of participant public keys and a media file to send.
-  /// Returns a list of tuples containing the participant key and their processed media attachments.
   Future<List<(String, List<MediaAttachment>)>> sendChatMedia(
     List<String> participantsMasterPubkeys,
     MediaFile mediaFile,
@@ -46,26 +40,19 @@ class SendChatMedia extends _$SendChatMedia {
     final mediaAttachments = <MediaAttachment>[];
     final result = <(String, List<MediaAttachment>)>[];
 
-    // Set loading state
-
     state = const AsyncLoading();
 
-    // Create cancellable operation for media processing
     _cancellableOperation = CancelableOperation.fromFuture(
       AsyncValue.guard(() async {
-        // Compress the media file first
         final compressedMediaFile = await ref.read(
           compressMediaFileProvider(mediaFile).future,
         );
 
-        // Process media for each participant
         for (final participantKey in participantsMasterPubkeys) {
-          // Check if operation was cancelled
           if (_cancellableOperation?.isCanceled ?? false) {
             return [];
           }
 
-          // Process media for this participant
           final processedAttachments = await processMedia(
             compressedMediaFile,
             participantKey,
@@ -79,7 +66,6 @@ class SendChatMedia extends _$SendChatMedia {
       }),
     );
 
-    // Handle cancellation
     final operation = await _cancellableOperation?.valueOrCancellation(
       const AsyncValue.data([]),
     );

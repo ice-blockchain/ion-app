@@ -30,10 +30,6 @@ class FileCacheService {
     return _cacheManager.getFileFromCache(url);
   }
 
-  Stream<FileResponse> getFileStream(String url) {
-    return _cacheManager.getFileStream(url);
-  }
-
   Future<File> putFile({
     required String url,
     required Uint8List bytes,
@@ -44,7 +40,5 @@ class FileCacheService {
 
   Future<void> removeFile(String url) async {
     await _cacheManager.removeFile(url);
-
-    return;
   }
 }

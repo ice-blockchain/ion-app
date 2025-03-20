@@ -16,28 +16,3 @@ enum MessageMediaStatus {
   completed,
   failed,
 }
-
-class MediaFileConverter extends TypeConverter<MediaFile, String>
-    with JsonTypeConverter2<MediaFile, String, Map<String, dynamic>> {
-  const MediaFileConverter();
-
-  @override
-  MediaFile fromSql(String fromDb) {
-    return fromJson(jsonDecode(fromDb) as Map<String, dynamic>);
-  }
-
-  @override
-  String toSql(MediaFile value) {
-    return jsonEncode(toJson(value));
-  }
-
-  @override
-  MediaFile fromJson(Map<String, dynamic> json) {
-    return MediaFile.fromJson(json);
-  }
-
-  @override
-  Map<String, dynamic> toJson(MediaFile value) {
-    return value.toJson();
-  }
-}
