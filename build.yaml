@@ -28,3 +28,4 @@ targets:
           use_sql_column_name_as_json_key : true
           databases:
             chat_database: lib/app/features/chat/model/database/chat_database.c.dart
+            notifications_database: lib/app/features/feed/notifications/data/database/notifications_database.c.dart

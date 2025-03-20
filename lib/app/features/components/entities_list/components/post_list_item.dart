@@ -6,7 +6,11 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class PostListItem extends StatelessWidget {
-  const PostListItem({required this.eventReference, required this.framedEventType, super.key});
+  const PostListItem({
+    required this.eventReference,
+    this.framedEventType = FramedEventType.quoted,
+    super.key,
+  });
 
   final EventReference eventReference;
 

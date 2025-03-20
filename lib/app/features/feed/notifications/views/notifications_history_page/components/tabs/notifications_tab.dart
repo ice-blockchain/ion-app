@@ -5,36 +5,40 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
-import 'package:ion/app/features/feed/notifications/providers/notification_comments_provider.c.dart';
+import 'package:ion/app/features/feed/notifications/data/model/notifications_tab_type.dart';
+import 'package:ion/app/features/feed/notifications/providers/tab_notifications_provider.c.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_item.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/tabs/empty_list.dart';
 
-class CommentsNotifications extends HookConsumerWidget {
-  const CommentsNotifications({
+class NotificationsTab extends HookConsumerWidget {
+  const NotificationsTab({
+    required this.type,
     super.key,
   });
+
+  final NotificationsTabType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
 
-    final comments = ref.watch(notificationCommentsProvider).valueOrNull;
+    final notifications = ref.watch(tabNotificationsProvider(type: type)).valueOrNull;
 
     return PullToRefreshBuilder(
       slivers: [
-        if (comments == null)
+        if (notifications == null)
           const EntitiesListSkeleton()
-        else if (comments.isEmpty)
+        else if (notifications.isEmpty)
           const EmptyState()
         else
           SliverList.builder(
-            itemCount: comments.length,
+            itemCount: notifications.length,
             itemBuilder: (context, index) {
-              return NotificationItem(notification: comments[index]);
+              return NotificationItem(notification: notifications[index]);
             },
           ),
       ],
-      onRefresh: () async => ref.invalidate(notificationCommentsProvider),
+      onRefresh: () async => ref.invalidate(tabNotificationsProvider(type: type)),
       builder: (context, slivers) => CustomScrollView(slivers: slivers),
     );
   }

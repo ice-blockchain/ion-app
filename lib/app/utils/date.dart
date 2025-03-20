@@ -24,15 +24,12 @@ String toPastDateDisplayValue(
   DateFormat? dateFormat,
 }) {
   final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
+  final today = DateTime.now();
   final yesterday = today.subtract(const Duration(days: 1));
 
-  if (date.year == today.year && date.month == today.month && date.day == today.day) {
+  if (isSameDay(date, today)) {
     return context.i18n.date_today;
-  } else if (date.year == yesterday.year &&
-      date.month == yesterday.month &&
-      date.day == yesterday.day) {
+  } else if (isSameDay(date, yesterday)) {
     return context.i18n.date_yesterday;
   }
 
@@ -156,4 +153,8 @@ String formatDetailedTimestamp(DateTime dateTime, {Locale? locale}) {
   final localDateTime = dateTime.toLocal();
   final dateFormat = DateFormat('MMM d, yyyy, hh:mm a', locale.languageCode);
   return dateFormat.format(localDateTime);
+}
+
+bool isSameDay(DateTime date1, DateTime date2) {
+  return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 }
