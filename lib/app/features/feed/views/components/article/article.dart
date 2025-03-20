@@ -141,7 +141,6 @@ class Article extends ConsumerWidget {
                                     ? Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          BookmarkButton(eventReference: eventReference),
                                           if (isOwnedByCurrentUser)
                                             OwnEntityMenu(eventReference: eventReference)
                                           else

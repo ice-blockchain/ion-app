@@ -33,7 +33,18 @@ abstract class BaseRouteData extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return switch (type) {
-      IceRouteType.single => CupertinoPage<void>(child: child),
+      IceRouteType.single => CupertinoPage<void>(
+          key: state.pageKey,
+          child: PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) async {
+              if (!didPop) {
+                context.pop();
+              }
+            },
+            child: child,
+          ),
+        ),
       IceRouteType.bottomSheet => FadeTransitionSheetPage(child: child, state: state),
       IceRouteType.slideFromLeft => SlideFromLeftTransitionPage(child: child, state: state),
       IceRouteType.fade => FadeTransitionPage(child: child, state: state),

@@ -25,6 +25,7 @@ class MainTabNavigation extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final tabHistory = useState<List<int>>([shell.currentIndex]);
     final tabPressStreamController = useStreamController<TabPressSteamData>();
     final currentTab = TabItem.fromNavigationIndex(shell.currentIndex);
 
@@ -35,8 +36,16 @@ class MainTabNavigation extends HookConsumerWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        if (!didPop && Navigator.of(ref.context).canPop()) {
-          context.pop();
+        if (!didPop) {
+          if (Navigator.of(ref.context).canPop()) {
+            context.pop();
+          } else {
+            if (tabHistory.value.length > 1) {
+              tabHistory.value = List.from(tabHistory.value)..removeLast();
+              final previousIndex = tabHistory.value.last;
+              shell.goBranch(previousIndex);
+            }
+          }
         }
       },
       child: Scaffold(
@@ -49,9 +58,13 @@ class MainTabNavigation extends HookConsumerWidget {
             : _BottomNavBarContent(
                 state: state,
                 currentTab: currentTab,
-                onTabPressed: (tabItem) {
-                  tabPressStreamController.add((current: currentTab, pressed: tabItem));
+                onTabPressed: (TabItem tabItem) {
+                  final newIndex = tabItem.navigationIndex;
+                  if (tabHistory.value.last != newIndex) {
+                    tabHistory.value = List.from(tabHistory.value)..add(newIndex);
+                  }
 
+                  tabPressStreamController.add((current: currentTab, pressed: tabItem));
                   if (tabItem == TabItem.main) {
                     _handleMainButtonTap(context, currentTab);
                   } else {
