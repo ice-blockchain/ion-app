@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
-import 'package:ion/app/components/scroll_view/pull_to_refresh_builder.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
@@ -54,7 +53,7 @@ class TabEntitiesList extends ConsumerWidget {
     final isBlockedOrBlocking = ref.watch(isBlockedOrBlockingProvider(pubkey));
     final entities = entitiesPagedData?.data.items;
 
-    return PullToRefreshBuilder(
+    return LoadMoreBuilder(
       slivers: [
         if (entities == null)
           const EntitiesListSkeleton()
@@ -67,12 +66,8 @@ class TabEntitiesList extends ConsumerWidget {
         else
           builder != null ? builder!(entities.toList()) : EntitiesList(entities: entities.toList()),
       ],
-      onRefresh: () async => ref.invalidate(entitiesPagedDataProvider(dataSource)),
-      builder: (context, slivers) => LoadMoreBuilder(
-        slivers: slivers,
-        onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
-        hasMore: entitiesPagedData?.hasMore ?? false,
-      ),
+      onLoadMore: ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities,
+      hasMore: entitiesPagedData?.hasMore ?? false,
     );
   }
 }

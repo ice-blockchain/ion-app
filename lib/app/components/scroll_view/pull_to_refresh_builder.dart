@@ -29,12 +29,6 @@ class PullToRefreshBuilder extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRefreshing = useState(false);
-    final refreshIndicatorKey = useMemoized(
-      GlobalKey<RefreshIndicatorState>.new,
-      [],
-    );
-
     if (!kIsWeb && Platform.isIOS) {
       return builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
@@ -42,6 +36,12 @@ class PullToRefreshBuilder extends HookWidget {
         ...slivers,
       ]);
     }
+
+    final isRefreshing = useState(false);
+    final refreshIndicatorKey = useMemoized(
+      GlobalKey<RefreshIndicatorState>.new,
+      [],
+    );
 
     return GestureDetector(
       // fallback for when refresh indicator doesn't intercept pull gesture itself
