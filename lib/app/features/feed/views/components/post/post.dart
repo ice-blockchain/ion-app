@@ -148,6 +148,7 @@ class _QuotedEvent extends StatelessWidget {
       padding: EdgeInsets.only(top: 12.0.s),
       child: _FramedEvent(
         eventReference: eventReference,
+        framedEventType: FramedEventType.quoted,
         postWidget: _QuotedPost(eventReference: eventReference),
         articleWidget: _QuotedArticle(eventReference: eventReference),
       ),
@@ -168,7 +169,7 @@ final class _ParentEvent extends StatelessWidget {
     }
     return _FramedEvent(
       eventReference: eventReference,
-      addPadding: true,
+      framedEventType: FramedEventType.parent,
       postWidget: _ParentPost(eventReference: eventReference),
       articleWidget: _ParentArticle(eventReference: eventReference),
     );
@@ -180,37 +181,53 @@ final class _FramedEvent extends HookConsumerWidget {
     required this.eventReference,
     required this.postWidget,
     required this.articleWidget,
-    this.addPadding = false,
+    required this.framedEventType,
   });
 
   final EventReference eventReference;
   final Widget postWidget;
   final Widget articleWidget;
-  final bool addPadding;
+  final FramedEventType framedEventType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+    final isParent = framedEventType == FramedEventType.parent;
+    Widget? deletedEntity;
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: addPadding ? 16.0.s : 0),
+      deletedEntity = Padding(
+        padding: EdgeInsets.symmetric(horizontal: isParent ? 16.0.s : 0),
         child: DeletedEntity(
           entityType: DeletedEntityType.post,
-          bottomPadding: addPadding ? 12.0.s : 0,
+          bottomPadding: isParent ? 4.0.s : 0,
           topPadding: 0,
         ),
       );
     }
 
     if (entity is ArticleEntity && entity.isDeleted) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: addPadding ? 16.0.s : 0),
+      deletedEntity = Padding(
+        padding: EdgeInsets.symmetric(horizontal: isParent ? 16.0.s : 0),
         child: DeletedEntity(
           entityType: DeletedEntityType.article,
-          bottomPadding: addPadding ? 12.0.s : 0,
+          bottomPadding: isParent ? 4.0.s : 0,
           topPadding: 0,
         ),
+      );
+    }
+
+    if (deletedEntity != null && isParent) {
+      deletedEntity = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          deletedEntity,
+          ParentDottedLine(
+            padding: EdgeInsetsDirectional.only(start: 32.0.s),
+            child: SizedBox(height: 14.0.s),
+          ),
+          SizedBox(height: 4.0.s),
+        ],
       );
     }
 
@@ -228,7 +245,7 @@ final class _FramedEvent extends HookConsumerWidget {
       [entity],
     );
 
-    return repliedEntity;
+    return deletedEntity ?? repliedEntity;
   }
 }
 
