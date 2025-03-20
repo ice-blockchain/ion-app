@@ -29,6 +29,7 @@ class Article extends ConsumerWidget {
     this.timeFormat = TimestampFormat.short,
     this.header,
     this.isReplied = false,
+    this.footer,
     super.key,
   });
 
@@ -53,6 +54,7 @@ class Article extends ConsumerWidget {
   final TimestampFormat timeFormat;
   final Widget? header;
   final bool isReplied;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -157,17 +159,18 @@ class Article extends ConsumerWidget {
                             SizedBox(height: 10.0.s),
                             ArticleFooter(text: entity.data.title ?? ''),
                             if (!isReplied)
-                              CounterItemsFooter(
-                                eventReference: eventReference,
-                                bottomPadding: 0,
-                              ),
+                              footer ??
+                                  CounterItemsFooter(
+                                    eventReference: eventReference,
+                                    bottomPadding: 0,
+                                  ),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                if (isReplied) CounterItemsFooter(eventReference: eventReference),
+                if (isReplied) footer ?? CounterItemsFooter(eventReference: eventReference),
               ],
             ),
           ),

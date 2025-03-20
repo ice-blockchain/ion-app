@@ -28,8 +28,7 @@ class CommentsRepository {
     final type = switch (entity) {
       ModifiablePostEntity() when entity.data.quotedEvent != null => CommentType.quote,
       ModifiablePostEntity() when entity.data.parentEvent != null => CommentType.reply,
-      GenericRepostEntity() when entity.data.kind == ModifiablePostEntity.kind =>
-        CommentType.repost,
+      GenericRepostEntity() => CommentType.repost,
       _ => throw UnknownNotificationCommentException(entity),
     };
     return _commentsDao.insert(entity, type: type);
