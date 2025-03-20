@@ -89,7 +89,9 @@ class _ParentEntitySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
-      child: ParentEntity(eventReference: eventReference),
+      child: IgnorePointer(
+        child: ParentEntity(eventReference: eventReference),
+      ),
     );
   }
 }
@@ -190,7 +192,9 @@ class _QuotedEntitySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenSideOffset.small(
-      child: QuotedEntity(eventReference: eventReference),
+      child: IgnorePointer(
+        child: QuotedEntity(eventReference: eventReference),
+      ),
     );
   }
 }
