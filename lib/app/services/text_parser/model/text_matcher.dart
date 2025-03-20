@@ -25,7 +25,7 @@ class UrlMatcher extends TextMatcher {
 
   @override
   String get pattern =>
-      r'((https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)\b)';
+      r'((https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(?<!\d)\.[a-zA-Z]{2,6}(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)\b)';
 }
 
 class CashtagMatcher extends TextMatcher {
