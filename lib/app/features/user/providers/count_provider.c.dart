@@ -26,9 +26,9 @@ class Count extends _$Count {
     required EventCountResultType type,
     required List<RequestFilter> filters,
     Duration? cacheExpirationDuration,
-    bool noCache = false,
+    bool cache = true,
   }) async {
-    if (!noCache) {
+    if (cache) {
       final countEntity = ref.watch(
         ionConnectCacheProvider.select(
           cacheSelector<EventCountResultEntity>(

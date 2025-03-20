@@ -19,6 +19,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/tab_ent
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/tabs_header/tabs_header.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_animated_opacity_on_scroll.dart';
 import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
@@ -34,7 +35,13 @@ class ProfilePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.invalidate(followersCountProvider(pubkey: pubkey, type: EventCountResultType.followers));
+    useOnInit(
+      () {
+        ref.invalidate(
+          followersCountProvider(pubkey: pubkey, type: EventCountResultType.followers),
+        );
+      },
+    );
 
     final scrollController = useScrollController();
     final (:opacity) = useAnimatedOpacityOnScroll(scrollController, topOffset: paddingTop);
