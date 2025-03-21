@@ -1,0 +1,19 @@
+# Run with `dart run ffigen --config ffigen.yaml`.
+name: IonContentLabelingBindings
+description: |
+  Bindings for `src/ion_content_labeling.h`.
+
+  Regenerate bindings with `dart run ffigen --config ffigen.yaml`.
+output: 'lib/ion_content_labeling_bindings_generated.dart'
+headers:
+  entry-points:
+    - 'src/ion_content_labeling.h'
+  include-directives:
+    - 'src/ion_content_labeling.h'
+preamble: |
+  // ignore_for_file: always_specify_types
+  // ignore_for_file: camel_case_types
+  // ignore_for_file: non_constant_identifier_names
+comments:
+  style: any
+  length: full
