@@ -82,32 +82,9 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
             status: MessageDeliveryStatus.created,
           );
 
-      final messageMediaIds = <int>[];
-      for (final mediaFile in mediaFiles) {
-        final file = File(mediaFile.path);
-        final fileName = generateUuid();
-        final isVideo = MediaType.fromMimeType(mediaFile.mimeType ?? '') == MediaType.video;
-
-        if (isVideo) {
-          final thumb = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
-          await FileSaver.instance.saveFileOnly(name: fileName, file: File(thumb.path));
-        } else {
-          await FileSaver.instance.saveFileOnly(name: fileName, file: file);
-        }
-
-        final id = await ref.read(messageMediaDaoProvider).add(
-              eventMessageId: eventMessage.id,
-              status: MessageMediaStatus.processing,
-              cacheKey: fileName,
-            );
-
-        messageMediaIds.add(id);
-      }
-
       final mediaAttachmentsUsersBased = await _sendMediaFiles(
         mediaFiles,
         participantsMasterPubkeys,
-        messageMediaIds,
         eventMessage.id,
       );
 
@@ -163,9 +140,28 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
   Future<Map<String, List<MediaAttachment>>> _sendMediaFiles(
     List<MediaFile> mediaFiles,
     List<String> participantsMasterPubkeys,
-    List<int> eventMessageIds,
     String eventMessageId,
   ) async {
+    final cacheKeys = <String>[];
+    for (final mediaFile in mediaFiles) {
+      final file = File(mediaFile.path);
+      final fileName = generateUuid();
+      final isVideo = MediaType.fromMimeType(mediaFile.mimeType ?? '') == MediaType.video;
+
+      if (isVideo) {
+        final thumb = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
+        await FileSaver.instance.saveFileOnly(name: fileName, file: File(thumb.path));
+      } else {
+        await FileSaver.instance.saveFileOnly(name: fileName, file: file);
+      }
+      cacheKeys.add(fileName);
+    }
+
+    final eventMessageIds = await ref.read(messageMediaDaoProvider).addBatch(
+          eventMessageId: eventMessageId,
+          cacheKeys: cacheKeys,
+        );
+
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
     final mediaAttachmentsUsersBased = <String, List<MediaAttachment>>{};
 

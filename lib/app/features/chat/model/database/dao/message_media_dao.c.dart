@@ -65,4 +65,29 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
   Future<void> cancel(int id) async {
     await (delete(messageMediaTable)..where((t) => t.id.equals(id))).go();
   }
+
+  Future<List<int>> addBatch({
+    required String eventMessageId,
+    required List<String> cacheKeys,
+  }) async {
+    await batch((b) {
+      b.insertAll(
+        messageMediaTable,
+        cacheKeys
+            .map(
+              (cacheKey) => MessageMediaTableCompanion(
+                eventMessageId: Value(eventMessageId),
+                cacheKey: Value(cacheKey),
+                status: const Value(MessageMediaStatus.processing),
+              ),
+            )
+            .toList(),
+        mode: InsertMode.insertOrIgnore,
+      );
+    });
+    final result = await (select(messageMediaTable)
+          ..where((t) => t.eventMessageId.equals(eventMessageId)))
+        .get();
+    return result.map((e) => e.id).toList();
+  }
 }
