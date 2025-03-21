@@ -7,7 +7,6 @@ part 'selected_message_provider.c.g.dart';
 
 @Riverpod()
 class SelectedMessage extends _$SelectedMessage {
-  
   @override
   MessageListItem? build() {
     return null;
