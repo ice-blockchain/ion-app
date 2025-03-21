@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -14,11 +15,9 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class EmojiMessage extends HookConsumerWidget {
   const EmojiMessage({
     required this.eventMessage,
-    this.isLastMessageFromAuthor = true,
     super.key,
   });
 
-  final bool isLastMessageFromAuthor;
   final EventMessage eventMessage;
 
   @override
@@ -29,20 +28,24 @@ class EmojiMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
-      messageEvent: eventMessage,
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
+      messageItem: EmojiItem(
+        eventMessage: eventMessage,
+        contentDescription: entity.data.content,
+      ),
       contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 6.0.s),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              Text(
-                entity.data.content,
-                style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-              ),
-              MessageReactions(eventMessage: eventMessage, isMe: isMe),
-            ],
+          Flexible(
+            child: Column(
+              children: [
+                Text(
+                  entity.data.content,
+                  style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+                ),
+                MessageReactions(eventMessage: eventMessage, isMe: isMe),
+              ],
+            ),
           ),
           MessageMetaData(eventMessage: eventMessage),
         ],

@@ -2,101 +2,69 @@
 
 // // SPDX-License-Identifier: ice License 1.0
 
-// import 'package:freezed_annotation/freezed_annotation.dart';
-// import 'package:ion/app/features/chat/model/message_author.c.dart';
-// import 'package:ion/app/features/chat/model/money_message_type.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-// part 'message_list_item.c.freezed.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
-// abstract class MessageWithAuthor {
-//   MessageAuthor get author;
-// }
+part 'message_list_item.c.freezed.dart';
 
-// /// Representation of any element in the chat list.
-// @freezed
-// sealed class MessageListItem with _$MessageListItem {
-//   const factory MessageListItem.date({
-//     required DateTime time,
-//   }) = DateItem;
+abstract class MessageInfo {
+  EventMessage get eventMessage;
+  String get contentDescription;
+}
 
-//   const factory MessageListItem.system({
-//     required String text,
-//     required DateTime time,
-//   }) = SystemItem;
+/// Representation of any element in the chat list.
+@freezed
+sealed class MessageListItem with _$MessageListItem {
+  @Implements<MessageInfo>()
+  const factory MessageListItem.text({
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = TextItem;
 
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.text({
-//     required MessageAuthor author,
-//     required String text,
-//     required DateTime time,
-//     // RepliedMessage? repliedMessage,
-//   }) = TextItem;
+  @Implements<MessageInfo>()
+  const factory MessageListItem.emoji({
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = EmojiItem;
 
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.photo({
-//     required MessageAuthor author,
-//     required DateTime time,
-//     required String imageUrl,
-//     String? text,
-//   }) = PhotoItem;
+  @Implements<MessageInfo>()
+  const factory MessageListItem.audio({
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = AudioItem;
 
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.audio({
-//     required MessageAuthor author,
-//     required DateTime time,
-//     required String audioId,
-//     required String audioUrl,
-//   }) = AudioItem;
+  @Implements<MessageInfo>()
+  const factory MessageListItem.photo({
+    required MediaAttachment media,
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = PhotoItem;
 
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.video({
-//     required MessageAuthor author,
-//     required DateTime time,
-//     required String videoUrl,
-//     String? text,
-//   }) = VideoItem;
+  @Implements<MessageInfo>()
+  const factory MessageListItem.video({
+    required MediaAttachment media,
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = VideoItem;
 
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.document({
-//     required String fileName,
-//     required MessageAuthor author,
-//     required DateTime time,
-//   }) = DocumentItem;
+  @Implements<MessageInfo>()
+  const factory MessageListItem.document({
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = DocumentItem;
 
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.link({
-//     required String link,
-//     required MessageAuthor author,
-//     required DateTime time,
-//   }) = LinkItem;
+  @Implements<MessageInfo>()
+  const factory MessageListItem.link({
+    required String url,
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = LinkItem;
 
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.shareProfile({
-//     required String displayName,
-//     required MessageAuthor author,
-//     required DateTime time,
-//   }) = ShareProfileItem;
-
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.poll({
-//     required MessageAuthor author,
-//     required DateTime time,
-//   }) = PollItem;
-
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.money({
-//     required MoneyMessageType type,
-//     required double amount,
-//     required double usdt,
-//     required String chain,
-//     required MessageAuthor author,
-//     required DateTime time,
-//   }) = MoneyItem;
-
-//   @Implements<MessageWithAuthor>()
-//   const factory MessageListItem.emoji({
-//     required String emoji,
-//     required MessageAuthor author,
-//     required DateTime time,
-//   }) = EmojiItem;
-// }
+  @Implements<MessageInfo>()
+  const factory MessageListItem.shareProfile({
+    required EventMessage eventMessage,
+    required String contentDescription,
+  }) = ShareProfileItem;
+}

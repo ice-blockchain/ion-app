@@ -12,11 +12,9 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class TextMessage extends ConsumerWidget {
   const TextMessage({
     required this.eventMessage,
-    this.isLastMessageFromAuthor = true,
     super.key,
   });
 
-  final bool isLastMessageFromAuthor;
   final EventMessage eventMessage;
 
   @override
@@ -24,13 +22,11 @@ class TextMessage extends ConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return MessageItemWrapper(
-      messageEvent: eventMessage,
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: 12.0.s,
-        vertical: 12.0.s,
-      ),
       isMe: isMe,
+      contentPadding: EdgeInsets.symmetric(
+        vertical: 12.0.s,
+        horizontal: 12.0.s,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

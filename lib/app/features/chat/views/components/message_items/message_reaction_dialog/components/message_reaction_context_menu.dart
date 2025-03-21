@@ -12,22 +12,23 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageReactionContextMenu extends ConsumerWidget {
   const MessageReactionContextMenu({
     required this.height,
-    required this.messageEvent,
+    required this.messageItem,
     required this.messageStatus,
     super.key,
   });
 
   final double height;
-  final EventMessage messageEvent;
+  final MessageListItem messageItem;
   final MessageDeliveryStatus messageStatus;
 
   static double get iconSize => 20.0.s;
@@ -73,7 +74,8 @@ class MessageReactionContextMenu extends ConsumerWidget {
                     color: context.theme.appColors.quaternaryText,
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    ref.read(selectedMessageProvider.notifier).selectMessage(messageItem);
+                    context.pop();
                   },
                   minWidth: 140.0.s,
                   verticalPadding: 12.0.s,
@@ -122,7 +124,7 @@ class MessageReactionContextMenu extends ConsumerWidget {
                   final forEveryone = await DeleteMessageRoute().push<bool>(context);
 
                   if (forEveryone != null && context.mounted) {
-                    final messageEventsList = [messageEvent];
+                    final messageEventsList = [messageItem.eventMessage];
                     ref.read(
                       e2eeDeleteMessageProvider(
                         messageEvents: messageEventsList,

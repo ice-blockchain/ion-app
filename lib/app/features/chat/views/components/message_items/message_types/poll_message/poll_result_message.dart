@@ -18,7 +18,11 @@ class PollResultMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MessageItemWrapper(
-      messageEvent: eventMessage,
+      // TODO: Add corresponding message item
+      messageItem: TextItem(
+        eventMessage: eventMessage,
+        contentDescription: eventMessage.content,
+      ),
       contentPadding: EdgeInsets.all(
         12.0.s,
       ),

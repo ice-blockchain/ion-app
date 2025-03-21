@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
@@ -45,7 +46,11 @@ class PollMessage extends HookWidget {
     }
 
     return MessageItemWrapper(
-      messageEvent: eventMessage,
+      // TODO: Add corresponding message item
+      messageItem: TextItem(
+        eventMessage: eventMessage,
+        contentDescription: eventMessage.content,
+      ),
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(
         12.0.s,

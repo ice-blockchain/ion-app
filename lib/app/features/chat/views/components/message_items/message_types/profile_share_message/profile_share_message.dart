@@ -8,6 +8,7 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -38,7 +39,10 @@ class ProfileShareMessage extends HookConsumerWidget {
     }
 
     return MessageItemWrapper(
-      messageEvent: eventMessage,
+      messageItem: ShareProfileItem(
+        eventMessage: eventMessage,
+        contentDescription: userMetadata.data.name,
+      ),
       contentPadding: EdgeInsets.all(12.0.s),
       isMe: isMe,
       child: IntrinsicWidth(

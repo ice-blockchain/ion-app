@@ -146,8 +146,9 @@ class RecentChatTile extends HookConsumerWidget {
 }
 
 class SenderSummary extends ConsumerWidget {
-  const SenderSummary({required this.pubkey, this.textColor, super.key});
+  const SenderSummary({required this.pubkey, this.textColor, this.isReply = false, super.key});
 
+  final bool isReply;
   final String pubkey;
 
   final Color? textColor;
@@ -162,17 +163,20 @@ class SenderSummary extends ConsumerWidget {
 
     return Row(
       children: [
+        if (isReply)
+          Padding(
+            padding: EdgeInsets.only(right: 4.0.s),
+            child: Assets.svg.iconChatReply.icon(
+              size: 16.0.s,
+              color: context.theme.appColors.quaternaryText,
+            ),
+          ),
         Text(
           user.name,
           style: context.theme.appTextThemes.subtitle3.copyWith(
             color: textColor ?? context.theme.appColors.primaryText,
           ),
         ),
-        // if (sender.isIceUser)
-        //   Padding(
-        //     padding: EdgeInsets.only(left: 4.0.s),
-        //     child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
-        //   ),
       ],
     );
   }

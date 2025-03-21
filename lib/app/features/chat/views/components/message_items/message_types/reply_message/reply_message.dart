@@ -1,0 +1,129 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/photo_message/photo_message.dart';
+import 'package:ion/generated/assets.gen.dart';
+
+class ReplyMessage extends HookConsumerWidget {
+  const ReplyMessage(this.messageItem, {super.key});
+
+  final MessageListItem messageItem;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final messageIconPath = _getMessageIcon();
+    final isMe = ref.watch(isCurrentUserSelectorProvider(messageItem.eventMessage.masterPubkey));
+
+    final bgColor = useMemoized(
+      () => isMe ? context.theme.appColors.darkBlue : context.theme.appColors.primaryBackground,
+      [isMe],
+    );
+
+    final textColor = useMemoized(
+      () => isMe ? context.theme.appColors.onPrimaryAccent : null,
+      [isMe],
+    );
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.0.s),
+      padding: EdgeInsets.fromLTRB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(10.0.s),
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _SideVerticalDivider(isMe: isMe),
+            if (messageItem is PhotoItem)
+              Padding(
+                padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
+                child: MediaContent(
+                  size: Size(30.0.s, 30.0.s),
+                  media: (messageItem as PhotoItem).media,
+                ),
+              ),
+            if (messageItem is VideoItem)
+              Padding(
+                padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
+                child: MediaContent(
+                  size: Size(30.0.s, 30.0.s),
+                  media: (messageItem as VideoItem).media,
+                ),
+              ),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SenderSummary(
+                    textColor: textColor,
+                    pubkey: messageItem.eventMessage.masterPubkey,
+                  ),
+                  Row(
+                    children: [
+                      if (messageIconPath != null)
+                        Padding(
+                          padding: EdgeInsets.only(right: 4.0.s),
+                          child: messageIconPath.icon(
+                            size: 16.0.s,
+                            color: textColor ?? context.theme.appColors.onTertararyBackground,
+                          ),
+                        ),
+                      Expanded(
+                        child: Text(
+                          messageItem.contentDescription,
+                          style: context.theme.appTextThemes.body2.copyWith(color: textColor),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String? _getMessageIcon() => switch (messageItem) {
+        TextItem _ => null,
+        EmojiItem _ => null,
+        VideoItem _ => Assets.svg.iconFeedVideos,
+        LinkItem _ => Assets.svg.iconArticleLink,
+        DocumentItem _ => Assets.svg.iconChatFile,
+        PhotoItem _ => Assets.svg.iconProfileCamera,
+        AudioItem _ => Assets.svg.iconChatVoicemessage,
+        ShareProfileItem _ => Assets.svg.iconProfileUsertab,
+      };
+}
+
+class _SideVerticalDivider extends StatelessWidget {
+  const _SideVerticalDivider({
+    required this.isMe,
+  });
+
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 2.0.s,
+      margin: EdgeInsets.only(right: 6.0.s),
+      decoration: BoxDecoration(
+        color:
+            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
+        borderRadius: BorderRadius.circular(2.0.s),
+      ),
+    );
+  }
+}

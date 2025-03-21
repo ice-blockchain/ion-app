@@ -15,6 +15,7 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
+import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -70,6 +71,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           children: [
             _Header(receiverMasterPubKey: receiverPubKey),
             _MessagesList(conversationId: conversationId.value),
+            const RepliedMessageInfo(),
             MessagingBottomBar(onSubmitted: onSubmitted),
           ],
         ),

@@ -6,6 +6,7 @@ import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/components/url_preview/url_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
@@ -40,7 +41,11 @@ class UrlPreviewMessage extends HookWidget {
     useAutomaticKeepAlive();
     return MessageItemWrapper(
       isMe: isMe,
-      messageEvent: eventMessage,
+      messageItem: LinkItem(
+        url: url,
+        contentDescription: url,
+        eventMessage: eventMessage,
+      ),
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.all(8.0.s),
       child: UrlPreview(

@@ -7,8 +7,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -16,17 +17,19 @@ class MessageItemWrapper extends HookConsumerWidget {
   const MessageItemWrapper({
     required this.isMe,
     required this.child,
-    required this.messageEvent,
+    required this.messageItem,
     required this.contentPadding,
+    this.repliedMessageItem,
     this.isLastMessageFromAuthor = true,
     super.key,
   });
 
   final bool isMe;
   final Widget child;
-  final EventMessage? messageEvent;
   final bool isLastMessageFromAuthor;
+  final MessageListItem messageItem;
   final EdgeInsetsGeometry contentPadding;
+  final MessageListItem? repliedMessageItem;
 
   /// The maximum width of the message content in the chat
   static double get maxWidth => 282.0.s;
@@ -36,15 +39,11 @@ class MessageItemWrapper extends HookConsumerWidget {
     final messageItemKey = useMemoized(GlobalKey.new);
 
     final deliveryStatus =
-        ref.watch(conversationMessageDataDaoProvider).messageStatus(messageEvent!.id);
+        ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
 
     final showReactDialog = useCallback(
       () async {
         try {
-          if (messageEvent == null) {
-            return;
-          }
-
           var messageStatus = MessageDeliveryStatus.created;
 
           final subscription = deliveryStatus.listen((status) {
@@ -57,7 +56,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             useSafeArea: false,
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
-              messageEvent: messageEvent!,
+              messageItem: messageItem,
               messageStatus: messageStatus,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
@@ -67,7 +66,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
             await e2eeMessageService.sendReaction(
               content: emoji,
-              kind14Rumor: messageEvent!,
+              kind14Rumor: messageItem.eventMessage,
             );
           }
 
@@ -118,7 +117,15 @@ class MessageItemWrapper extends HookConsumerWidget {
                             isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                       ),
                     ),
-                    child: child,
+                    child: IntrinsicWidth(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (repliedMessageItem != null) ReplyMessage(repliedMessageItem!),
+                          child,
+                        ],
+                      ),
+                    ),
                   ),
                   if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
                     Row(

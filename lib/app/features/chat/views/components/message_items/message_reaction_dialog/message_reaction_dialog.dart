@@ -9,24 +9,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_context_menu.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/components/message_reaction_emoji_bar.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessageReactionDialog extends HookConsumerWidget {
   const MessageReactionDialog({
     required this.isMe,
     required this.renderObject,
-    required this.messageEvent,
+    required this.messageItem,
     required this.messageStatus,
     super.key,
   });
 
   final bool isMe;
-  final EventMessage messageEvent;
+  final MessageListItem messageItem;
   final MessageDeliveryStatus messageStatus;
 
   /// The key of the message item to capture the image from widget tree
@@ -134,8 +134,8 @@ class MessageReactionDialog extends HookConsumerWidget {
                 ),
                 IntrinsicWidth(
                   child: MessageReactionContextMenu(
+                    messageItem: messageItem,
                     height: contextMenuHeight,
-                    messageEvent: messageEvent,
                     messageStatus: messageStatus,
                   ),
                 ),
