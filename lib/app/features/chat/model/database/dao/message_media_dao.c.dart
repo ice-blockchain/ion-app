@@ -71,19 +71,24 @@ class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMedia
     required List<String> cacheKeys,
   }) async {
     await batch((b) {
-      b.insertAll(
-        messageMediaTable,
-        cacheKeys
-            .map(
-              (cacheKey) => MessageMediaTableCompanion(
-                eventMessageId: Value(eventMessageId),
-                cacheKey: Value(cacheKey),
-                status: const Value(MessageMediaStatus.processing),
-              ),
-            )
-            .toList(),
-        mode: InsertMode.insertOrIgnore,
-      );
+      b
+        ..deleteWhere(
+          messageMediaTable,
+          (t) => t.eventMessageId.equals(eventMessageId),
+        )
+        ..insertAll(
+          messageMediaTable,
+          cacheKeys
+              .map(
+                (cacheKey) => MessageMediaTableCompanion(
+                  eventMessageId: Value(eventMessageId),
+                  cacheKey: Value(cacheKey),
+                  status: const Value(MessageMediaStatus.processing),
+                ),
+              )
+              .toList(),
+          mode: InsertMode.insertOrIgnore,
+        );
     });
     final result = await (select(messageMediaTable)
           ..where((t) => t.eventMessageId.equals(eventMessageId)))

@@ -9,13 +9,15 @@ import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dar
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class MessageReactionContextMenu extends ConsumerWidget {
@@ -52,10 +54,40 @@ class MessageReactionContextMenu extends ConsumerWidget {
                     color: context.theme.appColors.quaternaryText,
                   ),
                   onPressed: () async {
-                    final sendE2eeMessageProvider =
-                        await ref.read(sendE2eeMessageServiceProvider.future);
+                    final entity = PrivateDirectMessageEntity.fromEventMessage(messageEvent);
 
-                    unawaited(sendE2eeMessageProvider.resendFailedMessage(messageEvent));
+                    final messageStatuses = await ref
+                        .read(conversationMessageDataDaoProvider)
+                        .messageStatuses(messageEvent.id);
+
+                    final failedParticipantsMasterPubkeysMap = messageStatuses
+                      ..removeWhere((key, value) => value != MessageDeliveryStatus.failed);
+
+                    final failedParticipantsMasterPubkeys =
+                        failedParticipantsMasterPubkeysMap.keys.toList();
+
+                    final mediaFiles = entity.data.media.values
+                        .map(
+                          (media) => MediaFile(
+                            path: media.url,
+                            mimeType: media.mimeType,
+                            height: int.parse(media.dimension.split('x').first),
+                            width: int.parse(media.dimension.split('x').last),
+                          ),
+                        )
+                        .toList();
+
+                    unawaited(
+                      ref.watch(sendChatMessageNotifierProvider.notifier).sendMessage(
+                            conversationId: entity.data.uuid,
+                            participantsMasterPubkeys: entity.allPubkeys,
+                            mediaFiles: mediaFiles,
+                            content: messageEvent.content,
+                            failedEventMessageId: messageEvent.id,
+                            failedParticipantsMasterPubkeys: failedParticipantsMasterPubkeys,
+                          ),
+                    );
+
                     if (context.mounted) {
                       context.pop();
                     }

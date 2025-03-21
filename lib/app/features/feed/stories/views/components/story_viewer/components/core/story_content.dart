@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
@@ -56,13 +56,12 @@ class StoryContent extends HookConsumerWidget {
         final conversationId =
             await ref.read(existChatConversationIdProvider(post.masterPubkey).future) ??
                 generateUuid();
-        final conversationMessageManagementService =
-            await ref.read(sendE2eeMessageServiceProvider.future);
 
-        await conversationMessageManagementService.sendMessage(
+        await ref.read(sendChatMessageNotifierProvider.notifier).sendMessage(
           conversationId: conversationId,
           content: content,
           participantsMasterPubkeys: [post.masterPubkey, currentPubkey],
+          mediaFiles: [],
         );
 
         textController.clear();

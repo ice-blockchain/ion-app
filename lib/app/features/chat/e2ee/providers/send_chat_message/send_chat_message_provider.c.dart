@@ -43,7 +43,11 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
     required List<MediaFile> mediaFiles,
     String? subject,
     List<String>? groupImageTag,
+    String? failedEventMessageId,
+    List<String>? failedParticipantsMasterPubkeys,
   }) async {
+    String? currentUserEventMessageId;
+
     try {
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
 
@@ -72,7 +76,9 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
         content: content,
         signer: eventSigner,
         tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
+        previousId: failedEventMessageId,
       );
+      currentUserEventMessageId = eventMessage.id;
 
       await ref.read(conversationDaoProvider).add([eventMessage]);
       await ref.read(conversationEventMessageDaoProvider).add(eventMessage);
@@ -84,55 +90,84 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
 
       final mediaAttachmentsUsersBased = await _sendMediaFiles(
         mediaFiles,
-        participantsMasterPubkeys,
+        failedParticipantsMasterPubkeys ?? participantsMasterPubkeys,
         eventMessage.id,
       );
 
       final participantsKeysMap = await ref
           .read(conversationPubkeysProvider.notifier)
-          .fetchUsersKeys(participantsMasterPubkeys);
+          .fetchUsersKeys(failedParticipantsMasterPubkeys ?? participantsMasterPubkeys);
+
+      participantsMasterPubkeys.sort((a, b) {
+        if (a == currentUserMasterPubkey) return 1;
+        if (b == currentUserMasterPubkey) return -1;
+        return a.compareTo(b);
+      });
 
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
-          final pubkey = participantsKeysMap[masterPubkey];
-          if (pubkey == null) throw UserPubkeyNotFoundException(masterPubkey);
+          try {
+            final pubkey = participantsKeysMap[masterPubkey];
+            if (pubkey == null) throw UserPubkeyNotFoundException(masterPubkey);
 
-          final attachments = mediaAttachmentsUsersBased[masterPubkey];
-          final mediaTags = attachments?.map((a) => a.toTag()).toList();
+            final attachments = mediaAttachmentsUsersBased[masterPubkey];
+            final mediaTags = attachments?.map((a) => a.toTag()).toList();
 
-          final conversationTagsWithMediaTags = [
-            ..._generateConversationTags(
-              conversationId: conversationId,
-              masterPubkeys: participantsMasterPubkeys,
-              subject: subject,
-              groupImageTag: groupImageTag,
-            ),
-            if (mediaTags != null) ...mediaTags,
-          ];
+            final conversationTagsWithMediaTags = [
+              ..._generateConversationTags(
+                conversationId: conversationId,
+                masterPubkeys: participantsMasterPubkeys,
+                subject: subject,
+                groupImageTag: groupImageTag,
+              ),
+              if (mediaTags != null) ...mediaTags,
+            ];
 
-          final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
-          final event = await _createEventMessage(
-            content: content,
-            signer: eventSigner,
-            tags: conversationTagsWithMediaTags,
-            previousId: isCurrentUser ? eventMessage.id : null,
-          );
+            final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
+            final event = await _createEventMessage(
+              content: content,
+              signer: eventSigner,
+              tags: conversationTagsWithMediaTags,
+              previousId: isCurrentUser ? eventMessage.id : null,
+            );
 
-          await _sendKind14Message(
-            eventMessage: event,
-            eventSigner: eventSigner,
-            pubkey: pubkey,
-            masterPubkey: masterPubkey,
-          );
+            // if (isCurrentUser) {
+            //   throw Exception('test');
+            // }
 
-          await ref.read(conversationMessageDataDaoProvider).add(
-                masterPubkey: masterPubkey,
-                eventMessageId: event.id,
-                status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
-              );
+            await _sendKind14Message(
+              eventMessage: event,
+              eventSigner: eventSigner,
+              pubkey: pubkey,
+              masterPubkey: masterPubkey,
+            );
+
+            await ref.read(conversationMessageDataDaoProvider).add(
+                  masterPubkey: masterPubkey,
+                  eventMessageId: currentUserEventMessageId!,
+                  status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
+                );
+          } catch (e) {
+            if (currentUserEventMessageId != null) {
+              await ref.read(conversationMessageDataDaoProvider).add(
+                    masterPubkey: masterPubkey,
+                    eventMessageId: currentUserEventMessageId,
+                    status: MessageDeliveryStatus.failed,
+                  );
+            }
+          }
         }),
       );
     } catch (e) {
+      if (currentUserEventMessageId != null) {
+        for (final pubkey in participantsMasterPubkeys) {
+          await ref.read(conversationMessageDataDaoProvider).add(
+                masterPubkey: pubkey,
+                eventMessageId: currentUserEventMessageId,
+                status: MessageDeliveryStatus.failed,
+              );
+        }
+      }
       throw SendEventException(e.toString());
     }
   }
@@ -212,22 +247,18 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
     required String masterPubkey,
     required EventMessage eventMessage,
   }) async {
-    try {
-      final giftWrap = await _createGiftWrap(
-        signer: eventSigner,
-        receiverPubkey: pubkey,
-        eventMessage: eventMessage,
-        receiverMasterPubkey: masterPubkey,
-      );
+    final giftWrap = await _createGiftWrap(
+      signer: eventSigner,
+      receiverPubkey: pubkey,
+      eventMessage: eventMessage,
+      receiverMasterPubkey: masterPubkey,
+    );
 
-      await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
-            giftWrap,
-            cache: false,
-            actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
-          );
-    } catch (e) {
-      throw SendEventException(e.toString());
-    }
+    await ref.read(ionConnectNotifierProvider.notifier).sendEvent(
+          giftWrap,
+          cache: false,
+          actionSource: ActionSourceUserChat(masterPubkey, anonymous: true),
+        );
   }
 
   List<List<String>> _generateConversationTags({
