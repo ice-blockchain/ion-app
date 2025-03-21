@@ -61,28 +61,23 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         receiverAddress: form.receiverAddress,
       );
 
-      switch (result.status) {
-        case TransferStatus.executing:
-        case TransferStatus.pending:
-          // When executing or pending, txHash is still null, so we need to wait a bit
-          result = await withRetry<TransferResult>(
-            ({Object? error}) => service.getTransfer(
-              walletId: senderWallet.id,
-              transferId: result.id,
-            ),
-            maxRetries: 5,
-            initialDelay: const Duration(seconds: 1),
-            retryWhen: (result) =>
-                result is TransferResult &&
-                (result.status == TransferStatus.pending ||
-                    result.status == TransferStatus.executing),
-          );
-        case TransferStatus.failed:
-        case TransferStatus.rejected:
-          throw FailedToSendCryptoAssetsException(result.reason);
-        case TransferStatus.broadcasted:
-        case TransferStatus.confirmed:
-        // Do nothing, everything is okay
+      bool isRetryStatus(TransferStatus status) =>
+          status == TransferStatus.pending || status == TransferStatus.executing;
+      if (isRetryStatus(result.status)) {
+        // When executing or pending, txHash is still null, so we need to wait a bit
+        result = await withRetry<TransferResult>(
+          ({Object? error}) => service.getTransfer(
+            walletId: senderWallet.id,
+            transferId: result.id,
+          ),
+          maxRetries: 5,
+          initialDelay: const Duration(seconds: 1),
+          retryWhen: (result) => result is TransferResult && isRetryStatus(result.status),
+        );
+      }
+
+      if (result.status == TransferStatus.rejected || result.status == TransferStatus.failed) {
+        throw FailedToSendCryptoAssetsException(result.reason);
       }
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
