@@ -29,7 +29,7 @@ class SendNftForm extends ConsumerWidget {
     final locale = context.i18n;
 
     final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
-    final notifier = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
+    final notifier = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
     final selectedNft = formController.assetData.as<NftAssetData>()!.nft;
     final selectedContactPubkey = formController.contactPubkey;
 
@@ -54,16 +54,24 @@ class SendNftForm extends ConsumerWidget {
                   children: [
                     NftPicture(imageUrl: selectedNft.tokenUri),
                     SizedBox(height: 16.0.s),
-                    const NftName(
-                      rank: 'selectedNft.rank',
-                      name: 'selectedNft.collectionName',
+                    NftName(
+                      rank: selectedNft.tokenId,
+                      name: selectedNft.name,
                     ),
                     SizedBox(height: 16.0.s),
                     ContactInputSwitcher(
                       pubkey: selectedContactPubkey,
                       address: formController.receiverAddress,
-                      onWalletAddressChanged: (String? value) {},
-                      onClearTap: (_) => notifier.setContact(null),
+                      onWalletAddressChanged: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          notifier.setReceiverAddress(value);
+                        }
+                      },
+                      onClearTap: (pubkey) {
+                        notifier
+                          ..setContact(null)
+                          ..setReceiverAddress('');
+                      },
                       onContactTap: () async {
                         final pubkey = await NftSelectContactRoute(
                           networkId: formController.network!.id,
@@ -71,8 +79,6 @@ class SendNftForm extends ConsumerWidget {
 
                         pubkey?.let(notifier.setContact);
                       },
-                      // TODO
-                      onScanPressed: () {},
                     ),
                     SizedBox(height: 17.0.s),
                     const NetworkFeeSelector(),

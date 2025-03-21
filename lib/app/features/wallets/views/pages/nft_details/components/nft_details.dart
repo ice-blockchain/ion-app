@@ -9,11 +9,13 @@ import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/read_more_text/read_more_text.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
 import 'package:ion/app/features/wallets/views/pages/nft_details/components/nft_details_loading.dart';
 import 'package:ion/app/features/wallets/views/pages/nft_details/providers/nft_details_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class NftDetails extends ConsumerWidget {
@@ -93,7 +95,11 @@ class NftDetails extends ConsumerWidget {
           ),
           label: Text(context.i18n.feed_send),
           onPressed: () {
-            // TODO
+            ref.invalidate(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
+            ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier)
+              ..setNft(nftData)
+              ..setNetwork(nftData.network);
+            NftSendFormRoute().push<void>(context);
           },
         ),
       ],

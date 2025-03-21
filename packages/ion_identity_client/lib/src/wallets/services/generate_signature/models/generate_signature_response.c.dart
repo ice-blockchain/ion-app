@@ -10,8 +10,9 @@ part 'generate_signature_response.c.g.dart';
 class GenerateSignatureResponse with _$GenerateSignatureResponse {
   const factory GenerateSignatureResponse({
     required String id,
-    required String walletId,
-    required String network,
+    required String keyId,
+    required String? walletId,
+    required String? network,
     required Requester requester,
     required Map<String, dynamic> requestBody,
     required String status,

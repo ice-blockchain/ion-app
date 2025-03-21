@@ -4,15 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
+import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_nft_notifier_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
+import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
@@ -21,6 +26,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 class SendNftConfirmPage extends ConsumerWidget {
   const SendNftConfirmPage({super.key});
@@ -30,6 +36,15 @@ class SendNftConfirmPage extends ConsumerWidget {
     final locale = context.i18n;
     final formData = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
     final nft = formData.assetData.as<NftAssetData>()!.nft;
+
+    ref
+      ..displayErrors(sendNftNotifierProvider)
+      ..listenSuccess(sendNftNotifierProvider, (transactionDetails) {
+        if (context.mounted && transactionDetails != null) {
+          ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
+          NftTransactionResultRoute().go(context);
+        }
+      });
 
     return SheetContent(
       body: Column(
@@ -44,7 +59,7 @@ class SendNftConfirmPage extends ConsumerWidget {
               padding: EdgeInsets.only(top: 10.0.s),
               child: Column(
                 children: [
-                  NftItem(nftData: nft),
+                  NftItem(nftData: nft, showNetwork: false),
                   SizedBox(height: 16.0.s),
                   SendToRecipient(
                     address: formData.receiverAddress,
@@ -59,9 +74,8 @@ class SendNftConfirmPage extends ConsumerWidget {
                     ),
                     secondary: Align(
                       alignment: Alignment.centerRight,
-                      // TODO: Remove hardcode
                       child: Text(
-                        '0xf59B7547F254854F3f17a594Fe97b0aB24gf3023',
+                        formData.senderWallet!.address!,
                         textAlign: TextAlign.right,
                         style: context.theme.appTextThemes.caption3.copyWith(),
                       ),
@@ -71,7 +85,10 @@ class SendNftConfirmPage extends ConsumerWidget {
                   ListItem.textWithIcon(
                     title: Text(context.i18n.send_nft_confirm_network),
                     value: formData.network?.displayName,
-                    icon: Assets.svg.networks.walletEth.icon(size: 16.0.s),
+                    icon: NetworkIconWidget(
+                      size: 16.0.s,
+                      imageUrl: formData.network!.image,
+                    ),
                   ),
                   SizedBox(height: 12.0.s),
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
@@ -86,16 +103,33 @@ class SendNftConfirmPage extends ConsumerWidget {
                     ),
                   ],
                   SizedBox(height: 12.0.s),
-                  Button(
-                    mainAxisSize: MainAxisSize.max,
-                    minimumSize: Size(56.0.s, 56.0.s),
-                    label: Text(
-                      context.i18n.button_confirm,
+                  if (formData.assetData is NftAssetData)
+                    Button(
+                      mainAxisSize: MainAxisSize.max,
+                      disabled: ref.watch(sendNftNotifierProvider).isLoading,
+                      label: ref.watch(sendNftNotifierProvider).maybeMap(
+                            loading: (_) => const IONLoadingIndicator(),
+                            orElse: () => Text(locale.button_confirm),
+                          ),
+                      onPressed: () async {
+                        await guardPasskeyDialog(
+                          ref.context,
+                          (child) {
+                            return RiverpodVerifyIdentityRequestBuilder(
+                              provider: sendNftNotifierProvider,
+                              requestWithVerifyIdentity: (
+                                OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
+                              ) async {
+                                await ref
+                                    .read(sendNftNotifierProvider.notifier)
+                                    .send(onVerifyIdentity);
+                              },
+                              child: child,
+                            );
+                          },
+                        );
+                      },
                     ),
-                    onPressed: () {
-                      NftTransactionResultRoute().go(context);
-                    },
-                  ),
                 ],
               ),
             ),
