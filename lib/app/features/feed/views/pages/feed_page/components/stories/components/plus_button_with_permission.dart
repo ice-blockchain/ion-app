@@ -15,7 +15,7 @@ class PlusButtonWithPermission extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final plusSize = 24.0.s;
-    final iconPosition = plusSize - 8.0.s;
+    final iconPosition = plusSize - 6.0.s;
 
     return Positioned(
       bottom: iconPosition,

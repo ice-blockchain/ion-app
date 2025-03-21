@@ -46,7 +46,7 @@ class CurrentUserStoryListItem extends HookConsumerWidget {
               CurrentUserAvatarWithPermission(
                 pubkey: pubkey,
                 hasStories: hasStories,
-                gradient: gradient,
+                gradient: hasStories ? gradient : null,
                 isViewed: allStoriesViewed,
                 imageUrl: userMetadata.data.picture,
               ),
