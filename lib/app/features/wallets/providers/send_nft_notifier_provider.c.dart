@@ -17,7 +17,6 @@ part 'send_nft_notifier_provider.c.g.dart';
 class SendNftNotifier extends _$SendNftNotifier {
   @override
   Future<TransactionDetails?> build() async {
-    state = const AsyncData(null);
     return null;
   }
 
