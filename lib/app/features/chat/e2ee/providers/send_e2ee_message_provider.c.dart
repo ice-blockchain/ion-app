@@ -98,6 +98,8 @@ class SendE2eeMessageService {
   final ConversationMessageDataDao conversationMessageStatusDao;
   final SendChatMessageNotifier sendChatMessageNotifier;
 
+  //TODO: Remove this method after migration to new provider
+  @Deprecated('Use sendChatMessageNotifier.sendMessage instead')
   Future<void> sendMessage({
     required String content,
     required String conversationId,
