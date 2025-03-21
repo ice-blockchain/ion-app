@@ -95,11 +95,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
   }) async {
     final events = await Future.wait(entitiesData.map(sign));
-    return sendEvents(
-      events,
-      actionSource: actionSource,
-      cache: cache,
-    );
+    return sendEvents(events, actionSource: actionSource, cache: cache);
   }
 
   Future<T?> sendEntityData<T extends IonConnectEntity>(
@@ -107,11 +103,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final entities = await sendEntitiesData(
-      [entityData],
-      actionSource: actionSource,
-      cache: cache,
-    );
+    final entities = await sendEntitiesData([entityData], actionSource: actionSource, cache: cache);
     return entities?.elementAtOrNull(0) as T?;
   }
 
@@ -138,20 +130,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             ? subscriptionBuilder(requestMessage, relay!)
             : ion.requestEvents(requestMessage, relay!);
 
-        final eventStream = events.timeout(
-          _defaultTimeout,
-          onTimeout: (sink) {
-            sink
-              ..addError(
-                TimeoutException(
-                  'Request events timed out after ${_defaultTimeout.inSeconds} seconds',
-                ),
-              )
-              ..close();
-          },
-        );
-
-        await for (final event in eventStream) {
+        await for (final event in events) {
           // Note: The ion.requestEvents method automatically handles unsubscription for certain messages.
           // If the subscription needs to be retried or closed in response to a different message than those handled by ion.requestEvents,
           // then additional unsubscription logic should be implemented here.
@@ -177,10 +156,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final eventsStream = requestEvents(
-      requestMessage,
-      actionSource: actionSource,
-    );
+    final eventsStream = requestEvents(requestMessage, actionSource: actionSource);
 
     final events = await eventsStream.toList();
     return events.isNotEmpty ? events.first : null;
@@ -206,10 +182,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final entitiesStream = requestEntities<T>(
-      requestMessage,
-      actionSource: actionSource,
-    );
+    final entitiesStream = requestEntities<T>(requestMessage, actionSource: actionSource);
 
     final entities = await entitiesStream.toList();
     return entities.isNotEmpty ? entities.first : null;
