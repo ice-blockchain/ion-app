@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:async/async.dart';
-import 'package:blurhash_ffi/blurhash.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:flutter/material.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/compress_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -20,6 +17,7 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/utils/blurhash.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_chat_media_provider.c.g.dart';
@@ -81,16 +79,6 @@ class SendChatMedia extends _$SendChatMedia {
     await ref.read(messageMediaDaoProvider).cancel(id);
   }
 
-  Future<String?> _getBlurhash(MediaFile mediaFile) async {
-    final isImage = mediaFile.mimeType?.startsWith('image/') ?? false;
-    if (isImage) {
-      final image = FileImage(File(mediaFile.path));
-      final blurhash = await BlurhashFFI.encode(image);
-      return blurhash;
-    }
-    return null;
-  }
-
   Future<List<MediaAttachment>> processMedia(
     MediaFile mediaFile,
     String masterPubkey, {
@@ -104,13 +92,13 @@ class SendChatMedia extends _$SendChatMedia {
     final isVideo = mediaFile.mimeType?.startsWith('video/') ?? false;
     final isImage = mediaFile.mimeType?.startsWith('image/') ?? false;
 
-    var blurHash = await _getBlurhash(mediaFile);
+    var blurHash = await generateBlurhash(mediaFile);
     MediaAttachment? thumbMediaAttachment;
     String? thumbUrl;
 
     if (isVideo) {
       final thumbMediaFile = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
-      blurHash = await _getBlurhash(thumbMediaFile);
+      blurHash = await generateBlurhash(thumbMediaFile);
       thumbMediaAttachment = (await processMedia(thumbMediaFile, masterPubkey)).first;
       mediaAttachments.add(thumbMediaAttachment);
       thumbUrl = thumbMediaAttachment.url;
