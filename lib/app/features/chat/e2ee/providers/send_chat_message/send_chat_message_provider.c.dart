@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
-import 'package:drift/drift.dart' as drift;
 import 'package:file_saver/file_saver.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
@@ -13,6 +12,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_pubkeys_provider.c.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -46,12 +46,12 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
   }) async {
     try {
       final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
-      final conversationPubkeysNotifier = ref.read(conversationPubkeysProvider.notifier);
-      final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
       if (eventSigner == null) {
         throw EventSignerNotFoundException();
       }
+
+      final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
       if (currentUserMasterPubkey == null) {
         throw UserMasterPubkeyNotFoundException();
@@ -74,8 +74,6 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
         tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
       );
 
-      final messageMediaIds = <int>[];
-
       await ref.read(conversationDaoProvider).add([eventMessage]);
       await ref.read(conversationEventMessageDaoProvider).add(eventMessage);
       await ref.read(conversationMessageDataDaoProvider).add(
@@ -84,11 +82,11 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
             status: MessageDeliveryStatus.created,
           );
 
+      final messageMediaIds = <int>[];
       for (final mediaFile in mediaFiles) {
         final file = File(mediaFile.path);
         final fileName = generateUuid();
-
-        final isVideo = mediaFile.mimeType?.startsWith('video/') ?? false;
+        final isVideo = MediaType.fromMimeType(mediaFile.mimeType ?? '') == MediaType.video;
 
         if (isVideo) {
           final thumb = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
@@ -98,18 +96,13 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
         }
 
         final id = await ref.read(messageMediaDaoProvider).add(
-              MessageMediaTableCompanion(
-                status: const drift.Value(MessageMediaStatus.processing),
-                eventMessageId: drift.Value(eventMessage.id),
-                cacheKey: drift.Value(fileName),
-              ),
+              eventMessageId: eventMessage.id,
+              status: MessageMediaStatus.processing,
+              cacheKey: fileName,
             );
 
         messageMediaIds.add(id);
       }
-
-      final participantsKeysMap =
-          await conversationPubkeysNotifier.fetchUsersKeys(participantsMasterPubkeys);
 
       final mediaAttachmentsUsersBased = await _sendMediaFiles(
         mediaFiles,
@@ -118,6 +111,10 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
         eventMessage.id,
       );
 
+      final participantsKeysMap = await ref
+          .read(conversationPubkeysProvider.notifier)
+          .fetchUsersKeys(participantsMasterPubkeys);
+
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
           final pubkey = participantsKeysMap[masterPubkey];
@@ -125,8 +122,6 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
 
           final attachments = mediaAttachmentsUsersBased[masterPubkey];
           final mediaTags = attachments?.map((a) => a.toTag()).toList();
-
-          final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
 
           final conversationTagsWithMediaTags = [
             ..._generateConversationTags(
@@ -138,21 +133,13 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
             if (mediaTags != null) ...mediaTags,
           ];
 
-          final EventMessage event;
-          if (isCurrentUser) {
-            event = await _createEventMessage(
-              content: content,
-              signer: eventSigner,
-              tags: conversationTagsWithMediaTags,
-              previousId: eventMessage.id,
-            );
-          } else {
-            event = await _createEventMessage(
-              content: content,
-              signer: eventSigner,
-              tags: conversationTagsWithMediaTags,
-            );
-          }
+          final isCurrentUser = ref.read(isCurrentUserSelectorProvider(masterPubkey));
+          final event = await _createEventMessage(
+            content: content,
+            signer: eventSigner,
+            tags: conversationTagsWithMediaTags,
+            previousId: isCurrentUser ? eventMessage.id : null,
+          );
 
           await _sendKind14Message(
             eventMessage: event,
@@ -161,19 +148,11 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
             masterPubkey: masterPubkey,
           );
 
-          if (isCurrentUser) {
-            await ref.read(conversationMessageDataDaoProvider).add(
-                  masterPubkey: masterPubkey,
-                  eventMessageId: event.id,
-                  status: MessageDeliveryStatus.read,
-                );
-          } else {
-            await ref.read(conversationMessageDataDaoProvider).add(
-                  masterPubkey: masterPubkey,
-                  eventMessageId: event.id,
-                  status: MessageDeliveryStatus.sent,
-                );
-          }
+          await ref.read(conversationMessageDataDaoProvider).add(
+                masterPubkey: masterPubkey,
+                eventMessageId: event.id,
+                status: isCurrentUser ? MessageDeliveryStatus.read : MessageDeliveryStatus.sent,
+              );
         }),
       );
     } catch (e) {

@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:drift/drift.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
@@ -257,11 +256,9 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           continue;
         }
         await ref.watch(messageMediaDaoProvider).add(
-              MessageMediaTableCompanion(
-                eventMessageId: Value(rumor.id),
-                status: const Value(MessageMediaStatus.completed),
-                remoteUrl: Value(media.url),
-              ),
+              eventMessageId: rumor.id,
+              status: MessageMediaStatus.completed,
+              remoteUrl: media.url,
             );
       }
     }

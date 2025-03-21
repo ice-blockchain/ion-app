@@ -13,22 +13,34 @@ MessageMediaDao messageMediaDao(Ref ref) => MessageMediaDao(ref.watch(chatDataba
 class MessageMediaDao extends DatabaseAccessor<ChatDatabase> with _$MessageMediaDaoMixin {
   MessageMediaDao(super.db);
 
-  Future<int> add(MessageMediaTableCompanion messageMedia) async {
+  Future<int> add({
+    required String eventMessageId,
+    required MessageMediaStatus status,
+    String? cacheKey,
+    String? remoteUrl,
+  }) async {
     final existRecord = await (select(messageMediaTable)
-          ..where((t) => t.eventMessageId.equals(messageMedia.eventMessageId.value))
-          ..where((t) => t.remoteUrl.equals(messageMedia.remoteUrl.value ?? '')))
+          ..where((t) => t.eventMessageId.equals(eventMessageId))
+          ..where((t) => t.remoteUrl.equalsNullable(remoteUrl)))
         .getSingleOrNull();
 
     if (existRecord != null) {
       await updateById(
         existRecord.id,
-        messageMedia.eventMessageId.value,
-        messageMedia.remoteUrl.value ?? '',
-        messageMedia.status.value,
+        eventMessageId,
+        remoteUrl!,
+        status,
       );
       return existRecord.id;
     }
-    return into(messageMediaTable).insert(messageMedia, mode: InsertMode.insertOrReplace);
+    return into(messageMediaTable).insert(
+      MessageMediaTableCompanion(
+        eventMessageId: Value(eventMessageId),
+        status: Value(status),
+        cacheKey: Value(cacheKey),
+        remoteUrl: Value(remoteUrl),
+      ),
+    );
   }
 
   Stream<List<MessageMediaTableData>> watchByEventId(String eventId) {

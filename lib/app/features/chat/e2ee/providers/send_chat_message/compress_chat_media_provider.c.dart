@@ -8,23 +8,19 @@ import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'compress_media_provider.c.g.dart';
+part 'compress_chat_media_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<MediaFile> compressMediaFile(Ref ref, MediaFile mediaFile) async {
+Raw<Future<MediaFile>> compressChatMedia(Ref ref, MediaFile mediaFile) async {
   final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
   final compressService = ref.watch(compressServiceProvider);
 
   switch (mediaType) {
     case MediaType.image:
-      return compressService.compressImage(
-        mediaFile,
-        width: mediaFile.width,
-        height: mediaFile.height,
-      );
+      return compressService.compressImage(mediaFile);
     case MediaType.video:
-      return compressService.compressVideo(mediaFile, generateThumbnail: true);
+      return compressService.compressVideo(mediaFile);
     case MediaType.audio:
       return compressService.compressAudio(mediaFile.path);
     case MediaType.unknown:
