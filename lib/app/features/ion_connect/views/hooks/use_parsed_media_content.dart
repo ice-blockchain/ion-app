@@ -34,13 +34,13 @@ import 'package:ion/app/services/markdown/quill.dart';
     return (content: processDeltaMatches(mediaDelta.content), media: mediaDelta.media);
   }
 
-  final markdownContentDelta = markdownToDelta(content);
-  final plainTextContentDelta = plainTextToDelta(content);
+  final isMarkdownContent = isMarkdown(content);
 
-  delta =
-      markdownContentDelta.length == 1 && markdownContentDelta.operations.first.attributes == null
-          ? plainTextContentDelta
-          : markdownContentDelta;
+  if (isMarkdownContent) {
+    delta = markdownToDelta(content);
+  } else {
+    delta = plainTextToDelta(content);
+  }
 
   final mediaDeltaFallback = _parseMediaContentDelta(delta: delta, media: media);
   return (
@@ -98,4 +98,29 @@ import 'package:ion/app/services/markdown/quill.dart';
   }
 
   return (content: Delta.fromOperations(nonMediaOperations), media: mediaFromContent);
+}
+
+bool isMarkdown(String text) {
+  // Common markdown patterns
+  final patterns = [
+    // Headers
+    RegExp(r'^#{1,6}\s'),
+    // Lists
+    RegExp(r'^[-*+]\s'),
+    RegExp(r'^\d+\.\s'),
+    // Links
+    RegExp(r'\[.*?\]\(.*?\)'),
+    // Bold/Italic
+    RegExp('[*_]{1,2}.*?[*_]{1,2}'),
+    // Code blocks
+    RegExp('`{1,3}.*?`{1,3}'),
+    // Blockquotes
+    RegExp(r'^\s*>\s'),
+    // Tables
+    RegExp(r'\|.*\|'),
+    // Escaped characters
+    RegExp(r'\\[\\`*_{}\[\]()#+\-.!]'),
+  ];
+
+  return patterns.any((pattern) => pattern.hasMatch(text));
 }
