@@ -2,7 +2,7 @@
 
 part of '../chat_database.c.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 MessageMediaDao messageMediaDao(Ref ref) => MessageMediaDao(ref.watch(chatDatabaseProvider));
 
 @DriftAccessor(

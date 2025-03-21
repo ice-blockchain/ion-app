@@ -34,7 +34,9 @@ class VisualMediaMessage extends HookConsumerWidget {
       messageEvent: eventMessage,
       contentPadding: EdgeInsets.all(padding),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          //TODO: show full screen media
+        },
         child: SizedBox(
           width: messageMedias.length > 1 ? double.infinity : 146.0.s,
           child: IntrinsicWidth(

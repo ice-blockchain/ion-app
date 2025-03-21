@@ -7,7 +7,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/components/messaging_header/messaging_header.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/e2ee_conversation_empty_view.dart';
 import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_list.dart';
@@ -53,7 +53,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           throw UserMasterPubkeyNotFoundException();
         }
 
-        await ref.read(sendChatMessageNotifierProvider.notifier).sendMessage(
+        await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
           conversationId: conversationId.value!,
           content: content ?? '',
           mediaFiles: mediaFiles ?? [],
