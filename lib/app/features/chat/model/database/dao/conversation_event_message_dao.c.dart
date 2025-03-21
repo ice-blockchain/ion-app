@@ -40,7 +40,7 @@ class ConversationEventMessageDao extends DatabaseAccessor<ChatDatabase>
         conversationId: Value(conversationId),
         eventMessageId: Value(event.id),
       ),
-      mode: InsertMode.insertOrIgnore,
+      mode: InsertMode.insertOrReplace,
     );
   }
 
