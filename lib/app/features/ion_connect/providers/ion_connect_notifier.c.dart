@@ -26,6 +26,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_notifier.c.g.dart';
 
+const _defaultTimeout = Duration(seconds: 30);
+
 @riverpod
 class IonConnectNotifier extends _$IonConnectNotifier {
   @override
@@ -51,7 +53,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayAuthProvider(relay!))
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
-        await relay!.sendEvents(events);
+        await relay!.sendEvents(events).timeout(
+              _defaultTimeout,
+              onTimeout: () => throw TimeoutException(
+                'Sending events timed out after ${_defaultTimeout.inSeconds} seconds',
+              ),
+            );
 
         if (cache) {
           return events.map(_parseAndCache).toList();
@@ -88,7 +95,11 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     bool cache = true,
   }) async {
     final events = await Future.wait(entitiesData.map(sign));
-    return sendEvents(events, actionSource: actionSource, cache: cache);
+    return sendEvents(
+      events,
+      actionSource: actionSource,
+      cache: cache,
+    );
   }
 
   Future<T?> sendEntityData<T extends IonConnectEntity>(
@@ -96,7 +107,11 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
   }) async {
-    final entities = await sendEntitiesData([entityData], actionSource: actionSource, cache: cache);
+    final entities = await sendEntitiesData(
+      [entityData],
+      actionSource: actionSource,
+      cache: cache,
+    );
     return entities?.elementAtOrNull(0) as T?;
   }
 
@@ -123,7 +138,20 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             ? subscriptionBuilder(requestMessage, relay!)
             : ion.requestEvents(requestMessage, relay!);
 
-        await for (final event in events) {
+        final eventStream = events.timeout(
+          _defaultTimeout,
+          onTimeout: (sink) {
+            sink
+              ..addError(
+                TimeoutException(
+                  'Request events timed out after ${_defaultTimeout.inSeconds} seconds',
+                ),
+              )
+              ..close();
+          },
+        );
+
+        await for (final event in eventStream) {
           // Note: The ion.requestEvents method automatically handles unsubscription for certain messages.
           // If the subscription needs to be retried or closed in response to a different message than those handled by ion.requestEvents,
           // then additional unsubscription logic should be implemented here.
@@ -149,7 +177,11 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final eventsStream = requestEvents(requestMessage, actionSource: actionSource);
+    final eventsStream = requestEvents(
+      requestMessage,
+      actionSource: actionSource,
+    );
+
     final events = await eventsStream.toList();
     return events.isNotEmpty ? events.first : null;
   }
@@ -158,7 +190,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
-    await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
+    await for (final event in requestEvents(
+      requestMessage,
+      actionSource: actionSource,
+    )) {
       try {
         yield _parseAndCache(event) as T;
       } catch (error, stackTrace) {
@@ -171,9 +206,13 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final entitiesStream = requestEntities(requestMessage, actionSource: actionSource);
+    final entitiesStream = requestEntities<T>(
+      requestMessage,
+      actionSource: actionSource,
+    );
+
     final entities = await entitiesStream.toList();
-    return entities.isNotEmpty ? entities.first as T : null;
+    return entities.isNotEmpty ? entities.first : null;
   }
 
   Future<EventMessage> sign(
