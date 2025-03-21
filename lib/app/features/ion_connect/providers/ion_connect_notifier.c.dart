@@ -166,10 +166,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async* {
-    await for (final event in requestEvents(
-      requestMessage,
-      actionSource: actionSource,
-    )) {
+    await for (final event in requestEvents(requestMessage, actionSource: actionSource)) {
       try {
         yield _parseAndCache(event) as T;
       } catch (error, stackTrace) {
