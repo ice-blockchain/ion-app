@@ -49,7 +49,6 @@ class CompressionService {
     int fps = 24,
     FfmpegAudioCodecArg audioCodec = FfmpegAudioCodecArg.aac,
     FfmpegAudioBitrateArg audioBitrate = FfmpegAudioBitrateArg.low,
-    bool generateThumbnail = false,
   }) async {
     try {
       final output = await _generateOutputPath(extension: 'mp4');
@@ -86,24 +85,12 @@ class CompressionService {
 
       final (width: outWidth, height: outHeight) = await _getVideoDimensions(output);
 
-      MediaFile? thumbnail;
-      if (generateThumbnail) {
-        thumbnail = await getThumbnail(
-          MediaFile(
-            path: output,
-            width: outWidth,
-            height: outHeight,
-          ),
-        );
-      }
-
       // Return the final compressed video file info
       return MediaFile(
         path: output,
         mimeType: 'video/mp4',
         width: outWidth,
         height: outHeight,
-        thumb: thumbnail?.path,
       );
     } catch (error, stackTrace) {
       Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);

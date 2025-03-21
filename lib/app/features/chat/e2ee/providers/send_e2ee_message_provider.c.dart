@@ -97,6 +97,7 @@ class SendE2eeMessageService {
   final ConversationEventMessageDao eventMessageDao;
   final ConversationMessageDataDao conversationMessageStatusDao;
   final SendChatMessageNotifier sendChatMessageNotifier;
+
   Future<void> sendMessage({
     required String content,
     required String conversationId,
@@ -544,8 +545,7 @@ class SendE2eeMessageService {
           final mediaType = MediaType.fromMimeType(mediaFile.mimeType ?? '');
 
           final compressedMediaFile = switch (mediaType) {
-            MediaType.video =>
-              await compressionService.compressVideo(mediaFile, generateThumbnail: true),
+            MediaType.video => await compressionService.compressVideo(mediaFile),
             MediaType.image => await compressionService.compressImage(
                 mediaFile,
                 width: mediaFile.width,

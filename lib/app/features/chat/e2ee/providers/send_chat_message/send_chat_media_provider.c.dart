@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cryptography/cryptography.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/compress_media_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/compress_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
@@ -43,7 +43,7 @@ class SendChatMedia extends _$SendChatMedia {
     _cancellableOperation = CancelableOperation.fromFuture(
       AsyncValue.guard(() async {
         final compressedMediaFile = await ref.read(
-          compressMediaFileProvider(mediaFile).future,
+          compressChatMediaProvider(mediaFile),
         );
 
         for (final participantKey in participantsMasterPubkeys) {
@@ -75,7 +75,6 @@ class SendChatMedia extends _$SendChatMedia {
 
   Future<void> cancel() async {
     await _cancellableOperation?.cancel();
-
     await ref.read(messageMediaDaoProvider).cancel(id);
   }
 
