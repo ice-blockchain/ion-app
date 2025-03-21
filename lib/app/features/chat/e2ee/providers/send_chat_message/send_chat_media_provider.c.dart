@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
-import 'package:cryptography/cryptography.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/compress_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
@@ -22,7 +21,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_chat_media_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class SendChatMedia extends _$SendChatMedia {
   CancelableOperation<AsyncValue<List<MediaAttachment>>>? _cancellableOperation;
 
@@ -51,7 +50,7 @@ class SendChatMedia extends _$SendChatMedia {
             return [];
           }
 
-          final processedAttachments = await processMedia(
+          final processedAttachments = await _processMedia(
             compressedMediaFile,
             participantKey,
           );
@@ -78,12 +77,10 @@ class SendChatMedia extends _$SendChatMedia {
     await ref.read(messageMediaDaoProvider).cancel(id);
   }
 
-  Future<List<MediaAttachment>> processMedia(
+  Future<List<MediaAttachment>> _processMedia(
     MediaFile mediaFile,
-    String masterPubkey, {
-    SecretKey? secretKey,
-    List<int>? nonceBytes,
-  }) async {
+    String masterPubkey,
+  ) async {
     final mediaAttachments = <MediaAttachment>[];
     final oneTimeEventSigner = await Ed25519KeyStore.generate();
     final env = ref.read(envProvider.notifier);
@@ -98,7 +95,7 @@ class SendChatMedia extends _$SendChatMedia {
     if (isVideo) {
       final thumbMediaFile = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
       blurHash = await generateBlurhash(thumbMediaFile);
-      thumbMediaAttachment = (await processMedia(thumbMediaFile, masterPubkey)).first;
+      thumbMediaAttachment = (await _processMedia(thumbMediaFile, masterPubkey)).first;
       mediaAttachments.add(thumbMediaAttachment);
       thumbUrl = thumbMediaAttachment.url;
     }

@@ -16,6 +16,7 @@ import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -220,6 +221,14 @@ class MediaService {
         );
       }),
     );
+  }
+
+  Future<File?> getFileFromAppDirectory(String filename) async {
+    final appDirectory = await getApplicationDocumentsDirectory();
+    final file = File('${appDirectory.path}/$filename');
+    if (!file.existsSync()) return null;
+
+    return file;
   }
 }
 

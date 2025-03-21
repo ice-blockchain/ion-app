@@ -13,8 +13,8 @@ import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
-import 'package:path_provider/path_provider.dart';
 
 class VisualMediaContent extends HookConsumerWidget {
   const VisualMediaContent({
@@ -35,32 +35,40 @@ class VisualMediaContent extends HookConsumerWidget {
 
     useEffect(
       () {
-        getApplicationDocumentsDirectory().then((value) {
+        Future<void> loadMedia() async {
+          // Try to load from app directory first
           if (messageMediaTableData.cacheKey != null) {
-            final path = '${value.path}/${messageMediaTableData.cacheKey!}';
-            final isExist = File(path).existsSync();
-            if (isExist) {
-              localFile.value = File(path);
+            final cachedFile = await ref
+                .read(mediaServiceProvider)
+                .getFileFromAppDirectory(messageMediaTableData.cacheKey!);
+
+            if (cachedFile != null) {
+              localFile.value = cachedFile;
               return;
             }
           }
 
+          // If no cached file and no media attachment, exit
           if (mediaAttachment == null) {
             return;
           }
 
-          final thumb = entity.media.values.firstWhere((e) => e.url == mediaAttachment.thumb);
+          // Get thumbnail from media attachments
+          final thumb = entity.media.values.firstWhere(
+            (e) => e.url == mediaAttachment.thumb,
+          );
 
-          ref
-              .read(mediaEncryptionServiceProvider)
-              .retrieveEncryptedMedia(thumb)
-              .then((encryptedMedia) {
-            localFile.value = encryptedMedia;
-          });
-        });
+          // Load encrypted thumbnail
+          final encryptedMedia =
+              await ref.read(mediaEncryptionServiceProvider).retrieveEncryptedMedia(thumb);
+
+          localFile.value = encryptedMedia;
+        }
+
+        loadMedia();
         return null;
       },
-      [messageMediaTableData.remoteUrl, messageMediaTableData.cacheKey],
+      [mediaAttachment?.thumb, messageMediaTableData.cacheKey],
     );
 
     if (localFile.value == null && mediaAttachment?.blurhash == null) {

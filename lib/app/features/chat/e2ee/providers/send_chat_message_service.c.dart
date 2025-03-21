@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
@@ -15,7 +15,7 @@ part 'send_chat_message_service.c.g.dart';
 Future<SendChatMessageService> sendChatMessageService(Ref ref) async {
   return SendChatMessageService(
     currentUserMasterPubkey: ref.watch(currentPubkeySelectorProvider),
-    sendChatMessageService: ref.watch(sendChatMessageNotifierProvider.notifier),
+    sendChatMessageService: ref.watch(sendE2eeChatMessageServiceProvider),
     getExistingConversationId: (String pubkey) =>
         ref.read(existChatConversationIdProvider(pubkey).future),
   );
@@ -29,7 +29,7 @@ class SendChatMessageService {
   });
 
   final String? currentUserMasterPubkey;
-  final SendChatMessageNotifier sendChatMessageService;
+  final SendE2eeChatMessageService sendChatMessageService;
   final Future<String?> Function(String pubkey) getExistingConversationId;
 
   Future<void> send({

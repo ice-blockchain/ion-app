@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
@@ -27,14 +28,17 @@ import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'send_chat_message_provider.c.g.dart';
+part 'send_e2ee_chat_message_service.c.g.dart';
 
 @riverpod
-class SendChatMessageNotifier extends _$SendChatMessageNotifier {
-  @override
-  Future<void> build() async {
-    return;
-  }
+SendE2eeChatMessageService sendE2eeChatMessageService(Ref ref) {
+  return SendE2eeChatMessageService(ref);
+}
+
+class SendE2eeChatMessageService {
+  SendE2eeChatMessageService(this.ref);
+
+  final Ref ref;
 
   Future<void> sendMessage({
     required String conversationId,
@@ -130,10 +134,6 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
               tags: conversationTagsWithMediaTags,
               previousId: isCurrentUser ? eventMessage.id : null,
             );
-
-            // if (isCurrentUser) {
-            //   throw Exception('test');
-            // }
 
             await _sendKind14Message(
               eventMessage: event,
@@ -343,5 +343,39 @@ class SendChatMessageNotifier extends _$SendChatMessageNotifier {
     );
 
     return wrap;
+  }
+
+  Future<void> resendMessage({
+    required EventMessage messageEvent,
+  }) async {
+    final entity = PrivateDirectMessageEntity.fromEventMessage(messageEvent);
+
+    final messageStatuses =
+        await ref.read(conversationMessageDataDaoProvider).messageStatuses(messageEvent.id);
+
+    final failedParticipantsMasterPubkeysMap = messageStatuses
+      ..removeWhere((key, value) => value != MessageDeliveryStatus.failed);
+
+    final failedParticipantsMasterPubkeys = failedParticipantsMasterPubkeysMap.keys.toList();
+
+    final mediaFiles = entity.data.media.values
+        .map(
+          (media) => MediaFile(
+            path: media.url,
+            mimeType: media.mimeType,
+            height: int.parse(media.dimension.split('x').first),
+            width: int.parse(media.dimension.split('x').last),
+          ),
+        )
+        .toList();
+
+    await sendMessage(
+      conversationId: entity.data.uuid,
+      participantsMasterPubkeys: entity.allPubkeys,
+      mediaFiles: mediaFiles,
+      content: messageEvent.content,
+      failedEventMessageId: messageEvent.id,
+      failedParticipantsMasterPubkeys: failedParticipantsMasterPubkeys,
+    );
   }
 }
