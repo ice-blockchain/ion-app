@@ -76,7 +76,7 @@ class StoryContent extends HookConsumerWidget {
     final isPaused = ref.watch(storyPauseControllerProvider);
     final isMenuOpen = ref.watch(storyMenuControllerProvider);
 
-    final shouldShowElements = !isPaused || isMenuOpen;
+    final shouldShowElements = !isPaused || isMenuOpen || isKeyboardVisible;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.0.s),
