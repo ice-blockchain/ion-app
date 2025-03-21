@@ -26,6 +26,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'ion_connect_notifier.c.g.dart';
 
+const _defaultTimeout = Duration(seconds: 30);
+
 @riverpod
 class IonConnectNotifier extends _$IonConnectNotifier {
   @override
@@ -51,7 +53,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .read(relayAuthProvider(relay!))
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
-        await relay!.sendEvents(events);
+        await relay!.sendEvents(events).timeout(
+              _defaultTimeout,
+              onTimeout: () => throw TimeoutException(
+                'Sending events timed out after ${_defaultTimeout.inSeconds} seconds',
+              ),
+            );
 
         if (cache) {
           return events.map(_parseAndCache).toList();
@@ -150,6 +157,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
     final eventsStream = requestEvents(requestMessage, actionSource: actionSource);
+
     final events = await eventsStream.toList();
     return events.isNotEmpty ? events.first : null;
   }
@@ -171,9 +179,10 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
   }) async {
-    final entitiesStream = requestEntities(requestMessage, actionSource: actionSource);
+    final entitiesStream = requestEntities<T>(requestMessage, actionSource: actionSource);
+
     final entities = await entitiesStream.toList();
-    return entities.isNotEmpty ? entities.first as T : null;
+    return entities.isNotEmpty ? entities.first : null;
   }
 
   Future<EventMessage> sign(
