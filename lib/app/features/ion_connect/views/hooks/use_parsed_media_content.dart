@@ -42,7 +42,11 @@ import 'package:ion/app/services/markdown/quill.dart';
           ? plainTextContentDelta
           : markdownContentDelta;
 
-  return _parseMediaContentDelta(delta: delta, media: media);
+  final mediaDeltaFallback = _parseMediaContentDelta(delta: delta, media: media);
+  return (
+    content: processDeltaMatches(mediaDeltaFallback.content),
+    media: mediaDeltaFallback.media
+  );
 }
 
 /// Parses the provided [delta] content to extract media links and separate them from non-media content.

@@ -106,7 +106,7 @@ Delta markdownToDelta(String markdown) {
         processedDelta.insert(op.data, op.attributes);
       }
     } else {
-      _processMatches(op, processedDelta);
+      processedDelta.insert(op.data, op.attributes);
     }
   }
 
