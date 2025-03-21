@@ -450,3 +450,8 @@ class UnknownNotificationCommentException extends IONException {
 class MediaThumbnailNotFoundException extends IONException {
   MediaThumbnailNotFoundException() : super(10088, 'Media thumbnail not found');
 }
+
+class MediaBlurhashCannotBeGeneratedException extends IONException {
+  MediaBlurhashCannotBeGeneratedException(String? mimeType, {dynamic error})
+      : super(10089, 'Media blurhash cannot be generated for $mimeType: $error');
+}
