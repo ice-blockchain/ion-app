@@ -11,10 +11,10 @@ import 'package:ion/app/features/chat/views/components/message_items/message_ite
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/app/utils/filesize.dart';
+import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DocumentMessage extends HookConsumerWidget {
@@ -35,8 +35,12 @@ class DocumentMessage extends HookConsumerWidget {
     final filePath = useState<String>('');
     final fileSizeInFormat = useState<String?>(null);
 
-    useOnInit(
+    useEffect(
       () {
+        final url = entity.data.media.values.firstOrNull?.url;
+        if (Validators.isInvalidUrl(url)) {
+          return null;
+        }
         ref
             .read(mediaEncryptionServiceProvider)
             .retrieveEncryptedMedia(entity.data.media.values.first)
@@ -48,8 +52,9 @@ class DocumentMessage extends HookConsumerWidget {
             }
           },
         );
+        return null;
       },
-      [],
+      [entity.data.media.values.firstOrNull],
     );
 
     return MessageItemWrapper(

@@ -10,6 +10,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -66,6 +67,8 @@ class VisualMediaContent extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final isVideo = MediaType.fromMimeType(mediaAttachment?.mimeType ?? '') == MediaType.video;
+
     return Stack(
       key: Key(messageMediaTableData.id.toString()),
       alignment: Alignment.center,
@@ -88,6 +91,19 @@ class VisualMediaContent extends HookConsumerWidget {
               fit: BoxFit.cover,
               width: double.infinity,
               height: height,
+            ),
+          ),
+        if (isVideo)
+          Align(
+            child: Container(
+              padding: EdgeInsets.all(6.0.s),
+              decoration: BoxDecoration(
+                color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(12.0.s),
+              ),
+              child: Assets.svg.iconVideoPlay.icon(
+                size: 16.0.s,
+              ),
             ),
           ),
         if (messageMediaTableData.status == MessageMediaStatus.processing)
