@@ -102,6 +102,15 @@ class IONIdentityWallets {
         pageToken: pageToken,
       );
 
+  Future<WalletTransferRequest> getWalletTransferRequestById({
+    required String walletId,
+    required String transferId,
+  }) =>
+      _getWalletTransferRequestsService.getWalletTransferRequestById(
+        walletId: walletId,
+        transferId: transferId,
+      );
+
   Future<GenerateSignatureResponse> generateMessageSignatureWithPasskey(
     String walletId,
     String message,

@@ -20,6 +20,8 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
   FutureOr<void> build() {}
 
   Future<void> publish(UserMetadata userMetadata, {MediaFile? avatar, MediaFile? banner}) async {
+    if (state.isLoading) return;
+
     state = const AsyncValue.loading();
 
     state = await AsyncValue.guard(() async {

@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
+import 'package:ion_identity_client/ion_identity.dart';
 
 part 'transfer_result.c.freezed.dart';
 part 'transfer_result.c.g.dart';
@@ -24,4 +25,19 @@ class TransferResult with _$TransferResult {
   }) = _TransferResult;
 
   factory TransferResult.fromJson(Map<String, dynamic> json) => _$TransferResultFromJson(json);
+
+  factory TransferResult.fromDTO(WalletTransferRequest request) => TransferResult(
+        id: request.id,
+        txHash: request.txHash,
+        walletId: request.walletId,
+        status: $enumDecode(_$TransferStatusEnumMap, request.status),
+        requester: request.requester.toJson(),
+        requestBody: request.requestBody.toJson(),
+        metadata: request.metadata ?? {},
+        dateRequested: request.dateRequested,
+        dateConfirmed: request.dateConfirmed,
+        dateBroadcasted: request.dateBroadcasted,
+        network: request.network,
+        reason: request.reason,
+      );
 }

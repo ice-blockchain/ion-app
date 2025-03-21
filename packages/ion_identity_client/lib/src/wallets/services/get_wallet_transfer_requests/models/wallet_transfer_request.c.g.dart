@@ -25,6 +25,8 @@ _$WalletTransferRequestImpl _$$WalletTransferRequestImplFromJson(
       dateConfirmed: json['dateConfirmed'] == null
           ? null
           : DateTime.parse(json['dateConfirmed'] as String),
+      reason: json['reason'] as String?,
+      metadata: json['metadata'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$$WalletTransferRequestImplToJson(
@@ -41,4 +43,6 @@ Map<String, dynamic> _$$WalletTransferRequestImplToJson(
       'fee': instance.fee,
       'dateBroadcasted': instance.dateBroadcasted?.toIso8601String(),
       'dateConfirmed': instance.dateConfirmed?.toIso8601String(),
+      'reason': instance.reason,
+      'metadata': instance.metadata,
     };

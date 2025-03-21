@@ -6,7 +6,6 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/mappers/nft_mapper.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
@@ -26,15 +25,8 @@ part 'wallet_views_service.c.g.dart';
 
 @riverpod
 Future<WalletViewsService> walletViewsService(Ref ref) async {
-  final mainWallet = await ref.watch(mainWalletProvider.future);
-
-  if (mainWallet == null) {
-    throw MainWalletNotFoundException();
-  }
-
   return WalletViewsService(
     await ref.watch(ionIdentityClientProvider.future),
-    mainWallet,
     await ref.watch(walletsNotifierProvider.future),
     ref.watch(networksRepositoryProvider),
   );
@@ -43,12 +35,10 @@ Future<WalletViewsService> walletViewsService(Ref ref) async {
 class WalletViewsService {
   WalletViewsService(
     this._identity,
-    this._mainWallet,
     this._userWallets,
     this._networksRepository,
   );
 
-  final Wallet _mainWallet;
   final List<Wallet> _userWallets;
   final IONIdentityClient _identity;
   final NetworksRepository _networksRepository;
@@ -60,16 +50,29 @@ class WalletViewsService {
       shortViews.map((e) => _identity.wallets.getWalletView(e.id)),
     );
     final networks = await _networksRepository.getAllAsMap();
+    final mainWalletViewId = viewsDetailsDTO
+        .reduce(
+          (a, b) => a.createdAt.isBefore(b.createdAt) ? a : b,
+        )
+        .id;
 
-    return viewsDetailsDTO.map((viewDTO) => _parseWalletView(viewDTO, networks)).toList();
+    return viewsDetailsDTO
+        .map(
+          (viewDTO) => _parseWalletView(
+            viewDTO,
+            networks,
+            isMainWalletView: viewDTO.id == mainWalletViewId,
+          ),
+        )
+        .toList();
   }
 
   Future<WalletViewData> create(String name) async {
     final request = _CreateUpdateRequestBuilder().build(name: name);
     final networks = await _networksRepository.getAllAsMap();
-    final walletView = await _identity.wallets
-        .createWalletView(request)
-        .then((viewDTO) => _parseWalletView(viewDTO, networks));
+    final walletView = await _identity.wallets.createWalletView(request).then(
+          (viewDTO) => _parseWalletView(viewDTO, networks, isMainWalletView: false),
+        );
     return walletView;
   }
 
@@ -86,21 +89,28 @@ class WalletViewsService {
       userWallets: _userWallets,
     );
 
-    return _identity.wallets
-        .updateWalletView(walletView.id, request)
-        .then((viewDTO) => _parseWalletView(viewDTO, networks));
+    return _identity.wallets.updateWalletView(walletView.id, request).then(
+          (viewDTO) => _parseWalletView(
+            viewDTO,
+            networks,
+            isMainWalletView: walletView.isMainWalletView,
+          ),
+        );
   }
 
   Future<void> delete({required String walletViewId}) async {
     return _identity.wallets.deleteWalletView(walletViewId);
   }
 
-  WalletViewData _parseWalletView(WalletView viewDTO, Map<String, NetworkData> networks) {
+  WalletViewData _parseWalletView(
+    WalletView viewDTO,
+    Map<String, NetworkData> networks, {
+    required bool isMainWalletView,
+  }) {
     final coinGroups = <String, CoinsGroup>{};
     final symbolGroups = <String>{};
 
     var totalViewBalanceUSD = 0.0;
-    var isMainWalletView = false;
 
     for (final coinInWalletDTO in viewDTO.coins) {
       final coinDTO = coinInWalletDTO.coin;
@@ -108,10 +118,6 @@ class WalletViewsService {
 
       var coinAmount = 0.0;
       var coinBalanceUSD = 0.0;
-
-      if (coinInWalletDTO.walletId == _mainWallet.id) {
-        isMainWalletView = true;
-      }
 
       final aggregationItem = _searchAggregationItem(
         coinInWalletDTO: coinInWalletDTO,

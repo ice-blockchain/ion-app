@@ -14,6 +14,7 @@ import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/services/ion_connect/encrypted_message_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/utils/retry.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -52,7 +53,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     state = await AsyncValue.guard(() async {
       final service = await ref.read(coinsServiceProvider.future);
 
-      final result = await service.send(
+      var result = await service.send(
         amount: coinAssetData.amount,
         senderWallet: senderWallet,
         sendableAsset: sendableAsset,
@@ -60,7 +61,22 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         receiverAddress: form.receiverAddress,
       );
 
-      if (result.status == TransferStatus.failed || result.status == TransferStatus.rejected) {
+      bool isRetryStatus(TransferStatus status) =>
+          status == TransferStatus.pending || status == TransferStatus.executing;
+      if (isRetryStatus(result.status)) {
+        // When executing or pending, txHash is still null, so we need to wait a bit
+        result = await withRetry<TransferResult>(
+          ({Object? error}) => service.getTransfer(
+            walletId: senderWallet.id,
+            transferId: result.id,
+          ),
+          maxRetries: 5,
+          initialDelay: const Duration(seconds: 1),
+          retryWhen: (result) => result is TransferResult && isRetryStatus(result.status),
+        );
+      }
+
+      if (result.status == TransferStatus.rejected || result.status == TransferStatus.failed) {
         throw FailedToSendCryptoAssetsException(result.reason);
       }
 
@@ -76,7 +92,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         dateBroadcasted: result.dateBroadcasted,
         assetData: coinAssetData,
         walletViewName: form.wallet.name,
-        senderAddress: form.senderWallet!.address!,
+        senderAddress: senderWallet.address!,
         receiverAddress: form.receiverAddress,
         receiverPubkey: form.contactPubkey,
         type: TransactionType.send,
@@ -92,6 +108,11 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
 
       return details;
     });
+
+    if (state.hasError) {
+      // Log to get the error stack trace
+      Logger.error(state.error!, stackTrace: state.stackTrace);
+    }
   }
 
   Future<void> _sendTransactionEntity({
