@@ -17,8 +17,8 @@ import 'package:ion/app/features/user/pages/profile_page/pages/common/profile_co
 import 'package:ion/app/features/user/pages/profile_page/pages/common/profile_network_button.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/coins_network_fee_selector.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -148,7 +148,7 @@ class SendCoinFormModal extends HookConsumerWidget {
                       else
                         ItemLoadingState(itemHeight: 60.0.s),
                       SizedBox(height: 16.0.s),
-                      const NetworkFeeSelector(),
+                      const CoinsNetworkFeeSelector(),
                       SizedBox(height: 45.0.s),
                       Button(
                         type: amountController.text.isEmpty

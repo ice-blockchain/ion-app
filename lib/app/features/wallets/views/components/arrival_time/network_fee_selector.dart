@@ -4,40 +4,40 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/slider/app_slider.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/network_fee.dart';
 
 class NetworkFeeSelector extends ConsumerWidget {
-  const NetworkFeeSelector({super.key});
+  const NetworkFeeSelector({
+    required this.options,
+    required this.selectedOption,
+    required this.onChanged,
+    super.key,
+  });
+
+  final List<NetworkFeeOption> options;
+  final NetworkFeeOption? selectedOption;
+  final ValueChanged<int>? onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formData = ref.watch(sendAssetFormControllerProvider());
-    final options = formData.networkFeeOptions;
-    final selectedOption = formData.selectedNetworkFeeOption;
-
     if (options.isEmpty || selectedOption == null) {
       return const SizedBox.shrink();
     }
 
     return Column(
       children: [
-        ArrivalTime(option: selectedOption),
+        ArrivalTime(option: selectedOption!),
         SizedBox(height: 12.0.s),
         AppSlider(
           maxValue: options.length - 1,
           stops: List.generate(options.length, (i) => i.toDouble()),
-          initialValue: options.indexOf(selectedOption).toDouble(),
-          onChanged: (value) {
-            final selectedOption = options[value.toInt()];
-            ref
-                .read(sendAssetFormControllerProvider().notifier)
-                .selectNetworkFeeOption(selectedOption);
-          },
+          initialValue: options.indexOf(selectedOption!).toDouble(),
+          onChanged: (value) => onChanged?.call(value.toInt()),
         ),
         SizedBox(height: 8.0.s),
-        NetworkFeeOptionWidget(feeOption: selectedOption),
+        NetworkFeeOptionWidget(feeOption: selectedOption!),
       ],
     );
   }

@@ -6,7 +6,7 @@ import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_nft_form_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -21,15 +21,14 @@ class SendNftNotifier extends _$SendNftNotifier {
   }
 
   Future<void> send(OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity) async {
-    final form = ref.read(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
+    final form = ref.read(sendNftFormControllerProvider);
 
-    if (form.assetData is! NftAssetData) {
-      Logger.error('Cannot send nft: asset data is not a nft asset');
+    if (form.nft == null) {
+      Logger.error('Cannot send nft: nft is missing');
       return;
     }
 
-    final nftAssetData = form.assetData as NftAssetData;
-    final sendableAsset = nftAssetData.nft;
+    final nft = form.nft!;
     final senderWallet = form.senderWallet;
 
     if (senderWallet == null) {
@@ -44,9 +43,10 @@ class SendNftNotifier extends _$SendNftNotifier {
 
       final result = await sendNftUseCase.send(
         senderWallet: senderWallet,
-        sendableAsset: sendableAsset,
-        onVerifyIdentity: onVerifyIdentity,
+        sendableAsset: nft,
         receiverAddress: form.receiverAddress,
+        networkFeeType: form.selectedNetworkFeeOption?.type,
+        onVerifyIdentity: onVerifyIdentity,
       );
 
       if (result.status == TransferStatus.failed || result.status == TransferStatus.rejected) {
@@ -58,12 +58,12 @@ class SendNftNotifier extends _$SendNftNotifier {
       final details = TransactionDetails(
         txHash: result.txHash!,
         walletId: result.walletId,
-        network: form.network!,
+        network: nft.network,
         status: result.status,
         dateRequested: result.dateRequested,
         dateConfirmed: result.dateConfirmed,
         dateBroadcasted: result.dateBroadcasted,
-        assetData: nftAssetData,
+        assetData: CryptoAssetData.nft(nft: nft),
         walletViewName: form.wallet.name,
         senderAddress: form.senderWallet!.address!,
         receiverAddress: form.receiverAddress,

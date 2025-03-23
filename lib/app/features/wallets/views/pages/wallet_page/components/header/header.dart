@@ -77,8 +77,8 @@ class Header extends ConsumerWidget {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     if (!ref.context.mounted) return; // Check again after delay
 
-    ref.invalidate(sendAssetFormControllerProvider());
-    ref.read(sendAssetFormControllerProvider().notifier).setReceiverAddress(scannedAddress);
+    ref.invalidate(sendAssetFormControllerProvider);
+    ref.read(sendAssetFormControllerProvider.notifier).setReceiverAddress(scannedAddress);
     await CoinsSendFormRoute().push<void>(ref.context);
   }
 }

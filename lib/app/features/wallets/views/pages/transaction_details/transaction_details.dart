@@ -10,7 +10,6 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/timeline_item_data.dart';
 import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
@@ -29,9 +28,7 @@ import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
-  const TransactionDetailsPage({required this.type, super.key});
-
-  final CryptoAssetType type;
+  const TransactionDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

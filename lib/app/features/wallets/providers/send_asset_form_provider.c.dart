@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
@@ -12,7 +11,6 @@ import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
-import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
@@ -20,12 +18,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_asset_form_provider.c.g.dart';
 
-enum CryptoAssetType { coin, nft }
-
 @Riverpod(keepAlive: true)
 class SendAssetFormController extends _$SendAssetFormController {
   @override
-  SendAssetFormData build({CryptoAssetType type = CryptoAssetType.coin}) {
+  SendAssetFormData build() {
     final walletView = ref.watch(currentWalletViewDataProvider).requireValue;
     return SendAssetFormData(
       wallet: walletView,
@@ -38,15 +34,6 @@ class SendAssetFormController extends _$SendAssetFormController {
   void setCoin(CoinsGroup coin) {
     state = state.copyWith(
       assetData: CryptoAssetData.coin(coinsGroup: coin),
-      senderWallet: null,
-      networkFeeOptions: [],
-      selectedNetworkFeeOption: null,
-    );
-  }
-
-  void setNft(NftData nft) {
-    state = state.copyWith(
-      assetData: CryptoAssetData.nft(nft: nft),
       senderWallet: null,
       networkFeeOptions: [],
       selectedNetworkFeeOption: null,
@@ -139,17 +126,11 @@ class SendAssetFormController extends _$SendAssetFormController {
   }
 
   void _checkIfUserCanCoverFee() {
-    final selectedFee = state.selectedNetworkFeeOption;
-    final networkNativeToken = state.networkNativeToken;
-
-    if (selectedFee == null || networkNativeToken == null) return;
-
-    final parsedBalance = double.tryParse(networkNativeToken.balance) ?? 0;
-    final convertedBalance = parsedBalance / pow(10, networkNativeToken.decimals);
-    final hasEnoughForFee = convertedBalance >= selectedFee.amount;
-
     state = state.copyWith(
-      canCoverNetworkFee: hasEnoughForFee,
+      canCoverNetworkFee: canUserCoverFee(
+        selectedFee: state.selectedNetworkFeeOption,
+        networkNativeToken: state.networkNativeToken,
+      ),
     );
   }
 

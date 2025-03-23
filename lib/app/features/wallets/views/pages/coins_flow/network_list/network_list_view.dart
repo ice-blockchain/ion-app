@@ -42,7 +42,7 @@ class NetworkListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final coinsGroup = switch (type) {
       NetworkListViewType.send =>
-        ref.watch(sendAssetFormControllerProvider()).assetData.as<CoinAssetData>()?.coinsGroup,
+        ref.watch(sendAssetFormControllerProvider).assetData.as<CoinAssetData>()?.coinsGroup,
       NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin!,
     };
 
@@ -68,7 +68,7 @@ class NetworkListView extends ConsumerWidget {
 
       switch (type) {
         case NetworkListViewType.send:
-          final state = ref.read(sendAssetFormControllerProvider());
+          final state = ref.read(sendAssetFormControllerProvider);
 
           if (state.contactPubkey != null) {
             final contact = await ref.read(userMetadataProvider(state.contactPubkey!).future);
@@ -87,7 +87,7 @@ class NetworkListView extends ConsumerWidget {
           }
 
           if (context.mounted) {
-            unawaited(ref.read(sendAssetFormControllerProvider().notifier).setNetwork(network));
+            unawaited(ref.read(sendAssetFormControllerProvider.notifier).setNetwork(network));
             unawaited(CoinsSendFormRoute().push<void>(context));
           }
         case NetworkListViewType.receive:

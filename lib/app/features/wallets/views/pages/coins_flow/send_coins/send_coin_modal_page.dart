@@ -20,7 +20,7 @@ class SendCoinModalPage extends ConsumerWidget {
       body: CoinsListView(
         coinsResult: coinsResult,
         onItemTap: (group) {
-          ref.read(sendAssetFormControllerProvider().notifier).setCoin(group);
+          ref.read(sendAssetFormControllerProvider.notifier).setCoin(group);
           NetworkSelectSendRoute().push<void>(context);
         },
         title: context.i18n.wallet_send_coins,
