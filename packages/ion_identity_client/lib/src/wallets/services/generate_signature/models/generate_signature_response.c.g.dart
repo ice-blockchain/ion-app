@@ -11,8 +11,6 @@ _$GenerateSignatureResponseImpl _$$GenerateSignatureResponseImplFromJson(
     _$GenerateSignatureResponseImpl(
       id: json['id'] as String,
       keyId: json['keyId'] as String,
-      walletId: json['walletId'] as String?,
-      network: json['network'] as String?,
       requester: Requester.fromJson(json['requester'] as Map<String, dynamic>),
       requestBody: json['requestBody'] as Map<String, dynamic>,
       status: json['status'] as String,
@@ -26,8 +24,6 @@ Map<String, dynamic> _$$GenerateSignatureResponseImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'keyId': instance.keyId,
-      'walletId': instance.walletId,
-      'network': instance.network,
       'requester': instance.requester.toJson(),
       'requestBody': instance.requestBody,
       'status': instance.status,

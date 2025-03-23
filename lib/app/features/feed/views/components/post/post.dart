@@ -41,6 +41,7 @@ class Post extends ConsumerWidget {
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
     this.contentWrapper,
+    this.onVideoTap,
     super.key,
   });
 
@@ -55,6 +56,7 @@ class Post extends ConsumerWidget {
   final bool isTextSelectable;
   final int? bodyMaxLines;
   final Widget Function(Widget content)? contentWrapper;
+  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,6 +82,7 @@ class Post extends ConsumerWidget {
           entity: entity,
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
+          onVideoTap: onVideoTap,
         ),
         ScreenSideOffset.small(
           child: Column(

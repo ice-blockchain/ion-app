@@ -23,8 +23,6 @@ GenerateSignatureResponse _$GenerateSignatureResponseFromJson(
 mixin _$GenerateSignatureResponse {
   String get id => throw _privateConstructorUsedError;
   String get keyId => throw _privateConstructorUsedError;
-  String? get walletId => throw _privateConstructorUsedError;
-  String? get network => throw _privateConstructorUsedError;
   Requester get requester => throw _privateConstructorUsedError;
   Map<String, dynamic> get requestBody => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
@@ -51,8 +49,6 @@ abstract class $GenerateSignatureResponseCopyWith<$Res> {
   $Res call(
       {String id,
       String keyId,
-      String? walletId,
-      String? network,
       Requester requester,
       Map<String, dynamic> requestBody,
       String status,
@@ -81,8 +77,6 @@ class _$GenerateSignatureResponseCopyWithImpl<$Res,
   $Res call({
     Object? id = null,
     Object? keyId = null,
-    Object? walletId = freezed,
-    Object? network = freezed,
     Object? requester = null,
     Object? requestBody = null,
     Object? status = null,
@@ -99,14 +93,6 @@ class _$GenerateSignatureResponseCopyWithImpl<$Res,
           ? _value.keyId
           : keyId // ignore: cast_nullable_to_non_nullable
               as String,
-      walletId: freezed == walletId
-          ? _value.walletId
-          : walletId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      network: freezed == network
-          ? _value.network
-          : network // ignore: cast_nullable_to_non_nullable
-              as String?,
       requester: null == requester
           ? _value.requester
           : requester // ignore: cast_nullable_to_non_nullable
@@ -157,8 +143,6 @@ abstract class _$$GenerateSignatureResponseImplCopyWith<$Res>
   $Res call(
       {String id,
       String keyId,
-      String? walletId,
-      String? network,
       Requester requester,
       Map<String, dynamic> requestBody,
       String status,
@@ -187,8 +171,6 @@ class __$$GenerateSignatureResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? keyId = null,
-    Object? walletId = freezed,
-    Object? network = freezed,
     Object? requester = null,
     Object? requestBody = null,
     Object? status = null,
@@ -205,14 +187,6 @@ class __$$GenerateSignatureResponseImplCopyWithImpl<$Res>
           ? _value.keyId
           : keyId // ignore: cast_nullable_to_non_nullable
               as String,
-      walletId: freezed == walletId
-          ? _value.walletId
-          : walletId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      network: freezed == network
-          ? _value.network
-          : network // ignore: cast_nullable_to_non_nullable
-              as String?,
       requester: null == requester
           ? _value.requester
           : requester // ignore: cast_nullable_to_non_nullable
@@ -247,8 +221,6 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
   const _$GenerateSignatureResponseImpl(
       {required this.id,
       required this.keyId,
-      required this.walletId,
-      required this.network,
       required this.requester,
       required final Map<String, dynamic> requestBody,
       required this.status,
@@ -265,10 +237,6 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
   final String id;
   @override
   final String keyId;
-  @override
-  final String? walletId;
-  @override
-  final String? network;
   @override
   final Requester requester;
   final Map<String, dynamic> _requestBody;
@@ -296,7 +264,7 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
 
   @override
   String toString() {
-    return 'GenerateSignatureResponse(id: $id, keyId: $keyId, walletId: $walletId, network: $network, requester: $requester, requestBody: $requestBody, status: $status, signature: $signature, dateRequested: $dateRequested, dateSigned: $dateSigned)';
+    return 'GenerateSignatureResponse(id: $id, keyId: $keyId, requester: $requester, requestBody: $requestBody, status: $status, signature: $signature, dateRequested: $dateRequested, dateSigned: $dateSigned)';
   }
 
   @override
@@ -306,9 +274,6 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
             other is _$GenerateSignatureResponseImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.keyId, keyId) || other.keyId == keyId) &&
-            (identical(other.walletId, walletId) ||
-                other.walletId == walletId) &&
-            (identical(other.network, network) || other.network == network) &&
             (identical(other.requester, requester) ||
                 other.requester == requester) &&
             const DeepCollectionEquality()
@@ -328,8 +293,6 @@ class _$GenerateSignatureResponseImpl implements _GenerateSignatureResponse {
       runtimeType,
       id,
       keyId,
-      walletId,
-      network,
       requester,
       const DeepCollectionEquality().hash(_requestBody),
       status,
@@ -358,8 +321,6 @@ abstract class _GenerateSignatureResponse implements GenerateSignatureResponse {
   const factory _GenerateSignatureResponse(
       {required final String id,
       required final String keyId,
-      required final String? walletId,
-      required final String? network,
       required final Requester requester,
       required final Map<String, dynamic> requestBody,
       required final String status,
@@ -374,10 +335,6 @@ abstract class _GenerateSignatureResponse implements GenerateSignatureResponse {
   String get id;
   @override
   String get keyId;
-  @override
-  String? get walletId;
-  @override
-  String? get network;
   @override
   Requester get requester;
   @override

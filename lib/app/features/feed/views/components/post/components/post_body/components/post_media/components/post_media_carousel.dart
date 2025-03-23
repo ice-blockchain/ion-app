@@ -11,6 +11,7 @@ class PostMediaCarousel extends StatelessWidget {
     required this.media,
     required this.aspectRatio,
     required this.eventReference,
+    this.onVideoTap,
     super.key,
   });
 
@@ -20,6 +21,8 @@ class PostMediaCarousel extends StatelessWidget {
 
   final EventReference eventReference;
 
+  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
+
   @override
   Widget build(BuildContext context) {
     if (aspectRatio < 1) {
@@ -27,6 +30,7 @@ class PostMediaCarousel extends StatelessWidget {
         media: media,
         aspectRatio: aspectRatio,
         eventReference: eventReference,
+        onVideoTap: onVideoTap,
       );
     }
 
@@ -34,6 +38,7 @@ class PostMediaCarousel extends StatelessWidget {
       media: media,
       aspectRatio: aspectRatio,
       eventReference: eventReference,
+      onVideoTap: onVideoTap,
     );
   }
 }

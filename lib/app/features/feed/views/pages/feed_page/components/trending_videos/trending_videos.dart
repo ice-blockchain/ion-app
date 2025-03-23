@@ -50,7 +50,9 @@ class TrendingVideos extends ConsumerWidget {
           onPress: () {
             final eventReference =
                 videos.whereType<ModifiablePostEntity>().first.toEventReference();
-            VideosRoute(eventReference: eventReference.encode()).push<void>(context);
+            TrendingVideosRoute(
+              eventReference: eventReference.encode(),
+            ).push<void>(context);
           },
           title: context.i18n.feed_trending_videos,
           leadingIcon: const VideosIcon(),

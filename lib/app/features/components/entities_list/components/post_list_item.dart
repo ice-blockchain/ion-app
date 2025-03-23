@@ -9,12 +9,15 @@ class PostListItem extends StatelessWidget {
   const PostListItem({
     required this.eventReference,
     this.framedEventType = FramedEventType.quoted,
+    this.onVideoTap,
     super.key,
   });
 
   final EventReference eventReference;
 
   final FramedEventType framedEventType;
+
+  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +29,7 @@ class PostListItem extends StatelessWidget {
       child: Post(
         eventReference: eventReference,
         framedEventType: framedEventType,
+        onVideoTap: onVideoTap,
       ),
     );
   }

@@ -25,12 +25,14 @@ class EntitiesList extends HookWidget {
     required this.entities,
     this.framedEventType = FramedEventType.quoted,
     this.separatorHeight,
+    this.onVideoTap,
     super.key,
   });
 
   final List<IonConnectEntity> entities;
   final double? separatorHeight;
   final FramedEventType framedEventType;
+  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class EntitiesList extends HookWidget {
           eventReference: eventReference,
           framedEventType: framedEventType,
           separatorHeight: separatorHeight,
+          onVideoTap: onVideoTap,
         );
       },
     );
@@ -53,6 +56,7 @@ class _EntityListItem extends ConsumerWidget {
   _EntityListItem({
     required this.eventReference,
     required this.framedEventType,
+    this.onVideoTap,
     double? separatorHeight,
     super.key,
   }) : separatorHeight = separatorHeight ?? 12.0.s;
@@ -60,6 +64,7 @@ class _EntityListItem extends ConsumerWidget {
   final EventReference eventReference;
   final double separatorHeight;
   final FramedEventType framedEventType;
+  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,11 +86,12 @@ class _EntityListItem extends ConsumerWidget {
         ModifiablePostEntity() || PostEntity() => PostListItem(
             eventReference: entity.toEventReference(),
             framedEventType: framedEventType,
+            onVideoTap: onVideoTap,
           ),
         final ArticleEntity article => ArticleListItem(article: article),
         GenericRepostEntity() ||
         RepostEntity() =>
-          RepostListItem(eventReference: entity.toEventReference()),
+          RepostListItem(eventReference: entity.toEventReference(), onVideoTap: onVideoTap),
         _ => const SizedBox.shrink()
       },
     );

@@ -79,7 +79,8 @@ class LoadMoreBuilder extends HookWidget {
     final loadMoreOffset = this.loadMoreOffset ?? metrics.viewportDimension;
     if (metrics.maxScrollExtent - metrics.pixels <= loadMoreOffset) {
       loadMore();
+      return true;
     }
-    return true;
+    return false;
   }
 }

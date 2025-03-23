@@ -8,9 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/feed_trending_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/video/views/hooks/use_status_bar_color.dart';
@@ -19,10 +19,26 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_back_button.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class VideosPage extends HookConsumerWidget {
-  const VideosPage(this.eventReference, {super.key});
+class _FlattenedVideo {
+  _FlattenedVideo({required this.entity, required this.media});
+
+  final ModifiablePostEntity entity;
+  final MediaAttachment media;
+}
+
+class VideosVerticalScrollPage extends HookConsumerWidget {
+  const VideosVerticalScrollPage({
+    required this.eventReference,
+    required this.getVideosData,
+    required this.onLoadMore,
+    this.initialMediaIndex = 0,
+    super.key,
+  });
 
   final EventReference eventReference;
+  final int initialMediaIndex;
+  final EntitiesPagedDataState? Function() getVideosData;
+  final void Function() onLoadMore;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,16 +59,33 @@ class VideosPage extends HookConsumerWidget {
       );
     }
 
-    final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-    final videosData = ref.watch(entitiesPagedDataProvider(dataSource));
-    final trendingVideos = videosData?.data.items?.whereType<ModifiablePostEntity>().toList() ?? [];
+    final videosData = getVideosData();
+    final filteredVideos = videosData?.data.items
+            ?.whereType<ModifiablePostEntity>()
+            .where((item) => item.data.hasVideo)
+            .toList() ??
+        [];
 
-    final videos = trendingVideos.isEmpty ? [ionConnectEntity] : trendingVideos;
+    final entities = filteredVideos.isEmpty ? [ionConnectEntity] : filteredVideos;
 
-    final initialPage = trendingVideos.indexWhere((video) => video.id == ionConnectEntity.id);
-    final startPage = initialPage >= 0 ? initialPage : 0;
+    final List<_FlattenedVideo> flattenedVideos = useMemoized(
+      () {
+        final result = <_FlattenedVideo>[];
+        for (final entity in entities) {
+          for (final media in entity.data.videos) {
+            result.add(_FlattenedVideo(entity: entity, media: media));
+          }
+        }
+        return result;
+      },
+      [entities],
+    );
 
-    final userPageController = usePageController(initialPage: startPage);
+    final initialPage =
+        flattenedVideos.indexWhere((video) => video.entity.id == ionConnectEntity.id) +
+            initialMediaIndex;
+
+    final userPageController = usePageController(initialPage: initialPage);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -86,14 +119,14 @@ class VideosPage extends HookConsumerWidget {
         ),
         body: PageView.builder(
           controller: userPageController,
-          itemCount: videos.length,
+          itemCount: flattenedVideos.length,
           scrollDirection: Axis.vertical,
-          onPageChanged: (index) => _loadMore(ref, index, videos.length),
+          onPageChanged: (index) => _loadMore(ref, index, flattenedVideos.length),
           itemBuilder: (_, index) => VideoPage(
-            eventReference: videos[index].toEventReference(),
-            video: videos[index],
+            video: flattenedVideos[index].entity,
+            videoUrl: flattenedVideos[index].media.url,
             onVideoEnded: () {
-              if (index < videos.length - 1) {
+              if (index < flattenedVideos.length - 1) {
                 userPageController.nextPage(
                   duration: animationDuration,
                   curve: Curves.easeInOut,
@@ -106,16 +139,32 @@ class VideosPage extends HookConsumerWidget {
     );
   }
 
+  // EntitiesPagedDataState? _getVideosData(WidgetRef ref) {
+  //   switch (videosPageType) {
+  //     case VideosPageType.trending:
+  //       final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
+  //       return ref.watch(entitiesPagedDataProvider(dataSource));
+  //     case VideosPageType.feed:
+  //       return ref.watch(feedPostsProvider);
+  //   }
+  // }
+
   void _loadMore(WidgetRef ref, int index, int totalItems) {
     const threshold = 2;
     if (totalItems > threshold && index >= totalItems - threshold) {
-      ref
-          .read(
-            entitiesPagedDataProvider(
-              ref.read(feedTrendingVideosDataSourceProvider),
-            ).notifier,
-          )
-          .fetchEntities();
+      onLoadMore();
+      // switch (videosPageType) {
+      //   case VideosPageType.trending:
+      //     ref
+      //         .read(
+      //           entitiesPagedDataProvider(
+      //             ref.read(feedTrendingVideosDataSourceProvider),
+      //           ).notifier,
+      //         )
+      //         .fetchEntities();
+      //   case VideosPageType.feed:
+      //     ref.read(feedPostsProvider.notifier).loadMore();
+      // }
     }
   }
 }

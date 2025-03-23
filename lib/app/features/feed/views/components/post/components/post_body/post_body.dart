@@ -22,6 +22,7 @@ class PostBody extends HookConsumerWidget {
     this.isTextSelectable = false,
     this.maxLines = 6,
     this.sidePadding,
+    this.onVideoTap,
     super.key,
   });
 
@@ -29,6 +30,7 @@ class PostBody extends HookConsumerWidget {
   final bool isTextSelectable;
   final int? maxLines;
   final double? sidePadding;
+  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,6 +112,7 @@ class PostBody extends HookConsumerWidget {
                   media: media,
                   eventReference: entity.toEventReference(),
                   sidePadding: sidePadding,
+                  onVideoTap: onVideoTap,
                 ),
               ),
             if (media.isEmpty && urlPreview != null)

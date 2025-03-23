@@ -32,7 +32,6 @@ class SingleMediaView extends StatelessWidget {
     return media.mediaType == MediaType.video
         ? VideoPage(
             video: post,
-            eventReference: eventReference,
             looping: true,
           )
         : Column(

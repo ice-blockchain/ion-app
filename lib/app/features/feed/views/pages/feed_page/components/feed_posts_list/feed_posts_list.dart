@@ -10,6 +10,7 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.d
 import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class FeedPostsList extends HookConsumerWidget {
@@ -33,6 +34,12 @@ class FeedPostsList extends HookConsumerWidget {
 
     return EntitiesList(
       entities: entities,
+      onVideoTap: ({required String eventReference, required int initialMediaIndex}) {
+        FeedVideosRoute(
+          eventReference: eventReference,
+          initialMediaIndex: initialMediaIndex,
+        ).push<void>(context);
+      },
     );
   }
 }

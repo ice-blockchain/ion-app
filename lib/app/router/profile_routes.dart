@@ -5,6 +5,7 @@ part of 'app_routes.c.dart';
 class ProfileRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<ProfileRoute>(path: 'user/:pubkey'),
+    TypedGoRoute<ProfileVideosRoute>(path: 'user-videos-fullstack/:pubkey'),
     TypedGoRoute<ProfileEditRoute>(path: 'profile_edit'),
     TypedGoRoute<FollowListRoute>(path: 'follow-list-fullstack'),
     TypedShellRoute<ModalShellRouteData>(
@@ -28,6 +29,28 @@ class ProfileRoute extends BaseRouteData {
         );
 
   final String pubkey;
+}
+
+class ProfileVideosRoute extends BaseRouteData {
+  ProfileVideosRoute({
+    required this.pubkey,
+    required this.tabEntityType,
+    required this.eventReference,
+    this.initialMediaIndex = 0,
+  }) : super(
+          child: ProfileVideosPage(
+            pubkey: pubkey,
+            tabEntityType: tabEntityType,
+            eventReference: EventReference.fromEncoded(eventReference),
+            initialMediaIndex: initialMediaIndex,
+          ),
+          type: IceRouteType.swipeDismissible,
+        );
+
+  final String pubkey;
+  final TabEntityType tabEntityType;
+  final String eventReference;
+  final int initialMediaIndex;
 }
 
 class ProfileEditRoute extends BaseRouteData {

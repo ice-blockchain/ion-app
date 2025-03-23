@@ -12,6 +12,7 @@ import 'package:ion/app/features/components/entities_list/entities_list_skeleton
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/providers/feed_search_posts_data_source_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 
 class FeedAdvancedSearchPosts extends HookConsumerWidget {
   const FeedAdvancedSearchPosts({
@@ -21,7 +22,6 @@ class FeedAdvancedSearchPosts extends HookConsumerWidget {
   });
 
   final String query;
-
   final AdvancedSearchCategory category;
 
   @override
@@ -41,7 +41,16 @@ class FeedAdvancedSearchPosts extends HookConsumerWidget {
         else if (entities.isEmpty)
           NothingIsFound(title: context.i18n.search_nothing_found)
         else
-          EntitiesList(entities: entities),
+          EntitiesList(
+            entities: entities,
+            onVideoTap: ({required String eventReference, required int initialMediaIndex}) =>
+                FeedAdvancedSearchVideosRoute(
+              eventReference: eventReference,
+              initialMediaIndex: initialMediaIndex,
+              query: query,
+              category: category,
+            ).push<void>(context),
+          ),
       ],
       onRefresh: () async => ref.invalidate(entitiesPagedDataProvider(dataSource)),
       builder: (context, slivers) => LoadMoreBuilder(

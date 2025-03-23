@@ -16,12 +16,14 @@ class PostMedia extends HookConsumerWidget {
     required this.media,
     required this.eventReference,
     this.sidePadding,
+    this.onVideoTap,
     super.key,
   });
 
   final List<MediaAttachment> media;
   final EventReference eventReference;
   final double? sidePadding;
+  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
 
   static List<MediaAttachment> _filterKnownMedia(List<MediaAttachment> media) {
     return media.where((mediaItem) => mediaItem.mediaType != MediaType.unknown).toList();
@@ -46,6 +48,7 @@ class PostMedia extends HookConsumerWidget {
         media: knownMedia,
         aspectRatio: aspectRatio,
         eventReference: eventReference,
+        onVideoTap: onVideoTap,
       );
     }
 
@@ -55,6 +58,7 @@ class PostMedia extends HookConsumerWidget {
         mediaItem: knownMedia[0],
         aspectRatio: aspectRatio,
         eventReference: eventReference,
+        onVideoTap: onVideoTap,
       ),
     );
   }
