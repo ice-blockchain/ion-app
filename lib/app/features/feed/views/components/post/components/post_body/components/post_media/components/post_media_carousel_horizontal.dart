@@ -8,19 +8,21 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostMediaCarouselHorizontal extends HookConsumerWidget {
   const PostMediaCarouselHorizontal({
     required this.media,
     required this.aspectRatio,
     required this.eventReference,
+    this.onVideoTap,
     super.key,
   });
 
   final List<MediaAttachment> media;
   final double aspectRatio;
   final EventReference eventReference;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,18 +36,13 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
             onPageChanged: (index) => currentIndex.value = index,
             children: [
               for (int i = 0; i < media.length; i++)
-                GestureDetector(
-                  onTap: () => FullscreenMediaRoute(
-                    eventReference: eventReference.encode(),
-                    initialMediaIndex: i,
-                  ).push<void>(context),
-                  child: ScreenSideOffset.small(
-                    child: PostMediaItem(
-                      mediaItem: media[i],
-                      mediaIndex: i,
-                      aspectRatio: aspectRatio,
-                      eventReference: eventReference,
-                    ),
+                ScreenSideOffset.small(
+                  child: PostMediaItem(
+                    mediaItem: media[i],
+                    mediaIndex: i,
+                    aspectRatio: aspectRatio,
+                    eventReference: eventReference,
+                    onVideoTap: onVideoTap,
                   ),
                 ),
             ],

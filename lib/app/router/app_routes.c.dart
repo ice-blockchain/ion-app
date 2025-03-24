@@ -88,6 +88,7 @@ import 'package:ion/app/features/protect_account/phone/views/pages/edit_phone/ph
 import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/phone_setup_page.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_modal.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_options_page.dart';
+import 'package:ion/app/features/search/model/advanced_search_category.dart';
 import 'package:ion/app/features/search/views/pages/chat_advanced_search_page/chat_advanced_search_page.dart';
 import 'package:ion/app/features/search/views/pages/chat_simple_search_page/chat_simple_search_page.dart';
 import 'package:ion/app/features/search/views/pages/dapps_simple_search_page/dapps_simple_search_page.dart';
@@ -104,6 +105,7 @@ import 'package:ion/app/features/settings/views/push_notifications_settings.dart
 import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
+import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/profile_edit_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/follow_list_modal/follow_list_modal.dart';
@@ -116,7 +118,11 @@ import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/self_profile_page.dart';
 import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
-import 'package:ion/app/features/video/views/pages/videos_page.dart';
+import 'package:ion/app/features/video/views/pages/feed_advanced_search_videos_page.dart';
+import 'package:ion/app/features/video/views/pages/feed_videos_page.dart';
+import 'package:ion/app/features/video/views/pages/profile_videos_page.dart';
+import 'package:ion/app/features/video/views/pages/reply_list_videos_page.dart';
+import 'package:ion/app/features/video/views/pages/trending_videos_page.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/coin_details_page.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_receive_modal/coin_receive_modal.dart';

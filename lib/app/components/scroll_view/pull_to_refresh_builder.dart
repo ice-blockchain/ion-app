@@ -29,12 +29,6 @@ class PullToRefreshBuilder extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isRefreshing = useState(false);
-    final refreshIndicatorKey = useMemoized(
-      GlobalKey<RefreshIndicatorState>.new,
-      [],
-    );
-
     if (!kIsWeb && Platform.isIOS) {
       return builder(context, [
         if (sliverAppBar != null) sliverAppBar!,
@@ -43,23 +37,13 @@ class PullToRefreshBuilder extends HookWidget {
       ]);
     }
 
-    return GestureDetector(
-      // fallback for when refresh indicator doesn't intercept pull gesture itself
-      onVerticalDragUpdate: (details) {
-        if (!isRefreshing.value && details.primaryDelta != null && details.primaryDelta! > 10) {
-          isRefreshing.value = true;
-          refreshIndicatorKey.currentState?.show().whenComplete(() => isRefreshing.value = false);
-        }
-      },
-      child: RefreshIndicator(
-        key: refreshIndicatorKey,
-        onRefresh: onRefresh,
-        edgeOffset: refreshIndicatorEdgeOffset,
-        child: builder(context, [
-          if (sliverAppBar != null) sliverAppBar!,
-          ...slivers,
-        ]),
-      ),
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      edgeOffset: refreshIndicatorEdgeOffset,
+      child: builder(context, [
+        if (sliverAppBar != null) sliverAppBar!,
+        ...slivers,
+      ]),
     );
   }
 }

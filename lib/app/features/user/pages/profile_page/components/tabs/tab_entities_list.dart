@@ -15,6 +15,7 @@ import 'package:ion/app/features/user/pages/profile_page/components/tabs/empty_s
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/tab_data_source_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
 
 class TabEntitiesList extends ConsumerWidget {
@@ -65,7 +66,18 @@ class TabEntitiesList extends ConsumerWidget {
             username: prefixUsername(username: userMetadata?.data.name, context: context),
           )
         else
-          builder != null ? builder!(entities.toList()) : EntitiesList(entities: entities.toList()),
+          builder != null
+              ? builder!(entities.toList())
+              : EntitiesList(
+                  entities: entities.toList(),
+                  onVideoTap: ({required String eventReference, required int initialMediaIndex}) =>
+                      ProfileVideosRoute(
+                    eventReference: eventReference,
+                    initialMediaIndex: initialMediaIndex,
+                    pubkey: pubkey,
+                    tabEntityType: type,
+                  ).push<void>(context),
+                ),
       ],
       onRefresh: () async => ref.invalidate(entitiesPagedDataProvider(dataSource)),
       builder: (context, slivers) => LoadMoreBuilder(

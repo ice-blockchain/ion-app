@@ -25,6 +25,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 enum FramedEventType { parent, quoted, none }
 
@@ -41,6 +42,7 @@ class Post extends ConsumerWidget {
     this.isTextSelectable = false,
     this.bodyMaxLines = 6,
     this.contentWrapper,
+    this.onVideoTap,
     super.key,
   });
 
@@ -55,6 +57,7 @@ class Post extends ConsumerWidget {
   final bool isTextSelectable;
   final int? bodyMaxLines;
   final Widget Function(Widget content)? contentWrapper;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,6 +83,7 @@ class Post extends ConsumerWidget {
           entity: entity,
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
+          onVideoTap: onVideoTap,
         ),
         ScreenSideOffset.small(
           child: Column(

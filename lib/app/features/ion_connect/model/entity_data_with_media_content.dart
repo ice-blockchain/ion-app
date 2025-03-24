@@ -7,7 +7,9 @@ import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 
 mixin EntityDataWithMediaContent {
   String get content;
+
   Map<String, MediaAttachment> get media;
+
   RichText? get richText;
 
   bool get hasVideo => media.values.any((media) => media.mediaType == MediaType.video);
@@ -20,6 +22,9 @@ mixin EntityDataWithMediaContent {
   List<MediaAttachment> get visualMedias => media.values
       .where((media) => media.mediaType == MediaType.image || media.mediaType == MediaType.video)
       .toList();
+
+  List<MediaAttachment> get videos =>
+      media.values.where((media) => media.mediaType == MediaType.video).toList();
 
   MediaAttachment? get primaryAudio =>
       media.values.firstWhereOrNull((media) => media.mediaType == MediaType.audio);

@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/views/components/url_preview_content/url_p
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostBody extends HookConsumerWidget {
   const PostBody({
@@ -22,6 +23,7 @@ class PostBody extends HookConsumerWidget {
     this.isTextSelectable = false,
     this.maxLines = 6,
     this.sidePadding,
+    this.onVideoTap,
     super.key,
   });
 
@@ -29,6 +31,7 @@ class PostBody extends HookConsumerWidget {
   final bool isTextSelectable;
   final int? maxLines;
   final double? sidePadding;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,6 +113,7 @@ class PostBody extends HookConsumerWidget {
                   media: media,
                   eventReference: entity.toEventReference(),
                   sidePadding: sidePadding,
+                  onVideoTap: onVideoTap,
                 ),
               ),
             if (media.isEmpty && urlPreview != null)

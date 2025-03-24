@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/video/views/pages/videos_vertical_scroll_page.dart';
+
+class ReplyListVideosPage extends HookConsumerWidget {
+  const ReplyListVideosPage({
+    required this.parentEventReference,
+    required this.eventReference,
+    this.initialMediaIndex = 0,
+    super.key,
+  });
+
+  final EventReference parentEventReference;
+  final EventReference eventReference;
+  final int initialMediaIndex;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return VideosVerticalScrollPage(
+      eventReference: eventReference,
+      initialMediaIndex: initialMediaIndex,
+      getVideosData: () => ref.watch(repliesProvider(parentEventReference)),
+      onLoadMore: () =>
+          ref.read(repliesProvider(parentEventReference).notifier).loadMore(parentEventReference),
+    );
+  }
+}

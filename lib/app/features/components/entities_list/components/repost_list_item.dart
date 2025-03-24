@@ -15,11 +15,17 @@ import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class RepostListItem extends ConsumerWidget {
-  const RepostListItem({required this.eventReference, super.key});
+  const RepostListItem({
+    required this.eventReference,
+    this.onVideoTap,
+    super.key,
+  });
 
   final EventReference eventReference;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,6 +62,7 @@ class RepostListItem extends ConsumerWidget {
               ),
             GenericRepostEntity() when repostEntity.data.kind == ModifiablePostEntity.kind => Post(
                 eventReference: repostEntity.data.eventReference,
+                onVideoTap: onVideoTap,
               ),
             GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind => Padding(
                 padding: EdgeInsetsDirectional.symmetric(vertical: 12.0.s) +

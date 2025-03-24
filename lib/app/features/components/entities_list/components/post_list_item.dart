@@ -4,17 +4,21 @@ import 'package:flutter/widgets.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostListItem extends StatelessWidget {
   const PostListItem({
     required this.eventReference,
     this.framedEventType = FramedEventType.quoted,
+    this.onVideoTap,
     super.key,
   });
 
   final EventReference eventReference;
 
   final FramedEventType framedEventType;
+
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +30,7 @@ class PostListItem extends StatelessWidget {
       child: Post(
         eventReference: eventReference,
         framedEventType: framedEventType,
+        onVideoTap: onVideoTap,
       ),
     );
   }

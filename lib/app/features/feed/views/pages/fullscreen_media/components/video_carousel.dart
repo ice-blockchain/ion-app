@@ -50,7 +50,6 @@ class VideoCarousel extends HookWidget {
         return VideoPage(
           key: ValueKey('video_$videoUrl'),
           video: post,
-          eventReference: eventReference,
           videoUrl: videoUrl,
           onVideoEnded: () {
             final nextPage = (index + 1) % videos.length;

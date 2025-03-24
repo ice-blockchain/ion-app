@@ -5,7 +5,14 @@ part of 'app_routes.c.dart';
 class FeedRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<StoryViewerRoute>(path: 'story-viewing-fullstack/:pubkey'),
-    TypedGoRoute<VideosRoute>(path: 'video-fullstack/:eventReference'),
+    TypedGoRoute<TrendingVideosRoute>(path: 'trending-videos-fullstack/:eventReference'),
+    TypedGoRoute<FeedVideosRoute>(path: 'feed-videos-fullstack/:eventReference'),
+    TypedGoRoute<FeedAdvancedSearchVideosRoute>(
+      path: 'feed-advanced-search-videos-fullstack/:eventReference',
+    ),
+    TypedGoRoute<ReplyListVideosRoute>(
+      path: 'reply-list-videos-fullstack/:eventReference',
+    ),
     TypedGoRoute<PostDetailsRoute>(path: 'post/:eventReference'),
     TypedGoRoute<NotificationsHistoryRoute>(path: 'notifications-history'),
     TypedGoRoute<ArticleDetailsRoute>(path: 'article/:eventReference'),
@@ -275,16 +282,71 @@ class StoryViewerRoute extends BaseRouteData {
   final String pubkey;
 }
 
-class VideosRoute extends BaseRouteData {
-  VideosRoute({required this.eventReference})
+class TrendingVideosRoute extends BaseRouteData {
+  TrendingVideosRoute({required this.eventReference})
       : super(
-          child: VideosPage(
-            EventReference.fromEncoded(eventReference),
+          child: TrendingVideosPage(
+            eventReference: EventReference.fromEncoded(eventReference),
           ),
           type: IceRouteType.swipeDismissible,
         );
 
   final String eventReference;
+}
+
+class FeedVideosRoute extends BaseRouteData {
+  FeedVideosRoute({required this.eventReference, this.initialMediaIndex = 0})
+      : super(
+          child: FeedVideosPage(
+            eventReference: EventReference.fromEncoded(eventReference),
+            initialMediaIndex: initialMediaIndex,
+          ),
+          type: IceRouteType.swipeDismissible,
+        );
+
+  final String eventReference;
+  final int initialMediaIndex;
+}
+
+class FeedAdvancedSearchVideosRoute extends BaseRouteData {
+  FeedAdvancedSearchVideosRoute({
+    required this.eventReference,
+    required this.query,
+    required this.category,
+    this.initialMediaIndex = 0,
+  }) : super(
+          child: FeedAdvancedSearchVideosPage(
+            query: query,
+            category: category,
+            eventReference: EventReference.fromEncoded(eventReference),
+            initialMediaIndex: initialMediaIndex,
+          ),
+          type: IceRouteType.swipeDismissible,
+        );
+
+  final String query;
+  final AdvancedSearchCategory category;
+  final String eventReference;
+  final int initialMediaIndex;
+}
+
+class ReplyListVideosRoute extends BaseRouteData {
+  ReplyListVideosRoute({
+    required this.eventReference,
+    required this.parentEventReference,
+    this.initialMediaIndex = 0,
+  }) : super(
+          child: ReplyListVideosPage(
+            eventReference: EventReference.fromEncoded(eventReference),
+            initialMediaIndex: initialMediaIndex,
+            parentEventReference: EventReference.fromEncoded(parentEventReference),
+          ),
+          type: IceRouteType.swipeDismissible,
+        );
+
+  final String parentEventReference;
+  final String eventReference;
+  final int initialMediaIndex;
 }
 
 class FullscreenMediaRoute extends BaseRouteData {

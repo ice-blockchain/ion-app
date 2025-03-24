@@ -9,6 +9,7 @@ import 'package:ion/app/features/components/entities_list/entities_list.dart';
 import 'package:ion/app/features/components/entities_list/entities_list_skeleton.dart';
 import 'package:ion/app/features/feed/providers/replies_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyList extends ConsumerWidget {
@@ -41,6 +42,12 @@ class ReplyList extends ConsumerWidget {
           EntitiesList(
             entities: entities.toList(),
             separatorHeight: 1.0.s,
+            onVideoTap: ({required String eventReference, required int initialMediaIndex}) =>
+                ReplyListVideosRoute(
+              eventReference: eventReference,
+              initialMediaIndex: initialMediaIndex,
+              parentEventReference: this.eventReference.encode(),
+            ).push<void>(context),
           ),
       ],
     );

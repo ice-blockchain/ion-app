@@ -7,13 +7,14 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostMediaCarouselVertical extends HookConsumerWidget {
   const PostMediaCarouselVertical({
     required this.media,
     required this.aspectRatio,
     required this.eventReference,
+    this.onVideoTap,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class PostMediaCarouselVertical extends HookConsumerWidget {
   final List<MediaAttachment> media;
   final double aspectRatio;
   final EventReference eventReference;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,17 +45,12 @@ class PostMediaCarouselVertical extends HookConsumerWidget {
         itemBuilder: (context, index) {
           return SizedBox(
             width: itemWidth,
-            child: GestureDetector(
-              onTap: () => FullscreenMediaRoute(
-                eventReference: eventReference.encode(),
-                initialMediaIndex: index,
-              ).push<void>(context),
-              child: PostMediaItem(
-                mediaItem: media[index],
-                mediaIndex: index,
-                aspectRatio: aspectRatio,
-                eventReference: eventReference,
-              ),
+            child: PostMediaItem(
+              mediaItem: media[index],
+              mediaIndex: index,
+              aspectRatio: aspectRatio,
+              eventReference: eventReference,
+              onVideoTap: onVideoTap,
             ),
           );
         },

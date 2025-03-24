@@ -9,6 +9,7 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostMediaItem extends HookWidget {
   const PostMediaItem({
@@ -16,6 +17,7 @@ class PostMediaItem extends HookWidget {
     required this.aspectRatio,
     required this.eventReference,
     this.mediaIndex = 0,
+    this.onVideoTap,
     super.key,
   });
 
@@ -23,14 +25,17 @@ class PostMediaItem extends HookWidget {
   final int mediaIndex;
   final double aspectRatio;
   final EventReference eventReference;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FullscreenMediaRoute(
-        eventReference: eventReference.encode(),
-        initialMediaIndex: mediaIndex,
-      ).push<void>(context),
+      onTap: () => onVideoTap != null && mediaItem.mediaType == MediaType.video
+          ? onVideoTap?.call(eventReference: eventReference.encode(), initialMediaIndex: mediaIndex)
+          : FullscreenMediaRoute(
+              eventReference: eventReference.encode(),
+              initialMediaIndex: mediaIndex,
+            ).push<void>(context),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
         child: AspectRatio(
