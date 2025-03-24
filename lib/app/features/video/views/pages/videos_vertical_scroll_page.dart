@@ -139,32 +139,10 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
     );
   }
 
-  // EntitiesPagedDataState? _getVideosData(WidgetRef ref) {
-  //   switch (videosPageType) {
-  //     case VideosPageType.trending:
-  //       final dataSource = ref.watch(feedTrendingVideosDataSourceProvider);
-  //       return ref.watch(entitiesPagedDataProvider(dataSource));
-  //     case VideosPageType.feed:
-  //       return ref.watch(feedPostsProvider);
-  //   }
-  // }
-
   void _loadMore(WidgetRef ref, int index, int totalItems) {
     const threshold = 2;
     if (totalItems > threshold && index >= totalItems - threshold) {
       onLoadMore();
-      // switch (videosPageType) {
-      //   case VideosPageType.trending:
-      //     ref
-      //         .read(
-      //           entitiesPagedDataProvider(
-      //             ref.read(feedTrendingVideosDataSourceProvider),
-      //           ).notifier,
-      //         )
-      //         .fetchEntities();
-      //   case VideosPageType.feed:
-      //     ref.read(feedPostsProvider.notifier).loadMore();
-      // }
     }
   }
 }

@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/components/post_media_item.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostMediaCarouselHorizontal extends HookConsumerWidget {
   const PostMediaCarouselHorizontal({
@@ -21,7 +22,7 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
   final List<MediaAttachment> media;
   final double aspectRatio;
   final EventReference eventReference;
-  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -19,6 +19,7 @@ import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class EntitiesList extends HookWidget {
   const EntitiesList({
@@ -32,7 +33,7 @@ class EntitiesList extends HookWidget {
   final List<IonConnectEntity> entities;
   final double? separatorHeight;
   final FramedEventType framedEventType;
-  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class _EntityListItem extends ConsumerWidget {
   final EventReference eventReference;
   final double separatorHeight;
   final FramedEventType framedEventType;
-  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

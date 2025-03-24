@@ -9,6 +9,7 @@ import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class PostMediaItem extends HookWidget {
   const PostMediaItem({
@@ -24,7 +25,7 @@ class PostMediaItem extends HookWidget {
   final int mediaIndex;
   final double aspectRatio;
   final EventReference eventReference;
-  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context) {

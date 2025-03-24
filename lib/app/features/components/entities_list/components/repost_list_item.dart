@@ -15,6 +15,7 @@ import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class RepostListItem extends ConsumerWidget {
   const RepostListItem({
@@ -24,7 +25,7 @@ class RepostListItem extends ConsumerWidget {
   });
 
   final EventReference eventReference;
-  final void Function({required String eventReference, required int initialMediaIndex})? onVideoTap;
+  final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
