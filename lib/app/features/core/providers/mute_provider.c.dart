@@ -7,7 +7,7 @@ part 'mute_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 class GlobalMute extends _$GlobalMute {
   @override
-  bool build() => false;
+  bool build() => true;
 
   void toggle() => state = !state;
 
