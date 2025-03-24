@@ -6,9 +6,10 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-class TextMessage extends HookConsumerWidget {
+class TextMessage extends ConsumerWidget {
   const TextMessage({
     required this.eventMessage,
     this.isLastMessageFromAuthor = true,
@@ -30,17 +31,24 @@ class TextMessage extends HookConsumerWidget {
         vertical: 12.0.s,
       ),
       isMe: isMe,
-      child: _buildText(
-        eventMessage.content,
-        context.theme.appTextThemes.body2.copyWith(
-          color:
-              isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildContent(
+            eventMessage.content,
+            context.theme.appTextThemes.body2.copyWith(
+              color: isMe
+                  ? context.theme.appColors.onPrimaryAccent
+                  : context.theme.appColors.primaryText,
+            ),
+          ),
+          MessageReactions(isMe: isMe, eventMessage: eventMessage),
+        ],
       ),
     );
   }
 
-  Widget _buildText(String message, TextStyle style) {
+  Widget _buildContent(String message, TextStyle style) {
     final oneLineTextPainter = TextPainter(
       text: TextSpan(text: message, style: style),
       textDirection: TextDirection.ltr,
@@ -49,21 +57,7 @@ class TextMessage extends HookConsumerWidget {
 
     final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
 
-    if (oneLineMetrics.isEmpty) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            message,
-            style: style,
-          ),
-          MessageMetaData(eventMessage: eventMessage),
-        ],
-      );
-    }
-
-    if (oneLineMetrics.length == 1) {
+    if (oneLineMetrics.length <= 1) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -83,12 +77,7 @@ class TextMessage extends HookConsumerWidget {
       )..layout(maxWidth: 240.0.s);
 
       final lineMetrics = multiLineTextPainter.computeLineMetrics();
-
-      final lastLineWidth = lineMetrics.last.width;
-
-      final bool wouldOverlap;
-
-      wouldOverlap = lastLineWidth > 170.0.s;
+      final wouldOverlap = lineMetrics.last.width > 200.0.s;
 
       return Stack(
         alignment: Alignment.bottomRight,
