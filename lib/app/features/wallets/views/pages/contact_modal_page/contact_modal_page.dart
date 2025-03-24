@@ -42,8 +42,8 @@ class ContactPage extends ConsumerWidget {
             child: BalanceActions(
               onReceive: () => ReceiveCoinRoute().push<void>(context),
               onSend: () {
-                ref.invalidate(sendAssetFormControllerProvider());
-                ref.read(sendAssetFormControllerProvider().notifier).setContact(pubkey);
+                ref.invalidate(sendAssetFormControllerProvider);
+                ref.read(sendAssetFormControllerProvider.notifier).setContact(pubkey);
 
                 CoinSendRoute().push<void>(context);
               },

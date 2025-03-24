@@ -71,7 +71,7 @@ class Balance extends ConsumerWidget {
               },
               onNeedToEnable2FA: () => SecureAccountModalRoute().push<void>(context),
               onSend: () {
-                ref.read(sendAssetFormControllerProvider().notifier).setCoin(coinsGroup);
+                ref.read(sendAssetFormControllerProvider.notifier).setCoin(coinsGroup);
                 NetworkSelectSendRoute().push<void>(context);
               },
             ),

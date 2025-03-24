@@ -410,7 +410,7 @@ class SendNftConfirmRoute extends BaseRouteData {
 class NftTransactionDetailsRoute extends BaseRouteData {
   NftTransactionDetailsRoute()
       : super(
-          child: const TransactionDetailsPage(type: CryptoAssetType.nft),
+          child: const TransactionDetailsPage(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -418,7 +418,7 @@ class NftTransactionDetailsRoute extends BaseRouteData {
 class CoinTransactionDetailsRoute extends BaseRouteData {
   CoinTransactionDetailsRoute()
       : super(
-          child: const TransactionDetailsPage(type: CryptoAssetType.coin),
+          child: const TransactionDetailsPage(),
           type: IceRouteType.bottomSheet,
         );
 }

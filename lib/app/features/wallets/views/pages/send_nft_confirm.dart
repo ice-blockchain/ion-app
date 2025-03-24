@@ -8,11 +8,9 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_nft_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_nft_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
@@ -34,8 +32,8 @@ class SendNftConfirmPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
-    final formData = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
-    final nft = formData.assetData.as<NftAssetData>()!.nft;
+    final formData = ref.watch(sendNftFormControllerProvider);
+    final nft = formData.nft!;
 
     ref
       ..displayErrors(sendNftNotifierProvider)
@@ -84,10 +82,10 @@ class SendNftConfirmPage extends ConsumerWidget {
                   SizedBox(height: 12.0.s),
                   ListItem.textWithIcon(
                     title: Text(context.i18n.send_nft_confirm_network),
-                    value: formData.network?.displayName,
+                    value: nft.network.displayName,
                     icon: NetworkIconWidget(
                       size: 16.0.s,
-                      imageUrl: formData.network!.image,
+                      imageUrl: nft.network.image,
                     ),
                   ),
                   SizedBox(height: 12.0.s),
@@ -103,7 +101,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                     ),
                   ],
                   SizedBox(height: 12.0.s),
-                  if (formData.assetData is NftAssetData)
+                  if (formData.nft != null)
                     Button(
                       mainAxisSize: MainAxisSize.max,
                       disabled: ref.watch(sendNftNotifierProvider).isLoading,

@@ -31,11 +31,13 @@ class SendNftUseCase {
     required Wallet senderWallet,
     required String receiverAddress,
     required NftData sendableAsset,
+    required NetworkFeeType? networkFeeType,
     required OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity,
   }) async {
     final transfer = _TransferFactory().create(
       receiverAddress: receiverAddress,
       sendableAsset: sendableAsset,
+      networkFeeType: networkFeeType,
     );
     final result = await _ionIdentityClient.wallets.makeTransfer(
       senderWallet,

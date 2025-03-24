@@ -22,7 +22,7 @@ Future<NetworkFeeInformation?> networkFee(
   Ref ref, {
   required NetworkData network,
   required String? walletId,
-  required String assetSymbol,
+  String? assetSymbol,
 }) async {
   if (walletId == null) {
     Logger.error('Cannot load fees info without walletId');
@@ -62,32 +62,16 @@ Future<NetworkFeeInformation?> networkFee(
     return null;
   }
 
+  final networkFeeOptions = _buildNetworkFeeOptions(
+    estimateFees: estimateFees,
+    nativeCoin: nativeCoin,
+    networkNativeToken: networkNativeToken,
+  );
+
   return NetworkFeeInformation(
     networkNativeToken: networkNativeToken,
     sendableAsset: sendableAsset,
-    networkFeeOptions: [
-      if (estimateFees.slow != null)
-        _buildNetworkFeeOption(
-          estimateFees.slow!,
-          NetworkFeeType.slow,
-          nativeCoin,
-          networkNativeToken,
-        ),
-      if (estimateFees.standard != null)
-        _buildNetworkFeeOption(
-          estimateFees.standard!,
-          NetworkFeeType.standard,
-          nativeCoin,
-          networkNativeToken,
-        ),
-      if (estimateFees.fast != null)
-        _buildNetworkFeeOption(
-          estimateFees.fast!,
-          NetworkFeeType.fast,
-          nativeCoin,
-          networkNativeToken,
-        ),
-    ],
+    networkFeeOptions: networkFeeOptions,
   );
 }
 
@@ -109,7 +93,11 @@ Future<CoinData?> _getNativeCoin({
       .then((coins) => coins.firstOrNull);
 }
 
-ion.WalletAsset? _getSendableAsset(List<ion.WalletAsset> assets, String abbreviation) {
+ion.WalletAsset? _getSendableAsset(List<ion.WalletAsset> assets, String? abbreviation) {
+  if (abbreviation == null || abbreviation.isEmpty) {
+    return assets.firstWhereOrNull((asset) => asset.isNative);
+  }
+
   final result = assets.firstWhereOrNull(
     (asset) => asset.symbol.toLowerCase() == abbreviation.toLowerCase(),
   );
@@ -135,4 +123,46 @@ NetworkFeeOption _buildNetworkFeeOption(
     arrivalTime: fee.waitTime,
     type: type,
   );
+}
+
+List<NetworkFeeOption> _buildNetworkFeeOptions({
+  required ion.EstimateFee estimateFees,
+  required CoinData nativeCoin,
+  required ion.WalletAsset networkNativeToken,
+}) {
+  return [
+    if (estimateFees.slow != null)
+      _buildNetworkFeeOption(
+        estimateFees.slow!,
+        NetworkFeeType.slow,
+        nativeCoin,
+        networkNativeToken,
+      ),
+    if (estimateFees.standard != null)
+      _buildNetworkFeeOption(
+        estimateFees.standard!,
+        NetworkFeeType.standard,
+        nativeCoin,
+        networkNativeToken,
+      ),
+    if (estimateFees.fast != null)
+      _buildNetworkFeeOption(
+        estimateFees.fast!,
+        NetworkFeeType.fast,
+        nativeCoin,
+        networkNativeToken,
+      ),
+  ];
+}
+
+/// Check if a user has enough tokens to cover a fee
+bool canUserCoverFee({
+  required NetworkFeeOption? selectedFee,
+  required ion.WalletAsset? networkNativeToken,
+}) {
+  if (selectedFee == null || networkNativeToken == null) return false;
+
+  final parsedBalance = double.tryParse(networkNativeToken.balance) ?? 0;
+  final convertedBalance = parsedBalance / pow(10, networkNativeToken.decimals);
+  return convertedBalance >= selectedFee.amount;
 }

@@ -8,12 +8,11 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/send_nft_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_name.dart';
 import 'package:ion/app/features/wallets/views/components/nft_picture.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
+import 'package:ion/app/features/wallets/views/pages/send_nft/components/nft_network_fee_selector.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -28,9 +27,9 @@ class SendNftForm extends ConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final formController = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft));
-    final notifier = ref.watch(sendAssetFormControllerProvider(type: CryptoAssetType.nft).notifier);
-    final selectedNft = formController.assetData.as<NftAssetData>()!.nft;
+    final formController = ref.watch(sendNftFormControllerProvider);
+    final notifier = ref.watch(sendNftFormControllerProvider.notifier);
+    final selectedNft = formController.nft!;
     final selectedContactPubkey = formController.contactPubkey;
 
     return SheetContent(
@@ -74,14 +73,14 @@ class SendNftForm extends ConsumerWidget {
                       },
                       onContactTap: () async {
                         final pubkey = await NftSelectContactRoute(
-                          networkId: formController.network!.id,
+                          networkId: selectedNft.network.id,
                         ).push<String>(context);
 
                         pubkey?.let(notifier.setContact);
                       },
                     ),
                     SizedBox(height: 17.0.s),
-                    const NetworkFeeSelector(),
+                    const NftNetworkFeeSelector(),
                     SizedBox(height: 45.0.s),
                     Button(
                       label: Text(

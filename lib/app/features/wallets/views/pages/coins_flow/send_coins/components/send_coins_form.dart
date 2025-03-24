@@ -12,8 +12,8 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
-import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/arrival_time_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/coins_network_fee_selector.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/widgets/not_enough_coins_for_network_fee_message.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
@@ -33,8 +33,8 @@ class SendCoinsForm extends HookConsumerWidget {
     final colors = context.theme.appColors;
     final locale = context.i18n;
 
-    final formController = ref.watch(sendAssetFormControllerProvider());
-    final notifier = ref.watch(sendAssetFormControllerProvider().notifier);
+    final formController = ref.watch(sendAssetFormControllerProvider);
+    final notifier = ref.watch(sendAssetFormControllerProvider.notifier);
     final selectedContactPubkey = formController.contactPubkey;
     final coin = formController.assetData.as<CoinAssetData>();
     final maxAmount = coin?.selectedOption?.amount ?? 0;
@@ -138,7 +138,7 @@ class SendCoinsForm extends HookConsumerWidget {
                       coinAbbreviation: coin?.coinsGroup.abbreviation ?? '',
                     ),
                     SizedBox(height: 17.0.s),
-                    const NetworkFeeSelector(),
+                    const CoinsNetworkFeeSelector(),
                     if (formController.canCoverNetworkFee)
                       SizedBox(height: 45.0.s)
                     else if (formController.networkNativeToken case final WalletAsset networkToken)

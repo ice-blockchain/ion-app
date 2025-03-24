@@ -8,7 +8,6 @@ import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
@@ -18,6 +17,8 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_close_bu
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
+
+enum CryptoAssetType { coin, nft }
 
 class TransactionResultSheet extends ConsumerWidget {
   const TransactionResultSheet({required this.type, super.key});

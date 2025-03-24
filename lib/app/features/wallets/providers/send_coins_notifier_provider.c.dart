@@ -29,7 +29,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
   }
 
   Future<void> send(OnVerifyIdentity<Map<String, dynamic>> onVerifyIdentity) async {
-    final form = ref.read(sendAssetFormControllerProvider());
+    final form = ref.read(sendAssetFormControllerProvider);
 
     if (form.assetData is! CoinAssetData) {
       Logger.error('Cannot send coins: asset data is not a coin asset');
