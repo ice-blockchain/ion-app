@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
@@ -51,7 +50,6 @@ final DynamicLibrary _dylib = () {
 
 /// The bindings to the native functions in [_dylib].
 final IonContentLabelerBindings _bindings = IonContentLabelerBindings(_dylib);
-
 
 /// A request to compute `sum`.
 ///
@@ -129,3 +127,10 @@ Future<SendPort> _helperIsolateSendPort = () async {
   // can start sending requests.
   return completer.future;
 }();
+
+void detectLanguage(String content) {
+  final lib = DynamicLibrary.open('fasttext_predict.so');
+  // final loadModelFn = lib.providesSymbol<LoadModelNative, LoadModel>('load_model');
+  final loadModelFn = lib.providesSymbol('load_model');
+  print('loadModelFn $loadModelFn');
+}
