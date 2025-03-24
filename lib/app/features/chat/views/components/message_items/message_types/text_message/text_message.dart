@@ -34,23 +34,33 @@ class TextMessage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildContent(
-            eventMessage.content,
-            context.theme.appTextThemes.body2.copyWith(
+          _TextMessageContent(
+            style: context.theme.appTextThemes.body2.copyWith(
               color: isMe
                   ? context.theme.appColors.onPrimaryAccent
                   : context.theme.appColors.primaryText,
             ),
+            eventMessage: eventMessage,
           ),
           MessageReactions(isMe: isMe, eventMessage: eventMessage),
         ],
       ),
     );
   }
+}
 
-  Widget _buildContent(String message, TextStyle style) {
+class _TextMessageContent extends StatelessWidget {
+  const _TextMessageContent({
+    required this.style,
+    required this.eventMessage,
+  });
+
+  final TextStyle style;
+  final EventMessage eventMessage;
+  @override
+  Widget build(BuildContext context) {
     final oneLineTextPainter = TextPainter(
-      text: TextSpan(text: message, style: style),
+      text: TextSpan(text: eventMessage.content, style: style),
       textDirection: TextDirection.ltr,
       textWidthBasis: TextWidthBasis.longestLine,
     )..layout(maxWidth: 194.0.s);
@@ -63,7 +73,7 @@ class TextMessage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            message,
+            eventMessage.content,
             style: style,
           ),
           MessageMetaData(eventMessage: eventMessage),
@@ -71,7 +81,7 @@ class TextMessage extends ConsumerWidget {
       );
     } else {
       final multiLineTextPainter = TextPainter(
-        text: TextSpan(text: message, style: style),
+        text: TextSpan(text: eventMessage.content, style: style),
         textDirection: TextDirection.ltr,
         textWidthBasis: TextWidthBasis.longestLine,
       )..layout(maxWidth: 240.0.s);
@@ -83,7 +93,7 @@ class TextMessage extends ConsumerWidget {
         alignment: Alignment.bottomRight,
         children: [
           Text(
-            '$message${wouldOverlap ? '\n' : ''}',
+            '${eventMessage.content}${wouldOverlap ? '\n' : ''}',
             style: style,
           ),
           MessageMetaData(eventMessage: eventMessage),
