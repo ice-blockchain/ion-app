@@ -59,7 +59,7 @@ class VideoPlayerControllerFactory {
   final String sourcePath;
 
   CachedVideoPlayerPlusController createController() {
-    final videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
+    final videoPlayerOptions = VideoPlayerOptions();
 
     if (_isNetworkSource(sourcePath)) {
       return CachedVideoPlayerPlusController.networkUrl(
@@ -92,15 +92,4 @@ VideoPlayerControllerFactory videoPlayerControllerFactory(Ref ref, String source
   return VideoPlayerControllerFactory(
     sourcePath: sourcePath,
   );
-}
-
-/// A provider that manages the currently active video in the feed.
-/// Only one video can be active at a time to prevent multiple videos
-/// from playing simultaneously.
-@riverpod
-class ActiveVideo extends _$ActiveVideo {
-  @override
-  String? build() => null;
-
-  set activeVideo(String? videoId) => state = videoId;
 }

@@ -9,6 +9,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
+import 'package:ion/app/hooks/use_on_init.dart';
+import 'package:ion/app/hooks/use_route_presence.dart';
 import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -34,13 +36,14 @@ class VideoPreview extends HookConsumerWidget {
             looping: true,
           ),
         )!;
-
-    ref.listen(
-      activeVideoProvider.select((activeId) => activeId == controller.dataSource),
-      (_, isActive) {
-        if (!isActive && controller.value.isPlaying) {
-          controller.pause();
-        }
+    final isFullyVisible = useState(false);
+    final isRouteFocused = useState(true);
+    useRoutePresence(
+      onBecameInactive: () {
+        isRouteFocused.value = false;
+      },
+      onBecameActive: () {
+        isRouteFocused.value = true;
       },
     );
 
@@ -54,26 +57,29 @@ class VideoPreview extends HookConsumerWidget {
 
     final handleVisibilityChanged = useCallback(
       (VisibilityInfo info) {
-        if (!context.mounted || !controller.value.isInitialized) return;
+        isFullyVisible.value = info.visibleFraction == 1;
+      },
+      [isFullyVisible],
+    );
 
-        final currentActive = ref.read(activeVideoProvider);
-
-        final isFullyVisible = info.visibleFraction == 1;
-        final isCurrentlyActive = currentActive == controller.dataSource;
-        final shouldBeActive = isFullyVisible && !isCurrentlyActive;
-        final shouldBePaused = !isFullyVisible && isCurrentlyActive;
-
+    useOnInit(
+      () {
+        if (!controller.value.isInitialized) {
+          return;
+        }
+        final shouldBeActive =
+            isFullyVisible.value && !controller.value.isPlaying && isRouteFocused.value;
+        final shouldBePaused =
+            (!isFullyVisible.value || !isRouteFocused.value) && controller.value.isPlaying;
         if (shouldBeActive) {
-          ref.read(activeVideoProvider.notifier).activeVideo = controller.dataSource;
           controller
             ..play()
-            ..setVolume(isMuted ? 0 : 1);
+            ..setVolume(ref.read(globalMuteProvider) ? 0 : 1);
         } else if (shouldBePaused) {
-          ref.read(activeVideoProvider.notifier).activeVideo = null;
           controller.pause();
         }
       },
-      [controller, isMuted],
+      [isFullyVisible.value, isRouteFocused.value, controller.value.isInitialized],
     );
 
     return VisibilityDetector(

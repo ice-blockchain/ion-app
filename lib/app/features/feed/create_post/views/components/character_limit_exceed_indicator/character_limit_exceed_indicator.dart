@@ -18,7 +18,8 @@ class CharacterLimitExceedIndicator extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final exceedAmount = useTextEditorCharacterLimitExceedAmount(textEditorController, maxCharacters);
+    final exceedAmount =
+        useTextEditorCharacterLimitExceedAmount(textEditorController, maxCharacters);
 
     if (exceedAmount <= 0) return const SizedBox.shrink();
 
