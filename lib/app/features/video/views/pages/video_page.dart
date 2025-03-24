@@ -2,6 +2,7 @@
 
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -10,10 +11,12 @@ import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/video/views/components/video_actions.dart';
+import 'package:ion/app/features/video/views/components/video_button.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
 import 'package:ion/app/features/video/views/components/video_progress.dart';
 import 'package:ion/app/features/video/views/components/video_slider.dart';
 import 'package:ion/app/features/video/views/hooks/use_video_ended.dart';
+import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPage extends HookConsumerWidget {
@@ -49,6 +52,20 @@ class VideoPage extends HookConsumerWidget {
       return const CenteredLoadingIndicator();
     }
 
+    final isPlaying = useState(true);
+
+    useEffect(
+      () {
+        void listener() {
+          isPlaying.value = playerController.value.isPlaying;
+        }
+
+        playerController.addListener(listener);
+        return () => playerController.removeListener(listener);
+      },
+      [playerController],
+    );
+
     useVideoEnded(
       playerController: playerController,
       onVideoEnded: onVideoEnded,
@@ -60,10 +77,12 @@ class VideoPage extends HookConsumerWidget {
 
         if (current == AppLifecycleState.resumed) {
           playerController.play();
+          isPlaying.value = true;
         } else if (current == AppLifecycleState.inactive ||
             current == AppLifecycleState.paused ||
             current == AppLifecycleState.hidden) {
           playerController.pause();
+          isPlaying.value = false;
         }
       })
       ..listen(globalMuteProvider, (_, isMuted) {
@@ -77,16 +96,48 @@ class VideoPage extends HookConsumerWidget {
       onVisibilityChanged: (info) {
         if (!context.mounted) return;
 
-        info.visibleFraction == 0 ? playerController.pause() : playerController.play();
+        if (info.visibleFraction == 0) {
+          playerController.pause();
+          isPlaying.value = false;
+        } else {
+          playerController.play();
+          isPlaying.value = true;
+        }
       },
       child: Stack(
         children: [
-          Center(
-            child: AspectRatio(
-              aspectRatio: playerController.value.aspectRatio,
-              child: CachedVideoPlayerPlus(playerController),
+          GestureDetector(
+            onTap: () {
+              if (isPlaying.value) {
+                playerController.pause();
+                isPlaying.value = false;
+              } else {
+                playerController.play();
+                isPlaying.value = true;
+              }
+            },
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: playerController.value.aspectRatio,
+                child: CachedVideoPlayerPlus(playerController),
+              ),
             ),
           ),
+          if (!isPlaying.value)
+            Center(
+              child: VideoButton(
+                size: 48.0.s,
+                borderRadius: BorderRadius.circular(20.0.s),
+                icon: Assets.svg.iconVideoPlay.icon(
+                  color: context.theme.appColors.secondaryBackground,
+                  size: 30.0.s,
+                ),
+                onPressed: () {
+                  playerController.play();
+                  isPlaying.value = true;
+                },
+              ),
+            ),
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
