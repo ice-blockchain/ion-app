@@ -90,6 +90,11 @@ class FollowListManager extends _$FollowListManager {
     bool removeOnly = false,
   }) async {
     final followees = List<Followee>.from(followListEntity.data.list);
+    final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
+
+    // Remove current user from the list to prevent self follow errror
+    followees.removeWhere((followee) => followee.pubkey == currentUserPubkey);
+
     final followee = followees.firstWhereOrNull((followee) => followee.pubkey == pubkey);
     if (followee == null && removeOnly) {
       return;
