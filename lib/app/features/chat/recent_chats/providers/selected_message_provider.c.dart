@@ -12,7 +12,7 @@ class SelectedMessage extends _$SelectedMessage {
     return null;
   }
 
-  void selectMessage(MessageListItem messageItem) {
+  set selectedMessage(MessageListItem messageItem) {
     state = messageItem;
   }
 
