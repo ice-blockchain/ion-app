@@ -147,18 +147,16 @@ void detectLanguage(String content) async {
       lib.lookupFunction<LoadModelNative, LoadModel>('load_model'); // Lookup function in library
 
   ///
-  final byteData = await rootBundle.load('assets/language_identification.176.ftz');
-  print('FOO $byteData');
+  final byteData = await rootBundle.load('assets/labeling.ftz');
 
   final directory = await getApplicationDocumentsDirectory();
-  final file = File('${directory.path}/language_identification.176.ftz');
+  final file = File('${directory.path}/labeling.ftz');
 
   // Write the asset data to a file
   await file
       .writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
   final path = file.path;
-  print('PATH $path');
 
   ///
 

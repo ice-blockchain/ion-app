@@ -62,6 +62,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/language_identification.176.ftz
+    - assets/labeling.ftz
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
