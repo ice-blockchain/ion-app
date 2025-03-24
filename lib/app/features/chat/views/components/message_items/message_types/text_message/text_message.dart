@@ -6,7 +6,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
 class TextMessage extends ConsumerWidget {
@@ -46,6 +45,69 @@ class TextMessage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildText(String message, TextStyle style) {
+    final oneLineTextPainter = TextPainter(
+      text: TextSpan(text: message, style: style),
+      textDirection: TextDirection.ltr,
+      textWidthBasis: TextWidthBasis.longestLine,
+    )..layout(maxWidth: 194.0.s);
+
+    final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
+
+    if (oneLineMetrics.isEmpty) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            message,
+            style: style,
+          ),
+          MessageMetaData(eventMessage: eventMessage),
+        ],
+      );
+    }
+
+    if (oneLineMetrics.length == 1) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            message,
+            style: style,
+          ),
+          MessageMetaData(eventMessage: eventMessage),
+        ],
+      );
+    } else {
+      final multiLineTextPainter = TextPainter(
+        text: TextSpan(text: message, style: style),
+        textDirection: TextDirection.ltr,
+        textWidthBasis: TextWidthBasis.longestLine,
+      )..layout(maxWidth: 240.0.s);
+
+      final lineMetrics = multiLineTextPainter.computeLineMetrics();
+
+      final lastLineWidth = lineMetrics.last.width;
+
+      final bool wouldOverlap;
+
+      wouldOverlap = lastLineWidth > 170.0.s;
+
+      return Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Text(
+            '$message${wouldOverlap ? '\n' : ''}',
+            style: style,
+          ),
+          MessageMetaData(eventMessage: eventMessage),
+        ],
+      );
+    }
   }
 }
 
