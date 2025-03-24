@@ -74,7 +74,7 @@ class MessageReactionContextMenu extends ConsumerWidget {
                     color: context.theme.appColors.quaternaryText,
                   ),
                   onPressed: () {
-                    ref.read(selectedMessageProvider.notifier).selectMessage(messageItem);
+                    ref.read(selectedMessageProvider.notifier).selectedMessage = messageItem;
                     context.pop();
                   },
                   minWidth: 140.0.s,
