@@ -26,8 +26,7 @@ class ChatAddPollModal extends HookConsumerWidget {
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
 
     final isPoolValid = useMemoized(
-      () =>
-          Validators.isPollValid(pollTitle.text, pollAnswers.map((answer) => answer.text).toList()),
+      () => Validators.isPollValid(pollTitle.text, pollAnswers),
       [pollTitle.text, pollAnswers],
     );
 

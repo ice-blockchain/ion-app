@@ -16,9 +16,11 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
+import 'package:ion/app/features/feed/create_post/views/components/character_limit_exceed_indicator/character_limit_exceed_indicator.dart';
 import 'package:ion/app/features/feed/create_post/views/components/post_submit_button/post_submit_button.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_author_header.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/actions_toolbar/actions_toolbar.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_bold_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_image_button.dart';
@@ -170,18 +172,27 @@ class ReplyInputField extends HookConsumerWidget {
                 ToolbarItalicButton(textEditorController: textEditorController),
                 ToolbarBoldButton(textEditorController: textEditorController),
               ],
-              trailing: PostSubmitButton(
-                textEditorController: textEditorController,
-                parentEvent: eventReference,
-                mediaFiles: attachedMediaNotifier.value,
-                createOption: CreatePostOption.reply,
-                onSubmitted: () {
-                  _clear(
-                    focusNode: focusNode,
-                    attachedMediaNotifier: attachedMediaNotifier,
+              trailing: Row(
+                children: [
+                  CharacterLimitExceedIndicator(
+                    maxCharacters: ModifiablePostEntity.contentCharacterLimit,
                     textEditorController: textEditorController,
-                  );
-                },
+                  ),
+                  SizedBox(width: 8.0.s),
+                  PostSubmitButton(
+                    textEditorController: textEditorController,
+                    parentEvent: eventReference,
+                    mediaFiles: attachedMediaNotifier.value,
+                    createOption: CreatePostOption.reply,
+                    onSubmitted: () {
+                      _clear(
+                        focusNode: focusNode,
+                        attachedMediaNotifier: attachedMediaNotifier,
+                        textEditorController: textEditorController,
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
         ],
