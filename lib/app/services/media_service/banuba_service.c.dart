@@ -92,7 +92,7 @@ class BanubaService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 BanubaService banubaService(Ref ref) {
   return BanubaService(ref.watch(envProvider.notifier));
 }

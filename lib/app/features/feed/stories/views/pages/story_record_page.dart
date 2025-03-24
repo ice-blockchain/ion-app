@@ -6,6 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_sheets.dart';
@@ -39,16 +40,18 @@ class StoryRecordPage extends HookConsumerWidget {
 
     final isCameraReady = cameraState is CameraReady;
     final cameraActionsState = ref.watch(cameraActionsControllerProvider);
-    final selectedFile = cameraActionsState.whenOrNull(saved: (file) => file);
+    final videoFile = cameraActionsState.whenOrNull(
+      saved: (file) => MediaType.fromMimeType(file.mimeType ?? '') == MediaType.video ? file : null,
+    );
 
-    if (selectedFile != null) {
+    if (videoFile != null) {
       ref
-        ..displayErrors(editMediaProvider(selectedFile))
-        ..listenSuccess(editMediaProvider(selectedFile), (filePath) async {
+        ..displayErrors(editMediaProvider(videoFile))
+        ..listenSuccess(editMediaProvider(videoFile), (filePath) async {
           if (context.mounted && filePath != null) {
             await StoryPreviewRoute(
               path: filePath,
-              mimeType: selectedFile.mimeType,
+              mimeType: videoFile.mimeType,
             ).push<void>(context);
           }
         });
