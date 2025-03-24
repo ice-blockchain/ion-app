@@ -82,6 +82,7 @@ class SendE2eeChatMessageService {
         tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
         previousId: failedEventMessageId,
       );
+
       currentUserEventMessageId = eventMessage.id;
 
       await ref.read(conversationDaoProvider).add([eventMessage]);
