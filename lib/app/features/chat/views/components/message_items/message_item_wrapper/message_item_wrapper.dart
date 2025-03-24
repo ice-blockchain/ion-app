@@ -5,11 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -19,23 +25,30 @@ class MessageItemWrapper extends HookConsumerWidget {
     required this.child,
     required this.messageItem,
     required this.contentPadding,
-    this.repliedMessageItem,
     this.isLastMessageFromAuthor = true,
     super.key,
   });
 
   final bool isMe;
   final Widget child;
+
   final bool isLastMessageFromAuthor;
   final MessageListItem messageItem;
   final EdgeInsetsGeometry contentPadding;
-  final MessageListItem? repliedMessageItem;
 
   /// The maximum width of the message content in the chat
   static double get maxWidth => 282.0.s;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
+
+    final repliedMessageListItem = getRepliedMessageListItem(
+      ref: ref,
+      context: context,
+      repliedEventMessage: repliedEventMessage.valueOrNull,
+    );
+
     final messageItemKey = useMemoized(GlobalKey.new);
 
     final deliveryStatus =
@@ -121,7 +134,8 @@ class MessageItemWrapper extends HookConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (repliedMessageItem != null) ReplyMessage(repliedMessageItem!),
+                          if (repliedMessageListItem != null)
+                            ReplyMessage(messageItem, repliedMessageListItem),
                           child,
                         ],
                       ),
@@ -144,5 +158,58 @@ class MessageItemWrapper extends HookConsumerWidget {
         );
       },
     );
+  }
+
+  MessageListItem? getRepliedMessageListItem({
+    required WidgetRef ref,
+    required BuildContext context,
+    required EventMessage? repliedEventMessage,
+  }) {
+    if (repliedEventMessage == null) {
+      return null;
+    }
+
+    final repliedEntity = PrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
+
+    if (repliedEntity.data.messageType == MessageType.profile) {
+      final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
+
+      final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
+      return ShareProfileItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
+      );
+    }
+
+    return switch (repliedEntity.data.messageType) {
+      MessageType.profile => null,
+      MessageType.text => TextItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: repliedEntity.data.content,
+        ),
+      MessageType.emoji => EmojiItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: repliedEntity.data.content,
+        ),
+      MessageType.audio => AudioItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: context.i18n.common_voice_message,
+        ),
+      MessageType.document => DocumentItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: repliedEntity.data.content,
+        ),
+      MessageType.visualMedia => repliedEntity.data.primaryMedia?.mimeType == 'image/webp'
+          ? PhotoItem(
+              eventMessage: repliedEventMessage,
+              media: repliedEntity.data.primaryMedia!,
+              contentDescription: context.i18n.common_photo,
+            )
+          : VideoItem(
+              eventMessage: repliedEventMessage,
+              media: repliedEntity.data.primaryMedia!,
+              contentDescription: context.i18n.common_video,
+            )
+    };
   }
 }

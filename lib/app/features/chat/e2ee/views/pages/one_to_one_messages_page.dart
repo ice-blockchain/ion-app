@@ -14,6 +14,7 @@ import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
@@ -54,10 +55,18 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           throw UserMasterPubkeyNotFoundException();
         }
 
-        await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
-          conversationId: conversationId.value!,
+        final repliedMessage = ref.read(selectedMessageProvider);
+
+        final conversationMessageManagementService =
+            await ref.read(sendE2eeMessageServiceProvider.future);
+
+        ref.read(selectedMessageProvider.notifier).clear();
+
+        await conversationMessageManagementService.sendMessage(
           content: content ?? '',
           mediaFiles: mediaFiles ?? [],
+          conversationId: conversationId.value!,
+          repliedMessage: repliedMessage?.eventMessage,
           participantsMasterPubkeys: [receiverPubKey, currentPubkey],
         );
       },

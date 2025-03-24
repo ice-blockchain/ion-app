@@ -5,29 +5,34 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/photo_message/photo_message.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyMessage extends HookConsumerWidget {
-  const ReplyMessage(this.messageItem, {super.key});
+  const ReplyMessage(this.messageItem, this.repliedMessageItem, {super.key});
 
   final MessageListItem messageItem;
+  final MessageListItem repliedMessageItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messageIconPath = _getMessageIcon();
-    final isMe = ref.watch(isCurrentUserSelectorProvider(messageItem.eventMessage.masterPubkey));
+    final isMyMessage =
+        messageItem.eventMessage.masterPubkey == ref.watch(currentPubkeySelectorProvider);
 
     final bgColor = useMemoized(
-      () => isMe ? context.theme.appColors.darkBlue : context.theme.appColors.primaryBackground,
-      [isMe],
+      () => isMyMessage
+          ? context.theme.appColors.darkBlue
+          : context.theme.appColors.primaryBackground,
+      [isMyMessage],
     );
 
     final textColor = useMemoized(
-      () => isMe ? context.theme.appColors.onPrimaryAccent : null,
-      [isMe],
+      () => isMyMessage ? context.theme.appColors.onPrimaryAccent : null,
+      [isMyMessage],
     );
 
     return Container(
@@ -41,21 +46,21 @@ class ReplyMessage extends HookConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _SideVerticalDivider(isMe: isMe),
-            if (messageItem is PhotoItem)
+            _SideVerticalDivider(isMe: isMyMessage),
+            if (repliedMessageItem is PhotoItem)
               Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
                 child: MediaContent(
                   size: Size(30.0.s, 30.0.s),
-                  media: (messageItem as PhotoItem).media,
+                  media: (repliedMessageItem as PhotoItem).media,
                 ),
               ),
-            if (messageItem is VideoItem)
+            if (repliedMessageItem is VideoItem)
               Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
                 child: MediaContent(
                   size: Size(30.0.s, 30.0.s),
-                  media: (messageItem as VideoItem).media,
+                  media: (repliedMessageItem as VideoItem).media,
                 ),
               ),
             Flexible(
@@ -64,7 +69,7 @@ class ReplyMessage extends HookConsumerWidget {
                 children: [
                   SenderSummary(
                     textColor: textColor,
-                    pubkey: messageItem.eventMessage.masterPubkey,
+                    pubkey: repliedMessageItem.eventMessage.masterPubkey,
                   ),
                   Row(
                     children: [
@@ -78,7 +83,7 @@ class ReplyMessage extends HookConsumerWidget {
                         ),
                       Expanded(
                         child: Text(
-                          messageItem.contentDescription,
+                          repliedMessageItem.contentDescription,
                           style: context.theme.appTextThemes.body2.copyWith(color: textColor),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -95,7 +100,7 @@ class ReplyMessage extends HookConsumerWidget {
     );
   }
 
-  String? _getMessageIcon() => switch (messageItem) {
+  String? _getMessageIcon() => switch (repliedMessageItem) {
         TextItem _ => null,
         EmojiItem _ => null,
         VideoItem _ => Assets.svg.iconFeedVideos,

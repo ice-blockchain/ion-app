@@ -63,7 +63,7 @@ class SendE2eeMessageService {
 
   final allowedStatus = [MessageDeliveryStatus.received, MessageDeliveryStatus.read];
 
-  //TODO: Create a separate provider for message status updates
+  // TODO: Create a separate provider for message status updates
   Future<void> sendMessageStatus(
     EventMessage kind14Rumor,
     MessageDeliveryStatus status,
@@ -122,7 +122,7 @@ class SendE2eeMessageService {
     );
   }
 
-  //TODO: Create a separate provider for reaction events
+  // TODO: Create a separate provider for reaction events
   Future<void> sendReaction({
     required String content,
     required EventMessage kind14Rumor,

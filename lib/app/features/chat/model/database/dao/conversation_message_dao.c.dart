@@ -103,6 +103,16 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
+  Future<EventMessage> getEventMessage({
+    required Ref ref,
+    required String messageId,
+  }) async {
+    final message =
+        await (select(eventMessageTable)..where((table) => table.id.equals(messageId))).getSingle();
+
+    return message.toEventMessage();
+  }
+
   Future<void> removeMessages({
     required Ref ref,
     required EventMessage deleteRequest,
