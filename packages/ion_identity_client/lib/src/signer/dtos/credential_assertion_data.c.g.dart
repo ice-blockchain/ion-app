@@ -17,12 +17,20 @@ CredentialAssertionData _$CredentialAssertionDataFromJson(
     );
 
 Map<String, dynamic> _$CredentialAssertionDataToJson(
-        CredentialAssertionData instance) =>
-    <String, dynamic>{
-      'clientData': instance.clientData,
-      'credId': instance.credId,
-      'signature': instance.signature,
-      if (instance.authenticatorData case final value?)
-        'authenticatorData': value,
-      if (instance.userHandle case final value?) 'userHandle': value,
-    };
+    CredentialAssertionData instance) {
+  final val = <String, dynamic>{
+    'clientData': instance.clientData,
+    'credId': instance.credId,
+    'signature': instance.signature,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('authenticatorData', instance.authenticatorData);
+  writeNotNull('userHandle', instance.userHandle);
+  return val;
+}
