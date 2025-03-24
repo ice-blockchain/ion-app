@@ -31,16 +31,23 @@ class GalleryGridCell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectionState = ref.watch(mediaSelectionStateProvider(mediaFile.path));
     final assetEntityAsync = ref.watch(assetEntityProvider(mediaFile.path));
+    final maxNumberOfMediaSelected = ref.watch(
+      mediaSelectionNotifierProvider
+          .select((state) => state.selectedMedia.length >= state.maxSelection),
+    );
+    final isDisabled = !selectionState.isSelected && maxNumberOfMediaSelected;
 
     return SizedBox(
       width: cellWidth,
       height: cellHeight,
       child: GestureDetector(
-        onTap: () {
-          ref
-              .read(mediaSelectionNotifierProvider.notifier)
-              .toggleSelection(mediaFile.path, type: type);
-        },
+        onTap: isDisabled
+            ? null
+            : () {
+                ref
+                    .read(mediaSelectionNotifierProvider.notifier)
+                    .toggleSelection(mediaFile.path, type: type);
+              },
         child: assetEntityAsync.maybeWhen(
           data: (asset) {
             if (asset == null) {
@@ -56,28 +63,31 @@ class GalleryGridCell extends ConsumerWidget {
               fit: BoxFit.cover,
               frameBuilder: (_, Widget child, int? frame, bool wasSynchronouslyLoaded) {
                 if (wasSynchronouslyLoaded || frame != null) {
-                  return Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      child,
-                      if (showSelectionBadge)
-                        Positioned(
-                          top: 8.0.s,
-                          right: 8.0.s,
-                          child: SelectionBadge(
-                            isSelected: selectionState.isSelected,
-                            selectionOrder: selectionState.order.toString(),
+                  return Opacity(
+                    opacity: isDisabled ? 0.5 : 1.0,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        child,
+                        if (showSelectionBadge)
+                          Positioned(
+                            top: 8.0.s,
+                            right: 8.0.s,
+                            child: SelectionBadge(
+                              isSelected: selectionState.isSelected,
+                              selectionOrder: selectionState.order.toString(),
+                            ),
                           ),
-                        ),
-                      if (asset.type == AssetType.video)
-                        Positioned(
-                          bottom: 4.0.s,
-                          right: 4.0.s,
-                          child: DurationBadge(
-                            duration: asset.duration,
+                        if (asset.type == AssetType.video)
+                          Positioned(
+                            bottom: 4.0.s,
+                            right: 4.0.s,
+                            child: DurationBadge(
+                              duration: asset.duration,
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   );
                 } else {
                   return const ShimmerLoadingCell();

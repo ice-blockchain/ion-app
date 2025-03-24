@@ -15,7 +15,7 @@ class MediaSelectionNotifier extends _$MediaSelectionNotifier {
   MediaSelectionState build() {
     return const MediaSelectionState(
       selectedMedia: [],
-      maxSelection: 5,
+      maxSelection: 10,
     );
   }
 
