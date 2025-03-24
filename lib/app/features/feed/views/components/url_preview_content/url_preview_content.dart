@@ -31,7 +31,7 @@ class UrlPreviewContent extends HookWidget {
       key: ValueKey(normalizedUrl),
       url: normalizedUrl,
       builder: (meta, favIconUrl) {
-        if (meta == null) {
+        if (meta == null || meta.title == null || meta.title!.isEmpty) {
           return const SizedBox.shrink();
         }
 
