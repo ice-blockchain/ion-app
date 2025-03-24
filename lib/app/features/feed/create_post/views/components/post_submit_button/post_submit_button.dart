@@ -51,9 +51,10 @@ class PostSubmitButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hasContent = useTextEditorHasContent(textEditorController) || mediaFiles.isNotEmpty;
     final exceedsCharacterLimit = useTextEditorCharacterLimitExceedAmount(
-      textEditorController,
-      ModifiablePostEntity.contentCharacterLimit,
-    ) > 0;
+          textEditorController,
+          ModifiablePostEntity.contentCharacterLimit,
+        ) >
+        0;
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
     final hasPoll = useHasPoll(textEditorController);
@@ -61,16 +62,12 @@ class PostSubmitButton extends HookConsumerWidget {
 
     final isSubmitButtonEnabled = useMemoized(
       () {
-        var contentValid = false;
-        if (hasPoll) {
-          final isPoolValid = Validators.isPollValid(
-            pollTitle.text,
-            pollAnswers.map((answer) => answer.text).toList(),
-          );
-          contentValid = isPoolValid;
-        } else {
-          contentValid = hasContent;
-        }
+        final contentValid = hasPoll
+            ? Validators.isPollValid(
+                pollTitle.text,
+                pollAnswers,
+              )
+            : hasContent;
         return contentValid && !exceedsCharacterLimit;
       },
       [hasPoll, hasContent, exceedsCharacterLimit],

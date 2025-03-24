@@ -3,6 +3,7 @@
 import 'package:dlibphonenumber/dlibphonenumber.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/feed/data/models/poll/poll_answer.c.dart';
 import 'package:ion/app/utils/url.dart';
 
 class Validators {
@@ -73,11 +74,14 @@ class Validators {
     }
   }
 
-  static bool isPollValid(String pollTitle, List<String> pollAnswers) {
+  static bool isPollValid(String pollTitle, List<PollAnswer> pollAnswers) {
     return pollTitle.trim().isNotEmpty &&
         pollAnswers.length >= 2 &&
         pollAnswers.every(
-          (answer) => answer.trim().isNotEmpty && answer.trim().length <= 25,
+          (answer) {
+            final answerText = answer.text.trim();
+            return answerText.isNotEmpty && answerText.length <= 25;
+          },
         );
   }
 
