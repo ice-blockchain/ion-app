@@ -26,7 +26,7 @@ class SendChatMedia extends _$SendChatMedia {
   CancelableOperation<AsyncValue<List<MediaAttachment>>>? _cancellableOperation;
 
   @override
-  Future<List<MediaAttachment>> build(int id) async {
+  Future<List<MediaAttachment>> build(int messageMediaId) async {
     return [];
   }
 
@@ -74,7 +74,7 @@ class SendChatMedia extends _$SendChatMedia {
 
   Future<void> cancel() async {
     await _cancellableOperation?.cancel();
-    await ref.read(messageMediaDaoProvider).cancel(id);
+    await ref.read(messageMediaDaoProvider).cancel(messageMediaId);
   }
 
   Future<List<MediaAttachment>> _processMedia(
@@ -89,13 +89,12 @@ class SendChatMedia extends _$SendChatMedia {
     final isImage = mediaFile.mimeType?.startsWith('image/') ?? false;
 
     var blurHash = await generateBlurhash(mediaFile);
-    MediaAttachment? thumbMediaAttachment;
     String? thumbUrl;
 
     if (isVideo) {
       final thumbMediaFile = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
       blurHash = await generateBlurhash(thumbMediaFile);
-      thumbMediaAttachment = (await _processMedia(thumbMediaFile, masterPubkey)).first;
+      final thumbMediaAttachment = (await _processMedia(thumbMediaFile, masterPubkey)).first;
       mediaAttachments.add(thumbMediaAttachment);
       thumbUrl = thumbMediaAttachment.url;
     }

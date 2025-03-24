@@ -192,7 +192,7 @@ class SendE2eeChatMessageService {
       cacheKeys.add(fileName);
     }
 
-    final eventMessageIds = await ref.read(messageMediaDaoProvider).addBatch(
+    final messageMediaIds = await ref.read(messageMediaDaoProvider).addBatch(
           eventMessageId: eventMessageId,
           cacheKeys: cacheKeys,
         );
@@ -203,7 +203,7 @@ class SendE2eeChatMessageService {
     final mediaAttachmentsFutures = mediaFiles.map(
       (mediaFile) async {
         final indexOfMediaFile = mediaFiles.indexOf(mediaFile);
-        final id = eventMessageIds[indexOfMediaFile];
+        final id = messageMediaIds[indexOfMediaFile];
 
         final sendResult = await ref
             .read(sendChatMediaProvider(id).notifier)
