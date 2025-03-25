@@ -138,7 +138,7 @@ typedef PredictNative = Void Function(Pointer<Utf8> str, Pointer<Utf8> output);
 typedef Predict = void Function(Pointer<Utf8> str, Pointer<Utf8> output);
 
 void detectLanguage(String content) async {
-  final lib = DynamicLibrary.open('fasttext_predict.so');
+  final lib = DynamicLibrary.open('fasttext_predict.dylib');
   // final loadModelFn = lib.providesSymbol<LoadModelNative, LoadModel>('load_model');
   // final loadModelFn = lib.providesSymbol('load_model');
   // print('loadModelFn $loadModelFn');
@@ -147,10 +147,10 @@ void detectLanguage(String content) async {
       lib.lookupFunction<LoadModelNative, LoadModel>('load_model'); // Lookup function in library
 
   ///
-  final byteData = await rootBundle.load('assets/labeling.ftz');
+  final byteData = await rootBundle.load('assets/language_identification.176.ftz');
 
   final directory = await getApplicationDocumentsDirectory();
-  final file = File('${directory.path}/labeling.ftz');
+  final file = File('${directory.path}/language_identification.176.ftz');
 
   // Write the asset data to a file
   await file
