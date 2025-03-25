@@ -18,18 +18,31 @@ A new Flutter FFI plugin project.
   # paths, so Classes contains a forwarder C file that relatively imports
   # `../src/*` so that the C sources can be shared among all target platforms.
   s.source           = { :path => '.' }
-  s.source_files = 'fastText/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '13.0'
 
-  s.preserve_paths = 'Frameworks/fasttext_predict.xcframework'
   s.vendored_frameworks = 'Frameworks/fasttext_predict.xcframework'
+  s.preserve_paths = 'Frameworks/*.xcframework/**/*'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = {
+    'OTHER_LDFLAGS' => '$(inherited) -framework fasttext_predict',
+    'FRAMEWORK_SEARCH_PATHS' => '"${PODS_XCFRAMEWORKS_BUILD_DIR}/fasttext_predict"',
     'DEFINES_MODULE' => 'YES',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-    'OTHER_LDFLAGS' => '-framework fasttext_predict'
   }
+
   s.swift_version = '5.0'
+
+  # s.resource_bundles = {
+  #   'fasttext_predict' => ['Frameworks/fasttext_predict.xcframework']
+  # }
+
+  # s.script_phases = [
+  #   {
+  #     :name => 'Embed FastText Framework',
+  #     :script => 'mkdir -p "${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}" && cp -R "${PODS_ROOT}/fasttext_predict.xcframework" "${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"',
+  #     :execution_position => :after_compile
+  #   }
+  # ]
 end
