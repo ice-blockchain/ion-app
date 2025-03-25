@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
-import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/media_preview.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class RepliedMessageInfo extends HookConsumerWidget {
@@ -28,17 +29,14 @@ class RepliedMessageInfo extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const _SideVerticalDivider(),
-            repliedMessage.maybeWhen(
-              photo: (media, eventMessage, contentDescription) => Padding(
+            if (repliedMessage is MediaItem)
+              Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
-                child: MediaPreview(media: media),
+                child: VisualMediaCustomGrid(
+                  messageMedias: repliedMessage.medias,
+                  eventMessage: repliedMessage.eventMessage,
+                ),
               ),
-              video: (media, eventMessage, contentDescription) => Padding(
-                padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
-                child: MediaPreview(media: media),
-              ),
-              orElse: SizedBox.shrink,
-            ),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

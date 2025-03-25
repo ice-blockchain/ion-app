@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -23,6 +24,10 @@ class TextMessage extends ConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
+      messageItem: TextItem(
+        eventMessage: eventMessage,
+        contentDescription: eventMessage.content,
+      ),
       contentPadding: EdgeInsets.symmetric(
         vertical: 12.0.s,
         horizontal: 12.0.s,

@@ -57,16 +57,13 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
         final repliedMessage = ref.read(selectedMessageProvider);
 
-        final conversationMessageManagementService =
-            await ref.read(sendE2eeMessageServiceProvider.future);
-
         ref.read(selectedMessageProvider.notifier).clear();
 
-        await conversationMessageManagementService.sendMessage(
+        await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
           content: content ?? '',
           mediaFiles: mediaFiles ?? [],
           conversationId: conversationId.value!,
-          repliedMessage: repliedMessage?.eventMessage,
+          //repliedMessage: repliedMessage?.eventMessage,
           participantsMasterPubkeys: [receiverPubKey, currentPubkey],
         );
       },

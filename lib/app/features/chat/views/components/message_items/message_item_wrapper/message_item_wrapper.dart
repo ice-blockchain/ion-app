@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
@@ -177,10 +178,20 @@ class MessageItemWrapper extends HookConsumerWidget {
         eventMessage: repliedEventMessage,
         contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
       );
+    } else if (repliedEntity.data.messageType == MessageType.profile) {
+      final messageMedias =
+          ref.watch(chatMediasProvider(eventMessageId: repliedEntity.id)).valueOrNull ?? [];
+
+      return MediaItem(
+        medias: messageMedias,
+        eventMessage: repliedEventMessage,
+        contentDescription: ref.context.i18n.common_photo,
+      );
     }
 
     return switch (repliedEntity.data.messageType) {
       MessageType.profile => null,
+      MessageType.visualMedia => null,
       MessageType.text => TextItem(
           eventMessage: repliedEventMessage,
           contentDescription: repliedEntity.data.content,
@@ -197,17 +208,6 @@ class MessageItemWrapper extends HookConsumerWidget {
           eventMessage: repliedEventMessage,
           contentDescription: repliedEntity.data.content,
         ),
-      MessageType.visualMedia => repliedEntity.data.primaryMedia?.mimeType == 'image/webp'
-          ? PhotoItem(
-              eventMessage: repliedEventMessage,
-              media: repliedEntity.data.primaryMedia!,
-              contentDescription: ref.context.i18n.common_photo,
-            )
-          : VideoItem(
-              eventMessage: repliedEventMessage,
-              media: repliedEntity.data.primaryMedia!,
-              contentDescription: ref.context.i18n.common_video,
-            )
     };
   }
 }

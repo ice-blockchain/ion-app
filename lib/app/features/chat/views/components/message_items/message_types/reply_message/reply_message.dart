@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
-import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/media_preview.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyMessage extends HookConsumerWidget {
@@ -47,17 +47,14 @@ class ReplyMessage extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _SideVerticalDivider(isMe: isMyMessage),
-            repliedMessageItem.maybeWhen(
-              photo: (media, eventMessage, contentDescription) => Padding(
+            if (repliedMessageItem is MediaItem)
+              Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
-                child: MediaPreview(media: media),
+                child: VisualMediaCustomGrid(
+                  eventMessage: repliedMessageItem.eventMessage,
+                  messageMedias: (repliedMessageItem as MediaItem).medias,
+                ),
               ),
-              video: (media, eventMessage, contentDescription) => Padding(
-                padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
-                child: MediaPreview(media: media),
-              ),
-              orElse: SizedBox.shrink,
-            ),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,10 +95,9 @@ class ReplyMessage extends HookConsumerWidget {
   String? _getMessageIcon() => switch (repliedMessageItem) {
         TextItem _ => null,
         EmojiItem _ => null,
-        VideoItem _ => Assets.svg.iconFeedVideos,
         LinkItem _ => Assets.svg.iconArticleLink,
         DocumentItem _ => Assets.svg.iconChatFile,
-        PhotoItem _ => Assets.svg.iconProfileCamera,
+        MediaItem _ => Assets.svg.iconProfileCamera,
         AudioItem _ => Assets.svg.iconChatVoicemessage,
         ShareProfileItem _ => Assets.svg.iconProfileUsertab,
       };

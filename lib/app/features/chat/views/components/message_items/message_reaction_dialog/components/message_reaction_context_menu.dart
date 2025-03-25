@@ -55,7 +55,7 @@ class MessageReactionContextMenu extends ConsumerWidget {
                   onPressed: () async {
                     unawaited(
                       ref.read(sendE2eeChatMessageServiceProvider).resendMessage(
-                            messageEvent: messageEvent,
+                            messageEvent: messageItem.eventMessage,
                           ),
                     );
 
