@@ -11,10 +11,12 @@ class AdaptiveMediaView extends HookConsumerWidget {
   const AdaptiveMediaView({
     required this.eventReference,
     required this.initialMediaIndex,
+    this.framedEventReference,
     super.key,
   });
 
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final int initialMediaIndex;
 
   @override
@@ -31,6 +33,7 @@ class AdaptiveMediaView extends HookConsumerWidget {
           post: post,
           eventReference: eventReference,
           initialMediaIndex: initialMediaIndex,
+          framedEventReference: framedEventReference,
         );
       },
       orElse: () => const SizedBox.shrink(),

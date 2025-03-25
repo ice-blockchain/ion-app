@@ -59,9 +59,12 @@ class RepostListItem extends ConsumerWidget {
           switch (repostEntity) {
             RepostEntity() => Post(
                 eventReference: repostEntity.data.eventReference,
+                parentEventReference: eventReference,
+                onVideoTap: onVideoTap,
               ),
             GenericRepostEntity() when repostEntity.data.kind == ModifiablePostEntity.kind => Post(
                 eventReference: repostEntity.data.eventReference,
+                parentEventReference: eventReference,
                 onVideoTap: onVideoTap,
               ),
             GenericRepostEntity() when repostEntity.data.kind == ArticleEntity.kind => Padding(

@@ -42,11 +42,16 @@ class ReplyList extends ConsumerWidget {
           EntitiesList(
             entities: entities.toList(),
             separatorHeight: 1.0.s,
-            onVideoTap: ({required String eventReference, required int initialMediaIndex}) =>
+            onVideoTap: ({
+              required String eventReference,
+              required int initialMediaIndex,
+              String? framedEventReference,
+            }) =>
                 ReplyListVideosRoute(
               eventReference: eventReference,
               initialMediaIndex: initialMediaIndex,
               parentEventReference: this.eventReference.encode(),
+              framedEventReference: framedEventReference,
             ).push<void>(context),
           ),
       ],

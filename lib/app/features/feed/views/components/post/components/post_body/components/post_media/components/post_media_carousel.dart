@@ -12,6 +12,7 @@ class PostMediaCarousel extends StatelessWidget {
     required this.media,
     required this.aspectRatio,
     required this.eventReference,
+    this.framedEventReference,
     this.onVideoTap,
     super.key,
   });
@@ -21,6 +22,8 @@ class PostMediaCarousel extends StatelessWidget {
   final double aspectRatio;
 
   final EventReference eventReference;
+
+  final EventReference? framedEventReference;
 
   final OnVideoTapCallback? onVideoTap;
 
@@ -32,6 +35,7 @@ class PostMediaCarousel extends StatelessWidget {
         aspectRatio: aspectRatio,
         eventReference: eventReference,
         onVideoTap: onVideoTap,
+        framedEventReference: framedEventReference,
       );
     }
 
@@ -40,6 +44,7 @@ class PostMediaCarousel extends StatelessWidget {
       aspectRatio: aspectRatio,
       eventReference: eventReference,
       onVideoTap: onVideoTap,
+      framedEventReference: framedEventReference,
     );
   }
 }

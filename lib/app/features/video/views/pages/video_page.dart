@@ -10,6 +10,7 @@ import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/video/views/components/video_actions.dart';
 import 'package:ion/app/features/video/views/components/video_button.dart';
 import 'package:ion/app/features/video/views/components/video_post_info.dart';
@@ -25,12 +26,14 @@ class VideoPage extends HookConsumerWidget {
     this.onVideoEnded,
     this.videoUrl,
     this.looping = false,
+    this.framedEventReference,
     super.key,
   });
 
   final ModifiablePostEntity video;
   final VoidCallback? onVideoEnded;
   final String? videoUrl;
+  final EventReference? framedEventReference;
   final bool looping;
 
   @override
@@ -42,9 +45,12 @@ class VideoPage extends HookConsumerWidget {
 
     final playerController = ref.watch(
       videoControllerProvider(
-        videoPath,
-        autoPlay: true,
-        looping: looping,
+        VideoControllerParams(
+          sourcePath: videoPath,
+          autoPlay: true,
+          looping: looping,
+          uniqueId: framedEventReference?.encode() ?? '',
+        ),
       ),
     );
 

@@ -43,10 +43,15 @@ class FeedAdvancedSearchPosts extends HookConsumerWidget {
         else
           EntitiesList(
             entities: entities,
-            onVideoTap: ({required String eventReference, required int initialMediaIndex}) =>
+            onVideoTap: ({
+              required String eventReference,
+              required int initialMediaIndex,
+              String? framedEventReference,
+            }) =>
                 FeedAdvancedSearchVideosRoute(
               eventReference: eventReference,
               initialMediaIndex: initialMediaIndex,
+              framedEventReference: framedEventReference,
               query: query,
               category: category,
             ).push<void>(context),

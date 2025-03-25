@@ -17,6 +17,7 @@ class PostMediaItem extends HookWidget {
     required this.aspectRatio,
     required this.eventReference,
     this.mediaIndex = 0,
+    this.framedEventReference,
     this.onVideoTap,
     super.key,
   });
@@ -25,16 +26,22 @@ class PostMediaItem extends HookWidget {
   final int mediaIndex;
   final double aspectRatio;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final OnVideoTapCallback? onVideoTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onVideoTap != null && mediaItem.mediaType == MediaType.video
-          ? onVideoTap?.call(eventReference: eventReference.encode(), initialMediaIndex: mediaIndex)
+          ? onVideoTap?.call(
+              eventReference: eventReference.encode(),
+              initialMediaIndex: mediaIndex,
+              framedEventReference: framedEventReference?.encode(),
+            )
           : FullscreenMediaRoute(
               eventReference: eventReference.encode(),
               initialMediaIndex: mediaIndex,
+              framedEventReference: framedEventReference?.encode(),
             ).push<void>(context),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
@@ -49,6 +56,7 @@ class PostMediaItem extends HookWidget {
             MediaType.video => VideoPreview(
                 videoUrl: mediaItem.url,
                 thumbnailUrl: mediaItem.thumb,
+                framedEventReference: framedEventReference,
               ),
             _ => const SizedBox.shrink(),
           },

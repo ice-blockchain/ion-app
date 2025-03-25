@@ -14,12 +14,14 @@ class ProfileVideosPage extends HookConsumerWidget {
     required this.tabEntityType,
     required this.eventReference,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
     super.key,
   });
 
   final String pubkey;
   final TabEntityType tabEntityType;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final int initialMediaIndex;
 
   @override
@@ -29,6 +31,7 @@ class ProfileVideosPage extends HookConsumerWidget {
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       initialMediaIndex: initialMediaIndex,
+      framedEventReference: framedEventReference,
       getVideosData: () => ref.watch(entitiesPagedDataProvider(dataSource)),
       onLoadMore: () => ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities(),
     );

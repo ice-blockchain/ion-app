@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/components/post_media/post_media.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/views/hooks/use_parsed_media_content.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
@@ -22,6 +23,7 @@ class PostBody extends HookConsumerWidget {
     required this.entity,
     this.isTextSelectable = false,
     this.maxLines = 6,
+    this.framedEventReference,
     this.sidePadding,
     this.onVideoTap,
     super.key,
@@ -29,6 +31,7 @@ class PostBody extends HookConsumerWidget {
 
   final IonConnectEntity entity;
   final bool isTextSelectable;
+  final EventReference? framedEventReference;
   final int? maxLines;
   final double? sidePadding;
   final OnVideoTapCallback? onVideoTap;
@@ -114,6 +117,7 @@ class PostBody extends HookConsumerWidget {
                   eventReference: entity.toEventReference(),
                   sidePadding: sidePadding,
                   onVideoTap: onVideoTap,
+                  framedEventReference: framedEventReference,
                 ),
               ),
             if (media.isEmpty && urlPreview != null)

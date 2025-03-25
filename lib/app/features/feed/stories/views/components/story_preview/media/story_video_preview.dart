@@ -16,9 +16,7 @@ class StoryVideoPreview extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final videoController = ref.watch(
       videoControllerProvider(
-        path,
-        autoPlay: true,
-        looping: true,
+        VideoControllerParams(sourcePath: path, autoPlay: true, looping: true),
       ),
     );
 

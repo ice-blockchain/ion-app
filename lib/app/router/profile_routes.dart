@@ -37,12 +37,16 @@ class ProfileVideosRoute extends BaseRouteData {
     required this.tabEntityType,
     required this.eventReference,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
   }) : super(
           child: ProfileVideosPage(
             pubkey: pubkey,
             tabEntityType: tabEntityType,
             eventReference: EventReference.fromEncoded(eventReference),
             initialMediaIndex: initialMediaIndex,
+            framedEventReference: framedEventReference != null
+                ? EventReference.fromEncoded(framedEventReference)
+                : null,
           ),
           type: IceRouteType.swipeDismissible,
         );
@@ -50,6 +54,7 @@ class ProfileVideosRoute extends BaseRouteData {
   final String pubkey;
   final TabEntityType tabEntityType;
   final String eventReference;
+  final String? framedEventReference;
   final int initialMediaIndex;
 }
 

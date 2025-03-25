@@ -15,6 +15,7 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
     required this.media,
     required this.aspectRatio,
     required this.eventReference,
+    this.framedEventReference,
     this.onVideoTap,
     super.key,
   });
@@ -22,6 +23,7 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
   final List<MediaAttachment> media;
   final double aspectRatio;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final OnVideoTapCallback? onVideoTap;
 
   @override
@@ -43,6 +45,7 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
                     aspectRatio: aspectRatio,
                     eventReference: eventReference,
                     onVideoTap: onVideoTap,
+                    framedEventReference: framedEventReference,
                   ),
                 ),
             ],

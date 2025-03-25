@@ -14,6 +14,7 @@ class VideoCarousel extends HookWidget {
     required this.videos,
     required this.initialIndex,
     required this.eventReference,
+    this.framedEventReference,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class VideoCarousel extends HookWidget {
   final List<MediaAttachment> videos;
   final int initialIndex;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class VideoCarousel extends HookWidget {
           key: ValueKey('video_$videoUrl'),
           video: post,
           videoUrl: videoUrl,
+          framedEventReference: framedEventReference,
           onVideoEnded: () {
             final nextPage = (index + 1) % videos.length;
             pageController.animateToPage(

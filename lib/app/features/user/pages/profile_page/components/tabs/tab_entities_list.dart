@@ -70,10 +70,15 @@ class TabEntitiesList extends ConsumerWidget {
               ? builder!(entities.toList())
               : EntitiesList(
                   entities: entities.toList(),
-                  onVideoTap: ({required String eventReference, required int initialMediaIndex}) =>
+                  onVideoTap: ({
+                    required String eventReference,
+                    required int initialMediaIndex,
+                    String? framedEventReference,
+                  }) =>
                       ProfileVideosRoute(
                     eventReference: eventReference,
                     initialMediaIndex: initialMediaIndex,
+                    framedEventReference: framedEventReference,
                     pubkey: pubkey,
                     tabEntityType: type,
                   ).push<void>(context),

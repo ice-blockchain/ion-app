@@ -17,10 +17,12 @@ class FullscreenMediaPage extends HookConsumerWidget {
   const FullscreenMediaPage({
     required this.eventReference,
     required this.initialMediaIndex,
+    this.framedEventReference,
     super.key,
   });
 
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final int initialMediaIndex;
 
   @override

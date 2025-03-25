@@ -43,8 +43,7 @@ class VideoPreviewCover extends HookConsumerWidget {
 
     final videoController = ref.watch(
       videoControllerProvider(
-        filePath,
-        looping: true,
+        VideoControllerParams(sourcePath: filePath, looping: true),
       ),
     );
 

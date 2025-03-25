@@ -19,7 +19,13 @@ class IntroPage extends HookConsumerWidget {
     // We watch the intro page video controller here and ensure we pass the same parameters
     // (looping: true) to get the same instance of the already initialized provider from SplashPage.
     final videoController = ref.watch(
-      videoControllerProvider(Assets.videos.intro, looping: true),
+      videoControllerProvider(
+        VideoControllerParams(
+          sourcePath: Assets.videos.intro,
+          looping: true,
+          options: VideoPlayerOptions(mixWithOthers: true),
+        ),
+      ),
     );
 
     // Playing the intro video as soon as the widget is built.

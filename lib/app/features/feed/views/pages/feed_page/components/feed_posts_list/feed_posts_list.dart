@@ -34,10 +34,15 @@ class FeedPostsList extends HookConsumerWidget {
 
     return EntitiesList(
       entities: entities,
-      onVideoTap: ({required String eventReference, required int initialMediaIndex}) {
+      onVideoTap: ({
+        required String eventReference,
+        required int initialMediaIndex,
+        String? framedEventReference,
+      }) {
         FeedVideosRoute(
           eventReference: eventReference,
           initialMediaIndex: initialMediaIndex,
+          framedEventReference: framedEventReference,
         ).push<void>(context);
       },
     );
