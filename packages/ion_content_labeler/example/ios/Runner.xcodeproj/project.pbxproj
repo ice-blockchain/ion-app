@@ -11,8 +11,6 @@
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		6322088ED5BE44DFE39A9DEF /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25DF1CF6EBD5E9A7DFE8A72D /* Pods_Runner.framework */; };
-		6B2AFC312D91A72A00B297CB /* fasttext_predict.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B2AFC302D91A72A00B297CB /* fasttext_predict.dylib */; };
-		6B2AFC322D91A79400B297CB /* fasttext_predict.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 6B2AFC302D91A72A00B297CB /* fasttext_predict.dylib */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -28,34 +26,6 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
-		6BACDA262D9186BA005D4ECB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6BACDA1C2D9186BA005D4ECB /* fasttext.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 61F9BF3DF59540198044BE49;
-			remoteInfo = "fasttext-bin";
-		};
-		6BACDA282D9186BA005D4ECB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6BACDA1C2D9186BA005D4ECB /* fasttext.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D6199623BD8B4DCF8389BC28;
-			remoteInfo = "fasttext-shared";
-		};
-		6BACDA2A2D9186BA005D4ECB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6BACDA1C2D9186BA005D4ECB /* fasttext.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1681AE96F03E410F9F691729;
-			remoteInfo = "fasttext-static";
-		};
-		6BACDA2C2D9186BA005D4ECB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6BACDA1C2D9186BA005D4ECB /* fasttext.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 5D56F66167674C68ACEB53D2;
-			remoteInfo = "fasttext-static_pic";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -65,7 +35,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				6B2AFC322D91A79400B297CB /* fasttext_predict.dylib in Embed Libraries */,
 			);
 			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,8 +53,6 @@
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		489109491AFEBFCC8E0CDB95 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		5F6E6334D50D12783A1C1140 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B2AFC302D91A72A00B297CB /* fasttext_predict.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = fasttext_predict.dylib; sourceTree = "<group>"; };
-		6BACDA1C2D9186BA005D4ECB /* fasttext.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = fasttext.xcodeproj; sourceTree = "<group>"; };
 		742685EF9343A734FBF52674 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -114,7 +81,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6322088ED5BE44DFE39A9DEF /* Pods_Runner.framework in Frameworks */,
-				6B2AFC312D91A72A00B297CB /* fasttext_predict.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,23 +108,11 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		6BACDA1D2D9186BA005D4ECB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6BACDA272D9186BA005D4ECB /* fasttext */,
-				6BACDA292D9186BA005D4ECB /* libfasttext.dylib */,
-				6BACDA2B2D9186BA005D4ECB /* libfasttext.a */,
-				6BACDA2D2D9186BA005D4ECB /* libfasttext_pic.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		75BEA316554D6A22A58FC2F2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				25DF1CF6EBD5E9A7DFE8A72D /* Pods_Runner.framework */,
 				5F6E6334D50D12783A1C1140 /* Pods_RunnerTests.framework */,
-				6B2AFC302D91A72A00B297CB /* fasttext_predict.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -198,7 +152,6 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				6BACDA1C2D9186BA005D4ECB /* fasttext.xcodeproj */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -286,12 +239,6 @@
 			mainGroup = 97C146E51CF9000F007C117D;
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 6BACDA1D2D9186BA005D4ECB /* Products */;
-					ProjectRef = 6BACDA1C2D9186BA005D4ECB /* fasttext.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
@@ -299,39 +246,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		6BACDA272D9186BA005D4ECB /* fasttext */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			name = fasttext;
-			path = fasttext.app;
-			remoteRef = 6BACDA262D9186BA005D4ECB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6BACDA292D9186BA005D4ECB /* libfasttext.dylib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			name = libfasttext.dylib;
-			path = libfasttext.0.dylib;
-			remoteRef = 6BACDA282D9186BA005D4ECB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6BACDA2B2D9186BA005D4ECB /* libfasttext.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libfasttext.a;
-			remoteRef = 6BACDA2A2D9186BA005D4ECB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6BACDA2D2D9186BA005D4ECB /* libfasttext_pic.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libfasttext_pic.a;
-			remoteRef = 6BACDA2C2D9186BA005D4ECB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		331C807F294A63A400263BE5 /* Resources */ = {
