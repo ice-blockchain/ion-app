@@ -1004,13 +1004,550 @@ class MessageStatusTableCompanion
   }
 }
 
-class DatabaseAtV1 extends GeneratedDatabase {
-  DatabaseAtV1(QueryExecutor e) : super(e);
+class ReactionTable extends Table
+    with TableInfo<ReactionTable, ReactionTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  ReactionTable(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES event_message_table (id)'));
+  late final GeneratedColumn<String> kind14Id = GeneratedColumn<String>(
+      'kind14_id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES event_message_table (id)'));
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+      'content', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<String> masterPubkey = GeneratedColumn<String>(
+      'master_pubkey', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const CustomExpression('0'));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, kind14Id, content, masterPubkey, isDeleted];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'reaction_table';
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  ReactionTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReactionTableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      kind14Id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}kind14_id'])!,
+      content: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
+      masterPubkey: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}master_pubkey'])!,
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted'])!,
+    );
+  }
+
+  @override
+  ReactionTable createAlias(String alias) {
+    return ReactionTable(attachedDatabase, alias);
+  }
+}
+
+class ReactionTableData extends DataClass
+    implements Insertable<ReactionTableData> {
+  final String id;
+  final String kind14Id;
+  final String content;
+  final String masterPubkey;
+  final bool isDeleted;
+  const ReactionTableData(
+      {required this.id,
+      required this.kind14Id,
+      required this.content,
+      required this.masterPubkey,
+      required this.isDeleted});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['kind14_id'] = Variable<String>(kind14Id);
+    map['content'] = Variable<String>(content);
+    map['master_pubkey'] = Variable<String>(masterPubkey);
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    return map;
+  }
+
+  ReactionTableCompanion toCompanion(bool nullToAbsent) {
+    return ReactionTableCompanion(
+      id: Value(id),
+      kind14Id: Value(kind14Id),
+      content: Value(content),
+      masterPubkey: Value(masterPubkey),
+      isDeleted: Value(isDeleted),
+    );
+  }
+
+  factory ReactionTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ReactionTableData(
+      id: serializer.fromJson<String>(json['id']),
+      kind14Id: serializer.fromJson<String>(json['kind14_id']),
+      content: serializer.fromJson<String>(json['content']),
+      masterPubkey: serializer.fromJson<String>(json['master_pubkey']),
+      isDeleted: serializer.fromJson<bool>(json['is_deleted']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'kind14_id': serializer.toJson<String>(kind14Id),
+      'content': serializer.toJson<String>(content),
+      'master_pubkey': serializer.toJson<String>(masterPubkey),
+      'is_deleted': serializer.toJson<bool>(isDeleted),
+    };
+  }
+
+  ReactionTableData copyWith(
+          {String? id,
+          String? kind14Id,
+          String? content,
+          String? masterPubkey,
+          bool? isDeleted}) =>
+      ReactionTableData(
+        id: id ?? this.id,
+        kind14Id: kind14Id ?? this.kind14Id,
+        content: content ?? this.content,
+        masterPubkey: masterPubkey ?? this.masterPubkey,
+        isDeleted: isDeleted ?? this.isDeleted,
+      );
+  ReactionTableData copyWithCompanion(ReactionTableCompanion data) {
+    return ReactionTableData(
+      id: data.id.present ? data.id.value : this.id,
+      kind14Id: data.kind14Id.present ? data.kind14Id.value : this.kind14Id,
+      content: data.content.present ? data.content.value : this.content,
+      masterPubkey: data.masterPubkey.present
+          ? data.masterPubkey.value
+          : this.masterPubkey,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReactionTableData(')
+          ..write('id: $id, ')
+          ..write('kind14Id: $kind14Id, ')
+          ..write('content: $content, ')
+          ..write('masterPubkey: $masterPubkey, ')
+          ..write('isDeleted: $isDeleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, kind14Id, content, masterPubkey, isDeleted);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ReactionTableData &&
+          other.id == this.id &&
+          other.kind14Id == this.kind14Id &&
+          other.content == this.content &&
+          other.masterPubkey == this.masterPubkey &&
+          other.isDeleted == this.isDeleted);
+}
+
+class ReactionTableCompanion extends UpdateCompanion<ReactionTableData> {
+  final Value<String> id;
+  final Value<String> kind14Id;
+  final Value<String> content;
+  final Value<String> masterPubkey;
+  final Value<bool> isDeleted;
+  final Value<int> rowid;
+  const ReactionTableCompanion({
+    this.id = const Value.absent(),
+    this.kind14Id = const Value.absent(),
+    this.content = const Value.absent(),
+    this.masterPubkey = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ReactionTableCompanion.insert({
+    required String id,
+    required String kind14Id,
+    required String content,
+    required String masterPubkey,
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        kind14Id = Value(kind14Id),
+        content = Value(content),
+        masterPubkey = Value(masterPubkey);
+  static Insertable<ReactionTableData> custom({
+    Expression<String>? id,
+    Expression<String>? kind14Id,
+    Expression<String>? content,
+    Expression<String>? masterPubkey,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (kind14Id != null) 'kind14_id': kind14Id,
+      if (content != null) 'content': content,
+      if (masterPubkey != null) 'master_pubkey': masterPubkey,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ReactionTableCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? kind14Id,
+      Value<String>? content,
+      Value<String>? masterPubkey,
+      Value<bool>? isDeleted,
+      Value<int>? rowid}) {
+    return ReactionTableCompanion(
+      id: id ?? this.id,
+      kind14Id: kind14Id ?? this.kind14Id,
+      content: content ?? this.content,
+      masterPubkey: masterPubkey ?? this.masterPubkey,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (kind14Id.present) {
+      map['kind14_id'] = Variable<String>(kind14Id.value);
+    }
+    if (content.present) {
+      map['content'] = Variable<String>(content.value);
+    }
+    if (masterPubkey.present) {
+      map['master_pubkey'] = Variable<String>(masterPubkey.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReactionTableCompanion(')
+          ..write('id: $id, ')
+          ..write('kind14Id: $kind14Id, ')
+          ..write('content: $content, ')
+          ..write('masterPubkey: $masterPubkey, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class MessageMediaTable extends Table
+    with TableInfo<MessageMediaTable, MessageMediaTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  MessageMediaTable(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  late final GeneratedColumn<int> status = GeneratedColumn<int>(
+      'status', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<String> remoteUrl = GeneratedColumn<String>(
+      'remote_url', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<String> cacheKey = GeneratedColumn<String>(
+      'cache_key', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<String> eventMessageId = GeneratedColumn<String>(
+      'event_message_id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES event_message_table (id)'));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, status, remoteUrl, cacheKey, eventMessageId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'message_media_table';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MessageMediaTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MessageMediaTableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}status'])!,
+      remoteUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}remote_url']),
+      cacheKey: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}cache_key']),
+      eventMessageId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}event_message_id'])!,
+    );
+  }
+
+  @override
+  MessageMediaTable createAlias(String alias) {
+    return MessageMediaTable(attachedDatabase, alias);
+  }
+}
+
+class MessageMediaTableData extends DataClass
+    implements Insertable<MessageMediaTableData> {
+  final int id;
+  final int status;
+  final String? remoteUrl;
+  final String? cacheKey;
+  final String eventMessageId;
+  const MessageMediaTableData(
+      {required this.id,
+      required this.status,
+      this.remoteUrl,
+      this.cacheKey,
+      required this.eventMessageId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['status'] = Variable<int>(status);
+    if (!nullToAbsent || remoteUrl != null) {
+      map['remote_url'] = Variable<String>(remoteUrl);
+    }
+    if (!nullToAbsent || cacheKey != null) {
+      map['cache_key'] = Variable<String>(cacheKey);
+    }
+    map['event_message_id'] = Variable<String>(eventMessageId);
+    return map;
+  }
+
+  MessageMediaTableCompanion toCompanion(bool nullToAbsent) {
+    return MessageMediaTableCompanion(
+      id: Value(id),
+      status: Value(status),
+      remoteUrl: remoteUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remoteUrl),
+      cacheKey: cacheKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cacheKey),
+      eventMessageId: Value(eventMessageId),
+    );
+  }
+
+  factory MessageMediaTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MessageMediaTableData(
+      id: serializer.fromJson<int>(json['id']),
+      status: serializer.fromJson<int>(json['status']),
+      remoteUrl: serializer.fromJson<String?>(json['remote_url']),
+      cacheKey: serializer.fromJson<String?>(json['cache_key']),
+      eventMessageId: serializer.fromJson<String>(json['event_message_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'status': serializer.toJson<int>(status),
+      'remote_url': serializer.toJson<String?>(remoteUrl),
+      'cache_key': serializer.toJson<String?>(cacheKey),
+      'event_message_id': serializer.toJson<String>(eventMessageId),
+    };
+  }
+
+  MessageMediaTableData copyWith(
+          {int? id,
+          int? status,
+          Value<String?> remoteUrl = const Value.absent(),
+          Value<String?> cacheKey = const Value.absent(),
+          String? eventMessageId}) =>
+      MessageMediaTableData(
+        id: id ?? this.id,
+        status: status ?? this.status,
+        remoteUrl: remoteUrl.present ? remoteUrl.value : this.remoteUrl,
+        cacheKey: cacheKey.present ? cacheKey.value : this.cacheKey,
+        eventMessageId: eventMessageId ?? this.eventMessageId,
+      );
+  MessageMediaTableData copyWithCompanion(MessageMediaTableCompanion data) {
+    return MessageMediaTableData(
+      id: data.id.present ? data.id.value : this.id,
+      status: data.status.present ? data.status.value : this.status,
+      remoteUrl: data.remoteUrl.present ? data.remoteUrl.value : this.remoteUrl,
+      cacheKey: data.cacheKey.present ? data.cacheKey.value : this.cacheKey,
+      eventMessageId: data.eventMessageId.present
+          ? data.eventMessageId.value
+          : this.eventMessageId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageMediaTableData(')
+          ..write('id: $id, ')
+          ..write('status: $status, ')
+          ..write('remoteUrl: $remoteUrl, ')
+          ..write('cacheKey: $cacheKey, ')
+          ..write('eventMessageId: $eventMessageId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, status, remoteUrl, cacheKey, eventMessageId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MessageMediaTableData &&
+          other.id == this.id &&
+          other.status == this.status &&
+          other.remoteUrl == this.remoteUrl &&
+          other.cacheKey == this.cacheKey &&
+          other.eventMessageId == this.eventMessageId);
+}
+
+class MessageMediaTableCompanion
+    extends UpdateCompanion<MessageMediaTableData> {
+  final Value<int> id;
+  final Value<int> status;
+  final Value<String?> remoteUrl;
+  final Value<String?> cacheKey;
+  final Value<String> eventMessageId;
+  const MessageMediaTableCompanion({
+    this.id = const Value.absent(),
+    this.status = const Value.absent(),
+    this.remoteUrl = const Value.absent(),
+    this.cacheKey = const Value.absent(),
+    this.eventMessageId = const Value.absent(),
+  });
+  MessageMediaTableCompanion.insert({
+    this.id = const Value.absent(),
+    required int status,
+    this.remoteUrl = const Value.absent(),
+    this.cacheKey = const Value.absent(),
+    required String eventMessageId,
+  })  : status = Value(status),
+        eventMessageId = Value(eventMessageId);
+  static Insertable<MessageMediaTableData> custom({
+    Expression<int>? id,
+    Expression<int>? status,
+    Expression<String>? remoteUrl,
+    Expression<String>? cacheKey,
+    Expression<String>? eventMessageId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (status != null) 'status': status,
+      if (remoteUrl != null) 'remote_url': remoteUrl,
+      if (cacheKey != null) 'cache_key': cacheKey,
+      if (eventMessageId != null) 'event_message_id': eventMessageId,
+    });
+  }
+
+  MessageMediaTableCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? status,
+      Value<String?>? remoteUrl,
+      Value<String?>? cacheKey,
+      Value<String>? eventMessageId}) {
+    return MessageMediaTableCompanion(
+      id: id ?? this.id,
+      status: status ?? this.status,
+      remoteUrl: remoteUrl ?? this.remoteUrl,
+      cacheKey: cacheKey ?? this.cacheKey,
+      eventMessageId: eventMessageId ?? this.eventMessageId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<int>(status.value);
+    }
+    if (remoteUrl.present) {
+      map['remote_url'] = Variable<String>(remoteUrl.value);
+    }
+    if (cacheKey.present) {
+      map['cache_key'] = Variable<String>(cacheKey.value);
+    }
+    if (eventMessageId.present) {
+      map['event_message_id'] = Variable<String>(eventMessageId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MessageMediaTableCompanion(')
+          ..write('id: $id, ')
+          ..write('status: $status, ')
+          ..write('remoteUrl: $remoteUrl, ')
+          ..write('cacheKey: $cacheKey, ')
+          ..write('eventMessageId: $eventMessageId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class DatabaseAtV5 extends GeneratedDatabase {
+  DatabaseAtV5(QueryExecutor e) : super(e);
   late final ConversationTable conversationTable = ConversationTable(this);
   late final EventMessageTable eventMessageTable = EventMessageTable(this);
   late final ConversationMessageTable conversationMessageTable =
       ConversationMessageTable(this);
   late final MessageStatusTable messageStatusTable = MessageStatusTable(this);
+  late final ReactionTable reactionTable = ReactionTable(this);
+  late final MessageMediaTable messageMediaTable = MessageMediaTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1019,8 +1556,10 @@ class DatabaseAtV1 extends GeneratedDatabase {
         conversationTable,
         eventMessageTable,
         conversationMessageTable,
-        messageStatusTable
+        messageStatusTable,
+        reactionTable,
+        messageMediaTable
       ];
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 5;
 }
