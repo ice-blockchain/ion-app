@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:es_compression/brotli.dart';
@@ -50,7 +49,6 @@ class CompressionService {
     int fps = 24,
     FfmpegAudioCodecArg audioCodec = FfmpegAudioCodecArg.aac,
     FfmpegAudioBitrateArg audioBitrate = FfmpegAudioBitrateArg.low,
-    bool generateThumbnail = false,
   }) async {
     try {
       final output = await _generateOutputPath(extension: 'mp4');
@@ -87,24 +85,12 @@ class CompressionService {
 
       final (width: outWidth, height: outHeight) = await _getVideoDimensions(output);
 
-      MediaFile? thumbnail;
-      if (generateThumbnail) {
-        thumbnail = await getThumbnail(
-          MediaFile(
-            path: output,
-            width: outWidth,
-            height: outHeight,
-          ),
-        );
-      }
-
       // Return the final compressed video file info
       return MediaFile(
         path: output,
         mimeType: 'video/mp4',
         width: outWidth,
         height: outHeight,
-        thumb: thumbnail?.path,
       );
     } catch (error, stackTrace) {
       Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);
@@ -294,12 +280,9 @@ class CompressionService {
   ///
   /// Decompresses a Brotli-compressed file.
   ///
-  Future<File> decompressBrotli(File compressedFile, {String outputExtension = ''}) async {
+  Future<File> decompressBrotli(List<int> compressedData, {String outputExtension = ''}) async {
     try {
-      final compressedData = await compressedFile.readAsBytes();
-      final decompressedData = brotliCodec.decode(
-        Uint8List.fromList(compressedData),
-      );
+      final decompressedData = brotliCodec.decode(compressedData);
       final outputFile =
           await _saveBytesIntoFile(bytes: decompressedData, extension: outputExtension);
 

@@ -4,6 +4,7 @@ import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/validators.dart';
 
 /// Media attachments (images, videos, and other files) may be added to events by including
@@ -24,7 +25,23 @@ class MediaAttachment {
     this.encryptionMac,
     this.thumb,
     this.image,
+    this.blurhash,
   });
+
+  factory MediaAttachment.fromMediaFile(MediaFile mediaFile) {
+    return MediaAttachment(
+      url: mediaFile.path,
+      mimeType: mediaFile.mimeType ?? '',
+      dimension: '${mediaFile.width}x${mediaFile.height}',
+      alt: FileAlt.message,
+      torrentInfoHash: '',
+      fileHash: '',
+      originalFileHash: '',
+      image: mediaFile.path,
+      blurhash: mediaFile.blurhash,
+      thumb: mediaFile.path,
+    );
+  }
 
   /// https://github.com/nostr-protocol/nips/blob/master/92.md#example
   factory MediaAttachment.fromTag(List<String> tag) {
@@ -44,7 +61,7 @@ class MediaAttachment {
     String? encryptionKey;
     String? encryptionNonce;
     String? encryptionMac;
-
+    String? blurhash;
     for (final params in tag.skip(1)) {
       final pair = params.split(' ');
       final value = pair[1];
@@ -65,6 +82,8 @@ class MediaAttachment {
           image = value;
         case 'alt':
           alt = value;
+        case 'blurhash':
+          blurhash = value;
         case 'i':
           torrentInfoHash = value;
         case 'x':
@@ -94,6 +113,7 @@ class MediaAttachment {
       encryptionKey: encryptionKey,
       encryptionNonce: encryptionNonce,
       encryptionMac: encryptionMac,
+      blurhash: blurhash,
     );
   }
 
@@ -111,6 +131,7 @@ class MediaAttachment {
         encryptionMac: json['encryptionMac'] as String?,
         thumb: json['thumb'] as String?,
         image: json['image'] as String?,
+        blurhash: json['blurhash'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -125,6 +146,7 @@ class MediaAttachment {
         'encryptionNonce': encryptionNonce,
         'encryptionMac': encryptionMac,
         'thumb': thumb,
+        'blurhash': blurhash,
       };
 
   final String url;
@@ -154,6 +176,8 @@ class MediaAttachment {
   late double? aspectRatio = _aspectRatioFromDimension(dimension);
 
   late MediaType mediaType = _parseMediaType(url: url, mimeType: mimeType);
+
+  final String? blurhash;
 
   /// Calculates the aspect ratio from a given dimension string.
   ///
@@ -201,6 +225,7 @@ class MediaAttachment {
         'encryption-key $encryptionKey $encryptionNonce $encryptionMac aes-gcm',
       if (thumb != null) 'thumb $thumb',
       if (image != null) 'image $image',
+      if (blurhash != null) 'blurhash $blurhash',
     ];
   }
 
@@ -208,7 +233,7 @@ class MediaAttachment {
 
   @override
   String toString() {
-    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb, image: $image)';
+    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb, image: $image, blurhash: $blurhash)';
   }
 
   MediaAttachment copyWith({
@@ -224,6 +249,7 @@ class MediaAttachment {
     String? encryptionKey,
     String? encryptionNonce,
     String? encryptionMac,
+    String? blurhash,
   }) {
     return MediaAttachment(
       url: url ?? this.url,
@@ -238,6 +264,7 @@ class MediaAttachment {
       encryptionKey: encryptionKey ?? this.encryptionKey,
       encryptionNonce: encryptionNonce ?? this.encryptionNonce,
       encryptionMac: encryptionMac ?? this.encryptionMac,
+      blurhash: blurhash ?? this.blurhash,
     );
   }
 }

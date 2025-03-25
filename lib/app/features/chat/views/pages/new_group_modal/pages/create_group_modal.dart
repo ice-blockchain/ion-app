@@ -13,6 +13,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/views/components/user_data_inputs/general_user_data_input.dart';
 import 'package:ion/app/features/chat/community/models/group_type.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/providers/create_group_form_controller_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/general_selection_button.dart';
@@ -197,10 +198,7 @@ class CreateGroupModal extends HookConsumerWidget {
                         processed: (file) => file,
                       );
 
-                      final conversationMessageManagementService =
-                          await ref.read(sendE2eeMessageServiceProvider.future);
-
-                      await conversationMessageManagementService.sendMessage(
+                      await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
                         conversationId: generateUuid(),
                         content: '',
                         participantsMasterPubkeys: participantsMasterkeys,

@@ -20,14 +20,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'chat_database.c.g.dart';
 part 'dao/conversation_dao.c.dart';
-part 'dao/event_message_dao.c.dart';
 part 'dao/conversation_event_message_dao.c.dart';
 part 'dao/conversation_message_dao.c.dart';
 part 'dao/conversation_message_data_dao.c.dart';
 part 'dao/conversation_message_reaction_dao.c.dart';
+part 'dao/event_message_dao.c.dart';
+part 'dao/message_media_dao.c.dart';
 part 'tables/chat_message_table.dart';
 part 'tables/conversation_table.dart';
 part 'tables/event_message_table.dart';
+part 'tables/message_media_table.dart';
 part 'tables/message_status_table.dart';
 part 'tables/reaction_table.dart';
 
@@ -53,6 +55,7 @@ ChatDatabase chatDatabase(Ref ref) {
     ConversationMessageTable,
     MessageStatusTable,
     ReactionTable,
+    MessageMediaTable,
   ],
 )
 class ChatDatabase extends _$ChatDatabase {
@@ -61,7 +64,7 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -87,6 +90,9 @@ class ChatDatabase extends _$ChatDatabase {
                 },
               ),
             );
+          },
+          from3To4: (m, schema) async {
+            await m.createTable(schema.messageMediaTable);
           },
         ),
       );

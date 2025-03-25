@@ -18,6 +18,7 @@ import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/utils/date.dart';
+import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -44,12 +45,15 @@ class AudioMessage extends HookConsumerWidget {
     final audioData = useFuture(
       useMemoized(
         () async {
+          if (Validators.isInvalidUrl(entity.data.primaryAudio!.url)) {
+            return null;
+          }
           final encryptedMedia = await ref
               .read(mediaEncryptionServiceProvider)
               .retrieveEncryptedMedia(entity.data.primaryAudio!);
           return ref.read(compressServiceProvider).compressAudioToWav(encryptedMedia.path);
         },
-        [],
+        [entity.data.primaryAudio!.url],
       ),
     );
 

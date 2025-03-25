@@ -5,11 +5,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
-import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message_service.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
 import 'package:ion/app/features/feed/stories/providers/emoji_reaction_provider.c.dart';
@@ -17,7 +15,6 @@ import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.d
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/components.dart';
 import 'package:ion/app/features/feed/stories/views/components/story_viewer/components/header/header.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 
 class StoryContent extends HookConsumerWidget {
   const StoryContent({
@@ -47,22 +44,10 @@ class StoryContent extends HookConsumerWidget {
     final onSubmitted = useCallback(
       (String? content) async {
         if (content == null || content.isEmpty) return;
-
-        final currentPubkey = ref.read(currentPubkeySelectorProvider);
-        if (currentPubkey == null) {
-          throw UserMasterPubkeyNotFoundException();
-        }
-
-        final conversationId =
-            await ref.read(existChatConversationIdProvider(post.masterPubkey).future) ??
-                generateUuid();
-        final conversationMessageManagementService =
-            await ref.read(sendE2eeMessageServiceProvider.future);
-
-        await conversationMessageManagementService.sendMessage(
-          conversationId: conversationId,
+        final sendChatMessageService = await ref.read(sendChatMessageServiceProvider.future);
+        await sendChatMessageService.send(
+          receiverPubkey: post.masterPubkey,
           content: content,
-          participantsMasterPubkeys: [post.masterPubkey, currentPubkey],
         );
 
         textController.clear();

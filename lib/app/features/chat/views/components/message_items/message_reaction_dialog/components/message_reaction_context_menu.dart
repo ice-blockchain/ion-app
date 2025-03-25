@@ -10,7 +10,7 @@ import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_sep
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/providers/e2ee_delete_event_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
@@ -52,10 +52,12 @@ class MessageReactionContextMenu extends ConsumerWidget {
                     color: context.theme.appColors.quaternaryText,
                   ),
                   onPressed: () async {
-                    final sendE2eeMessageProvider =
-                        await ref.read(sendE2eeMessageServiceProvider.future);
+                    unawaited(
+                      ref.read(sendE2eeChatMessageServiceProvider).resendMessage(
+                            messageEvent: messageEvent,
+                          ),
+                    );
 
-                    unawaited(sendE2eeMessageProvider.resendFailedMessage(messageEvent));
                     if (context.mounted) {
                       context.pop();
                     }

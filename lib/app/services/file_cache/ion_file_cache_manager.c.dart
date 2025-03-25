@@ -26,11 +26,19 @@ class FileCacheService {
     return _cacheManager.getSingleFile(url);
   }
 
+  Future<FileInfo?> getFileFromCache(String url) async {
+    return _cacheManager.getFileFromCache(url);
+  }
+
   Future<File> putFile({
     required String url,
     required Uint8List bytes,
     required String fileExtension,
   }) async {
     return _cacheManager.putFile(url, bytes, fileExtension: fileExtension);
+  }
+
+  Future<void> removeFile(String url) async {
+    await _cacheManager.removeFile(url);
   }
 }
