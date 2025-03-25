@@ -40,16 +40,16 @@ class DocumentMessage extends HookConsumerWidget {
     final messageMedia =
         ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
 
-    final entity = PrivateDirectMessageData.fromEventMessage(eventMessage);
+    final entityData = PrivateDirectMessageData.fromEventMessage(eventMessage);
     final mediaAttachment =
-        messageMedia?.remoteUrl == null ? null : entity.media[messageMedia?.remoteUrl!];
+        messageMedia?.remoteUrl == null ? null : entityData.media[messageMedia?.remoteUrl!];
 
     useEffect(
       () {
         ref
             .read(
           chatMessageLoadMediaProvider(
-            entity: entity,
+            entity: entityData,
             mediaAttachment: mediaAttachment,
             cacheKey: messageMedia?.cacheKey,
             loadThumbnail: false,
@@ -74,7 +74,7 @@ class DocumentMessage extends HookConsumerWidget {
       isMe: isMe,
       messageItem: DocumentItem(
         eventMessage: eventMessage,
-        contentDescription: entity.data.content,
+        contentDescription: entityData.content,
       ),
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
@@ -82,7 +82,7 @@ class DocumentMessage extends HookConsumerWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          shareFile(localFile.value?.path ?? '', name: entity.content);
+          shareFile(localFile.value?.path ?? '', name: entityData.content);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -106,7 +106,7 @@ class DocumentMessage extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              entity.content,
+                              entityData.content,
                               style: context.theme.appTextThemes.body2.copyWith(
                                 color: isMe
                                     ? context.theme.appColors.onPrimaryAccent
