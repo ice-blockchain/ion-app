@@ -32,9 +32,14 @@ class RepliedMessageInfo extends HookConsumerWidget {
             if (repliedMessage is MediaItem)
               Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
-                child: VisualMediaCustomGrid(
-                  messageMedias: repliedMessage.medias,
-                  eventMessage: repliedMessage.eventMessage,
+                child: SizedBox(
+                  width: 30.0.s,
+                  child: VisualMediaCustomGrid(
+                    customSpacing: 2.0.s,
+                    customHeight: repliedMessage.medias.length > 1 ? 18.0.s : 30.0.s,
+                    messageMedias: repliedMessage.medias,
+                    eventMessage: repliedMessage.eventMessage,
+                  ),
                 ),
               ),
             Flexible(

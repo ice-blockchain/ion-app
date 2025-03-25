@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/tags/community_identifier_tag.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
@@ -18,7 +19,10 @@ import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.dart';
 import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
+import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
@@ -48,6 +52,7 @@ class SendE2eeChatMessageService {
     String? subject,
     List<String>? groupImageTag,
     String? failedEventMessageId,
+    EventMessage? repliedMessage,
     List<String>? failedParticipantsMasterPubkeys,
   }) async {
     String? currentUserEventMessageId;
@@ -69,6 +74,7 @@ class SendE2eeChatMessageService {
         subject: subject,
         groupImageTag: groupImageTag,
         conversationId: conversationId,
+        repliedMessage: repliedMessage,
         masterPubkeys: participantsMasterPubkeys,
       );
 
@@ -120,10 +126,11 @@ class SendE2eeChatMessageService {
 
             final conversationTagsWithMediaTags = [
               ..._generateConversationTags(
-                conversationId: conversationId,
-                masterPubkeys: participantsMasterPubkeys,
                 subject: subject,
                 groupImageTag: groupImageTag,
+                conversationId: conversationId,
+                repliedMessage: repliedMessage,
+                masterPubkeys: participantsMasterPubkeys,
               ),
               if (mediaTags != null) ...mediaTags,
             ];
@@ -171,6 +178,31 @@ class SendE2eeChatMessageService {
       }
       throw SendEventException(e.toString());
     }
+  }
+
+  List<RelatedEvent> _buildRelatedEvents(EventMessage? repliedMessage) {
+    if (repliedMessage != null) {
+      final entity = PrivateDirectMessageEntity.fromEventMessage(repliedMessage);
+
+      final rootRelatedEvent = entity.data.relatedEvents
+          ?.firstWhereOrNull((tag) => tag.marker == RelatedEventMarker.root);
+
+      final marker = rootRelatedEvent != null ? RelatedEventMarker.reply : RelatedEventMarker.root;
+
+      return [
+        if (rootRelatedEvent != null) rootRelatedEvent,
+        RelatedImmutableEvent(
+          marker: marker,
+          pubkey: repliedMessage.masterPubkey,
+          eventReference: ImmutableEventReference(
+            eventId: repliedMessage.id,
+            pubkey: repliedMessage.pubkey,
+          ),
+        ),
+      ];
+    }
+
+    return [];
   }
 
   Future<Map<String, List<MediaAttachment>>> _sendMediaFiles(
@@ -267,12 +299,16 @@ class SendE2eeChatMessageService {
     required List<String> masterPubkeys,
     String? subject,
     List<String>? groupImageTag,
+    EventMessage? repliedMessage,
   }) {
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+
+    final relatedEventsTags = _buildRelatedEvents(repliedMessage).map((tag) => tag.toTag());
 
     final tags = [
       if (subject != null) ['subject', subject],
       ...masterPubkeys.map((pubkey) => ['p', pubkey]),
+      ...relatedEventsTags,
       [CommunityIdentifierTag.tagName, conversationId],
       if (groupImageTag != null) groupImageTag,
       ['b', currentUserMasterPubkey!],
@@ -371,11 +407,11 @@ class SendE2eeChatMessageService {
         .toList();
 
     await sendMessage(
-      conversationId: entity.data.uuid,
-      participantsMasterPubkeys: entity.allPubkeys,
       mediaFiles: mediaFiles,
       content: messageEvent.content,
+      conversationId: entity.data.uuid,
       failedEventMessageId: messageEvent.id,
+      participantsMasterPubkeys: entity.allPubkeys,
       failedParticipantsMasterPubkeys: failedParticipantsMasterPubkeys,
     );
   }

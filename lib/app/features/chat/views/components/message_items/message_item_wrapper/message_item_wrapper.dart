@@ -32,7 +32,6 @@ class MessageItemWrapper extends HookConsumerWidget {
 
   final bool isMe;
   final Widget child;
-
   final bool isLastMessageFromAuthor;
   final ChatMessageInfoItem messageItem;
   final EdgeInsetsGeometry contentPadding;
@@ -42,14 +41,14 @@ class MessageItemWrapper extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final messageItemKey = useMemoized(GlobalKey.new);
+
     final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
 
-    final repliedMessageListItem = getRepliedMessageListItem(
+    final repliedMessageItem = getRepliedMessageListItem(
       ref: ref,
       repliedEventMessage: repliedEventMessage.valueOrNull,
     );
-
-    final messageItemKey = useMemoized(GlobalKey.new);
 
     final deliveryStatus =
         ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
@@ -88,7 +87,7 @@ class MessageItemWrapper extends HookConsumerWidget {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
-      [messageItemKey, isMe],
+      [messageItemKey, isMe, messageItem],
     );
 
     return StreamBuilder<MessageDeliveryStatus>(
@@ -130,16 +129,17 @@ class MessageItemWrapper extends HookConsumerWidget {
                             isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                       ),
                     ),
-                    child: IntrinsicWidth(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (repliedMessageListItem != null)
-                            ReplyMessage(messageItem, repliedMessageListItem),
-                          child,
-                        ],
-                      ),
-                    ),
+                    child: repliedMessageItem == null
+                        ? child
+                        : Column(
+                            children: [
+                              ReplyMessage(messageItem, repliedMessageItem),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: child,
+                              ),
+                            ],
+                          ),
                   ),
                   if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
                     Row(
@@ -178,14 +178,14 @@ class MessageItemWrapper extends HookConsumerWidget {
         eventMessage: repliedEventMessage,
         contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
       );
-    } else if (repliedEntity.data.messageType == MessageType.profile) {
+    } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
       final messageMedias =
-          ref.watch(chatMediasProvider(eventMessageId: repliedEntity.id)).valueOrNull ?? [];
+          ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
 
       return MediaItem(
         medias: messageMedias,
         eventMessage: repliedEventMessage,
-        contentDescription: ref.context.i18n.common_photo,
+        contentDescription: ref.context.i18n.common_media,
       );
     }
 

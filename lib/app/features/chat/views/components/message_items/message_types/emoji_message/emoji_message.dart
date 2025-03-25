@@ -33,21 +33,20 @@ class EmojiMessage extends HookConsumerWidget {
         contentDescription: entity.data.content,
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 6.0.s),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(
-            child: Column(
-              children: [
-                Text(
-                  entity.data.content,
-                  style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                ),
-                MessageReactions(eventMessage: eventMessage, isMe: isMe),
-              ],
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                entity.data.content,
+                style: context.theme.appTextThemes.headline1.copyWith(height: 1),
+              ),
+              MessageMetaData(eventMessage: eventMessage),
+            ],
           ),
-          MessageMetaData(eventMessage: eventMessage),
+          MessageReactions(eventMessage: eventMessage, isMe: isMe),
         ],
       ),
     );

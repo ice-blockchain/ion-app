@@ -29,8 +29,8 @@ class TextMessage extends ConsumerWidget {
         contentDescription: eventMessage.content,
       ),
       contentPadding: EdgeInsets.symmetric(
-        vertical: 12.0.s,
         horizontal: 12.0.s,
+        vertical: 12.0.s,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

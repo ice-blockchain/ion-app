@@ -15,10 +15,14 @@ class ReplyMessage extends HookConsumerWidget {
   const ReplyMessage(this.messageItem, this.repliedMessageItem, {super.key});
 
   final ChatMessageInfoItem messageItem;
-  final ChatMessageInfoItem repliedMessageItem;
+  final ChatMessageInfoItem? repliedMessageItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (repliedMessageItem == null) {
+      return const SizedBox.shrink();
+    }
+
     final messageIconPath = _getMessageIcon();
     final isMyMessage =
         messageItem.eventMessage.masterPubkey == ref.watch(currentPubkeySelectorProvider);
@@ -35,6 +39,10 @@ class ReplyMessage extends HookConsumerWidget {
       [isMyMessage],
     );
 
+    final mediaItem = repliedMessageItem != null && repliedMessageItem is MediaItem
+        ? (repliedMessageItem! as MediaItem)
+        : null;
+
     return Container(
       margin: EdgeInsets.only(bottom: 12.0.s),
       padding: EdgeInsets.fromLTRB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
@@ -42,57 +50,60 @@ class ReplyMessage extends HookConsumerWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(10.0.s),
       ),
-      child: IntrinsicHeight(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _SideVerticalDivider(isMe: isMyMessage),
-            if (repliedMessageItem is MediaItem)
-              Padding(
-                padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _SideVerticalDivider(isMyMessage: isMyMessage),
+          if (mediaItem != null)
+            SizedBox(
+              width: 50.0.s,
+              child: Padding(
+                padding: EdgeInsets.only(left: 4.0.s, right: 8.0.s),
                 child: VisualMediaCustomGrid(
-                  eventMessage: repliedMessageItem.eventMessage,
-                  messageMedias: (repliedMessageItem as MediaItem).medias,
+                  customSpacing: 2.0.s,
+                  messageMedias: mediaItem.medias,
+                  customHeight: mediaItem.medias.length > 1 ? 16.0.s : 30.0.s,
+                  eventMessage: repliedMessageItem!.eventMessage,
                 ),
               ),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SenderSummary(
-                    textColor: textColor,
-                    pubkey: repliedMessageItem.eventMessage.masterPubkey,
-                  ),
-                  Row(
-                    children: [
-                      if (messageIconPath != null)
-                        Padding(
-                          padding: EdgeInsets.only(right: 4.0.s),
-                          child: messageIconPath.icon(
-                            size: 16.0.s,
-                            color: textColor ?? context.theme.appColors.onTertararyBackground,
-                          ),
-                        ),
-                      Expanded(
-                        child: Text(
-                          repliedMessageItem.contentDescription,
-                          style: context.theme.appTextThemes.body2.copyWith(color: textColor),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+            ),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SenderSummary(
+                  textColor: textColor,
+                  pubkey: repliedMessageItem!.eventMessage.masterPubkey,
+                ),
+                Row(
+                  children: [
+                    if (messageIconPath != null)
+                      Padding(
+                        padding: EdgeInsets.only(right: 4.0.s),
+                        child: messageIconPath.icon(
+                          size: 16.0.s,
+                          color: textColor ?? context.theme.appColors.onTertararyBackground,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: Text(
+                        repliedMessageItem!.contentDescription,
+                        style: context.theme.appTextThemes.body2.copyWith(color: textColor),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  String? _getMessageIcon() => switch (repliedMessageItem) {
+  String? _getMessageIcon() => switch (repliedMessageItem!) {
         TextItem _ => null,
         EmojiItem _ => null,
         LinkItem _ => Assets.svg.iconArticleLink,
@@ -105,19 +116,21 @@ class ReplyMessage extends HookConsumerWidget {
 
 class _SideVerticalDivider extends StatelessWidget {
   const _SideVerticalDivider({
-    required this.isMe,
+    required this.isMyMessage,
   });
 
-  final bool isMe;
+  final bool isMyMessage;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 2.0.s,
+      height: 36.0.s,
       margin: EdgeInsets.only(right: 6.0.s),
       decoration: BoxDecoration(
-        color:
-            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
+        color: isMyMessage
+            ? context.theme.appColors.onPrimaryAccent
+            : context.theme.appColors.primaryAccent,
         borderRadius: BorderRadius.circular(2.0.s),
       ),
     );

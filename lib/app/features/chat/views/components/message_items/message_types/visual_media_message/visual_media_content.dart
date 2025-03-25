@@ -64,7 +64,7 @@ class VisualMediaContent extends HookConsumerWidget {
       children: [
         if (mediaAttachment?.blurhash != null)
           ClipRRect(
-            borderRadius: BorderRadius.circular(5.0.s),
+            borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
             child: SizedBox(
               height: height,
               child: BlurhashFfi(
@@ -74,7 +74,7 @@ class VisualMediaContent extends HookConsumerWidget {
           ),
         if (localFile.value != null)
           ClipRRect(
-            borderRadius: BorderRadius.circular(5.0.s),
+            borderRadius: BorderRadius.circular(height <= 30.0.s ? 2.0.s : 5.0.s),
             child: Image.file(
               localFile.value!,
               fit: BoxFit.cover,

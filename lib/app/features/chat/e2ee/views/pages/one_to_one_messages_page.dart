@@ -63,7 +63,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           content: content ?? '',
           mediaFiles: mediaFiles ?? [],
           conversationId: conversationId.value!,
-          //repliedMessage: repliedMessage?.eventMessage,
+          repliedMessage: repliedMessage?.eventMessage,
           participantsMasterPubkeys: [receiverPubKey, currentPubkey],
         );
       },
