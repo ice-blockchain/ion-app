@@ -52,7 +52,7 @@ class VideoPage extends HookConsumerWidget {
       return const CenteredLoadingIndicator();
     }
 
-    final isPlaying = useState(true);
+    final isPlaying = useState(playerController.value.isPlaying);
 
     useEffect(
       () {
@@ -77,12 +77,10 @@ class VideoPage extends HookConsumerWidget {
 
         if (current == AppLifecycleState.resumed) {
           playerController.play();
-          isPlaying.value = true;
         } else if (current == AppLifecycleState.inactive ||
             current == AppLifecycleState.paused ||
             current == AppLifecycleState.hidden) {
           playerController.pause();
-          isPlaying.value = false;
         }
       })
       ..listen(globalMuteProvider, (_, isMuted) {
@@ -98,10 +96,8 @@ class VideoPage extends HookConsumerWidget {
 
         if (info.visibleFraction == 0) {
           playerController.pause();
-          isPlaying.value = false;
         } else {
           playerController.play();
-          isPlaying.value = true;
         }
       },
       child: Stack(
@@ -110,10 +106,8 @@ class VideoPage extends HookConsumerWidget {
             onTap: () {
               if (isPlaying.value) {
                 playerController.pause();
-                isPlaying.value = false;
               } else {
                 playerController.play();
-                isPlaying.value = true;
               }
             },
             child: Center(
@@ -132,10 +126,7 @@ class VideoPage extends HookConsumerWidget {
                   color: context.theme.appColors.secondaryBackground,
                   size: 30.0.s,
                 ),
-                onPressed: () {
-                  playerController.play();
-                  isPlaying.value = true;
-                },
+                onPressed: playerController.play,
               ),
             ),
           SafeArea(
