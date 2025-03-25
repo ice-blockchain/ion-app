@@ -33,8 +33,8 @@ class Replies extends _$Replies {
   }
 
   void _handleReply(IonConnectEntity entity) {
-    final items = state?.data.items ?? {};
-    state = state?.copyWith.data(items: {entity, ...items});
+    final dataSource = ref.read(repliesDataSourceProvider(eventReference: eventReference));
+    ref.read(entitiesPagedDataProvider(dataSource).notifier).insertEntity(entity);
   }
 
   Future<void> loadMore(EventReference eventReference) async {

@@ -89,6 +89,14 @@ class EntitiesPagedData extends _$EntitiesPagedData {
     }
   }
 
+  void insertEntity(IonConnectEntity entity, {int index = 0}) {
+    final items = state?.data.items?.toList() ?? []
+      ..insert(index, entity);
+    state = state!.copyWith(
+      data: state!.data.copyWith(items: items.toSet()),
+    );
+  }
+
   Future<MapEntry<ActionSource, PaginationParams>> _fetchEntitiesFromDataSource(
     EntitiesDataSource dataSource,
   ) async {
