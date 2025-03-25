@@ -8,7 +8,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_types/photo_message/photo_message.dart';
+import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/media_preview.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyMessage extends HookConsumerWidget {
@@ -50,17 +50,11 @@ class ReplyMessage extends HookConsumerWidget {
             repliedMessageItem.maybeWhen(
               photo: (media, eventMessage, contentDescription) => Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
-                child: MediaContent(
-                  size: Size(30.0.s, 30.0.s),
-                  media: (repliedMessageItem as PhotoItem).media,
-                ),
+                child: MediaPreview(media: media),
               ),
               video: (media, eventMessage, contentDescription) => Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
-                child: MediaContent(
-                  size: Size(30.0.s, 30.0.s),
-                  media: (repliedMessageItem as VideoItem).media,
-                ),
+                child: MediaPreview(media: media),
               ),
               orElse: SizedBox.shrink,
             ),
