@@ -29,11 +29,13 @@ class VideoPreview extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final uniqueId = useRef(UniqueKey().toString());
     final controller = videoController ??
         ref.watch(
           videoControllerProvider(
             videoUrl,
             looping: true,
+            uniqueId: uniqueId.value,
           ),
         )!;
     final isFullyVisible = useState(false);
@@ -83,7 +85,7 @@ class VideoPreview extends HookConsumerWidget {
     );
 
     return VisibilityDetector(
-      key: ValueKey(controller.dataSource),
+      key: ValueKey(uniqueId),
       onVisibilityChanged: handleVisibilityChanged,
       child: Stack(
         children: [

@@ -93,10 +93,12 @@ class VideoPage extends HookConsumerWidget {
       key: ValueKey(videoPath),
       onVisibilityChanged: (info) {
         if (!context.mounted) return;
-
-        if (info.visibleFraction == 0) {
-          playerController.pause();
-        } else {
+        if (info.visibleFraction <= 0.5) {
+          if (playerController.value.isInitialized && playerController.value.isPlaying) {
+            playerController.pause();
+          }
+        } else if (playerController.value.isInitialized &&
+            playerController.value.isPlaying == false) {
           playerController.play();
         }
       },

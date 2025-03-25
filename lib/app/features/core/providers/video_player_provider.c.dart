@@ -16,6 +16,8 @@ Raw<CachedVideoPlayerPlusController> videoController(
   String sourcePath, {
   bool autoPlay = false,
   bool looping = false,
+  String?
+      uniqueId, // an optional uniqueId parameter which should be used when needed independent controllers for the same sourcePath
 }) {
   final controller = ref.read(videoPlayerControllerFactoryProvider(sourcePath)).createController();
   var isInitialized = false;
