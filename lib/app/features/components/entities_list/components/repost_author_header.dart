@@ -40,6 +40,7 @@ class RepostAuthorHeader extends ConsumerWidget {
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: context.theme.appColors.onTertararyBackground,
                 ),
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
