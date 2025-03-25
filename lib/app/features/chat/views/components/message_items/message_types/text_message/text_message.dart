@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 
-class TextMessage extends HookConsumerWidget {
+class TextMessage extends ConsumerWidget {
   const TextMessage({
     required this.eventMessage,
     this.isLastMessageFromAuthor = true,
@@ -23,8 +21,6 @@ class TextMessage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = useMemoized(() => PrivateDirectMessageEntity.fromEventMessage(eventMessage));
-
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return MessageItemWrapper(
@@ -35,36 +31,74 @@ class TextMessage extends HookConsumerWidget {
         vertical: 12.0.s,
       ),
       isMe: isMe,
-      child: IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        entity.data.content,
-                        style: context.theme.appTextThemes.body2.copyWith(
-                          color: isMe
-                              ? context.theme.appColors.onPrimaryAccent
-                              : context.theme.appColors.primaryText,
-                        ),
-                      ),
-                      MessageReactions(eventMessage: eventMessage, isMe: isMe),
-                    ],
-                  ),
-                ),
-                MessageMetaData(eventMessage: eventMessage),
-              ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _TextMessageContent(
+            style: context.theme.appTextThemes.body2.copyWith(
+              color: isMe
+                  ? context.theme.appColors.onPrimaryAccent
+                  : context.theme.appColors.primaryText,
             ),
-          ],
-        ),
+            eventMessage: eventMessage,
+          ),
+          MessageReactions(isMe: isMe, eventMessage: eventMessage),
+        ],
       ),
     );
+  }
+}
+
+class _TextMessageContent extends StatelessWidget {
+  const _TextMessageContent({
+    required this.style,
+    required this.eventMessage,
+  });
+
+  final TextStyle style;
+  final EventMessage eventMessage;
+  @override
+  Widget build(BuildContext context) {
+    final oneLineTextPainter = TextPainter(
+      text: TextSpan(text: eventMessage.content, style: style),
+      textDirection: TextDirection.ltr,
+      textWidthBasis: TextWidthBasis.longestLine,
+    )..layout(maxWidth: 194.0.s);
+
+    final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
+
+    if (oneLineMetrics.length <= 1) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            eventMessage.content,
+            style: style,
+          ),
+          MessageMetaData(eventMessage: eventMessage),
+        ],
+      );
+    } else {
+      final multiLineTextPainter = TextPainter(
+        text: TextSpan(text: eventMessage.content, style: style),
+        textDirection: TextDirection.ltr,
+        textWidthBasis: TextWidthBasis.longestLine,
+      )..layout(maxWidth: 240.0.s);
+
+      final lineMetrics = multiLineTextPainter.computeLineMetrics();
+      final wouldOverlap = lineMetrics.last.width > 200.0.s;
+
+      return Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Text(
+            '${eventMessage.content}${wouldOverlap ? '\n' : ''}',
+            style: style,
+          ),
+          MessageMetaData(eventMessage: eventMessage),
+        ],
+      );
+    }
   }
 }
