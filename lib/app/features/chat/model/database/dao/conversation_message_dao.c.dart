@@ -103,10 +103,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     });
   }
 
-  Future<EventMessage> getEventMessage({
-    required Ref ref,
-    required String messageId,
-  }) async {
+  Future<EventMessage> getEventMessage({required String messageId}) async {
     final message =
         await (select(eventMessageTable)..where((table) => table.id.equals(messageId))).getSingle();
 
@@ -118,7 +115,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     required EventMessage deleteRequest,
     required List<String> messageIds,
   }) async {
-    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+    final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     await eventMessageDao.add(deleteRequest);
 

@@ -29,7 +29,6 @@ class RepliedMessageListItem extends _$RepliedMessageListItem {
 
     if (relatedEvent != null) {
       final repliedMessageEvent = await ref.watch(conversationMessageDaoProvider).getEventMessage(
-            ref: ref,
             messageId: (relatedEvent as RelatedImmutableEvent).eventReference.eventId,
           );
 

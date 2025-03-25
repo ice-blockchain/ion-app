@@ -251,7 +251,7 @@ class ConversationDao extends DatabaseAccessor<ChatDatabase> with _$Conversation
     required List<String> conversationIds,
     required EventMessage deleteRequest,
   }) async {
-    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+    final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     await eventMessageDao.add(deleteRequest);
 
