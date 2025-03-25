@@ -1,0 +1,1889 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		09288DF569D2A9BFAF1B16FB /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 0035BEF49E6F4496B176DC3D /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				A53C57C2DE515D57F15B957D /* Generate CMakeFiles/ZERO_CHECK */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+		21C4A7C3D8F0FB035C7377A7 /* install */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = D6208FECACA1428B9E83244B /* Build configuration list for PBXAggregateTarget "install" */;
+			buildPhases = (
+				93426DA6A4AC2C2AC9CE883C /* CMake PostBuild Rules */,
+			);
+			dependencies = (
+				259763E998724C7F820AAD1A /* PBXTargetDependency */,
+			);
+			name = install;
+			productName = install;
+		};
+		8DD33512621F2D1BE355BD8C /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 155A196EBCC5453A92DF67B8 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				4B8CD945041B271119F2A588 /* Generate CMakeFiles/ALL_BUILD */,
+			);
+			dependencies = (
+				FA8B960B3396470098AECB81 /* PBXTargetDependency */,
+				BDCBC94F5FA64CFD8AC6D77B /* PBXTargetDependency */,
+				C70A08E1F9224504B394368B /* PBXTargetDependency */,
+				8CB4BAD0106F4B649B49B410 /* PBXTargetDependency */,
+				23A94AF1A0914D3A9BEF021E /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		00B1033ED2B54A0285E5E4D3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */ = {isa = PBXBuildFile; fileRef = 36AD1A7D38FE45BB90EF021A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */; };
+		00BA4E1507754921A718EBBC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */ = {isa = PBXBuildFile; fileRef = 249FA0AE345341E7A1809059 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */; };
+		026D937CA26A4CCA820EC86F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */ = {isa = PBXBuildFile; fileRef = 3F78315FA21F420EB99DA64A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */; };
+		067C63D6ECBD453BB8251D60 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */ = {isa = PBXBuildFile; fileRef = 75C96EC83DED40638A571834 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */; };
+		0790BB5E734F4724BDADBD36 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */ = {isa = PBXBuildFile; fileRef = BB257294E0C445CF888A7FC5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */; };
+		12B003B436D14B189872EC8F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */ = {isa = PBXBuildFile; fileRef = E96C904850654DADBDE4FFAF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */; };
+		1574CBE23BB94C2A8F742CFC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */ = {isa = PBXBuildFile; fileRef = F9A2D5ABAD2541CCB5CDD73C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */; };
+		1898A6DB4A4345E7A0FA6FA4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */ = {isa = PBXBuildFile; fileRef = 339E1479C73D4639BB2662B7 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */; };
+		23319870E07B4DBA998CB402 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */ = {isa = PBXBuildFile; fileRef = 2028E220031C4081B5D0A060 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */; };
+		270FBCC41F554CF0A40A303D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXBuildFile; fileRef = 6EC21CEC420C4E36A0AEFB29 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */; };
+		2EB9B49BA8AA4AB3B3B64147 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */ = {isa = PBXBuildFile; fileRef = AD13AD7F3DD341E58964A970 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */; };
+		30790567D8EE4D509F4EDA30 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXBuildFile; fileRef = 68CA36E64DAF4D86A8A1E3AD /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */; };
+		30E02B18BA854325829AB022 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */ = {isa = PBXBuildFile; fileRef = 8E089FF603AE42858BD1C860 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */; };
+		32E2FBC385EA4679AFA1B84F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 0827A4E0EA82495B9A8BB915 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */; };
+		3407A1CE898749EFB0F3B6F6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */ = {isa = PBXBuildFile; fileRef = 45B18DAB47C74EC9B9A5779E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */; };
+		35B5DDAF195D452386B71FE4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */ = {isa = PBXBuildFile; fileRef = 97E30DA484784EDE957B5EBB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */; };
+		36F784123D2A4180A1F4098E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */ = {isa = PBXBuildFile; fileRef = 90B7D6200F25420086EEE208 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */; };
+		37D8545F69F84CE883DA650B /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */ = {isa = PBXBuildFile; fileRef = 6568701F33EB4B33929779B2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */; };
+		387A9A85387741AD82E5DBDF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 8D07146D48A84453A789FE26 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */; };
+		39F261656D494B94B180DAA5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-shared.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = 1A6C896B4B2A41458BCD7C10 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-shared.dir/Info.plist */; };
+		41FBC8D55BD64B3F953CBC79 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */ = {isa = PBXBuildFile; fileRef = 5B9858C53BF04EFB81CF1870 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */; };
+		48E878D84F904F62A0C148CC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */ = {isa = PBXBuildFile; fileRef = 4FA3975EC7524D06B96FCD06 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */; };
+		4A0F04A75DEB4955807D31F7 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXBuildFile; fileRef = DDBD3BD5EACD4360BD7A71EB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */; };
+		4B9D19BCB720451381B9707D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */ = {isa = PBXBuildFile; fileRef = 40CAC2D8CD7E40B292AC8501 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */; };
+		4D34957D445549A18853CCB9 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */ = {isa = PBXBuildFile; fileRef = 2C2603180FDF4FADBDAF98B4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */; };
+		51536C2AE5754AE687E0A266 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */ = {isa = PBXBuildFile; fileRef = BD439436C56B4025BD613C73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */; };
+		52C9695DEBB8475CA7FB4A30 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */ = {isa = PBXBuildFile; fileRef = CF796EB72DEA416E82AF6CA6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */; };
+		534FFC4A40954D99847DF04F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */ = {isa = PBXBuildFile; fileRef = 919AF0189DD24BABB525F2C5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */; };
+		53739CC70C9B4A2098972D29 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = 9CA19FF0B0C74767A8824099 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist */; };
+		5652A96E1441493690E0E4E9 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */ = {isa = PBXBuildFile; fileRef = 526E4F76E8A34A8A933A413A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */; };
+		5A916D6BEF0C4FC9BD30F486 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */ = {isa = PBXBuildFile; fileRef = E5895B6B8B0143DEABFEC144 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */; };
+		61B04937200D4069A567ECBE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */ = {isa = PBXBuildFile; fileRef = 357718CFB0394C0291BFB60F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */; };
+		641A7CD821B3413392118E07 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */ = {isa = PBXBuildFile; fileRef = 37414A4B46634DF281AB76DE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */; };
+		64CCF81B1CD743F597D3AE14 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */ = {isa = PBXBuildFile; fileRef = B5EB91F3B003415EA9945F1A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */; };
+		6F84E4F6274644FA87F53EEE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */ = {isa = PBXBuildFile; fileRef = F061538DEBF0477196DE6451 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */; };
+		6FEB2D30E81948B8BFA81E3A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */ = {isa = PBXBuildFile; fileRef = FAA160A9A8B64D94B91BACBC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */; };
+		72012E5751444965AA3801E2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */ = {isa = PBXBuildFile; fileRef = F5C1F31165414BC88229A695 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */; };
+		766D674564EA42BDAA1774F7 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */ = {isa = PBXBuildFile; fileRef = 4F7C7DED7F8D4C7A9047773D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */; };
+		76D0E90B49C54934AA7F0196 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 40B900DE068242DBACFC5C73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */; };
+		78EB61AA8ADA4C92A7399A81 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */ = {isa = PBXBuildFile; fileRef = 1CB3DD8F3B434B6A92500214 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */; };
+		7AE2734FC87F4945BA785F1F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */ = {isa = PBXBuildFile; fileRef = 59BB1940C1F94EC69ADF78E3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */; };
+		7CF8D9B0DDA0488098CF5160 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */ = {isa = PBXBuildFile; fileRef = 7EF6E589F70747D3905CE847 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */; };
+		7D082F78BDC344C08E2885E9 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = ECD7D3B7F2244438A0F03022 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static.dir/Info.plist */; };
+		80522065617E4F6DAA678102 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXBuildFile; fileRef = 91A36E6A50444930B29FDCA8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */; };
+		822E3B91DE114A8A8050A05D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */ = {isa = PBXBuildFile; fileRef = D37F697392904FF3AFDD1465 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */; };
+		8255FBC330C8423592844A96 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */ = {isa = PBXBuildFile; fileRef = D84C3645FE40434BADF91FD0 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */; };
+		84DDA80E48D4461B984903AD /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */ = {isa = PBXBuildFile; fileRef = 20FF787E8DD545BF96F60760 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */; };
+		8AC29156708048F685DED04C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */ = {isa = PBXBuildFile; fileRef = 01C0B4A06A0C40FE8B54FA65 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */; };
+		9572CF25054B4449835B3E3A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */ = {isa = PBXBuildFile; fileRef = 157C6C7D69D84D61B2DF62DC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */; };
+		997E6776F591400D8D0F21DB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */ = {isa = PBXBuildFile; fileRef = F1F1CEC86B584AE58AD32C1C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */; };
+		A25704949AAB45129410A3A8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */ = {isa = PBXBuildFile; fileRef = 52F2E3A764EB4AD4B71B46C4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */; };
+		A26917EF36684E0CA1CB7879 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */ = {isa = PBXBuildFile; fileRef = 3A30DFADB4274A299AC96CE8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */; };
+		A49B06B3F9784BC9838399A1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */ = {isa = PBXBuildFile; fileRef = EEB87448952B423E8B5CCBF2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */; };
+		A6C933D767D84CE5AC43093C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */ = {isa = PBXBuildFile; fileRef = 523C33A7469640B4B349C444 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */; };
+		A6FD346E468349D59F8A8D58 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */ = {isa = PBXBuildFile; fileRef = 04D47F0A247442A882640FDE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */; };
+		A7CEDB16E2DD494B9C8EDFC8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */ = {isa = PBXBuildFile; fileRef = EFD22665F89E4F9F87B23CCA /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */; };
+		AEB3B742723F4C1FB6FB2EBF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */ = {isa = PBXBuildFile; fileRef = 71D96E92636C462A83E83C32 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */; };
+		AF4A76E9A4AE42CAB4239980 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */ = {isa = PBXBuildFile; fileRef = DCB19B489EE64EFCA1B03A42 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */; };
+		AFA10FB80C0A449D89C36D73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */ = {isa = PBXBuildFile; fileRef = AC7E75CED6BE43D08A34AA61 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */; };
+		B32BB7917C1B46738350C8BF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */ = {isa = PBXBuildFile; fileRef = 6DBE3715F2384CF991083DDE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */; };
+		B3316C219250492EADB78583 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */ = {isa = PBXBuildFile; fileRef = 28C86C300FD3467B833D85D2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */; };
+		B669DAD5EAAC488C92D624CF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */ = {isa = PBXBuildFile; fileRef = 8CB03B7F42794EF7B2AB16FB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */; };
+		B66B9B23990C4EF5B376BFC4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */ = {isa = PBXBuildFile; fileRef = 029F056378B142A6857EB4B3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */; };
+		B740D636D46146138BC210CA /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */ = {isa = PBXBuildFile; fileRef = 347F509A42494FD594BB56A8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */; };
+		B89B8038F17D4C9A987CBC77 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */ = {isa = PBXBuildFile; fileRef = 17507ED3B7E0430BB0C13CF6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */; };
+		B920EBF02A9744F99D420C03 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */ = {isa = PBXBuildFile; fileRef = C83C20418BDF4D5A9AE391CC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */; };
+		BB5DE9874E6242B8B873BD2D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */ = {isa = PBXBuildFile; fileRef = 9B883A471AB34BC28618BCFF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */; };
+		BFF79D04BCF1473E89DDD7AE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */ = {isa = PBXBuildFile; fileRef = BA692D5BE9854BFB895132DE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */; };
+		C1A588C658E9426191F28309 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */ = {isa = PBXBuildFile; fileRef = 924159C50B544F029F7CBF1B /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */; };
+		C25BC67B83C14E739DCDB686 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */ = {isa = PBXBuildFile; fileRef = 5669615C17C943EC9C834E4A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */; };
+		C9734B86F99245F1AB97BBB2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */ = {isa = PBXBuildFile; fileRef = BAA706954CB2479AB9890E98 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */; };
+		D0DF94E4826C44A98927FB90 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */ = {isa = PBXBuildFile; fileRef = 715D9102202C44ECBD07B47D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */; };
+		D1E85D0468154BD49623F0A1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = A483F76102C74BC7B00BF8A3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */; };
+		D2BD3D26A27F43C1BD50DAA6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */ = {isa = PBXBuildFile; fileRef = A4990CB325374770A56F268F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */; };
+		D4E2646C44544FCEA8DB0810 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */ = {isa = PBXBuildFile; fileRef = 67616EDBB9FB4CEDB4B635E4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */; };
+		D6535ED3E9E44E03B68C6EC6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */ = {isa = PBXBuildFile; fileRef = C52E1CB02B7D40A7AE00AB3D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */; };
+		D9487EFCA60A4611B915A6A3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */ = {isa = PBXBuildFile; fileRef = 72DDF73047334425A8893D48 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */; };
+		DB1192FF8EFA4847BC718247 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */ = {isa = PBXBuildFile; fileRef = 77FFB8EED1B04426BB6B050F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */; };
+		DBDC0A4271974FC28A5AB49F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */ = {isa = PBXBuildFile; fileRef = B12D3C6B80534D03B153F09F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */; };
+		DCAE5574193B441AA66D196D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static_pic.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = 342FF72A1E8A4242A8AA6676 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static_pic.dir/Info.plist */; };
+		DE38DD09BD5F419696C5DD27 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */ = {isa = PBXBuildFile; fileRef = FEFC80D409454207B280E40D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */; };
+		DF49BC1C28424BB99A615043 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */ = {isa = PBXBuildFile; fileRef = 6615A4738C5745FF999FF3B8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */; };
+		DF5F05727900425BB1A5AC49 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */ = {isa = PBXBuildFile; fileRef = 20FBEFA5CF724CD4BCEA2EA4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */; };
+		E7C9B11D69FB40D3BA7A602D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */ = {isa = PBXBuildFile; fileRef = DE8B0D8A78BE4E8D84062231 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */; };
+		E969973A25484A9586C53DDB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */ = {isa = PBXBuildFile; fileRef = 3ED423EE3EA845F68E6C437D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */; };
+		EB7244F98D2445CDB6C586E1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */ = {isa = PBXBuildFile; fileRef = B0A04444A6544F808A1DE80E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */; };
+		EB987ED7773F4886B2F25883 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */ = {isa = PBXBuildFile; fileRef = A0A4365ECAC3483A9B6F24E4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */; };
+		EF063A785DCF4D678F8EA569 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */ = {isa = PBXBuildFile; fileRef = 060D19466C1145949F575B9D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */; };
+		F6DAA30738124CA5989484B6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */ = {isa = PBXBuildFile; fileRef = 4DDB07F3AAFD47F1B0D432B6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */; };
+		F8C32BAE4162479893D20B63 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */ = {isa = PBXBuildFile; fileRef = 543A0CBFB2424147879486C1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */; };
+		FAFC3F3E3DE74CC19B7553DD /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */ = {isa = PBXBuildFile; fileRef = CAE4D7B394CC49929141CBA5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */; };
+		FBC13BB75DFE4442A6740D41 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */ = {isa = PBXBuildFile; fileRef = 17B1FEE41C6944D59FAF4C00 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */; };
+		FC6B01C4EDDA4B5F834CCED6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */ = {isa = PBXBuildFile; fileRef = A459CEC197204C53A21242ED /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		22FA4FF211944D28A55B14D7 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+		4C0C44C81DE44AC8902F673C /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		83EBFFF68AFC45FBB0B4254E /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		FB3C0B6D09BA479D9DFABE2C /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		0FF7BEEA9ABD44049286CA1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09288DF569D2A9BFAF1B16FB;
+			remoteInfo = ZERO_CHECK;
+		};
+		30896AB50F164F7B8733EC40 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD33512621F2D1BE355BD8C;
+			remoteInfo = ALL_BUILD;
+		};
+		4138DF3F11764D3BA8428303 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09288DF569D2A9BFAF1B16FB;
+			remoteInfo = ZERO_CHECK;
+		};
+		5881CC7B119B407FA08B4293 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FCAE4AD2C667364DCD050445;
+			remoteInfo = "fasttext-bin";
+		};
+		5F29557DF45142A9B9D295C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09288DF569D2A9BFAF1B16FB;
+			remoteInfo = ZERO_CHECK;
+		};
+		64F85D4DB7DB4D6384AE7E76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 01BF6DB9FB308154B639A618;
+			remoteInfo = "fasttext-static_pic";
+		};
+		65F6433BFABE4D5BA2424E74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A4D303576531704BDB5BE61;
+			remoteInfo = "fasttext-shared";
+		};
+		B2CFC0816E3A4E63B130971C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09288DF569D2A9BFAF1B16FB;
+			remoteInfo = ZERO_CHECK;
+		};
+		BF8335250417490AA8A81714 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 09288DF569D2A9BFAF1B16FB;
+			remoteInfo = ZERO_CHECK;
+		};
+		C97DCB96916F4655B7B4A871 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 08365454CDBB863279989BD0;
+			remoteInfo = "fasttext-static";
+		};
+		CDD39EE292164B5187480F5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C0267B20156E4D138195DAE4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 08365454CDBB863279989BD0;
+			remoteInfo = "fasttext-static";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		01C0B4A06A0C40FE8B54FA65 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = dictionary.h; path = src/dictionary.h; sourceTree = SOURCE_ROOT; };
+		029F056378B142A6857EB4B3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = productquantizer.cc; path = src/productquantizer.cc; sourceTree = SOURCE_ROOT; };
+		04D47F0A247442A882640FDE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = dictionary.h; path = src/dictionary.h; sourceTree = SOURCE_ROOT; };
+		060D19466C1145949F575B9D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = real.h; path = src/real.h; sourceTree = SOURCE_ROOT; };
+		0827A4E0EA82495B9A8BB915 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		157C6C7D69D84D61B2DF62DC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dictionary.cc; path = src/dictionary.cc; sourceTree = SOURCE_ROOT; };
+		1681AE96F03E410F9F691729 /* fasttext-static */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libfasttext.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		17507ED3B7E0430BB0C13CF6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = meter.h; path = src/meter.h; sourceTree = SOURCE_ROOT; };
+		17B1FEE41C6944D59FAF4C00 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = matrix.cc; path = src/matrix.cc; sourceTree = SOURCE_ROOT; };
+		1A6C896B4B2A41458BCD7C10 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-shared.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = "build/ios/CMakeFiles/fasttext-shared.dir/Info.plist"; sourceTree = SOURCE_ROOT; };
+		1CB3DD8F3B434B6A92500214 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = quantmatrix.cc; path = src/quantmatrix.cc; sourceTree = SOURCE_ROOT; };
+		2028E220031C4081B5D0A060 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = model.cc; path = src/model.cc; sourceTree = SOURCE_ROOT; };
+		20FBEFA5CF724CD4BCEA2EA4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = densematrix.h; path = src/densematrix.h; sourceTree = SOURCE_ROOT; };
+		20FF787E8DD545BF96F60760 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = args.cc; path = src/args.cc; sourceTree = SOURCE_ROOT; };
+		249FA0AE345341E7A1809059 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = dictionary.h; path = src/dictionary.h; sourceTree = SOURCE_ROOT; };
+		28C86C300FD3467B833D85D2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = autotune.cc; path = src/autotune.cc; sourceTree = SOURCE_ROOT; };
+		2C2603180FDF4FADBDAF98B4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = productquantizer.h; path = src/productquantizer.h; sourceTree = SOURCE_ROOT; };
+		339E1479C73D4639BB2662B7 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = model.h; path = src/model.h; sourceTree = SOURCE_ROOT; };
+		342FF72A1E8A4242A8AA6676 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static_pic.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = "build/ios/CMakeFiles/fasttext-static_pic.dir/Info.plist"; sourceTree = SOURCE_ROOT; };
+		347F509A42494FD594BB56A8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = vector.cc; path = src/vector.cc; sourceTree = SOURCE_ROOT; };
+		357718CFB0394C0291BFB60F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = matrix.cc; path = src/matrix.cc; sourceTree = SOURCE_ROOT; };
+		36AD1A7D38FE45BB90EF021A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = vector.h; path = src/vector.h; sourceTree = SOURCE_ROOT; };
+		37414A4B46634DF281AB76DE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = loss.h; path = src/loss.h; sourceTree = SOURCE_ROOT; };
+		3A30DFADB4274A299AC96CE8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = utils.h; path = src/utils.h; sourceTree = SOURCE_ROOT; };
+		3ED423EE3EA845F68E6C437D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = productquantizer.cc; path = src/productquantizer.cc; sourceTree = SOURCE_ROOT; };
+		3F78315FA21F420EB99DA64A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = densematrix.cc; path = src/densematrix.cc; sourceTree = SOURCE_ROOT; };
+		40B900DE068242DBACFC5C73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		40CAC2D8CD7E40B292AC8501 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = densematrix.h; path = src/densematrix.h; sourceTree = SOURCE_ROOT; };
+		45B18DAB47C74EC9B9A5779E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = utils.h; path = src/utils.h; sourceTree = SOURCE_ROOT; };
+		4DDB07F3AAFD47F1B0D432B6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = fasttext.cc; path = src/fasttext.cc; sourceTree = SOURCE_ROOT; };
+		4F7C7DED7F8D4C7A9047773D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = quantmatrix.h; path = src/quantmatrix.h; sourceTree = SOURCE_ROOT; };
+		4FA3975EC7524D06B96FCD06 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = model.h; path = src/model.h; sourceTree = SOURCE_ROOT; };
+		523C33A7469640B4B349C444 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = fasttext.h; path = src/fasttext.h; sourceTree = SOURCE_ROOT; };
+		526E4F76E8A34A8A933A413A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = vector.h; path = src/vector.h; sourceTree = SOURCE_ROOT; };
+		52F2E3A764EB4AD4B71B46C4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = meter.cc; path = src/meter.cc; sourceTree = SOURCE_ROOT; };
+		543A0CBFB2424147879486C1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = quantmatrix.cc; path = src/quantmatrix.cc; sourceTree = SOURCE_ROOT; };
+		5669615C17C943EC9C834E4A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = model.cc; path = src/model.cc; sourceTree = SOURCE_ROOT; };
+		59BB1940C1F94EC69ADF78E3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = utils.cc; path = src/utils.cc; sourceTree = SOURCE_ROOT; };
+		5B9858C53BF04EFB81CF1870 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = autotune.cc; path = src/autotune.cc; sourceTree = SOURCE_ROOT; };
+		5D56F66167674C68ACEB53D2 /* fasttext-static_pic */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libfasttext_pic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		61F9BF3DF59540198044BE49 /* fasttext-bin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = fasttext; sourceTree = BUILT_PRODUCTS_DIR; };
+		6568701F33EB4B33929779B2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = densematrix.cc; path = src/densematrix.cc; sourceTree = SOURCE_ROOT; };
+		6615A4738C5745FF999FF3B8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = productquantizer.cc; path = src/productquantizer.cc; sourceTree = SOURCE_ROOT; };
+		67616EDBB9FB4CEDB4B635E4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = loss.h; path = src/loss.h; sourceTree = SOURCE_ROOT; };
+		68CA36E64DAF4D86A8A1E3AD /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cc; path = src/main.cc; sourceTree = SOURCE_ROOT; };
+		6DBE3715F2384CF991083DDE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = densematrix.cc; path = src/densematrix.cc; sourceTree = SOURCE_ROOT; };
+		6EC21CEC420C4E36A0AEFB29 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cc; path = src/main.cc; sourceTree = SOURCE_ROOT; };
+		715D9102202C44ECBD07B47D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = matrix.h; path = src/matrix.h; sourceTree = SOURCE_ROOT; };
+		71D96E92636C462A83E83C32 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = loss.cc; path = src/loss.cc; sourceTree = SOURCE_ROOT; };
+		72DDF73047334425A8893D48 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = utils.cc; path = src/utils.cc; sourceTree = SOURCE_ROOT; };
+		75C96EC83DED40638A571834 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = real.h; path = src/real.h; sourceTree = SOURCE_ROOT; };
+		77FFB8EED1B04426BB6B050F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = fasttext.cc; path = src/fasttext.cc; sourceTree = SOURCE_ROOT; };
+		7EF6E589F70747D3905CE847 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = autotune.h; path = src/autotune.h; sourceTree = SOURCE_ROOT; };
+		8CB03B7F42794EF7B2AB16FB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = meter.cc; path = src/meter.cc; sourceTree = SOURCE_ROOT; };
+		8D07146D48A84453A789FE26 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		8E089FF603AE42858BD1C860 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = autotune.cc; path = src/autotune.cc; sourceTree = SOURCE_ROOT; };
+		90B7D6200F25420086EEE208 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = meter.cc; path = src/meter.cc; sourceTree = SOURCE_ROOT; };
+		919AF0189DD24BABB525F2C5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = loss.cc; path = src/loss.cc; sourceTree = SOURCE_ROOT; };
+		91A36E6A50444930B29FDCA8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cc; path = src/main.cc; sourceTree = SOURCE_ROOT; };
+		924159C50B544F029F7CBF1B /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = model.h; path = src/model.h; sourceTree = SOURCE_ROOT; };
+		97E30DA484784EDE957B5EBB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = model.cc; path = src/model.cc; sourceTree = SOURCE_ROOT; };
+		9B883A471AB34BC28618BCFF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = quantmatrix.h; path = src/quantmatrix.h; sourceTree = SOURCE_ROOT; };
+		9CA19FF0B0C74767A8824099 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = "build/ios/CMakeFiles/fasttext-bin.dir/Info.plist"; sourceTree = SOURCE_ROOT; };
+		A0A4365ECAC3483A9B6F24E4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = productquantizer.h; path = src/productquantizer.h; sourceTree = SOURCE_ROOT; };
+		A459CEC197204C53A21242ED /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = vector.h; path = src/vector.h; sourceTree = SOURCE_ROOT; };
+		A483F76102C74BC7B00BF8A3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		A4990CB325374770A56F268F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = autotune.h; path = src/autotune.h; sourceTree = SOURCE_ROOT; };
+		AC7E75CED6BE43D08A34AA61 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = vector.cc; path = src/vector.cc; sourceTree = SOURCE_ROOT; };
+		AD13AD7F3DD341E58964A970 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = matrix.cc; path = src/matrix.cc; sourceTree = SOURCE_ROOT; };
+		B0A04444A6544F808A1DE80E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = meter.h; path = src/meter.h; sourceTree = SOURCE_ROOT; };
+		B12D3C6B80534D03B153F09F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = args.cc; path = src/args.cc; sourceTree = SOURCE_ROOT; };
+		B5EB91F3B003415EA9945F1A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = quantmatrix.h; path = src/quantmatrix.h; sourceTree = SOURCE_ROOT; };
+		BA692D5BE9854BFB895132DE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = autotune.h; path = src/autotune.h; sourceTree = SOURCE_ROOT; };
+		BAA706954CB2479AB9890E98 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = productquantizer.h; path = src/productquantizer.h; sourceTree = SOURCE_ROOT; };
+		BB257294E0C445CF888A7FC5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = densematrix.h; path = src/densematrix.h; sourceTree = SOURCE_ROOT; };
+		BD439436C56B4025BD613C73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = utils.h; path = src/utils.h; sourceTree = SOURCE_ROOT; };
+		C52E1CB02B7D40A7AE00AB3D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = fasttext.cc; path = src/fasttext.cc; sourceTree = SOURCE_ROOT; };
+		C83C20418BDF4D5A9AE391CC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = real.h; path = src/real.h; sourceTree = SOURCE_ROOT; };
+		CAE4D7B394CC49929141CBA5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = matrix.h; path = src/matrix.h; sourceTree = SOURCE_ROOT; };
+		CF796EB72DEA416E82AF6CA6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = meter.h; path = src/meter.h; sourceTree = SOURCE_ROOT; };
+		D37F697392904FF3AFDD1465 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = utils.cc; path = src/utils.cc; sourceTree = SOURCE_ROOT; };
+		D6199623BD8B4DCF8389BC28 /* fasttext-shared */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libfasttext.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D84C3645FE40434BADF91FD0 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dictionary.cc; path = src/dictionary.cc; sourceTree = SOURCE_ROOT; };
+		DCB19B489EE64EFCA1B03A42 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = loss.h; path = src/loss.h; sourceTree = SOURCE_ROOT; };
+		DDBD3BD5EACD4360BD7A71EB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cc; path = src/main.cc; sourceTree = SOURCE_ROOT; };
+		DE8B0D8A78BE4E8D84062231 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = fasttext.h; path = src/fasttext.h; sourceTree = SOURCE_ROOT; };
+		E5895B6B8B0143DEABFEC144 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = fasttext.h; path = src/fasttext.h; sourceTree = SOURCE_ROOT; };
+		E96C904850654DADBDE4FFAF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = matrix.h; path = src/matrix.h; sourceTree = SOURCE_ROOT; };
+		ECD7D3B7F2244438A0F03022 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = "build/ios/CMakeFiles/fasttext-static.dir/Info.plist"; sourceTree = SOURCE_ROOT; };
+		EEB87448952B423E8B5CCBF2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = args.cc; path = src/args.cc; sourceTree = SOURCE_ROOT; };
+		EFD22665F89E4F9F87B23CCA /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dictionary.cc; path = src/dictionary.cc; sourceTree = SOURCE_ROOT; };
+		F061538DEBF0477196DE6451 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = args.h; path = src/args.h; sourceTree = SOURCE_ROOT; };
+		F1F1CEC86B584AE58AD32C1C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = args.h; path = src/args.h; sourceTree = SOURCE_ROOT; };
+		F5C1F31165414BC88229A695 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = args.h; path = src/args.h; sourceTree = SOURCE_ROOT; };
+		F7855960D0784518B88107A1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		F9A2D5ABAD2541CCB5CDD73C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = vector.cc; path = src/vector.cc; sourceTree = SOURCE_ROOT; };
+		FAA160A9A8B64D94B91BACBC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = loss.cc; path = src/loss.cc; sourceTree = SOURCE_ROOT; };
+		FEFC80D409454207B280E40D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = quantmatrix.cc; path = src/quantmatrix.cc; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		26BEB373E35642979320299D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		42C305D74DF84CE38933C8FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7083BAD137DF4B49BF3A96DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		757E29BE6FD44581B13DDB45 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0755CF62AAA445CEBC450FFD /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				F061538DEBF0477196DE6451 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */,
+				BA692D5BE9854BFB895132DE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */,
+				20FBEFA5CF724CD4BCEA2EA4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */,
+				01C0B4A06A0C40FE8B54FA65 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */,
+				523C33A7469640B4B349C444 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */,
+				DCB19B489EE64EFCA1B03A42 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */,
+				E96C904850654DADBDE4FFAF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */,
+				CF796EB72DEA416E82AF6CA6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */,
+				339E1479C73D4639BB2662B7 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */,
+				A0A4365ECAC3483A9B6F24E4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */,
+				4F7C7DED7F8D4C7A9047773D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */,
+				C83C20418BDF4D5A9AE391CC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */,
+				45B18DAB47C74EC9B9A5779E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */,
+				36AD1A7D38FE45BB90EF021A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		2015C2F371AC4F40913D006F /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				B12D3C6B80534D03B153F09F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */,
+				28C86C300FD3467B833D85D2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */,
+				6DBE3715F2384CF991083DDE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */,
+				157C6C7D69D84D61B2DF62DC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */,
+				77FFB8EED1B04426BB6B050F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */,
+				919AF0189DD24BABB525F2C5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */,
+				DDBD3BD5EACD4360BD7A71EB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+				17B1FEE41C6944D59FAF4C00 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */,
+				52F2E3A764EB4AD4B71B46C4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */,
+				5669615C17C943EC9C834E4A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */,
+				6615A4738C5745FF999FF3B8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */,
+				1CB3DD8F3B434B6A92500214 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */,
+				D37F697392904FF3AFDD1465 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */,
+				AC7E75CED6BE43D08A34AA61 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		24A8E1A9A11149A8AC047A87 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		32B0818108BB49049774EC88 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				F1F1CEC86B584AE58AD32C1C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */,
+				7EF6E589F70747D3905CE847 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */,
+				40CAC2D8CD7E40B292AC8501 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */,
+				04D47F0A247442A882640FDE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */,
+				DE8B0D8A78BE4E8D84062231 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */,
+				37414A4B46634DF281AB76DE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */,
+				715D9102202C44ECBD07B47D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */,
+				B0A04444A6544F808A1DE80E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */,
+				4FA3975EC7524D06B96FCD06 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */,
+				2C2603180FDF4FADBDAF98B4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */,
+				B5EB91F3B003415EA9945F1A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */,
+				75C96EC83DED40638A571834 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */,
+				3A30DFADB4274A299AC96CE8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */,
+				A459CEC197204C53A21242ED /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		3B65B7E9991447379F0532E7 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				F5C1F31165414BC88229A695 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.h */,
+				A4990CB325374770A56F268F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.h */,
+				BB257294E0C445CF888A7FC5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.h */,
+				249FA0AE345341E7A1809059 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.h */,
+				E5895B6B8B0143DEABFEC144 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.h */,
+				67616EDBB9FB4CEDB4B635E4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.h */,
+				CAE4D7B394CC49929141CBA5 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.h */,
+				17507ED3B7E0430BB0C13CF6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.h */,
+				924159C50B544F029F7CBF1B /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.h */,
+				BAA706954CB2479AB9890E98 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.h */,
+				9B883A471AB34BC28618BCFF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.h */,
+				060D19466C1145949F575B9D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/real.h */,
+				BD439436C56B4025BD613C73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.h */,
+				526E4F76E8A34A8A933A413A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		45A06B28453C4D9E82609D07 = {
+			isa = PBXGroup;
+			children = (
+				EC756F6C087B4FFFBEAC31EE /* fasttext-shared */,
+				993538A3DCC24CA49F2C181D /* fasttext-static */,
+				F8F00C94F23B46C98601D8B8 /* fasttext-static_pic */,
+				B1BED77868A741B583FBB854 /* fasttext-bin */,
+				AAF3AAB834754A4E93884B62 /* ALL_BUILD */,
+				4C96A7BA7678433988A8A896 /* Products */,
+				24A8E1A9A11149A8AC047A87 /* Frameworks */,
+				F51DE3B7C1284AE9ABEC5FAB /* Resources */,
+			);
+			sourceTree = "<group>";
+		};
+		4C96A7BA7678433988A8A896 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				61F9BF3DF59540198044BE49 /* fasttext-bin */,
+				D6199623BD8B4DCF8389BC28 /* fasttext-shared */,
+				1681AE96F03E410F9F691729 /* fasttext-static */,
+				5D56F66167674C68ACEB53D2 /* fasttext-static_pic */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4CF6DB59A06C460AB0F3DFFF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				342FF72A1E8A4242A8AA6676 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static_pic.dir/Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		506210562C5F4E9699F4CF94 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9CA19FF0B0C74767A8824099 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		53EF23DF9F8944AEB73DE6C5 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				91A36E6A50444930B29FDCA8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5BFF430065394A99AD2D7234 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1A6C896B4B2A41458BCD7C10 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-shared.dir/Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		7008C07175394E3B9312B762 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				20FF787E8DD545BF96F60760 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */,
+				8E089FF603AE42858BD1C860 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */,
+				6568701F33EB4B33929779B2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */,
+				EFD22665F89E4F9F87B23CCA /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */,
+				C52E1CB02B7D40A7AE00AB3D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */,
+				FAA160A9A8B64D94B91BACBC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */,
+				6EC21CEC420C4E36A0AEFB29 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+				AD13AD7F3DD341E58964A970 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */,
+				8CB03B7F42794EF7B2AB16FB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */,
+				97E30DA484784EDE957B5EBB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */,
+				3ED423EE3EA845F68E6C437D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */,
+				FEFC80D409454207B280E40D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */,
+				72DDF73047334425A8893D48 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */,
+				F9A2D5ABAD2541CCB5CDD73C /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		8BD2DD2AFEF44159ADFCAB2F /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				EEB87448952B423E8B5CCBF2 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */,
+				5B9858C53BF04EFB81CF1870 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */,
+				3F78315FA21F420EB99DA64A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */,
+				D84C3645FE40434BADF91FD0 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */,
+				4DDB07F3AAFD47F1B0D432B6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */,
+				71D96E92636C462A83E83C32 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */,
+				68CA36E64DAF4D86A8A1E3AD /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+				357718CFB0394C0291BFB60F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */,
+				90B7D6200F25420086EEE208 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */,
+				2028E220031C4081B5D0A060 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */,
+				029F056378B142A6857EB4B3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */,
+				543A0CBFB2424147879486C1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */,
+				59BB1940C1F94EC69ADF78E3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */,
+				347F509A42494FD594BB56A8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		90A70B831398417BBF0C40A7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				ECD7D3B7F2244438A0F03022 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-static.dir/Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		993538A3DCC24CA49F2C181D /* fasttext-static */ = {
+			isa = PBXGroup;
+			children = (
+				8BD2DD2AFEF44159ADFCAB2F /* Source Files */,
+				32B0818108BB49049774EC88 /* Header Files */,
+				90A70B831398417BBF0C40A7 /* Resources */,
+				8D07146D48A84453A789FE26 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */,
+			);
+			name = "fasttext-static";
+			sourceTree = "<group>";
+		};
+		AAF3AAB834754A4E93884B62 /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				DEF2727E6C89490F866D59F0 /* CMake Rules */,
+				F7855960D0784518B88107A1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		B1BED77868A741B583FBB854 /* fasttext-bin */ = {
+			isa = PBXGroup;
+			children = (
+				53EF23DF9F8944AEB73DE6C5 /* Source Files */,
+				506210562C5F4E9699F4CF94 /* Resources */,
+				0827A4E0EA82495B9A8BB915 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */,
+			);
+			name = "fasttext-bin";
+			sourceTree = "<group>";
+		};
+		DEF2727E6C89490F866D59F0 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		EC756F6C087B4FFFBEAC31EE /* fasttext-shared */ = {
+			isa = PBXGroup;
+			children = (
+				7008C07175394E3B9312B762 /* Source Files */,
+				3B65B7E9991447379F0532E7 /* Header Files */,
+				5BFF430065394A99AD2D7234 /* Resources */,
+				40B900DE068242DBACFC5C73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */,
+			);
+			name = "fasttext-shared";
+			sourceTree = "<group>";
+		};
+		F51DE3B7C1284AE9ABEC5FAB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		F8F00C94F23B46C98601D8B8 /* fasttext-static_pic */ = {
+			isa = PBXGroup;
+			children = (
+				2015C2F371AC4F40913D006F /* Source Files */,
+				0755CF62AAA445CEBC450FFD /* Header Files */,
+				4CF6DB59A06C460AB0F3DFFF /* Resources */,
+				A483F76102C74BC7B00BF8A3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/CMakeLists.txt */,
+			);
+			name = "fasttext-static_pic";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		01BF6DB9FB308154B639A618 /* fasttext-static_pic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC0FD30296304EB1A0A0D212 /* Build configuration list for PBXNativeTarget "fasttext-static_pic" */;
+			buildPhases = (
+				781E2B0802654ED1B5D7310B /* Sources */,
+				757E29BE6FD44581B13DDB45 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9122ACD31D08402A9815FDB1 /* PBXTargetDependency */,
+			);
+			name = "fasttext-static_pic";
+			productName = "fasttext-static_pic";
+			productReference = 5D56F66167674C68ACEB53D2 /* fasttext-static_pic */;
+			productType = "com.apple.product-type.library.static";
+		};
+		08365454CDBB863279989BD0 /* fasttext-static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89EA78F652EB41448DEC57DB /* Build configuration list for PBXNativeTarget "fasttext-static" */;
+			buildPhases = (
+				CF5F53AC31D44FCBAB3E8D54 /* Sources */,
+				7083BAD137DF4B49BF3A96DA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D1123B31C34F4524BE482506 /* PBXTargetDependency */,
+			);
+			name = "fasttext-static";
+			productName = "fasttext-static";
+			productReference = 1681AE96F03E410F9F691729 /* fasttext-static */;
+			productType = "com.apple.product-type.library.static";
+		};
+		0A4D303576531704BDB5BE61 /* fasttext-shared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E8C9D2C6BB994169A8AA23F9 /* Build configuration list for PBXNativeTarget "fasttext-shared" */;
+			buildPhases = (
+				C60231A703194AC7A9793868 /* Sources */,
+				26BEB373E35642979320299D /* Frameworks */,
+				458508E2A176B49C4E0E0654 /* CMake PostBuild Rules */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5EAA0DB591964E25B4628C8A /* PBXTargetDependency */,
+			);
+			name = "fasttext-shared";
+			productName = "fasttext-shared";
+			productReference = D6199623BD8B4DCF8389BC28 /* fasttext-shared */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		FCAE4AD2C667364DCD050445 /* fasttext-bin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 57F84D9AB0FD4F79B5D50A6D /* Build configuration list for PBXNativeTarget "fasttext-bin" */;
+			buildPhases = (
+				9B5C84DA8B3548C0B07C9983 /* Sources */,
+				42C305D74DF84CE38933C8FC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				09A9F03FAB7648B5BA761683 /* PBXTargetDependency */,
+				1A13E52DA8254BBDB70EEE9D /* PBXTargetDependency */,
+			);
+			name = "fasttext-bin";
+			productName = "fasttext-bin";
+			productReference = 61F9BF3DF59540198044BE49 /* fasttext-bin */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C0267B20156E4D138195DAE4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 4D9234FC1C4E41569A81D9AD /* Build configuration list for PBXProject "fasttext" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				22FA4FF211944D28A55B14D7 /* Debug */,
+				83EBFFF68AFC45FBB0B4254E /* Release */,
+				4C0C44C81DE44AC8902F673C /* MinSizeRel */,
+				FB3C0B6D09BA479D9DFABE2C /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = 45A06B28453C4D9E82609D07;
+			projectDirPath = "/Users/kirillpisarev/projects/ice/content-labeling/fastText";
+			projectRoot = "";
+			targets = (
+				8DD33512621F2D1BE355BD8C /* ALL_BUILD */,
+				09288DF569D2A9BFAF1B16FB /* ZERO_CHECK */,
+				FCAE4AD2C667364DCD050445 /* fasttext-bin */,
+				0A4D303576531704BDB5BE61 /* fasttext-shared */,
+				08365454CDBB863279989BD0 /* fasttext-static */,
+				01BF6DB9FB308154B639A618 /* fasttext-static_pic */,
+				21C4A7C3D8F0FB035C7377A7 /* install */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3C0110FC8322DE7E50886E21 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		458508E2A176B49C4E0E0654 /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -E cmake_symlink_library /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}/libfasttext.dylib
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -E cmake_symlink_library /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}/libfasttext.dylib
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -E cmake_symlink_library /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}/libfasttext.dylib
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -E cmake_symlink_library /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}/libfasttext.0.dylib /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}/libfasttext.dylib
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		4B8CD945041B271119F2A588 /* Generate CMakeFiles/ALL_BUILD */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ALL_BUILD";
+			outputPaths = (
+"/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/ALL_BUILD"			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  echo Build\\ all\\ projects
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  echo Build\\ all\\ projects
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		87AF4882E018677E2624B544 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		93426DA6A4AC2C2AC9CE883C /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -DBUILD_TYPE=$CONFIGURATION -DEFFECTIVE_PLATFORM_NAME=$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -DBUILD_TYPE=$CONFIGURATION -DEFFECTIVE_PLATFORM_NAME=$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -DBUILD_TYPE=$CONFIGURATION -DEFFECTIVE_PLATFORM_NAME=$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  /opt/homebrew/bin/cmake -DBUILD_TYPE=$CONFIGURATION -DEFFECTIVE_PLATFORM_NAME=$EFFECTIVE_PLATFORM_NAME -P cmake_install.cmake
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+		9B50530E35CC49C82C2FACCF = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		A53C57C2DE515D57F15B957D /* Generate CMakeFiles/ZERO_CHECK */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate CMakeFiles/ZERO_CHECK";
+			outputPaths = (
+"/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/ZERO_CHECK"			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e
+if test \"$CONFIGURATION\" = \"Debug\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  make -f /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"Release\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  make -f /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"MinSizeRel\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  make -f /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeScripts/ReRunCMake.make
+fi
+if test \"$CONFIGURATION\" = \"RelWithDebInfo\"; then :
+  cd /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios
+  make -f /Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeScripts/ReRunCMake.make
+fi
+";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		781E2B0802654ED1B5D7310B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBDC0A4271974FC28A5AB49F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */,
+				B3316C219250492EADB78583 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */,
+				B32BB7917C1B46738350C8BF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */,
+				9572CF25054B4449835B3E3A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */,
+				DB1192FF8EFA4847BC718247 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */,
+				534FFC4A40954D99847DF04F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */,
+				4A0F04A75DEB4955807D31F7 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+				FBC13BB75DFE4442A6740D41 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */,
+				A25704949AAB45129410A3A8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */,
+				C25BC67B83C14E739DCDB686 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */,
+				DF49BC1C28424BB99A615043 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */,
+				78EB61AA8ADA4C92A7399A81 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */,
+				822E3B91DE114A8A8050A05D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */,
+				AFA10FB80C0A449D89C36D73 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9B5C84DA8B3548C0B07C9983 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80522065617E4F6DAA678102 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C60231A703194AC7A9793868 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84DDA80E48D4461B984903AD /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */,
+				30E02B18BA854325829AB022 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */,
+				37D8545F69F84CE883DA650B /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */,
+				A7CEDB16E2DD494B9C8EDFC8 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */,
+				D6535ED3E9E44E03B68C6EC6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */,
+				6FEB2D30E81948B8BFA81E3A /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */,
+				270FBCC41F554CF0A40A303D /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+				2EB9B49BA8AA4AB3B3B64147 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */,
+				B669DAD5EAAC488C92D624CF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */,
+				35B5DDAF195D452386B71FE4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */,
+				E969973A25484A9586C53DDB /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */,
+				DE38DD09BD5F419696C5DD27 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */,
+				D9487EFCA60A4611B915A6A3 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */,
+				1574CBE23BB94C2A8F742CFC /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF5F53AC31D44FCBAB3E8D54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A49B06B3F9784BC9838399A1 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/args.cc */,
+				41FBC8D55BD64B3F953CBC79 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/autotune.cc */,
+				026D937CA26A4CCA820EC86F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/densematrix.cc */,
+				8255FBC330C8423592844A96 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/dictionary.cc */,
+				F6DAA30738124CA5989484B6 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/fasttext.cc */,
+				AEB3B742723F4C1FB6FB2EBF /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/loss.cc */,
+				30790567D8EE4D509F4EDA30 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/main.cc */,
+				61B04937200D4069A567ECBE /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/matrix.cc */,
+				36F784123D2A4180A1F4098E /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/meter.cc */,
+				23319870E07B4DBA998CB402 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/model.cc */,
+				B66B9B23990C4EF5B376BFC4 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/productquantizer.cc */,
+				F8C32BAE4162479893D20B63 /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/quantmatrix.cc */,
+				7AE2734FC87F4945BA785F1F /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/utils.cc */,
+				B740D636D46146138BC210CA /* /Users/kirillpisarev/projects/ice/content-labeling/fastText/src/vector.cc */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		09A9F03FAB7648B5BA761683 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 08365454CDBB863279989BD0 /* fasttext-static */;
+			targetProxy = C97DCB96916F4655B7B4A871 /* PBXContainerItemProxy */;
+		};
+		1A13E52DA8254BBDB70EEE9D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09288DF569D2A9BFAF1B16FB /* ZERO_CHECK */;
+			targetProxy = 4138DF3F11764D3BA8428303 /* PBXContainerItemProxy */;
+		};
+		23A94AF1A0914D3A9BEF021E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09288DF569D2A9BFAF1B16FB /* ZERO_CHECK */;
+			targetProxy = 5F29557DF45142A9B9D295C2 /* PBXContainerItemProxy */;
+		};
+		259763E998724C7F820AAD1A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DD33512621F2D1BE355BD8C /* ALL_BUILD */;
+			targetProxy = 30896AB50F164F7B8733EC40 /* PBXContainerItemProxy */;
+		};
+		5EAA0DB591964E25B4628C8A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09288DF569D2A9BFAF1B16FB /* ZERO_CHECK */;
+			targetProxy = BF8335250417490AA8A81714 /* PBXContainerItemProxy */;
+		};
+		8CB4BAD0106F4B649B49B410 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FCAE4AD2C667364DCD050445 /* fasttext-bin */;
+			targetProxy = 5881CC7B119B407FA08B4293 /* PBXContainerItemProxy */;
+		};
+		9122ACD31D08402A9815FDB1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09288DF569D2A9BFAF1B16FB /* ZERO_CHECK */;
+			targetProxy = 0FF7BEEA9ABD44049286CA1E /* PBXContainerItemProxy */;
+		};
+		BDCBC94F5FA64CFD8AC6D77B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 08365454CDBB863279989BD0 /* fasttext-static */;
+			targetProxy = CDD39EE292164B5187480F5A /* PBXContainerItemProxy */;
+		};
+		C70A08E1F9224504B394368B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 01BF6DB9FB308154B639A618 /* fasttext-static_pic */;
+			targetProxy = 64F85D4DB7DB4D6384AE7E76 /* PBXContainerItemProxy */;
+		};
+		D1123B31C34F4524BE482506 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 09288DF569D2A9BFAF1B16FB /* ZERO_CHECK */;
+			targetProxy = B2CFC0816E3A4E63B130971C /* PBXContainerItemProxy */;
+		};
+		FA8B960B3396470098AECB81 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A4D303576531704BDB5BE61 /* fasttext-shared */;
+			targetProxy = 65F6433BFABE4D5BA2424E74 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		076E8BD0D4DC4B18A161FADC /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INFOPLIST_FILE = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist";
+				INSTALL_PATH = "";
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-headerpad_max_install_names","/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}/libfasttext.a","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-bin.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		08E6F18C07A040C9B88B9E1C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops        '-std=gnu++17' -fPIC ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext_pic;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static_pic.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		166E02659F85458184860E5C /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",fasttext_shared_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops            -DNDEBUG '-std=gnu++17' -fPIC ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext.0;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-shared.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		1C2DF55A76284F638B10CEF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' -fPIC ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext_pic;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static_pic.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		1DBBC3855AD3430DBECA089A /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		259BF15E5E7840E8A6E59840 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INFOPLIST_FILE = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist";
+				INSTALL_PATH = "";
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-headerpad_max_install_names","/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}/libfasttext.a","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-bin.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		2686B48E69664D5994729875 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops            -DNDEBUG '-std=gnu++17' -fPIC ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext_pic;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static_pic.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		275D8C74CE634236A763E4AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build";
+			};
+			name = Debug;
+		};
+		3A9ABA47A1BA46249A356A4F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INFOPLIST_FILE = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist";
+				INSTALL_PATH = "";
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops        '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-headerpad_max_install_names","/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}/libfasttext.a","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-bin.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		3D02D194383D41A8A1C574C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		5016CE1CB5BD4451B465A7D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",fasttext_shared_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' -fPIC ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext.0;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-shared.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		5177452EA8D54C598C0C90F8 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",fasttext_shared_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' -fPIC ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext.0;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-shared.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		59E09BC008784D2BA491FAB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build";
+			};
+			name = Release;
+		};
+		60AF3FE93F5346A889E37FBE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		638D66B557E3443A93392D2E /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		7A6867EDC67249F0A70B1120 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build";
+			};
+			name = MinSizeRel;
+		};
+		7A8C48499B474559BB54AE0F /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		9A73739004144B83B5B95875 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		A3DBE1B614264FDCAFAA8F82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Release${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		A72990D3D0D642C89443ED8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops        '-std=gnu++17' ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		AA90249EBAD648638EA57469 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		B2CC282398134759A60E7F12 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		B8215C69D4FE449E9A320CB8 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SYMROOT = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build";
+			};
+			name = RelWithDebInfo;
+		};
+		B926454BB3FF438AB4AD1367 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		C13BFB311403492DA8EEE362 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}";
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",fasttext_shared_EXPORTS,"$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/Debug${EFFECTIVE_PLATFORM_NAME}";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops        '-std=gnu++17' -fPIC ";
+				OTHER_LDFLAGS = (" -dynamiclib -Wl,-headerpad_max_install_names","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext.0;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-shared.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		C1EFD1E59C494D17B46C7618 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/MinSizeRel${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops         -DNDEBUG '-std=gnu++17' -fPIC ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext_pic;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static_pic.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		C3CEB876B0B04C498782A1DA /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops            -DNDEBUG '-std=gnu++17' ";
+				OTHER_LIBTOOLFLAGS = ("");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-static.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		C4924C2362CA4D17849A8071 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/kirillpisarev/projects/ice/content-labeling/fastText/fasttext","$(inherited)");
+				INFOPLIST_FILE = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/CMakeFiles/fasttext-bin.dir/Info.plist";
+				INSTALL_PATH = "";
+				OTHER_CPLUSPLUSFLAGS = " -pthread -std=c++17 -funroll-loops            -DNDEBUG '-std=gnu++17' ";
+				OTHER_LDFLAGS = (" -Wl,-headerpad_max_install_names","/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/RelWithDebInfo${EFFECTIVE_PLATFORM_NAME}/libfasttext.a","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = fasttext;
+				SECTORDER_FLAGS = "";
+				TARGET_TEMP_DIR = "/Users/kirillpisarev/projects/ice/content-labeling/fastText/build/ios/build/fasttext-bin.build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		DFF85CD3BE1E40CCB255A74F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Release;
+		};
+		E475676D63A847A19809F643 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = Debug;
+		};
+		EB7F8B8F1A0A43E8A58371AC /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		F2ACCA23ACD049A2B7420968 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'","$(inherited)");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = ("","$(inherited)");
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0035BEF49E6F4496B176DC3D /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B2CC282398134759A60E7F12 /* Debug */,
+				3D02D194383D41A8A1C574C9 /* Release */,
+				9A73739004144B83B5B95875 /* MinSizeRel */,
+				AA90249EBAD648638EA57469 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		155A196EBCC5453A92DF67B8 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60AF3FE93F5346A889E37FBE /* Debug */,
+				B926454BB3FF438AB4AD1367 /* Release */,
+				F2ACCA23ACD049A2B7420968 /* MinSizeRel */,
+				1DBBC3855AD3430DBECA089A /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4D9234FC1C4E41569A81D9AD /* Build configuration list for PBXProject "fasttext" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				275D8C74CE634236A763E4AA /* Debug */,
+				59E09BC008784D2BA491FAB2 /* Release */,
+				7A6867EDC67249F0A70B1120 /* MinSizeRel */,
+				B8215C69D4FE449E9A320CB8 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		57F84D9AB0FD4F79B5D50A6D /* Build configuration list for PBXNativeTarget "fasttext-bin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A9ABA47A1BA46249A356A4F /* Debug */,
+				259BF15E5E7840E8A6E59840 /* Release */,
+				076E8BD0D4DC4B18A161FADC /* MinSizeRel */,
+				C4924C2362CA4D17849A8071 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		89EA78F652EB41448DEC57DB /* Build configuration list for PBXNativeTarget "fasttext-static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A72990D3D0D642C89443ED8D /* Debug */,
+				A3DBE1B614264FDCAFAA8F82 /* Release */,
+				7A8C48499B474559BB54AE0F /* MinSizeRel */,
+				C3CEB876B0B04C498782A1DA /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AC0FD30296304EB1A0A0D212 /* Build configuration list for PBXNativeTarget "fasttext-static_pic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				08E6F18C07A040C9B88B9E1C /* Debug */,
+				1C2DF55A76284F638B10CEF0 /* Release */,
+				C1EFD1E59C494D17B46C7618 /* MinSizeRel */,
+				2686B48E69664D5994729875 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D6208FECACA1428B9E83244B /* Build configuration list for PBXAggregateTarget "install" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E475676D63A847A19809F643 /* Debug */,
+				DFF85CD3BE1E40CCB255A74F /* Release */,
+				638D66B557E3443A93392D2E /* MinSizeRel */,
+				EB7F8B8F1A0A43E8A58371AC /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E8C9D2C6BB994169A8AA23F9 /* Build configuration list for PBXNativeTarget "fasttext-shared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C13BFB311403492DA8EEE362 /* Debug */,
+				5016CE1CB5BD4451B465A7D8 /* Release */,
+				5177452EA8D54C598C0C90F8 /* MinSizeRel */,
+				166E02659F85458184860E5C /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C0267B20156E4D138195DAE4 /* Project object */;
+}
