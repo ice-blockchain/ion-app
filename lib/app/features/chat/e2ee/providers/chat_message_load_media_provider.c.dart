@@ -17,6 +17,7 @@ Raw<Future<File?>> chatMessageLoadMedia(
   required PrivateDirectMessageData entity,
   String? cacheKey,
   MediaAttachment? mediaAttachment,
+  bool loadThumbnail = true,
 }) async {
   if (cacheKey != null) {
     final cachedFile = await ref.watch(mediaServiceProvider).getFileFromAppDirectory(cacheKey);
@@ -31,14 +32,19 @@ Raw<Future<File?>> chatMessageLoadMedia(
     return null;
   }
 
-  // Get thumbnail from media attachments
-  final thumb = entity.media.values.firstWhere(
-    (e) => e.url == mediaAttachment.thumb,
-  );
+  final MediaAttachment mediaAttachmentToLoad;
+  if (loadThumbnail) {
+    // Get thumbnail from media attachments
+    mediaAttachmentToLoad = entity.media.values.firstWhere(
+      (e) => e.url == mediaAttachment.thumb,
+    );
+  } else {
+    mediaAttachmentToLoad = mediaAttachment;
+  }
 
   // Load encrypted thumbnail
   final encryptedMedia =
-      await ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia(thumb);
+      await ref.watch(mediaEncryptionServiceProvider).retrieveEncryptedMedia(mediaAttachmentToLoad);
 
   return encryptedMedia;
 }

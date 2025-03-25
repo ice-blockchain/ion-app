@@ -39,7 +39,7 @@ class MessageReactionDialog extends HookConsumerWidget {
           ref.read(featureFlagsProvider.notifier).get(ChatFeatureFlag.hideChatBookmark);
 
       final heightOfFailedMessageOverlayMenu = 103.0.s;
-      final heightOfSuccessMessageOverlayMenu = 184.0.s;
+      final heightOfSuccessMessageOverlayMenu = 185.0.s;
       final heightOfSuccessMessageOverlayMenuWithBookmark = 203.0.s;
 
       if (messageStatus == MessageDeliveryStatus.failed) {

@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,14 +9,15 @@ import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
+import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/services/share/share.dart';
 import 'package:ion/app/utils/filesize.dart';
-import 'package:ion/app/utils/validators.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class DocumentMessage extends HookConsumerWidget {
@@ -28,34 +31,43 @@ class DocumentMessage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useAutomaticKeepAlive();
+    final fileSizeInFormat = useState<String?>(null);
+    final localFile = useState<File?>(null);
 
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
-    final entity = PrivateDirectMessageEntity.fromEventMessage(eventMessage);
 
-    final filePath = useState<String>('');
-    final fileSizeInFormat = useState<String?>(null);
+    final messageMedia =
+        ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
+
+    final entity = PrivateDirectMessageData.fromEventMessage(eventMessage);
+    final mediaAttachment =
+        messageMedia?.remoteUrl == null ? null : entity.media[messageMedia?.remoteUrl!];
 
     useEffect(
       () {
-        final url = entity.data.media.values.firstOrNull?.url;
-        if (Validators.isInvalidUrl(url)) {
-          return null;
-        }
         ref
-            .read(mediaEncryptionServiceProvider)
-            .retrieveEncryptedMedia(entity.data.media.values.first)
-            .then(
-          (encryptedMedia) {
-            if (context.mounted) {
-              filePath.value = encryptedMedia.path;
-              fileSizeInFormat.value = formattedFileSize(filePath.value);
-            }
-          },
-        );
+            .read(
+          chatMessageLoadMediaProvider(
+            entity: entity,
+            mediaAttachment: mediaAttachment,
+            cacheKey: messageMedia?.cacheKey,
+            loadThumbnail: false,
+          ),
+        )
+            .then((value) {
+          if (context.mounted) {
+            localFile.value = value;
+            fileSizeInFormat.value = formattedFileSize(localFile.value?.path ?? '');
+          }
+        });
         return null;
       },
-      [entity.data.media.values.firstOrNull],
+      [messageMedia?.cacheKey, mediaAttachment],
     );
+
+    if (messageMedia == null) {
+      return const SizedBox.shrink();
+    }
 
     return MessageItemWrapper(
       isMe: isMe,
@@ -66,7 +78,7 @@ class DocumentMessage extends HookConsumerWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          shareFile(filePath.value, subject: entity.data.content);
+          shareFile(localFile.value?.path ?? '', name: entity.content);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -80,7 +92,7 @@ class DocumentMessage extends HookConsumerWidget {
                   Row(
                     children: [
                       _DocumentIcon(
-                        isLoading: filePath.value.isEmpty,
+                        isLoading: messageMedia.status == MessageMediaStatus.processing,
                       ),
                       SizedBox(
                         width: 12.0.s,
@@ -90,7 +102,7 @@ class DocumentMessage extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              entity.data.content,
+                              entity.content,
                               style: context.theme.appTextThemes.body2.copyWith(
                                 color: isMe
                                     ? context.theme.appColors.onPrimaryAccent
