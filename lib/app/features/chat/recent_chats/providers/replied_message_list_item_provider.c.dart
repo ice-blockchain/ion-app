@@ -15,7 +15,7 @@ part 'replied_message_list_item_provider.c.g.dart';
 @riverpod
 class RepliedMessageListItem extends _$RepliedMessageListItem {
   @override
-  Future<EventMessage?> build(MessageListItem messageItem) async {
+  Future<EventMessage?> build(ChatMessageInfoItem messageItem) async {
     final entity = PrivateDirectMessageEntity.fromEventMessage(messageItem.eventMessage);
 
     RelatedEvent? relatedEvent;

@@ -146,7 +146,12 @@ class RecentChatTile extends HookConsumerWidget {
 }
 
 class SenderSummary extends ConsumerWidget {
-  const SenderSummary({required this.pubkey, this.textColor, this.isReply = false, super.key});
+  const SenderSummary({
+    required this.pubkey,
+    this.textColor,
+    this.isReply = false,
+    super.key,
+  });
 
   final bool isReply;
   final String pubkey;

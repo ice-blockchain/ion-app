@@ -33,7 +33,7 @@ class MessageItemWrapper extends HookConsumerWidget {
   final Widget child;
 
   final bool isLastMessageFromAuthor;
-  final MessageListItem messageItem;
+  final ChatMessageInfoItem messageItem;
   final EdgeInsetsGeometry contentPadding;
 
   /// The maximum width of the message content in the chat
@@ -45,7 +45,6 @@ class MessageItemWrapper extends HookConsumerWidget {
 
     final repliedMessageListItem = getRepliedMessageListItem(
       ref: ref,
-      context: context,
       repliedEventMessage: repliedEventMessage.valueOrNull,
     );
 
@@ -160,9 +159,8 @@ class MessageItemWrapper extends HookConsumerWidget {
     );
   }
 
-  MessageListItem? getRepliedMessageListItem({
+  ChatMessageInfoItem? getRepliedMessageListItem({
     required WidgetRef ref,
-    required BuildContext context,
     required EventMessage? repliedEventMessage,
   }) {
     if (repliedEventMessage == null) {
@@ -193,7 +191,7 @@ class MessageItemWrapper extends HookConsumerWidget {
         ),
       MessageType.audio => AudioItem(
           eventMessage: repliedEventMessage,
-          contentDescription: context.i18n.common_voice_message,
+          contentDescription: ref.context.i18n.common_voice_message,
         ),
       MessageType.document => DocumentItem(
           eventMessage: repliedEventMessage,
@@ -203,12 +201,12 @@ class MessageItemWrapper extends HookConsumerWidget {
           ? PhotoItem(
               eventMessage: repliedEventMessage,
               media: repliedEntity.data.primaryMedia!,
-              contentDescription: context.i18n.common_photo,
+              contentDescription: ref.context.i18n.common_photo,
             )
           : VideoItem(
               eventMessage: repliedEventMessage,
               media: repliedEntity.data.primaryMedia!,
-              contentDescription: context.i18n.common_video,
+              contentDescription: ref.context.i18n.common_video,
             )
     };
   }

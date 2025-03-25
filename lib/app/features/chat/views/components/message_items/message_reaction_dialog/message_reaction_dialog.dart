@@ -26,7 +26,7 @@ class MessageReactionDialog extends HookConsumerWidget {
   });
 
   final bool isMe;
-  final MessageListItem messageItem;
+  final ChatMessageInfoItem messageItem;
   final MessageDeliveryStatus messageStatus;
 
   /// The key of the message item to capture the image from widget tree

@@ -29,22 +29,23 @@ class RepliedMessageInfo extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const _SideVerticalDivider(),
-            if (repliedMessage is PhotoItem)
-              Padding(
+            repliedMessage.maybeWhen(
+              photo: (media, eventMessage, contentDescription) => Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
                 child: MediaContent(
-                  media: repliedMessage.media,
                   size: Size(30.0.s, 30.0.s),
+                  media: (repliedMessage as PhotoItem).media,
                 ),
               ),
-            if (repliedMessage is VideoItem)
-              Padding(
+              video: (media, eventMessage, contentDescription) => Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
                 child: MediaContent(
-                  media: repliedMessage.media,
                   size: Size(30.0.s, 30.0.s),
+                  media: (repliedMessage as VideoItem).media,
                 ),
               ),
+              orElse: SizedBox.shrink,
+            ),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

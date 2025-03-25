@@ -16,54 +16,54 @@ abstract class MessageInfo {
 
 /// Representation of any element in the chat list.
 @freezed
-sealed class MessageListItem with _$MessageListItem {
+sealed class ChatMessageInfoItem with _$ChatMessageInfoItem {
   @Implements<MessageInfo>()
-  const factory MessageListItem.text({
+  const factory ChatMessageInfoItem.text({
     required EventMessage eventMessage,
     required String contentDescription,
   }) = TextItem;
 
   @Implements<MessageInfo>()
-  const factory MessageListItem.emoji({
+  const factory ChatMessageInfoItem.emoji({
     required EventMessage eventMessage,
     required String contentDescription,
   }) = EmojiItem;
 
   @Implements<MessageInfo>()
-  const factory MessageListItem.audio({
+  const factory ChatMessageInfoItem.audio({
     required EventMessage eventMessage,
     required String contentDescription,
   }) = AudioItem;
 
   @Implements<MessageInfo>()
-  const factory MessageListItem.photo({
+  const factory ChatMessageInfoItem.photo({
     required MediaAttachment media,
     required EventMessage eventMessage,
     required String contentDescription,
   }) = PhotoItem;
 
   @Implements<MessageInfo>()
-  const factory MessageListItem.video({
+  const factory ChatMessageInfoItem.video({
     required MediaAttachment media,
     required EventMessage eventMessage,
     required String contentDescription,
   }) = VideoItem;
 
   @Implements<MessageInfo>()
-  const factory MessageListItem.document({
+  const factory ChatMessageInfoItem.document({
     required EventMessage eventMessage,
     required String contentDescription,
   }) = DocumentItem;
 
   @Implements<MessageInfo>()
-  const factory MessageListItem.link({
+  const factory ChatMessageInfoItem.link({
     required String url,
     required EventMessage eventMessage,
     required String contentDescription,
   }) = LinkItem;
 
   @Implements<MessageInfo>()
-  const factory MessageListItem.shareProfile({
+  const factory ChatMessageInfoItem.shareProfile({
     required EventMessage eventMessage,
     required String contentDescription,
   }) = ShareProfileItem;

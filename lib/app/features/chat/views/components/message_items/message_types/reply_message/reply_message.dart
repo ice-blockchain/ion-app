@@ -14,8 +14,8 @@ import 'package:ion/generated/assets.gen.dart';
 class ReplyMessage extends HookConsumerWidget {
   const ReplyMessage(this.messageItem, this.repliedMessageItem, {super.key});
 
-  final MessageListItem messageItem;
-  final MessageListItem repliedMessageItem;
+  final ChatMessageInfoItem messageItem;
+  final ChatMessageInfoItem repliedMessageItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,22 +47,23 @@ class ReplyMessage extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _SideVerticalDivider(isMe: isMyMessage),
-            if (repliedMessageItem is PhotoItem)
-              Padding(
+            repliedMessageItem.maybeWhen(
+              photo: (media, eventMessage, contentDescription) => Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
                 child: MediaContent(
                   size: Size(30.0.s, 30.0.s),
                   media: (repliedMessageItem as PhotoItem).media,
                 ),
               ),
-            if (repliedMessageItem is VideoItem)
-              Padding(
+              video: (media, eventMessage, contentDescription) => Padding(
                 padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
                 child: MediaContent(
                   size: Size(30.0.s, 30.0.s),
                   media: (repliedMessageItem as VideoItem).media,
                 ),
               ),
+              orElse: SizedBox.shrink,
+            ),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -28,7 +28,7 @@ class MessageReactionContextMenu extends ConsumerWidget {
   });
 
   final double height;
-  final MessageListItem messageItem;
+  final ChatMessageInfoItem messageItem;
   final MessageDeliveryStatus messageStatus;
 
   static double get iconSize => 20.0.s;
