@@ -7,12 +7,15 @@ int useTextEditorCharacterLimitExceedAmount(
   QuillController textEditorController,
   int maxCharacters,
 ) {
-  final exceedAmount = useState(textEditorController.document.length - maxCharacters);
+  // Quill document's initial length is 1: https://github.com/singerdmx/flutter-quill/issues/2047
+  final documentLength = textEditorController.document.length - 1;
+  final exceedAmount = useState(documentLength - maxCharacters);
 
   useEffect(
     () {
       void textEditorListener() {
-        exceedAmount.value = textEditorController.document.length - maxCharacters;
+        final documentLength = textEditorController.document.length - 1;
+        exceedAmount.value = documentLength - maxCharacters;
       }
 
       textEditorController.addListener(textEditorListener);
