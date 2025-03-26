@@ -102,7 +102,7 @@ class _Header extends HookConsumerWidget {
     return MessagingHeader(
       imageUrl: receiver.data.picture,
       name: receiver.data.displayName,
-      onTap: () => ChatProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
+      onTap: () => ProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
       subtitle: Text(
         prefixUsername(username: receiver.data.name, context: context),
         style: context.theme.appTextThemes.caption.copyWith(
