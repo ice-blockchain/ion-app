@@ -196,7 +196,7 @@ class SendE2eeChatMessageService {
           pubkey: repliedMessage.masterPubkey,
           eventReference: ImmutableEventReference(
             eventId: repliedMessage.id,
-            pubkey: repliedMessage.pubkey,
+            pubkey: repliedMessage.masterPubkey,
           ),
         ),
       ];
