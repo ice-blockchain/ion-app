@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/message_author.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/model/message_reaction_group.c.dart';
 import 'package:ion/app/features/chat/model/money_message_type.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_author/message_author.dart';
@@ -87,7 +88,11 @@ class MoneyMessage extends HookWidget {
     );
 
     return MessageItemWrapper(
-      messageEvent: eventMessage,
+      //TODO: Add corresponding message item
+      messageItem: TextItem(
+        eventMessage: eventMessage,
+        contentDescription: title,
+      ),
       isLastMessageFromAuthor: isLastMessageFromAuthor,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,

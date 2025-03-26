@@ -1,83 +1,89 @@
 // SPDX-License-Identifier: ice License 1.0
 
-// // SPDX-License-Identifier: ice License 1.0
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
+import 'package:ion/generated/assets.gen.dart';
 
-// import 'package:flutter/material.dart';
-// import 'package:flutter_hooks/flutter_hooks.dart';
-// import 'package:ion/app/extensions/extensions.dart';
-// import 'package:ion/app/features/chat/model/message_author.c.dart';
-// import 'package:ion/app/features/chat/providers/mock.dart';
-// import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
+class RepliedMessageInfo extends HookConsumerWidget {
+  const RepliedMessageInfo({super.key});
 
-// class RepliedMessageInfo extends HookWidget {
-//   const RepliedMessageInfo({
-//     required this.isMe,
-//     required this.sender,
-//     required this.message,
-//     super.key,
-//   });
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final repliedMessage = ref.watch(selectedMessageProvider);
 
-//   final bool isMe;
-//   final MessageAuthor sender;
-//   final RecentChatMessage message;
+    if (repliedMessage == null) {
+      return const SizedBox();
+    }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final bgColor = useMemoized(
-//       () => isMe ? context.theme.appColors.darkBlue : context.theme.appColors.primaryBackground,
-//       [isMe],
-//     );
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.0.s),
+      padding: EdgeInsets.fromLTRB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
+      color: context.theme.appColors.onPrimaryAccent,
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const _SideVerticalDivider(),
+            if (repliedMessage is MediaItem)
+              Padding(
+                padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
+                child: SizedBox(
+                  width: 30.0.s,
+                  child: VisualMediaCustomGrid(
+                    customSpacing: 2.0.s,
+                    customHeight: repliedMessage.medias.length > 1 ? 18.0.s : 30.0.s,
+                    messageMedias: repliedMessage.medias,
+                    eventMessage: repliedMessage.eventMessage,
+                  ),
+                ),
+              ),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SenderSummary(pubkey: repliedMessage.eventMessage.masterPubkey, isReply: true),
+                  Text(
+                    repliedMessage.contentDescription,
+                    style: context.theme.appTextThemes.body2.copyWith(
+                      color: context.theme.appColors.onTertararyBackground,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: ref.read(selectedMessageProvider.notifier).clear,
+              child: Assets.svg.iconSheetClose.icon(
+                size: 20.0.s,
+                color: context.theme.appColors.tertararyText,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-//     final textColor = useMemoized(
-//       () => isMe ? context.theme.appColors.onPrimaryAccent : null,
-//       [isMe],
-//     );
+class _SideVerticalDivider extends StatelessWidget {
+  const _SideVerticalDivider();
 
-//     return IntrinsicWidth(
-//       child: Container(
-//         padding: EdgeInsets.fromLTRB(6.0.s, 4.0.s, 8.0.s, 4.0.s),
-//         margin: EdgeInsets.only(bottom: 12.0.s),
-//         decoration: BoxDecoration(
-//           color: bgColor,
-//           borderRadius: BorderRadius.circular(10.0.s),
-//         ),
-//         child: IntrinsicHeight(
-//           child: Row(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               _SideVerticalDivider(isMe: isMe),
-//               Flexible(
-//                 child: Column(
-//                   children: [
-//                     SenderSummary(sender: sender, textColor: textColor),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class _SideVerticalDivider extends StatelessWidget {
-//   const _SideVerticalDivider({
-//     required this.isMe,
-//   });
-
-//   final bool isMe;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 2.0.s,
-//       margin: EdgeInsets.only(right: 6.0.s),
-//       decoration: BoxDecoration(
-//         color:
-//             isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
-//         borderRadius: BorderRadius.circular(2.0.s),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 2.0.s,
+      margin: EdgeInsets.only(right: 6.0.s),
+      decoration: BoxDecoration(
+        color: context.theme.appColors.primaryAccent,
+        borderRadius: BorderRadius.circular(2.0.s),
+      ),
+    );
+  }
+}

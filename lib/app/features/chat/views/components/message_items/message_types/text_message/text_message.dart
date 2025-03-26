@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -12,11 +13,9 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 class TextMessage extends ConsumerWidget {
   const TextMessage({
     required this.eventMessage,
-    this.isLastMessageFromAuthor = true,
     super.key,
   });
 
-  final bool isLastMessageFromAuthor;
   final EventMessage eventMessage;
 
   @override
@@ -24,13 +23,15 @@ class TextMessage extends ConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return MessageItemWrapper(
-      messageEvent: eventMessage,
-      isLastMessageFromAuthor: isLastMessageFromAuthor,
+      isMe: isMe,
+      messageItem: TextItem(
+        eventMessage: eventMessage,
+        contentDescription: eventMessage.content,
+      ),
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
       ),
-      isMe: isMe,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

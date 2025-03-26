@@ -8,6 +8,13 @@ class ChatRoutes {
     TypedGoRoute<ChatSimpleSearchRoute>(path: 'chat-simple-search'),
     TypedGoRoute<ChatAdvancedSearchRoute>(path: 'chat-advanced-search'),
     TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
+    TypedGoRoute<ConversationRoute>(
+      path: 'conversation-fullstack',
+      routes: [
+        TypedGoRoute<ChannelDetailRoute>(path: 'channel-detail'),
+        TypedGoRoute<EditChannelRoute>(path: 'edit-channel'),
+      ],
+    ),
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<DeleteConversationRoute>(path: 'delete-conversation'),
@@ -26,23 +33,6 @@ class ChatRoutes {
   ];
 }
 
-class ChatProfileRoute extends BaseRouteData {
-  ChatProfileRoute({required this.pubkey})
-      : super(
-          child: ProfilePage(pubkey: pubkey),
-        );
-
-  final String pubkey;
-}
-
-@TypedGoRoute<ConversationRoute>(
-  path: '/conversation',
-  routes: [
-    TypedGoRoute<ChatProfileRoute>(path: 'chat-profile/:pubkey'),
-    TypedGoRoute<ChannelDetailRoute>(path: 'channel-detail'),
-    TypedGoRoute<EditChannelRoute>(path: 'edit-channel'),
-  ],
-)
 class ConversationRoute extends BaseRouteData {
   ConversationRoute({
     this.conversationId,

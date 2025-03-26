@@ -14,7 +14,9 @@ import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
+import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -53,10 +55,15 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           throw UserMasterPubkeyNotFoundException();
         }
 
+        final repliedMessage = ref.read(selectedMessageProvider);
+
+        ref.read(selectedMessageProvider.notifier).clear();
+
         await ref.read(sendE2eeChatMessageServiceProvider).sendMessage(
-          conversationId: conversationId.value!,
           content: content ?? '',
           mediaFiles: mediaFiles ?? [],
+          conversationId: conversationId.value!,
+          repliedMessage: repliedMessage?.eventMessage,
           participantsMasterPubkeys: [receiverPubKey, currentPubkey],
         );
       },
@@ -70,6 +77,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
           children: [
             _Header(receiverMasterPubKey: receiverPubKey),
             _MessagesList(conversationId: conversationId.value),
+            const RepliedMessageInfo(),
             MessagingBottomBar(onSubmitted: onSubmitted),
           ],
         ),
@@ -94,7 +102,7 @@ class _Header extends HookConsumerWidget {
     return MessagingHeader(
       imageUrl: receiver.data.picture,
       name: receiver.data.displayName,
-      onTap: () => ChatProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
+      onTap: () => ProfileRoute(pubkey: receiverMasterPubKey).push<void>(context),
       subtitle: Text(
         prefixUsername(username: receiver.data.name, context: context),
         style: context.theme.appTextThemes.caption.copyWith(

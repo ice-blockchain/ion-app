@@ -9,6 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/hooks/use_audio_playback_controller.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -115,7 +116,10 @@ class AudioMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
-      messageEvent: eventMessage,
+      messageItem: AudioItem(
+        eventMessage: eventMessage,
+        contentDescription: context.i18n.common_voice_message,
+      ),
       contentPadding: contentPadding,
       child: VisibilityDetector(
         key: ValueKey(audioUrl),

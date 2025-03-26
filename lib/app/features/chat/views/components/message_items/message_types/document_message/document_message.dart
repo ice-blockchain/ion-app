@@ -12,6 +12,7 @@ import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_metadata/message_metadata.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
@@ -39,16 +40,16 @@ class DocumentMessage extends HookConsumerWidget {
     final messageMedia =
         ref.watch(chatMediasProvider(eventMessageId: eventMessage.id)).valueOrNull?.firstOrNull;
 
-    final entity = PrivateDirectMessageData.fromEventMessage(eventMessage);
+    final entityData = PrivateDirectMessageData.fromEventMessage(eventMessage);
     final mediaAttachment =
-        messageMedia?.remoteUrl == null ? null : entity.media[messageMedia?.remoteUrl!];
+        messageMedia?.remoteUrl == null ? null : entityData.media[messageMedia?.remoteUrl!];
 
     useEffect(
       () {
         ref
             .read(
           chatMessageLoadMediaProvider(
-            entity: entity,
+            entity: entityData,
             mediaAttachment: mediaAttachment,
             cacheKey: messageMedia?.cacheKey,
             loadThumbnail: false,
@@ -71,14 +72,17 @@ class DocumentMessage extends HookConsumerWidget {
 
     return MessageItemWrapper(
       isMe: isMe,
-      messageEvent: eventMessage,
+      messageItem: DocumentItem(
+        eventMessage: eventMessage,
+        contentDescription: entityData.content,
+      ),
       contentPadding: EdgeInsets.symmetric(
         horizontal: 12.0.s,
         vertical: 12.0.s,
       ),
       child: GestureDetector(
         onTap: () {
-          shareFile(localFile.value?.path ?? '', name: entity.content);
+          shareFile(localFile.value?.path ?? '', name: entityData.content);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -102,7 +106,7 @@ class DocumentMessage extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              entity.content,
+                              entityData.content,
                               style: context.theme.appTextThemes.body2.copyWith(
                                 color: isMe
                                     ? context.theme.appColors.onPrimaryAccent

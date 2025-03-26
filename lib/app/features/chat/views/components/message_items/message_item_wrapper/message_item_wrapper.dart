@@ -5,10 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_e2ee_message_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/model/message_list_item.c.dart';
+import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/recent_chats/providers/replied_message_list_item_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_reaction_dialog/message_reaction_dialog.dart';
+import 'package:ion/app/features/chat/views/components/message_items/message_types/reply_message/reply_message.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -16,7 +24,7 @@ class MessageItemWrapper extends HookConsumerWidget {
   const MessageItemWrapper({
     required this.isMe,
     required this.child,
-    required this.messageEvent,
+    required this.messageItem,
     required this.contentPadding,
     this.isLastMessageFromAuthor = true,
     super.key,
@@ -24,8 +32,8 @@ class MessageItemWrapper extends HookConsumerWidget {
 
   final bool isMe;
   final Widget child;
-  final EventMessage? messageEvent;
   final bool isLastMessageFromAuthor;
+  final ChatMessageInfoItem messageItem;
   final EdgeInsetsGeometry contentPadding;
 
   /// The maximum width of the message content in the chat
@@ -35,16 +43,19 @@ class MessageItemWrapper extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final messageItemKey = useMemoized(GlobalKey.new);
 
+    final repliedEventMessage = ref.watch(repliedMessageListItemProvider(messageItem));
+
+    final repliedMessageItem = getRepliedMessageListItem(
+      ref: ref,
+      repliedEventMessage: repliedEventMessage.valueOrNull,
+    );
+
     final deliveryStatus =
-        ref.watch(conversationMessageDataDaoProvider).messageStatus(messageEvent!.id);
+        ref.watch(conversationMessageDataDaoProvider).messageStatus(messageItem.eventMessage.id);
 
     final showReactDialog = useCallback(
       () async {
         try {
-          if (messageEvent == null) {
-            return;
-          }
-
           var messageStatus = MessageDeliveryStatus.created;
 
           final subscription = deliveryStatus.listen((status) {
@@ -57,7 +68,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             useSafeArea: false,
             builder: (context) => MessageReactionDialog(
               isMe: isMe,
-              messageEvent: messageEvent!,
+              messageItem: messageItem,
               messageStatus: messageStatus,
               renderObject: messageItemKey.currentContext!.findRenderObject()!,
             ),
@@ -67,7 +78,7 @@ class MessageItemWrapper extends HookConsumerWidget {
             final e2eeMessageService = await ref.read(sendE2eeMessageServiceProvider.future);
             await e2eeMessageService.sendReaction(
               content: emoji,
-              kind14Rumor: messageEvent!,
+              kind14Rumor: messageItem.eventMessage,
             );
           }
 
@@ -76,7 +87,7 @@ class MessageItemWrapper extends HookConsumerWidget {
           Logger.log('Error showing message reaction dialog:', error: e, stackTrace: st);
         }
       },
-      [messageItemKey, isMe],
+      [messageItemKey, isMe, messageItem],
     );
 
     return StreamBuilder<MessageDeliveryStatus>(
@@ -118,7 +129,17 @@ class MessageItemWrapper extends HookConsumerWidget {
                             isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                       ),
                     ),
-                    child: child,
+                    child: repliedMessageItem == null
+                        ? child
+                        : Column(
+                            children: [
+                              ReplyMessage(messageItem, repliedMessageItem),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: child,
+                              ),
+                            ],
+                          ),
                   ),
                   if (snapshot.hasData && snapshot.data == MessageDeliveryStatus.failed)
                     Row(
@@ -137,5 +158,56 @@ class MessageItemWrapper extends HookConsumerWidget {
         );
       },
     );
+  }
+
+  ChatMessageInfoItem? getRepliedMessageListItem({
+    required WidgetRef ref,
+    required EventMessage? repliedEventMessage,
+  }) {
+    if (repliedEventMessage == null) {
+      return null;
+    }
+
+    final repliedEntity = PrivateDirectMessageEntity.fromEventMessage(repliedEventMessage);
+
+    if (repliedEntity.data.messageType == MessageType.profile) {
+      final profilePubkey = EventReference.fromEncoded(repliedEntity.data.content).pubkey;
+
+      final userMetadata = ref.watch(userMetadataProvider(profilePubkey)).valueOrNull;
+      return ShareProfileItem(
+        eventMessage: repliedEventMessage,
+        contentDescription: userMetadata?.data.name ?? repliedEntity.data.content,
+      );
+    } else if (repliedEntity.data.messageType == MessageType.visualMedia) {
+      final messageMedias =
+          ref.watch(chatMediasProvider(eventMessageId: repliedEventMessage.id)).valueOrNull ?? [];
+
+      return MediaItem(
+        medias: messageMedias,
+        eventMessage: repliedEventMessage,
+        contentDescription: ref.context.i18n.common_media,
+      );
+    }
+
+    return switch (repliedEntity.data.messageType) {
+      MessageType.profile => null,
+      MessageType.visualMedia => null,
+      MessageType.text => TextItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: repliedEntity.data.content,
+        ),
+      MessageType.emoji => EmojiItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: repliedEntity.data.content,
+        ),
+      MessageType.audio => AudioItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: ref.context.i18n.common_voice_message,
+        ),
+      MessageType.document => DocumentItem(
+          eventMessage: repliedEventMessage,
+          contentDescription: repliedEntity.data.content,
+        ),
+    };
   }
 }

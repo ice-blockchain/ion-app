@@ -19,7 +19,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     required String kind14EventId,
     required EventMessage newReactionEvent,
   }) async {
-    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+    final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     final kind14EventMessage = await (select(db.eventMessageTable)
           ..where((table) => table.id.equals(kind14EventId)))
@@ -69,7 +69,7 @@ class ConversationMessageReactionDao extends DatabaseAccessor<ChatDatabase>
     required String reactionEventId,
     required EventMessage deleteRequest,
   }) async {
-    final eventMessageDao = ref.watch(eventMessageDaoProvider);
+    final eventMessageDao = ref.read(eventMessageDaoProvider);
 
     await eventMessageDao.add(deleteRequest);
 
