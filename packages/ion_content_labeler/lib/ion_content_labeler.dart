@@ -4,47 +4,70 @@ import 'package:ffi/ffi.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-typedef LoadModelNative = Void Function(Pointer<Utf8> str);
-typedef LoadModel = void Function(Pointer<Utf8> str);
+Future<String> detectTextLanguage(String content) async {
+  final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
+  final modelPath = await _getAssetFilePath(name: 'language_identification.176.ftz');
+  loadModel(modelPath);
+  return predict(content);
+}
 
-typedef PredictNative = Void Function(Pointer<Utf8> str, Pointer<Utf8> output);
-typedef Predict = void Function(Pointer<Utf8> str, Pointer<Utf8> output);
+Future<String> detectTextCategory(String content) async {
+  final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
+  final modelPath = await _getAssetFilePath(name: 'labeling.ftz');
+  loadModel(modelPath);
+  return predict(content);
+}
 
-void detectLanguage(String content) async {
-  final lib = DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
-  // final loadModelFn = lib.providesSymbol<LoadModelNative, LoadModel>('load_model');
-  // final loadModelFn = lib.providesSymbol('load_model');
-  // print('loadModelFn $loadModelFn');
-
-  final loadModelFn =
-      lib.lookupFunction<LoadModelNative, LoadModel>('load_model'); // Lookup function in library
-
-  ///
-  final byteData = await rootBundle.load('assets/language_identification.176.ftz');
+Future<String> _getAssetFilePath({required String name}) async {
+  final byteData = await rootBundle.load('assets/$name');
 
   final directory = await getApplicationDocumentsDirectory();
-  final file = File('${directory.path}/language_identification.176.ftz');
+  final file = File('${directory.path}/$name');
 
-  // Write the asset data to a file
   await file
       .writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
-  final path = file.path;
+  return file.path;
+}
 
-  ///
+DynamicLibrary _loadFastTextLibrary() {
+  if (Platform.isIOS) {
+    return DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
+  } else if (Platform.isAndroid) {
+    return DynamicLibrary.open('fasttext_predict.so');
+  } else {
+    throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
+  }
+}
 
-  final filenameUtf8 = path.toNativeUtf8();
+String _normalizeOutput(String output) {
+  return output.replaceFirst('__label__', '');
+}
 
-  loadModelFn(filenameUtf8);
-  calloc.free(filenameUtf8);
-
-  final predictFn =
-      lib.lookupFunction<PredictNative, Predict>('predict'); // Lookup function in library
-  final inputUtf8 = content.toNativeUtf8();
-  Pointer<Utf8> outputPrediction = calloc.allocate(20);
-  predictFn(inputUtf8, outputPrediction);
-  print("Prediction:");
-  print(outputPrediction.toDartString());
-  calloc.free(inputUtf8);
-  calloc.free(outputPrediction);
+({
+  void Function(String path) loadModel,
+  String Function(String content) predict,
+}) _loadFastTextLibrarySymbols() {
+  final lib = _loadFastTextLibrary();
+  return (
+    loadModel: (String path) {
+      final filenameUtf8 = path.toNativeUtf8();
+      final loadModelFn =
+          lib.lookupFunction<Void Function(Pointer<Utf8> str), void Function(Pointer<Utf8> str)>(
+              'load_model');
+      loadModelFn(filenameUtf8);
+      calloc.free(filenameUtf8);
+    },
+    predict: (String input) {
+      final predictFn = lib.lookupFunction<Void Function(Pointer<Utf8> str, Pointer<Utf8> output),
+          void Function(Pointer<Utf8> str, Pointer<Utf8> output)>('predict');
+      final inputUtf8 = input.toNativeUtf8();
+      Pointer<Utf8> outputPrediction = calloc.allocate(20);
+      predictFn(inputUtf8, outputPrediction);
+      final prediction = outputPrediction.toDartString();
+      calloc.free(inputUtf8);
+      calloc.free(outputPrediction);
+      return _normalizeOutput(prediction);
+    },
+  );
 }

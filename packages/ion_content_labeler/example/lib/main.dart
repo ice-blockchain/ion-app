@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ion_content_labeler/ion_content_labeler.dart' as ion_content_labeler;
+import 'package:ion_content_labeler/ion_content_labeler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,33 +13,41 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String? _input;
+
+  String? _language;
+
+  String? _category;
+
   @override
   void initState() {
     super.initState();
-    ion_content_labeler.detectLanguage('Hello world');
+    _input =
+        'Advancements in artificial intelligence are revolutionizing industries by enabling faster data analysis and smarter decision-making.';
+    detectTextLanguage(_input!).then((language) => setState(() {
+          _language = language;
+        }));
+    detectTextCategory(_input!).then((category) => setState(() {
+          _category = category;
+        }));
   }
 
   @override
   Widget build(BuildContext context) {
-    const textStyle = TextStyle(fontSize: 25);
-    const spacerSmall = SizedBox(height: 10);
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Native Packages'),
+          title: const Text('Ion Content Labeler Example'),
         ),
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                const Text(
-                  'This calls a native function through FFI that is shipped as source in the package. '
-                  'The native code is built as part of the Flutter Runner build.',
-                  style: textStyle,
-                  textAlign: TextAlign.center,
-                ),
-                spacerSmall,
+                Text('Input text is:\n$_input'),
+                SizedBox(height: 10),
+                if (_language != null) ...[Text('Language is:\n$_language'), SizedBox(height: 10)],
+                if (_category != null) ...[Text('Category is:\n$_category'), SizedBox(height: 10)],
               ],
             ),
           ),
