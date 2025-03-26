@@ -15,11 +15,13 @@ class GalleryPermissionButton extends ConsumerWidget {
   const GalleryPermissionButton({
     required this.mediaPickerType,
     required this.onMediaSelected,
+    required this.maxSelection,
     super.key,
   });
 
   final MediaPickerType mediaPickerType;
   final ValueChanged<List<MediaFile>?> onMediaSelected;
+  final int? maxSelection;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,8 +30,10 @@ class GalleryPermissionButton extends ConsumerWidget {
       requestId: 'gallery_permission_button',
       onGranted: () async {
         if (context.mounted) {
-          final mediaFiles = await MediaPickerRoute(mediaPickerType: mediaPickerType)
-              .push<List<MediaFile>>(context);
+          final mediaFiles = await MediaPickerRoute(
+            mediaPickerType: mediaPickerType,
+            maxSelection: maxSelection,
+          ).push<List<MediaFile>>(context);
           onMediaSelected(mediaFiles);
         }
       },
