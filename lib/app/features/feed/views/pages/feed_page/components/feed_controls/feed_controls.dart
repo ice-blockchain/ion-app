@@ -6,8 +6,11 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_cont
 
 class FeedControls extends StatelessWidget {
   const FeedControls({
+    this.scrollController,
     super.key,
   });
+
+  final ScrollController? scrollController;
 
   static double get height => 40.0.s;
 
@@ -15,7 +18,7 @@ class FeedControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      child: const FeedNavigation(),
+      child: FeedNavigation(scrollController: scrollController),
     );
   }
 }

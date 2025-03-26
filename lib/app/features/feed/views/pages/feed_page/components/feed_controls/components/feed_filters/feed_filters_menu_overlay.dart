@@ -14,10 +14,12 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_cont
 class FeedFiltersMenuOverlay extends StatelessWidget {
   const FeedFiltersMenuOverlay({
     required this.closeMenu,
+    this.scrollController,
     super.key,
   });
 
   final VoidCallback closeMenu;
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {

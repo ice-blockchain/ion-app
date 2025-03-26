@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 void useHideOnScroll(
   BuildContext context,
   OverlayPortalController overlayPortalController,
+  ScrollController? scrollController,
 ) {
   useEffect(
     () {
@@ -20,13 +21,13 @@ void useHideOnScroll(
         });
       }
 
-      final scrollable = Scrollable.maybeOf(context);
-      final isScrollingNotifier = scrollable?.position.isScrollingNotifier;
+      final changeNotifier =
+          scrollController ?? Scrollable.maybeOf(context)?.position.isScrollingNotifier;
 
-      isScrollingNotifier?.addListener(handleScrolling);
+      changeNotifier?.addListener(handleScrolling);
 
-      return () => isScrollingNotifier?.removeListener(handleScrolling);
+      return () => changeNotifier?.removeListener(handleScrolling);
     },
-    [overlayPortalController],
+    [overlayPortalController, scrollController],
   );
 }

@@ -11,6 +11,7 @@ class OverlayMenu extends HookWidget {
     required this.menuBuilder,
     this.onOpen,
     this.onClose,
+    this.scrollController,
     super.key,
   });
 
@@ -18,6 +19,7 @@ class OverlayMenu extends HookWidget {
   final Widget Function(VoidCallback closeMenu) menuBuilder;
   final VoidCallback? onOpen;
   final VoidCallback? onClose;
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class OverlayMenu extends HookWidget {
     final animationController = useAnimationController(duration: const Duration(milliseconds: 400));
     final scaleAnimation = CurvedAnimation(parent: animationController, curve: Curves.easeOutBack);
 
-    useHideOnScroll(context, overlayPortalController);
+    useHideOnScroll(context, overlayPortalController, scrollController);
 
     final hideMenu = useCallback(
       () {
@@ -61,6 +63,7 @@ class OverlayMenu extends HookWidget {
                 link: followLink,
                 offset: Offset(renderBox.size.width, renderBox.size.height + 6.0.s),
                 followerAnchor: Alignment.topRight,
+                showWhenUnlinked: false,
                 child: ScaleTransition(
                   alignment: Alignment.topRight,
                   scale: scaleAnimation,
