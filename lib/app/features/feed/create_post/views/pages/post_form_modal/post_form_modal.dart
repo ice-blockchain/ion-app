@@ -10,10 +10,10 @@ import 'package:ion/app/components/back_hardware_button_interceptor/back_hardwar
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/post_editor_modal/components/create_post_app_bar.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/post_editor_modal/components/create_post_bottom_panel.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/post_editor_modal/components/create_post_content.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/post_editor_modal/hooks/use_post_quill_controller.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/create_post_app_bar.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/create_post_bottom_panel.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/create_post_content.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_post_quill_controller.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
