@@ -11,7 +11,6 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
-import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/model/user_metadata.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -38,10 +37,9 @@ class MoreContentView extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _MoreContentItem(
-                iconPath: Assets.svg.walletChatPhotos,
-                title: context.i18n.common_media,
-                onTap: () async {
+              PermissionAwareWidget(
+                permissionType: Permission.photos,
+                onGranted: () async {
                   final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
                   if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                     final convertedMediaFiles = await ref
@@ -49,32 +47,31 @@ class MoreContentView extends ConsumerWidget {
                         .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
                     unawaited(onSubmitted(mediaFiles: convertedMediaFiles));
-
-                    ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
                   }
                 },
+                requestDialog: const PermissionRequestSheet(permission: Permission.photos),
+                settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
+                builder: (context, onPressed) => _MoreContentItem(
+                  iconPath: Assets.svg.walletChatPhotos,
+                  title: context.i18n.common_media,
+                  onTap: onPressed,
+                ),
               ),
               PermissionAwareWidget(
-                permissionType: Permission.camera,
+                permissionType: Permission.photos,
                 onGranted: () async {
-                  final recordedVideoAsset =
-                      await GalleryCameraRoute(mediaPickerType: MediaPickerType.video)
-                          .push<MediaFile?>(context);
-
-                  if (recordedVideoAsset != null) {
-                    final convertedVideos = await ref
+                  final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
+                  if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+                    final convertedMediaFiles = await ref
                         .read(mediaServiceProvider)
-                        .convertAssetIdsToMediaFiles(ref, mediaFiles: [recordedVideoAsset]);
+                        .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
-                    if (convertedVideos.isNotEmpty) {
-                      unawaited(onSubmitted(mediaFiles: [convertedVideos.first]));
-                      ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-                    }
+                    unawaited(onSubmitted(mediaFiles: convertedMediaFiles));
                   }
                 },
-                requestDialog: const PermissionRequestSheet(permission: Permission.camera),
-                settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
-                builder: (_, onPressed) => _MoreContentItem(
+                requestDialog: const PermissionRequestSheet(permission: Permission.photos),
+                settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
+                builder: (context, onPressed) => _MoreContentItem(
                   iconPath: Assets.svg.walletChatCamera,
                   title: context.i18n.common_camera,
                   onTap: onPressed,
