@@ -32,6 +32,7 @@ import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
@@ -46,7 +47,8 @@ class ReplyInputField extends HookConsumerWidget {
     required BuildContext context,
     required QuillController textEditorController,
     required FocusNode focusNode,
-    required ValueNotifier<List<MediaFile>> attachedMediaNotifier,
+    required AttachedMediaNotifier attachedMediaNotifier,
+    required AttachedMediaLinksNotifier attachedMediaLinksNotifier,
   }) async {
     final attachedMedia =
         attachedMediaNotifier.value.isNotEmpty ? jsonEncode(attachedMediaNotifier.value) : null;
@@ -142,6 +144,7 @@ class ReplyInputField extends HookConsumerWidget {
                                     textEditorController: textEditorController,
                                     focusNode: focusNode,
                                     attachedMediaNotifier: attachedMediaNotifier,
+                                    attachedMediaLinksNotifier: attachedMediaLinksNotifier,
                                   );
                                 },
                                 child: Assets.svg.iconReplysearchScale.icon(size: 20.0.s),
@@ -171,6 +174,7 @@ class ReplyInputField extends HookConsumerWidget {
                       textEditorController: textEditorController,
                       focusNode: focusNode,
                       attachedMediaNotifier: attachedMediaNotifier,
+                      attachedMediaLinksNotifier: attachedMediaLinksNotifier,
                     );
                   },
                 ),

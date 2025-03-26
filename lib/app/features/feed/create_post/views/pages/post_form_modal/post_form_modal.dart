@@ -173,7 +173,7 @@ class PostFormModal extends HookConsumerWidget {
     );
     final attachedMediaLinksNotifier = useState<Map<String, MediaAttachment>>({});
 
-    if (createOption == CreatePostOption.modify) {
+    if (modifiedEvent != null) {
       useEffect(
         () {
           final modifiedEntity =
