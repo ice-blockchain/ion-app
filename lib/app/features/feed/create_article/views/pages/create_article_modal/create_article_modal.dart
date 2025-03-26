@@ -26,7 +26,8 @@ class CreateArticleModal extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final articleState = useCreateArticle(ref);
-    final scrollController = useScrollController();
+
+    final scrollController = ScrollController();
     final textEditorKey = useMemoized(TextEditorKeys.createArticle);
 
     Future<bool?> showCancelCreationModal(BuildContext context) {
@@ -120,6 +121,7 @@ class CreateArticleModal extends HookConsumerWidget {
                               articleState.textEditorController,
                               placeholder: context.i18n.create_article_story_placeholder,
                               key: textEditorKey,
+                              scrollController: scrollController,
                             );
                           },
                         ),

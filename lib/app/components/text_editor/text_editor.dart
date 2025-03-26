@@ -26,12 +26,14 @@ class TextEditor extends ConsumerStatefulWidget {
     this.placeholder,
     this.focusNode,
     this.autoFocus = true,
+    this.scrollController,
   }) : super(key: key);
 
   final QuillController controller;
   final String? placeholder;
   final FocusNode? focusNode;
   final bool autoFocus;
+  final ScrollController? scrollController;
 
   @override
   TextEditorState createState() => TextEditorState();
@@ -67,6 +69,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
     return QuillEditor.basic(
       controller: widget.controller,
       focusNode: _focusNode,
+      scrollController: widget.scrollController,
       config: QuillEditorConfig(
         embedBuilders: [
           TextEditorSingleImageBuilder(),
@@ -82,6 +85,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
         floatingCursorDisabled: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
         customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(context, attribute),
+        scrollable: false,
       ),
     );
   }
