@@ -10,14 +10,14 @@ Future<String> detectTextLanguage(String content) async {
   final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
   final modelPath = await _getAssetFilePath(name: 'language_identification.176.ftz');
   loadModel(modelPath);
-  return predict(content);
+  return predict(_normalizeInput(content));
 }
 
 Future<String> detectTextCategory(String content) async {
   final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
   final modelPath = await _getAssetFilePath(name: 'labeling.ftz');
   loadModel(modelPath);
-  return predict(content);
+  return predict(_normalizeInput(content));
 }
 
 Future<String> _getAssetFilePath({required String name}) async {
@@ -44,6 +44,13 @@ DynamicLibrary _loadFastTextLibrary() {
 
 String _normalizeOutput(String output) {
   return output.replaceFirst('__label__', '');
+}
+
+String _normalizeInput(String input) {
+  return input.replaceAll('\n', ' ')
+    ..replaceAll(RegExp(r'[^\w\s]'), '')
+    ..toLowerCase()
+    ..trim();
 }
 
 ({
