@@ -22,6 +22,8 @@ class WebsiteInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const maxLength = 100;
+
     return GeneralUserDataInput(
       controller: controller,
       onChanged: onChanged,
@@ -38,6 +40,9 @@ class WebsiteInput extends StatelessWidget {
         if (Validators.isEmpty(value)) return null;
         if (Validators.isInvalidUrl(value)) {
           return context.i18n.error_website_invalid;
+        }
+        if (Validators.isInvalidLength(value, maxLength: maxLength)) {
+          return context.i18n.error_input_length_max(maxLength);
         }
         return null;
       },

@@ -32,7 +32,7 @@ class UserInfoTile extends StatelessWidget {
           ),
           SizedBox(width: 4.0.s),
           Text(
-            isLink ? removeHttpsPrefix(title)! : title,
+            isLink ? extractDomain(title)! : title,
             style: context.theme.appTextThemes.body2.copyWith(color: color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

@@ -49,7 +49,7 @@ class HeaderAction extends StatelessWidget {
       tintColor: context.theme.appColors.primaryText,
       icon: loading
           ? const IONLoadingIndicator(type: IndicatorType.dark)
-          : assetName.icon(size: iconSize),
+          : assetName.icon(size: iconSize, color: context.theme.appColors.primaryText),
       onPressed: onPressed,
     );
   }

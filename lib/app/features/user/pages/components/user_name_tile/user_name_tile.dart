@@ -33,7 +33,7 @@ class UserNameTile extends ConsumerWidget {
               child: Text(
                 textAlign: TextAlign.center,
                 userMetadataValue.data.displayName,
-                style: context.theme.appTextThemes.title.copyWith(
+                style: context.theme.appTextThemes.subtitle.copyWith(
                   color: context.theme.appColors.primaryText,
                 ),
               ),
@@ -44,7 +44,7 @@ class UserNameTile extends ConsumerWidget {
         Text(
           prefixUsername(username: userMetadataValue.data.name, context: context),
           style: context.theme.appTextThemes.caption.copyWith(
-            color: context.theme.appColors.secondaryText,
+            color: context.theme.appColors.quaternaryText,
           ),
           maxLines: 1,
         ),

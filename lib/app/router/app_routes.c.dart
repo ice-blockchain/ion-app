@@ -116,7 +116,6 @@ import 'package:ion/app/features/user/pages/profile_page/pages/select_network_mo
 import 'package:ion/app/features/user/pages/profile_page/pages/send_coins_form_modal/send_coin_form_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/profile_page.dart';
 import 'package:ion/app/features/user/pages/profile_page/self_profile_page.dart';
-import 'package:ion/app/features/user/pages/pull_right_menu_page/pull_right_menu_page.dart';
 import 'package:ion/app/features/user/pages/switch_account_modal/switch_account_modal.dart';
 import 'package:ion/app/features/video/views/pages/feed_advanced_search_videos_page.dart';
 import 'package:ion/app/features/video/views/pages/feed_videos_page.dart';

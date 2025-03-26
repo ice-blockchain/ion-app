@@ -5,6 +5,14 @@ String? removeHttpsPrefix(String? url) {
   return url?.replaceFirst(RegExp('^https://'), '');
 }
 
+String? extractDomain(String url) {
+  try {
+    final uri = Uri.parse(url);
+    return uri.host;
+  } catch (_) {}
+  return null;
+}
+
 String normalizeUrl(String url) {
   // Remove leading/trailing whitespace
   var normalizedUrl = url.trim();

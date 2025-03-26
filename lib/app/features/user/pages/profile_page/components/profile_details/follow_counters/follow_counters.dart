@@ -17,7 +17,7 @@ class FollowCounters extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      height: 44.0.s,
+      height: 36.0.s,
       decoration: BoxDecoration(
         color: context.theme.appColors.tertararyBackground,
         borderRadius: BorderRadius.circular(16.0.s),
