@@ -199,17 +199,17 @@ class CreateArticleRoute extends BaseRouteData {
 
 class MediaPickerRoute extends BaseRouteData {
   MediaPickerRoute({
-    this.maxSelection = 10,
+    this.maxSelection,
     this.mediaPickerType = MediaPickerType.common,
   }) : super(
           child: MediaPickerPage(
-            maxSelection: maxSelection,
+            maxSelection: maxSelection ?? 5,
             type: mediaPickerType,
           ),
           type: IceRouteType.bottomSheet,
         );
 
-  final int maxSelection;
+  final int? maxSelection;
   final MediaPickerType mediaPickerType;
 }
 

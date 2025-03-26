@@ -151,6 +151,7 @@ class _ActionsSection extends StatelessWidget {
           if (modifiedEvent == null)
             ToolbarImageButton(
               delegate: AttachedMediaHandler(attachedMediaNotifier),
+              maxImages: ModifiablePostEntity.contentMediaLimit,
             ),
           ToolbarPollButton(textEditorController: textEditorController),
           ToolbarRegularButton(textEditorController: textEditorController),

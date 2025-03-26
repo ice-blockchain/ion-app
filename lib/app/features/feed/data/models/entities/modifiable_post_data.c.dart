@@ -68,6 +68,7 @@ class ModifiablePostEntity
   static const kind = 30175;
 
   static const contentCharacterLimit = 4000;
+  static const contentMediaLimit = 10;
 }
 
 @freezed

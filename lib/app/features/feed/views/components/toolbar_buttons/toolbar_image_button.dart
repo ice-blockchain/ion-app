@@ -65,16 +65,19 @@ class QuillControllerHandler extends ToolbarImageButtonDelegate {
 class ToolbarImageButton extends StatelessWidget {
   const ToolbarImageButton({
     required this.delegate,
+    this.maxImages,
     super.key,
   });
 
   final ToolbarImageButtonDelegate delegate;
+  final int? maxImages;
 
   @override
   Widget build(BuildContext context) {
     return GalleryPermissionButton(
       mediaPickerType: MediaPickerType.image,
       onMediaSelected: delegate.onMediaSelected,
+      maxSelection: maxImages,
     );
   }
 }

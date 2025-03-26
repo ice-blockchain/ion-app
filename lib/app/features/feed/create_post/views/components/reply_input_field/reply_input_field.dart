@@ -156,6 +156,7 @@ class ReplyInputField extends HookConsumerWidget {
               actions: [
                 ToolbarImageButton(
                   delegate: AttachedMediaHandler(attachedMediaNotifier),
+                  maxImages: ModifiablePostEntity.contentMediaLimit,
                 ),
                 ToolbarPollButton(
                   textEditorController: textEditorController,
