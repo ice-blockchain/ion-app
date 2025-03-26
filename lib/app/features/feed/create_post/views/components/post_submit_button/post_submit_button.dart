@@ -13,11 +13,12 @@ import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dar
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_editor_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/validators.dart';
 
@@ -30,6 +31,7 @@ class PostSubmitButton extends HookConsumerWidget {
     this.quotedEvent,
     this.modifiedEvent,
     this.mediaFiles = const [],
+    this.mediaAttachments = const {},
     this.onSubmitted,
   });
 
@@ -42,6 +44,8 @@ class PostSubmitButton extends HookConsumerWidget {
   final EventReference? modifiedEvent;
 
   final List<MediaFile> mediaFiles;
+
+  final Map<String, MediaAttachment> mediaAttachments;
 
   final CreatePostOption createOption;
 
@@ -77,6 +81,9 @@ class PostSubmitButton extends HookConsumerWidget {
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
         if (modifiedEvent != null) {
+          final convertedMediaFiles = await ref
+              .read(mediaServiceProvider)
+              .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
           unawaited(
             ref
                 .read(
@@ -86,6 +93,8 @@ class PostSubmitButton extends HookConsumerWidget {
                 )
                 .modify(
                   content: textEditorController.document.toDelta(),
+                  mediaFiles: convertedMediaFiles,
+                  mediaAttachments: mediaAttachments,
                   eventReference: modifiedEvent!,
                   whoCanReply: whoCanReply,
                 ),

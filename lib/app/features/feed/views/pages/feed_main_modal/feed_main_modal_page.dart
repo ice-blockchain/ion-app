@@ -72,7 +72,7 @@ class FeedMainModalPage extends StatelessWidget {
                       );
 
                       if (result != null && result.isNotEmpty && context.mounted) {
-                        final postWasCreated = await CreatePostRoute(
+                        final postWasCreated = await CreateVideoRoute(
                               videoPath: result[0].path,
                             ).push<bool>(context) ??
                             false;

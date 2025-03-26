@@ -6,7 +6,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/media_service/aspect_ratio.dart';
-import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 import 'package:ion/generated/assets.gen.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
@@ -16,7 +16,7 @@ class AttachedMediaPreview extends ConsumerWidget {
     super.key,
   });
 
-  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
+  final AttachedMediaNotifier attachedMediaNotifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

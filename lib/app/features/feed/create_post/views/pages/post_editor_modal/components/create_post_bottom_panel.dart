@@ -24,6 +24,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provid
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class CreatePostBottomPanel extends StatelessWidget {
@@ -33,6 +34,7 @@ class CreatePostBottomPanel extends StatelessWidget {
     required this.quotedEvent,
     required this.modifiedEvent,
     required this.attachedMediaNotifier,
+    required this.attachedMediaLinksNotifier,
     required this.attachedVideoNotifier,
     required this.createOption,
     super.key,
@@ -42,8 +44,9 @@ class CreatePostBottomPanel extends StatelessWidget {
   final EventReference? parentEvent;
   final EventReference? quotedEvent;
   final EventReference? modifiedEvent;
-  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
+  final AttachedMediaNotifier attachedMediaNotifier;
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
+  final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final CreatePostOption createOption;
 
   @override
@@ -61,6 +64,7 @@ class CreatePostBottomPanel extends StatelessWidget {
           quotedEvent: quotedEvent,
           modifiedEvent: modifiedEvent,
           attachedMediaNotifier: attachedMediaNotifier,
+          attachedMediaLinksNotifier: attachedMediaLinksNotifier,
           attachedVideoNotifier: attachedVideoNotifier,
           createOption: createOption,
         ),
@@ -131,6 +135,7 @@ class _ActionsSection extends StatelessWidget {
     required this.quotedEvent,
     required this.modifiedEvent,
     required this.attachedMediaNotifier,
+    required this.attachedMediaLinksNotifier,
     required this.attachedVideoNotifier,
     required this.createOption,
   });
@@ -139,7 +144,8 @@ class _ActionsSection extends StatelessWidget {
   final EventReference? parentEvent;
   final EventReference? quotedEvent;
   final EventReference? modifiedEvent;
-  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
+  final AttachedMediaNotifier attachedMediaNotifier;
+  final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
   final CreatePostOption createOption;
 
@@ -148,11 +154,10 @@ class _ActionsSection extends StatelessWidget {
     return ScreenSideOffset.small(
       child: ActionsToolbar(
         actions: [
-          if (modifiedEvent == null)
-            ToolbarImageButton(
-              delegate: AttachedMediaHandler(attachedMediaNotifier),
-              maxImages: ModifiablePostEntity.contentMediaLimit,
-            ),
+          ToolbarImageButton(
+            delegate: AttachedMediaHandler(attachedMediaNotifier),
+            maxImages: ModifiablePostEntity.contentMediaLimit,
+          ),
           ToolbarPollButton(textEditorController: textEditorController),
           ToolbarRegularButton(textEditorController: textEditorController),
           ToolbarItalicButton(textEditorController: textEditorController),
@@ -174,6 +179,7 @@ class _ActionsSection extends StatelessWidget {
                 ...attachedMediaNotifier.value,
                 if (attachedVideoNotifier.value != null) attachedVideoNotifier.value!,
               ],
+              mediaAttachments: attachedMediaLinksNotifier.value,
               createOption: createOption,
             ),
           ],

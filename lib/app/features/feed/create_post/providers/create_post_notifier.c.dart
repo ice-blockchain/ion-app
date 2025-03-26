@@ -106,6 +106,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   Future<void> modify({
     required EventReference eventReference,
     Delta? content,
+    List<MediaFile>? mediaFiles,
+    Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
   }) async {
     state = const AsyncValue.loading();
@@ -118,22 +120,26 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         throw UnsupportedEventReference(eventReference);
       }
 
+      final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
+      final modifyedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
+
       final postData = modifiedEntity.data.copyWith(
         content: _buildContentWithMediaLinks(
           content: postContent,
-          media: modifiedEntity.data.media.values.toList(),
+          media: modifyedMedia.values.toList(),
         ),
         richText: _buildRichTextContentWithMediaLinks(
           content: postContent,
-          media: modifiedEntity.data.media.values.toList(),
+          media: modifyedMedia.values.toList(),
         ),
+        media: modifyedMedia,
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         settings: EntityDataWithSettings.build(
           whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
         ),
       );
 
-      await _sendPostEntities([postData]);
+      await _sendPostEntities([...files, postData]);
     });
   }
 

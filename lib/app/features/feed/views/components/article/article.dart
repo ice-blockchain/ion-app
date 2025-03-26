@@ -7,7 +7,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_editor_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
