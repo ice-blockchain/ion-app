@@ -11,7 +11,7 @@ typedef PredictNative = Void Function(Pointer<Utf8> str, Pointer<Utf8> output);
 typedef Predict = void Function(Pointer<Utf8> str, Pointer<Utf8> output);
 
 void detectLanguage(String content) async {
-  final lib = DynamicLibrary.open('fasttext_predict_simulator.dylib');
+  final lib = DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
   // final loadModelFn = lib.providesSymbol<LoadModelNative, LoadModel>('load_model');
   // final loadModelFn = lib.providesSymbol('load_model');
   // print('loadModelFn $loadModelFn');

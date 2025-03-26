@@ -1,5 +1,5 @@
 name: ion_content_labeler
-description: "A new Flutter FFI plugin project."
+description: "The plugin might be used to analyze the input text and produce corresponding labels, such as the detected language and content categories"
 version: 0.0.1
 homepage:
 
@@ -10,12 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
   ffi: ^2.1.3
   path_provider: ^2.1.5
 
 dev_dependencies:
-  ffigen: ^13.0.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
