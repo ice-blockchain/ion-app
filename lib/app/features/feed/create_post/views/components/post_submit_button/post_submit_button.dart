@@ -36,12 +36,19 @@ class PostSubmitButton extends HookConsumerWidget {
   });
 
   final QuillController textEditorController;
+
   final EventReference? parentEvent;
+
   final EventReference? quotedEvent;
+
   final EventReference? modifiedEvent;
+
   final List<MediaFile> mediaFiles;
+
   final Map<String, MediaAttachment> mediaAttachments;
+
   final CreatePostOption createOption;
+
   final VoidCallback? onSubmitted;
 
   @override
@@ -55,82 +62,60 @@ class PostSubmitButton extends HookConsumerWidget {
     final pollTitle = ref.watch(pollTitleNotifierProvider);
     final pollAnswers = ref.watch(pollAnswersNotifierProvider);
     final hasPoll = useHasPoll(textEditorController);
-
-    final isLoading = useState(false);
+    final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
 
     final isSubmitButtonEnabled = useMemoized(
       () {
-        if (isLoading.value) return false;
-
         final contentValid = hasPoll
             ? Validators.isPollValid(
                 pollTitle.text,
                 pollAnswers,
               )
             : hasContent;
-
         return contentValid && !exceedsCharacterLimit;
       },
-      [hasPoll, hasContent, exceedsCharacterLimit, isLoading.value],
+      [hasPoll, hasContent, exceedsCharacterLimit],
     );
 
     return ToolbarSendButton(
       enabled: isSubmitButtonEnabled,
-      isLoading: isLoading.value,
       onPressed: () async {
-        if (!isSubmitButtonEnabled) return;
+        final convertedMediaFiles = await ref
+            .read(mediaServiceProvider)
+            .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
-        try {
-          isLoading.value = true;
-          await _handlePostSubmission(ref, context);
-        } catch (e) {
-          // Show error message to user
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to submit post: $e')),
-            );
-          }
-        } finally {
-          isLoading.value = false;
+        final notifier = ref.read(
+          createPostNotifierProvider(createOption).notifier,
+        );
+
+        if (modifiedEvent != null) {
+          unawaited(
+            notifier.modify(
+              content: textEditorController.document.toDelta(),
+              mediaFiles: convertedMediaFiles,
+              mediaAttachments: mediaAttachments,
+              eventReference: modifiedEvent!,
+              whoCanReply: whoCanReply,
+            ),
+          );
+        } else {
+          unawaited(
+            notifier.create(
+              content: textEditorController.document.toDelta(),
+              parentEvent: parentEvent,
+              quotedEvent: quotedEvent,
+              mediaFiles: convertedMediaFiles,
+              whoCanReply: whoCanReply,
+            ),
+          );
+        }
+
+        if (onSubmitted != null) {
+          onSubmitted!();
+        } else if (context.mounted) {
+          ref.context.pop(true);
         }
       },
     );
-  }
-
-  Future<void> _handlePostSubmission(WidgetRef ref, BuildContext context) async {
-    final convertedMediaFiles = await ref
-        .read(mediaServiceProvider)
-        .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
-
-    final createPostNotifier = ref.read(
-      createPostNotifierProvider(createOption).notifier,
-    );
-
-    final whoCanReply = ref.read(selectedWhoCanReplyOptionProvider);
-    final content = textEditorController.document.toDelta();
-
-    if (modifiedEvent != null) {
-      await createPostNotifier.modify(
-        content: content,
-        mediaFiles: convertedMediaFiles,
-        mediaAttachments: mediaAttachments,
-        eventReference: modifiedEvent!,
-        whoCanReply: whoCanReply,
-      );
-    } else {
-      await createPostNotifier.create(
-        content: content,
-        parentEvent: parentEvent,
-        quotedEvent: quotedEvent,
-        mediaFiles: convertedMediaFiles,
-        whoCanReply: whoCanReply,
-      );
-    }
-
-    if (onSubmitted != null) {
-      onSubmitted!();
-    } else if (context.mounted) {
-      ref.context.pop(true);
-    }
   }
 }

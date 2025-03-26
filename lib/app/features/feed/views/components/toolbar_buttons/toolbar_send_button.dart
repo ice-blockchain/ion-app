@@ -9,18 +9,18 @@ class ToolbarSendButton extends StatelessWidget {
   const ToolbarSendButton({
     required this.onPressed,
     this.enabled = false,
-    this.isLoading = false,
+    this.loading = false,
     super.key,
   });
 
   final VoidCallback onPressed;
   final bool enabled;
-  final bool isLoading;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (enabled && !isLoading) ? onPressed : null,
+      onTap: enabled ? onPressed : null,
       child: Container(
         width: 48.0.s,
         height: 28.0.s,
@@ -30,7 +30,7 @@ class ToolbarSendButton extends StatelessWidget {
               enabled ? context.theme.appColors.primaryAccent : context.theme.appColors.sheetLine,
         ),
         alignment: Alignment.center,
-        child: isLoading
+        child: loading
             ? const IONLoadingIndicator()
             : Assets.svg.iconFeedSendbutton.icon(size: 20.0.s),
       ),
