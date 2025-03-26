@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _input =
-        'Advancements in artificial intelligence are revolutionizing industries by enabling faster data analysis and smarter decision-making.';
+        ' was tired of holding \$pi i sold and rested if youre tired of holding \$ice do the same and rest but coming here to throw shades eeewwwweeeeeeee i no go gree you ooo ehhhh baby';
     detectTextLanguage(_input!).then((language) => setState(() {
           _language = language;
         }));
