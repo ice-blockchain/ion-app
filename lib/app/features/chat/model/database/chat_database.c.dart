@@ -64,7 +64,7 @@ class ChatDatabase extends _$ChatDatabase {
   final String pubkey;
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -92,6 +92,10 @@ class ChatDatabase extends _$ChatDatabase {
             );
           },
           from3To4: (m, schema) async {
+            await m.createTable(schema.messageMediaTable);
+          },
+          from4To5: (m, schema) async {
+            await m.deleteTable(schema.messageMediaTable.actualTableName);
             await m.createTable(schema.messageMediaTable);
           },
         ),
