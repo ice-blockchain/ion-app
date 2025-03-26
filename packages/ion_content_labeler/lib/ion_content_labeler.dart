@@ -36,7 +36,7 @@ DynamicLibrary _loadFastTextLibrary() {
   if (Platform.isIOS) {
     return DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
   } else if (Platform.isAndroid) {
-    return DynamicLibrary.open('fasttext_predict.so');
+    return DynamicLibrary.open('libfasttext_predict.so');
   } else {
     throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
   }
