@@ -10,20 +10,48 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'video_player_provider.c.g.dart';
 
+@immutable
+class VideoControllerParams {
+  const VideoControllerParams({
+    required this.sourcePath,
+    this.uniqueId = '',
+    this.autoPlay = false,
+    this.looping = false,
+    this.options,
+  });
+
+  final String sourcePath;
+  final String
+      uniqueId; // an optional uniqueId parameter which should be used when needed independent controllers for the same sourcePath
+  final VideoPlayerOptions? options;
+  final bool autoPlay;
+  final bool looping;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VideoControllerParams &&
+          other.sourcePath == sourcePath &&
+          other.uniqueId == uniqueId;
+
+  @override
+  int get hashCode => sourcePath.hashCode ^ uniqueId.hashCode;
+}
+
 @riverpod
 Raw<CachedVideoPlayerPlusController> videoController(
   Ref ref,
-  String sourcePath, {
-  bool autoPlay = false,
-  bool looping = false,
-}) {
-  final controller = ref.read(videoPlayerControllerFactoryProvider(sourcePath)).createController();
+  VideoControllerParams params,
+) {
+  final controller = ref
+      .watch(videoPlayerControllerFactoryProvider(params.sourcePath))
+      .createController(params.options);
   var isInitialized = false;
 
   void handleInitialized() {
     if (!isInitialized && controller.value.isInitialized) {
       isInitialized = true;
-      controller.setLooping(looping);
+      controller.setLooping(params.looping);
 
       if (kIsWeb) {
         controller.setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
@@ -32,7 +60,7 @@ Raw<CachedVideoPlayerPlusController> videoController(
         controller.setVolume(isMuted ? 0 : 1);
       }
 
-      if (autoPlay) {
+      if (params.autoPlay) {
         controller.play();
       }
       ref.notifyListeners();
@@ -58,8 +86,8 @@ class VideoPlayerControllerFactory {
 
   final String sourcePath;
 
-  CachedVideoPlayerPlusController createController() {
-    final videoPlayerOptions = VideoPlayerOptions();
+  CachedVideoPlayerPlusController createController(VideoPlayerOptions? options) {
+    final videoPlayerOptions = options ?? VideoPlayerOptions();
 
     if (_isNetworkSource(sourcePath)) {
       return CachedVideoPlayerPlusController.networkUrl(

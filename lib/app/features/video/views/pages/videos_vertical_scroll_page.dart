@@ -32,6 +32,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
     required this.getVideosData,
     required this.onLoadMore,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
     super.key,
   });
 
@@ -39,6 +40,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
   final int initialMediaIndex;
   final EntitiesPagedDataState? Function() getVideosData;
   final void Function() onLoadMore;
+  final EventReference? framedEventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -125,6 +127,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           itemBuilder: (_, index) => VideoPage(
             video: flattenedVideos[index].entity,
             videoUrl: flattenedVideos[index].media.url,
+            framedEventReference: index == initialPage ? framedEventReference : null,
             onVideoEnded: () {
               if (index < flattenedVideos.length - 1) {
                 userPageController.nextPage(

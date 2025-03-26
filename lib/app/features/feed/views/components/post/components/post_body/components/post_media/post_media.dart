@@ -16,6 +16,7 @@ class PostMedia extends HookConsumerWidget {
   const PostMedia({
     required this.media,
     required this.eventReference,
+    this.framedEventReference,
     this.sidePadding,
     this.onVideoTap,
     super.key,
@@ -23,6 +24,7 @@ class PostMedia extends HookConsumerWidget {
 
   final List<MediaAttachment> media;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final double? sidePadding;
   final OnVideoTapCallback? onVideoTap;
 
@@ -50,6 +52,7 @@ class PostMedia extends HookConsumerWidget {
         aspectRatio: aspectRatio,
         eventReference: eventReference,
         onVideoTap: onVideoTap,
+        framedEventReference: framedEventReference,
       );
     }
 
@@ -60,6 +63,7 @@ class PostMedia extends HookConsumerWidget {
         aspectRatio: aspectRatio,
         eventReference: eventReference,
         onVideoTap: onVideoTap,
+        framedEventReference: framedEventReference,
       ),
     );
   }

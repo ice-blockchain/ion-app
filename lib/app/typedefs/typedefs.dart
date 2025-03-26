@@ -3,4 +3,5 @@
 typedef OnVideoTapCallback = void Function({
   required String eventReference,
   required int initialMediaIndex,
+  String? framedEventReference,
 });

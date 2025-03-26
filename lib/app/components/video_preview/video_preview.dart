@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/hooks/use_route_presence.dart';
 import 'package:ion/app/utils/date.dart';
@@ -19,23 +20,27 @@ class VideoPreview extends HookConsumerWidget {
   const VideoPreview({
     required this.videoUrl,
     this.thumbnailUrl,
-    this.videoController,
+    this.framedEventReference,
     super.key,
   });
 
   final String videoUrl;
   final String? thumbnailUrl;
-  final CachedVideoPlayerPlusController? videoController;
+  final EventReference? framedEventReference;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = videoController ??
-        ref.watch(
-          videoControllerProvider(
-            videoUrl,
-            looping: true,
-          ),
-        )!;
+    final uniqueId = useRef(UniqueKey().toString());
+
+    final controller = ref.watch(
+      videoControllerProvider(
+        VideoControllerParams(
+          sourcePath: videoUrl,
+          looping: true,
+          uniqueId: framedEventReference?.encode() ?? '',
+        ), //, uniqueId: uniqueId.value
+      ),
+    );
     final isFullyVisible = useState(false);
     final isRouteFocused = useState(true);
     useRoutePresence(
@@ -83,7 +88,7 @@ class VideoPreview extends HookConsumerWidget {
     );
 
     return VisibilityDetector(
-      key: ValueKey(controller.dataSource),
+      key: ValueKey(uniqueId),
       onVisibilityChanged: handleVisibilityChanged,
       child: Stack(
         children: [

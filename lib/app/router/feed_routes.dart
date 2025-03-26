@@ -295,10 +295,16 @@ class TrendingVideosRoute extends BaseRouteData {
 }
 
 class FeedVideosRoute extends BaseRouteData {
-  FeedVideosRoute({required this.eventReference, this.initialMediaIndex = 0})
-      : super(
+  FeedVideosRoute({
+    required this.eventReference,
+    this.initialMediaIndex = 0,
+    this.framedEventReference,
+  }) : super(
           child: FeedVideosPage(
             eventReference: EventReference.fromEncoded(eventReference),
+            framedEventReference: framedEventReference != null
+                ? EventReference.fromEncoded(framedEventReference)
+                : null,
             initialMediaIndex: initialMediaIndex,
           ),
           type: IceRouteType.swipeDismissible,
@@ -306,6 +312,7 @@ class FeedVideosRoute extends BaseRouteData {
 
   final String eventReference;
   final int initialMediaIndex;
+  final String? framedEventReference;
 }
 
 class FeedAdvancedSearchVideosRoute extends BaseRouteData {
@@ -314,12 +321,16 @@ class FeedAdvancedSearchVideosRoute extends BaseRouteData {
     required this.query,
     required this.category,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
   }) : super(
           child: FeedAdvancedSearchVideosPage(
             query: query,
             category: category,
             eventReference: EventReference.fromEncoded(eventReference),
             initialMediaIndex: initialMediaIndex,
+            framedEventReference: framedEventReference != null
+                ? EventReference.fromEncoded(framedEventReference)
+                : null,
           ),
           type: IceRouteType.swipeDismissible,
         );
@@ -328,6 +339,7 @@ class FeedAdvancedSearchVideosRoute extends BaseRouteData {
   final AdvancedSearchCategory category;
   final String eventReference;
   final int initialMediaIndex;
+  final String? framedEventReference;
 }
 
 class ReplyListVideosRoute extends BaseRouteData {
@@ -335,11 +347,15 @@ class ReplyListVideosRoute extends BaseRouteData {
     required this.eventReference,
     required this.parentEventReference,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
   }) : super(
           child: ReplyListVideosPage(
             eventReference: EventReference.fromEncoded(eventReference),
             initialMediaIndex: initialMediaIndex,
             parentEventReference: EventReference.fromEncoded(parentEventReference),
+            framedEventReference: framedEventReference != null
+                ? EventReference.fromEncoded(framedEventReference)
+                : null,
           ),
           type: IceRouteType.swipeDismissible,
         );
@@ -347,20 +363,26 @@ class ReplyListVideosRoute extends BaseRouteData {
   final String parentEventReference;
   final String eventReference;
   final int initialMediaIndex;
+  final String? framedEventReference;
 }
 
 class FullscreenMediaRoute extends BaseRouteData {
   FullscreenMediaRoute({
     required this.initialMediaIndex,
     required this.eventReference,
+    this.framedEventReference,
   }) : super(
           child: FullscreenMediaPage(
             initialMediaIndex: initialMediaIndex,
             eventReference: EventReference.fromEncoded(eventReference),
+            framedEventReference: framedEventReference != null
+                ? EventReference.fromEncoded(framedEventReference)
+                : null,
           ),
           type: IceRouteType.swipeDismissible,
         );
 
   final int initialMediaIndex;
   final String eventReference;
+  final String? framedEventReference;
 }

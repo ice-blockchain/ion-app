@@ -16,11 +16,13 @@ class MediaContentHandler extends HookConsumerWidget {
     required this.post,
     required this.eventReference,
     required this.initialMediaIndex,
+    this.framedEventReference,
     super.key,
   });
 
   final ModifiablePostEntity post;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final int initialMediaIndex;
 
   static List<MediaAttachment> _filterKnownMedia(List<MediaAttachment> media) {
@@ -53,6 +55,7 @@ class MediaContentHandler extends HookConsumerWidget {
         post: post,
         media: selectedMedia,
         eventReference: eventReference,
+        framedEventReference: framedEventReference,
       );
     }
 
@@ -65,6 +68,7 @@ class MediaContentHandler extends HookConsumerWidget {
             videos: filteredMedia,
             initialIndex: startIndex,
             eventReference: eventReference,
+            framedEventReference: framedEventReference,
           )
         : ImageCarousel(
             images: filteredMedia,

@@ -10,10 +10,12 @@ class FeedVideosPage extends HookConsumerWidget {
   const FeedVideosPage({
     required this.eventReference,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
     super.key,
   });
 
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final int initialMediaIndex;
 
   @override
@@ -21,6 +23,7 @@ class FeedVideosPage extends HookConsumerWidget {
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       initialMediaIndex: initialMediaIndex,
+      framedEventReference: framedEventReference,
       getVideosData: () => ref.watch(feedPostsProvider),
       onLoadMore: () => ref.read(feedPostsProvider.notifier).loadMore(),
     );

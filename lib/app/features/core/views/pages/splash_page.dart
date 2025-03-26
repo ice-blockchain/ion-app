@@ -22,16 +22,29 @@ class SplashPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     _setSystemChrome();
 
+    final options = VideoPlayerOptions(mixWithOthers: true);
     final splashVideoController = ref.watch(
-      videoControllerProvider(Assets.videos.logoStatic, autoPlay: true),
+      videoControllerProvider(
+        VideoControllerParams(
+          sourcePath: Assets.videos.logoStatic,
+          autoPlay: true,
+          options: options,
+        ),
+      ),
     );
 
     // We watch the intro video controller here to initialize the intro video in advance.
     // This ensures a seamless transition to the IntroPage without flickering or delays.
     ref
-      ..watch(videoControllerProvider(Assets.videos.intro, looping: true))
+      ..watch(
+        videoControllerProvider(
+          VideoControllerParams(sourcePath: Assets.videos.intro, autoPlay: true, options: options),
+        ),
+      )
       ..listen<CachedVideoPlayerPlusController>(
-        videoControllerProvider(Assets.videos.logoStatic, autoPlay: true),
+        videoControllerProvider(
+          VideoControllerParams(sourcePath: Assets.videos.logoStatic),
+        ),
         (previous, controller) {
           void onSplashVideoComplete() {
             if (controller.value.position >= controller.value.duration ||

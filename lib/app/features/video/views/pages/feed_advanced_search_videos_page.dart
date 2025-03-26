@@ -14,12 +14,14 @@ class FeedAdvancedSearchVideosPage extends HookConsumerWidget {
     required this.category,
     required this.eventReference,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
     super.key,
   });
 
   final String query;
   final AdvancedSearchCategory category;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final int initialMediaIndex;
 
   @override
@@ -31,6 +33,7 @@ class FeedAdvancedSearchVideosPage extends HookConsumerWidget {
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       initialMediaIndex: initialMediaIndex,
+      framedEventReference: framedEventReference,
       getVideosData: () => ref.watch(entitiesPagedDataProvider(dataSource)),
       onLoadMore: () => ref.read(entitiesPagedDataProvider(dataSource).notifier).fetchEntities(),
     );

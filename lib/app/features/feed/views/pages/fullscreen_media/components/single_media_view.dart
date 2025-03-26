@@ -15,12 +15,14 @@ class SingleMediaView extends StatelessWidget {
     required this.post,
     required this.media,
     required this.eventReference,
+    this.framedEventReference,
     super.key,
   });
 
   final ModifiablePostEntity post;
   final MediaAttachment media;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class SingleMediaView extends StatelessWidget {
     return media.mediaType == MediaType.video
         ? VideoPage(
             video: post,
+            framedEventReference: framedEventReference,
             looping: true,
           )
         : Column(

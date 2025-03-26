@@ -32,6 +32,7 @@ enum FramedEventType { parent, quoted, none }
 class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
+    this.parentEventReference,
     this.framedEventType = FramedEventType.quoted,
     this.timeFormat = TimestampFormat.short,
     this.topOffset,
@@ -47,6 +48,7 @@ class Post extends ConsumerWidget {
   });
 
   final EventReference eventReference;
+  final EventReference? parentEventReference;
   final FramedEventType framedEventType;
   final double? topOffset;
   final double? headerOffset;
@@ -84,6 +86,7 @@ class Post extends ConsumerWidget {
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
           onVideoTap: onVideoTap,
+          framedEventReference: parentEventReference ?? framedEventReference,
         ),
         ScreenSideOffset.small(
           child: Column(

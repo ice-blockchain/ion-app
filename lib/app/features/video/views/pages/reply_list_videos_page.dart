@@ -11,11 +11,13 @@ class ReplyListVideosPage extends HookConsumerWidget {
     required this.parentEventReference,
     required this.eventReference,
     this.initialMediaIndex = 0,
+    this.framedEventReference,
     super.key,
   });
 
   final EventReference parentEventReference;
   final EventReference eventReference;
+  final EventReference? framedEventReference;
   final int initialMediaIndex;
 
   @override
@@ -23,6 +25,7 @@ class ReplyListVideosPage extends HookConsumerWidget {
     return VideosVerticalScrollPage(
       eventReference: eventReference,
       initialMediaIndex: initialMediaIndex,
+      framedEventReference: framedEventReference,
       getVideosData: () => ref.watch(repliesProvider(parentEventReference)),
       onLoadMore: () =>
           ref.read(repliesProvider(parentEventReference).notifier).loadMore(parentEventReference),

@@ -197,8 +197,11 @@ class VideoPlayerTab extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final remoteVideoController = ref.watch(
       videoControllerProvider(
-        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        looping: true,
+        const VideoControllerParams(
+          sourcePath:
+              'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          looping: true,
+        ),
       ),
     );
 
