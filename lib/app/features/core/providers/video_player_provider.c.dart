@@ -44,7 +44,7 @@ Raw<CachedVideoPlayerPlusController> videoController(
   VideoControllerParams params,
 ) {
   final controller = ref
-      .read(videoPlayerControllerFactoryProvider(params.sourcePath))
+      .watch(videoPlayerControllerFactoryProvider(params.sourcePath))
       .createController(params.options);
   var isInitialized = false;
 
