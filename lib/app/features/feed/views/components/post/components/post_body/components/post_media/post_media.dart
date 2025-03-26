@@ -34,7 +34,13 @@ class PostMedia extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final knownMedia = useMemoized(() => _filterKnownMedia(media));
+    final knownMedia = useMemoized(
+      () => _filterKnownMedia(media),
+      [
+        media,
+        media.map((m) => m.url).join(),
+      ],
+    );
 
     final aspectRatio = useMemoized(
       () => attachedMediaAspectRatio(

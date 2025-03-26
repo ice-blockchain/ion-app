@@ -44,6 +44,7 @@ class IonConnectCache extends _$IonConnectCache {
       entity: entity,
       createdAt: DateTime.now(),
     );
+
     state = {...state, entity.cacheKey: entry};
 
     _ionConnectCacheStreamController.sink.add(entity);

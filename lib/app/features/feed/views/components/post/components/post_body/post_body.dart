@@ -48,7 +48,10 @@ class PostBody extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final (:content, :media) = useParsedMediaContent(data: postData);
+    final (:content, :media) = useParsedMediaContent(
+      data: postData,
+      key: ValueKey(postData.hashCode),
+    );
 
     final firstLinkOperation = useMemoized(
       () => content.operations.firstWhereOrNull(

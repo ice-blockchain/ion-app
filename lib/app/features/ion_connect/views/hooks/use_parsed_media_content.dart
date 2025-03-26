@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
@@ -13,10 +14,11 @@ import 'package:ion/app/services/markdown/quill.dart';
 /// and List of media attachments, extracted from the content.
 ({Delta content, List<MediaAttachment> media}) useParsedMediaContent({
   required EntityDataWithMediaContent data,
+  Key? key,
 }) {
   return useMemoized(
     () => parseMediaContent(data: data),
-    [data],
+    [data, key],
   );
 }
 
