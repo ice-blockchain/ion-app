@@ -12,7 +12,6 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
-import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -134,25 +133,19 @@ class BottomBarInitialView extends HookConsumerWidget {
               SizedBox(width: 6.0.s),
               if (!bottomBarState.isHasText)
                 PermissionAwareWidget(
-                  permissionType: Permission.camera,
+                  permissionType: Permission.photos,
                   onGranted: () async {
-                    final recordedVideoAsset =
-                        await GalleryCameraRoute(mediaPickerType: MediaPickerType.video)
-                            .push<MediaFile?>(context);
-
-                    if (recordedVideoAsset != null) {
-                      final convertedVideos = await ref
+                    final mediaFiles = await MediaPickerRoute().push<List<MediaFile>>(context);
+                    if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+                      final convertedMediaFiles = await ref
                           .read(mediaServiceProvider)
-                          .convertAssetIdsToMediaFiles(ref, mediaFiles: [recordedVideoAsset]);
+                          .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
-                      if (convertedVideos.isNotEmpty) {
-                        unawaited(onSubmitted(mediaFiles: [convertedVideos.first]));
-                        ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
-                      }
+                      unawaited(onSubmitted(mediaFiles: convertedMediaFiles));
                     }
                   },
-                  requestDialog: const PermissionRequestSheet(permission: Permission.camera),
-                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.camera),
+                  requestDialog: const PermissionRequestSheet(permission: Permission.photos),
+                  settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
                   builder: (_, onPressed) => GestureDetector(
                     onTap: onPressed,
                     child: Padding(
