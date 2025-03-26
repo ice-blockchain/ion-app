@@ -23,8 +23,8 @@ import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class PostEditorModal extends HookConsumerWidget {
-  const PostEditorModal._({
+class PostFormModal extends HookConsumerWidget {
+  const PostFormModal._({
     required this.createOption,
     super.key,
     this.parentEvent,
@@ -35,12 +35,12 @@ class PostEditorModal extends HookConsumerWidget {
     this.attachedMedia,
   });
 
-  factory PostEditorModal.createPost({
+  factory PostFormModal.createPost({
     Key? key,
     String? content,
     String? attachedMedia,
   }) {
-    return PostEditorModal._(
+    return PostFormModal._(
       key: key,
       createOption: CreatePostOption.plain,
       content: content,
@@ -48,13 +48,13 @@ class PostEditorModal extends HookConsumerWidget {
     );
   }
 
-  factory PostEditorModal.editPost({
+  factory PostFormModal.editPost({
     required EventReference modifiedEvent,
     Key? key,
     String? content,
     String? attachedMedia,
   }) {
-    return PostEditorModal._(
+    return PostFormModal._(
       key: key,
       createOption: CreatePostOption.modify,
       modifiedEvent: modifiedEvent,
@@ -63,13 +63,13 @@ class PostEditorModal extends HookConsumerWidget {
     );
   }
 
-  factory PostEditorModal.createReply({
+  factory PostFormModal.createReply({
     required EventReference parentEvent,
     Key? key,
     String? content,
     String? attachedMedia,
   }) {
-    return PostEditorModal._(
+    return PostFormModal._(
       key: key,
       createOption: CreatePostOption.reply,
       parentEvent: parentEvent,
@@ -78,14 +78,14 @@ class PostEditorModal extends HookConsumerWidget {
     );
   }
 
-  factory PostEditorModal.editReply({
+  factory PostFormModal.editReply({
     required EventReference parentEvent,
     required EventReference modifiedEvent,
     Key? key,
     String? content,
     String? attachedMedia,
   }) {
-    return PostEditorModal._(
+    return PostFormModal._(
       key: key,
       createOption: CreatePostOption.reply,
       parentEvent: parentEvent,
@@ -95,13 +95,13 @@ class PostEditorModal extends HookConsumerWidget {
     );
   }
 
-  factory PostEditorModal.createQuote({
+  factory PostFormModal.createQuote({
     required EventReference quotedEvent,
     Key? key,
     String? content,
     String? attachedMedia,
   }) {
-    return PostEditorModal._(
+    return PostFormModal._(
       key: key,
       createOption: CreatePostOption.quote,
       quotedEvent: quotedEvent,
@@ -110,14 +110,14 @@ class PostEditorModal extends HookConsumerWidget {
     );
   }
 
-  factory PostEditorModal.editQuote({
+  factory PostFormModal.editQuote({
     required EventReference quotedEvent,
     required EventReference modifiedEvent,
     Key? key,
     String? content,
     String? attachedMedia,
   }) {
-    return PostEditorModal._(
+    return PostFormModal._(
       key: key,
       createOption: CreatePostOption.quote,
       quotedEvent: quotedEvent,
@@ -127,12 +127,12 @@ class PostEditorModal extends HookConsumerWidget {
     );
   }
 
-  factory PostEditorModal.video({
+  factory PostFormModal.video({
     required String videoPath,
     Key? key,
     String? content,
   }) {
-    return PostEditorModal._(
+    return PostFormModal._(
       key: key,
       createOption: CreatePostOption.video,
       videoPath: videoPath,

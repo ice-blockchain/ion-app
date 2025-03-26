@@ -168,7 +168,7 @@ class CreatePostRoute extends BaseRouteData {
     this.content,
     this.attachedMedia,
   }) : super(
-          child: PostEditorModal.createPost(
+          child: PostFormModal.createPost(
             content: content,
             attachedMedia: attachedMedia,
           ),
@@ -185,7 +185,7 @@ class EditPostRoute extends BaseRouteData {
     this.content,
     this.attachedMedia,
   }) : super(
-          child: PostEditorModal.editPost(
+          child: PostFormModal.editPost(
             modifiedEvent: EventReference.fromEncoded(modifiedEvent),
             content: content,
             attachedMedia: attachedMedia,
@@ -204,7 +204,7 @@ class CreateReplyRoute extends BaseRouteData {
     this.content,
     this.attachedMedia,
   }) : super(
-          child: PostEditorModal.createReply(
+          child: PostFormModal.createReply(
             parentEvent: EventReference.fromEncoded(parentEvent),
             content: content,
             attachedMedia: attachedMedia,
@@ -224,7 +224,7 @@ class EditReplyRoute extends BaseRouteData {
     this.content,
     this.attachedMedia,
   }) : super(
-          child: PostEditorModal.editReply(
+          child: PostFormModal.editReply(
             parentEvent: EventReference.fromEncoded(parentEvent),
             modifiedEvent: EventReference.fromEncoded(modifiedEvent),
             content: content,
@@ -245,7 +245,7 @@ class CreateQuoteRoute extends BaseRouteData {
     this.content,
     this.attachedMedia,
   }) : super(
-          child: PostEditorModal.createQuote(
+          child: PostFormModal.createQuote(
             quotedEvent: EventReference.fromEncoded(quotedEvent),
             content: content,
             attachedMedia: attachedMedia,
@@ -265,7 +265,7 @@ class EditQuoteRoute extends BaseRouteData {
     this.content,
     this.attachedMedia,
   }) : super(
-          child: PostEditorModal.editQuote(
+          child: PostFormModal.editQuote(
             quotedEvent: EventReference.fromEncoded(quotedEvent),
             modifiedEvent: EventReference.fromEncoded(modifiedEvent),
             content: content,
@@ -285,7 +285,7 @@ class CreateVideoRoute extends BaseRouteData {
     required this.videoPath,
     this.content,
   }) : super(
-          child: PostEditorModal.video(
+          child: PostFormModal.video(
             videoPath: videoPath,
             content: content,
           ),
