@@ -14,14 +14,14 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
+import 'package:ion/app/services/media_service/blurhash_service.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/utils/blurhash.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'send_chat_media_provider.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SendChatMedia extends _$SendChatMedia {
   CancelableOperation<AsyncValue<List<MediaAttachment>>>? _cancellableOperation;
 
@@ -88,12 +88,12 @@ class SendChatMedia extends _$SendChatMedia {
     final isVideo = mediaFile.mimeType?.startsWith('video/') ?? false;
     final isImage = mediaFile.mimeType?.startsWith('image/') ?? false;
 
-    var blurHash = await generateBlurhash(mediaFile);
+    var blurHash = await ref.read(generateBlurhashProvider(mediaFile));
     String? thumbUrl;
 
     if (isVideo) {
       final thumbMediaFile = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
-      blurHash = await generateBlurhash(thumbMediaFile);
+      blurHash = await ref.read(generateBlurhashProvider(thumbMediaFile));
       final thumbMediaAttachment = (await _processMedia(thumbMediaFile, masterPubkey)).first;
       mediaAttachments.add(thumbMediaAttachment);
       thumbUrl = thumbMediaAttachment.url;
