@@ -17,7 +17,6 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/co
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_url_links.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 
@@ -52,13 +51,11 @@ class CreatePostContent extends StatelessWidget {
           children: [
             _VideoPreviewSection(attachedVideoNotifier: attachedVideoNotifier),
             if (parentEvent != null) _ParentEntitySection(eventReference: parentEvent!),
-            KeyboardVisibilityProvider(
-              child: _TextInputSection(
-                textEditorController: textEditorController,
-                createOption: createOption,
-                attachedMediaNotifier: attachedMediaNotifier,
-                attachedMediaLinksNotifier: attachedMediaLinksNotifier,
-              ),
+            _TextInputSection(
+              textEditorController: textEditorController,
+              createOption: createOption,
+              attachedMediaNotifier: attachedMediaNotifier,
+              attachedMediaLinksNotifier: attachedMediaLinksNotifier,
             ),
             if (quotedEvent != null) _QuotedEntitySection(eventReference: quotedEvent!),
           ],
@@ -118,10 +115,10 @@ class _TextInputSection extends HookConsumerWidget {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
     final textEditorKey = useMemoized(TextEditorKeys.createPost);
-    final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
-    useOnInit(
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    useEffect(
       () {
-        if (textEditorKey.currentContext != null && isKeyboardVisible) {
+        if (bottomInset > 0 && textEditorKey.currentContext != null) {
           Future.delayed(const Duration(milliseconds: 300), () {
             Scrollable.ensureVisible(
               textEditorKey.currentContext!,
@@ -130,8 +127,9 @@ class _TextInputSection extends HookConsumerWidget {
             );
           });
         }
+        return null;
       },
-      [isKeyboardVisible],
+      [bottomInset],
     );
 
     final links = useUrlLinks(
