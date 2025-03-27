@@ -7,6 +7,12 @@ void main() {
   runApp(const MyApp());
 }
 
+final _initialInput =
+    '''Trump is trying to deport a Columbia Univ. student who has been a permanent resident in the U.S. since she was 7.
+Her "crime"?
+Attending a protest against the war in Gaza.
+No, Mr. President. This is a democracy. You can't exile political dissidents. Not in the United States.''';
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -15,7 +21,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String? _input;
+  IonTextLabeler? _languageLabeler;
+  IonTextLabeler? _categoryLabeler;
+
+  final TextEditingController _controller = TextEditingController(text: _initialInput);
 
   String? _normalizedInput;
 
@@ -26,20 +35,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    final labeler = IonTextLabeler();
-    _input =
-        '''Trump is trying to deport a Columbia Univ. student who has been a permanent resident in the U.S. since she was 7.
-Her "crime"?
-Attending a protest against the war in Gaza.
-No, Mr. President. This is a democracy. You can't exile political dissidents. Not in the United States.''';
-    labeler.detectTextLanguage(_input!).then((result) => setState(() {
-          _language = result.labels.join('\n');
-          _normalizedInput = result.input;
-        }));
-    labeler.detectTextCategory(_input!).then((result) => setState(() {
-          _labels = result.labels.join('\n');
-          _normalizedInput = result.input;
-        }));
+    // IonTextLabeler.create(TextLabelerType.language).then((labeler) => _languageLabeler = labeler);
+    // IonTextLabeler.create(TextLabelerType.category).then((labeler) => _categoryLabeler = labeler);
   }
 
   @override
@@ -55,7 +52,11 @@ No, Mr. President. This is a democracy. You can't exile political dissidents. No
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Input text is:\n$_input'),
+                TextField(controller: _controller),
+                ElevatedButton(
+                  onPressed: _onButtonPressed,
+                  child: Text('run'),
+                ),
                 SizedBox(height: 10),
                 if (_normalizedInput != null) ...[
                   Text('Normalized input is:\n$_normalizedInput'),
@@ -69,5 +70,22 @@ No, Mr. President. This is a democracy. You can't exile political dissidents. No
         ),
       ),
     );
+  }
+
+  void _onButtonPressed() {
+    setState(() {
+      _normalizedInput = null;
+      _language = null;
+      _labels = null;
+    });
+    final input = _controller.text;
+    _languageLabeler?.detect(input).then((result) => setState(() {
+          _language = result.labels.join('\n');
+          _normalizedInput = result.input;
+        }));
+    _categoryLabeler?.detect(input).then((result) => setState(() {
+          _labels = result.labels.join('\n');
+          _normalizedInput = result.input;
+        }));
   }
 }

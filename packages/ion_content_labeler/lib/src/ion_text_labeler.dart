@@ -10,31 +10,41 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:ion_content_labeler/ion_content_labeler.dart';
 
-//TODO:load model per instance, add downloading models, use predict in isolate
+enum TextLabelerType {
+  language,
+  category,
+}
+
+//TODO:add downloading models, use predict in isolate
 class IonTextLabeler {
-  Future<TextLabelerResult> detectTextLanguage(String content) async {
+  IonTextLabeler._(this._loadModel, this._predict);
+
+  final void Function(String path) _loadModel;
+
+  final List<Label> Function(String content) _predict;
+
+  static Future<IonTextLabeler> create() async {
     final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
-    final modelPath = await _getAssetFilePath(name: 'language_identification.176.ftz');
-    loadModel(modelPath);
-    final input = _normalizeInput(content);
+    return IonTextLabeler._(loadModel, predict);
+  }
+
+  Future<TextLabelerResult> detect(String input, {required TextLabelerType type}) async {
+    //TODO:add abstract Model class that will resolve it's path
+    final modelName = switch (type) {
+      TextLabelerType.language => 'language_identification.176.ftz',
+      TextLabelerType.category => 'labeling_3.ftz',
+    };
+    final modelPath = await _getAssetFilePath(name: modelName);
+    _loadModel(modelPath);
+
+    final normalizedInput = _normalizeInput(input);
     return TextLabelerResult(
-      input: input,
-      labels: predict(input),
+      input: normalizedInput,
+      labels: _predict(input).map(_normalizeLabel).toList(),
     );
   }
 
-  Future<TextLabelerResult> detectTextCategory(String content) async {
-    final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
-    final modelPath = await _getAssetFilePath(name: 'labeling_3.ftz');
-    loadModel(modelPath);
-    final input = _normalizeInput(content);
-    return TextLabelerResult(
-      input: input,
-      labels: predict(input),
-    );
-  }
-
-  Future<String> _getAssetFilePath({required String name}) async {
+  static Future<String> _getAssetFilePath({required String name}) async {
     final byteData = await rootBundle.load('assets/$name');
 
     final directory = await getApplicationDocumentsDirectory();
@@ -46,7 +56,7 @@ class IonTextLabeler {
     return file.path;
   }
 
-  DynamicLibrary _loadFastTextLibrary() {
+  static DynamicLibrary _loadFastTextLibrary() {
     if (Platform.isIOS) {
       return DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
     } else if (Platform.isAndroid) {
@@ -56,7 +66,7 @@ class IonTextLabeler {
     }
   }
 
-  Label _normalizeLabel(Label label) {
+  static Label _normalizeLabel(Label label) {
     return label.copyWith(name: label.name.replaceFirst('__label__', ''));
   }
 
@@ -68,7 +78,8 @@ class IonTextLabeler {
         .trim();
   }
 
-  ({
+  //TODO: make those non static
+  static ({
     void Function(String path) loadModel,
     List<Label> Function(String content) predict,
   }) _loadFastTextLibrarySymbols() {
@@ -92,7 +103,7 @@ class IonTextLabeler {
         calloc.free(inputUtf8);
         calloc.free(outputPrediction);
         return (jsonDecode(predictions) as List<dynamic>)
-            .map((prediction) => _normalizeLabel(Label.fromMap(prediction)))
+            .map((prediction) => Label.fromMap(prediction))
             .toList();
       },
     );
