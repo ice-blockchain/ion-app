@@ -449,7 +449,7 @@ SPEC CHECKSUMS:
   icloud_storage: d9ac7a33ced81df08ba7ea1bf3099cc0ee58f60a
   image_cropper: 37d40f62177c101ff4c164906d259ea2c3aa70cf
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
-  ion_content_labeler: 4effbafd5c044e76d74d372c82d5e11e03847f79
+  ion_content_labeler: 4bd5aad82774177354943482eb8cbc8376adb192
   ion_screenshot_detector: bd85296e1347b5bf5acf71407a6d9b7933bfe604
   local_auth_crypto: 3ee858ca5d40c9da56dcd1fe8d814e92438a9371
   local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
