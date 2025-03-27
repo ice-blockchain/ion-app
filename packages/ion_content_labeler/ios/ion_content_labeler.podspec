@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 The plugin might be used to analyze the input text and produce corresponding labels, such as the detected language and content categories
                        DESC
   s.homepage         = 'https://ice.io'
-  s.license          = { :file => '../../../LICENSE.txt' }
+  s.license          = { :file => '../LICENSE' }
   s.author           = { 'ice Labs Limited' => 'hi@ice.io' }
 
   # This will ensure the source files in Classes/ are included in the native
