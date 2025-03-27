@@ -151,14 +151,20 @@ class _ActionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isVideo = createOption == CreatePostOption.video;
+
     return ScreenSideOffset.small(
       child: ActionsToolbar(
         actions: [
           ToolbarImageButton(
             delegate: AttachedMediaHandler(attachedMediaNotifier),
-            maxImages: ModifiablePostEntity.contentMediaLimit,
+            maxImages: isVideo ? 1 : ModifiablePostEntity.contentMediaLimit,
+            enabled: !isVideo,
           ),
-          ToolbarPollButton(textEditorController: textEditorController),
+          ToolbarPollButton(
+            textEditorController: textEditorController,
+            enabled: !isVideo,
+          ),
           ToolbarRegularButton(textEditorController: textEditorController),
           ToolbarItalicButton(textEditorController: textEditorController),
           ToolbarBoldButton(textEditorController: textEditorController),

@@ -12,11 +12,13 @@ class ToolbarPollButton extends HookWidget {
   const ToolbarPollButton({
     required this.textEditorController,
     this.onPressed,
+    this.enabled = true,
     super.key,
   });
 
   final QuillController textEditorController;
   final VoidCallback? onPressed;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class ToolbarPollButton extends HookWidget {
 
     return ActionsToolbarButton(
       icon: Assets.svg.iconPostPoll,
-      enabled: !hasPoll,
+      enabled: !hasPoll && enabled,
       onPressed: () {
         final index = textEditorController.selection.baseOffset;
 
