@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
 
   String? _language;
 
-  String? _category;
+  String? _labels;
 
   @override
   void initState() {
@@ -33,11 +33,11 @@ Her "crime"?
 Attending a protest against the war in Gaza.
 No, Mr. President. This is a democracy. You can't exile political dissidents. Not in the United States.''';
     labeler.detectTextLanguage(_input!).then((result) => setState(() {
-          _language = result.labels.first;
+          _language = result.labels.join('\n');
           _normalizedInput = result.input;
         }));
     labeler.detectTextCategory(_input!).then((result) => setState(() {
-          _category = result.labels.first;
+          _labels = result.labels.join('\n');
           _normalizedInput = result.input;
         }));
   }
@@ -62,7 +62,7 @@ No, Mr. President. This is a democracy. You can't exile political dissidents. No
                   SizedBox(height: 10)
                 ],
                 if (_language != null) ...[Text('Language is:\n$_language'), SizedBox(height: 10)],
-                if (_category != null) ...[Text('Category is:\n$_category'), SizedBox(height: 10)],
+                if (_labels != null) ...[Text('Labels are:\n$_labels'), SizedBox(height: 10)],
               ],
             ),
           ),

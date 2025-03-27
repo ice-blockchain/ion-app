@@ -1,10 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 import 'package:flutter/services.dart';
-import 'package:ion_content_labeler/ion_content_labeler.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:ion_content_labeler/ion_content_labeler.dart';
 
 //TODO:load model per instance
 class IonTextLabeler {
@@ -15,7 +18,7 @@ class IonTextLabeler {
     final input = _normalizeInput(content);
     return TextLabelerResult(
       input: input,
-      labels: predict(input).split(';'),
+      labels: predict(input),
     );
   }
 
@@ -26,7 +29,7 @@ class IonTextLabeler {
     final input = _normalizeInput(content);
     return TextLabelerResult(
       input: input,
-      labels: predict(input).split(';'),
+      labels: predict(input),
     );
   }
 
@@ -52,8 +55,8 @@ class IonTextLabeler {
     }
   }
 
-  String _normalizeOutput(String output) {
-    return output.replaceFirst('__label__', '');
+  Label _normalizeLabel(Label label) {
+    return label.copyWith(name: label.name.replaceFirst('__label__', ''));
   }
 
   String _normalizeInput(String input) {
@@ -62,7 +65,7 @@ class IonTextLabeler {
 
   ({
     void Function(String path) loadModel,
-    String Function(String content) predict,
+    List<Label> Function(String content) predict,
   }) _loadFastTextLibrarySymbols() {
     final lib = _loadFastTextLibrary();
     return (
@@ -78,12 +81,14 @@ class IonTextLabeler {
         final predictFn = lib.lookupFunction<Void Function(Pointer<Utf8> str, Pointer<Utf8> output),
             void Function(Pointer<Utf8> str, Pointer<Utf8> output)>('predict');
         final inputUtf8 = input.toNativeUtf8();
-        Pointer<Utf8> outputPrediction = calloc.allocate(128);
+        Pointer<Utf8> outputPrediction = calloc.allocate(256);
         predictFn(inputUtf8, outputPrediction);
-        final prediction = outputPrediction.toDartString();
+        final predictions = outputPrediction.toDartString();
         calloc.free(inputUtf8);
         calloc.free(outputPrediction);
-        return _normalizeOutput(prediction);
+        return (jsonDecode(predictions) as List<dynamic>)
+            .map((prediction) => _normalizeLabel(Label.fromMap(prediction)))
+            .toList();
       },
     );
   }

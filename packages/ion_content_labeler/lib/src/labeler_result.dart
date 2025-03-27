@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:ion_content_labeler/ion_content_labeler.dart';
 
 abstract class LabelerResult {
-  List<String> get labels;
+  List<Label> get labels;
 }
 
 class TextLabelerResult implements LabelerResult {
   @override
-  final List<String> labels;
+  final List<Label> labels;
 
   final String input;
 
@@ -29,7 +30,7 @@ class TextLabelerResult implements LabelerResult {
   String toString() => 'TextLabelerResult(labels: $labels, input: $input)';
 
   TextLabelerResult copyWith({
-    List<String>? labels,
+    List<Label>? labels,
     String? input,
   }) {
     return TextLabelerResult(
