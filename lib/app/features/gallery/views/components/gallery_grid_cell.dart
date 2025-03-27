@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/views/pages/upload_limit_reached_modal/upload_limit_reached_modal.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/media_selection_provider.c.dart';
 import 'package:ion/app/features/gallery/views/components/components.dart';
 import 'package:ion/app/features/gallery/views/components/duration_badge.dart';
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
+import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
@@ -37,24 +41,35 @@ class GalleryGridCell extends ConsumerWidget {
     );
     final isDisabled = !selectionState.isSelected && maxNumberOfMediaSelected;
 
+    final maxVideoDurationInSeconds = ref.watch(
+      mediaSelectionNotifierProvider.select((state) => state.maxVideoDurationInSeconds),
+    );
+
     return SizedBox(
       width: cellWidth,
       height: cellHeight,
-      child: GestureDetector(
-        onTap: isDisabled
-            ? null
-            : () {
-                ref
-                    .read(mediaSelectionNotifierProvider.notifier)
-                    .toggleSelection(mediaFile.path, type: type);
-              },
-        child: assetEntityAsync.maybeWhen(
-          data: (asset) {
-            if (asset == null) {
-              return const ShimmerLoadingCell();
-            }
+      child: assetEntityAsync.maybeWhen(
+        data: (asset) {
+          if (asset == null) {
+            return const ShimmerLoadingCell();
+          }
 
-            return Image(
+          return GestureDetector(
+            onTap: isDisabled
+                ? null
+                : () {
+                    final isSelectedAssetValid = _validateAsset(
+                      asset: asset,
+                      context: context,
+                      maxVideoDurationInSeconds: maxVideoDurationInSeconds,
+                    );
+                    if (isSelectedAssetValid) {
+                      ref
+                          .read(mediaSelectionNotifierProvider.notifier)
+                          .toggleSelection(mediaFile.path, type: type);
+                    }
+                  },
+            child: Image(
               image: AssetEntityImageProvider(
                 asset,
                 isOriginal: false,
@@ -94,11 +109,36 @@ class GalleryGridCell extends ConsumerWidget {
                 }
               },
               errorBuilder: (_, __, ___) => const ShimmerLoadingCell(),
-            );
-          },
-          orElse: () => const ShimmerLoadingCell(),
-        ),
+            ),
+          );
+        },
+        orElse: () => const ShimmerLoadingCell(),
       ),
     );
+  }
+
+  bool _validateAsset({
+    required AssetEntity asset,
+    required BuildContext context,
+    int? maxVideoDurationInSeconds,
+  }) {
+    final isVideo = asset.type == AssetType.video;
+    if (isVideo) {
+      final isVideoDurationValid =
+          maxVideoDurationInSeconds == null || asset.duration <= maxVideoDurationInSeconds;
+
+      if (!isVideoDurationValid) {
+        unawaited(
+          showSimpleBottomSheet<void>(
+            context: context,
+            child: const UploadLimitReachedModal(),
+          ),
+        );
+      }
+
+      return isVideoDurationValid;
+    }
+
+    return true;
   }
 }

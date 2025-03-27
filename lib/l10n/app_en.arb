@@ -795,5 +795,7 @@
   "empty_message_history": "The message history is empty",
   "users_search": "Search above for users",
   "contact_wallet_not_found_title": "Wallet not found",
-  "contact_wallet_not_found_description": "doesn't have a wallet in the {network} network"
+  "contact_wallet_not_found_description": "doesn't have a wallet in the {network} network",
+  "video_upload_limit_error_title": "Upload limit reached",
+  "video_upload_limit_error_description": "You can upload a video of up to 5 minutes"
 }

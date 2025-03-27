@@ -25,6 +25,7 @@ class MediaPickerPage extends HookConsumerWidget {
     this.type = MediaPickerType.common,
     this.title,
     this.isBottomSheet = false,
+    this.maxVideoDurationInSeconds,
     super.key,
   });
 
@@ -32,6 +33,7 @@ class MediaPickerPage extends HookConsumerWidget {
   final MediaPickerType type;
   final String? title;
   final bool isBottomSheet;
+  final int? maxVideoDurationInSeconds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,8 +55,11 @@ class MediaPickerPage extends HookConsumerWidget {
     useOnInit(
       () {
         ref.read(mediaSelectionNotifierProvider.notifier).updateMaxSelection(maxSelection);
+        ref
+            .read(mediaSelectionNotifierProvider.notifier)
+            .updateDurationLimit(maxVideoDurationInSeconds);
       },
-      [maxSelection],
+      [maxSelection, maxVideoDurationInSeconds],
     );
 
     final slivers = [
