@@ -26,17 +26,18 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    final labeler = IonTextLabeler();
     _input =
         '''Trump is trying to deport a Columbia Univ. student who has been a permanent resident in the U.S. since she was 7.
 Her "crime"?
 Attending a protest against the war in Gaza.
 No, Mr. President. This is a democracy. You can't exile political dissidents. Not in the United States.''';
-    detectTextLanguage(_input!).then((result) => setState(() {
-          _language = result.predictions.first;
+    labeler.detectTextLanguage(_input!).then((result) => setState(() {
+          _language = result.labels.first;
           _normalizedInput = result.input;
         }));
-    detectTextCategory(_input!).then((result) => setState(() {
-          _category = result.predictions.first;
+    labeler.detectTextCategory(_input!).then((result) => setState(() {
+          _category = result.labels.first;
           _normalizedInput = result.input;
         }));
   }
@@ -52,6 +53,7 @@ No, Mr. President. This is a democracy. You can't exile political dissidents. No
           child: Container(
             padding: const EdgeInsets.all(10),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Input text is:\n$_input'),
                 SizedBox(height: 10),
