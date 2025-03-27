@@ -78,7 +78,7 @@ class IonTextLabeler {
         final predictFn = lib.lookupFunction<Void Function(Pointer<Utf8> str, Pointer<Utf8> output),
             void Function(Pointer<Utf8> str, Pointer<Utf8> output)>('predict');
         final inputUtf8 = input.toNativeUtf8();
-        Pointer<Utf8> outputPrediction = calloc.allocate(20);
+        Pointer<Utf8> outputPrediction = calloc.allocate(128);
         predictFn(inputUtf8, outputPrediction);
         final prediction = outputPrediction.toDartString();
         calloc.free(inputUtf8);
