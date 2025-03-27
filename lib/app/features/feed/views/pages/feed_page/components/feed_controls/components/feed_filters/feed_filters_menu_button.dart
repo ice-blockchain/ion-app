@@ -8,11 +8,17 @@ import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.d
 import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_controls/components/feed_filters/feed_filters_menu_overlay.dart';
 
 class FeedFiltersMenuButton extends StatelessWidget {
-  const FeedFiltersMenuButton({super.key});
+  const FeedFiltersMenuButton({
+    this.scrollController,
+    super.key,
+  });
+
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
     return OverlayMenu(
+      scrollController: scrollController,
       menuBuilder: (closeMenu) => FeedFiltersMenuOverlay(closeMenu: closeMenu),
       child: const _MenuButton(),
     );

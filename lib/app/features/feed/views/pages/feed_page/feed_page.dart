@@ -36,8 +36,9 @@ class FeedPage extends HookConsumerWidget {
     final showTrendingVideos = useRef(
       ref.watch(featureFlagsProvider.notifier).get(FeedFeatureFlag.showTrendingVideo),
     );
+    final scrollController = useScrollController();
 
-    useScrollTopOnTabPress(context, scrollController: PrimaryScrollController.of(context));
+    useScrollTopOnTabPress(context, scrollController: scrollController);
 
     final slivers = [
       SliverToBoxAdapter(
@@ -64,14 +65,17 @@ class FeedPage extends HookConsumerWidget {
           return PullToRefreshBuilder(
             sliverAppBar: CollapsingAppBar(
               height: FeedControls.height,
-              child: const FeedControls(),
+              child: FeedControls(scrollController: scrollController),
             ),
             slivers: slivers,
             onRefresh: () => _onRefresh(ref),
             refreshIndicatorEdgeOffset: FeedControls.height +
                 MediaQuery.paddingOf(context).top +
                 ScreenTopOffset.defaultMargin,
-            builder: (context, slivers) => CustomScrollView(slivers: slivers),
+            builder: (context, slivers) => CustomScrollView(
+              slivers: slivers,
+              controller: scrollController,
+            ),
           );
         },
       ),

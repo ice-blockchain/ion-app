@@ -10,8 +10,11 @@ import 'package:ion/app/router/app_routes.c.dart';
 
 class FeedNavigation extends StatelessWidget {
   const FeedNavigation({
+    this.scrollController,
     super.key,
   });
+
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class FeedNavigation extends StatelessWidget {
           SizedBox(width: 12.0.s),
           const FeedNotificationsButton(),
           SizedBox(width: 12.0.s),
-          const FeedFiltersMenuButton(),
+          FeedFiltersMenuButton(scrollController: scrollController),
         ],
       ),
     );
