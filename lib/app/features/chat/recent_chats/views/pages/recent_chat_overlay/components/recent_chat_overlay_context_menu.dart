@@ -36,7 +36,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
               children: [
                 OverlayMenuItem(
                   label: conversation.isArchived
-                      ? context.i18n.common_unarchive
+                      ? context.i18n.common_unarchive_single
                       : context.i18n.common_add_to_archive,
                   icon: Assets.svg.iconChatArchive.icon(
                     size: iconSize,

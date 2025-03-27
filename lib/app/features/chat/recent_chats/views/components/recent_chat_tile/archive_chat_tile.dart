@@ -11,7 +11,6 @@ import 'package:ion/app/features/chat/providers/conversations_provider.c.dart';
 import 'package:ion/app/features/chat/providers/unread_message_count_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/archive_state_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
-import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -22,16 +21,10 @@ class ArchiveChatTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
-    final selectedConversations = ref.watch(selectedConversationsProvider);
     final conversations = ref.watch(archivedConversationsProvider).valueOrNull ?? [];
 
     final unreadMessagesCount =
         ref.watch(getAllUnreadMessagesCountInArchiveProvider).valueOrNull ?? 0;
-
-    final isSelected = useMemoized(
-      () => selectedConversations.toSet().containsAll(conversations),
-      [selectedConversations, conversations],
-    );
 
     final combinedConversationNames = useCombinedConversationNames(conversations, ref);
 
@@ -52,9 +45,7 @@ class ArchiveChatTile extends HookConsumerWidget {
       padding: EdgeInsets.symmetric(vertical: 6.0.s),
       child: GestureDetector(
         onTap: () async {
-          if (isEditMode) {
-            ref.read(selectedConversationsProvider.notifier).toggleAll(conversations);
-          } else {
+          if (!isEditMode) {
             ref.read(archiveStateProvider.notifier).toggle();
             await ArchivedChatsMainRoute().push<void>(context);
             ref.read(archiveStateProvider.notifier).toggle();
@@ -63,16 +54,6 @@ class ArchiveChatTile extends HookConsumerWidget {
         behavior: HitTestBehavior.opaque,
         child: Row(
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: isEditMode ? 40.0.s : 0,
-              child: Padding(
-                padding: EdgeInsets.only(right: 10.0.s),
-                child: isSelected
-                    ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
-                    : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
-              ),
-            ),
             Flexible(
               child: Row(
                 children: [

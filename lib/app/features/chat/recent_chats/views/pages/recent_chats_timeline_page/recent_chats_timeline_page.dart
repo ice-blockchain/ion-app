@@ -207,14 +207,14 @@ class E2eeRecentChatTile extends ConsumerWidget {
 
     final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
 
-    final receiverPukeyKey =
+    final receiverPubkey =
         entity.relatedPubkeys?.firstWhere((p) => p.value != currentUserPubkey).value;
 
-    if (receiverPukeyKey == null) {
+    if (receiverPubkey == null) {
       return const SizedBox.shrink();
     }
 
-    final userMetadata = ref.watch(userMetadataProvider(receiverPukeyKey)).valueOrNull;
+    final userMetadata = ref.watch(userMetadataProvider(receiverPubkey)).valueOrNull;
 
     if (userMetadata == null) {
       return const RecentChatSkeletonItem();
@@ -233,7 +233,7 @@ class E2eeRecentChatTile extends ConsumerWidget {
       lastMessageContent: conversation.latestMessage?.content ?? '',
       unreadMessagesCount: unreadMessagesCount.valueOrNull ?? 0,
       onTap: () {
-        ConversationRoute(receiverPubKey: receiverPukeyKey).push<void>(context);
+        ConversationRoute(receiverPubKey: receiverPubkey).push<void>(context);
       },
     );
   }
