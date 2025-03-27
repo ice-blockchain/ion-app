@@ -49,21 +49,7 @@ class CustomCameraPreview extends HookWidget {
           Positioned(
             top: focusPoint.value.$2 - 20.0.s,
             left: focusPoint.value.$1 - 20.0.s,
-            child: AnimatedOpacity(
-              duration: !showFocusCircle.value ? const Duration(milliseconds: 200) : Duration.zero,
-              opacity: showFocusCircle.value ? 1.0 : 0.0,
-              child: Container(
-                height: 40.0.s,
-                width: 40.0.s,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 1.5.s,
-                  ),
-                ),
-              ),
-            ),
+            child: _CameraFocusCircle(visible: showFocusCircle.value),
           ),
         ],
       ),
@@ -96,5 +82,32 @@ class CustomCameraPreview extends HookWidget {
     await Future<void>.delayed(const Duration(seconds: 1)).whenComplete(() {
       showFocusCircle.value = false;
     });
+  }
+}
+
+final class _CameraFocusCircle extends StatelessWidget {
+  const _CameraFocusCircle({
+    required this.visible,
+  });
+
+  final bool visible;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      duration: !visible ? const Duration(milliseconds: 200) : Duration.zero,
+      opacity: visible ? 1.0 : 0.0,
+      child: Container(
+        height: 40.0.s,
+        width: 40.0.s,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: Colors.white,
+            width: 1.5.s,
+          ),
+        ),
+      ),
+    );
   }
 }
