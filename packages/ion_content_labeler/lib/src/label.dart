@@ -22,14 +22,14 @@ class Label {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'label': name,
+      'name': name,
       'score': score,
     };
   }
 
   factory Label.fromMap(Map<String, dynamic> map) {
     return Label(
-      name: map['label'] as String,
+      name: map['name'] as String,
       score: map['score'] as double,
     );
   }
