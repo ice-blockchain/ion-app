@@ -121,18 +121,18 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       }
 
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
-      final modifyedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
+      final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
 
       final postData = modifiedEntity.data.copyWith(
         content: _buildContentWithMediaLinks(
           content: postContent,
-          media: modifyedMedia.values.toList(),
+          media: modifiedMedia.values.toList(),
         ),
         richText: _buildRichTextContentWithMediaLinks(
           content: postContent,
-          media: modifyedMedia.values.toList(),
+          media: modifiedMedia.values.toList(),
         ),
-        media: modifyedMedia,
+        media: modifiedMedia,
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         settings: EntityDataWithSettings.build(
           whoCanReply: whoCanReply ?? modifiedEntity.data.whoCanReplySetting,
