@@ -88,7 +88,7 @@ class RepliesCounterButton extends HookConsumerWidget {
       if (entity is ArticleEntity) {
         await ArticleRepliesRoute(eventReference: eventReference.encode()).push<void>(ref.context);
       } else {
-        await CreatePostRoute(parentEvent: eventReference.encode()).push<void>(ref.context);
+        await CreateReplyRoute(parentEvent: eventReference.encode()).push<void>(ref.context);
       }
       await HapticFeedback.lightImpact();
     } else {

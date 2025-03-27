@@ -30,7 +30,17 @@ class FeedRoutes {
     TypedShellRoute<ModalShellRouteData>(
       routes: [
         TypedGoRoute<RepostOptionsModalRoute>(path: 'post-repost-options/:eventReference'),
-        TypedGoRoute<CreatePostRoute>(path: 'create-post'),
+        TypedGoRoute<CreatePostRoute>(path: 'post-editor/create'),
+        TypedGoRoute<EditPostRoute>(path: 'post-editor/edit/:modifiedEvent'),
+        TypedGoRoute<CreateReplyRoute>(path: 'post-editor/reply/:parentEvent'),
+        TypedGoRoute<EditReplyRoute>(
+          path: 'post-editor/edit-reply/:parentEvent/:modifiedEvent',
+        ),
+        TypedGoRoute<CreateQuoteRoute>(path: 'post-editor/quote/:quotedEvent'),
+        TypedGoRoute<EditQuoteRoute>(
+          path: 'post-editor/edit-quote/:quotedEvent/:modifiedEvent',
+        ),
+        TypedGoRoute<CreateVideoRoute>(path: 'post-editor/video'),
         TypedGoRoute<CreateArticleRoute>(path: 'create-article'),
         TypedGoRoute<MediaPickerRoute>(
           path: 'media-picker',
@@ -155,30 +165,135 @@ class SwitchAccountRoute extends BaseRouteData {
 
 class CreatePostRoute extends BaseRouteData {
   CreatePostRoute({
-    this.parentEvent,
-    this.quotedEvent,
-    this.modifiedEvent,
     this.content,
-    this.videoPath,
     this.attachedMedia,
   }) : super(
-          child: CreatePostModal(
-            parentEvent: parentEvent != null ? EventReference.fromEncoded(parentEvent) : null,
-            quotedEvent: quotedEvent != null ? EventReference.fromEncoded(quotedEvent) : null,
-            modifiedEvent: modifiedEvent != null ? EventReference.fromEncoded(modifiedEvent) : null,
+          child: PostFormModal.createPost(
             content: content,
-            videoPath: videoPath,
             attachedMedia: attachedMedia,
           ),
           type: IceRouteType.bottomSheet,
         );
 
-  final String? parentEvent;
-  final String? quotedEvent;
-  final String? modifiedEvent;
   final String? content;
-  final String? videoPath;
   final String? attachedMedia;
+}
+
+class EditPostRoute extends BaseRouteData {
+  EditPostRoute({
+    required this.modifiedEvent,
+    this.content,
+    this.attachedMedia,
+  }) : super(
+          child: PostFormModal.editPost(
+            modifiedEvent: EventReference.fromEncoded(modifiedEvent),
+            content: content,
+            attachedMedia: attachedMedia,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String modifiedEvent;
+  final String? content;
+  final String? attachedMedia;
+}
+
+class CreateReplyRoute extends BaseRouteData {
+  CreateReplyRoute({
+    required this.parentEvent,
+    this.content,
+    this.attachedMedia,
+  }) : super(
+          child: PostFormModal.createReply(
+            parentEvent: EventReference.fromEncoded(parentEvent),
+            content: content,
+            attachedMedia: attachedMedia,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String parentEvent;
+  final String? content;
+  final String? attachedMedia;
+}
+
+class EditReplyRoute extends BaseRouteData {
+  EditReplyRoute({
+    required this.parentEvent,
+    required this.modifiedEvent,
+    this.content,
+    this.attachedMedia,
+  }) : super(
+          child: PostFormModal.editReply(
+            parentEvent: EventReference.fromEncoded(parentEvent),
+            modifiedEvent: EventReference.fromEncoded(modifiedEvent),
+            content: content,
+            attachedMedia: attachedMedia,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String parentEvent;
+  final String modifiedEvent;
+  final String? content;
+  final String? attachedMedia;
+}
+
+class CreateQuoteRoute extends BaseRouteData {
+  CreateQuoteRoute({
+    required this.quotedEvent,
+    this.content,
+    this.attachedMedia,
+  }) : super(
+          child: PostFormModal.createQuote(
+            quotedEvent: EventReference.fromEncoded(quotedEvent),
+            content: content,
+            attachedMedia: attachedMedia,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String quotedEvent;
+  final String? content;
+  final String? attachedMedia;
+}
+
+class EditQuoteRoute extends BaseRouteData {
+  EditQuoteRoute({
+    required this.quotedEvent,
+    required this.modifiedEvent,
+    this.content,
+    this.attachedMedia,
+  }) : super(
+          child: PostFormModal.editQuote(
+            quotedEvent: EventReference.fromEncoded(quotedEvent),
+            modifiedEvent: EventReference.fromEncoded(modifiedEvent),
+            content: content,
+            attachedMedia: attachedMedia,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String quotedEvent;
+  final String modifiedEvent;
+  final String? content;
+  final String? attachedMedia;
+}
+
+class CreateVideoRoute extends BaseRouteData {
+  CreateVideoRoute({
+    required this.videoPath,
+    this.content,
+  }) : super(
+          child: PostFormModal.video(
+            videoPath: videoPath,
+            content: content,
+          ),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String videoPath;
+  final String? content;
 }
 
 class CreateArticleRoute extends BaseRouteData {

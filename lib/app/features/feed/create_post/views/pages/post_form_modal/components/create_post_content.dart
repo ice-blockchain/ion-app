@@ -10,15 +10,16 @@ import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/attached_media_preview.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/current_user_avatar.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/parent_entity.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/quoted_entity.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/components/video_preview_cover.dart';
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_url_links.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/current_user_avatar.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/parent_entity.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/quoted_entity.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_cover.dart';
+import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_url_links.dart';
 import 'package:ion/app/features/feed/views/components/url_preview_content/url_preview_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 
 class CreatePostContent extends StatelessWidget {
   const CreatePostContent({
@@ -28,6 +29,7 @@ class CreatePostContent extends StatelessWidget {
     required this.textEditorController,
     required this.createOption,
     required this.attachedMediaNotifier,
+    required this.attachedMediaLinksNotifier,
     required this.quotedEvent,
     super.key,
   });
@@ -37,7 +39,8 @@ class CreatePostContent extends StatelessWidget {
   final EventReference? parentEvent;
   final QuillController textEditorController;
   final CreatePostOption createOption;
-  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
+  final AttachedMediaNotifier attachedMediaNotifier;
+  final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final EventReference? quotedEvent;
 
   @override
@@ -54,6 +57,7 @@ class CreatePostContent extends StatelessWidget {
                 textEditorController: textEditorController,
                 createOption: createOption,
                 attachedMediaNotifier: attachedMediaNotifier,
+                attachedMediaLinksNotifier: attachedMediaLinksNotifier,
               ),
             ),
             if (quotedEvent != null) _QuotedEntitySection(eventReference: quotedEvent!),
@@ -101,15 +105,18 @@ class _TextInputSection extends HookConsumerWidget {
     required this.textEditorController,
     required this.createOption,
     required this.attachedMediaNotifier,
+    required this.attachedMediaLinksNotifier,
   });
 
   final QuillController textEditorController;
   final CreatePostOption createOption;
-  final ValueNotifier<List<MediaFile>> attachedMediaNotifier;
+  final AttachedMediaNotifier attachedMediaNotifier;
+  final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaFiles = attachedMediaNotifier.value;
+    final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
     final textEditorKey = useMemoized(TextEditorKeys.createPost);
     final isKeyboardVisible = KeyboardVisibilityProvider.isKeyboardVisible(context);
     useOnInit(
@@ -159,10 +166,11 @@ class _TextInputSection extends HookConsumerWidget {
                     placeholder: createOption.getPlaceholder(context),
                     key: textEditorKey,
                   ),
-                  if (mediaFiles.isNotEmpty) ...[
+                  if (mediaFiles.isNotEmpty || mediaLinks.isNotEmpty) ...[
                     SizedBox(height: 12.0.s),
                     AttachedMediaPreview(
                       attachedMediaNotifier: attachedMediaNotifier,
+                      attachedMediaLinksNotifier: attachedMediaLinksNotifier,
                     ),
                   ],
                   if (mediaFiles.isEmpty && links.isNotEmpty)

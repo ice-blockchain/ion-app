@@ -59,11 +59,26 @@ class OwnEntityMenu extends ConsumerWidget {
                     ),
                     onPressed: () {
                       closeMenu();
-                      CreatePostRoute(
-                        parentEvent: entity.data.parentEvent?.eventReference.encode(),
-                        quotedEvent: entity.data.quotedEvent?.eventReference.encode(),
-                        modifiedEvent: entity.toEventReference().encode(),
-                      ).push<void>(context);
+
+                      final parentEvent = entity.data.parentEvent?.eventReference.encode();
+                      final quotedEvent = entity.data.quotedEvent?.eventReference.encode();
+                      final modifiedEvent = entity.toEventReference().encode();
+
+                      if (parentEvent != null) {
+                        EditReplyRoute(
+                          parentEvent: parentEvent,
+                          modifiedEvent: modifiedEvent,
+                        ).push<void>(context);
+                      } else if (quotedEvent != null) {
+                        EditQuoteRoute(
+                          quotedEvent: quotedEvent,
+                          modifiedEvent: modifiedEvent,
+                        ).push<void>(context);
+                      } else if (parentEvent == null && quotedEvent == null) {
+                        EditPostRoute(
+                          modifiedEvent: modifiedEvent,
+                        ).push<void>(context);
+                      }
                     },
                   ),
                   const OverlayMenuItemSeparator(),

@@ -32,6 +32,7 @@ class PostMediaItem extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: ValueKey(mediaItem.url),
       onTap: () => onVideoTap != null && mediaItem.mediaType == MediaType.video
           ? onVideoTap?.call(
               eventReference: eventReference.encode(),

@@ -28,9 +28,11 @@ import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_i
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_poll_button.dart';
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_regular_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
+import 'package:ion/app/typedefs/typedefs.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ReplyInputField extends HookConsumerWidget {
@@ -45,12 +47,13 @@ class ReplyInputField extends HookConsumerWidget {
     required BuildContext context,
     required QuillController textEditorController,
     required FocusNode focusNode,
-    required ValueNotifier<List<MediaFile>> attachedMediaNotifier,
+    required AttachedMediaNotifier attachedMediaNotifier,
+    required AttachedMediaLinksNotifier attachedMediaLinksNotifier,
   }) async {
     final attachedMedia =
         attachedMediaNotifier.value.isNotEmpty ? jsonEncode(attachedMediaNotifier.value) : null;
 
-    await CreatePostRoute(
+    await CreateReplyRoute(
       parentEvent: eventReference.encode(),
       content: jsonEncode(
         textEditorController.document.toDelta().toJson(),
@@ -75,6 +78,7 @@ class ReplyInputField extends HookConsumerWidget {
     final focusNode = useFocusNode();
     final hasFocus = useNodeFocused(focusNode);
     final attachedMediaNotifier = useState(<MediaFile>[]);
+    final attachedMediaLinksNotifier = useState<Map<String, MediaAttachment>>({});
 
     return ScreenSideOffset.small(
       child: Column(
@@ -105,7 +109,10 @@ class ReplyInputField extends HookConsumerWidget {
                     children: [
                       if (attachedMediaNotifier.value.isNotEmpty) ...[
                         SizedBox(height: 6.0.s),
-                        AttachedMediaPreview(attachedMediaNotifier: attachedMediaNotifier),
+                        AttachedMediaPreview(
+                          attachedMediaNotifier: attachedMediaNotifier,
+                          attachedMediaLinksNotifier: attachedMediaLinksNotifier,
+                        ),
                       ],
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 12.0.s, vertical: 9.0.s),
@@ -137,6 +144,7 @@ class ReplyInputField extends HookConsumerWidget {
                                     textEditorController: textEditorController,
                                     focusNode: focusNode,
                                     attachedMediaNotifier: attachedMediaNotifier,
+                                    attachedMediaLinksNotifier: attachedMediaLinksNotifier,
                                   );
                                 },
                                 child: Assets.svg.iconReplysearchScale.icon(size: 20.0.s),
@@ -166,6 +174,7 @@ class ReplyInputField extends HookConsumerWidget {
                       textEditorController: textEditorController,
                       focusNode: focusNode,
                       attachedMediaNotifier: attachedMediaNotifier,
+                      attachedMediaLinksNotifier: attachedMediaLinksNotifier,
                     );
                   },
                 ),
