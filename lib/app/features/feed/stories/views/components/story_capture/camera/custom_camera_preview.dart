@@ -68,7 +68,7 @@ class CustomCameraPreview extends HookWidget {
     focusPoint.value = (x, y);
     showFocusCircle.value = true;
 
-    final fullWidth = MediaQuery.of(context).size.width;
+    final fullWidth = MediaQuery.sizeOf(context).width;
     final cameraHeight = fullWidth * controller.value.aspectRatio;
 
     final xp = x / fullWidth;
