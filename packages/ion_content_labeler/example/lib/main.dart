@@ -62,7 +62,7 @@ No, Mr. President. This is a democracy. You can't exile political dissidents. No
                   SizedBox(height: 10)
                 ],
                 if (_language != null) ...[Text('Language is:\n$_language'), SizedBox(height: 10)],
-                if (_labels != null) ...[Text('Labels are:\n$_labels'), SizedBox(height: 10)],
+                if (_labels != null) ...[Text('Categories are:\n$_labels'), SizedBox(height: 10)],
               ],
             ),
           ),
