@@ -8,14 +8,17 @@ import 'package:ion/app/router/app_routes.c.dart';
 
 GestureRecognizer? customRecognizerBuilder(
   BuildContext context,
-  Attribute<dynamic> attribute,
-) {
+  Attribute<dynamic> attribute, {
+  bool isEditing = false,
+}) {
   if (attribute.key == HashtagAttribute.attributeKey ||
       attribute.key == CashtagAttribute.attributeKey) {
     return TapGestureRecognizer()
-      ..onTap = () {
-        FeedAdvancedSearchRoute(query: attribute.value as String).go(context);
-      };
+      ..onTap = isEditing
+          ? null
+          : () {
+              FeedAdvancedSearchRoute(query: attribute.value as String).go(context);
+            };
   }
   return null;
 }

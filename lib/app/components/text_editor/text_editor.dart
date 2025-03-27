@@ -84,7 +84,8 @@ class TextEditorState extends ConsumerState<TextEditor> {
         customStyles: textEditorStyles(context),
         floatingCursorDisabled: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
-        customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(context, attribute),
+        customRecognizerBuilder: (attribute, leaf) =>
+            customRecognizerBuilder(context, attribute, isEditing: true),
         scrollable: false,
       ),
     );
