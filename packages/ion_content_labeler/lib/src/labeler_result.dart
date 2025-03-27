@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/foundation.dart';
 import 'package:ion_content_labeler/ion_content_labeler.dart';
 
