@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:ion_content_labeler/ion_content_labeler.dart';
 
-//TODO:load model per instance
+//TODO:load model per instance, add downloading models, use predict in isolate
 class IonTextLabeler {
   Future<TextLabelerResult> detectTextLanguage(String content) async {
     final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
