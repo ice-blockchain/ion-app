@@ -120,19 +120,21 @@ class PostSubmitButton extends HookConsumerWidget {
             ),
 =======
         final content = textEditorController.document.toPlainText().trim();
-        final language = await detectTextLanguage(content);
-        final category = await detectTextCategory(content);
+        final labeler = IonTextLabeler();
+        final language = await labeler.detectTextLanguage(content);
+        final category = await labeler.detectTextCategory(content);
         if (context.mounted) {
           await showSimpleBottomSheet<void>(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 NavigationAppBar.modal(
                   showBackButton: false,
                   title: const Text('Labeling results'),
                 ),
-                Text('language: $language', textAlign: TextAlign.left),
-                Text('category: $category', textAlign: TextAlign.left),
-                Text('input: $content', textAlign: TextAlign.left),
+                Text('language: ${language.labels.first}', textAlign: TextAlign.left),
+                Text('category: ${category.labels.first}', textAlign: TextAlign.left),
+                Text('input: ${category.input}', textAlign: TextAlign.left),
                 ScreenBottomOffset(),
               ],
             ),

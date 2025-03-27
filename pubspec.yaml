@@ -184,7 +184,7 @@ flutter:
     - assets/ion_identity/coins_version.txt
     - assets/ion_identity/networks.json
     - assets/language_identification.176.ftz
-    - assets/labeling_2.ftz
+    - assets/labeling_3.ftz
 
 flutter_gen:
   output: lib/generated/
