@@ -26,12 +26,13 @@ class EditUserButton extends ConsumerWidget {
       label: Text(
         context.i18n.profile_edit,
         style: context.theme.appTextThemes.caption.copyWith(
-          color: context.theme.appColors.secondaryBackground,
+          color: context.theme.appColors.onPrimaryAccent,
+          fontSize: 12.0.s,
         ),
       ),
       style: OutlinedButton.styleFrom(
         minimumSize: Size(87.0.s, 28.0.s),
-        padding: EdgeInsets.symmetric(horizontal: 15.0.s),
+        padding: EdgeInsets.symmetric(horizontal: 18.0.s),
       ),
     );
   }

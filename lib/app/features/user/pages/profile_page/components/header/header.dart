@@ -40,7 +40,7 @@ class Header extends ConsumerWidget {
                     Navigator.of(context).pop(true);
                   },
                   assetName: Assets.svg.iconProfileBack,
-                  opacity: opacity,
+                  opacity: 1,
                 ),
               Expanded(
                 child: Padding(
@@ -60,12 +60,11 @@ class Header extends ConsumerWidget {
                     SettingsRoute().push<void>(context);
                   },
                   assetName: Assets.svg.iconProfileSettings,
-                  opacity: opacity,
+                  opacity: 1,
                 )
               else
                 ContextMenu(
                   pubkey: pubkey,
-                  opacity: opacity,
                 ),
             ],
           ),

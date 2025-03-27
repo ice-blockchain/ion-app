@@ -38,7 +38,7 @@ class VideoPreview extends HookConsumerWidget {
           sourcePath: videoUrl,
           looping: true,
           uniqueId: framedEventReference?.encode() ?? '',
-        ), //, uniqueId: uniqueId.value
+        ),
       ),
     );
     final isFullyVisible = useState(false);

@@ -145,14 +145,6 @@ class FeedAdvancedSearchRoute extends BaseRouteData {
   final String query;
 }
 
-class PullRightMenuRoute extends BaseRouteData {
-  PullRightMenuRoute()
-      : super(
-          child: const PullRightMenuPage(),
-          type: IceRouteType.slideFromLeft,
-        );
-}
-
 class SwitchAccountRoute extends BaseRouteData {
   SwitchAccountRoute()
       : super(

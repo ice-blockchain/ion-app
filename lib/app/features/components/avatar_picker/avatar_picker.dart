@@ -27,6 +27,7 @@ class AvatarPicker extends HookConsumerWidget {
     this.iconSize,
     this.iconBackgroundSize,
     this.avatarSize,
+    this.borderRadius,
   });
 
   final String? avatarUrl;
@@ -35,6 +36,7 @@ class AvatarPicker extends HookConsumerWidget {
   final double? iconBackgroundSize;
   final Widget? avatarWidget;
   final String? title;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -55,16 +57,18 @@ class AvatarPicker extends HookConsumerWidget {
       children: [
         Avatar(
           size: avatarSize ?? 100.0.s,
-          borderRadius: BorderRadius.circular(20.0.s),
+          borderRadius: borderRadius ?? BorderRadius.circular(20.0.s),
           imageUrl: avatarFile == null ? avatarUrl : null,
           imageWidget: avatarFile != null
               ? Image.file(File(avatarFile.path))
               : avatarWidget ??
-                  (avatarUrl == null ? Assets.svg.userPhotoArea.icon(size: 100.0.s) : null),
+                  (avatarUrl == null
+                      ? Assets.svg.userPhotoArea.icon(size: avatarSize ?? 100.0.s)
+                      : null),
         ),
         Positioned(
           bottom: -6.0.s,
-          right: 0,
+          right: -6.0.s,
           child: PermissionAwareWidget(
             permissionType: Permission.photos,
             onGranted: () async {

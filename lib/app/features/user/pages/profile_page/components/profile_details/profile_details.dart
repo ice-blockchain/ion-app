@@ -29,11 +29,11 @@ class ProfileDetails extends ConsumerWidget {
       child: Column(
         children: [
           UserNameTile(pubkey: pubkey),
-          SizedBox(height: 8.0.s),
+          SizedBox(height: 12.0.s),
           if (isCurrentUserProfile) const EditUserButton() else ProfileActions(pubkey: pubkey),
           SizedBox(height: 16.0.s),
           FollowCounters(pubkey: pubkey),
-          SizedBox(height: 10.0.s),
+          SizedBox(height: 12.0.s),
           if (!isCurrentUserProfile) ...[
             RelevantFollowers(pubkey: pubkey),
             SizedBox(height: 12.0.s),

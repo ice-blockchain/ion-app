@@ -11,7 +11,6 @@ import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/model/user_content_type.dart';
 import 'package:ion/app/features/user/pages/components/header_action/header_action.dart';
 import 'package:ion/app/features/user/pages/components/profile_avatar/profile_avatar.dart';
-import 'package:ion/app/features/user/pages/components/user_banner/user_banner.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/header.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/profile_details/profile_details.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/tabs/content_separator.dart';
@@ -54,12 +53,6 @@ class ProfilePage extends HookConsumerWidget {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            Positioned(
-              child: Opacity(
-                opacity: 1.0 - opacity,
-                child: UserBanner(pubkey: pubkey),
-              ),
-            ),
             ScreenTopOffset(
               child: DefaultTabController(
                 length: UserContentType.values.length,
@@ -67,27 +60,15 @@ class ProfilePage extends HookConsumerWidget {
                   controller: scrollController,
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return [
-                      PinnedHeaderSliver(
-                        child: SizedBox(height: paddingTop),
-                      ),
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: backgroundColor,
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(30.0.s)),
-                              ),
-                              child: Column(
-                                children: [
-                                  ProfileAvatar(pubkey: pubkey),
-                                  ProfileDetails(pubkey: pubkey),
-                                  SizedBox(height: 16.0.s),
-                                  const HorizontalSeparator(),
-                                  SizedBox(height: 16.0.s),
-                                ],
-                              ),
-                            ),
+                            ProfileAvatar(pubkey: pubkey),
+                            SizedBox(height: 16.0.s),
+                            ProfileDetails(pubkey: pubkey),
+                            SizedBox(height: 16.0.s),
+                            const HorizontalSeparator(),
+                            SizedBox(height: 16.0.s),
                           ],
                         ),
                       ),
