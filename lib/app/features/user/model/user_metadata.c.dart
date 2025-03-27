@@ -47,6 +47,9 @@ class UserMetadataEntity
   }
 
   static const int kind = 0;
+
+  static const locationCharacterLimit = 30;
+  static const websiteCharacterLimit = 100;
 }
 
 @freezed
