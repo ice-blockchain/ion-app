@@ -38,7 +38,7 @@ class FeedPosts extends _$FeedPosts {
   }
 
   void _handlePost(IonConnectEntity entity) {
-    final items = state?.data.items ?? {};
-    state = state?.copyWith.data(items: {entity, ...items});
+    final dataSource = ref.read(feedPostsDataSourceProvider);
+    ref.read(entitiesPagedDataProvider(dataSource).notifier).insertEntity(entity);
   }
 }
