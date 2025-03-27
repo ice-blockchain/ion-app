@@ -47,19 +47,19 @@ class CustomCameraPreview extends HookWidget {
             ),
           ),
           Positioned(
-            top: focusPoint.value.$2 - 20,
-            left: focusPoint.value.$1 - 20,
+            top: focusPoint.value.$2 - 20.0.s,
+            left: focusPoint.value.$1 - 20.0.s,
             child: AnimatedOpacity(
               duration: !showFocusCircle.value ? const Duration(milliseconds: 200) : Duration.zero,
               opacity: showFocusCircle.value ? 1.0 : 0.0,
               child: Container(
-                height: 40,
-                width: 40,
+                height: 40.0.s,
+                width: 40.0.s,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Colors.white,
-                    width: 1.5,
+                    width: 1.5.s,
                   ),
                 ),
               ),
