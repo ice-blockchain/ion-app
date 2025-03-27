@@ -5,13 +5,13 @@
 Pod::Spec.new do |s|
   s.name             = 'ion_content_labeler'
   s.version          = '0.0.1'
-  s.summary          = 'A new Flutter FFI plugin project.'
+  s.summary          = 'Flutter plugin to label the provided content'
   s.description      = <<-DESC
-A new Flutter FFI plugin project.
+The plugin might be used to analyze the input text and produce corresponding labels, such as the detected language and content categories
                        DESC
-  s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.homepage         = ''
+  s.license          = { :file => '' }
+  s.author           = { '' }
 
   # This will ensure the source files in Classes/ are included in the native
   # builds of apps using this FFI plugin. Podspec does not support relative
