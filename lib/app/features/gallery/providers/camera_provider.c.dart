@@ -111,6 +111,19 @@ class CameraControllerNotifier extends _$CameraControllerNotifier {
       return false;
     }
 
+    final shouldSkipInitialization = state.maybeWhen(
+      loading: () => true,
+      ready: (_, __, ___) => true,
+      orElse: () => false,
+    );
+
+    if (shouldSkipInitialization) {
+      return state.maybeWhen(
+        ready: (_, __, ___) => true,
+        orElse: () => false,
+      );
+    }
+
     await _initializeCamera();
     return state is CameraReady;
   }
