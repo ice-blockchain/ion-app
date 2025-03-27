@@ -60,7 +60,11 @@ class IonTextLabeler {
   }
 
   String _normalizeInput(String input) {
-    return input.replaceAll('\n', ' ').replaceAll(RegExp(r'[^\w\s#\$]'), '').toLowerCase().trim();
+    return input
+        .replaceAll('\n', ' ')
+        .replaceAll(RegExp(r'[^\p{L}\s]', unicode: true), '')
+        .toLowerCase()
+        .trim();
   }
 
   ({
