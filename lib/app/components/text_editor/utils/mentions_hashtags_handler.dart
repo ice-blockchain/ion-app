@@ -8,9 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
 
-const maxMentionsLength = 3;
-const maxHashtagsLength = 5;
-
 class MentionsHashtagsHandler {
   MentionsHashtagsHandler({
     required this.controller,
@@ -27,6 +24,7 @@ class MentionsHashtagsHandler {
   int lastTagIndex = -1;
   Timer? _debounce;
   String? previousText;
+  int? _lastCursorPosition;
 
   void initialize() {
     controller.addListener(_editorListener);
@@ -44,32 +42,60 @@ class MentionsHashtagsHandler {
     final text = controller.document.toPlainText();
 
     final isBackspace = previousText != null && text.length < previousText!.length;
+    final cursorMoved = _lastCursorPosition != null && _lastCursorPosition != cursorIndex;
 
     previousText = text;
+    _lastCursorPosition = cursorIndex;
 
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 1), () {
+      if (cursorMoved) {
+        _cleanAndReformatTags(text);
+      }
+
       if (cursorIndex > 0) {
         final char = text.substring(cursorIndex - 1, cursorIndex);
 
         if (char == '#' || char == '@' || char == r'$') {
           taggingCharacter = char;
           lastTagIndex = cursorIndex - 1;
-          _applyFormatting(lastTagIndex, 1, taggingCharacter);
+
+          if (char == '#' || char == r'$') {
+            _formatSingleWord(text, lastTagIndex);
+          } else {
+            _applyFormatting(lastTagIndex, 1, taggingCharacter);
+          }
+
           ref.invalidate(suggestionsNotifierProvider);
         } else if (char == ' ' || char == '\n') {
           if (lastTagIndex != -1) {
-            _applyTagIfNeeded(cursorIndex);
+            if (taggingCharacter == '@') {
+              _applyTagIfNeeded(cursorIndex);
+            } else {
+              _resetState();
+            }
             ref.invalidate(suggestionsNotifierProvider);
-            _resetState();
           }
         } else if (lastTagIndex != -1) {
-          final currentTagText = text.substring(lastTagIndex, cursorIndex);
-          ref
-              .read(suggestionsNotifierProvider.notifier)
-              .updateSuggestions(currentTagText, taggingCharacter);
+          if (taggingCharacter == '@') {
+            final currentTagText = text.substring(lastTagIndex, cursorIndex);
+            ref
+                .read(suggestionsNotifierProvider.notifier)
+                .updateSuggestions(currentTagText, taggingCharacter);
 
-          _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentTagText);
+            _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentTagText);
+          } else if (taggingCharacter == '#' || taggingCharacter == r'$') {
+            final currentText = text.substring(lastTagIndex, cursorIndex);
+            final spaceIndex = currentText.indexOf(' ');
+
+            if (spaceIndex != -1) {
+              final tagText = currentText.substring(0, spaceIndex);
+              _applyFormatting(lastTagIndex, spaceIndex, tagText);
+              _resetState();
+            } else {
+              _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentText);
+            }
+          }
         }
       }
 
@@ -80,11 +106,133 @@ class MentionsHashtagsHandler {
         } else {
           final remainingText = text.substring(lastTagIndex, cursorIndex);
           if (remainingText.isNotEmpty) {
-            _applyFormatting(lastTagIndex, remainingText.length, remainingText);
+            if (taggingCharacter == '@') {
+              _applyFormatting(lastTagIndex, remainingText.length, remainingText);
+            } else {
+              final spaceIndex = remainingText.indexOf(' ');
+              if (spaceIndex != -1) {
+                _applyFormatting(lastTagIndex, spaceIndex, remainingText.substring(0, spaceIndex));
+                _resetState();
+              } else {
+                _applyFormatting(lastTagIndex, remainingText.length, remainingText);
+              }
+            }
           }
         }
       }
     });
+  }
+
+  void _cleanAndReformatTags(String text) {
+    controller.removeListener(_editorListener);
+
+    try {
+      final tags = <_TagInfo>[];
+
+      for (var i = 0; i < text.length; i++) {
+        if ((text[i] == '#' || text[i] == r'$') && _isWordStart(text, i)) {
+          var endIndex = i;
+          for (var j = i + 1; j < text.length; j++) {
+            if (_isWordBoundary(text[j])) {
+              break;
+            }
+            endIndex = j;
+          }
+
+          if (endIndex >= i) {
+            final tagText = text.substring(i, endIndex + 1);
+            tags.add(
+              _TagInfo(
+                start: i,
+                length: tagText.length,
+                text: tagText,
+                tagChar: text[i],
+              ),
+            );
+          }
+        }
+      }
+
+      for (final tag in tags) {
+        final attribute = switch (tag.tagChar) {
+          '#' => HashtagAttribute.withValue(tag.text),
+          r'$' => CashtagAttribute.withValue(tag.text),
+          _ => null,
+        };
+
+        if (attribute != null) {
+          controller.formatText(tag.start, tag.length, attribute);
+        }
+      }
+    } finally {
+      controller.addListener(_editorListener);
+    }
+  }
+
+  void _formatSingleWord(String text, int tagIndex) {
+    if (tagIndex >= 0 && tagIndex < text.length) {
+      final tagChar = text[tagIndex];
+      if (tagChar == '#' || tagChar == r'$') {
+        final tagAttribute = switch (tagChar) {
+          '#' => const HashtagAttribute.withValue('#'),
+          r'$' => const CashtagAttribute.withValue(r'$'),
+          _ => null,
+        };
+
+        if (tagAttribute != null) {
+          controller.removeListener(_editorListener);
+          try {
+            controller.formatText(tagIndex, 1, tagAttribute);
+          } finally {
+            controller.addListener(_editorListener);
+          }
+        }
+
+        if (tagIndex + 1 < text.length) {
+          var endIndex = tagIndex;
+          for (var i = tagIndex + 1; i < text.length; i++) {
+            if (_isWordBoundary(text[i])) {
+              break;
+            }
+            endIndex = i;
+          }
+
+          if (endIndex > tagIndex) {
+            final wordLength = endIndex - tagIndex + 1;
+            final tagText = text.substring(tagIndex, tagIndex + wordLength);
+
+            final attribute = switch (tagChar) {
+              '#' => HashtagAttribute.withValue(tagText),
+              r'$' => CashtagAttribute.withValue(tagText),
+              _ => null,
+            };
+
+            if (attribute != null) {
+              controller.removeListener(_editorListener);
+              try {
+                controller.formatText(tagIndex, wordLength, attribute);
+              } finally {
+                controller.addListener(_editorListener);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  bool _isWordBoundary(String char) {
+    return char == ' ' || char == '\n' || _isPunctuation(char);
+  }
+
+  bool _isWordStart(String text, int index) {
+    if (index == 0) return true;
+    return _isWordBoundary(text[index - 1]);
+  }
+
+  bool _isPunctuation(String char) {
+    const punctuations = '.,;:!?()[]{}"\'/\\';
+    return punctuations.contains(char);
   }
 
   void _applyFormatting(int index, int length, String text) {
@@ -179,4 +327,17 @@ class MentionsHashtagsHandler {
     taggingCharacter = '';
     previousText = null;
   }
+}
+
+class _TagInfo {
+  _TagInfo({
+    required this.start,
+    required this.length,
+    required this.text,
+    required this.tagChar,
+  });
+  final int start;
+  final int length;
+  final String text;
+  final String tagChar;
 }
