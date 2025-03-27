@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 
-class TextMessageLimitLabel extends HookWidget {
+class TextMessageLimitLabel extends HookConsumerWidget {
   const TextMessageLimitLabel({
     required this.textEditingController,
     super.key,
@@ -12,7 +14,8 @@ class TextMessageLimitLabel extends HookWidget {
   final TextEditingController textEditingController;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
     final exceededLimit = useState<int>(0);
 
     useEffect(
@@ -28,7 +31,7 @@ class TextMessageLimitLabel extends HookWidget {
       [textEditingController],
     );
 
-    if (exceededLimit.value > 0) {
+    if (exceededLimit.value > 0 && bottomBarState.isHasText) {
       return Positioned(
         top: 8.0.s,
         right: 15.0.s,
@@ -36,7 +39,7 @@ class TextMessageLimitLabel extends HookWidget {
           style: context.theme.appTextThemes.caption2.copyWith(
             color: context.theme.appColors.attentionRed,
           ),
-          '-$exceededLimit',
+          '-${exceededLimit.value}',
         ),
       );
     }
