@@ -148,4 +148,6 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
 
     return MessageType.text;
   }
+
+  static const textMessageLimit = 4096;
 }

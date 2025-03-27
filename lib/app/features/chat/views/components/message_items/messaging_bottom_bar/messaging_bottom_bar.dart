@@ -4,9 +4,11 @@ import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/components.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
+import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/text_message_limit_label.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
 class MessagingBottomBar extends HookConsumerWidget {
@@ -21,6 +23,23 @@ class MessagingBottomBar extends HookConsumerWidget {
     final controller = useTextEditingController();
     final recordedMediaFile = useState<MediaFile?>(null);
     final recorderController = useRef(RecorderController());
+    final isTextLimitReached = useState<bool>(false);
+
+    useEffect(
+      () {
+        void onTextChanged() {
+          isTextLimitReached.value =
+              controller.text.length > PrivateDirectMessageData.textMessageLimit;
+        }
+
+        controller.addListener(onTextChanged);
+
+        return () {
+          controller.removeListener(onTextChanged);
+        };
+      },
+      [controller],
+    );
 
     return Stack(
       alignment: Alignment.center,
@@ -36,17 +55,23 @@ class MessagingBottomBar extends HookConsumerWidget {
             },
             recorderController: recorderController.value,
           ),
+        TextMessageLimitLabel(textEditingController: controller),
         ActionButton(
           controller: controller,
           recorderController: recorderController.value,
-          onSubmitted: () async {
-            if (recordedMediaFile.value != null) {
-              await onSubmitted(content: controller.text, mediaFiles: [recordedMediaFile.value!]);
-            } else {
-              await onSubmitted(content: controller.text);
-            }
-            recordedMediaFile.value = null;
-          },
+          onSubmitted: isTextLimitReached.value
+              ? null
+              : () async {
+                  if (recordedMediaFile.value != null) {
+                    await onSubmitted(
+                      content: controller.text,
+                      mediaFiles: [recordedMediaFile.value!],
+                    );
+                  } else {
+                    await onSubmitted(content: controller.text);
+                  }
+                  recordedMediaFile.value = null;
+                },
         ),
       ],
     );

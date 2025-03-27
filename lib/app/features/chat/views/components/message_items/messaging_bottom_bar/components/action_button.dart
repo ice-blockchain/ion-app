@@ -29,7 +29,6 @@ class ActionButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
     final paddingBottom = useState<double>(0);
-
     final onSend = useCallback(() async {
       ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
       await onSubmitted?.call();
@@ -41,6 +40,7 @@ class ActionButton extends HookConsumerWidget {
         case MessagingBottomBarState.voicePaused:
           return SendButton(
             onSend: onSend,
+            disabled: onSubmitted == null,
           );
         case MessagingBottomBarState.voice:
         case MessagingBottomBarState.voiceLocked:
