@@ -22,4 +22,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/language_identification.176.ftz
-    - assets/labeling.ftz
+    - assets/labeling_2.ftz

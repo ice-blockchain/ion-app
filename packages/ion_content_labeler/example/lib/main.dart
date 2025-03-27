@@ -17,6 +17,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String? _input;
 
+  String? _normalizedInput;
+
   String? _language;
 
   String? _category;
@@ -25,12 +27,17 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _input =
-        ' was tired of holding \$pi i sold and rested if youre tired of holding \$ice do the same and rest but coming here to throw shades eeewwwweeeeeeee i no go gree you ooo ehhhh baby';
-    detectTextLanguage(_input!).then((language) => setState(() {
-          _language = language;
+        '''Trump is trying to deport a Columbia Univ. student who has been a permanent resident in the U.S. since she was 7.
+Her "crime"?
+Attending a protest against the war in Gaza.
+No, Mr. President. This is a democracy. You can't exile political dissidents. Not in the United States.''';
+    detectTextLanguage(_input!).then((result) => setState(() {
+          _language = result.predictions.first;
+          _normalizedInput = result.input;
         }));
-    detectTextCategory(_input!).then((category) => setState(() {
-          _category = category;
+    detectTextCategory(_input!).then((result) => setState(() {
+          _category = result.predictions.first;
+          _normalizedInput = result.input;
         }));
   }
 
@@ -48,6 +55,10 @@ class _MyAppState extends State<MyApp> {
               children: [
                 Text('Input text is:\n$_input'),
                 SizedBox(height: 10),
+                if (_normalizedInput != null) ...[
+                  Text('Normalized input is:\n$_normalizedInput'),
+                  SizedBox(height: 10)
+                ],
                 if (_language != null) ...[Text('Language is:\n$_language'), SizedBox(height: 10)],
                 if (_category != null) ...[Text('Category is:\n$_category'), SizedBox(height: 10)],
               ],

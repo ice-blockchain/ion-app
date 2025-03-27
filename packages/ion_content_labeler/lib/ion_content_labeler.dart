@@ -1,23 +1,34 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:ffi';
 import 'dart:io';
+
 import 'package:ffi/ffi.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<String> detectTextLanguage(String content) async {
+Future<PredictResult> detectTextLanguage(String content) async {
   final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
   final modelPath = await _getAssetFilePath(name: 'language_identification.176.ftz');
   loadModel(modelPath);
-  return predict(_normalizeInput(content));
+  final input = _normalizeInput(content);
+  return PredictResult(
+    input: input,
+    predictions: predict(input).split(';'),
+  );
 }
 
-Future<String> detectTextCategory(String content) async {
+Future<PredictResult> detectTextCategory(String content) async {
   final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
-  final modelPath = await _getAssetFilePath(name: 'labeling.ftz');
+  final modelPath = await _getAssetFilePath(name: 'labeling_2.ftz');
   loadModel(modelPath);
-  return predict(_normalizeInput(content));
+  final input = _normalizeInput(content);
+  return PredictResult(
+    input: input,
+    predictions: predict(input).split(';'),
+  );
 }
 
 Future<String> _getAssetFilePath({required String name}) async {
@@ -47,10 +58,7 @@ String _normalizeOutput(String output) {
 }
 
 String _normalizeInput(String input) {
-  return input.replaceAll('\n', ' ')
-    ..replaceAll(RegExp(r'[^\w\s]'), '')
-    ..toLowerCase()
-    ..trim();
+  return input.replaceAll('\n', ' ').replaceAll(RegExp(r'[^\w\s#\$]'), '').toLowerCase().trim();
 }
 
 ({
@@ -79,4 +87,37 @@ String _normalizeInput(String input) {
       return _normalizeOutput(prediction);
     },
   );
+}
+
+class PredictResult {
+  final List<String> predictions;
+  final String input;
+
+  PredictResult({
+    required this.predictions,
+    required this.input,
+  });
+
+  @override
+  bool operator ==(covariant PredictResult other) {
+    if (identical(this, other)) return true;
+
+    return listEquals(other.predictions, predictions) && other.input == input;
+  }
+
+  @override
+  int get hashCode => predictions.hashCode ^ input.hashCode;
+
+  @override
+  String toString() => 'PredictResult(predictions: $predictions, input: $input)';
+
+  PredictResult copyWith({
+    List<String>? predictions,
+    String? input,
+  }) {
+    return PredictResult(
+      predictions: predictions ?? this.predictions,
+      input: input ?? this.input,
+    );
+  }
 }
