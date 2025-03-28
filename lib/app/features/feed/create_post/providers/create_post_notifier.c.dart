@@ -36,6 +36,7 @@ import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -155,19 +156,24 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         throw UnsupportedEventReference(eventReference);
       }
 
+      final media = entity.data.media.values;
       final postData = entity.data.copyWith(
         content: '',
         editingEndedAt: null,
         relatedHashtags: [],
         relatedPubkeys: [],
         quotedEvent: null,
-        media: {}, //TODO: consider removing media from the storage
+        media: {},
         settings: null,
         expiration: null,
         richText: null,
       );
 
-      await _sendPostEntities([postData]);
+      final fileHashes = media.map((e) => e.originalFileHash).toList();
+      await Future.wait([
+        ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(fileHashes),
+        _sendPostEntities([postData]),
+      ]);
     });
   }
 
