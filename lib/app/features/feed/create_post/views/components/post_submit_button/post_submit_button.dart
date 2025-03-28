@@ -120,9 +120,10 @@ class PostSubmitButton extends HookConsumerWidget {
             ),
 =======
         final content = textEditorController.document.toPlainText().trim();
-        final labeler = IonTextLabeler();
-        final language = await labeler.detectTextLanguage(content);
-        final category = await labeler.detectTextCategory(content);
+        final langLabeler = await IonTextLabeler.create(TextLabelerType.language);
+        final categoryLabeler = await IonTextLabeler.create(TextLabelerType.category);
+        final language = await langLabeler.detect(content);
+        final category = await categoryLabeler.detect(content);
         if (context.mounted) {
           await showSimpleBottomSheet<void>(
             child: Column(

@@ -17,31 +17,36 @@ enum TextLabelerType {
 
 //TODO:add downloading models, use predict in isolate
 class IonTextLabeler {
-  IonTextLabeler._(this._loadModel, this._predict);
+  IonTextLabeler._(this._lib);
 
-  final void Function(String path) _loadModel;
+  final FastText _lib;
 
-  final List<Label> Function(String content) _predict;
-
-  static Future<IonTextLabeler> create() async {
-    final (:loadModel, :predict) = _loadFastTextLibrarySymbols();
-    return IonTextLabeler._(loadModel, predict);
-  }
-
-  Future<TextLabelerResult> detect(String input, {required TextLabelerType type}) async {
+  static Future<IonTextLabeler> create(TextLabelerType type) async {
+    final lib = FastText();
     //TODO:add abstract Model class that will resolve it's path
     final modelName = switch (type) {
       TextLabelerType.language => 'language_identification.176.ftz',
       TextLabelerType.category => 'labeling_3.ftz',
     };
     final modelPath = await _getAssetFilePath(name: modelName);
-    _loadModel(modelPath);
+    lib.loadModel(modelPath);
+    return IonTextLabeler._(lib);
+  }
 
+  Future<TextLabelerResult> detect(String input, {int count = 3}) async {
     final normalizedInput = _normalizeInput(input);
+    final predictionsJson = _lib.predict(input, k: count);
+    final labels = (jsonDecode(predictionsJson) as List<dynamic>)
+        .map((prediction) => _normalizeLabel(Label.fromMap(prediction)))
+        .toList();
     return TextLabelerResult(
       input: normalizedInput,
-      labels: _predict(input).map(_normalizeLabel).toList(),
+      labels: labels,
     );
+  }
+
+  void dispose() {
+    _lib.dispose();
   }
 
   static Future<String> _getAssetFilePath({required String name}) async {
@@ -56,16 +61,6 @@ class IonTextLabeler {
     return file.path;
   }
 
-  static DynamicLibrary _loadFastTextLibrary() {
-    if (Platform.isIOS) {
-      return DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
-    } else if (Platform.isAndroid) {
-      return DynamicLibrary.open('libfasttext_predict.so');
-    } else {
-      throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
-    }
-  }
-
   static Label _normalizeLabel(Label label) {
     return label.copyWith(name: label.name.replaceFirst('__label__', ''));
   }
@@ -77,35 +72,82 @@ class IonTextLabeler {
         .toLowerCase()
         .trim();
   }
+}
 
-  //TODO: make those non static
-  static ({
-    void Function(String path) loadModel,
-    List<Label> Function(String content) predict,
-  }) _loadFastTextLibrarySymbols() {
-    final lib = _loadFastTextLibrary();
-    return (
-      loadModel: (String path) {
-        final filenameUtf8 = path.toNativeUtf8();
-        final loadModelFn =
-            lib.lookupFunction<Void Function(Pointer<Utf8> str), void Function(Pointer<Utf8> str)>(
-                'load_model');
-        loadModelFn(filenameUtf8);
-        calloc.free(filenameUtf8);
-      },
-      predict: (String input) {
-        final predictFn = lib.lookupFunction<Void Function(Pointer<Utf8> str, Pointer<Utf8> output),
-            void Function(Pointer<Utf8> str, Pointer<Utf8> output)>('predict');
-        final inputUtf8 = input.toNativeUtf8();
-        Pointer<Utf8> outputPrediction = calloc.allocate(256);
-        predictFn(inputUtf8, outputPrediction);
-        final predictions = outputPrediction.toDartString();
-        calloc.free(inputUtf8);
-        calloc.free(outputPrediction);
-        return (jsonDecode(predictions) as List<dynamic>)
-            .map((prediction) => Label.fromMap(prediction))
-            .toList();
-      },
+class FastText {
+  final int _handle;
+
+  final void Function(int handle, Pointer<Utf8> filename) _loadModel;
+  final void Function(int handle, Pointer<Utf8> input, int k, Pointer<Utf8> out, int outSize)
+      _predict;
+  final void Function(int handle) _destroyInstance;
+
+  FastText._(this._handle, this._loadModel, this._predict, this._destroyInstance);
+
+  factory FastText() {
+    final lib = _loadLibrary();
+
+    final createInstance = lib.lookupFunction<Uint64 Function(), int Function()>('create_instance');
+
+    final loadModel = lib.lookupFunction<Void Function(Uint64 handle, Pointer<Utf8> filename),
+        void Function(int handle, Pointer<Utf8> filename)>('load_model');
+
+    final predict = lib.lookupFunction<
+        Void Function(
+            Uint64 handle, Pointer<Utf8> input, Int32 k, Pointer<Utf8> out, Uint64 outSize),
+        void Function(
+            int handle, Pointer<Utf8> input, int k, Pointer<Utf8> out, int outSize)>('predict');
+
+    final destroyInstance =
+        lib.lookupFunction<Void Function(Uint64 handle), void Function(int handle)>(
+            'destroy_instance');
+
+    final handle = createInstance();
+    if (handle == 0) {
+      throw Exception('Failed to create FastText instance');
+    }
+
+    return FastText._(
+      handle,
+      loadModel,
+      predict,
+      destroyInstance,
     );
+  }
+
+  void loadModel(String modelPath) {
+    final modelPathPtr = modelPath.toNativeUtf8();
+    try {
+      _loadModel(_handle, modelPathPtr);
+    } finally {
+      calloc.free(modelPathPtr);
+    }
+  }
+
+  String predict(String text, {int k = 3}) {
+    final textPtr = text.toNativeUtf8();
+    final outPtr = calloc.allocate<Utf8>(512);
+
+    try {
+      _predict(_handle, textPtr, k, outPtr, 512);
+      return outPtr.toDartString();
+    } finally {
+      calloc.free(textPtr);
+      calloc.free(outPtr);
+    }
+  }
+
+  void dispose() {
+    _destroyInstance(_handle);
+  }
+
+  static DynamicLibrary _loadLibrary() {
+    if (Platform.isIOS) {
+      return DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
+    } else if (Platform.isAndroid) {
+      return DynamicLibrary.open('libfasttext_predict.so');
+    } else {
+      throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
+    }
   }
 }

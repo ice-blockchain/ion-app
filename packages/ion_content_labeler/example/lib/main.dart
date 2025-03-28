@@ -21,9 +21,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  IonTextLabeler? _languageLabeler;
-  IonTextLabeler? _categoryLabeler;
-
   final TextEditingController _controller = TextEditingController(text: _initialInput);
 
   String? _normalizedInput;
@@ -35,8 +32,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // IonTextLabeler.create(TextLabelerType.language).then((labeler) => _languageLabeler = labeler);
-    // IonTextLabeler.create(TextLabelerType.category).then((labeler) => _categoryLabeler = labeler);
   }
 
   @override
@@ -78,14 +73,20 @@ class _MyAppState extends State<MyApp> {
       _language = null;
       _labels = null;
     });
-    final input = _controller.text;
-    _languageLabeler?.detect(input).then((result) => setState(() {
-          _language = result.labels.join('\n');
-          _normalizedInput = result.input;
-        }));
-    _categoryLabeler?.detect(input).then((result) => setState(() {
-          _labels = result.labels.join('\n');
-          _normalizedInput = result.input;
-        }));
+    // final input = _controller.text;
+    for (var i = 0; i < 1; i++) {
+      IonTextLabeler.create(TextLabelerType.language).then((labeler) {
+        // labeler.detect(input).then((result) => setState(() {
+        //       _language = result.labels.join('\n');
+        //       _normalizedInput = result.input;
+        //     }));
+      });
+      IonTextLabeler.create(TextLabelerType.category).then((labeler) {
+        // labeler.detect(input).then((result) => setState(() {
+        //       _labels = result.labels.join('\n');
+        //       _normalizedInput = result.input;
+        //     }));
+      });
+    }
   }
 }
