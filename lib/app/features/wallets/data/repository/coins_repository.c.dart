@@ -5,6 +5,7 @@ import 'package:ion/app/features/wallets/data/database/dao/coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/sync_coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/wallets_database.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -59,17 +60,21 @@ class CoinsRepository {
   /// If the [coins] list is not provided, all coins will be returned.
   Future<List<CoinData>> getCoins([Iterable<String>? coinIds]) => _coinsDao.get(coinIds);
 
+  Future<CoinData> getNativeCoin(NetworkData network) =>
+      getCoinsByFilters(networks: [network.id], contractAddresses: [''])
+          .then((result) => result.first);
+
   Future<List<CoinData>> getCoinsByFilters({
-    String? symbolGroup,
-    String? symbol,
-    String? network,
-    String? contractAddress,
+    Iterable<String>? symbolGroups,
+    Iterable<String>? symbols,
+    Iterable<String>? networks,
+    Iterable<String>? contractAddresses,
   }) =>
       _coinsDao.getByFilters(
-        symbolGroup: symbolGroup,
-        symbol: symbol,
-        network: network,
-        contractAddress: contractAddress,
+        symbolGroups: symbolGroups,
+        symbols: symbols,
+        networks: networks,
+        contractAddresses: contractAddresses,
       );
 
   int? getLastSyncTime() => _localStorage.getInt(_lastSyncTimeKey);

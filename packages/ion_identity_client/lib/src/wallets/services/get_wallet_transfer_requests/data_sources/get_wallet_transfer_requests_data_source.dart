@@ -46,6 +46,7 @@ class GetWalletTransferRequestsDataSource {
     String username,
     String walletId, {
     String? pageToken,
+    int? pageSize,
   }) async {
     final token = _token(username);
 
@@ -56,7 +57,10 @@ class GetWalletTransferRequestsDataSource {
           token: token.token,
           username: username,
         ),
-        queryParams: pageToken != null ? {'paginationToken': pageToken} : {},
+        queryParams: {
+          if (pageToken != null) 'paginationToken': pageToken,
+          if (pageSize != null) 'limit': pageSize,
+        },
         decoder: (result) => parseJsonObject(result, fromJson: WalletTransferRequests.fromJson),
       );
     } on NetworkException catch (e) {
