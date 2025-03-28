@@ -60,41 +60,24 @@ class MentionsHashtagsHandler {
           taggingCharacter = char;
           lastTagIndex = cursorIndex - 1;
 
-          if (char == '#' || char == r'$') {
-            _formatSingleWord(text, lastTagIndex);
-          } else {
-            _applyFormatting(lastTagIndex, 1, taggingCharacter);
-          }
+          _formatSingleWord(text, lastTagIndex);
 
           ref.invalidate(suggestionsNotifierProvider);
         } else if (char == ' ' || char == '\n') {
           if (lastTagIndex != -1) {
-            if (taggingCharacter == '@') {
-              _applyTagIfNeeded(cursorIndex);
-            } else {
-              _resetState();
-            }
+            _resetState();
             ref.invalidate(suggestionsNotifierProvider);
           }
         } else if (lastTagIndex != -1) {
-          if (taggingCharacter == '@') {
-            final currentTagText = text.substring(lastTagIndex, cursorIndex);
-            ref
-                .read(suggestionsNotifierProvider.notifier)
-                .updateSuggestions(currentTagText, taggingCharacter);
+          final currentText = text.substring(lastTagIndex, cursorIndex);
+          final spaceIndex = currentText.indexOf(' ');
 
-            _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentTagText);
-          } else if (taggingCharacter == '#' || taggingCharacter == r'$') {
-            final currentText = text.substring(lastTagIndex, cursorIndex);
-            final spaceIndex = currentText.indexOf(' ');
-
-            if (spaceIndex != -1) {
-              final tagText = currentText.substring(0, spaceIndex);
-              _applyFormatting(lastTagIndex, spaceIndex, tagText);
-              _resetState();
-            } else {
-              _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentText);
-            }
+          if (spaceIndex != -1) {
+            final tagText = currentText.substring(0, spaceIndex);
+            _applyFormatting(lastTagIndex, spaceIndex, tagText);
+            _resetState();
+          } else {
+            _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentText);
           }
         }
       }
@@ -106,16 +89,12 @@ class MentionsHashtagsHandler {
         } else {
           final remainingText = text.substring(lastTagIndex, cursorIndex);
           if (remainingText.isNotEmpty) {
-            if (taggingCharacter == '@') {
-              _applyFormatting(lastTagIndex, remainingText.length, remainingText);
+            final spaceIndex = remainingText.indexOf(' ');
+            if (spaceIndex != -1) {
+              _applyFormatting(lastTagIndex, spaceIndex, remainingText.substring(0, spaceIndex));
+              _resetState();
             } else {
-              final spaceIndex = remainingText.indexOf(' ');
-              if (spaceIndex != -1) {
-                _applyFormatting(lastTagIndex, spaceIndex, remainingText.substring(0, spaceIndex));
-                _resetState();
-              } else {
-                _applyFormatting(lastTagIndex, remainingText.length, remainingText);
-              }
+              _applyFormatting(lastTagIndex, remainingText.length, remainingText);
             }
           }
         }
@@ -130,7 +109,7 @@ class MentionsHashtagsHandler {
       final tags = <_TagInfo>[];
 
       for (var i = 0; i < text.length; i++) {
-        if ((text[i] == '#' || text[i] == r'$') && _isWordStart(text, i)) {
+        if ((text[i] == '#' || text[i] == '@' || text[i] == r'$') && _isWordStart(text, i)) {
           var endIndex = i;
           for (var j = i + 1; j < text.length; j++) {
             if (_isWordBoundary(text[j])) {
@@ -158,6 +137,7 @@ class MentionsHashtagsHandler {
       for (final tag in tags) {
         final attribute = switch (tag.tagChar) {
           '#' => HashtagAttribute.withValue(tag.text),
+          '@' => MentionAttribute.withValue(tag.text),
           r'$' => CashtagAttribute.withValue(tag.text),
           _ => null,
         };
@@ -315,25 +295,6 @@ class MentionsHashtagsHandler {
       controller.addListener(_editorListener);
     }
     ref.invalidate(suggestionsNotifierProvider);
-  }
-
-  void _applyTagIfNeeded(int cursorIndex) {
-    if (lastTagIndex == -1) return;
-
-    final tagText = controller.document.toPlainText().substring(lastTagIndex, cursorIndex);
-    final attribute = switch (taggingCharacter) {
-      '@' => MentionAttribute.withValue(tagText),
-      '#' => HashtagAttribute.withValue(tagText),
-      r'$' => CashtagAttribute.withValue(tagText),
-      _ => null,
-    };
-
-    if (attribute != null) {
-      controller.formatText(lastTagIndex, tagText.length, attribute);
-    }
-
-    lastTagIndex = -1;
-    taggingCharacter = '';
   }
 
   void _focusListener() {
