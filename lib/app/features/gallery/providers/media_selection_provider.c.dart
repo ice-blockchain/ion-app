@@ -23,6 +23,10 @@ class MediaSelectionNotifier extends _$MediaSelectionNotifier {
     state = state.copyWith(maxSelection: newMaxSelection);
   }
 
+  void updateDurationLimit(int? durationLimitInSeconds) {
+    state = state.copyWith(maxVideoDurationInSeconds: durationLimitInSeconds);
+  }
+
   void toggleSelection(String path, {MediaPickerType type = MediaPickerType.common}) {
     final isSelected = state.selectedMedia.any((media) => media.path == path);
     if (isSelected) {

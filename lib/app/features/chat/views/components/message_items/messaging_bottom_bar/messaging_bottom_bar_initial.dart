@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -137,6 +138,8 @@ class BottomBarInitialView extends HookConsumerWidget {
                   onGranted: () async {
                     final mediaFiles = await MediaPickerRoute(
                       maxSelection: 10,
+                      maxVideoDurationInSeconds:
+                          PrivateDirectMessageData.videoDurationLimitInSeconds,
                     ).push<List<MediaFile>>(context);
                     if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
                       final convertedMediaFiles = await ref

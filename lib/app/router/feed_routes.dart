@@ -308,16 +308,19 @@ class MediaPickerRoute extends BaseRouteData {
   MediaPickerRoute({
     this.maxSelection,
     this.mediaPickerType = MediaPickerType.common,
+    this.maxVideoDurationInSeconds,
   }) : super(
           child: MediaPickerPage(
             maxSelection: maxSelection ?? 5,
             type: mediaPickerType,
+            maxVideoDurationInSeconds: maxVideoDurationInSeconds,
           ),
           type: IceRouteType.bottomSheet,
         );
 
   final int? maxSelection;
   final MediaPickerType mediaPickerType;
+  final int? maxVideoDurationInSeconds;
 }
 
 class AlbumSelectionRoute extends BaseRouteData {
