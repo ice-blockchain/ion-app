@@ -36,6 +36,7 @@ import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
 import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -122,6 +123,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
       final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments)..addAll(media);
+      final originalMediaHashes =
+          modifiedEntity.data.media.values.map((e) => e.originalFileHash).toSet();
+      final attachedMediaHashes = mediaAttachments.values.map((e) => e.originalFileHash).toSet();
+      final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
 
       final postData = modifiedEntity.data.copyWith(
         content: _buildContentWithMediaLinks(
@@ -139,7 +144,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ),
       );
 
-      await _sendPostEntities([...files, postData]);
+      await Future.wait([
+        ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(removedMediaHashes),
+        _sendPostEntities([...files, postData]),
+      ]);
     });
   }
 
@@ -161,7 +169,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         relatedHashtags: [],
         relatedPubkeys: [],
         quotedEvent: null,
-        media: {}, //TODO: consider removing media from the storage
+        media: {},
         settings: null,
         expiration: null,
         richText: null,

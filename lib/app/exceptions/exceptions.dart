@@ -455,3 +455,8 @@ class MediaBlurhashCannotBeGeneratedException extends IONException {
   MediaBlurhashCannotBeGeneratedException(String? mimeType, {dynamic error})
       : super(10089, 'Media blurhash cannot be generated for $mimeType: $error');
 }
+
+class FileDeleteException extends IONException {
+  FileDeleteException(dynamic error, {required String fileHash})
+      : super(10090, 'Failed to delete file $fileHash: $error');
+}
