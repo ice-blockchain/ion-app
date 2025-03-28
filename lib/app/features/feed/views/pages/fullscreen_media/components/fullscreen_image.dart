@@ -2,14 +2,12 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:photo_view/photo_view.dart';
 
-final isImageZoomedProvider = StateProvider<bool>((ref) => false);
-
-class FullscreenImage extends HookConsumerWidget {
+class FullscreenImage extends HookWidget {
   const FullscreenImage({
     required this.imageUrl,
     required this.eventReference,
@@ -20,24 +18,31 @@ class FullscreenImage extends HookConsumerWidget {
   final EventReference eventReference;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final scaleStateController = PhotoViewScaleStateController();
+  Widget build(BuildContext context) {
+    final controller = useState(PhotoViewController());
 
     return Container(
-      padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
+      padding: EdgeInsets.only(
+        top: MediaQuery.paddingOf(context).top,
+      ),
       child: PhotoView(
-        key: ValueKey('fullscreen-$imageUrl'),
         imageProvider: CachedNetworkImageProvider(imageUrl),
-        loadingBuilder: (_, __) => const CenteredLoadingIndicator(),
-        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-        backgroundDecoration: const BoxDecoration(color: Colors.transparent),
-        scaleStateController: scaleStateController,
-        scaleStateCycle: (state) => state == PhotoViewScaleState.initial
-            ? PhotoViewScaleState.covering
-            : PhotoViewScaleState.initial,
+        loadingBuilder: (context, event) => const CenteredLoadingIndicator(),
+        controller: controller.value,
         minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 6,
         initialScale: PhotoViewComputedScale.contained,
-        maxScale: PhotoViewComputedScale.contained * 3,
+        basePosition: Alignment.center,
+        backgroundDecoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
+        customSize: MediaQuery.of(context).size,
+        scaleStateCycle: (actual) {
+          if (actual == PhotoViewScaleState.initial) {
+            return PhotoViewScaleState.covering;
+          }
+          return PhotoViewScaleState.initial;
+        },
       ),
     );
   }
