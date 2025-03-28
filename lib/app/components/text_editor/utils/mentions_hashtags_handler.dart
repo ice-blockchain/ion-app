@@ -141,14 +141,16 @@ class MentionsHashtagsHandler {
 
           if (endIndex >= i) {
             final tagText = text.substring(i, endIndex + 1);
-            tags.add(
-              _TagInfo(
-                start: i,
-                length: tagText.length,
-                text: tagText,
-                tagChar: text[i],
-              ),
-            );
+            if (tagText.length > 1) {
+              tags.add(
+                _TagInfo(
+                  start: i,
+                  length: tagText.length,
+                  text: tagText,
+                  tagChar: text[i],
+                ),
+              );
+            }
           }
         }
       }
@@ -222,30 +224,52 @@ class MentionsHashtagsHandler {
   }
 
   bool _isWordBoundary(String char) {
-    return char == ' ' || char == '\n' || _isPunctuation(char);
+    return char == ' ' ||
+        char == '\n' ||
+        _isPunctuation(char) ||
+        char == '#' ||
+        char == r'$' ||
+        char == '@';
   }
 
   bool _isWordStart(String text, int index) {
     if (index == 0) return true;
-    return _isWordBoundary(text[index - 1]);
+    final prevChar = text[index - 1];
+    return _isWordBoundary(prevChar);
   }
 
   bool _isPunctuation(String char) {
-    const punctuations = '.,;:!?()[]{}"\'/\\';
-    return punctuations.contains(char);
+    const regularPunctuation = '.,;:!?()[]{}"\'\\/\\`~=+<>*&^%_-|';
+    const specialQuotes = '\u2018\u2019\u201C\u201D\u2032\u2035\u00B4\u0060\u00AB\u00BB';
+    return regularPunctuation.contains(char) || specialQuotes.contains(char);
   }
 
   void _applyFormatting(int index, int length, String text) {
+    var actualLength = length;
+    var actualText = text;
+
+    for (var i = 0; i < text.length; i++) {
+      if (_isPunctuation(text[i])) {
+        actualLength = i;
+        actualText = text.substring(0, i);
+        break;
+      }
+    }
+
+    if (actualLength == 0) {
+      return;
+    }
+
     controller.removeListener(_editorListener);
     try {
       final attribute = switch (taggingCharacter) {
-        '@' => MentionAttribute.withValue(text),
-        '#' => HashtagAttribute.withValue(text),
-        r'$' => CashtagAttribute.withValue(text),
+        '@' => MentionAttribute.withValue(actualText),
+        '#' => HashtagAttribute.withValue(actualText),
+        r'$' => CashtagAttribute.withValue(actualText),
         _ => null,
       };
       if (attribute != null) {
-        controller.formatText(index, length, attribute);
+        controller.formatText(index, actualLength, attribute);
       }
     } finally {
       controller.addListener(_editorListener);
