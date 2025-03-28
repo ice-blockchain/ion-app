@@ -5,17 +5,26 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:ion_content_labeler/ion_content_labeler.dart';
 
 enum TextLabelerType {
-  language,
-  category,
+  language(AssetClassificationModel(name: 'language_identification.176.ftz')),
+  category(NetworkClassificationModel(
+    name: 'labeling_v3',
+    url:
+        'https://github.com/ice-blockchain/ion-app/raw/063772ec0dd75fac8946b2f33fb4ea33d04308aa/assets/labeling_3.ftz',
+  ));
+
+  final ClassificationModel model;
+
+  const TextLabelerType(this.model);
 }
 
-//TODO:add downloading models, use predict in isolate
+//TODO:use predict in isolate, add custom exceptions
 class IonTextLabeler {
   IonTextLabeler._(this._lib);
 
@@ -23,12 +32,7 @@ class IonTextLabeler {
 
   static Future<IonTextLabeler> create(TextLabelerType type) async {
     final lib = FastText();
-    //TODO:add abstract Model class that will resolve it's path
-    final modelName = switch (type) {
-      TextLabelerType.language => 'language_identification.176.ftz',
-      TextLabelerType.category => 'labeling_3.ftz',
-    };
-    final modelPath = await _getAssetFilePath(name: modelName);
+    final modelPath = await type.model.getPath();
     lib.loadModel(modelPath);
     return IonTextLabeler._(lib);
   }
@@ -47,18 +51,6 @@ class IonTextLabeler {
 
   void dispose() {
     _lib.dispose();
-  }
-
-  static Future<String> _getAssetFilePath({required String name}) async {
-    final byteData = await rootBundle.load('assets/$name');
-
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/$name');
-
-    await file
-        .writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
-    return file.path;
   }
 
   static Label _normalizeLabel(Label label) {
@@ -149,5 +141,55 @@ class FastText {
     } else {
       throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
     }
+  }
+}
+
+abstract class ClassificationModel {
+  Future<String> getPath();
+}
+
+class AssetClassificationModel implements ClassificationModel {
+  const AssetClassificationModel({required this.name});
+
+  final String name;
+
+  @override
+  Future<String> getPath() async {
+    final directory = await getApplicationCacheDirectory();
+    final file = File('${directory.path}/$name');
+    if (await file.exists()) {
+      return file.path;
+    }
+
+    final byteData = await rootBundle.load('packages/ion_content_labeler/assets/$name');
+    await file
+        .writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file.path;
+  }
+}
+
+class NetworkClassificationModel implements ClassificationModel {
+  const NetworkClassificationModel({required this.name, required this.url});
+
+  final String name;
+  final String url;
+
+  @override
+  Future<String> getPath() async {
+    final directory = await getApplicationCacheDirectory();
+    final file = File('${directory.path}/$name');
+    if (await file.exists()) {
+      return file.path;
+    }
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to download bundle');
+    }
+
+    await file.writeAsBytes(response.bodyBytes);
+
+    return file.path;
   }
 }

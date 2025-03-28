@@ -73,20 +73,23 @@ class _MyAppState extends State<MyApp> {
       _language = null;
       _labels = null;
     });
-    // final input = _controller.text;
-    for (var i = 0; i < 1; i++) {
-      IonTextLabeler.create(TextLabelerType.language).then((labeler) {
-        // labeler.detect(input).then((result) => setState(() {
-        //       _language = result.labels.join('\n');
-        //       _normalizedInput = result.input;
-        //     }));
-      });
-      IonTextLabeler.create(TextLabelerType.category).then((labeler) {
-        // labeler.detect(input).then((result) => setState(() {
-        //       _labels = result.labels.join('\n');
-        //       _normalizedInput = result.input;
-        //     }));
-      });
-    }
+    final input = _controller.text;
+
+    IonTextLabeler.create(TextLabelerType.language).then((labeler) {
+      for (var i = 0; i < 100; i++) {
+        labeler.detect(input.substring(0, i)).then((result) => setState(() {
+              _language = result.labels.join('\n');
+              _normalizedInput = result.input;
+            }));
+      }
+    });
+    IonTextLabeler.create(TextLabelerType.category).then((labeler) {
+      for (var i = 0; i < 100; i++) {
+        labeler.detect(input).then((result) => setState(() {
+              _labels = result.labels.join('\n');
+              _normalizedInput = result.input;
+            }));
+      }
+    });
   }
 }
