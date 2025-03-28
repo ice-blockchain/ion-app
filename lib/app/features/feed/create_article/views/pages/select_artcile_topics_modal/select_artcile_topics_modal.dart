@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
@@ -73,7 +74,7 @@ class SelectArticleTopicModal extends HookConsumerWidget {
               },
             ),
           ),
-          SizedBox(height: 12.0.s),
+          SizedBox(height: 8.0.s),
           Expanded(
             child: ListView.builder(
               itemCount: filteredTopics.length,
@@ -81,12 +82,15 @@ class SelectArticleTopicModal extends HookConsumerWidget {
                 final topic = filteredTopics[index];
                 final isSelected = selectedTopics.contains(topic);
 
-                return MenuItemButton(
-                  onPressed: () => toggleTopicSelection(topic),
-                  trailingIcon: isSelected
+                return ListItem(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
+                  constraints: const BoxConstraints(),
+                  onTap: () => toggleTopicSelection(topic),
+                  backgroundColor: colors.secondaryBackground,
+                  trailing: isSelected
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(color: colors.success)
                       : Assets.svg.iconBlockCheckboxOff.icon(color: colors.tertararyText),
-                  child: Text(topic.getTitle(context), style: textStyles.body),
+                  title: Text(topic.getTitle(context), style: textStyles.body),
                 );
               },
             ),
