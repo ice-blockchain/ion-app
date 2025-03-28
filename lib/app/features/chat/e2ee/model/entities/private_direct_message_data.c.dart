@@ -151,4 +151,5 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
 
   static const textMessageLimit = 4096;
   static const videoDurationLimitInSeconds = 300;
+  static const audioMessageDurationLimitInSeconds = 300;
 }
