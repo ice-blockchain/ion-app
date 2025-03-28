@@ -11,39 +11,52 @@ class FullscreenImage extends HookWidget {
   const FullscreenImage({
     required this.imageUrl,
     required this.eventReference,
+    this.bottomOverlayBuilder,
     super.key,
   });
 
+  static const _maxScaleFactor = 6.0;
+
   final String imageUrl;
   final EventReference eventReference;
+  final Widget Function(BuildContext)? bottomOverlayBuilder;
 
   @override
   Widget build(BuildContext context) {
     final controller = useState(PhotoViewController());
+    final scaleState = useState(PhotoViewScaleState.initial);
 
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.paddingOf(context).top,
-      ),
-      child: PhotoView(
-        imageProvider: CachedNetworkImageProvider(imageUrl),
-        loadingBuilder: (context, event) => const CenteredLoadingIndicator(),
-        controller: controller.value,
-        minScale: PhotoViewComputedScale.contained,
-        maxScale: PhotoViewComputedScale.covered * 6,
-        initialScale: PhotoViewComputedScale.contained,
-        basePosition: Alignment.center,
-        backgroundDecoration: const BoxDecoration(
-          color: Colors.transparent,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        PhotoView(
+          imageProvider: CachedNetworkImageProvider(imageUrl),
+          loadingBuilder: (_, __) => const CenteredLoadingIndicator(),
+          controller: controller.value,
+          minScale: PhotoViewComputedScale.contained,
+          maxScale: PhotoViewComputedScale.covered * _maxScaleFactor,
+          initialScale: PhotoViewComputedScale.contained,
+          basePosition: Alignment.center,
+          backgroundDecoration: const BoxDecoration(
+            color: Colors.transparent,
+          ),
+          customSize: MediaQuery.of(context).size,
+          tightMode: false,
+          scaleStateChangedCallback: (state) {
+            scaleState.value = state;
+          },
+          scaleStateCycle: (actual) => actual == PhotoViewScaleState.initial
+              ? PhotoViewScaleState.covering
+              : PhotoViewScaleState.initial,
         ),
-        customSize: MediaQuery.of(context).size,
-        scaleStateCycle: (actual) {
-          if (actual == PhotoViewScaleState.initial) {
-            return PhotoViewScaleState.covering;
-          }
-          return PhotoViewScaleState.initial;
-        },
-      ),
+        if (bottomOverlayBuilder != null)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: bottomOverlayBuilder!(context),
+          ),
+      ],
     );
   }
 }
