@@ -75,9 +75,9 @@ class _MyAppState extends State<MyApp> {
     });
     final input = _controller.text;
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 1; i++) {
       IonTextLabeler.create(TextLabelerType.category).then((labeler) {
-        labeler.detect(input.substring(0, i)).then((result) => setState(() {
+        labeler.detect(input.substring(0, input.length - i)).then((result) => setState(() {
               _language = result.labels.join('\n');
               _normalizedInput = result.input;
             }));
