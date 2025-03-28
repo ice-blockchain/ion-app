@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/components/components.dart';
 import 'package:ion/app/services/audio_wave_playback_service/audio_wave_playback_service.c.dart';
@@ -43,13 +44,19 @@ class BottomBarRecordingView extends HookConsumerWidget {
 
     useEffect(
       () {
-        final durationSubscription = recorderController.onCurrentDuration.listen((event) {
-          duration.value = formatDuration(event);
+        final durationSubscription = recorderController.onCurrentDuration.listen((currentDuration) {
+          duration.value = formatDuration(currentDuration);
+          if (currentDuration.inSeconds ==
+              PrivateDirectMessageData.audioMessageDurationLimitInSeconds) {
+            ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
+            return;
+          }
         });
 
-        final playerStateSubscription = playerController.value.onPlayerStateChanged.listen((event) {
-          if (event != PlayerState.stopped) {
-            playerState.value = event;
+        final playerStateSubscription =
+            playerController.value.onPlayerStateChanged.listen((currentPlayerState) {
+          if (currentPlayerState != PlayerState.stopped) {
+            playerState.value = currentPlayerState;
           }
         });
 
@@ -66,7 +73,6 @@ class BottomBarRecordingView extends HookConsumerWidget {
       },
       [],
     );
-
     useEffect(
       () {
         if (bottomBarState.isVoicePaused) {
