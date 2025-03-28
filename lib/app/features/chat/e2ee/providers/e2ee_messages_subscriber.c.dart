@@ -52,7 +52,7 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
           PrivateMessageReactionEntity.kind.toString(),
         ],
         '#p': [
-          [masterPubkey, '', eventSigner.publicKey],
+          [masterPubkey],
         ],
       },
       since: sinceDate,
