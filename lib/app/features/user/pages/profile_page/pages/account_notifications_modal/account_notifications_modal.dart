@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
-import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/user_notifications_type.dart';
@@ -49,40 +49,46 @@ class AccountNotificationsModal extends HookConsumerWidget {
           showBackButton: false,
           title: Text(context.i18n.profile_notifications_popup_title),
         ),
-        const HorizontalSeparator(),
-        for (final UserNotificationsType option in UserNotificationsType.values.toSet())
-          Column(
-            children: [
-              MenuItemButton(
-                onPressed: () => handleOptionSelection(option),
-                leadingIcon: ButtonIconFrame(
-                  containerSize: 36.0.s,
-                  borderRadius: BorderRadius.circular(10.0.s),
-                  color: colors.onSecondaryBackground,
-                  icon: option.iconAsset.icon(
-                    size: 24.0.s,
-                    color: colors.primaryAccent,
+        ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            final option = UserNotificationsType.values[index];
+            return Column(
+              children: [
+                if (index == 0) const HorizontalSeparator(),
+                ListItem(
+                  backgroundColor: colors.secondaryBackground,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 12.0.s),
+                  constraints: const BoxConstraints(),
+                  onTap: () => handleOptionSelection(option),
+                  title: Text(option.getTitle(context), style: textStyles.body),
+                  leading: ButtonIconFrame(
+                    containerSize: 36.0.s,
+                    borderRadius: BorderRadius.circular(10.0.s),
+                    color: colors.onSecondaryBackground,
+                    icon: option.iconAsset.icon(
+                      size: 24.0.s,
+                      color: colors.primaryAccent,
+                    ),
+                    border: Border.fromBorderSide(
+                      BorderSide(color: colors.onTerararyFill, width: 1.0.s),
+                    ),
                   ),
-                  border: Border.fromBorderSide(
-                    BorderSide(color: colors.onTerararyFill, width: 1.0.s),
-                  ),
+                  trailing: selectedOptions.value.contains(option)
+                      ? Assets.svg.iconBlockCheckboxOnblue.icon(
+                          color: colors.success,
+                        )
+                      : Assets.svg.iconBlockCheckboxOff.icon(
+                          color: colors.tertararyText,
+                        ),
                 ),
-                trailingIcon: selectedOptions.value.contains(option)
-                    ? Assets.svg.iconBlockCheckboxOnblue.icon(
-                        color: colors.success,
-                      )
-                    : Assets.svg.iconBlockCheckboxOff.icon(
-                        color: colors.tertararyText,
-                      ),
-                child: Text(
-                  option.getTitle(context),
-                  style: textStyles.body,
-                ),
-              ),
-              const HorizontalSeparator(),
-            ],
-          ),
-        ScreenBottomOffset(),
+                const HorizontalSeparator(),
+              ],
+            );
+          },
+          itemCount: UserNotificationsType.values.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+        ),
       ],
     );
   }

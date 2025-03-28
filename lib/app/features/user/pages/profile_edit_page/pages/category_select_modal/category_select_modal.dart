@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/inputs/search_input/search_input.dart';
+import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_categories_provider.c.dart';
@@ -65,7 +66,7 @@ class CategorySelectModal extends HookConsumerWidget {
                       },
                     ),
                   ),
-                  SizedBox(height: 16.0.s),
+                  SizedBox(height: 8.0.s),
                 ],
               ),
             ),
@@ -74,21 +75,19 @@ class CategorySelectModal extends HookConsumerWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 final category = filteredCategories[index];
-                return MenuItemButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(category.key);
-                  },
-                  trailingIcon: selectedCategory == category.key
+                return ListItem(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0.s, vertical: 8.0.s),
+                  constraints: const BoxConstraints(),
+                  backgroundColor: context.theme.appColors.secondaryBackground,
+                  onTap: () => Navigator.of(context).pop(category.key),
+                  title: Text(category.name, style: context.theme.appTextThemes.body),
+                  trailing: selectedCategory == category.key
                       ? Assets.svg.iconBlockCheckboxOnblue.icon(
                           color: context.theme.appColors.success,
                         )
                       : Assets.svg.iconBlockCheckboxOff.icon(
                           color: context.theme.appColors.tertararyText,
                         ),
-                  child: Text(
-                    category.name,
-                    style: context.theme.appTextThemes.body,
-                  ),
                 );
               },
               childCount: filteredCategories.length,
