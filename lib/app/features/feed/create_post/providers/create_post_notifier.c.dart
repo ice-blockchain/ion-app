@@ -163,7 +163,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         throw UnsupportedEventReference(eventReference);
       }
 
-      final media = entity.data.media.values;
       final postData = entity.data.copyWith(
         content: '',
         editingEndedAt: null,
@@ -176,11 +175,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         richText: null,
       );
 
-      final fileHashes = media.map((e) => e.originalFileHash).toList();
-      await Future.wait([
-        ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(fileHashes),
-        _sendPostEntities([postData]),
-      ]);
+      await _sendPostEntities([postData]);
     });
   }
 
