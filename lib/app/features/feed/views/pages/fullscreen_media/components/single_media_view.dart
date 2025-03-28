@@ -26,7 +26,6 @@ class SingleMediaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryTextColor = context.theme.appColors.primaryText;
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
     final horizontalPadding = 16.0.s;
 
@@ -44,7 +43,7 @@ class SingleMediaView extends StatelessWidget {
       bottomOverlayBuilder: (context) => SafeArea(
         top: false,
         child: ColoredBox(
-          color: primaryTextColor,
+          color: Colors.transparent,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: CounterItemsFooter(
