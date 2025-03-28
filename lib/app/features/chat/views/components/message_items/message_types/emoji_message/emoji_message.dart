@@ -39,11 +39,9 @@ class EmojiMessage extends HookConsumerWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: Text(
-                  entity.data.content,
-                  style: context.theme.appTextThemes.headline1.copyWith(height: 1),
-                ),
+              Text(
+                entity.data.content,
+                style: context.theme.appTextThemes.headline1.copyWith(height: 1),
               ),
               MessageMetaData(eventMessage: eventMessage),
             ],
