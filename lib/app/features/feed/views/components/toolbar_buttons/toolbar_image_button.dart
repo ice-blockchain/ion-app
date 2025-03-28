@@ -66,11 +66,13 @@ class ToolbarImageButton extends StatelessWidget {
   const ToolbarImageButton({
     required this.delegate,
     this.maxImages,
+    this.enabled = true,
     super.key,
   });
 
   final ToolbarImageButtonDelegate delegate;
   final int? maxImages;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +80,7 @@ class ToolbarImageButton extends StatelessWidget {
       mediaPickerType: MediaPickerType.image,
       onMediaSelected: delegate.onMediaSelected,
       maxSelection: maxImages,
+      enabled: enabled,
     );
   }
 }

@@ -3,8 +3,10 @@
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
 
-class DismissibleContent extends StatelessWidget {
+class DismissibleContent extends ConsumerWidget {
   const DismissibleContent({
     required this.child,
     required this.state,
@@ -15,14 +17,18 @@ class DismissibleContent extends StatelessWidget {
   final GoRouterState state;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isZoomed = ref.watch(imageZoomStateProvider);
+
     return DismissiblePage(
       onDismissed: () {
         if (context.canPop()) {
           context.pop();
         }
       },
-      direction: DismissiblePageDismissDirection.multi,
+      direction: isZoomed
+          ? DismissiblePageDismissDirection.none
+          : DismissiblePageDismissDirection.vertical,
       child: child,
     );
   }
