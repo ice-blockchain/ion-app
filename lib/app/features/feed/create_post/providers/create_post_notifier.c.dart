@@ -209,13 +209,13 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final files = <FileMetadata>[];
     final attachments = <MediaAttachment>[];
     if (mediaFiles != null && mediaFiles.isNotEmpty) {
-      await Future.wait(
-        mediaFiles.map((mediaFile) async {
-          final (:fileMetadatas, :mediaAttachment) = await _uploadMedia(mediaFile);
-          attachments.add(mediaAttachment);
-          files.addAll(fileMetadatas);
-        }),
+      final results = await Future.wait(
+        mediaFiles.map(_uploadMedia),
       );
+      for (final result in results) {
+        files.addAll(result.fileMetadatas);
+        attachments.add(result.mediaAttachment);
+      }
     }
     return (
       files: files,
