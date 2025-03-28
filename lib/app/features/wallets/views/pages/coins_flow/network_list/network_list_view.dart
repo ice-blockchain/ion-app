@@ -13,7 +13,7 @@ import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_by_filters_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/mock_data/mock_data.dart';
@@ -44,8 +44,11 @@ class NetworkListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final coinsGroup = switch (type) {
-      NetworkListViewType.send =>
-        ref.watch(sendAssetFormControllerProvider).assetData.as<CoinAssetData>()?.coinsGroup,
+      NetworkListViewType.send => ref
+          .watch(sendAssetFormControllerProvider())
+          .assetData
+          .as<CoinAssetToSendData>()
+          ?.coinsGroup,
       NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin!,
     };
 

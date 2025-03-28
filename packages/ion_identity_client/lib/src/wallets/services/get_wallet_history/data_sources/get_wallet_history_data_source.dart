@@ -44,7 +44,7 @@ class GetWalletHistoryDataSource {
           limit: pageSize,
           paginationToken: pageToken,
         ).toJson(),
-        decoder: (result) => parseJsonObject(result, fromJson: WalletHistory.fromJson) ,
+        decoder: (result) => parseJsonObject(result, fromJson: WalletHistory.fromJson),
       );
     } on NetworkException catch (e) {
       if (e is RequestExecutionException && e.error is DioException) {

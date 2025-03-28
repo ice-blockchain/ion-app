@@ -47,10 +47,10 @@ class CoinsService {
     String? contractAddress,
   }) {
     return _coinsRepository.getCoinsByFilters(
-      symbolGroup: symbolGroup,
-      symbol: symbol,
-      network: network?.id,
-      contractAddress: contractAddress,
+      symbolGroups: symbolGroup != null ? [symbolGroup] : null,
+      symbols: symbol != null ? [symbol] : null,
+      networks: network != null ? [network.id] : null,
+      contractAddresses: contractAddress != null ? [contractAddress] : null,
     );
   }
 

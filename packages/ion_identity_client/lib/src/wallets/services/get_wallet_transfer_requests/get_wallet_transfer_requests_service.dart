@@ -16,11 +16,13 @@ class GetWalletTransferRequestsService {
   Future<WalletTransferRequests> getWalletTransferRequests(
     String walletId, {
     String? pageToken,
+    int? pageSize,
   }) async {
     return _getWalletTransferRequestsDataSource.getWalletTransferRequests(
       username,
       walletId,
       pageToken: pageToken,
+      pageSize: pageSize,
     );
   }
 

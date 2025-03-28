@@ -8,7 +8,7 @@ import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
@@ -27,13 +27,13 @@ class SendAssetFormController extends _$SendAssetFormController {
       wallet: walletView,
       arrivalDateTime: DateTime.now(),
       receiverAddress: '',
-      assetData: const CryptoAssetData.notInitialized(),
+      assetData: const CryptoAssetToSendData.notInitialized(),
     );
   }
 
   void setCoin(CoinsGroup coin) {
     state = state.copyWith(
-      assetData: CryptoAssetData.coin(coinsGroup: coin),
+      assetData: CryptoAssetToSendData.coin(coinsGroup: coin),
       senderWallet: null,
       networkFeeOptions: [],
       selectedNetworkFeeOption: null,
@@ -62,14 +62,13 @@ class SendAssetFormController extends _$SendAssetFormController {
 
   Future<void> setNetwork(NetworkData network) async {
     final wallets = await ref.read(walletsNotifierProvider.future);
-    final wallet = wallets.firstWhereOrNull(
-      (wallet) => wallet.network == network.id,
-    );
 
     // Reset current information about network
     state = state.copyWith(
       network: network,
-      senderWallet: wallet,
+      senderWallet: wallets.firstWhereOrNull(
+        (wallet) => wallet.network == network.id,
+      ),
       networkFeeOptions: [],
       selectedNetworkFeeOption: null,
     );
@@ -78,11 +77,12 @@ class SendAssetFormController extends _$SendAssetFormController {
       _initReceiverAddressFromContact(),
     );
 
-    if (state.assetData case final CoinAssetData coin) {
+    if (state.assetData case final CoinAssetToSendData coin) {
       var selectedOption = coin.coinsGroup.coins.firstWhereOrNull(
         (e) => e.coin.network == network,
       );
 
+      // TODO: Do we need if (selectedOption == null) code block below? Looks like it will never work
       if (selectedOption == null) {
         final coinData = await (await ref.watch(coinsServiceProvider.future))
             .getCoinsByFilters(
@@ -96,10 +96,19 @@ class SendAssetFormController extends _$SendAssetFormController {
         }
       }
 
+      // We should check the case, when user has several crypto wallets in one network.
+      // So, if we initially selected a wallet that doesn't have the same id
+      // as the selected coin wallet, we must correct this.
+      final isCryptoWalletCorrect =
+          selectedOption?.walletId != null && selectedOption?.walletId == state.senderWallet?.id;
+
       state = state.copyWith(
         assetData: coin.copyWith(
           selectedOption: selectedOption,
         ),
+        senderWallet: isCryptoWalletCorrect
+            ? state.senderWallet
+            : wallets.firstWhereOrNull((w) => w.id == selectedOption!.walletId),
       );
 
       final networkFeeInfo = await ref.read(
@@ -135,12 +144,12 @@ class SendAssetFormController extends _$SendAssetFormController {
   }
 
   void setCoinsAmount(String amount) {
-    if (state.assetData case final CoinAssetData coin) {
+    if (state.assetData case final CoinAssetToSendData coin) {
       final parsedAmount = double.tryParse(amount) ?? 0.0;
       state = state.copyWith(
         assetData: coin.copyWith(
           amount: parsedAmount,
-          priceUSD: parsedAmount * (coin.selectedOption?.coin.priceUSD ?? 0),
+          amountUSD: parsedAmount * (coin.selectedOption?.coin.priceUSD ?? 0),
         ),
       );
     }

@@ -11,13 +11,12 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/components/verify_identity/verify_identity_prompt_dialog_helper.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
-import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
@@ -43,13 +42,14 @@ class ConfirmationSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
 
-    final formData = ref.watch(sendAssetFormControllerProvider);
-    final coin = formData.assetData.as<CoinAssetData>();
+    final formData = ref.watch(sendAssetFormControllerProvider());
+    final coin = formData.assetData.as<CoinAssetToSendData>();
 
     ref
       ..displayErrors(sendCoinsNotifierProvider)
       ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) {
-        ref.invalidate(walletViewsDataNotifierProvider);
+        // TODO: Why we need to invalide this provider?
+        // ref.invalidate(walletViewsDataNotifierProvider);
 
         if (context.mounted && transactionDetails != null) {
           ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
@@ -79,7 +79,7 @@ class ConfirmationSheet extends ConsumerWidget {
                     TransactionAmountSummary(
                       amount: coin.amount,
                       currency: coin.coinsGroup.abbreviation,
-                      usdAmount: coin.priceUSD,
+                      usdAmount: coin.amountUSD,
                       icon: CoinIconWidget(
                         imageUrl: coin.coinsGroup.iconUrl,
                         size: 36.0.s,
@@ -136,18 +136,18 @@ class ConfirmationSheet extends ConsumerWidget {
                     ListItemNetworkFee(value: formatCrypto(fee.amount, fee.symbol)),
                   ],
                   SizedBox(height: 22.0.s),
-                  if (formData.assetData case final CoinAssetData coin)
+                  if (formData.assetData case final CoinAssetToSendData coin)
                     Button(
                       mainAxisSize: MainAxisSize.max,
                       disabled: ref.watch(sendCoinsNotifierProvider).isLoading,
                       label: ref.watch(sendCoinsNotifierProvider).maybeMap(
                             loading: (_) => const IONLoadingIndicator(),
                             orElse: () => Text(
-                              '${locale.button_confirm} - ${formatToCurrency(coin.priceUSD)}',
+                              '${locale.button_confirm} - ${formatToCurrency(coin.amountUSD)}',
                             ),
                           ),
                       onPressed: () async {
-                        if (formData.assetData is! CoinAssetData) return;
+                        if (formData.assetData is! CoinAssetToSendData) return;
 
                         await guardPasskeyDialog(
                           ref.context,

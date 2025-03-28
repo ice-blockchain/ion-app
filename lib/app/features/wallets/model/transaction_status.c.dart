@@ -2,7 +2,10 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-enum TransferStatus {
+part 'transaction_status.c.g.dart';
+
+@JsonEnum(alwaysCreate: true)
+enum TransactionStatus {
   /// The request is pending approval due to a policy applied to the wallet
   @JsonValue('Pending')
   pending,
@@ -27,4 +30,8 @@ enum TransferStatus {
   /// The request has been rejected by a policy approval action
   @JsonValue('Rejected')
   rejected;
+
+  String toJson() => _$TransactionStatusEnumMap[this]!;
+  factory TransactionStatus.fromJson(String json) =>
+      _$TransactionStatusEnumMap.map((key, value) => MapEntry(value, key))[json]!;
 }

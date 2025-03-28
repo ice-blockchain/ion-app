@@ -1,22 +1,25 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/mappers/nft_mapper.dart';
+import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_crypto_asset.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
+import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,23 +28,43 @@ part 'wallet_views_service.c.g.dart';
 
 @riverpod
 Future<WalletViewsService> walletViewsService(Ref ref) async {
-  return WalletViewsService(
+  final service = WalletViewsService(
     await ref.watch(ionIdentityClientProvider.future),
     await ref.watch(walletsNotifierProvider.future),
+    ref.watch(coinsRepositoryProvider),
     ref.watch(networksRepositoryProvider),
+    await ref.watch(transactionsRepositoryProvider.future),
   );
+
+  ref.onDispose(service.dispose);
+
+  return service;
 }
 
 class WalletViewsService {
   WalletViewsService(
     this._identity,
     this._userWallets,
+    this._coinsRepository,
     this._networksRepository,
+    this._transactionsRepository,
   );
 
   final List<Wallet> _userWallets;
   final IONIdentityClient _identity;
+  final CoinsRepository _coinsRepository;
   final NetworksRepository _networksRepository;
+  final TransactionsRepository _transactionsRepository;
+
+  final StreamController<List<WalletViewData>> _walletViewsController =
+      StreamController.broadcast();
+  Stream<List<WalletViewData>> get walletViews => _walletViewsController.stream;
+  List<WalletViewData> _originWalletViews = [];
+  List<WalletViewData> _modifiedWalletViews = [];
+  List<WalletViewData> get lastEmitted => _modifiedWalletViews;
+
+  StreamSubscription<Iterable<CoinData>>? _pricesSubscription;
+  StreamSubscription<Map<CoinData, TransactionData>>? _transactionsSubscription;
 
   Future<List<WalletViewData>> fetch() async {
     final shortViews = await _identity.wallets.getWalletViews();
@@ -50,13 +73,10 @@ class WalletViewsService {
       shortViews.map((e) => _identity.wallets.getWalletView(e.id)),
     );
     final networks = await _networksRepository.getAllAsMap();
-    final mainWalletViewId = viewsDetailsDTO
-        .reduce(
-          (a, b) => a.createdAt.isBefore(b.createdAt) ? a : b,
-        )
-        .id;
+    final mainWalletViewId =
+        viewsDetailsDTO.reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b).id;
 
-    return viewsDetailsDTO
+    _originWalletViews = viewsDetailsDTO
         .map(
           (viewDTO) => _parseWalletView(
             viewDTO,
@@ -65,15 +85,169 @@ class WalletViewsService {
           ),
         )
         .toList();
+    _emitModifiedWalletViews(walletViews: _originWalletViews);
+
+    test();
+
+    return _originWalletViews;
+  }
+
+  void test() async {
+    await _originWalletViews
+        .expand((wv) => wv.coins)
+        .map((e) => e.walletId)
+        .nonNulls
+        .map((id) => _transactionsRepository.syncTransfers(id, pageSize: 5000))
+        .wait;
+  }
+
+  void _emitModifiedWalletViews({
+    List<WalletViewData>? walletViews,
+    bool refreshSubscriptions = true,
+  }) {
+    if (walletViews != null) {
+      _modifiedWalletViews = walletViews;
+    }
+
+    _walletViewsController.add(_modifiedWalletViews);
+
+    if (refreshSubscriptions) _refreshSubscriptions();
+  }
+
+  void _refreshSubscriptions() {
+    if (_modifiedWalletViews.isNotEmpty) {
+      _listenForPricesUpdate();
+      _listenForTransactions();
+    }
+  }
+
+  Future<void> _listenForTransactions() async {
+    final coins =
+        _originWalletViews.expand((view) => view.coins).map((coin) => coin.coin.id).toSet();
+
+    if (coins.isEmpty) return;
+
+    if (_transactionsSubscription != null) await _transactionsSubscription?.cancel();
+
+    final since = DateTime.now().subtract(const Duration(hours: 24));
+    _transactionsSubscription = _transactionsRepository
+        .watchUnfinishedTransactionsByCoins(coins.toList(), since: since)
+        .distinct()
+        .listen((transactions) {
+      if (transactions.isEmpty) return;
+
+      final updatedViews = <WalletViewData>[];
+
+      for (final walletView in _modifiedWalletViews) {
+        final updatedCoinGroups = <CoinsGroup>[];
+
+        for (final coinsGroup in walletView.coinGroups) {
+          var totalGroupAmount = 0.0;
+          var totalGroupBalanceUSD = 0.0;
+          final updatedCoinsInWallet = <CoinInWalletData>[];
+
+          for (final coinInWallet in coinsGroup.coins) {
+            CoinInWalletData? modifiedCoin;
+
+            final transaction = transactions.entries
+                .firstWhereOrNull((entry) => entry.key.id == coinInWallet.coin.id)
+                ?.value;
+
+            final wallet = _userWallets.firstWhereOrNull((w) => w.id == coinInWallet.walletId);
+
+            // Check if transaction related to the current coin and we should modify amount/balance of it
+            final isTransactionRelatedToCoin =
+                transaction != null && transaction.senderWalletAddress == wallet?.address;
+            final transactionCoin = transaction?.cryptoAsset;
+            // final isNeedToModifyCoinBalance = transactionCoin is CoinTransactionAsset && transactionCoin.balanceBeforeTransaction ==
+
+            if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
+              final adjustedRawAmount =
+                  (BigInt.parse(coinInWallet.rawAmount) - BigInt.parse(transactionCoin.rawAmount))
+                      .toString();
+              final adjustedAmount = parseCryptoAmount(
+                adjustedRawAmount,
+                coinInWallet.coin.decimals,
+              );
+              final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
+
+              modifiedCoin = coinInWallet.copyWith(
+                amount: adjustedAmount,
+                balanceUSD: adjustedBalanceUSD,
+                rawAmount: adjustedRawAmount,
+              );
+            }
+
+            final coin = modifiedCoin ?? coinInWallet;
+
+            totalGroupAmount += coin.amount;
+            totalGroupBalanceUSD += coin.balanceUSD;
+
+            updatedCoinsInWallet.add(coin);
+          }
+
+          updatedCoinGroups.add(
+            coinsGroup.copyWith(
+              coins: updatedCoinsInWallet,
+              totalAmount: totalGroupAmount,
+              totalBalanceUSD: totalGroupBalanceUSD,
+            ),
+          );
+        }
+
+        updatedViews.add(
+          walletView.copyWith(
+            coinGroups: updatedCoinGroups,
+            usdBalance: updatedCoinGroups.fold<double>(
+              0,
+              (sum, group) => sum + group.totalBalanceUSD,
+            ),
+          ),
+        );
+      }
+
+      _emitModifiedWalletViews(
+        walletViews: updatedViews,
+        refreshSubscriptions: false,
+      );
+    });
+  }
+
+  Future<void> _listenForPricesUpdate() async {
+    if (_modifiedWalletViews.isEmpty) return;
+
+    final coinIds = _modifiedWalletViews
+        .expand((view) => view.coinGroups)
+        .expand((group) => group.coins)
+        .map((coin) => coin.coin.id)
+        .toSet();
+
+    await _pricesSubscription?.cancel();
+
+    // TODO: Should we skip the fisrt pack? It returns all coins from the DB by ids.
+    _pricesSubscription = _coinsRepository.watchCoins(coinIds).listen((updatedCoins) {
+      if (_modifiedWalletViews.isEmpty) return;
+
+      final merged = [
+        for (final walletView in _modifiedWalletViews)
+          _mergeWalletViewWithPriceUpdates(walletView, updatedCoins),
+      ];
+
+      _emitModifiedWalletViews(walletViews: merged, refreshSubscriptions: false);
+    });
   }
 
   Future<WalletViewData> create(String name) async {
     final request = _CreateUpdateRequestBuilder().build(name: name);
     final networks = await _networksRepository.getAllAsMap();
-    final walletView = await _identity.wallets.createWalletView(request).then(
+    final newWalletView = await _identity.wallets.createWalletView(request).then(
           (viewDTO) => _parseWalletView(viewDTO, networks, isMainWalletView: false),
         );
-    return walletView;
+
+    _originWalletViews = [..._originWalletViews, newWalletView];
+    _emitModifiedWalletViews(walletViews: _originWalletViews);
+
+    return newWalletView;
   }
 
   Future<WalletViewData> update({
@@ -89,19 +263,32 @@ class WalletViewsService {
       userWallets: _userWallets,
     );
 
-    return _identity.wallets.updateWalletView(walletView.id, request).then(
+    final updatedWalletView = await _identity.wallets.updateWalletView(walletView.id, request).then(
           (viewDTO) => _parseWalletView(
             viewDTO,
             networks,
             isMainWalletView: walletView.isMainWalletView,
           ),
         );
+
+    final index = _originWalletViews.indexWhere((w) => w.id == walletView.id);
+    index != -1
+        ? _originWalletViews[index] = updatedWalletView
+        : _originWalletViews.add(updatedWalletView);
+
+    _emitModifiedWalletViews(walletViews: _originWalletViews);
+
+    return updatedWalletView;
   }
 
   Future<void> delete({required String walletViewId}) async {
-    return _identity.wallets.deleteWalletView(walletViewId);
+    await _identity.wallets.deleteWalletView(walletViewId);
+    _emitModifiedWalletViews(
+      walletViews: _originWalletViews.where((view) => view.id != walletViewId).toList(),
+    );
   }
 
+  // TODO: Move parsing to the separate class
   WalletViewData _parseWalletView(
     WalletView viewDTO,
     Map<String, NetworkData> networks, {
@@ -117,6 +304,7 @@ class WalletViewsService {
       final network = networks[coinDTO.network]!;
 
       var coinAmount = 0.0;
+      var rawCoinAmount = '0';
       var coinBalanceUSD = 0.0;
 
       final aggregationItem = _searchAggregationItem(
@@ -132,15 +320,8 @@ class WalletViewsService {
             ?.asset;
 
         if (asset != null) {
-          late final double assetBalance;
-          try {
-            assetBalance = double.parse(asset.balance);
-          } on FormatException catch (_) {
-            Logger.error('Failed to parse asset balance with `${asset.balance}` value.');
-            assetBalance = 0;
-          }
-
-          coinAmount = assetBalance / pow(10, coinDTO.decimals);
+          rawCoinAmount = asset.balance;
+          coinAmount = parseCryptoAmount(asset.balance, asset.decimals);
           coinBalanceUSD = coinAmount * coinDTO.priceUSD;
         }
       }
@@ -151,6 +332,7 @@ class WalletViewsService {
 
       final coinInWallet = CoinInWalletData(
         amount: coinAmount,
+        rawAmount: rawCoinAmount,
         balanceUSD: coinBalanceUSD,
         walletId: coinInWalletDTO.walletId,
         coin: CoinData.fromDTO(coinDTO, network),
@@ -210,7 +392,7 @@ class WalletViewsService {
     return search(aggregation.values);
   }
 
-  WalletViewData mergeWalletViewWithPriceUpdates(
+  WalletViewData _mergeWalletViewWithPriceUpdates(
     WalletViewData walletView,
     Iterable<CoinData> updatedCoins,
   ) {
@@ -252,5 +434,12 @@ class WalletViewsService {
         (sum, group) => sum + group.totalBalanceUSD,
       ),
     );
+  }
+
+  void dispose() {
+    _walletViewsController.close();
+
+    _pricesSubscription?.cancel();
+    _transactionsSubscription?.cancel();
   }
 }

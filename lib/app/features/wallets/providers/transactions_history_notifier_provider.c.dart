@@ -20,9 +20,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'transactions_history_notifier_provider.c.g.dart';
 
 typedef TransactionsHistoryState = ({
-  List<WalletAssetEntity> transactions,
   bool hasMore,
   List<EntitiesDataSource> dataSource,
+  List<WalletAssetEntity> transactions,
 });
 
 // TODO: Looks like it should be a repository part. Especially if the downloaded data will be stored in the DB.
