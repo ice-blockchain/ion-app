@@ -8,6 +8,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -62,7 +63,7 @@ class ArticleEntity
 
 @freezed
 class ArticleData
-    with SoftDeletableEntityData, EntityDataWithSettings, _$ArticleData
+    with SoftDeletableEntityData, EntityDataWithMediaContent, EntityDataWithSettings, _$ArticleData
     implements EventSerializable, ReplaceableEntityData {
   const factory ArticleData({
     required String content,
