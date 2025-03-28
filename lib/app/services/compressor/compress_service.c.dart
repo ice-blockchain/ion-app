@@ -13,6 +13,7 @@ import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_bitrate_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_audio_codec_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_bitrate_arg.dart';
+import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_pixel_format_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_preset_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_scale_arg.dart';
 import 'package:ion/app/services/media_service/ffmpeg_args/ffmpeg_video_codec_arg.dart';
@@ -50,6 +51,7 @@ class CompressionService {
     int fps = 24,
     FfmpegAudioCodecArg audioCodec = FfmpegAudioCodecArg.aac,
     FfmpegAudioBitrateArg audioBitrate = FfmpegAudioBitrateArg.low,
+    FfmpegPixelFormatArg pixelFormat = FfmpegPixelFormatArg.yuv420p,
   }) async {
     try {
       final output = await _generateOutputPath(extension: 'mp4');
@@ -70,6 +72,8 @@ class CompressionService {
         audioCodec.codec,
         '-b:a',
         audioBitrate.bitrate,
+        '-pix_fmt',
+        pixelFormat.name,
         '-vf',
         'scale=-2:${scale.resolution},fps=$fps',
         output,
