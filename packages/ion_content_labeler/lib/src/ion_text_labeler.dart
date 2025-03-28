@@ -155,7 +155,7 @@ class AssetClassificationModel implements ClassificationModel {
 
   @override
   Future<String> getPath() async {
-    final directory = await getApplicationCacheDirectory();
+    final directory = await getApplicationSupportDirectory();
     final file = File('${directory.path}/$name');
     if (await file.exists()) {
       return file.path;
@@ -177,7 +177,7 @@ class NetworkClassificationModel implements ClassificationModel {
 
   @override
   Future<String> getPath() async {
-    final directory = await getApplicationCacheDirectory();
+    final directory = await getApplicationSupportDirectory();
     final file = File('${directory.path}/$name');
     if (await file.exists()) {
       return file.path;
