@@ -36,7 +36,7 @@ class CreatorListItem extends ConsumerWidget {
         contentPadding: EdgeInsets.all(12.0.s),
         borderRadius: BorderRadius.circular(16.0.s),
         trailing: FollowButton(onPressed: onPressed, following: selected),
-        trailingPadding: EdgeInsets.only(left: 6.0.s),
+        trailingPadding: EdgeInsetsDirectional.only(start: 6.0.s),
       ),
     );
   }

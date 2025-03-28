@@ -23,7 +23,7 @@ class AdvancedSearchChannels extends HookConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 16.0.s),
+            padding: EdgeInsetsDirectional.only(top: 16.0.s),
             child: SearchSubHeader(
               icon: Assets.svg.iconCategoriesFollowing,
               title: context.i18n.chat_groups_subscribed,
@@ -32,7 +32,7 @@ class AdvancedSearchChannels extends HookConsumerWidget {
           ),
           const SubscribedChannels(),
           Padding(
-            padding: EdgeInsets.only(top: 8.0.s),
+            padding: EdgeInsetsDirectional.only(top: 8.0.s),
             child: SearchSubHeader(
               icon: Assets.svg.iconSendfundsUser,
               title: context.i18n.chat_groups_explore,

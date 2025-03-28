@@ -53,7 +53,7 @@ class SelectArticleTopicsItem extends ConsumerWidget {
         ),
         if (selectedTopics.isNotEmpty)
           Padding(
-            padding: EdgeInsets.only(top: 10.0.s),
+            padding: EdgeInsetsDirectional.only(top: 10.0.s),
             child: TopicsCarousel(topics: selectedTopics),
           ),
       ],

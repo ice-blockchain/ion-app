@@ -69,7 +69,7 @@ class ProfileShareMessage extends HookConsumerWidget {
                         },
                         minimumSize: Size(120.0.s, 32.0.s),
                         label: Padding(
-                          padding: EdgeInsets.only(bottom: 2.0.s),
+                          padding: EdgeInsetsDirectional.only(bottom: 2.0.s),
                           child: Text(
                             context.i18n.chat_profile_share_button,
                             style: context.theme.appTextThemes.caption2.copyWith(
@@ -101,6 +101,7 @@ class _ProfileSummary extends StatelessWidget {
 
   final bool isMe;
   final UserMetadataEntity userMetadata;
+
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(

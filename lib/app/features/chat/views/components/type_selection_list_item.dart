@@ -35,17 +35,18 @@ class TypeSelectionListItem<T extends SelectableType> extends StatelessWidget {
           child: isSelected
               ? Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(borderRadius),
-                      bottomRight: Radius.circular(borderRadius),
+                    borderRadius: BorderRadiusDirectional.only(
+                      bottomStart: Radius.circular(borderRadius),
+                      bottomEnd: Radius.circular(borderRadius),
                     ),
                     color: colors.attentionBlock,
                   ),
-                  margin:
-                      EdgeInsets.only(top: ListItem.defaultConstraints.minHeight - borderRadius),
-                  padding: EdgeInsets.only(
-                    left: 16.0.s,
-                    right: 16.0.s,
+                  margin: EdgeInsetsDirectional.only(
+                    top: ListItem.defaultConstraints.minHeight - borderRadius,
+                  ),
+                  padding: EdgeInsetsDirectional.only(
+                    start: 16.0.s,
+                    end: 16.0.s,
                     top: 12.0.s + borderRadius,
                     bottom: 12.0.s,
                   ),

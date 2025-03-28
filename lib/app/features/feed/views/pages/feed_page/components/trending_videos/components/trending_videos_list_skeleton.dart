@@ -33,7 +33,7 @@ class TrendingVideosListSkeleton extends StatelessWidget {
             height: listOverlay.itemSize.height,
             child: OverflowBox(
               maxWidth: double.infinity,
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: ScreenSideOffset.small(
                 child: SeparatedRow(
                   separator: const TrendingVideosListSeparator(),

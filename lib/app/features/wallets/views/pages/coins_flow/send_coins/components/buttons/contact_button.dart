@@ -31,11 +31,11 @@ class ContactButton extends ConsumerWidget {
         color: colors.secondaryBackground,
       ),
       child: ListItem.user(
-        contentPadding: EdgeInsets.only(
-          left: ScreenSideOffset.defaultSmallMargin,
+        contentPadding: EdgeInsetsDirectional.only(
+          start: ScreenSideOffset.defaultSmallMargin,
           top: 10.0.s,
           bottom: 10.0.s,
-          right: 8.0.s,
+          end: 8.0.s,
         ),
         title: Text(userMetadata.displayName),
         subtitle: Text(userMetadata.name),

@@ -197,9 +197,9 @@ class CubeWidget extends StatelessWidget {
           : transform.rotateX(-degToRad(rotation));
     }
 
-    Alignment alignment;
+    AlignmentGeometry alignment;
     if (rotationDirection == Axis.horizontal) {
-      alignment = isLeaving ? Alignment.centerRight : Alignment.centerLeft;
+      alignment = isLeaving ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart;
     } else {
       alignment = !isLeaving ? Alignment.topCenter : Alignment.bottomCenter;
     }
@@ -225,4 +225,5 @@ class CubeWidget extends StatelessWidget {
 }
 
 double degToRad(double deg) => deg * (pi / 180.0);
+
 double radToDeg(double rad) => rad * (180.0 / pi);

@@ -17,7 +17,7 @@ class CancelRecordButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: EdgeInsets.only(left: 16.0.s),
+      padding: EdgeInsetsDirectional.only(start: 16.0.s),
       child: GestureDetector(
         onTap: () {
           recorderController.stop();

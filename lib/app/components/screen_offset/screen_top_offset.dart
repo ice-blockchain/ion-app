@@ -20,7 +20,7 @@ class ScreenTopOffset extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: EdgeInsets.only(top: margin),
+        padding: EdgeInsetsDirectional.only(top: margin),
         child: child,
       ),
     );

@@ -61,7 +61,7 @@ class LoadMoreBuilder extends HookWidget {
                 ...slivers,
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 8.0.s),
+                    padding: EdgeInsetsDirectional.only(top: 8.0.s),
                     child: const Center(child: CircularProgressIndicator.adaptive()),
                   ),
                 ),

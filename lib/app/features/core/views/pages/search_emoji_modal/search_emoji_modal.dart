@@ -64,7 +64,7 @@ class SearchEmojiModal extends HookConsumerWidget {
             if (hasLoadedEmojis)
               Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.only(top: 16.0.s, bottom: 10.0.s),
+                  padding: EdgeInsetsDirectional.only(top: 16.0.s, bottom: 10.0.s),
                   child: SeparatedColumn(
                     separator: SizedBox(height: 24.0.s),
                     children: EmojiCategory.values.map((category) {
@@ -157,7 +157,7 @@ class _EmojiCategoryButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 16.0.s, bottom: 12.0.s),
+      padding: EdgeInsetsDirectional.only(top: 16.0.s, bottom: 12.0.s),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: EmojiCategory.values.map((category) {

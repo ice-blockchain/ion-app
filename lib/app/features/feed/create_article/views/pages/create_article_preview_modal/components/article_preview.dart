@@ -41,9 +41,9 @@ class ArticlePreview extends ConsumerWidget {
                 color: imageColor != null
                     ? fromHexColor(imageColor)
                     : context.theme.appColors.primaryAccent,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(4.0.s),
-                  bottomRight: Radius.circular(4.0.s),
+                borderRadius: BorderRadiusDirectional.only(
+                  topEnd: Radius.circular(4.0.s),
+                  bottomEnd: Radius.circular(4.0.s),
                 ),
               ),
             ),

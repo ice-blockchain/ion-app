@@ -10,6 +10,7 @@ import 'package:ion/generated/assets.gen.dart';
 
 class PollAnswerItem extends HookConsumerWidget {
   const PollAnswerItem({required this.index, this.isLast = false, super.key});
+
   final int index;
   final bool isLast;
 
@@ -68,7 +69,7 @@ class PollAnswerItem extends HookConsumerWidget {
                           hintText: context.i18n.poll_choice_placeholder(index + 1),
                           hintStyle: textThemes.caption,
                           border: InputBorder.none,
-                          contentPadding: const EdgeInsets.only(bottom: 10),
+                          contentPadding: const EdgeInsetsDirectional.only(bottom: 10),
                         ),
                         cursorColor: colors.primaryAccent,
                         cursorHeight: 22.0.s,

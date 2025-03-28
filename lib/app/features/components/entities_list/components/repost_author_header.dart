@@ -24,7 +24,7 @@ class RepostAuthorHeader extends ConsumerWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.only(top: 12.0.s),
+      padding: EdgeInsetsDirectional.only(top: 12.0.s),
       child: GestureDetector(
         onTap: () => ProfileRoute(pubkey: pubkey).push<void>(context),
         child: Row(

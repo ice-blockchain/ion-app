@@ -39,7 +39,7 @@ class AuthHeader extends StatelessWidget {
             children: [
               if (icon != null)
                 Padding(
-                  padding: EdgeInsets.only(bottom: iconOffset),
+                  padding: EdgeInsetsDirectional.only(bottom: iconOffset),
                   child: icon,
                 ),
               if (title?.isNotEmpty ?? false)
@@ -53,9 +53,9 @@ class AuthHeader extends StatelessWidget {
                 ),
               if (description.isNotEmpty)
                 Padding(
-                  padding: EdgeInsets.only(
-                    left: descriptionSidePadding,
-                    right: descriptionSidePadding,
+                  padding: EdgeInsetsDirectional.only(
+                    start: descriptionSidePadding,
+                    end: descriptionSidePadding,
                     top: 8.0.s,
                   ),
                   child: Text(

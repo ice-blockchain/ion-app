@@ -24,7 +24,7 @@ class _EmojisGridView extends ConsumerWidget {
           ),
         ),
         GridView.count(
-          padding: EdgeInsets.only(top: 10.0.s),
+          padding: EdgeInsetsDirectional.only(top: 10.0.s),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 8,

@@ -95,8 +95,8 @@ class AppSlider extends HookWidget {
                 AnimatedBuilder(
                   animation: animationController,
                   builder: (BuildContext context, Widget? child) {
-                    return Positioned(
-                      left: 0.0.s,
+                    return PositionedDirectional(
+                      start: 0.0.s,
                       child: TrackBar.active(
                         trackBarHeight: trackBarHeight,
                         color: context.theme.appColors.primaryAccent,
@@ -117,8 +117,8 @@ class AppSlider extends HookWidget {
                 AnimatedBuilder(
                   animation: animationController,
                   builder: (BuildContext context, Widget? child) {
-                    return Positioned(
-                      left: SliderUtils.computeSliderOffset(
+                    return PositionedDirectional(
+                      start: SliderUtils.computeSliderOffset(
                         value: animation.value,
                         sliderWidth: sliderWidth,
                         thumbSize: thumbIconSize.s,

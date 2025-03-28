@@ -28,10 +28,10 @@ class ShareSendButton extends HookConsumerWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: EdgeInsets.only(
+        padding: EdgeInsetsDirectional.only(
           top: 16.0.s,
-          left: 44.0.s,
-          right: 44.0.s,
+          start: 44.0.s,
+          end: 44.0.s,
         ),
         child: Button(
           disabled: loading.value,

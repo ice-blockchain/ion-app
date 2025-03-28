@@ -34,7 +34,7 @@ class TextEditorPollBuilder extends EmbedBuilder {
     EmbedContext embedContext,
   ) {
     return Padding(
-      padding: EdgeInsets.only(right: 23.0.s),
+      padding: EdgeInsetsDirectional.only(end: 23.0.s),
       child: Poll(
         onRemove: () {
           removeBlock(embedContext.controller, embedContext.node);

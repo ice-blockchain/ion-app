@@ -41,7 +41,7 @@ class AlbumSelectionPage extends ConsumerWidget {
           toolbarHeight: NavigationAppBar.modalHeaderHeight,
           pinned: true,
         ),
-        SliverPadding(padding: EdgeInsets.only(top: 12.0.s)),
+        SliverPadding(padding: EdgeInsetsDirectional.only(top: 12.0.s)),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             childCount: albumsAsync.valueOrNull?.length ?? 0,

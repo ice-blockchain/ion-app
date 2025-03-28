@@ -17,6 +17,7 @@ class ReadMoreText extends HookWidget {
   final String text;
 
   static String get ellipsis => '\u2026';
+
   static String get lineSeparator => '\u2028';
 
   @override
@@ -101,7 +102,9 @@ class ReadMoreText extends HookWidget {
           endIndex = textPainter.getOffsetBefore(pos.offset) ?? 0;
         } else {
           final pos = textPainter.getPositionForOffset(
-            textSize.bottomLeft(Offset.zero),
+            textDirection == TextDirection.rtl
+                ? textSize.bottomRight(Offset.zero)
+                : textSize.bottomLeft(Offset.zero),
           );
           endIndex = pos.offset;
           linkLongerThanLine = true;

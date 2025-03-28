@@ -26,9 +26,9 @@ class DeleteAdminButton extends ConsumerWidget {
 
     return ScreenSideOffset.small(
       child: ListItem(
-        contentPadding: EdgeInsets.only(
-          left: ScreenSideOffset.defaultSmallMargin,
-          right: 8.0.s,
+        contentPadding: EdgeInsetsDirectional.only(
+          start: ScreenSideOffset.defaultSmallMargin,
+          end: 8.0.s,
         ),
         title: Text(
           context.i18n.channel_create_admin_type_remove,

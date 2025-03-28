@@ -18,7 +18,7 @@ MenuThemeData buildMenuTheme(
         colors.tertararyBackground,
       ),
       padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(
-        EdgeInsets.fromLTRB(
+        EdgeInsetsDirectional.fromSTEB(
           templateTheme.menu.paddingLeft.s,
           templateTheme.menu.paddingTop.s,
           templateTheme.menu.paddingRight.s,

@@ -25,7 +25,7 @@ class TopicsCarousel extends ConsumerWidget {
     return SizedBox(
       height: 30.0.s,
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           padding:

@@ -35,7 +35,7 @@ class TwoFASelectOptionStep extends ConsumerWidget {
               itemCount: optionsState.optionsAmount,
               itemBuilder: (context, option) {
                 return Padding(
-                  padding: EdgeInsets.only(bottom: 22.0.s),
+                  padding: EdgeInsetsDirectional.only(bottom: 22.0.s),
                   child: TwoFaOptionSelector(
                     availableOptions: optionsState.availableOptions,
                     selectedOptions: optionsState.selectedValues,

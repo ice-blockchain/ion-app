@@ -130,6 +130,8 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.4.1
   go_router_builder: ^2.8.2
+  ion_lint_rules:
+    path: packages/ion_lint_rules
   json_serializable: ^6.7.1
   melos: ^6.1.0
   riverpod_generator: ^2.6.1

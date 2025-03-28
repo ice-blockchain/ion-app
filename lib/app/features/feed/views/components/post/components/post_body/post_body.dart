@@ -101,7 +101,7 @@ class PostBody extends HookConsumerWidget {
                     ),
                   if (maxHeight != null)
                     Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: Text(
                         context.i18n.common_show_more,
                         style: context.theme.appTextThemes.body2.copyWith(
@@ -114,7 +114,7 @@ class PostBody extends HookConsumerWidget {
             ),
             if (media.isNotEmpty)
               Padding(
-                padding: EdgeInsets.only(top: 10.0.s),
+                padding: EdgeInsetsDirectional.only(top: 10.0.s),
                 child: PostMedia(
                   media: media,
                   eventReference: entity.toEventReference(),
@@ -125,8 +125,8 @@ class PostBody extends HookConsumerWidget {
               ),
             if (media.isEmpty && urlPreview != null)
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: sidePadding ?? 16.0.s) +
-                    EdgeInsets.only(top: 10.0.s),
+                padding: EdgeInsetsDirectional.symmetric(horizontal: sidePadding ?? 16.0.s) +
+                    EdgeInsetsDirectional.only(top: 10.0.s),
                 child: urlPreview,
               ),
           ],

@@ -132,7 +132,7 @@ class ProfileEditPage extends HookConsumerWidget {
                 ),
               ],
             ),
-            Positioned(child: Header(pubkey: pubkey)),
+            PositionedDirectional(child: Header(pubkey: pubkey)),
           ],
         ),
       ),

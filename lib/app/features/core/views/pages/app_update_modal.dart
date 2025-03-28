@@ -24,7 +24,7 @@ class AppUpdateModal extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 30.0.s, right: 30.0.s, top: 30.0.s),
+          padding: EdgeInsetsDirectional.only(start: 30.0.s, end: 30.0.s, top: 30.0.s),
           child: InfoCard(
             iconAsset: appUpdateType.iconAsset,
             title: appUpdateType.getTitle(context),

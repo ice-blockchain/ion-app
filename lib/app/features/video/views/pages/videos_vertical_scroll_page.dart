@@ -111,7 +111,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           onBackPress: () => context.pop(),
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: rightPadding),
+              padding: EdgeInsetsDirectional.only(end: rightPadding),
               child: UserInfoMenu(
                 pubkey: eventReference.pubkey,
                 iconColor: secondaryBackgroundColor,

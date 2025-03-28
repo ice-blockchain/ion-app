@@ -97,7 +97,7 @@ class _CoinsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         bottom: ScreenBottomOffset.defaultMargin,
       ),
       sliver: SliverList.separated(

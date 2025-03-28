@@ -22,8 +22,8 @@ class FollowedByAvatars extends StatelessWidget {
       child: Stack(
         children: [
           for (int i = pubkeys.length - 1; i >= 0; i--)
-            Positioned(
-              left: i * (avatarSize - overlap),
+            PositionedDirectional(
+              start: i * (avatarSize - overlap),
               child: _FollowedAvatar(pubkey: pubkeys[i]),
             ),
         ],

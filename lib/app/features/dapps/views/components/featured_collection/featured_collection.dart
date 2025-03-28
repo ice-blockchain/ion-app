@@ -44,9 +44,9 @@ class FeaturedCollection extends ConsumerWidget {
               ),
               child: Stack(
                 children: [
-                  Positioned(
+                  PositionedDirectional(
                     bottom: 12.0.s,
-                    left: 12.0.s,
+                    start: 12.0.s,
                     child: Row(
                       children: [
                         featuredApps[index].iconImage.icon(size: 30.0.s),

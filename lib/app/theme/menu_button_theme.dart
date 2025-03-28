@@ -18,7 +18,7 @@ MenuButtonThemeData buildMenuButtonTheme(
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(
-        EdgeInsets.fromLTRB(
+        EdgeInsetsDirectional.fromSTEB(
           templateTheme.menuButton.paddingLeft.s,
           templateTheme.menuButton.paddingTop.s,
           templateTheme.menuButton.paddingRight.s,

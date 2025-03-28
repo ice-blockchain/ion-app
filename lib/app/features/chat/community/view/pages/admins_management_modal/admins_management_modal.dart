@@ -59,7 +59,7 @@ class AdminsManagementModal extends HookConsumerWidget {
           PinnedHeaderSliver(
             child: ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: buttonPaddingTop, bottom: separatorHeight),
+                padding: EdgeInsetsDirectional.only(top: buttonPaddingTop, bottom: separatorHeight),
                 child: Button(
                   mainAxisSize: MainAxisSize.max,
                   minimumSize: Size(buttonSize, buttonSize),

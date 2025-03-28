@@ -15,7 +15,7 @@ class QuotedEntityFrame extends StatelessWidget {
     Key? key,
   }) {
     return QuotedEntityFrame._(
-      padding: EdgeInsets.only(bottom: 10.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 10.0.s),
       key: key,
       child: child,
     );
@@ -26,14 +26,14 @@ class QuotedEntityFrame extends StatelessWidget {
     Key? key,
   }) {
     return QuotedEntityFrame._(
-      padding: EdgeInsets.only(top: 12.0.s, right: 16.0.s, bottom: 12.0.s),
+      padding: EdgeInsetsDirectional.only(top: 12.0.s, end: 16.0.s, bottom: 12.0.s),
       key: key,
       child: child,
     );
   }
 
   final Widget child;
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {

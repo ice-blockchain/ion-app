@@ -23,9 +23,9 @@ class CodeBlockTypeItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.only(
-          left: 8.0.s,
-          right: isSelected ? 4.0.s : 8.0.s,
+        padding: EdgeInsetsDirectional.only(
+          start: 8.0.s,
+          end: isSelected ? 4.0.s : 8.0.s,
         ),
         decoration: BoxDecoration(
           color: isSelected

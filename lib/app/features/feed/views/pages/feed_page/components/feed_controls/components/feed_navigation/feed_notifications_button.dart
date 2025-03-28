@@ -25,7 +25,7 @@ class FeedNotificationsButton extends ConsumerWidget {
             color: context.theme.appColors.primaryText,
           ),
         ),
-        Positioned(top: -5.0.s, right: -5.0.s, child: const _UnreadCounter()),
+        PositionedDirectional(top: -5.0.s, end: -5.0.s, child: const _UnreadCounter()),
       ],
     );
   }

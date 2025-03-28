@@ -35,9 +35,9 @@ class SignUpListItem extends StatelessWidget {
         decoration: ShapeDecoration(
           color: context.theme.appColors.tertararyBackground,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12.0.s),
-              bottomLeft: Radius.circular(12.0.s),
+            borderRadius: BorderRadiusDirectional.only(
+              topStart: Radius.circular(12.0.s),
+              bottomStart: Radius.circular(12.0.s),
             ),
           ),
         ),

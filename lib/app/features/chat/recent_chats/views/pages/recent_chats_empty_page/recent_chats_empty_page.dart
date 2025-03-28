@@ -33,7 +33,7 @@ class RecentChatsEmptyPage extends ConsumerWidget {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 210.0.s),
+                      padding: EdgeInsetsDirectional.only(top: 210.0.s),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -41,7 +41,7 @@ class RecentChatsEmptyPage extends ConsumerWidget {
                             size: 48.0.s,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 8.0.s),
+                            padding: EdgeInsetsDirectional.only(top: 8.0.s),
                             child: Text(
                               context.i18n.chat_empty_description,
                               style: context.theme.appTextThemes.caption2.copyWith(

@@ -99,7 +99,7 @@ class MediaPickerPage extends HookConsumerWidget {
       if (hasLimitedPermission)
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.only(bottom: 12.0.s),
+            padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
             child: ManageAccessBanner(type: type),
           ),
         ),

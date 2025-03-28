@@ -20,7 +20,7 @@ class BottomAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         bottom: 16.0.s,
         top: 12.0.s,
       ),

@@ -45,7 +45,7 @@ class AddGroupParticipantsModal extends HookConsumerWidget {
             ScreenBottomOffset(
               margin: 32.0.s,
               child: Padding(
-                padding: EdgeInsets.only(top: 16.0.s),
+                padding: EdgeInsetsDirectional.only(top: 16.0.s),
                 child: ScreenSideOffset.large(
                   child: Button(
                     onPressed: () {

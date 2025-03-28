@@ -27,6 +27,7 @@ class BottomBarInitialView extends HookConsumerWidget {
 
   final TextEditingController controller;
   final Future<void> Function({String? content, List<MediaFile>? mediaFiles}) onSubmitted;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -63,7 +64,7 @@ class BottomBarInitialView extends HookConsumerWidget {
           constraints: BoxConstraints(
             minHeight: 48.0.s,
           ),
-          padding: EdgeInsets.fromLTRB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
+          padding: EdgeInsetsDirectional.fromSTEB(8.0.s, 8.0.s, 44.0.s, 8.0.s),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -154,7 +155,7 @@ class BottomBarInitialView extends HookConsumerWidget {
                   builder: (_, onPressed) => GestureDetector(
                     onTap: onPressed,
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(0.0.s, 4.0.s, 4.0.s, 4.0.s),
+                      padding: EdgeInsetsDirectional.fromSTEB(0.0.s, 4.0.s, 4.0.s, 4.0.s),
                       child: Assets.svg.iconCameraOpen.icon(
                         color: context.theme.appColors.primaryText,
                         size: 24.0.s,

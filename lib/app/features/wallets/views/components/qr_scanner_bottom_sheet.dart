@@ -64,7 +64,7 @@ class QRScannerBottomSheet extends HookConsumerWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 80.0.s),
+                  padding: EdgeInsetsDirectional.only(bottom: 80.0.s),
                   child: SizedBox(
                     width: 200.0.s,
                     child: Text(

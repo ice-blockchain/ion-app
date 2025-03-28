@@ -17,9 +17,9 @@ class UnreadMessagesCounter extends ConsumerWidget {
     if (unreadMessagesCount == 0) {
       return const SizedBox();
     }
-    return Positioned(
+    return PositionedDirectional(
       top: 10.0.s,
-      right: 22.0.s,
+      end: 22.0.s,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 3.0.s, vertical: 2.0.s),
         decoration: BoxDecoration(

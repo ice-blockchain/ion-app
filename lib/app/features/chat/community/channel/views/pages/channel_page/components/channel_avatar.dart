@@ -22,6 +22,7 @@ class ChannelAvatar extends ConsumerWidget {
 
   final CommunityDefinitionData channel;
   final bool editMode;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
@@ -41,7 +42,7 @@ class ChannelAvatar extends ConsumerWidget {
             ),
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: -pictureSize * 0.4,
           child: Container(
             padding: EdgeInsets.all(pictureBorderWidth),

@@ -22,6 +22,7 @@ class NftItem extends StatelessWidget {
   final Color? backgroundColor;
 
   static double get imageWidth => 54.0.s;
+
   static double get imageHeight => 54.0.s;
 
   @override
@@ -41,7 +42,7 @@ class NftItem extends StatelessWidget {
                   size: 12.0.s,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 4.0.s, left: 5.0.s),
+                  padding: EdgeInsetsDirectional.only(start: 4.0.s, end: 5.0.s),
                   child: Text(
                     nftData.network.displayName,
                     style: context.theme.appTextThemes.caption2.copyWith(

@@ -35,7 +35,7 @@ class TrendingVideoLikesButton extends ConsumerWidget {
             color: context.theme.appColors.secondaryBackground,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 2.0.s),
+            padding: EdgeInsetsDirectional.only(start: 2.0.s),
             child: Text(
               formatDoubleCompact(likesCount),
               style: context.theme.appTextThemes.caption3.copyWith(

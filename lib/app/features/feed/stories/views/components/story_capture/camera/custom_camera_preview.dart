@@ -46,9 +46,9 @@ class CustomCameraPreview extends HookWidget {
               ),
             ),
           ),
-          Positioned(
+          PositionedDirectional(
             top: focusPoint.value.$2 - 20.0.s,
-            left: focusPoint.value.$1 - 20.0.s,
+            start: focusPoint.value.$1 - 20.0.s,
             child: _CameraFocusCircle(visible: showFocusCircle.value),
           ),
         ],

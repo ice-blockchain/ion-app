@@ -18,9 +18,9 @@ class RecordingOverlay extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
 
-    return Positioned(
+    return PositionedDirectional(
       bottom: MediaQuery.of(context).viewInsets.bottom + 8.0.s,
-      right: 14.0.s,
+      end: 14.0.s,
       child: SafeArea(
         child: Container(
           width: 32.0.s,
@@ -40,7 +40,7 @@ class RecordingOverlay extends ConsumerWidget {
                     ref.read(messagingBottomBarActiveStateProvider.notifier).setVoicePaused();
                   },
                   child: Padding(
-                    padding: EdgeInsets.only(top: 8.0.s),
+                    padding: EdgeInsetsDirectional.only(top: 8.0.s),
                     child: Assets.svg.iconVideoPause.icon(
                       color: context.theme.appColors.primaryAccent,
                       size: 20.0.s,
@@ -49,7 +49,7 @@ class RecordingOverlay extends ConsumerWidget {
                 )
               else
                 Padding(
-                  padding: EdgeInsets.only(top: 4.0.s),
+                  padding: EdgeInsetsDirectional.only(top: 4.0.s),
                   child: Container(
                     padding: EdgeInsets.all(4.0.s),
                     decoration: BoxDecoration(

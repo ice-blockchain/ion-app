@@ -10,7 +10,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/views/components/auth_scrolled_body/auth_header.dart';
 import 'package:ion/app/features/auth/views/pages/select_languages/language_list_item.dart';
 import 'package:ion/app/hooks/use_languages.dart';
-
 import 'package:ion/app/router/components/navigation_app_bar/collapsing_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -78,7 +77,7 @@ class LanguageSelectorPage extends HookConsumerWidget {
                   },
                 ),
                 SliverPadding(
-                  padding: EdgeInsets.only(
+                  padding: EdgeInsetsDirectional.only(
                     bottom: 16.0.s + (mayContinue ? 0 : MediaQuery.paddingOf(context).bottom),
                   ),
                 ),

@@ -75,6 +75,7 @@ class _PreviewItem extends ConsumerWidget {
     required this.url,
     required this.onRemove,
   });
+
   const _PreviewItem.file({
     required this.path,
     required this.onRemove,
@@ -104,8 +105,8 @@ class _PreviewItem extends ConsumerWidget {
       dimension: 50.0.s,
       child: Stack(
         children: [
-          Positioned(
-            left: 0,
+          PositionedDirectional(
+            start: 0,
             bottom: 0,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10.0.s),
@@ -126,8 +127,8 @@ class _PreviewItem extends ConsumerWidget {
               ),
             ),
           ),
-          Positioned(
-            right: 0,
+          PositionedDirectional(
+            end: 0,
             top: 0,
             child: GestureDetector(
               onTap: onRemove,

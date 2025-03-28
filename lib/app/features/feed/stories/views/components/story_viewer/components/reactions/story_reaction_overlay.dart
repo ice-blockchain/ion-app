@@ -49,10 +49,10 @@ class StoryReactionOverlay extends HookConsumerWidget {
         return Stack(
           children: [
             if (isKeyboardVisible)
-              Positioned(
+              PositionedDirectional(
                 bottom: keyboardHeight + contentPadding,
-                left: 0,
-                right: 0,
+                start: 0,
+                end: 0,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

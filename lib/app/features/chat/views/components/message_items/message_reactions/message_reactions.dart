@@ -38,7 +38,7 @@ class MessageReactions extends ConsumerWidget {
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return HookBuilder(
             builder: (context) => Padding(
-              padding: EdgeInsets.only(top: 8.0.s),
+              padding: EdgeInsetsDirectional.only(top: 8.0.s),
               child: Wrap(
                 spacing: 4.0.s,
                 runSpacing: 4.0.s,

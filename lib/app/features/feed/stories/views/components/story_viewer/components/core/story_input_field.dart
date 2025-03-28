@@ -54,17 +54,17 @@ class StoryInputField extends HookConsumerWidget {
       [controller],
     );
 
-    return Positioned(
+    return PositionedDirectional(
       bottom: bottomPadding,
-      left: 16.0.s,
-      right: 68.0.s,
+      start: 16.0.s,
+      end: 68.0.s,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(
-              left: 16.0.s,
-              right: 16.0.s,
+            padding: EdgeInsetsDirectional.only(
+              start: 16.0.s,
+              end: 16.0.s,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.0.s),
@@ -86,11 +86,11 @@ class StoryInputField extends HookConsumerWidget {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: appColors.primaryText.withValues(alpha: 0.5),
-                          contentPadding: EdgeInsets.only(
-                            left: 12.0.s,
+                          contentPadding: EdgeInsetsDirectional.only(
+                            start: 12.0.s,
                             top: 9.0.s,
                             bottom: 9.0.s,
-                            right: 58.0.s,
+                            end: 58.0.s,
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16.0.s),
@@ -103,9 +103,9 @@ class StoryInputField extends HookConsumerWidget {
                         style: body2.copyWith(color: onPrimaryAccent),
                       ),
                       if (isTextNotEmpty.value)
-                        Positioned(
+                        PositionedDirectional(
                           bottom: 4.0.s,
-                          right: 4.0.s,
+                          end: 4.0.s,
                           child: ToolbarSendButton(
                             enabled: true,
                             onPressed: () => onSubmitted(controller.text),

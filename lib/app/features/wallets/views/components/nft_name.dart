@@ -22,7 +22,7 @@ class NftName extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.only(right: 4.0.s),
+            padding: EdgeInsetsDirectional.only(start: 4.0.s),
             child: Text(
               name,
               maxLines: 2,

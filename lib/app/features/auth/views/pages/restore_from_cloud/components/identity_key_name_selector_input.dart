@@ -60,7 +60,7 @@ class IdentityKeyNameSelectorInput extends HookWidget {
       labelText: context.i18n.restore_from_cloud_selector_title,
       controller: textController,
       textInputAction: TextInputAction.done,
-      scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+      scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
       onFocused: onFocused,
       errorText: errorText,
       onChanged: onChanged,

@@ -66,9 +66,9 @@ class AvatarPicker extends HookConsumerWidget {
                       ? Assets.svg.userPhotoArea.icon(size: avatarSize ?? 100.0.s)
                       : null),
         ),
-        Positioned(
+        PositionedDirectional(
           bottom: -6.0.s,
-          right: -6.0.s,
+          end: -6.0.s,
           child: PermissionAwareWidget(
             permissionType: Permission.photos,
             onGranted: () async {

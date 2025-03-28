@@ -13,7 +13,7 @@ class MessageAuthorNameWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return author != null && !author!.isCurrentUser
         ? Padding(
-            padding: EdgeInsets.only(bottom: 8.0.s),
+            padding: EdgeInsetsDirectional.only(bottom: 8.0.s),
             child: Text(
               author!.name,
               style: context.theme.appTextThemes.subtitle3.copyWith(

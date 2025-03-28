@@ -43,7 +43,7 @@ class RestoreCredsPage extends HookWidget {
                       IdentityKeyNameInput(
                         controller: identityKeyNameController,
                         textInputAction: TextInputAction.next,
-                        scrollPadding: EdgeInsets.only(bottom: 250.0.s),
+                        scrollPadding: EdgeInsetsDirectional.only(bottom: 250.0.s),
                         notShowInfoIcon: true,
                       ),
                       SizedBox(height: 16.0.s),

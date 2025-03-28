@@ -14,9 +14,9 @@ class ContactListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: ScreenSideOffset.defaultSmallMargin,
-        right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
+      padding: EdgeInsetsDirectional.only(
+        start: ScreenSideOffset.defaultSmallMargin,
+        end: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
         top: 16.0.s - UiConstants.hitSlop,
         bottom: 14.0.s - UiConstants.hitSlop,
       ),

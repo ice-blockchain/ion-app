@@ -18,7 +18,7 @@ class DeleteAudioButton extends ConsumerWidget {
         ref.read(messagingBottomBarActiveStateProvider.notifier).setText();
       },
       child: Padding(
-        padding: EdgeInsets.fromLTRB(12.0.s, 4.0.s, 4.0.s, 4.0.s),
+        padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 4.0.s, 4.0.s, 4.0.s),
         child: Assets.svg.iconBlockDelete.icon(
           color: context.theme.appColors.primaryText,
           size: 24.0.s,

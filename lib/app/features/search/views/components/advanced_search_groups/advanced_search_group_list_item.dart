@@ -69,7 +69,7 @@ class GroupDescription extends StatelessWidget {
       children: [
         if (joined)
           Padding(
-            padding: EdgeInsets.only(right: 4.0.s),
+            padding: EdgeInsetsDirectional.only(end: 4.0.s),
             child: Assets.svg.iconChannelMembers.icon(
               size: 12.0.s,
               color: context.theme.appColors.onTertararyBackground,
@@ -112,12 +112,12 @@ class GroupHeader extends StatelessWidget {
         ),
         if (isVerified)
           Padding(
-            padding: EdgeInsets.only(left: 4.0.s),
+            padding: EdgeInsetsDirectional.only(start: 4.0.s),
             child: Assets.svg.iconBadgeIcelogo.icon(size: 16.0.s),
           ),
         if (isION)
           Padding(
-            padding: EdgeInsets.only(left: 4.0.s),
+            padding: EdgeInsetsDirectional.only(start: 4.0.s),
             child: Assets.svg.iconBadgeVerify.icon(size: 16.0.s),
           ),
       ],

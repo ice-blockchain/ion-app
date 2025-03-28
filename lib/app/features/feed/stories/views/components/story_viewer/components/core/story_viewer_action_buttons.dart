@@ -28,9 +28,9 @@ class StoryViewerActionButtons extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final shareColor = context.theme.appColors.onPrimaryAccent;
 
-    return Positioned(
+    return PositionedDirectional(
       bottom: bottomPadding,
-      right: 16.0.s,
+      end: 16.0.s,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

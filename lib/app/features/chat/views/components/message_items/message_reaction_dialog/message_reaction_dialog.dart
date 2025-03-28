@@ -112,9 +112,9 @@ class MessageReactionDialog extends HookConsumerWidget {
             ),
           ),
         ),
-        Positioned(
-          left: isMe ? null : ScreenSideOffset.defaultSmallMargin,
-          right: isMe ? ScreenSideOffset.defaultSmallMargin : null,
+        PositionedDirectional(
+          start: isMe ? null : ScreenSideOffset.defaultSmallMargin,
+          end: isMe ? ScreenSideOffset.defaultSmallMargin : null,
           top: topY,
           bottom: overflowBottomSize < 0
               ? MediaQuery.paddingOf(context).bottom

@@ -41,7 +41,7 @@ class MessageReactionContextMenu extends ConsumerWidget {
     return SizedBox(
       height: height,
       child: Padding(
-        padding: EdgeInsets.only(top: 6.0.s),
+        padding: EdgeInsetsDirectional.only(top: 6.0.s),
         child: OverlayMenuContainer(
           child: Column(
             children: [

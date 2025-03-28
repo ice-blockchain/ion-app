@@ -11,6 +11,7 @@ import 'package:ion/generated/assets.gen.dart';
 
 class MessageReactionEmojiBar extends ConsumerWidget {
   const MessageReactionEmojiBar({required this.isMe, super.key});
+
   static double get height => 72.0.s;
 
   final bool isMe;
@@ -20,7 +21,7 @@ class MessageReactionEmojiBar extends ConsumerWidget {
     final recentEmojiReactions = ref.watch(recentEmojiReactionsProvider);
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 6.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 6.0.s),
       child: SizedBox(
         width: MediaQuery.sizeOf(context).width - ScreenSideOffset.defaultSmallMargin * 2,
         child: Column(
@@ -105,7 +106,7 @@ class _EmojiButton extends ConsumerWidget {
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 6.0.s, horizontal: 10.0.s),
-        margin: EdgeInsets.only(right: 14.0.s),
+        margin: EdgeInsetsDirectional.only(end: 14.0.s),
         decoration: BoxDecoration(
           color: context.theme.appColors.primaryBackground,
           borderRadius: BorderRadius.circular(20.0.s),

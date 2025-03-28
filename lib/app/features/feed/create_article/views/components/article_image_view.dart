@@ -27,9 +27,9 @@ class ArticleImageView extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: 12.0.s,
-          right: 12.0.s,
+          end: 12.0.s,
           child: IconButton(
             onPressed: onClearImage,
             icon: Assets.svg.iconFieldClearall.icon(size: 20.0.s),

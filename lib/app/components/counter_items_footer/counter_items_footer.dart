@@ -28,7 +28,7 @@ class CounterItemsFooter extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomPadding, top: topPadding),
+      padding: EdgeInsetsDirectional.only(bottom: bottomPadding, top: topPadding),
       child: SizedBox(
         height: 28.0.s,
         child: Row(

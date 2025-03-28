@@ -16,7 +16,7 @@ class NotificationsHistoryTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = IconTheme.of(context).color;
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 8.0.s),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

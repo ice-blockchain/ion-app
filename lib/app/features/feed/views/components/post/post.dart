@@ -152,7 +152,7 @@ class _QuotedEvent extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Padding(
-      padding: EdgeInsets.only(top: 12.0.s),
+      padding: EdgeInsetsDirectional.only(top: 12.0.s),
       child: _FramedEvent(
         eventReference: eventReference,
         framedEventType: FramedEventType.quoted,

@@ -54,8 +54,8 @@ DefaultStyles textEditorStyles(BuildContext context, {Color? color}) {
       VerticalSpacing.zero,
       VerticalSpacing.zero,
       BoxDecoration(
-        border: Border(
-          left: BorderSide(
+        border: BorderDirectional(
+          start: BorderSide(
             color: context.theme.appColors.primaryAccent,
             width: 2.0.s,
           ),

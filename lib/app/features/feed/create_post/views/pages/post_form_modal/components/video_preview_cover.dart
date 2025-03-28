@@ -56,7 +56,7 @@ class VideoPreviewCover extends HookConsumerWidget {
     final clampedAspectRatio = videoAspectRatio.clamp(minAspectRatio, maxAspectRatio);
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 24.0.s, left: 12.0.s, right: 12.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 24.0.s, start: 12.0.s, end: 12.0.s),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxHeight: 430.0.s),
         child: ClipRRect(
@@ -102,13 +102,13 @@ class VideoPreviewCover extends HookConsumerWidget {
                         },
                       ),
                     ),
-                  Positioned(
-                    right: 12.0.s,
+                  PositionedDirectional(
+                    end: 12.0.s,
                     bottom: 12.0.s,
                     child: VideoPreviewEditCover(attachedVideoNotifier: attachedVideoNotifier),
                   ),
-                  Positioned(
-                    left: 12.0.s,
+                  PositionedDirectional(
+                    start: 12.0.s,
                     bottom: 12.0.s,
                     child: VideoPreviewDuration(
                       duration: Duration(seconds: videoController.value.duration.inSeconds),
@@ -130,7 +130,7 @@ class _VideoPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 24.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 24.0.s),
       child: Container(
         constraints: BoxConstraints(
           minHeight: 180.0.s,

@@ -70,7 +70,7 @@ class TextEditorSeparator extends HookWidget {
                 ),
                 if (isSelected.value && !readOnly)
                   Align(
-                    alignment: Alignment.topRight,
+                    alignment: AlignmentDirectional.topEnd,
                     child: TextEditorSeparatorClose(
                       onPressed: onRemove,
                     ),

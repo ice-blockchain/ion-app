@@ -32,7 +32,7 @@ class AttachedMediaPreview extends ConsumerWidget {
         maxHeight: maxItemHeight,
       ),
       child: ListView.separated(
-        padding: EdgeInsets.only(right: ScreenSideOffset.defaultSmallMargin),
+        padding: EdgeInsetsDirectional.only(end: ScreenSideOffset.defaultSmallMargin),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, i) {
           final file = attachedMediaNotifier.value[i];
@@ -62,9 +62,9 @@ class AttachedMediaPreview extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Positioned(
+                PositionedDirectional(
                   top: 0,
-                  right: 0,
+                  end: 0,
                   child: IconButton(
                     onPressed: () {
                       attachedMediaNotifier.value = attachedMediaNotifier.value.toList()

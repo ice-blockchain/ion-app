@@ -31,7 +31,7 @@ class AlbumItem extends StatelessWidget {
       onTap: onTap,
       child: ScreenSideOffset.small(
         child: Padding(
-          padding: EdgeInsets.only(bottom: 16.0.s),
+          padding: EdgeInsetsDirectional.only(bottom: 16.0.s),
           child: Row(
             children: [
               AlbumThumbnail(albumId: albumId),

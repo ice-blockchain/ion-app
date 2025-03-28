@@ -259,9 +259,9 @@ class VideoPlayerTab extends HookConsumerWidget {
                   aspectRatio: remoteVideoController.value.aspectRatio,
                   child: CachedVideoPlayerPlus(remoteVideoController),
                 ),
-                Positioned(
+                PositionedDirectional(
                   top: 0,
-                  right: 0,
+                  end: 0,
                   child: IconButton(
                     icon: Icon(
                       isPlaying.value ? Icons.pause : Icons.play_arrow,
@@ -274,10 +274,10 @@ class VideoPlayerTab extends HookConsumerWidget {
                     },
                   ),
                 ),
-                Positioned(
+                PositionedDirectional(
                   bottom: 0,
-                  left: 0,
-                  right: 0,
+                  start: 0,
+                  end: 0,
                   child: GestureDetector(
                     onHorizontalDragStart: (_) {
                       remoteVideoController.setPlaybackSpeed(0.1);
@@ -297,9 +297,9 @@ class VideoPlayerTab extends HookConsumerWidget {
                     ),
                   ),
                 ),
-                Positioned(
+                PositionedDirectional(
                   bottom: 40,
-                  left: 10,
+                  start: 10,
                   child: IconButton(
                     icon: const Icon(Icons.replay_10, color: Colors.white),
                     onPressed: () {
@@ -307,9 +307,9 @@ class VideoPlayerTab extends HookConsumerWidget {
                     },
                   ),
                 ),
-                Positioned(
+                PositionedDirectional(
                   bottom: 40,
-                  right: 10,
+                  end: 10,
                   child: IconButton(
                     icon: const Icon(Icons.forward_10, color: Colors.white),
                     onPressed: () {
@@ -317,10 +317,10 @@ class VideoPlayerTab extends HookConsumerWidget {
                     },
                   ),
                 ),
-                Positioned(
+                PositionedDirectional(
                   bottom: 40,
-                  left: 0,
-                  right: 0,
+                  start: 0,
+                  end: 0,
                   child: Center(
                     child: Text(
                       '${currentDuration.value.toString().split('.').first} / ${totalDuration.value.toString().split('.').first}',

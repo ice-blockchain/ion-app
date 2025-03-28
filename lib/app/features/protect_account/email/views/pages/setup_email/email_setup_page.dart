@@ -24,7 +24,7 @@ class EmailSetupPage extends ConsumerWidget {
     return SheetContent(
       body: step == EmailSetupSteps.success
           ? Padding(
-              padding: EdgeInsets.only(top: 45.0.s, bottom: 16.0.s),
+              padding: EdgeInsetsDirectional.only(top: 45.0.s, bottom: 16.0.s),
               child: const EmailSetupSuccessPage(),
             )
           : CustomScrollView(

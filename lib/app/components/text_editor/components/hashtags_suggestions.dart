@@ -40,7 +40,7 @@ class HashtagsSuggestions extends StatelessWidget {
                   },
                   child: ScreenSideOffset.small(
                     child: Container(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       height: hashtagItemSize,
                       child: DefaultTextStyle(
                         style: context.theme.appTextThemes.caption.copyWith(

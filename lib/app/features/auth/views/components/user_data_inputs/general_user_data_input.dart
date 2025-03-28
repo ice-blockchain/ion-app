@@ -53,7 +53,7 @@ class GeneralUserDataInput extends HookWidget {
       controller: controller,
       validator: validator,
       textInputAction: textInputAction ?? TextInputAction.next,
-      scrollPadding: EdgeInsets.all(120.0.s),
+      scrollPadding: EdgeInsetsDirectional.all(120.0.s),
       maxLines: maxLines,
       minLines: minLines,
       initialValue: initialValue,

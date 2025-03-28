@@ -62,10 +62,10 @@ class OverlayMenu extends HookWidget {
               CompositedTransformFollower(
                 link: followLink,
                 offset: Offset(renderBox.size.width, renderBox.size.height + 6.0.s),
-                followerAnchor: Alignment.topRight,
+                followerAnchor: AlignmentDirectional.topEnd.resolve(Directionality.of(context)),
                 showWhenUnlinked: false,
                 child: ScaleTransition(
-                  alignment: Alignment.topRight,
+                  alignment: AlignmentDirectional.topEnd.resolve(Directionality.of(context)),
                   scale: scaleAnimation,
                   child: IntrinsicWidth(child: menuBuilder(hideMenu)),
                 ),

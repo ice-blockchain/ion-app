@@ -38,7 +38,7 @@ class NetworkFeeOptionWidget extends StatelessWidget {
             );
           },
           child: Padding(
-            padding: EdgeInsets.only(left: 6.0.s),
+            padding: EdgeInsetsDirectional.only(start: 6.0.s),
             child: IconTheme(
               data: IconThemeData(
                 size: 16.0.s,

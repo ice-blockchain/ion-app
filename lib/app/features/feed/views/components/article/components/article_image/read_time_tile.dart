@@ -10,24 +10,28 @@ class ReadTimeTile extends StatelessWidget {
     required this.minutesToRead,
     required this.borderRadius,
     super.key,
-    this.alignment = Alignment.bottomRight,
+    this.alignment = AlignmentDirectional.bottomEnd,
   });
 
-  final Alignment alignment;
+  final AlignmentDirectional alignment;
 
   final int minutesToRead;
 
   final double borderRadius;
 
-  BorderRadius _getOverlayBorderRadius(Alignment alignment) {
+  BorderRadiusGeometry _getOverlayBorderRadius(AlignmentDirectional alignment) {
     return switch (alignment) {
-      Alignment.bottomRight || Alignment.topLeft => BorderRadius.only(
-          topLeft: Radius.circular(borderRadius),
-          bottomRight: Radius.circular(borderRadius),
+      AlignmentDirectional.bottomEnd ||
+      AlignmentDirectional.topStart =>
+        BorderRadiusDirectional.only(
+          topStart: Radius.circular(borderRadius),
+          bottomEnd: Radius.circular(borderRadius),
         ),
-      Alignment.topRight || Alignment.bottomLeft => BorderRadius.only(
-          topRight: Radius.circular(borderRadius),
-          bottomLeft: Radius.circular(borderRadius),
+      AlignmentDirectional.topEnd ||
+      AlignmentDirectional.bottomStart =>
+        BorderRadiusDirectional.only(
+          topEnd: Radius.circular(borderRadius),
+          bottomStart: Radius.circular(borderRadius),
         ),
       _ => BorderRadius.all(Radius.circular(borderRadius))
     };

@@ -52,17 +52,17 @@ class CoinIconWithNetwork extends StatelessWidget {
       dimension: containerSize,
       child: Stack(
         children: [
-          Positioned(
+          PositionedDirectional(
             top: 0,
-            left: 0,
+            start: 0,
             child: CoinIconWidget(
               imageUrl: iconUrl,
               size: coinSize,
             ),
           ),
-          Positioned(
+          PositionedDirectional(
             bottom: 0,
-            right: 0,
+            end: 0,
             child: NetworkIconWidget(
               size: networkSize,
               imageUrl: network.image,

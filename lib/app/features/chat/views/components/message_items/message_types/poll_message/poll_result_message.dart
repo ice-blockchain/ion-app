@@ -10,6 +10,7 @@ class PollResultMessage extends StatelessWidget {
     super.key,
     this.reactions,
   });
+
   final bool isMe;
   final DateTime createdAt;
   final EventMessage eventMessage;
@@ -109,7 +110,7 @@ class _PollResultItem extends HookWidget {
     });
 
     return Stack(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       children: [
         Expanded(
           child: LinearProgressIndicator(
@@ -123,8 +124,8 @@ class _PollResultItem extends HookWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(
-            left: 12.0.s,
+          padding: EdgeInsetsDirectional.only(
+            start: 12.0.s,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

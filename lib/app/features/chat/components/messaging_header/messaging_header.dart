@@ -27,7 +27,7 @@ class MessagingHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
+      padding: EdgeInsetsDirectional.fromSTEB(16.0.s, 8.0.s, 16.0.s, 12.0.s),
       child: Row(
         children: [
           GestureDetector(

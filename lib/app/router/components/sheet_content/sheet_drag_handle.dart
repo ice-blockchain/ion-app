@@ -29,7 +29,7 @@ class SheetDragHandle extends StatelessWidget implements PreferredSizeWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        margin: EdgeInsets.only(bottom: 8.0.s),
+        margin: EdgeInsetsDirectional.only(bottom: 8.0.s),
         width: _dragHandleWidth,
         height: _dragHandleHeight,
         decoration: ShapeDecoration(

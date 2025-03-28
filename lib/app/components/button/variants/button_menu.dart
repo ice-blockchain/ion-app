@@ -24,9 +24,9 @@ class _ButtonMenu extends Button {
               ),
               minimumSize: Size.square(40.0.s),
               padding: leadingIcon != null
-                  ? EdgeInsets.only(
-                      left: 4.0.s,
-                      right: active ? 12.0.s : 20.0.s,
+                  ? EdgeInsetsDirectional.only(
+                      start: 4.0.s,
+                      end: active ? 12.0.s : 20.0.s,
                     )
                   : EdgeInsets.symmetric(horizontal: 14.0.s),
             ),

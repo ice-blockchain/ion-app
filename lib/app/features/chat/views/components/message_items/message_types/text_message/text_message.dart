@@ -58,6 +58,7 @@ class _TextMessageContent extends StatelessWidget {
 
   final TextStyle style;
   final EventMessage eventMessage;
+
   @override
   Widget build(BuildContext context) {
     final oneLineTextPainter = TextPainter(
@@ -91,7 +92,7 @@ class _TextMessageContent extends StatelessWidget {
       final wouldOverlap = lineMetrics.last.width > 200.0.s;
 
       return Stack(
-        alignment: Alignment.bottomRight,
+        alignment: AlignmentDirectional.bottomEnd,
         children: [
           Text(
             '${eventMessage.content}${wouldOverlap ? '\n' : ''}',

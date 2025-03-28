@@ -55,9 +55,9 @@ class PostMediaCarouselHorizontal extends HookConsumerWidget {
             ],
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: 8.0.s,
-          right: 8.0.s,
+          end: 8.0.s,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(6.0.s)),

@@ -24,9 +24,9 @@ class _CoinNetworkItem extends ConsumerWidget {
             width: 6.0.s,
           ),
           Container(
-            padding: EdgeInsets.only(
-              left: 6.0.s,
-              right: 6.0.s,
+            padding: EdgeInsetsDirectional.only(
+              start: 6.0.s,
+              end: 6.0.s,
               bottom: 2.0.s,
             ),
             decoration: BoxDecoration(
@@ -51,9 +51,9 @@ class _CoinNetworkItem extends ConsumerWidget {
             imageUrl: coinData.iconUrl,
             size: 36.0.s,
           ),
-          Positioned(
+          PositionedDirectional(
             bottom: -3.0.s,
-            right: -3.0.s,
+            end: -3.0.s,
             child: NetworkIconWidget(
               size: 16.0.s,
               imageUrl: coinData.network.image,

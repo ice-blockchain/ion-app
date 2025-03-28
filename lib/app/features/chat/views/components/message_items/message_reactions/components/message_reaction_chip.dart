@@ -61,7 +61,7 @@ class _AvatarStack extends ConsumerWidget {
               final userPicture =
                   ref.watch(userMetadataProvider(pubkeys[i])).valueOrNull?.data.picture;
               return Padding(
-                padding: EdgeInsets.only(left: i * 8.0.s),
+                padding: EdgeInsetsDirectional.only(start: i * 8.0.s),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: context.theme.appColors.onPrimaryAccent,

@@ -20,7 +20,7 @@ class SuggestionsContainerEmpty extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 8.0.s),
+              padding: EdgeInsetsDirectional.only(end: 8.0.s),
               child: Assets.svg.iconFieldSearch.icon(
                 color: context.theme.appColors.tertararyText,
                 size: 18.0.s,

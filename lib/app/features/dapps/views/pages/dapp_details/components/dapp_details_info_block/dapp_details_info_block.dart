@@ -40,12 +40,12 @@ class DappDetailsInfoBlock extends StatelessWidget {
                 title ?? const SizedBox.shrink(),
                 if (showBottomPart)
                   Padding(
-                    padding: EdgeInsets.only(top: 4.0.s),
+                    padding: EdgeInsetsDirectional.only(top: 4.0.s),
                     child: Row(
                       children: [
                         if (iconPath != null)
                           Padding(
-                            padding: EdgeInsets.only(right: 6.0.s),
+                            padding: EdgeInsetsDirectional.only(end: 6.0.s),
                             child: SvgPicture.asset(
                               iconPath!,
                               width: 24.0.s,

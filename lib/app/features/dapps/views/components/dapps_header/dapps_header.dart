@@ -40,7 +40,7 @@ class DAppsHeader extends ConsumerWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 12.0.s),
+              padding: EdgeInsetsDirectional.only(start: 12.0.s),
               child: Button.icon(
                 onPressed: () {
                   WalletsRoute().push<void>(context);

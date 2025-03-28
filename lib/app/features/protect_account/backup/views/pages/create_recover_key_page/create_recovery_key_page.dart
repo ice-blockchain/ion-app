@@ -58,7 +58,7 @@ class _Header extends StatelessWidget {
     final locale = context.i18n;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 16.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 16.0.s),
       child: AuthHeader(
         topOffset: 0.0.s,
         title: locale.backup_option_with_recovery_keys_title,

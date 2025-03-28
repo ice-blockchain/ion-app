@@ -85,9 +85,9 @@ class CreateArticleModal extends HookConsumerWidget {
                         selectedImage: articleState.selectedImage,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
-                          left: ScreenSideOffset.defaultSmallMargin,
-                          right: ScreenSideOffset.defaultSmallMargin,
+                        padding: EdgeInsetsDirectional.only(
+                          start: ScreenSideOffset.defaultSmallMargin,
+                          end: ScreenSideOffset.defaultSmallMargin,
                           top: ScreenSideOffset.defaultSmallMargin,
                           bottom: 6.0.s,
                         ),

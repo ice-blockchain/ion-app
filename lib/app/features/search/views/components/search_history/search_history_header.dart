@@ -19,7 +19,7 @@ class SearchHistoryHeader extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: ScreenSideOffset.defaultSmallMargin),
+          padding: EdgeInsetsDirectional.only(start: ScreenSideOffset.defaultSmallMargin),
           child: Text(
             context.i18n.feed_search_history_title,
             style: context.theme.appTextThemes.subtitle3.copyWith(

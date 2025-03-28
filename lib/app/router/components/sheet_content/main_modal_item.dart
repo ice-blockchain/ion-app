@@ -20,7 +20,7 @@ class MainModalItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
-      contentPadding: EdgeInsets.fromLTRB(
+      contentPadding: EdgeInsetsDirectional.fromSTEB(
         40.0.s,
         index == 0 ? 9.0.s : 12.0.s,
         40.0.s,
@@ -29,7 +29,7 @@ class MainModalItem extends StatelessWidget {
       constraints: BoxConstraints(
         minHeight: 42.0.s,
       ),
-      leadingPadding: EdgeInsets.only(right: 10.0.s),
+      leadingPadding: EdgeInsetsDirectional.only(end: 10.0.s),
       title: Text(
         item.getDisplayName(context),
         style: context.theme.appTextThemes.subtitle2.copyWith(

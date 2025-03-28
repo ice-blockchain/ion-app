@@ -41,9 +41,9 @@ class TextInput extends HookWidget {
     this.labelColor,
     this.floatingLabelColor,
     this.autoValidateMode,
-    EdgeInsets? scrollPadding,
+    EdgeInsetsDirectional? scrollPadding,
     EdgeInsetsGeometry? contentPadding,
-  })  : scrollPadding = scrollPadding ?? EdgeInsets.all(20.0.s),
+  })  : scrollPadding = scrollPadding ?? EdgeInsetsDirectional.all(20.0.s),
         contentPadding =
             contentPadding ?? EdgeInsets.symmetric(vertical: 13.0.s, horizontal: 16.0.s);
 
@@ -69,7 +69,7 @@ class TextInput extends HookWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
-  final EdgeInsets scrollPadding;
+  final EdgeInsetsDirectional scrollPadding;
   final EdgeInsetsGeometry contentPadding;
 
   final ValueChanged<String>? onChanged;
@@ -121,7 +121,7 @@ class TextInput extends HookWidget {
     }
 
     return TextFormField(
-      scrollPadding: scrollPadding,
+      scrollPadding: scrollPadding.resolve(Directionality.of(context)),
       controller: controller,
       focusNode: focusNode,
       onChanged: onChangedHandler,

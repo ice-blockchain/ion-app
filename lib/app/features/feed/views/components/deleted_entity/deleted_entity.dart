@@ -30,7 +30,7 @@ class DeletedEntity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: topPadding, bottom: bottomPadding),
+      padding: EdgeInsetsDirectional.only(top: topPadding, bottom: bottomPadding),
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0.s),
@@ -38,7 +38,8 @@ class DeletedEntity extends StatelessWidget {
           border: Border.all(color: context.theme.appColors.onTerararyFill, width: 1.0.s),
         ),
         child: Padding(
-          padding: EdgeInsets.only(top: 12.0.s, right: 16.0.s, bottom: 12.0.s, left: 12.0.s),
+          padding:
+              EdgeInsetsDirectional.only(top: 12.0.s, end: 16.0.s, bottom: 12.0.s, start: 12.0.s),
           child: Row(
             children: [
               Assets.svg.iconFeedDeletedpost

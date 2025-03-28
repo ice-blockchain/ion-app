@@ -67,7 +67,7 @@ class PasswordInput extends HookWidget {
       },
       obscureText: isPasswordVisible.value == false,
       textInputAction: TextInputAction.done,
-      scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+      scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
       onFocused: onFocused,
       errorText: errorText,
       onChanged: onValueChanged,

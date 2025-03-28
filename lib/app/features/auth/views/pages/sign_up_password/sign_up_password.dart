@@ -82,7 +82,7 @@ class SignUpPasswordPage extends HookConsumerWidget {
                       errorText: registerActionState.error?.toString(),
                       controller: identityKeyNameController,
                       textInputAction: TextInputAction.next,
-                      scrollPadding: EdgeInsets.only(bottom: 250.0.s),
+                      scrollPadding: EdgeInsetsDirectional.only(bottom: 250.0.s),
                     ),
                     SizedBox(height: 16.0.s),
                     PasswordInput(

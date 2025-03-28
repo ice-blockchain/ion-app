@@ -36,7 +36,8 @@ class TurnOnNotifications extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 8.0.s + MediaQuery.paddingOf(context).bottom),
+            padding:
+                EdgeInsetsDirectional.only(bottom: 8.0.s + MediaQuery.paddingOf(context).bottom),
             child: ScreenSideOffset.small(
               child: Button(
                 label: Text(context.i18n.button_continue),

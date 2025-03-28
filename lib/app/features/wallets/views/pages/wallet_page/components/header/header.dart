@@ -35,7 +35,7 @@ class Header extends ConsumerWidget {
           children: [
             const Expanded(
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: WalletSwitcher(),
               ),
             ),
@@ -67,7 +67,7 @@ class Header extends ConsumerWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => Padding(
-        padding: EdgeInsets.only(top: 64.0.s),
+        padding: EdgeInsetsDirectional.only(top: 64.0.s),
         child: const WalletScanModalPage(),
       ),
     );

@@ -56,7 +56,7 @@ class ChannelSummary extends HookConsumerWidget {
         if (!basicMode)
           if (canEdit) ...[
             Padding(
-              padding: EdgeInsets.only(top: 16.0.s, bottom: 20.0.s),
+              padding: EdgeInsetsDirectional.only(top: 16.0.s, bottom: 20.0.s),
               child: Button(
                 onPressed: () {
                   EditChannelRoute(uuid: channel.data.uuid).push<void>(context);

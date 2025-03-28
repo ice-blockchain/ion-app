@@ -10,7 +10,7 @@ class ArticleImage extends StatelessWidget {
   const ArticleImage({
     this.imageUrl,
     this.minutesToRead,
-    this.minutesToReadAlignment = Alignment.bottomRight,
+    this.minutesToReadAlignment = AlignmentDirectional.bottomEnd,
     super.key,
   });
 
@@ -18,7 +18,7 @@ class ArticleImage extends StatelessWidget {
 
   final int? minutesToRead;
 
-  final Alignment minutesToReadAlignment;
+  final AlignmentDirectional minutesToReadAlignment;
 
   @override
   Widget build(BuildContext context) {

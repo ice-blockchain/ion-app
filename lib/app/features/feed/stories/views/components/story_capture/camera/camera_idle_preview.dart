@@ -24,34 +24,34 @@ class CameraIdlePreview extends ConsumerWidget {
 
     return Stack(
       children: [
-        Positioned(
+        PositionedDirectional(
           top: 10.0.s,
-          left: 10.0.s,
+          start: 10.0.s,
           child: StoryControlButton(
             icon: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
             onPressed: () => context.pop(),
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           top: 10.0.s,
-          right: 10.0.s,
+          end: 10.0.s,
           child: StoryControlButton(
             icon: Assets.svg.iconStoryLightning.icon(),
             onPressed: cameraActionsNotifier.toggleFlash,
           ),
         ),
-        Positioned(
+        PositionedDirectional(
           bottom: 30.0.s,
-          right: 16.0.s,
+          end: 16.0.s,
           child: StoryControlButton(
             icon: Assets.svg.iconStorySwitchcamera.icon(),
             onPressed: () => ref.read(cameraControllerNotifierProvider.notifier).switchCamera(),
           ),
         ),
         if (showGalleryButton)
-          Positioned(
+          PositionedDirectional(
             bottom: 30.0.s,
-            left: 16.0.s,
+            start: 16.0.s,
             child: const StoryGalleryButton(),
           ),
       ],

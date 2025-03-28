@@ -29,6 +29,7 @@ class GalleryGridCell extends ConsumerWidget {
   final bool showSelectionBadge;
 
   static double get cellHeight => 120.0.s;
+
   static double get cellWidth => 122.0.s;
 
   @override
@@ -85,18 +86,18 @@ class GalleryGridCell extends ConsumerWidget {
                       children: [
                         child,
                         if (showSelectionBadge)
-                          Positioned(
+                          PositionedDirectional(
                             top: 8.0.s,
-                            right: 8.0.s,
+                            end: 8.0.s,
                             child: SelectionBadge(
                               isSelected: selectionState.isSelected,
                               selectionOrder: selectionState.order.toString(),
                             ),
                           ),
                         if (asset.type == AssetType.video)
-                          Positioned(
+                          PositionedDirectional(
                             bottom: 4.0.s,
-                            right: 4.0.s,
+                            end: 4.0.s,
                             child: DurationBadge(
                               duration: asset.duration,
                             ),

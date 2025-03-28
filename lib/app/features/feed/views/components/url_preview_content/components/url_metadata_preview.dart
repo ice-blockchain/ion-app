@@ -18,7 +18,7 @@ class _UrlMetadataPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Padding(
-        padding: EdgeInsets.only(bottom: 12.0.s),
+        padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,9 +44,9 @@ class _UrlMetadataImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(12.0.s),
-        topRight: Radius.circular(12.0.s),
+      borderRadius: BorderRadiusDirectional.only(
+        topStart: Radius.circular(12.0.s),
+        topEnd: Radius.circular(12.0.s),
       ),
       child: IonNetworkImage(
         imageUrl: imageUrl,
@@ -70,7 +70,7 @@ class _UrlMetadataSiteInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 12.0.s, right: 12.0.s, top: 12.0.s),
+      padding: EdgeInsetsDirectional.only(start: 12.0.s, end: 12.0.s, top: 12.0.s),
       child: Row(
         children: [
           IonNetworkImage(
@@ -107,7 +107,7 @@ class _UrlMetadataTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 4.0.s, left: 12.0.s, right: 12.0.s),
+      padding: EdgeInsetsDirectional.only(top: 4.0.s, start: 12.0.s, end: 12.0.s),
       child: Text(
         title,
         style: context.theme.appTextThemes.caption.copyWith(
@@ -126,10 +126,10 @@ class _UrlMetadataDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         top: 4.0.s,
-        left: 12.0.s,
-        right: 12.0.s,
+        start: 12.0.s,
+        end: 12.0.s,
       ),
       child: Text(
         description,

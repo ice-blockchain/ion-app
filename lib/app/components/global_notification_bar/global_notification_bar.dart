@@ -61,7 +61,7 @@ class GlobalNotificationBar extends HookConsumerWidget {
               children: [
                 if (icon != null)
                   Padding(
-                    padding: EdgeInsets.only(right: 8.0.s),
+                    padding: EdgeInsetsDirectional.only(start: 8.0.s),
                     child: icon,
                   ),
                 Text(

@@ -10,14 +10,15 @@ class CameraRecordingIndicator extends StatelessWidget {
     required this.recordingDuration,
     super.key,
   });
+
   final Duration recordingDuration;
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return PositionedDirectional(
       top: 12.0.s,
-      left: 0.0.s,
-      right: 0.0.s,
+      start: 0.0.s,
+      end: 0.0.s,
       child: Center(
         child: Container(
           padding: EdgeInsets.symmetric(

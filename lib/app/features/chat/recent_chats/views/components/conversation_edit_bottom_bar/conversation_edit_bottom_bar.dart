@@ -18,15 +18,15 @@ class ConversationEditBottomBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final archiveOpened = ref.read(archiveStateProvider).falseOrValue;
 
-    return Positioned(
+    return PositionedDirectional(
       top: 0,
-      left: 0,
-      right: 0,
+      start: 0,
+      end: 0,
       bottom: 0,
       child: Container(
         alignment: Alignment.topCenter,
         color: context.theme.appColors.secondaryBackground,
-        padding: EdgeInsets.only(top: 16.0.s, left: 16.0.s, right: 16.0.s),
+        padding: EdgeInsetsDirectional.only(top: 16.0.s, start: 16.0.s, end: 16.0.s),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

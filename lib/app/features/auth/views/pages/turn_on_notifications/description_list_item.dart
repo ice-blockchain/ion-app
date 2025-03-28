@@ -22,7 +22,7 @@ class DescriptionListItem extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(right: 10.0.s),
+                padding: EdgeInsetsDirectional.only(end: 10.0.s),
                 child: icon,
               ),
             ],

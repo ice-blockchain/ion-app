@@ -54,7 +54,7 @@ class SendNftConfirmPage extends ConsumerWidget {
           ),
           ScreenSideOffset.small(
             child: SingleChildScrollView(
-              padding: EdgeInsets.only(top: 10.0.s),
+              padding: EdgeInsetsDirectional.only(top: 10.0.s),
               child: Column(
                 children: [
                   NftItem(nftData: nft, showNetwork: false),
@@ -71,7 +71,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                       size: ScreenSideOffset.defaultSmallMargin,
                     ),
                     secondary: Align(
-                      alignment: Alignment.centerRight,
+                      alignment: AlignmentDirectional.centerEnd,
                       child: Text(
                         formData.senderWallet!.address!,
                         textAlign: TextAlign.right,

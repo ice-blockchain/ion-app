@@ -43,7 +43,7 @@ class TextActionButton extends StatelessWidget {
         if (effectiveIcon != null) effectiveIcon,
         if (value != null)
           Padding(
-            padding: EdgeInsets.only(left: 4.0.s),
+            padding: EdgeInsetsDirectional.only(start: 4.0.s),
             child: Text(
               value!,
               style: context.theme.appTextThemes.caption2.copyWith(

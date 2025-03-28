@@ -25,7 +25,7 @@ class TextInputIcons extends StatelessWidget {
       children: [
         if (hasLeftDivider)
           Padding(
-            padding: EdgeInsets.only(left: 16.0.s),
+            padding: EdgeInsetsDirectional.only(start: 16.0.s),
             child: const TextInputIconsDivider(),
           ),
         ConstrainedBox(
@@ -39,7 +39,7 @@ class TextInputIcons extends StatelessWidget {
         ),
         if (hasRightDivider)
           Padding(
-            padding: EdgeInsets.only(right: 16.0.s),
+            padding: EdgeInsetsDirectional.only(start: 16.0.s),
             child: const TextInputIconsDivider(),
           ),
       ],

@@ -56,7 +56,7 @@ class TwoFAOptionsStep extends HookConsumerWidget {
                         optionsState.optionsAmount,
                         (option) {
                           return Padding(
-                            padding: EdgeInsets.only(bottom: 16.0.s),
+                            padding: EdgeInsetsDirectional.only(bottom: 16.0.s),
                             child: TwoFaOptionSelector(
                               availableOptions: optionsState.availableOptions,
                               selectedOptions: optionsState.selectedValues,

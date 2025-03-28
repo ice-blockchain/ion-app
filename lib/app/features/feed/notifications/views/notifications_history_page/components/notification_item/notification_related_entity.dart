@@ -24,7 +24,7 @@ class NotificationRelatedEntity extends StatelessWidget {
 
     if (eventReference is ReplaceableEventReference && eventReference.kind == ArticleEntity.kind) {
       return Padding(
-        padding: EdgeInsets.only(top: 12.0.s, right: 16.0.s),
+        padding: EdgeInsetsDirectional.only(top: 12.0.s, end: 16.0.s),
         child: GestureDetector(
           onTap: () {
             ArticleDetailsRoute(eventReference: entity.toEventReference().encode())

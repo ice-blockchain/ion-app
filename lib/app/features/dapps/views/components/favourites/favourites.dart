@@ -31,9 +31,9 @@ class Favourites extends StatelessWidget {
           child: Container(
             height: containerHeight,
             width: double.infinity,
-            padding: EdgeInsets.only(
-              left: ScreenSideOffset.defaultSmallMargin,
-              right: 10.0.s,
+            padding: EdgeInsetsDirectional.only(
+              start: ScreenSideOffset.defaultSmallMargin,
+              end: 10.0.s,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0.s),

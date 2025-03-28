@@ -27,7 +27,7 @@ class ChatLearnMoreModal extends ConsumerWidget {
           ),
           ScreenSideOffset.medium(
             child: Padding(
-              padding: EdgeInsets.only(top: 13.0.s, bottom: 16.0.s),
+              padding: EdgeInsetsDirectional.only(top: 13.0.s, bottom: 16.0.s),
               child: Column(
                 children: [
                   Assets.svg.walletIconChatEncription.icon(size: 80.0.s),

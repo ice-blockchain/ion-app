@@ -55,7 +55,7 @@ class EmailSetupInputPage extends HookConsumerWidget {
                 if (isKeyboardVisible) SizedBox(height: 58.0.s),
                 const Spacer(),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 20.0.s),
+                  padding: EdgeInsetsDirectional.only(bottom: 20.0.s),
                   child: TextInput(
                     prefixIcon: TextInputIcons(
                       hasRightDivider: true,
@@ -66,7 +66,7 @@ class EmailSetupInputPage extends HookConsumerWidget {
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) => Validators.isInvalidEmail(value) ? '' : null,
                     textInputAction: TextInputAction.done,
-                    scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+                    scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
                   ),
                 ),
                 const Spacer(),
