@@ -39,7 +39,6 @@ class FullscreenImage extends HookConsumerWidget {
           initialScale: PhotoViewComputedScale.contained,
           basePosition: Alignment.center,
           backgroundDecoration: BoxDecoration(color: primaryTextColor),
-          customSize: MediaQuery.of(context).size,
           tightMode: false,
           scaleStateChangedCallback: (state) {
             scaleState.value = state;

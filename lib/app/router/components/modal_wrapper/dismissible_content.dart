@@ -26,8 +26,9 @@ class DismissibleContent extends ConsumerWidget {
           context.pop();
         }
       },
-      direction:
-          isZoomed ? DismissiblePageDismissDirection.none : DismissiblePageDismissDirection.none,
+      direction: isZoomed
+          ? DismissiblePageDismissDirection.none
+          : DismissiblePageDismissDirection.vertical,
       child: child,
     );
   }
