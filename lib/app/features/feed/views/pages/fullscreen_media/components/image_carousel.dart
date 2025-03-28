@@ -23,7 +23,6 @@ class ImageCarousel extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final pageController = usePageController(initialPage: initialIndex);
-    final primaryTextColor = context.theme.appColors.primaryText;
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
     final horizontalPadding = 16.0.s;
 
@@ -46,7 +45,7 @@ class ImageCarousel extends HookWidget {
                     ? (context) => SafeArea(
                           top: false,
                           child: ColoredBox(
-                            color: primaryTextColor,
+                            color: Colors.transparent,
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                               child: CounterItemsFooter(
