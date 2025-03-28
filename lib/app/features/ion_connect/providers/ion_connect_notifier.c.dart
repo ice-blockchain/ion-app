@@ -38,7 +38,6 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
     IonConnectRelay? relay,
-    Duration? timeout,
   }) async {
     _warnSendIssues(events);
 
@@ -55,7 +54,7 @@ class IonConnectNotifier extends _$IonConnectNotifier {
             .handleRelayAuthOnAction(actionSource: actionSource, error: error);
 
         await relay!.sendEvents(events).timeout(
-              timeout ?? _defaultTimeout,
+              _defaultTimeout,
               onTimeout: () => throw TimeoutException(
                 'Sending events timed out after ${_defaultTimeout.inSeconds} seconds',
               ),
@@ -79,14 +78,12 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     EventMessage event, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
     bool cache = true,
-    Duration? timeout,
     IonConnectRelay? relay,
   }) async {
     final result = await sendEvents(
       [event],
       cache: cache,
       relay: relay,
-      timeout: timeout,
       actionSource: actionSource,
     );
     return result?.elementAtOrNull(0);
