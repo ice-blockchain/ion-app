@@ -34,6 +34,8 @@ class RepostOptionsModal extends HookConsumerWidget {
 
     final selectedAction = useState<RepostOptionAction?>(null);
     final repostLoading = ref.watch(repostNotifierProvider).isLoading;
+    final repostUndoing = ref.watch(deleteEntityControllerProvider).isLoading;
+    final isLoading = repostLoading || repostUndoing;
     final repostReference = ref.watch(repostReferenceProvider(eventReference));
 
     final actions = [
@@ -59,7 +61,7 @@ class RepostOptionsModal extends HookConsumerWidget {
                 children: [
                   for (final option in actions)
                     ModalActionButton(
-                      icon: (repostLoading && selectedAction.value == option)
+                      icon: (isLoading && selectedAction.value == option)
                           ? const IONLoadingIndicator(type: IndicatorType.dark)
                           : option.getIcon(context),
                       label: option.getLabel(context),
@@ -84,7 +86,7 @@ class RepostOptionsModal extends HookConsumerWidget {
                             if (repostReference != null) {
                               await ref
                                   .read(deleteEntityControllerProvider.notifier)
-                                  .deleteEntity(eventReference);
+                                  .deleteEntity(repostReference);
                               if (context.mounted) {
                                 context.pop();
                               }
