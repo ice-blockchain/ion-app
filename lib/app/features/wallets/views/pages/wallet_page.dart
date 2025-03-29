@@ -8,6 +8,7 @@ import 'package:ion/app/features/feed/views/pages/feed_page/components/feed_cont
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/should_show_friends_selector_provider.c.dart';
+import 'package:ion/app/features/wallets/domain/transactions/sync_broadcasted_transfers_service.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/coins/coins_tab.dart';
@@ -75,6 +76,11 @@ class WalletPage extends HookConsumerWidget {
             if (currentUserFollowList != null) {
               ref.read(ionConnectCacheProvider.notifier).remove(currentUserFollowList.cacheKey);
             }
+
+            final syncTransfersService =
+                await ref.read(syncBroadcastedTransfersServiceProvider.future);
+            await syncTransfersService.syncBroadcastedTransfers();
+
             ref.invalidate(walletViewsDataNotifierProvider);
           },
           builder: (context, slivers) => CustomScrollView(

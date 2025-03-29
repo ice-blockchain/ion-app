@@ -64,7 +64,7 @@ class WalletViewsService {
   List<WalletViewData> get lastEmitted => _modifiedWalletViews;
 
   StreamSubscription<Iterable<CoinData>>? _pricesSubscription;
-  StreamSubscription<Map<CoinData, TransactionData>>? _transactionsSubscription;
+  StreamSubscription<Map<CoinData, List<TransactionData>>>? _transactionsSubscription;
 
   Future<List<WalletViewData>> fetch() async {
     final shortViews = await _identity.wallets.getWalletViews();
@@ -87,18 +87,7 @@ class WalletViewsService {
         .toList();
     _emitModifiedWalletViews(walletViews: _originWalletViews);
 
-    test();
-
     return _originWalletViews;
-  }
-
-  void test() async {
-    await _originWalletViews
-        .expand((wv) => wv.coins)
-        .map((e) => e.walletId)
-        .nonNulls
-        .map((id) => _transactionsRepository.syncTransfers(id, pageSize: 5000))
-        .wait;
   }
 
   void _emitModifiedWalletViews({
@@ -129,16 +118,16 @@ class WalletViewsService {
 
     if (_transactionsSubscription != null) await _transactionsSubscription?.cancel();
 
-    final since = DateTime.now().subtract(const Duration(hours: 24));
+    final since = DateTime.now().subtract(const Duration(days: 1));
     _transactionsSubscription = _transactionsRepository
-        .watchUnfinishedTransactionsByCoins(coins.toList(), since: since)
+        .watchBroadcastedTransfersByCoins(coins.toList(), since: since)
         .distinct()
         .listen((transactions) {
       if (transactions.isEmpty) return;
 
       final updatedViews = <WalletViewData>[];
 
-      for (final walletView in _modifiedWalletViews) {
+      for (final walletView in _originWalletViews) {
         final updatedCoinGroups = <CoinsGroup>[];
 
         for (final coinsGroup in walletView.coinGroups) {
@@ -147,43 +136,38 @@ class WalletViewsService {
           final updatedCoinsInWallet = <CoinInWalletData>[];
 
           for (final coinInWallet in coinsGroup.coins) {
-            CoinInWalletData? modifiedCoin;
+            var modifiedCoin = coinInWallet.copyWith();
+            final key = transactions.keys.firstWhereOrNull((key) => key.id == coinInWallet.coin.id);
+            final coinRelatedTransactions = transactions[key] ?? [];
+            final wallet = _userWallets.firstWhereOrNull((w) => w.id == modifiedCoin.walletId);
 
-            final transaction = transactions.entries
-                .firstWhereOrNull((entry) => entry.key.id == coinInWallet.coin.id)
-                ?.value;
+            for (final transaction in coinRelatedTransactions) {
+              // Check if transaction related to the coin wallet and we should modify amount/balance of it
+              final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
+              final transactionCoin = transaction.cryptoAsset;
 
-            final wallet = _userWallets.firstWhereOrNull((w) => w.id == coinInWallet.walletId);
+              if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
+                final adjustedRawAmount =
+                    (BigInt.parse(modifiedCoin.rawAmount) - BigInt.parse(transactionCoin.rawAmount))
+                        .toString();
+                final adjustedAmount = parseCryptoAmount(
+                  adjustedRawAmount,
+                  modifiedCoin.coin.decimals,
+                );
+                final adjustedBalanceUSD = adjustedAmount * modifiedCoin.coin.priceUSD;
 
-            // Check if transaction related to the current coin and we should modify amount/balance of it
-            final isTransactionRelatedToCoin =
-                transaction != null && transaction.senderWalletAddress == wallet?.address;
-            final transactionCoin = transaction?.cryptoAsset;
-            // final isNeedToModifyCoinBalance = transactionCoin is CoinTransactionAsset && transactionCoin.balanceBeforeTransaction ==
-
-            if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
-              final adjustedRawAmount =
-                  (BigInt.parse(coinInWallet.rawAmount) - BigInt.parse(transactionCoin.rawAmount))
-                      .toString();
-              final adjustedAmount = parseCryptoAmount(
-                adjustedRawAmount,
-                coinInWallet.coin.decimals,
-              );
-              final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
-
-              modifiedCoin = coinInWallet.copyWith(
-                amount: adjustedAmount,
-                balanceUSD: adjustedBalanceUSD,
-                rawAmount: adjustedRawAmount,
-              );
+                modifiedCoin = modifiedCoin.copyWith(
+                  amount: adjustedAmount,
+                  balanceUSD: adjustedBalanceUSD,
+                  rawAmount: adjustedRawAmount,
+                );
+              }
             }
 
-            final coin = modifiedCoin ?? coinInWallet;
+            totalGroupAmount += modifiedCoin.amount;
+            totalGroupBalanceUSD += modifiedCoin.balanceUSD;
 
-            totalGroupAmount += coin.amount;
-            totalGroupBalanceUSD += coin.balanceUSD;
-
-            updatedCoinsInWallet.add(coin);
+            updatedCoinsInWallet.add(modifiedCoin);
           }
 
           updatedCoinGroups.add(
