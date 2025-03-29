@@ -79,9 +79,8 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
   }
 
   Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
-    List<String> coinIds, {
-    required DateTime since,
-  }) {
+    List<String> coinIds,
+  ) {
     final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
     final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
 
@@ -95,8 +94,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
                       tbl.status.equals(TransactionStatus.broadcasted.toJson())) &
                   tbl.transferredAmount.isNotNull() &
                   tbl.transferredAmountUsd.isNotNull() &
-                  tbl.balanceBeforeTransfer.isNotNull() &
-                  tbl.createdAt.isBiggerOrEqualValue(since);
+                  tbl.balanceBeforeTransfer.isNotNull();
             },
           )
           ..orderBy([

@@ -15,9 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transactions_subscription_provider.c.g.dart';
 
-// TODO:
-// 1. Subscription doesn't process events in runtime, only after app startup.
-// 2. Subscription isn't created after login in one session.
+// TODO: Subscription isn't created after login in one session.
 @Riverpod(keepAlive: true)
 Future<void> transactionsSubscription(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);

@@ -41,6 +41,8 @@ Future<WalletViewsService> walletViewsService(Ref ref) async {
   return service;
 }
 
+// TODO: Combine two subscriptions into one and make an analogue of combineLatest,
+// so both streams will be listened and the latest emits will be merged into one
 class WalletViewsService {
   WalletViewsService(
     this._identity,
@@ -111,16 +113,15 @@ class WalletViewsService {
   }
 
   Future<void> _listenForTransactions() async {
-    final coins =
+    final coinIds =
         _originWalletViews.expand((view) => view.coins).map((coin) => coin.coin.id).toSet();
 
-    if (coins.isEmpty) return;
+    if (coinIds.isEmpty) return;
 
     if (_transactionsSubscription != null) await _transactionsSubscription?.cancel();
 
-    final since = DateTime.now().subtract(const Duration(days: 1));
     _transactionsSubscription = _transactionsRepository
-        .watchBroadcastedTransfersByCoins(coins.toList(), since: since)
+        .watchBroadcastedTransfersByCoins(coinIds.toList())
         .distinct()
         .listen((transactions) {
       if (transactions.isEmpty) return;
@@ -208,8 +209,7 @@ class WalletViewsService {
 
     await _pricesSubscription?.cancel();
 
-    // TODO: Should we skip the fisrt pack? It returns all coins from the DB by ids.
-    _pricesSubscription = _coinsRepository.watchCoins(coinIds).listen((updatedCoins) {
+    _pricesSubscription = _coinsRepository.watchCoins(coinIds).skip(1).listen((updatedCoins) {
       if (_modifiedWalletViews.isEmpty) return;
 
       final merged = [

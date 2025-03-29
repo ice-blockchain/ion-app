@@ -86,11 +86,9 @@ class TransactionsRepository {
   }
 
   Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
-    List<String> coinIds, {
-    required DateTime since,
-  }) {
-    return _transactionsDao.watchBroadcastedTransfersByCoins(coinIds, since: since);
-  }
+    List<String> coinIds,
+  ) =>
+      _transactionsDao.watchBroadcastedTransfersByCoins(coinIds);
 
   Future<List<TransactionData>> getBroadcastedTransfers() =>
       _transactionsDao.getBroadcastedTransfers();
@@ -173,10 +171,10 @@ class TransactionsRepository {
     final converted = transfersDTO.items
         .where((t) => t.requestBody is CoinTransferRequestBody && t.txHash != null)
         .map((transactionDTO) {
+          final symbol = _extractSymbolFromDtoMetadata(transactionDTO.metadata);
           final nativeCoin = nativeCoins.firstWhereOrNull(
             (c) => c.contractAddress.isEmpty && c.network.id == transactionDTO.network,
           );
-          final symbol = _extractSymbolFromDtoMetadata(transactionDTO.metadata);
           final coin = _isNativeKind(transactionDTO.requestBody.kind)
               ? nativeCoin
               : coins.firstWhereOrNull(
@@ -184,19 +182,16 @@ class TransactionsRepository {
                       c.abbreviation.toLowerCase() == symbol?.toLowerCase() &&
                       c.network.id == transactionDTO.network,
                 );
-
-          if (nativeCoin == null || coin == null) {
-            return null;
-          }
-          final rawAmount = (transactionDTO.requestBody as CoinTransferRequestBody).amount;
-          final convertedAmount = parseCryptoAmount(rawAmount, coin.decimals);
-          final amountUSD = convertedAmount * coin.priceUSD;
           final senderAddress =
               _userWallets.firstWhereOrNull((e) => e.id == transactionDTO.walletId)?.address;
 
-          if (senderAddress == null) {
+          if (nativeCoin == null || coin == null || senderAddress == null) {
             return null;
           }
+
+          final rawAmount = (transactionDTO.requestBody as CoinTransferRequestBody).amount;
+          final convertedAmount = parseCryptoAmount(rawAmount, coin.decimals);
+          final amountUSD = convertedAmount * coin.priceUSD;
 
           return TransactionData(
             id: transactionDTO.id,

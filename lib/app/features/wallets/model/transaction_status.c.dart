@@ -31,7 +31,8 @@ enum TransactionStatus {
   @JsonValue('Rejected')
   rejected;
 
-  String toJson() => _$TransactionStatusEnumMap[this]!;
   factory TransactionStatus.fromJson(String json) =>
       _$TransactionStatusEnumMap.map((key, value) => MapEntry(value, key))[json]!;
+
+  String toJson() => _$TransactionStatusEnumMap[this]!;
 }

@@ -12,9 +12,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_view_data_provider.c.g.dart';
 
-// TODO: Looks like this provider contains too much logic. Consider the nexto flow, when you have time:
-// 1. Make Stream<List<WalletViewData>> in the walletViewsService.
-// 2. Merge prices, watch coin balances there and just emit updated state.
 @Riverpod(keepAlive: true)
 class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
   StreamSubscription<List<WalletViewData>>? _subscription;
