@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/auth/providers/onboarding_complete_provider.c.dart';
@@ -11,6 +13,7 @@ import 'package:ion/app/features/core/providers/window_manager_provider.c.dart';
 import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coin_initializer.c.dart';
 import 'package:ion/app/features/wallets/domain/networks/networks_initializer.c.dart';
+import 'package:ion/app/features/wallets/domain/transactions/sync_broadcasted_transfers_service.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
@@ -52,6 +55,12 @@ Future<void> initApp(Ref ref) async {
     ..listen(connectedCryptoWalletsProvider, (_, __) {
       ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
     });
+
+  unawaited(
+    ref
+        .read(syncBroadcastedTransfersServiceProvider.future)
+        .then((service) => service.syncBroadcastedTransfers()),
+  );
 
   registerTimeagoLocalesForEnum();
 }

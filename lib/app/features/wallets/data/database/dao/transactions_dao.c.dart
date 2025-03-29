@@ -35,7 +35,48 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     });
   }
 
-  Stream<Map<CoinData, TransactionData>> watchUnfinishedTransactionsByCoins(
+  Future<List<TransactionData>> getBroadcastedTransfers() {
+    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
+    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
+
+    final query = (select(transactionsTable)
+          ..where(
+            (tbl) =>
+                tbl.type.equals(TransactionType.send.value) &
+                tbl.id.isNotNull() &
+                (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson())),
+          )
+          ..orderBy([
+            (tbl) => OrderingTerm(
+                  expression: tbl.createdAt,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
+        .join([
+      leftOuterJoin(
+        networksTable,
+        networksTable.id.equalsExp(transactionsTable.networkId),
+      ),
+      leftOuterJoin(
+        transactionCoinAlias,
+        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
+      ),
+      leftOuterJoin(
+        nativeCoinAlias,
+        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
+      ),
+    ]);
+
+    return query.map((row) {
+      return _mapRowToDomainModel(
+        row,
+        nativeCoinAlias: nativeCoinAlias,
+        transactionCoinAlias: transactionCoinAlias,
+      );
+    }).get();
+  }
+
+  Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
     List<String> coinIds, {
     required DateTime since,
   }) {
@@ -44,15 +85,17 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
 
     final query = (select(transactionsTable)
           ..where(
-            (tbl) =>
-                tbl.coinId.isIn(coinIds) &
-                tbl.networkId.isNotNull() &
-                tbl.type.equals(TransactionType.send.value) &
-                (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson())) &
-                tbl.transferredAmount.isNotNull() &
-                tbl.transferredAmountUsd.isNotNull() &
-                tbl.balanceBeforeTransfer.isNotNull() &
-                tbl.createdAt.isBiggerOrEqualValue(since),
+            (tbl) {
+              return tbl.coinId.isIn(coinIds) &
+                  tbl.networkId.isNotNull() &
+                  tbl.type.equals(TransactionType.send.value) &
+                  (tbl.status.isNull() |
+                      tbl.status.equals(TransactionStatus.broadcasted.toJson())) &
+                  tbl.transferredAmount.isNotNull() &
+                  tbl.transferredAmountUsd.isNotNull() &
+                  tbl.balanceBeforeTransfer.isNotNull() &
+                  tbl.createdAt.isBiggerOrEqualValue(since);
+            },
           )
           ..orderBy([
             (tbl) => OrderingTerm(
@@ -78,58 +121,63 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
     return query
         .watch()
         .map(
-          (rows) => rows.map((row) {
-            final transaction = row.readTable(transactionsTable);
-            final network = row.readTableOrNull(networksTable);
-            final nativeCoin = row.readTableOrNull(nativeCoinAlias);
-            final transactionCoin = row.readTableOrNull(transactionCoinAlias);
-
-            final domainNetwork = NetworkData.fromDB(network!);
-            final transferredAmount = transaction.transferredAmount ?? '0';
-            final transferredCoin = CoinData.fromDB(transactionCoin!, domainNetwork);
-
-            return TransactionData(
-              txHash: transaction.txHash,
-              network: domainNetwork,
-              type: TransactionType.fromValue(transaction.type),
-              senderWalletAddress: transaction.senderWalletAddress,
-              receiverWalletAddress: transaction.receiverWalletAddress,
-              nativeCoin: CoinData.fromDB(nativeCoin!, domainNetwork),
-              cryptoAsset: CoinTransactionAsset(
-                coin: transferredCoin,
-                balanceBeforeTransaction: transaction.balanceBeforeTransfer ?? '0',
-                amount: parseCryptoAmount(
-                  transferredAmount,
-                  transferredCoin.decimals,
-                ),
-                amountUSD: transaction.transferredAmountUsd!,
-                rawAmount: transferredAmount,
-              ),
-              id: transaction.id,
-              fee: transaction.fee,
-              createdAt: transaction.createdAt,
-              dateConfirmed: transaction.dateConfirmed,
-              status: transaction.status != null
-                  ? TransactionStatus.fromJson(transaction.status!)
-                  : null,
-              userPubkey: transaction.userPubkey,
-            );
-          }),
+          (rows) => rows.map(
+            (row) => _mapRowToDomainModel(
+              row,
+              nativeCoinAlias: nativeCoinAlias,
+              transactionCoinAlias: transactionCoinAlias,
+            ),
+          ),
         )
         .map((transactions) {
-      final transactionsByCoin = <CoinData, TransactionData>{};
+      final transactionsByCoin = <CoinData, List<TransactionData>>{};
 
       for (final transaction in transactions) {
         final coin = (transaction.cryptoAsset as CoinTransactionAsset).coin;
-        // Only add if this coin hasn't been seen yet or
-        // if the existing transaction is newer than this one (keeping the first/earliest one)
-        if (!transactionsByCoin.containsKey(coin) ||
-            (transactionsByCoin[coin]?.createdAt?.isAfter(transaction.createdAt!) ?? false)) {
-          transactionsByCoin[coin] = transaction;
-        }
+        transactionsByCoin.putIfAbsent(coin, () => []).add(transaction);
       }
 
       return transactionsByCoin;
     });
+  }
+
+  TransactionData _mapRowToDomainModel(
+    TypedResult row, {
+    required $CoinsTableTable nativeCoinAlias,
+    required $CoinsTableTable transactionCoinAlias,
+  }) {
+    final transaction = row.readTable(transactionsTable);
+    final network = row.readTableOrNull(networksTable);
+    final nativeCoin = row.readTableOrNull(nativeCoinAlias);
+    final transactionCoin = row.readTableOrNull(transactionCoinAlias);
+
+    final domainNetwork = NetworkData.fromDB(network!);
+    final transferredAmount = transaction.transferredAmount ?? '0';
+    final transferredCoin = CoinData.fromDB(transactionCoin!, domainNetwork);
+
+    return TransactionData(
+      txHash: transaction.txHash,
+      network: domainNetwork,
+      type: TransactionType.fromValue(transaction.type),
+      senderWalletAddress: transaction.senderWalletAddress,
+      receiverWalletAddress: transaction.receiverWalletAddress,
+      nativeCoin: CoinData.fromDB(nativeCoin!, domainNetwork),
+      cryptoAsset: CoinTransactionAsset(
+        coin: transferredCoin,
+        balanceBeforeTransaction: transaction.balanceBeforeTransfer ?? '0',
+        amount: parseCryptoAmount(
+          transferredAmount,
+          transferredCoin.decimals,
+        ),
+        amountUSD: transaction.transferredAmountUsd!,
+        rawAmount: transferredAmount,
+      ),
+      id: transaction.id,
+      fee: transaction.fee,
+      createdAt: transaction.createdAt,
+      dateConfirmed: transaction.dateConfirmed,
+      status: transaction.status != null ? TransactionStatus.fromJson(transaction.status!) : null,
+      userPubkey: transaction.userPubkey,
+    );
   }
 }

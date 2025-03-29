@@ -43,7 +43,7 @@ class TransactionsRepository {
 
   Future<DateTime?> lastCreatedAt() => _transactionsDao.lastCreatedAt();
 
-  Future<void> saveTransaction({
+  Future<void> saveTransactionDetails({
     required TransactionDetails details,
     String? balanceBeforeTransfer,
   }) async {
@@ -53,6 +53,9 @@ class TransactionsRepository {
     );
     await _transactionsDao.save([mapped]);
   }
+
+  Future<void> saveTransactions(List<TransactionData> transactions) =>
+      _transactionsDao.save(CoinTransactionsMapper().fromDomainToDB(transactions));
 
   Future<void> saveEntities(List<WalletAssetEntity> entities) async {
     // Always add empty contract address to get native coin of the network
@@ -80,96 +83,153 @@ class TransactionsRepository {
     await _transactionsDao.save(mapped);
   }
 
-  Stream<Map<CoinData, TransactionData>> watchUnfinishedTransactionsByCoins(
+  Stream<Map<CoinData, List<TransactionData>>> watchBroadcastedTransfersByCoins(
     List<String> coinIds, {
     required DateTime since,
   }) {
-    return _transactionsDao.watchUnfinishedTransactionsByCoins(coinIds, since: since);
+    return _transactionsDao.watchBroadcastedTransfersByCoins(coinIds, since: since);
   }
 
-  Future<void> syncTransfers(
-    // Future<({List<TransactionData> transactions, String? nextPageToken})> test(
+  Future<List<TransactionData>> getBroadcastedTransfers() =>
+      _transactionsDao.getBroadcastedTransfers();
+
+  Future<TransactionData?> getCoinTransferById({
+    required String transferId,
+    required String walletId,
+  }) async {
+    final dto = await _ionIdentityClient.wallets
+        .getWalletTransferRequestById(walletId: walletId, transferId: transferId);
+    final senderAddress = _userWallets.firstWhereOrNull((e) => e.id == dto.walletId)?.address;
+    final symbol = _extractSymbolFromDtoMetadata(dto.metadata);
+    final nativeCoin = await _coinsDao.getByFilters(
+      networks: [dto.network],
+      contractAddresses: [''],
+    ).then((result) => result.firstOrNull);
+    final transferredCoin = _isNativeKind(dto.requestBody.kind)
+        ? nativeCoin
+        : symbol == null
+            ? null
+            : await _coinsDao.getByFilters(
+                symbols: [symbol],
+                networks: [dto.network],
+              ).then((result) => result.firstOrNull);
+
+    if (dto.requestBody is! CoinTransferRequestBody ||
+        nativeCoin == null ||
+        senderAddress == null ||
+        transferredCoin == null) {
+      return null;
+    }
+
+    final rawAmount = (dto.requestBody as CoinTransferRequestBody).amount;
+    final convertedAmount = parseCryptoAmount(rawAmount, transferredCoin.decimals);
+    final amountUSD = convertedAmount * transferredCoin.priceUSD;
+
+    return TransactionData(
+      id: dto.id,
+      network: transferredCoin.network,
+      txHash: dto.txHash!,
+      type: TransactionType.send,
+      senderWalletAddress: senderAddress,
+      receiverWalletAddress: dto.requestBody.to,
+      nativeCoin: nativeCoin,
+      fee: dto.fee,
+      status: TransactionStatus.fromJson(dto.status),
+      dateConfirmed: dto.dateConfirmed,
+      cryptoAsset: CoinTransactionAsset(
+        coin: transferredCoin,
+        rawAmount: rawAmount,
+        amountUSD: amountUSD,
+        amount: convertedAmount,
+      ),
+    );
+  }
+
+  Future<({List<TransactionData> transactions, String? nextPageToken})> getTransfers(
     String cryptoWalletId, {
     int? pageSize,
     String? paginationToken,
   }) async {
-    // _ionIdentityClient.wallets.getWalletTransferRequests(cryptoWalletId)
     final transfersDTO = await _ionIdentityClient.wallets.getWalletTransferRequests(
       cryptoWalletId,
       pageSize: pageSize,
       pageToken: paginationToken,
     );
 
-    final coinSymbols = <String>['']; // Get native tokens for the selected networks too
-    final networks = <String>[];
-
-    String? extractSymbol(Map<String, dynamic>? metadata) {
-      final asset = metadata?['asset'];
-      if (asset is Map<String, dynamic>) {
-        final symbol = asset['symbol'];
-        if (symbol is String) return symbol;
-      }
-
-      return null;
-    }
+    final coinSymbols = <String>{};
+    final networks = <String>{};
 
     for (final historyItem in transfersDTO.items) {
-      final symbol = extractSymbol(historyItem.metadata);
+      final symbol = _extractSymbolFromDtoMetadata(historyItem.metadata);
       if (symbol != null) coinSymbols.add(symbol);
       networks.add(historyItem.network);
     }
 
     final coins = await _coinsDao.getByFilters(symbols: coinSymbols, networks: networks);
+    final nativeCoins = await _coinsDao.getByFilters(networks: networks, contractAddresses: ['']);
 
     final converted = transfersDTO.items
         .where((t) => t.requestBody is CoinTransferRequestBody && t.txHash != null)
         .map((transactionDTO) {
-      final nativeCoin = coins.firstWhereOrNull(
-        (c) => c.contractAddress.isEmpty && c.network.id == transactionDTO.network,
-      );
-      final symbol = extractSymbol(transactionDTO.metadata);
-      final coin = transactionDTO.requestBody.kind.toLowerCase().contains('native')
-          ? nativeCoin
-          : coins.firstWhereOrNull(
-              (c) =>
-                  c.abbreviation.toLowerCase() == symbol?.toLowerCase() &&
-                  c.network.id == transactionDTO.network,
-            );
+          final nativeCoin = nativeCoins.firstWhereOrNull(
+            (c) => c.contractAddress.isEmpty && c.network.id == transactionDTO.network,
+          );
+          final symbol = _extractSymbolFromDtoMetadata(transactionDTO.metadata);
+          final coin = _isNativeKind(transactionDTO.requestBody.kind)
+              ? nativeCoin
+              : coins.firstWhereOrNull(
+                  (c) =>
+                      c.abbreviation.toLowerCase() == symbol?.toLowerCase() &&
+                      c.network.id == transactionDTO.network,
+                );
 
-      if (nativeCoin == null || coin == null) {
-        return null;
-      }
-      final rawAmount = (transactionDTO.requestBody as CoinTransferRequestBody).amount;
-      final convertedAmount = parseCryptoAmount(rawAmount, coin.decimals);
-      final amountUSD = convertedAmount * coin.priceUSD;
-      final senderAddress =
-          _userWallets.firstWhereOrNull((e) => e.id == transactionDTO.walletId)?.address;
+          if (nativeCoin == null || coin == null) {
+            return null;
+          }
+          final rawAmount = (transactionDTO.requestBody as CoinTransferRequestBody).amount;
+          final convertedAmount = parseCryptoAmount(rawAmount, coin.decimals);
+          final amountUSD = convertedAmount * coin.priceUSD;
+          final senderAddress =
+              _userWallets.firstWhereOrNull((e) => e.id == transactionDTO.walletId)?.address;
 
-      if (senderAddress == null) {
-        return null;
-      }
+          if (senderAddress == null) {
+            return null;
+          }
 
-      return TransactionData(
-        network: coin.network,
-        txHash: transactionDTO.txHash!,
-        type: TransactionType.send,
-        senderWalletAddress: senderAddress,
-        receiverWalletAddress: transactionDTO.requestBody.to,
-        nativeCoin: nativeCoin,
-        fee: transactionDTO.fee,
-        status: TransactionStatus.fromJson(transactionDTO.status),
-        dateConfirmed: transactionDTO.dateConfirmed,
-        cryptoAsset: CoinTransactionAsset(
-          coin: coin,
-          rawAmount: rawAmount,
-          amountUSD: amountUSD,
-          amount: convertedAmount,
-        ),
-      );
-    })
-        // .nonNulls
+          return TransactionData(
+            id: transactionDTO.id,
+            network: coin.network,
+            txHash: transactionDTO.txHash!,
+            type: TransactionType.send,
+            senderWalletAddress: senderAddress,
+            receiverWalletAddress: transactionDTO.requestBody.to,
+            nativeCoin: nativeCoin,
+            fee: transactionDTO.fee,
+            status: TransactionStatus.fromJson(transactionDTO.status),
+            dateConfirmed: transactionDTO.dateConfirmed,
+            cryptoAsset: CoinTransactionAsset(
+              coin: coin,
+              rawAmount: rawAmount,
+              amountUSD: amountUSD,
+              amount: convertedAmount,
+            ),
+          );
+        })
+        .nonNulls
         .toList();
 
-    // return (transactions: converted, nextPageToken: walletHistoryDTO.nextPageToken);
+    return (transactions: converted, nextPageToken: transfersDTO.nextPageToken);
+  }
+
+  bool _isNativeKind(String kind) => kind.toLowerCase().contains('native');
+
+  String? _extractSymbolFromDtoMetadata(Map<String, dynamic>? metadata) {
+    final asset = metadata?['asset'];
+    if (asset is Map<String, dynamic>) {
+      final symbol = asset['symbol'];
+      if (symbol is String) return symbol;
+    }
+
+    return null;
   }
 }

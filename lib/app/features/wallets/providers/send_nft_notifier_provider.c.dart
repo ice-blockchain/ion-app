@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/nfts/send_nft_use_case.c.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
-import 'package:ion/app/features/wallets/model/transfer_status.c.dart';
 import 'package:ion/app/features/wallets/providers/send_nft_form_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
@@ -49,21 +50,28 @@ class SendNftNotifier extends _$SendNftNotifier {
         onVerifyIdentity: onVerifyIdentity,
       );
 
-      if (result.status == TransferStatus.failed || result.status == TransferStatus.rejected) {
+      if (result.status == TransactionStatus.failed ||
+          result.status == TransactionStatus.rejected) {
         throw FailedToSendCryptoAssetsException(result.reason);
       }
 
       Logger.info('Transaction was successful. Hash: ${result.txHash}');
+      final nativeCoin = await ref.read(coinsServiceProvider.future).then(
+            (service) => service
+                .getCoinsByFilters(contractAddress: '', network: nft.network)
+                .then((result) => result.first),
+          );
 
       final details = TransactionDetails(
         txHash: result.txHash!,
         walletId: result.walletId,
         network: nft.network,
         status: result.status,
+        nativeCoin: nativeCoin,
         dateRequested: result.dateRequested,
         dateConfirmed: result.dateConfirmed,
         dateBroadcasted: result.dateBroadcasted,
-        assetData: CryptoAssetData.nft(nft: nft),
+        assetData: CryptoAssetToSendData.nft(nft: nft),
         walletViewName: form.wallet.name,
         senderAddress: form.senderWallet!.address!,
         receiverAddress: form.receiverAddress,

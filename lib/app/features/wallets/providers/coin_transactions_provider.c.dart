@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_history_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
@@ -67,37 +68,20 @@ class CoinTransactionsNotifier extends _$CoinTransactionsNotifier {
     );
 
     final (:transactions, :hasMore, :dataSource) = transactionsValue;
-    final List<CoinTransactionData?> converted = await Future.wait(
+    final converted = await Future.wait(
       transactions.map((entity) async {
-        late final WalletAssetContent walletAssetContent;
+        final amount =
+            (double.tryParse(entity.data.content.amount ?? '') ?? 0) / pow(10, coin.coin.decimals);
 
-        throw UnimplementedError();
-
-        try {
-          // TODO: Not implemented
-          // final decrypted = await encryptedMessageService.decryptMessage(entity.data.content);
-          // final decoded = jsonDecode(entity.data.content) as Map<String, dynamic>;
-          // walletAssetContent = WalletAssetContent.fromJson(decoded);
-        } catch (ex) {
-          Logger.error(
-            'Failed to decrypt content. Remove transaction from history.\n'
-            'Entity id is ${entity.id}. \nException: $ex',
-          );
-          return null;
-        }
-
-        // final amount =
-        //     (double.tryParse(walletAssetContent.amount ?? '') ?? 0) / pow(10, coin.coin.decimals);
-
-        // return CoinTransactionData(
-        //   network: coin.coin.network,
-        //   timestamp: entity.createdAt.millisecondsSinceEpoch,
-        //   transactionType: wallets.keys.contains(walletAssetContent.from)
-        //       ? TransactionType.send
-        //       : TransactionType.receive,
-        //   coinAmount: amount,
-        //   usdAmount: double.tryParse(walletAssetContent.amountUsd ?? '') ?? 0,
-        // );
+        return CoinTransactionData(
+          network: coin.coin.network,
+          timestamp: entity.createdAt.millisecondsSinceEpoch,
+          transactionType: wallets.keys.contains(entity.data.content.from)
+              ? TransactionType.send
+              : TransactionType.receive,
+          coinAmount: amount,
+          usdAmount: double.tryParse(entity.data.content.amountUsd ?? '') ?? 0,
+        );
       }),
     );
     final result = converted.nonNulls;

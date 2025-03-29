@@ -42,7 +42,7 @@ class ConfirmationSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
 
-    final formData = ref.watch(sendAssetFormControllerProvider());
+    final formData = ref.watch(sendAssetFormControllerProvider);
     final coin = formData.assetData.as<CoinAssetToSendData>();
 
     ref
