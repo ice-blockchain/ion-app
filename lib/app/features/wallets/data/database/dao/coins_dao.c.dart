@@ -96,26 +96,32 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
   }
 
   Future<List<CoinData>> getByFilters({
-    String? symbolGroup,
-    String? symbol,
-    String? network,
-    String? contractAddress,
+    Iterable<String>? symbolGroups,
+    Iterable<String>? symbols,
+    Iterable<String>? networks,
+    Iterable<String>? contractAddresses,
   }) {
     final query = select(coinsTable).join([
       leftOuterJoin(networksTable, networksTable.id.equalsExp(coinsTable.networkId)),
     ]);
-    if (symbolGroup != null) {
-      query.where(coinsTable.symbolGroup.lower().equals(symbolGroup.toLowerCase()));
+
+    if (symbolGroups?.isNotEmpty ?? false) {
+      query.where(coinsTable.symbolGroup.isIn(symbolGroups!));
     }
-    if (symbol != null) {
-      query.where(coinsTable.symbol.lower().equals(symbol.toLowerCase()));
+
+    if (symbols?.isNotEmpty ?? false) {
+      final lowered = symbols!.map((e) => e.toLowerCase()).toList();
+      query.where(coinsTable.symbol.lower().isIn(lowered));
     }
-    if (network != null) {
-      query.where(networksTable.id.lower().equals(network.toLowerCase()));
+
+    if (networks?.isNotEmpty ?? false) {
+      query.where(networksTable.id.isIn(networks!));
     }
-    if (contractAddress != null) {
-      query.where(coinsTable.contractAddress.equals(contractAddress));
+
+    if (contractAddresses?.isNotEmpty ?? false) {
+      query.where(coinsTable.contractAddress.isIn(contractAddresses!));
     }
+
     return query.map(_toCoinData).get();
   }
 

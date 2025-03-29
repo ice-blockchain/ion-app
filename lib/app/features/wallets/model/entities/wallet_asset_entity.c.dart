@@ -1,19 +1,14 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_address_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/asset_class_tag.c.dart';
-import 'package:ion/app/features/wallets/model/entities/tags/encrypted_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/label_namespace_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/label_tag.c.dart';
 import 'package:ion/app/features/wallets/model/entities/tags/network_tag.c.dart';
@@ -22,13 +17,10 @@ part 'wallet_asset_entity.c.freezed.dart';
 part 'wallet_asset_entity.c.g.dart';
 
 @Freezed(equal: false)
-class WalletAssetEntity
-    with IonConnectEntity, CacheableEntity, ImmutableEntity, _$WalletAssetEntity {
+class WalletAssetEntity with _$WalletAssetEntity {
   const factory WalletAssetEntity({
     required String id,
     required String pubkey,
-    required String masterPubkey,
-    required String signature,
     required DateTime createdAt,
     required WalletAssetData data,
   }) = _WalletAssetEntity;
@@ -40,23 +32,23 @@ class WalletAssetEntity
       throw IncorrectEventKindException(eventMessage.id, kind: kind);
     }
 
-    return WalletAssetEntity(
+    final parsed = WalletAssetEntity(
       id: eventMessage.id,
       pubkey: eventMessage.pubkey,
-      masterPubkey: eventMessage.masterPubkey,
-      signature: eventMessage.sig!,
       createdAt: eventMessage.createdAt,
       data: WalletAssetData.fromEventMessage(eventMessage),
     );
+
+    return parsed;
   }
 
   static const int kind = 1756;
 }
 
 @freezed
-class WalletAssetData with _$WalletAssetData implements EventSerializable {
+class WalletAssetData with _$WalletAssetData {
   const factory WalletAssetData({
-    required String content, // Encrypted content
+    required WalletAssetContent content,
     @JsonKey(name: 'network') required String networkId,
     required String assetClass,
     required String assetAddress,
@@ -69,42 +61,50 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
 
   factory WalletAssetData.fromEventMessage(EventMessage eventMessage) {
     final tags = groupBy(eventMessage.tags, (tag) => tag[0]);
-
+    final decodedContent = jsonDecode(eventMessage.content) as Map<String, dynamic>;
     return WalletAssetData(
-      content: eventMessage.content,
+      content: WalletAssetContent.fromJson(decodedContent),
       pubkey: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).first.value,
       networkId: tags[NetworkTag.tagName]!.map(NetworkTag.fromTag).first.value,
       assetClass: tags[AssetClassTag.tagName]!.map(AssetClassTag.fromTag).first.value,
-      // Can be empty string for native coins of the network
-      assetAddress: tags[AssetAddressTag.tagName]?.map(AssetAddressTag.fromTag).first.value ?? '',
+      assetAddress: tags[AssetAddressTag.tagName]!.map(AssetAddressTag.fromTag).first.value,
       walletAddress: tags[LabelTag.tagName]?.map(LabelTag.fromTag).first.value,
     );
   }
 
-  @override
-  FutureOr<EventMessage> toEventMessage(
-    EventSigner signer, {
-    List<List<String>> tags = const [],
-    DateTime? createdAt,
-  }) {
-    return EventMessage.fromData(
-      signer: signer,
+  EventMessage toEventMessage({required String currentUserPubkey}) {
+    final tags = [
+      NetworkTag(value: networkId).toTag(),
+      AssetClassTag(value: assetClass).toTag(),
+      AssetAddressTag(value: assetAddress).toTag(),
+      if (pubkey != null)
+        RelatedPubkey(value: pubkey!).toTag()
+      else if (walletAddress != null) ...[
+        LabelNamespaceTag.walletAddress().toTag(),
+        LabelTag(value: walletAddress!).toTag(),
+      ],
+    ];
+
+    final createdAt = DateTime.now();
+
+    final encodedContent = jsonEncode(content.toJson());
+
+    final rumorId = EventMessage.calculateEventId(
+      publicKey: currentUserPubkey,
       createdAt: createdAt,
       kind: WalletAssetEntity.kind,
-      tags: [
-        ...tags,
-        NetworkTag(value: networkId).toTag(),
-        AssetClassTag(value: assetClass).toTag(),
-        AssetAddressTag(value: assetAddress).toTag(),
-        if (pubkey != null)
-          RelatedPubkey(value: pubkey!).toTag()
-        else if (walletAddress != null) ...[
-          LabelNamespaceTag.walletAddress().toTag(),
-          LabelTag(value: walletAddress!).toTag(),
-        ],
-        const EncryptedTag().toTag(),
-      ],
-      content: content,
+      tags: tags,
+      content: encodedContent,
+    );
+
+    return EventMessage(
+      id: rumorId,
+      pubkey: currentUserPubkey,
+      createdAt: createdAt,
+      kind: WalletAssetEntity.kind,
+      tags: tags,
+      content: encodedContent,
+      sig: null,
     );
   }
 }
@@ -113,6 +113,7 @@ class WalletAssetData with _$WalletAssetData implements EventSerializable {
 class WalletAssetContent {
   const WalletAssetContent({
     required this.txUrl,
+    required this.txHash,
     required this.from,
     required this.to,
     this.assetId,
@@ -125,6 +126,7 @@ class WalletAssetContent {
       _$WalletAssetContentFromJson(json);
 
   final String txUrl;
+  final String txHash;
   final String from; // address
   final String to; // address
 

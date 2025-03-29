@@ -1,0 +1,132 @@
+// SPDX-License-Identifier: ice License 1.0
+
+import 'dart:async';
+
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/entity_expiration.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
+import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'send_transaction_to_relay_service.c.g.dart';
+
+typedef MasterPubkeyWithDeviceKeys = ({String masterPubkey, List<String> devicePubkeys});
+
+@riverpod
+Future<SendTransactionToRelayService> sendTransactionToRelayService(Ref ref) async {
+  final sealService = await ref.watch(ionConnectSealServiceProvider.future);
+  final wrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
+
+  return SendTransactionToRelayService(
+    eventSigner: eventSigner,
+    sealService: sealService,
+    wrapService: wrapService,
+    env: ref.watch(envProvider.notifier),
+    ionConnectNotifier: ref.watch(ionConnectNotifierProvider.notifier),
+  );
+}
+
+class SendTransactionToRelayService {
+  SendTransactionToRelayService({
+    required this.env,
+    required this.wrapService,
+    required this.sealService,
+    required this.eventSigner,
+    required this.ionConnectNotifier,
+  });
+
+  final Env env;
+  final EventSigner? eventSigner;
+  final IonConnectNotifier ionConnectNotifier;
+  final IonConnectSealService sealService;
+  final IonConnectGiftWrapService wrapService;
+
+  Future<void> sendTransactionEntity({
+    required WalletAssetData entityData,
+    required MasterPubkeyWithDeviceKeys senderPubkeys,
+    required MasterPubkeyWithDeviceKeys receiverPubkeys,
+  }) async {
+    try {
+      if (eventSigner == null) {
+        throw EventSignerNotFoundException();
+      }
+
+      final pubkeyCombinations = <({String masterPubkey, String devicePubkey})>[
+        ...receiverPubkeys.devicePubkeys.map(
+          (receiverPubkey) => (
+            masterPubkey: receiverPubkeys.masterPubkey,
+            devicePubkey: receiverPubkey,
+          ),
+        ),
+        ...senderPubkeys.devicePubkeys.map(
+          (senderPubkey) => (
+            masterPubkey: senderPubkeys.masterPubkey,
+            devicePubkey: senderPubkey,
+          ),
+        ),
+      ];
+
+      final event = entityData.toEventMessage(currentUserPubkey: eventSigner!.publicKey);
+
+      // TODO: Optimize it to use sendEvents with master pubkey
+      await pubkeyCombinations.map((pubkeys) async {
+        final (:masterPubkey, :devicePubkey) = pubkeys;
+
+        final giftWrap = await _createGiftWrap(
+          signer: eventSigner!,
+          eventMessage: event,
+          receiverPubkey: devicePubkey,
+          receiverMasterPubkey: masterPubkey,
+          kind: WalletAssetEntity.kind,
+        );
+
+        await ionConnectNotifier.sendEvent(
+          giftWrap,
+          cache: false,
+          actionSource: ActionSourceUser(masterPubkey, anonymous: true),
+        );
+      }).wait;
+    } catch (e) {
+      throw SendEventException(e.toString());
+    }
+  }
+
+  Future<EventMessage> _createGiftWrap({
+    required String receiverPubkey,
+    required String receiverMasterPubkey,
+    required EventSigner signer,
+    required EventMessage eventMessage,
+    int kind = PrivateDirectMessageEntity.kind,
+  }) async {
+    final expirationTag = EntityExpiration(
+      value: DateTime.now().add(
+        Duration(hours: env.get<int>(EnvVariable.GIFT_WRAP_EXPIRATION_HOURS)),
+      ),
+    ).toTag();
+
+    final seal = await sealService.createSeal(
+      eventMessage,
+      signer,
+      receiverPubkey,
+    );
+
+    final wrap = await wrapService.createWrap(
+      event: seal,
+      contentKind: kind,
+      receiverPubkey: receiverPubkey,
+      receiverMasterPubkey: receiverMasterPubkey,
+      expirationTag: expirationTag,
+    );
+
+    return wrap;
+  }
+}

@@ -96,10 +96,12 @@ class IONIdentityWallets {
   Future<WalletTransferRequests> getWalletTransferRequests(
     String walletId, {
     String? pageToken,
+    int? pageSize,
   }) =>
       _getWalletTransferRequestsService.getWalletTransferRequests(
         walletId,
         pageToken: pageToken,
+        pageSize: pageSize,
       );
 
   Future<WalletTransferRequest> getWalletTransferRequestById({
