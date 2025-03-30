@@ -33,6 +33,7 @@ class PostFormModal extends HookConsumerWidget {
     this.content,
     this.videoPath,
     this.attachedMedia,
+    this.mimeType,
   });
 
   factory PostFormModal.createPost({
@@ -129,6 +130,7 @@ class PostFormModal extends HookConsumerWidget {
 
   factory PostFormModal.video({
     required String videoPath,
+    required String mimeType,
     Key? key,
     String? content,
   }) {
@@ -136,6 +138,7 @@ class PostFormModal extends HookConsumerWidget {
       key: key,
       createOption: CreatePostOption.video,
       videoPath: videoPath,
+      mimeType: mimeType,
       content: content,
     );
   }
@@ -147,6 +150,7 @@ class PostFormModal extends HookConsumerWidget {
   final String? content;
   final String? videoPath;
   final String? attachedMedia;
+  final String? mimeType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -169,7 +173,12 @@ class PostFormModal extends HookConsumerWidget {
 
     final attachedMediaNotifier = useState<List<MediaFile>>(mediaFiles);
     final attachedVideoNotifier = useState<MediaFile?>(
-      videoPath != null ? MediaFile(path: videoPath!) : null,
+      videoPath != null && mimeType != null
+          ? MediaFile(
+              path: videoPath!,
+              mimeType: mimeType,
+            )
+          : null,
     );
     final attachedMediaLinksNotifier = useState<Map<String, MediaAttachment>>({});
 
