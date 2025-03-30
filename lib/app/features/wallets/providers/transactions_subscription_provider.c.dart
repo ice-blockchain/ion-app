@@ -74,8 +74,6 @@ Future<void> transactionsSubscription(Ref ref) async {
         giftWrapService: giftWrapService,
       );
 
-      Logger.info('Rumor is ready');
-
       if (rumor != null) {
         final message = WalletAssetEntity.fromEventMessage(rumor);
         await transactionsRepository.saveEntities([message]);

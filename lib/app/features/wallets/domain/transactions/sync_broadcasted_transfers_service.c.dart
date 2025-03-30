@@ -47,6 +47,8 @@ class SyncBroadcastedTransfersService {
         .nonNulls
         .wait
         .then((updatedTransfers) => updatedTransfers.nonNulls);
-    await _transactionsRepository.saveTransactions(updatedTransfers.toList());
+    if (updatedTransfers.isNotEmpty) {
+      await _transactionsRepository.saveTransactions(updatedTransfers.toList());
+    }
   }
 }
