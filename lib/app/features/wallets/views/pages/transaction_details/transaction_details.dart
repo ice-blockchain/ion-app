@@ -20,7 +20,6 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/compo
 import 'package:ion/app/features/wallets/views/pages/transaction_details/transaction_details_actions.dart';
 import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -28,7 +27,12 @@ import 'package:ion/app/services/share/share.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class TransactionDetailsPage extends ConsumerWidget {
-  const TransactionDetailsPage({super.key});
+  const TransactionDetailsPage({
+    required this.exploreRouteLocationBuilder,
+    super.key,
+  });
+
+  final String Function(String url) exploreRouteLocationBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -152,17 +156,8 @@ class TransactionDetailsPage extends ConsumerWidget {
                     TransactionDetailsActions(
                       onViewOnExplorer: () {
                         final url = transactionData.transactionExplorerUrl;
-                        final location = transactionData.assetData.map(
-                          coin: (coin) => ExploreCoinTransactionDetailsRoute(
-                            url: url,
-                          ).location,
-                          nft: (nft) => ExploreNftTransactionDetailsRoute(
-                            url: url,
-                          ).location,
-                          notInitialized: (_) => null,
-                        );
-
-                        if (location != null) context.push<void>(location);
+                        final location = exploreRouteLocationBuilder(url);
+                        context.push<void>(location);
                       },
                       onShare: () => shareContent(transactionData.transactionExplorerUrl),
                     ),

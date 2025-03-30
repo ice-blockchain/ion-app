@@ -55,7 +55,7 @@ class WalletMainModalPage extends ConsumerWidget {
 
   String _getSubRouteLocation(WalletMainModalListItem type) {
     return switch (type) {
-      WalletMainModalListItem.send => CoinSendRoute().location,
+      WalletMainModalListItem.send => SelectCoinWalletRoute().location,
       WalletMainModalListItem.receive => ReceiveCoinRoute().location,
     };
   }

@@ -14,6 +14,8 @@ class WalletRoutes {
       routes: [
         TypedGoRoute<SelectContactRoute>(path: 'select-contact'),
         TypedGoRoute<ContactRoute>(path: 'one-contact/:pubkey'),
+        TypedGoRoute<CoinTransactionDetailsRoute>(path: 'transaction-details'),
+        TypedGoRoute<ExploreTransactionDetailsRoute>(path: 'explore-transaction-details'),
         ...coinSendRoutes,
         ...coinReceiveRoutes,
       ],
@@ -55,33 +57,27 @@ class WalletRoutes {
         TypedGoRoute<NftSendScanRoute>(path: 'scan-receiver-wallet'),
         TypedGoRoute<SendNftConfirmRoute>(path: 'nft-confirm'),
         TypedGoRoute<NftTransactionResultRoute>(path: 'nft-transaction-result'),
-        TypedGoRoute<NftTransactionDetailsRoute>(path: 'nft-transaction-details'),
-        TypedGoRoute<ExploreNftTransactionDetailsRoute>(path: 'explore-nft-transaction-details'),
       ],
     ),
   ];
 
   static const coinSendRoutes = <TypedRoute<RouteData>>[
-    TypedGoRoute<CoinSendRoute>(
+    TypedGoRoute<SelectCoinWalletRoute>(
       path: 'coin-send',
       routes: [
-        TypedGoRoute<NetworkSelectSendRoute>(path: 'network-select'),
-        TypedGoRoute<CoinsSendFormRoute>(
+        TypedGoRoute<SelectNetworkWalletRoute>(path: 'network-select'),
+        TypedGoRoute<SendCoinsFormWalletRoute>(
           path: 'coin-send-form',
           routes: [
-            TypedGoRoute<CoinsSelectContactRoute>(path: 'select-contact-to-send_coins'),
+            TypedGoRoute<SelectContactWalletRoute>(path: 'select-contact-to-send_coins'),
             TypedGoRoute<ShareAddressDepositRoute>(path: 'share-address-to-deposit'),
           ],
         ),
         TypedGoRoute<CoinSendScanRoute>(path: 'scan-receiver-wallet'),
-        TypedGoRoute<CoinsSendFormConfirmationRoute>(
-          path: 'coin-send-form-confirmation',
-        ),
+        TypedGoRoute<SendCoinsConfirmationWalletRoute>(path: 'coin-send-form-confirmation'),
       ],
     ),
-    TypedGoRoute<CoinTransactionResultRoute>(path: 'coin-transaction-result'),
-    TypedGoRoute<CoinTransactionDetailsRoute>(path: 'coin-transaction-details'),
-    TypedGoRoute<ExploreCoinTransactionDetailsRoute>(path: 'explore-coin-transaction-details'),
+    TypedGoRoute<CoinTransactionResultWalletRoute>(path: 'coin-transaction-result'),
   ];
 
   static const coinReceiveRoutes = <TypedRoute<RouteData>>[
@@ -131,10 +127,12 @@ class CoinSendScanRoute extends BaseRouteData {
         );
 }
 
-class CoinSendRoute extends BaseRouteData {
-  CoinSendRoute()
+class SelectCoinWalletRoute extends BaseRouteData {
+  SelectCoinWalletRoute()
       : super(
-          child: const SendCoinModalPage(),
+          child: SendCoinModalPage(
+            selectNetworkRouteLocationBuilder: () => SelectNetworkWalletRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -163,10 +161,12 @@ class NetworkSelectReceiveRoute extends BaseRouteData {
         );
 }
 
-class NetworkSelectSendRoute extends BaseRouteData {
-  NetworkSelectSendRoute()
+class SelectNetworkWalletRoute extends BaseRouteData {
+  SelectNetworkWalletRoute()
       : super(
-          child: const NetworkListView(),
+          child: NetworkListView(
+            sendFormRouteLocationBuilder: () => SendCoinsFormWalletRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -206,16 +206,23 @@ class ShareAddressRoute extends BaseRouteData {
         );
 }
 
-class CoinsSendFormRoute extends BaseRouteData {
-  CoinsSendFormRoute()
+class SendCoinsFormWalletRoute extends BaseRouteData {
+  SendCoinsFormWalletRoute()
       : super(
-          child: const SendCoinsForm(),
+          child: SendCoinsForm(
+            selectCoinRouteLocationBuilder: () => SelectCoinWalletRoute().location,
+            selectNetworkRouteLocationBuilder: () => SelectNetworkWalletRoute().location,
+            selectContactRouteLocationBuilder: (networkId) =>
+                SelectContactWalletRoute(networkId: networkId).location,
+            scanAddressRouteLocationBuilder: () => CoinSendScanRoute().location,
+            confirmRouteLocationBuilder: () => SendCoinsConfirmationWalletRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
 
-class CoinsSelectContactRoute extends BaseRouteData {
-  CoinsSelectContactRoute({required this.networkId})
+class SelectContactWalletRoute extends BaseRouteData {
+  SelectContactWalletRoute({required this.networkId})
       : super(
           child: ContactPickerModal(
             networkId: networkId,
@@ -248,18 +255,22 @@ class NftSelectContactRoute extends BaseRouteData {
   final String networkId;
 }
 
-class CoinsSendFormConfirmationRoute extends BaseRouteData {
-  CoinsSendFormConfirmationRoute()
+class SendCoinsConfirmationWalletRoute extends BaseRouteData {
+  SendCoinsConfirmationWalletRoute()
       : super(
-          child: const ConfirmationSheet(),
+          child: ConfirmationSheet(
+            successRouteLocationBuilder: () => CoinTransactionResultWalletRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
 
-class CoinTransactionResultRoute extends BaseRouteData {
-  CoinTransactionResultRoute()
+class CoinTransactionResultWalletRoute extends BaseRouteData {
+  CoinTransactionResultWalletRoute()
       : super(
-          child: const TransactionResultSheet(type: CryptoAssetType.coin),
+          child: TransactionResultSheet(
+            transactionDetailsRouteLocationBuilder: () => CoinTransactionDetailsRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -267,7 +278,9 @@ class CoinTransactionResultRoute extends BaseRouteData {
 class NftTransactionResultRoute extends BaseRouteData {
   NftTransactionResultRoute()
       : super(
-          child: const TransactionResultSheet(type: CryptoAssetType.nft),
+          child: TransactionResultSheet(
+            transactionDetailsRouteLocationBuilder: () => CoinTransactionDetailsRoute().location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -407,34 +420,18 @@ class SendNftConfirmRoute extends BaseRouteData {
         );
 }
 
-class NftTransactionDetailsRoute extends BaseRouteData {
-  NftTransactionDetailsRoute()
-      : super(
-          child: const TransactionDetailsPage(),
-          type: IceRouteType.bottomSheet,
-        );
-}
-
 class CoinTransactionDetailsRoute extends BaseRouteData {
   CoinTransactionDetailsRoute()
       : super(
-          child: const TransactionDetailsPage(),
+          child: TransactionDetailsPage(
+            exploreRouteLocationBuilder: (url) => ExploreTransactionDetailsRoute(url: url).location,
+          ),
           type: IceRouteType.bottomSheet,
         );
 }
 
-class ExploreNftTransactionDetailsRoute extends BaseRouteData {
-  ExploreNftTransactionDetailsRoute({required this.url})
-      : super(
-          child: ExploreTransactionDetailsModal(url: url),
-          type: IceRouteType.bottomSheet,
-        );
-
-  final String url;
-}
-
-class ExploreCoinTransactionDetailsRoute extends BaseRouteData {
-  ExploreCoinTransactionDetailsRoute({required this.url})
+class ExploreTransactionDetailsRoute extends BaseRouteData {
+  ExploreTransactionDetailsRoute({required this.url})
       : super(
           child: ExploreTransactionDetailsModal(url: url),
           type: IceRouteType.bottomSheet,

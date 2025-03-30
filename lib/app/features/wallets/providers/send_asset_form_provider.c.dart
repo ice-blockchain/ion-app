@@ -40,8 +40,8 @@ class SendAssetFormController extends _$SendAssetFormController {
     );
   }
 
-  void setContact(String? pubkey) {
-    state = state.copyWith(contactPubkey: pubkey);
+  void setContact(String? pubkey, {bool isContactPreselected = false}) {
+    state = state.copyWith(contactPubkey: pubkey, isContactPreselected: isContactPreselected);
     _initReceiverAddressFromContact();
   }
 

@@ -99,12 +99,16 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         networkFeeOption: form.selectedNetworkFeeOption,
       );
 
-      await _sendTransactionEntity(
-        details: details,
-        transferResult: result,
-        sendableAsset: sendableAsset,
-        coinAssetData: coinAssetData,
-      );
+      try {
+        await _sendTransactionEntity(
+          details: details,
+          transferResult: result,
+          sendableAsset: sendableAsset,
+          coinAssetData: coinAssetData,
+        );
+      } on Exception catch (e, stacktrace) {
+        Logger.error('Failed to send Nostr event $e', stackTrace: stacktrace);
+      }
 
       return details;
     });
@@ -124,7 +128,8 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     final walletAssetContent = WalletAssetContent(
       amount: transferResult.requestBody['amount'] as String?,
       amountUsd: coinAssetData.priceUSD.toString(),
-      balance: sendableAsset.balance, // number of coins before transfer
+      // number of coins before transfer
+      balance: sendableAsset.balance,
       txUrl: details.transactionExplorerUrl,
       from: details.senderAddress,
       to: details.receiverAddress,

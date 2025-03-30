@@ -79,6 +79,6 @@ class Header extends ConsumerWidget {
 
     ref.invalidate(sendAssetFormControllerProvider);
     ref.read(sendAssetFormControllerProvider.notifier).setReceiverAddress(scannedAddress);
-    await CoinsSendFormRoute().push<void>(ref.context);
+    await SendCoinsFormWalletRoute().push<void>(ref.context);
   }
 }

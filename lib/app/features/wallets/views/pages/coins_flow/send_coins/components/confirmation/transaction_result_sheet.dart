@@ -11,7 +11,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -21,9 +20,12 @@ import 'package:ion/generated/assets.gen.dart';
 enum CryptoAssetType { coin, nft }
 
 class TransactionResultSheet extends ConsumerWidget {
-  const TransactionResultSheet({required this.type, super.key});
+  const TransactionResultSheet({
+    required this.transactionDetailsRouteLocationBuilder,
+    super.key,
+  });
 
-  final CryptoAssetType type;
+  final String Function() transactionDetailsRouteLocationBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,11 +95,7 @@ class TransactionResultSheet extends ConsumerWidget {
                         type: ButtonType.outlined,
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () {
-                          final location = switch (type) {
-                            CryptoAssetType.coin => CoinTransactionDetailsRoute().location,
-                            CryptoAssetType.nft => NftTransactionDetailsRoute().location,
-                          };
-                          context.push(location);
+                          context.push(transactionDetailsRouteLocationBuilder());
                         },
                       ),
                     ),
