@@ -216,18 +216,9 @@ class WalletViewsService {
         );
       }).toList();
 
-      final updatedUsdBalance = updatedGroups.fold(
-        0.0,
-        (sum, group) => sum + group.totalBalanceUSD,
-      );
-
-      if (updatedUsdBalance != walletView.usdBalance) {
-        print('Unmatch');
-      }
-
       return walletView.copyWith(
         coinGroups: updatedGroups,
-        usdBalance: updatedUsdBalance,
+        usdBalance: updatedGroups.fold(0, (sum, group) => sum + group.totalBalanceUSD),
       );
     }).toList();
   }
