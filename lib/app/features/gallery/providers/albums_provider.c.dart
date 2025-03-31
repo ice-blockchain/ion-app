@@ -9,7 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'albums_provider.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 AlbumService albumService(Ref ref) => AlbumService();
 
 @riverpod
