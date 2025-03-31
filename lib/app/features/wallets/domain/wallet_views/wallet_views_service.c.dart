@@ -73,8 +73,9 @@ class WalletViewsService {
       shortViews.map((e) => _identity.wallets.getWalletView(e.id)),
     );
     final networks = await _networksRepository.getAllAsMap();
-    final mainWalletViewId =
-        viewsDetailsDTO.reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b).id;
+    final mainWalletViewId = viewsDetailsDTO.isEmpty
+        ? '' // if there no wallet views, we haven't the main one
+        : viewsDetailsDTO.reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b).id;
 
     _originWalletViews = viewsDetailsDTO
         .map(
@@ -150,56 +151,15 @@ class WalletViewsService {
         var totalGroupBalanceUSD = 0.0;
 
         final updatedCoinsInGroup = group.coins.map((coinInWallet) {
-          var modifiedCoin = coinInWallet;
+          var modifiedCoin = _applyUpdatedCoinPrice(
+            coinInWallet: coinInWallet,
+            updatedCoins: updatedCoins,
+          );
 
-          // Apply price updates if available
-          if (updatedCoins.isNotEmpty) {
-            final updatedCoin = updatedCoins.firstWhereOrNull(
-              (coin) => coin.id == coinInWallet.coin.id,
-            );
-
-            if (updatedCoin != null) {
-              final balanceUSD = modifiedCoin.amount * updatedCoin.priceUSD;
-              modifiedCoin = modifiedCoin.copyWith(
-                coin: updatedCoin,
-                balanceUSD: balanceUSD,
-              );
-            }
-          }
-
-          // Apply transaction updates if available
-          if (transactions.isNotEmpty) {
-            final key = transactions.keys.firstWhereOrNull(
-              (key) => key.id == modifiedCoin.coin.id,
-            );
-            final coinTransactions = transactions[key] ?? [];
-            final wallet = _userWallets.firstWhereOrNull(
-              (w) => w.id == modifiedCoin.walletId,
-            );
-
-            for (final transaction in coinTransactions) {
-              final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
-              final transactionCoin = transaction.cryptoAsset;
-
-              if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
-                final adjustedRawAmount =
-                    (BigInt.parse(modifiedCoin.rawAmount) - BigInt.parse(transactionCoin.rawAmount))
-                        .toString();
-
-                final adjustedAmount = parseCryptoAmount(
-                  adjustedRawAmount,
-                  modifiedCoin.coin.decimals,
-                );
-                final adjustedBalanceUSD = adjustedAmount * modifiedCoin.coin.priceUSD;
-
-                modifiedCoin = modifiedCoin.copyWith(
-                  amount: adjustedAmount,
-                  balanceUSD: adjustedBalanceUSD,
-                  rawAmount: adjustedRawAmount,
-                );
-              }
-            }
-          }
+          modifiedCoin = _applyExecutingTransactions(
+            coinInWallet: modifiedCoin,
+            transactions: transactions,
+          );
 
           totalGroupAmount += modifiedCoin.amount;
           totalGroupBalanceUSD += modifiedCoin.balanceUSD;
@@ -219,6 +179,69 @@ class WalletViewsService {
         usdBalance: updatedGroups.fold(0, (sum, group) => sum + group.totalBalanceUSD),
       );
     }).toList();
+  }
+
+  /// Updates coin usd price
+  CoinInWalletData _applyUpdatedCoinPrice({
+    required Iterable<CoinData> updatedCoins,
+    required CoinInWalletData coinInWallet,
+  }) {
+    if (updatedCoins.isNotEmpty) {
+      final updatedCoin = updatedCoins.firstWhereOrNull(
+        (coin) => coin.id == coinInWallet.coin.id,
+      );
+
+      if (updatedCoin != null) {
+        final balanceUSD = coinInWallet.amount * updatedCoin.priceUSD;
+        return coinInWallet.copyWith(
+          coin: updatedCoin,
+          balanceUSD: balanceUSD,
+        );
+      }
+    }
+
+    return coinInWallet;
+  }
+
+  /// Subtracts sent coins from the existing number of coins.
+  CoinInWalletData _applyExecutingTransactions({
+    required Map<CoinData, List<TransactionData>> transactions,
+    required CoinInWalletData coinInWallet,
+  }) {
+    if (transactions.isNotEmpty) {
+      final key = transactions.keys.firstWhereOrNull(
+        (key) => key.id == coinInWallet.coin.id,
+      );
+      final coinTransactions = transactions[key] ?? [];
+      final wallet = _userWallets.firstWhereOrNull(
+        (w) => w.id == coinInWallet.walletId,
+      );
+
+      for (final transaction in coinTransactions) {
+        final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
+        final transactionCoin = transaction.cryptoAsset;
+
+        if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
+          final adjustedRawAmount =
+              (BigInt.parse(coinInWallet.rawAmount) - BigInt.parse(transactionCoin.rawAmount))
+                  .toString();
+
+          final adjustedAmount = parseCryptoAmount(
+            adjustedRawAmount,
+            coinInWallet.coin.decimals,
+          );
+          final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
+
+          return coinInWallet.copyWith(
+            amount: adjustedAmount,
+            balanceUSD: adjustedBalanceUSD,
+            rawAmount: adjustedRawAmount,
+          );
+        }
+      }
+    }
+
+    return coinInWallet;
   }
 
   Future<WalletViewData> create(String name) async {
@@ -256,9 +279,12 @@ class WalletViewsService {
         );
 
     final index = _originWalletViews.indexWhere((w) => w.id == walletView.id);
-    index != -1
-        ? _originWalletViews[index] = updatedWalletView
-        : _originWalletViews.add(updatedWalletView);
+
+    if (index != -1) {
+      _originWalletViews[index] = updatedWalletView;
+    } else {
+      _originWalletViews.add(updatedWalletView);
+    }
 
     _emitModifiedWalletViews(walletViews: _originWalletViews);
 

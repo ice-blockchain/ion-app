@@ -17,6 +17,7 @@ import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_coins_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
@@ -48,8 +49,7 @@ class ConfirmationSheet extends ConsumerWidget {
     ref
       ..displayErrors(sendCoinsNotifierProvider)
       ..listenSuccess(sendCoinsNotifierProvider, (transactionDetails) {
-        // TODO: Why we need to invalide this provider?
-        // ref.invalidate(walletViewsDataNotifierProvider);
+        ref.invalidate(walletViewsDataNotifierProvider);
 
         if (context.mounted && transactionDetails != null) {
           ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
