@@ -40,7 +40,7 @@ Future<void> transactionsSubscription(Ref ref) async {
         since: since?.subtract(const Duration(days: 2)),
         tags: {
           '#k': ['1755', WalletAssetEntity.kind.toString()],
-          '#p': [currentPubkey, '', eventSigner.publicKey],
+          '#p': [currentPubkey],
         },
       ),
     ],

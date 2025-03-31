@@ -116,13 +116,14 @@ class WalletViewsService {
     if (coinIds.isEmpty) return;
 
     _updatesSubscription?.cancel();
-    _updatesSubscription =
-        _transactionsRepository.watchBroadcastedTransfersByCoins(coinIds.toList()).combineLatest(
-      _coinsRepository.watchCoins(coinIds),
-      (Map<CoinData, List<TransactionData>> transactions, List<CoinData> coins) {
-        return (coins, transactions);
-      },
-    ).listen((combined) {
+    _updatesSubscription = _transactionsRepository
+        .watchBroadcastedTransfersByCoins(coinIds.toList())
+        .combineLatest(
+          _coinsRepository.watchCoins(coinIds),
+          (Map<CoinData, List<TransactionData>> transactions, List<CoinData> coins) =>
+              (coins, transactions),
+        )
+        .listen((combined) {
       final (updatedCoins, transactions) = combined;
 
       if (_originWalletViews.isEmpty) return;
