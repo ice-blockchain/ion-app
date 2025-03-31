@@ -9,7 +9,6 @@ import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
@@ -163,16 +162,6 @@ class MediaService {
       path: asset.id,
       mimeType: mimeType,
     );
-  }
-
-  Future<File?> selectVideoFromGallery() async {
-    final results = await ImagePicker().pickVideo(source: ImageSource.gallery);
-
-    if (results != null) {
-      return File(results.path);
-    }
-
-    return null;
   }
 
   Future<({Uint8List imageBytes, Offset position, Size size})?> captureWidgetAsImage(
