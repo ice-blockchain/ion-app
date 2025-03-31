@@ -16,12 +16,14 @@ class GalleryPermissionButton extends ConsumerWidget {
     required this.mediaPickerType,
     required this.onMediaSelected,
     required this.maxSelection,
+    this.enabled = true,
     super.key,
   });
 
   final MediaPickerType mediaPickerType;
   final ValueChanged<List<MediaFile>?> onMediaSelected;
   final int? maxSelection;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,7 +46,8 @@ class GalleryPermissionButton extends ConsumerWidget {
       builder: (context, onPressed) {
         return ActionsToolbarButton(
           icon: Assets.svg.iconGalleryOpen,
-          onPressed: onPressed,
+          onPressed: enabled ? onPressed : () {},
+          enabled: enabled,
         );
       },
     );

@@ -26,42 +26,34 @@ class SingleMediaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryTextColor = context.theme.appColors.primaryText;
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
-    final sizedBoxHeight = 20.0.s;
     final horizontalPadding = 16.0.s;
 
-    return media.mediaType == MediaType.video
-        ? VideoPage(
-            video: post,
-            framedEventReference: framedEventReference,
-            looping: true,
-          )
-        : Column(
-            children: [
-              Expanded(
-                child: FullscreenImage(
-                  imageUrl: media.url,
-                  eventReference: eventReference,
-                ),
-              ),
-              SizedBox(height: sizedBoxHeight),
-              ColoredBox(
-                color: primaryTextColor,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                  child: SafeArea(
-                    top: false,
-                    child: CounterItemsFooter(
-                      eventReference: eventReference,
-                      color: onPrimaryAccentColor,
-                      bottomPadding: 0,
-                      topPadding: 0,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
+    if (media.mediaType == MediaType.video) {
+      return VideoPage(
+        video: post,
+        framedEventReference: framedEventReference,
+        looping: true,
+      );
+    }
+
+    return FullscreenImage(
+      imageUrl: media.url,
+      bottomOverlayBuilder: (context) => SafeArea(
+        top: false,
+        child: ColoredBox(
+          color: Colors.transparent,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: CounterItemsFooter(
+              eventReference: eventReference,
+              color: onPrimaryAccentColor,
+              bottomPadding: 0,
+              topPadding: 0,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
