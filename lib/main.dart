@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:isolate';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -22,6 +25,27 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
   await dotenv.load(fileName: Assets.aApp);
+
+  /// Handles Flutter-specific errors and exceptions
+  FlutterError.onError = (errorDetails) {
+    Logger.error('[Flutter Error] ${errorDetails.exceptionAsString()}');
+  };
+
+  /// Handles platform-level errors that occur outside of the Flutter framework
+  PlatformDispatcher.instance.onError = (error, stack) {
+    Logger.error('[Platform Error] $error', stackTrace: stack);
+    return true;
+  };
+
+  /// Sets up an error listener for the current isolate to catch
+  /// any errors that occur in isolate execution.
+  Isolate.current.addErrorListener(
+    RawReceivePort((List<dynamic> pair) async {
+      final errorAndStacktrace = pair;
+      Logger.error('[Isolate Error] ${errorAndStacktrace.first}');
+      Logger.error('[Isolate Stack] ${errorAndStacktrace.last}');
+    }).sendPort,
+  );
 
   runApp(
     ProviderScope(
