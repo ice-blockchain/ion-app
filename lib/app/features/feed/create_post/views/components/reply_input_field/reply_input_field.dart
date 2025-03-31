@@ -162,9 +162,9 @@ class ReplyInputField extends HookConsumerWidget {
           if (hasFocus.value)
             ActionsToolbar(
               actions: [
-                ToolbarImageButton(
+                ToolbarMediaButton(
                   delegate: AttachedMediaHandler(attachedMediaNotifier),
-                  maxImages: ModifiablePostEntity.contentMediaLimit,
+                  maxMedia: ModifiablePostEntity.contentMediaLimit,
                 ),
                 ToolbarPollButton(
                   textEditorController: textEditorController,

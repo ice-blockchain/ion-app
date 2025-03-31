@@ -7,7 +7,7 @@ import 'package:ion/app/components/text_editor/components/gallery_permission_but
 import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-abstract class ToolbarImageButtonDelegate {
+abstract class ToolbarMediaButtonDelegate {
   void onMediaSelected(List<MediaFile>? mediaFiles) {
     if (mediaFiles != null && mediaFiles.isNotEmpty) {
       handleSelectedMedia(mediaFiles);
@@ -20,7 +20,7 @@ abstract class ToolbarImageButtonDelegate {
 ///
 /// Handles and stores attached media files using a [attachedMediaNotifier].
 ///
-class AttachedMediaHandler extends ToolbarImageButtonDelegate {
+class AttachedMediaHandler extends ToolbarMediaButtonDelegate {
   AttachedMediaHandler(this._attachedMediaNotifier);
 
   final ValueNotifier<List<MediaFile>> _attachedMediaNotifier;
@@ -34,7 +34,7 @@ class AttachedMediaHandler extends ToolbarImageButtonDelegate {
 ///
 /// Integrates selected media into a text using single image block and QuillController.
 ///
-class QuillControllerHandler extends ToolbarImageButtonDelegate {
+class QuillControllerHandler extends ToolbarMediaButtonDelegate {
   QuillControllerHandler(this._textEditorController);
 
   final QuillController _textEditorController;
@@ -62,24 +62,24 @@ class QuillControllerHandler extends ToolbarImageButtonDelegate {
   }
 }
 
-class ToolbarImageButton extends StatelessWidget {
-  const ToolbarImageButton({
+class ToolbarMediaButton extends StatelessWidget {
+  const ToolbarMediaButton({
     required this.delegate,
-    this.maxImages,
+    this.maxMedia,
     this.enabled = true,
     super.key,
   });
 
-  final ToolbarImageButtonDelegate delegate;
-  final int? maxImages;
+  final ToolbarMediaButtonDelegate delegate;
+  final int? maxMedia;
   final bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return GalleryPermissionButton(
-      mediaPickerType: MediaPickerType.image,
+      mediaPickerType: MediaPickerType.common,
       onMediaSelected: delegate.onMediaSelected,
-      maxSelection: maxImages,
+      maxSelection: maxMedia,
       enabled: enabled,
     );
   }

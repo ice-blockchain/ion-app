@@ -17,6 +17,7 @@ class PostMediaItem extends HookWidget {
     required this.aspectRatio,
     required this.eventReference,
     this.mediaIndex = 0,
+    this.videoIndex = 0,
     this.framedEventReference,
     this.onVideoTap,
     super.key,
@@ -24,6 +25,7 @@ class PostMediaItem extends HookWidget {
 
   final MediaAttachment mediaItem;
   final int mediaIndex;
+  final int videoIndex;
   final double aspectRatio;
   final EventReference eventReference;
   final EventReference? framedEventReference;
@@ -36,7 +38,7 @@ class PostMediaItem extends HookWidget {
       onTap: () => onVideoTap != null && mediaItem.mediaType == MediaType.video
           ? onVideoTap?.call(
               eventReference: eventReference.encode(),
-              initialMediaIndex: mediaIndex,
+              initialMediaIndex: videoIndex,
               framedEventReference: framedEventReference?.encode(),
             )
           : FullscreenMediaRoute(
