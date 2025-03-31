@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:ion_content_labeler/src/ffi/fast_text.dart';
 import 'package:ion_content_labeler/ion_content_labeler.dart';
@@ -25,10 +26,25 @@ class IonTextLabeler {
   final FastText _lib;
 
   static Future<IonTextLabeler> create(TextLabelerType type) async {
-    final lib = FastText();
     final modelPath = await type.model.getPath();
-    lib.loadModel(modelPath);
-    return IonTextLabeler._(lib);
+    final res = await Isolate.run(() {
+      final lib = FastText();
+
+      try {
+        late String res;
+        for (var i = 0; i < 10; i++) {
+          lib.loadModel(modelPath);
+          res = lib.predict('SOME TEXT!!!');
+        }
+
+        return res;
+      } catch (error) {
+        lib.dispose();
+        rethrow;
+      }
+    });
+    print(res);
+    return IonTextLabeler._(FastText());
   }
 
   Future<TextLabelerResult> detect(String input, {int count = 3}) async {
