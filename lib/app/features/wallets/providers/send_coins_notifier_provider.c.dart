@@ -4,11 +4,10 @@ import 'dart:async';
 
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/user/providers/user_delegation_provider.c.dart';
 import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
-import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/domain/transactions/send_transaction_to_relay_service.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
