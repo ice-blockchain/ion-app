@@ -12,11 +12,8 @@ import 'package:ion/app/features/core/providers/dio_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
-import 'package:ion/app/features/ion_connect/model/file_storage_metadata.c.dart';
-import 'package:ion/app/features/ion_connect/model/ion_connect_auth.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/features/user/providers/user_relays_manager.c.dart';
+import 'package:ion/app/features/ion_connect/utils/file_storage_utils.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -41,14 +38,16 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
 
     final dimension = '${file.width}x${file.height}';
 
-    final url = await _getFileStorageApiUrl();
+    final url = await getFileStorageApiUrl(ref);
 
     final fileBytes = await File(file.path).readAsBytes();
 
-    final authorizationToken = await _generateAuthorizationToken(
+    final authorizationToken = await generateAuthorizationToken(
+      ref: ref,
       url: url,
       fileBytes: fileBytes,
       customEventSigner: customEventSigner,
+      method: 'POST',
     );
 
     final response = await _makeUploadRequest(
@@ -76,51 +75,6 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
     );
 
     return (fileMetadata: fileMetadata, mediaAttachment: mediaAttachment);
-  }
-
-  Future<String> _generateAuthorizationToken({
-    required String url,
-    required List<int> fileBytes,
-    EventSigner? customEventSigner,
-  }) async {
-    final ionConnectAuth = IonConnectAuth(url: url, method: 'POST', payload: fileBytes);
-
-    if (customEventSigner != null) {
-      final authEvent = await ionConnectAuth.toEventMessage(customEventSigner);
-
-      return ionConnectAuth.toAuthorizationHeader(authEvent);
-    } else {
-      final authEvent = await ref.read(ionConnectNotifierProvider.notifier).sign(ionConnectAuth);
-
-      return ionConnectAuth.toAuthorizationHeader(authEvent);
-    }
-  }
-
-  // TODO: handle delegatedToUrl when migrating to common relays
-  Future<String> _getFileStorageApiUrl() async {
-    final userRelays = await ref.read(currentUserRelayProvider.future);
-    if (userRelays == null) {
-      throw UserRelaysNotFoundException();
-    }
-    final relayUrl = userRelays.data.list.random.url;
-
-    try {
-      final parsedRelayUrl = Uri.parse(relayUrl);
-      final metadataUri = Uri(
-        scheme: 'https',
-        host: parsedRelayUrl.host,
-        port: parsedRelayUrl.hasPort ? parsedRelayUrl.port : null,
-        path: FileStorageMetadata.path,
-      );
-
-      final response = await ref.read(dioProvider).getUri<dynamic>(metadataUri);
-      final uploadPath =
-          FileStorageMetadata.fromJson(json.decode(response.data as String) as Map<String, dynamic>)
-              .apiUrl;
-      return metadataUri.replace(path: uploadPath).toString();
-    } catch (error) {
-      throw GetFileStorageUrlException(error);
-    }
   }
 
   Future<UploadResponse> _makeUploadRequest({

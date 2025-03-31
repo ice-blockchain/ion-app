@@ -17,10 +17,12 @@ import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.
 import 'package:ion/app/features/feed/providers/user_posts_data_source_provider.c.dart';
 import 'package:ion/app/features/feed/providers/user_videos_data_source_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
+import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -48,6 +50,7 @@ class DeleteEntityController extends _$DeleteEntityController {
         case GenericRepostEntity() || RepostEntity() || PostEntity():
           {
             await _deleteFromServer(ref, entity);
+            if (entity is PostEntity) _deleteMedia(ref, entity.data);
             _deleteFromDataSources(ref, entity);
             _deleteFromCache(ref, entity);
             _deleteFromCounters(ref, entity);
@@ -56,12 +59,14 @@ class DeleteEntityController extends _$DeleteEntityController {
         case ModifiablePostEntity():
           {
             _deleteFromCounters(ref, entity);
+            _deleteMedia(ref, entity.data);
             await ref
                 .read(createPostNotifierProvider(CreatePostOption.softDelete).notifier)
                 .softDelete(eventReference: eventReference);
           }
         case ArticleEntity():
           {
+            _deleteMedia(ref, entity.data);
             await ref
                 .read(createArticleProvider(CreateArticleOption.softDelete).notifier)
                 .softDelete(eventReference: eventReference);
@@ -148,4 +153,10 @@ void _deleteFromProviders(Ref ref, IonConnectEntity entity) {
   if (eventReference != null) {
     ref.read(repostedEventsNotifierProvider.notifier).removeRepost(eventReference);
   }
+}
+
+void _deleteMedia(Ref ref, EntityDataWithMediaContent entity) {
+  final media = entity.media.values;
+  final fileHashes = media.map((e) => e.originalFileHash).toList();
+  ref.read(ionConnectDeleteFileNotifierProvider.notifier).deleteMultiple(fileHashes);
 }
