@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
@@ -106,7 +107,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
           sendableAsset: sendableAsset,
           coinAssetData: coinAssetData,
         );
-      } on Exception catch (e, stacktrace) {
+      } on SendEventException catch (e, stacktrace) {
         Logger.error('Failed to send Nostr event $e', stackTrace: stacktrace);
       }
 
