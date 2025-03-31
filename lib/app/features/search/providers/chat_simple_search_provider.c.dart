@@ -26,7 +26,7 @@ Future<List<String>?> chatSimpleSearch(Ref ref, String query) async {
 
   final foundUsersMasterPubkeys = sortedUsers.map((user) => user.masterPubkey);
 
-  // Debounce users search results 
+  // Debounce users search results
   await Future<void>.delayed(const Duration(milliseconds: 700));
 
   final lastConversationMessages = ref

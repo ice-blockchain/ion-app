@@ -73,7 +73,7 @@ class AppTestRoute extends BaseRouteData {
 class ChatSimpleSearchRoute extends BaseRouteData {
   ChatSimpleSearchRoute({this.query = ''})
       : super(
-          child: ChatSimpleSearchPage( query),
+          child: ChatSimpleSearchPage(query),
         );
 
   final String query;
