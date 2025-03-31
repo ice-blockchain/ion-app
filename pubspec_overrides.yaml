@@ -1,7 +1,5 @@
-# melos_managed_dependency_overrides: ion_identity_client,js,ion_screenshot_detector
+# melos_managed_dependency_overrides: ion_identity_client,js
 dependency_overrides:
   ion_identity_client:
     path: packages/ion_identity_client
-  ion_screenshot_detector:
-    path: packages/ion_screenshot_detector
   js: ^0.7.1
