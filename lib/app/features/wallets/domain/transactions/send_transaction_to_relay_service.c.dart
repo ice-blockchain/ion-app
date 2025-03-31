@@ -19,6 +19,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'send_transaction_to_relay_service.c.g.dart';
 
 typedef MasterPubkeyWithDeviceKeys = ({String masterPubkey, List<String> devicePubkeys});
+typedef PubkeyPair = ({String masterPubkey, String devicePubkey});
 
 @riverpod
 Future<SendTransactionToRelayService> sendTransactionToRelayService(Ref ref) async {
@@ -60,7 +61,7 @@ class SendTransactionToRelayService {
         throw EventSignerNotFoundException();
       }
 
-      final pubkeyCombinations = <({String masterPubkey, String devicePubkey})>[
+      final pubkeyCombinations = <PubkeyPair>[
         ...receiverPubkeys.devicePubkeys.map(
           (receiverPubkey) => (
             masterPubkey: receiverPubkeys.masterPubkey,
