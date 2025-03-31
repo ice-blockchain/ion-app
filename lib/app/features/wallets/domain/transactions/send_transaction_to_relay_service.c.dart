@@ -27,6 +27,10 @@ Future<SendTransactionToRelayService> sendTransactionToRelayService(Ref ref) asy
   final wrapService = await ref.watch(ionConnectGiftWrapServiceProvider.future);
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
+  if (eventSigner == null) {
+    throw EventSignerNotFoundException();
+  }
+
   return SendTransactionToRelayService(
     eventSigner: eventSigner,
     sealService: sealService,
@@ -46,7 +50,7 @@ class SendTransactionToRelayService {
   });
 
   final Env env;
-  final EventSigner? eventSigner;
+  final EventSigner eventSigner;
   final IonConnectNotifier ionConnectNotifier;
   final IonConnectSealService sealService;
   final IonConnectGiftWrapService wrapService;
@@ -57,10 +61,6 @@ class SendTransactionToRelayService {
     required MasterPubkeyWithDeviceKeys receiverPubkeys,
   }) async {
     try {
-      if (eventSigner == null) {
-        throw EventSignerNotFoundException();
-      }
-
       final pubkeyCombinations = <PubkeyPair>[
         ...receiverPubkeys.devicePubkeys.map(
           (receiverPubkey) => (
@@ -76,14 +76,14 @@ class SendTransactionToRelayService {
         ),
       ];
 
-      final event = entityData.toEventMessage(currentUserPubkey: eventSigner!.publicKey);
+      final event = entityData.toEventMessage(currentUserPubkey: eventSigner.publicKey);
 
       // TODO: Optimize it to use sendEvents with master pubkey
       await pubkeyCombinations.map((pubkeys) async {
         final (:masterPubkey, :devicePubkey) = pubkeys;
 
         final giftWrap = await _createGiftWrap(
-          signer: eventSigner!,
+          signer: eventSigner,
           eventMessage: event,
           receiverPubkey: devicePubkey,
           receiverMasterPubkey: masterPubkey,
