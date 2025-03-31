@@ -19,10 +19,10 @@ import 'package:ion/app/features/wallets/model/transaction_crypto_asset.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
-import 'package:ion/app/features/wallets/utils/stream_combiner.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 part 'create_update_wallet_view_request_builder.dart';
 part 'wallet_views_service.c.g.dart';
@@ -64,7 +64,7 @@ class WalletViewsService {
   List<WalletViewData> _modifiedWalletViews = [];
   List<WalletViewData> get lastEmitted => _modifiedWalletViews;
 
-  StreamCombiner<Iterable<CoinData>, Map<CoinData, List<TransactionData>>>? _streamCombiner;
+  StreamSubscription<(List<CoinData>, Map<CoinData, List<TransactionData>>)>? _updatesSubscription;
 
   Future<List<WalletViewData>> fetch() async {
     final shortViews = await _identity.wallets.getWalletViews();
@@ -100,10 +100,10 @@ class WalletViewsService {
 
     _walletViewsController.add(_modifiedWalletViews);
 
-    if (refreshSubscriptions) _refreshSubscriptions();
+    if (refreshSubscriptions) _refreshUpdateSubscription();
   }
 
-  void _refreshSubscriptions() {
+  void _refreshUpdateSubscription() {
     if (_originWalletViews.isEmpty) return;
 
     final coinIds = _originWalletViews
@@ -114,22 +114,22 @@ class WalletViewsService {
 
     if (coinIds.isEmpty) return;
 
-    _streamCombiner?.dispose();
-
-    _streamCombiner = StreamCombiner(
-      stream1: _coinsRepository.watchCoins(coinIds),
-      stream2: _transactionsRepository.watchBroadcastedTransfersByCoins(coinIds.toList()),
-    );
-
-    _streamCombiner?.stream.listen((combined) {
+    _updatesSubscription?.cancel();
+    _updatesSubscription =
+        _transactionsRepository.watchBroadcastedTransfersByCoins(coinIds.toList()).combineLatest(
+      _coinsRepository.watchCoins(coinIds),
+      (Map<CoinData, List<TransactionData>> transactions, List<CoinData> coins) {
+        return (coins, transactions);
+      },
+    ).listen((combined) {
       final (updatedCoins, transactions) = combined;
 
       if (_originWalletViews.isEmpty) return;
 
       final updatedViews = _updateWalletViews(
         _originWalletViews,
-        updatedCoins: updatedCoins ?? [],
-        transactions: transactions ?? {},
+        updatedCoins: updatedCoins,
+        transactions: transactions,
       );
 
       _emitModifiedWalletViews(
@@ -378,6 +378,6 @@ class WalletViewsService {
 
   void dispose() {
     _walletViewsController.close();
-    _streamCombiner?.dispose();
+    _updatesSubscription?.cancel();
   }
 }

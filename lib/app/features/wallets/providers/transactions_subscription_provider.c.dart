@@ -23,11 +23,8 @@ Future<void> transactionsSubscription(Ref ref) async {
   final sealService = ref.watch(ionConnectSealServiceProvider).valueOrNull;
   final giftWrapService = ref.watch(ionConnectGiftWrapServiceProvider).valueOrNull;
 
-  if (currentPubkey == null) {
-    throw UserMasterPubkeyNotFoundException();
-  }
-
-  if (eventSigner == null ||
+  if (currentPubkey == null ||
+      eventSigner == null ||
       sealService == null ||
       giftWrapService == null ||
       transactionsRepository == null) {
@@ -85,7 +82,6 @@ Future<void> transactionsSubscription(Ref ref) async {
   ref.onDispose(subscription.cancel);
 }
 
-// TODO: Maybe, we need some service to wrap/unwrap gifts in the core module
 Future<EventMessage?> _unwrapGift({
   required EventMessage giftWrap,
   required String privateKey,

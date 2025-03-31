@@ -28,6 +28,7 @@ Future<TransactionsRepository> transactionsRepository(Ref ref) async => Transact
       await ref.watch(walletsNotifierProvider.future),
       ref.watch(transactionsDaoProvider),
       await ref.watch(ionIdentityClientProvider.future),
+      CoinTransactionsMapper(),
     );
 
 class TransactionsRepository {
@@ -36,12 +37,14 @@ class TransactionsRepository {
     this._userWallets,
     this._transactionsDao,
     this._ionIdentityClient,
+    this._coinMapper,
   );
 
   final CoinsDao _coinsDao;
   final List<Wallet> _userWallets;
   final TransactionsDao _transactionsDao;
   final IONIdentityClient _ionIdentityClient;
+  final CoinTransactionsMapper _coinMapper;
 
   Future<DateTime?> lastCreatedAt() => _transactionsDao.lastCreatedAt();
 
@@ -49,7 +52,7 @@ class TransactionsRepository {
     required TransactionDetails details,
     String? balanceBeforeTransfer,
   }) async {
-    final mapped = CoinTransactionsMapper().fromTransactionDetails(
+    final mapped = _coinMapper.fromTransactionDetails(
       details: details,
       balanceBeforeTransactions: balanceBeforeTransfer,
     );
@@ -57,7 +60,7 @@ class TransactionsRepository {
   }
 
   Future<void> saveTransactions(List<TransactionData> transactions) =>
-      _transactionsDao.save(CoinTransactionsMapper().fromDomainToDB(transactions));
+      _transactionsDao.save(_coinMapper.fromDomainToDB(transactions));
 
   Future<void> saveEntities(List<WalletAssetEntity> entities) async {
     // Always add empty contract address to get native coin of the network
@@ -74,7 +77,7 @@ class TransactionsRepository {
       contractAddresses: contractFilters,
     );
 
-    final mapped = CoinTransactionsMapper().fromEntityToDB(
+    final mapped = _coinMapper.fromEntityToDB(
       entities,
       _userWallets.map((e) => e.address).nonNulls,
       coins,
@@ -143,79 +146,6 @@ class TransactionsRepository {
         amount: convertedAmount,
       ),
     );
-  }
-
-  Future<({List<TransactionData> transactions, String? nextPageToken})> getTransfers(
-    String cryptoWalletId, {
-    int? pageSize,
-    String? paginationToken,
-  }) async {
-    final transfersDTO = await _ionIdentityClient.wallets.getWalletTransferRequests(
-      cryptoWalletId,
-      pageSize: pageSize,
-      pageToken: paginationToken,
-    );
-
-    final coinSymbols = <String>{};
-    final networks = <String>{};
-
-    for (final historyItem in transfersDTO.items) {
-      final symbol = _extractSymbolFromDtoMetadata(historyItem.metadata);
-      if (symbol != null) coinSymbols.add(symbol);
-      networks.add(historyItem.network);
-    }
-
-    final coins = await _coinsDao.getByFilters(symbols: coinSymbols, networks: networks);
-    final nativeCoins = await _coinsDao.getByFilters(networks: networks, contractAddresses: ['']);
-
-    final converted = transfersDTO.items
-        .where((t) => t.requestBody is CoinTransferRequestBody && t.txHash != null)
-        .map((transactionDTO) {
-          final symbol = _extractSymbolFromDtoMetadata(transactionDTO.metadata);
-          final nativeCoin = nativeCoins.firstWhereOrNull(
-            (c) => c.contractAddress.isEmpty && c.network.id == transactionDTO.network,
-          );
-          final coin = _isNativeKind(transactionDTO.requestBody.kind)
-              ? nativeCoin
-              : coins.firstWhereOrNull(
-                  (c) =>
-                      c.abbreviation.toLowerCase() == symbol?.toLowerCase() &&
-                      c.network.id == transactionDTO.network,
-                );
-          final senderAddress =
-              _userWallets.firstWhereOrNull((e) => e.id == transactionDTO.walletId)?.address;
-
-          if (nativeCoin == null || coin == null || senderAddress == null) {
-            return null;
-          }
-
-          final rawAmount = (transactionDTO.requestBody as CoinTransferRequestBody).amount;
-          final convertedAmount = parseCryptoAmount(rawAmount, coin.decimals);
-          final amountUSD = convertedAmount * coin.priceUSD;
-
-          return TransactionData(
-            id: transactionDTO.id,
-            network: coin.network,
-            txHash: transactionDTO.txHash!,
-            type: TransactionType.send,
-            senderWalletAddress: senderAddress,
-            receiverWalletAddress: transactionDTO.requestBody.to,
-            nativeCoin: nativeCoin,
-            fee: transactionDTO.fee,
-            status: TransactionStatus.fromJson(transactionDTO.status),
-            dateConfirmed: transactionDTO.dateConfirmed,
-            cryptoAsset: CoinTransactionAsset(
-              coin: coin,
-              rawAmount: rawAmount,
-              amountUSD: amountUSD,
-              amount: convertedAmount,
-            ),
-          );
-        })
-        .nonNulls
-        .toList();
-
-    return (transactions: converted, nextPageToken: transfersDTO.nextPageToken);
   }
 
   bool _isNativeKind(String kind) => kind.toLowerCase().contains('native');
