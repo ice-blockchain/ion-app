@@ -6,64 +6,51 @@ import 'dart:isolate';
 import 'package:ion_content_labeler/src/ffi/fast_text.dart';
 import 'package:ion_content_labeler/ion_content_labeler.dart';
 
-enum TextLabelerType {
-  language(AssetClassificationModel(name: 'language_identification.176.ftz')),
-  category(NetworkClassificationModel(
+enum TextLabelerModel {
+  language(AssetModelFile(name: 'language_identification.176.ftz')),
+  category(NetworkModelFile(
     name: 'labeling_v3',
     url:
         'https://github.com/ice-blockchain/ion-app/raw/063772ec0dd75fac8946b2f33fb4ea33d04308aa/assets/labeling_3.ftz',
   ));
 
-  final ClassificationModel model;
+  final ModelFile file;
 
-  const TextLabelerType(this.model);
+  const TextLabelerModel(this.file);
 }
 
-//TODO:use predict in isolate, add custom exceptions
+//TODO:add custom exceptions
 class IonTextLabeler {
-  IonTextLabeler._(this._lib);
+  Future<TextLabelerResult> detect(
+    String input, {
+    required TextLabelerModel model,
+    int count = 3,
+  }) async {
+    final normalizedInput = _normalizeInput(input);
 
-  final FastText _lib;
+    final modelPath = await model.file.getPath();
 
-  static Future<IonTextLabeler> create(TextLabelerType type) async {
-    final modelPath = await type.model.getPath();
-    final res = await Isolate.run(() {
+    final predictionsJson = await Isolate.run(() {
       final lib = FastText();
-
       try {
-        late String res;
-        for (var i = 0; i < 10; i++) {
-          lib.loadModel(modelPath);
-          res = lib.predict('SOME TEXT!!!');
-        }
-
-        return res;
-      } catch (error) {
+        lib.loadModel(modelPath);
+        return lib.predict(normalizedInput);
+      } finally {
         lib.dispose();
-        rethrow;
       }
     });
-    print(res);
-    return IonTextLabeler._(FastText());
-  }
 
-  Future<TextLabelerResult> detect(String input, {int count = 3}) async {
-    final normalizedInput = _normalizeInput(input);
-    final predictionsJson = _lib.predict(input, k: count);
     final labels = (jsonDecode(predictionsJson) as List<dynamic>)
         .map((prediction) => _normalizeLabel(Label.fromMap(prediction)))
         .toList();
+
     return TextLabelerResult(
       input: normalizedInput,
       labels: labels,
     );
   }
 
-  void dispose() {
-    _lib.dispose();
-  }
-
-  static Label _normalizeLabel(Label label) {
+  Label _normalizeLabel(Label label) {
     return label.copyWith(name: label.name.replaceFirst('__label__', ''));
   }
 

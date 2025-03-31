@@ -23,11 +23,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final TextEditingController _controller = TextEditingController(text: _initialInput);
 
+  final IonTextLabeler _labeler = IonTextLabeler();
+
   String? _normalizedInput;
 
-  String? _language;
+  String? _languages;
 
-  String? _labels;
+  String? _categories;
 
   @override
   void initState() {
@@ -57,8 +59,14 @@ class _MyAppState extends State<MyApp> {
                   Text('Normalized input is:\n$_normalizedInput'),
                   SizedBox(height: 10)
                 ],
-                if (_language != null) ...[Text('Language is:\n$_language'), SizedBox(height: 10)],
-                if (_labels != null) ...[Text('Categories are:\n$_labels'), SizedBox(height: 10)],
+                if (_languages != null) ...[
+                  Text('Languages are:\n$_languages'),
+                  SizedBox(height: 10)
+                ],
+                if (_categories != null) ...[
+                  Text('Categories are:\n$_categories'),
+                  SizedBox(height: 10)
+                ],
               ],
             ),
           ),
@@ -70,26 +78,25 @@ class _MyAppState extends State<MyApp> {
   void _onButtonPressed() {
     setState(() {
       _normalizedInput = null;
-      _language = null;
-      _labels = null;
+      _languages = null;
+      _categories = null;
     });
     final input = _controller.text;
 
-    for (var i = 0; i < 1; i++) {
-      IonTextLabeler.create(TextLabelerType.category).then((labeler) {
-        // labeler.detect(input.substring(0, input.length - i)).then((result) => setState(() {
-        //       _language = result.labels.join('\n');
-        //       _normalizedInput = result.input;
-        //     }));
-      });
-    }
-    // IonTextLabeler.create(TextLabelerType.category).then((labeler) {
-    //   for (var i = 0; i < 1; i++) {
-    //     labeler.detect(input).then((result) => setState(() {
-    //           _labels = result.labels.join('\n');
-    //           _normalizedInput = result.input;
-    //         }));
-    //   }
-    // });
+    _labeler.detect(input, model: TextLabelerModel.language).then((result) {
+      setState(
+        () {
+          _languages = result.labels.join('\n');
+          _normalizedInput = result.input;
+        },
+      );
+    });
+    _labeler.detect(input, model: TextLabelerModel.category).then((result) {
+      setState(
+        () {
+          _categories = result.labels.join('\n');
+        },
+      );
+    });
   }
 }

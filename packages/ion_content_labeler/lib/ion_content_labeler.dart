@@ -2,7 +2,7 @@
 
 library;
 
-export 'src/classification_model.dart';
+export 'src/model_file.dart';
 export 'src/ion_text_labeler.dart';
 export 'src/labeler_result.dart';
 export 'src/label.dart';
