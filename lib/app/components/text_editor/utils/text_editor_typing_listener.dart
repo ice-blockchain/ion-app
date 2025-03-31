@@ -46,7 +46,7 @@ abstract class TextEditorTypingListener {
 
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 1), () {
-      onTextChanged(text, cursorIndex, isBackspace, cursorMoved);
+      onTextChanged(text, cursorIndex, isBackspace: isBackspace, cursorMoved: cursorMoved);
     });
   }
 
@@ -70,6 +70,11 @@ abstract class TextEditorTypingListener {
     return regularPunctuation.contains(char) || specialQuotes.contains(char);
   }
 
-  void onTextChanged(String text, int cursorIndex, bool isBackspace, bool cursorMoved);
+  void onTextChanged(
+    String text,
+    int cursorIndex, {
+    required bool isBackspace,
+    required bool cursorMoved,
+  });
   void onFocusLost();
 }

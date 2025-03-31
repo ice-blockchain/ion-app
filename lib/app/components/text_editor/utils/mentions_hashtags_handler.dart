@@ -18,7 +18,12 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
   int lastTagIndex = -1;
 
   @override
-  void onTextChanged(String text, int cursorIndex, bool isBackspace, bool cursorMoved) {
+  void onTextChanged(
+    String text,
+    int cursorIndex, {
+    required bool isBackspace,
+    required bool cursorMoved,
+  }) {
     if (cursorMoved) {
       _cleanAndReformatTags(text);
     }

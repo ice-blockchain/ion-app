@@ -15,7 +15,12 @@ class LinksHandler extends TextEditorTypingListener {
   final _urlMatcher = const UrlMatcher();
 
   @override
-  void onTextChanged(String text, int cursorIndex, bool isBackspace, bool cursorMoved) {
+  void onTextChanged(
+    String text,
+    int cursorIndex, {
+    required bool isBackspace,
+    required bool cursorMoved,
+  }) {
     _cleanAndReformatLinks(text);
 
     if (cursorIndex > 0) {
