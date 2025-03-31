@@ -1439,12 +1439,9 @@ packages:
     dependency: transitive
     description:
       name: io
-      sha256: dfd5a80599cf0165756e3181807ed3e77daf6dd4137caaad72d0b7931597650b
+      sha256: "2ec25704aba361659e10e3e5f5d672068d332fc8ac516421d483a11e5cbd061e"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
-    version: "1.0.5"
-=======
     version: "1.0.4"
   ion_content_labeler:
     dependency: "direct main"
@@ -1453,7 +1450,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
->>>>>>> ae81a0f7d (chore(test): apply labeler lib to post creation)
   ion_identity_client:
     dependency: "direct main"
     description:

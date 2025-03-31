@@ -7,20 +7,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:ion/app/components/text_editor/hooks/use_text_editor_character_limit_exceed_amount.dart';
-=======
-import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
->>>>>>> ae81a0f7d (chore(test): apply labeler lib to post creation)
-=======
->>>>>>> 13f89f9b4 (chore: revert post changes)
 import 'package:ion/app/components/text_editor/hooks/use_text_editor_has_content.dart';
 import 'package:ion/app/features/core/providers/poll/poll_answers_provider.c.dart';
 import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/hooks/use_has_poll.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -28,20 +19,6 @@ import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_pr
 import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
-=======
-=======
-import 'package:ion/app/features/feed/create_post/providers/create_post_notifier.c.dart';
->>>>>>> 13f89f9b4 (chore: revert post changes)
-import 'package:ion/app/features/feed/create_post/views/pages/create_post_modal/hooks/use_has_poll.dart';
-import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/toolbar_buttons/toolbar_send_button.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-<<<<<<< HEAD
-import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
-import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
->>>>>>> ae81a0f7d (chore(test): apply labeler lib to post creation)
-=======
->>>>>>> 13f89f9b4 (chore: revert post changes)
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/utils/validators.dart';
 
@@ -103,8 +80,6 @@ class PostSubmitButton extends HookConsumerWidget {
     return ToolbarSendButton(
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
-<<<<<<< HEAD
-<<<<<<< HEAD
         final convertedMediaFiles = await ref
             .read(mediaServiceProvider)
             .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
@@ -132,62 +107,6 @@ class PostSubmitButton extends HookConsumerWidget {
               mediaFiles: convertedMediaFiles,
               whoCanReply: whoCanReply,
             ),
-=======
-        final content = textEditorController.document.toPlainText().trim();
-        final labeler = IonTextLabeler();
-        final language = await labeler.detect(content, model: TextLabelerModel.language);
-        final category = await labeler.detect(content, model: TextLabelerModel.category);
-        if (context.mounted) {
-          await showSimpleBottomSheet<void>(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                NavigationAppBar.modal(
-                  showBackButton: false,
-                  title: const Text('Labeling results'),
-                ),
-                Text('languages:\n${language.labels.join('\n')}\n', textAlign: TextAlign.left),
-                Text('categories:\n${category.labels.join('\n')}\n', textAlign: TextAlign.left),
-                Text('input: ${category.input}', textAlign: TextAlign.left),
-                ScreenBottomOffset(),
-              ],
-            ),
-            context: context,
->>>>>>> ae81a0f7d (chore(test): apply labeler lib to post creation)
-=======
-        if (modifiedEvent != null) {
-          unawaited(
-            ref
-                .read(
-                  createPostNotifierProvider(
-                    createOption,
-                  ).notifier,
-                )
-                .modify(
-                  content: textEditorController.document.toDelta(),
-                  eventReference: modifiedEvent!,
-                  whoCanReply: whoCanReply,
-                ),
-          );
-        } else {
-          final convertedMediaFiles = await ref
-              .read(mediaServiceProvider)
-              .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
-          unawaited(
-            ref
-                .read(
-                  createPostNotifierProvider(
-                    createOption,
-                  ).notifier,
-                )
-                .create(
-                  content: textEditorController.document.toDelta(),
-                  parentEvent: parentEvent,
-                  quotedEvent: quotedEvent,
-                  mediaFiles: convertedMediaFiles,
-                  whoCanReply: whoCanReply,
-                ),
->>>>>>> 13f89f9b4 (chore: revert post changes)
           );
         }
 
