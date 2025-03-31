@@ -42,8 +42,6 @@ Future<WalletViewsService> walletViewsService(Ref ref) async {
   return service;
 }
 
-// TODO: Combine two subscriptions into one and make an analogue of combineLatest,
-// so both streams will be listened and the latest emits will be merged into one
 class WalletViewsService {
   WalletViewsService(
     this._identity,
