@@ -19,8 +19,7 @@ enum TextLabelerModel {
   const TextLabelerModel(this.file);
 }
 
-//TODO:add custom exceptions
-class IonTextLabeler {
+class IONTextLabeler {
   Future<TextLabelerResult> detect(
     String input, {
     required TextLabelerModel model,

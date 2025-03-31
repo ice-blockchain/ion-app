@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:ffi/ffi.dart';
+import 'package:ion_content_labeler/src/exceptions.dart';
 
 class FastText {
   final int _handle;
@@ -33,7 +34,7 @@ class FastText {
 
     final handle = createInstance();
     if (handle == 0) {
-      throw Exception('Failed to create FastText instance');
+      throw CreateFastTextInstanceException();
     }
 
     return FastText._(
@@ -48,6 +49,8 @@ class FastText {
     final modelPathPtr = modelPath.toNativeUtf8();
     try {
       _loadModel(_handle, modelPathPtr);
+    } catch (error) {
+      throw LoadFfiModelException(error);
     } finally {
       calloc.free(modelPathPtr);
     }
@@ -60,6 +63,8 @@ class FastText {
     try {
       _predict(_handle, textPtr, k, outPtr, 512);
       return outPtr.toDartString();
+    } catch (error) {
+      throw FastTextPredictionException(error);
     } finally {
       calloc.free(textPtr);
       calloc.free(outPtr);
@@ -67,16 +72,24 @@ class FastText {
   }
 
   void dispose() {
-    _destroyInstance(_handle);
+    try {
+      _destroyInstance(_handle);
+    } catch (error) {
+      throw FastTextDisposeException(error);
+    }
   }
 
   static DynamicLibrary _loadLibrary() {
-    if (Platform.isIOS) {
-      return DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
-    } else if (Platform.isAndroid) {
-      return DynamicLibrary.open('libfasttext_predict.so');
-    } else {
-      throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
+    try {
+      if (Platform.isIOS) {
+        return DynamicLibrary.open('fasttext_predict.framework/fasttext_predict');
+      } else if (Platform.isAndroid) {
+        return DynamicLibrary.open('libfasttext_predict.so');
+      } else {
+        throw UnsupportedError('Unsupported platform: ${Platform.operatingSystem}');
+      }
+    } catch (error) {
+      throw LoadFfiLibraryException(error);
     }
   }
 }

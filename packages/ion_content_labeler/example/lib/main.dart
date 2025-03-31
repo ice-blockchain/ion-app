@@ -23,7 +23,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final TextEditingController _controller = TextEditingController(text: _initialInput);
 
-  final IonTextLabeler _labeler = IonTextLabeler();
+  final IONTextLabeler _labeler = IONTextLabeler();
 
   String? _normalizedInput;
 
@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Ion Content Labeler Example'),
+          title: const Text('ION Content Labeler Example'),
         ),
         body: SingleChildScrollView(
           child: Container(

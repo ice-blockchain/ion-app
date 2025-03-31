@@ -2,7 +2,8 @@
 
 library;
 
-export 'src/model_file.dart';
 export 'src/ion_text_labeler.dart';
-export 'src/labeler_result.dart';
-export 'src/label.dart';
+export 'src/exceptions.dart';
+export 'src/models/model_file.dart';
+export 'src/models/labeler_result.dart';
+export 'src/models/label.dart';
