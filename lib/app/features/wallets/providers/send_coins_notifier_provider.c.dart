@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
@@ -99,12 +100,16 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         networkFeeOption: form.selectedNetworkFeeOption,
       );
 
-      await _sendTransactionEntity(
-        details: details,
-        transferResult: result,
-        sendableAsset: sendableAsset,
-        coinAssetData: coinAssetData,
-      );
+      try {
+        await _sendTransactionEntity(
+          details: details,
+          transferResult: result,
+          sendableAsset: sendableAsset,
+          coinAssetData: coinAssetData,
+        );
+      } on SendEventException catch (e, stacktrace) {
+        Logger.error('Failed to send Nostr event $e', stackTrace: stacktrace);
+      }
 
       return details;
     });
@@ -124,7 +129,8 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
     final walletAssetContent = WalletAssetContent(
       amount: transferResult.requestBody['amount'] as String?,
       amountUsd: coinAssetData.priceUSD.toString(),
-      balance: sendableAsset.balance, // number of coins before transfer
+      // number of coins before transfer
+      balance: sendableAsset.balance,
       txUrl: details.transactionExplorerUrl,
       from: details.senderAddress,
       to: details.receiverAddress,

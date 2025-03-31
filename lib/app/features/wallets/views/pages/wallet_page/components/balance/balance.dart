@@ -63,7 +63,7 @@ class Balance extends ConsumerWidget {
               onReceive: () => ReceiveCoinRoute().push<void>(context),
               onSend: () {
                 ref.invalidate(sendAssetFormControllerProvider);
-                CoinSendRoute().push<void>(context);
+                SelectCoinWalletRoute().push<void>(context);
               },
               onNeedToEnable2FA: () => SecureAccountModalRoute().push<void>(context),
             ),

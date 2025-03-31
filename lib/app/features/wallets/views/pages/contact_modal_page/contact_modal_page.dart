@@ -45,7 +45,7 @@ class ContactPage extends ConsumerWidget {
                 ref.invalidate(sendAssetFormControllerProvider);
                 ref.read(sendAssetFormControllerProvider.notifier).setContact(pubkey);
 
-                CoinSendRoute().push<void>(context);
+                SelectCoinWalletRoute().push<void>(context);
               },
               onNeedToEnable2FA: () => Navigator.of(context).pop(true),
             ),

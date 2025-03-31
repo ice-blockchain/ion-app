@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
@@ -32,11 +33,13 @@ class NetworkListView extends ConsumerWidget {
   const NetworkListView({
     this.type = NetworkListViewType.send,
     this.onSelectReturnType = false,
+    this.sendFormRouteLocationBuilder,
     super.key,
   });
 
   final bool onSelectReturnType;
   final NetworkListViewType type;
+  final String Function()? sendFormRouteLocationBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +91,7 @@ class NetworkListView extends ConsumerWidget {
 
           if (context.mounted) {
             unawaited(ref.read(sendAssetFormControllerProvider.notifier).setNetwork(network));
-            unawaited(CoinsSendFormRoute().push<void>(context));
+            unawaited(context.push<void>(sendFormRouteLocationBuilder!()));
           }
         case NetworkListViewType.receive:
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);

@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -10,11 +8,8 @@ import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/pages/profile_page/hooks/use_state_with_init_value_from_provider.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/common/profile_coin_button.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/common/profile_network_button.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
@@ -55,24 +50,6 @@ class RequestCoinsFormModal extends HookConsumerWidget {
       ),
     );
 
-    Future<void> loadSelectedCoin({
-      required String networkId,
-      required String symbolGroup,
-      required String abbreviation,
-    }) async {
-      final newCoin = await ref.read(
-        coinInWalletProvider(
-          networkId: networkId,
-          symbolGroup: symbolGroup,
-          abbreviation: abbreviation,
-        ).future,
-      );
-
-      if (newCoin != null) {
-        selectedCoinInWallet.value = newCoin;
-      }
-    }
-
     return SheetContent(
       body: KeyboardDismissOnTap(
         child: SingleChildScrollView(
@@ -93,46 +70,9 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                 child: ScreenSideOffset.small(
                   child: Column(
                     children: [
-                      ProfileCoinButton(
-                        pubkey: pubkey,
-                        paymentType: PaymentType.receive,
-                        coinInWalletData: selectedCoinInWallet.value,
-                        onUpdate: (group) {
-                          final networks = group.coins.map((e) => e.coin.network);
-                          final useNetworkFromPrevCoin = networks.contains(
-                            selectedCoinInWallet.value!.coin.network,
-                          );
-
-                          unawaited(
-                            loadSelectedCoin(
-                              networkId: useNetworkFromPrevCoin
-                                  ? selectedCoinInWallet.value!.coin.network.id
-                                  : networks.first.id,
-                              symbolGroup: group.symbolGroup,
-                              abbreviation: group.abbreviation,
-                            ),
-                          );
-                        },
-                      ),
+                      // TODO: Add CoinButton
                       SizedBox(height: 16.0.s),
-                      ProfileNetworkButton(
-                        coinInWallet: selectedCoinInWallet.value,
-                        pubkey: pubkey,
-                        paymentType: PaymentType.receive,
-                        onUpdate: (network) {
-                          final coin = selectedCoinInWallet.value?.coin;
-
-                          if (coin == null) return;
-
-                          unawaited(
-                            loadSelectedCoin(
-                              networkId: network.id,
-                              symbolGroup: coin.symbolGroup,
-                              abbreviation: coin.abbreviation,
-                            ),
-                          );
-                        },
-                      ),
+                      // TODO: Add NetworkButton
                       SizedBox(height: 16.0.s),
                       UserPaymentFlowCard(pubkey: pubkey),
                       SizedBox(height: 16.0.s),

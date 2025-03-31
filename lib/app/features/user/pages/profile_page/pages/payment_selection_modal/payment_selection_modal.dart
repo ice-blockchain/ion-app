@@ -8,7 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/select_coin_modal/select_coin_modal.dart';
+import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/hooks/use_on_receive_funds_flow.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -28,11 +28,12 @@ class PaymentSelectionModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final onContinue = useCallback(
       (PaymentType paymentType) {
-        SelectCoinRoute(
-          paymentType: paymentType,
-          pubkey: pubkey,
-          selectCoinModalType: SelectCoinModalType.select,
-        ).push<void>(context);
+        ref.invalidate(sendAssetFormControllerProvider);
+        ref.read(sendAssetFormControllerProvider.notifier).setContact(
+              pubkey,
+              isContactPreselected: true,
+            );
+        SelectCoinProfileRoute().push<void>(context);
       },
       [],
     );
