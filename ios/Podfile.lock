@@ -175,6 +175,8 @@ PODS:
     - TOCropViewController (~> 2.7.4)
   - image_picker_ios (0.0.1):
     - Flutter
+  - ion_content_labeler (0.0.1):
+    - Flutter
   - ion_screenshot_detector (0.0.1):
     - Flutter
   - local_auth_crypto (1.0.0):
@@ -273,6 +275,7 @@ DEPENDENCIES:
   - icloud_storage (from `.symlinks/plugins/icloud_storage/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - ion_content_labeler (from `.symlinks/plugins/ion_content_labeler/ios`)
   - ion_screenshot_detector (from `.symlinks/plugins/ion_screenshot_detector/ios`)
   - local_auth_crypto (from `.symlinks/plugins/local_auth_crypto/ios`)
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
@@ -369,6 +372,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_cropper/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  ion_content_labeler:
+    :path: ".symlinks/plugins/ion_content_labeler/ios"
   ion_screenshot_detector:
     :path: ".symlinks/plugins/ion_screenshot_detector/ios"
   local_auth_crypto:
@@ -453,6 +458,8 @@ SPEC CHECKSUMS:
   icloud_storage: e55639f0c0d7cb2b0ba9c0b3d5968ccca9cd9aa2
   image_cropper: 5f162dcf988100dc1513f9c6b7eb42cd6fbf9156
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
+  ion_content_labeler: 4effbafd5c044e76d74d372c82d5e11e03847f79
+  ion_screenshot_detector: bd85296e1347b5bf5acf71407a6d9b7933bfe604
   ion_screenshot_detector: 6981b7ec0add023ce57337882e28dc4b80caad4b
   local_auth_crypto: 0f489ce05f51504fc091a53ce357e98313696085
   local_auth_darwin: 553ce4f9b16d3fdfeafce9cf042e7c9f77c1c391

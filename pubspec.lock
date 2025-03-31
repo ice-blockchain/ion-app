@@ -1442,7 +1442,18 @@ packages:
       sha256: dfd5a80599cf0165756e3181807ed3e77daf6dd4137caaad72d0b7931597650b
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
     version: "1.0.5"
+=======
+    version: "1.0.4"
+  ion_content_labeler:
+    dependency: "direct main"
+    description:
+      path: "packages/ion_content_labeler"
+      relative: true
+    source: path
+    version: "0.0.1"
+>>>>>>> ae81a0f7d (chore(test): apply labeler lib to post creation)
   ion_identity_client:
     dependency: "direct main"
     description:
@@ -2866,5 +2877,5 @@ packages:
     source: hosted
     version: "2.2.2"
 sdks:
-  dart: ">=3.6.0 <4.0.0"
+  dart: ">=3.6.2 <4.0.0"
   flutter: ">=3.27.4"

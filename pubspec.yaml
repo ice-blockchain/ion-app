@@ -72,6 +72,8 @@ dependencies:
     path: packages/ion_identity_client
   ion_screenshot_detector:
     path: packages/ion_screenshot_detector
+  ion_content_labeler:
+    path: packages/ion_content_labeler
   json_annotation: ^4.8.1
   lottie: ^3.1.0
   markdown: ^7.3.0
@@ -181,6 +183,8 @@ flutter:
     - assets/ion_identity/coins.json
     - assets/ion_identity/coins_version.txt
     - assets/ion_identity/networks.json
+    - assets/language_identification.176.ftz
+    - assets/labeling.ftz
 
 flutter_gen:
   output: lib/generated/
