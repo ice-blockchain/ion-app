@@ -28,7 +28,7 @@ class IonTextLabeler {
   }) async {
     final normalizedInput = _normalizeInput(input);
 
-    final modelPath = await model.file.getPath();
+    final modelPath = (await model.file.load()).path;
 
     final predictionsJson = await Isolate.run(() {
       final lib = FastText();
