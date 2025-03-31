@@ -15,7 +15,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transactions_subscription_provider.c.g.dart';
 
-// TODO: Subscription isn't created after login in one session.
 @Riverpod(keepAlive: true)
 Future<void> transactionsSubscription(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
