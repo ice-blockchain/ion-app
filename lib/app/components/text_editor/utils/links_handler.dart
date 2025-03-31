@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/services/text_parser/model/text_matcher.dart';
