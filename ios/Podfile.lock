@@ -458,11 +458,10 @@ SPEC CHECKSUMS:
   icloud_storage: d9ac7a33ced81df08ba7ea1bf3099cc0ee58f60a
   image_cropper: 37d40f62177c101ff4c164906d259ea2c3aa70cf
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
-  ion_content_labeler: 4bd5aad82774177354943482eb8cbc8376adb192
-  ion_screenshot_detector: bd85296e1347b5bf5acf71407a6d9b7933bfe604
-  ion_screenshot_detector: 6981b7ec0add023ce57337882e28dc4b80caad4b
-  local_auth_crypto: 0f489ce05f51504fc091a53ce357e98313696085
-  local_auth_darwin: 553ce4f9b16d3fdfeafce9cf042e7c9f77c1c391
+  ion_content_labeler: 5cf4691267614f0af5733b3872813da5e99d2543
+  ion_screenshot_detector: 8332b6aedff48dc5dedc0c5a0be24aa5acff9ac9
+  local_auth_crypto: 3ee858ca5d40c9da56dcd1fe8d814e92438a9371
+  local_auth_darwin: 66e40372f1c29f383a314c738c7446e2f7fdadc3
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: 566e1b7a2f3900e4b0020914ad3fc051dcc95596
