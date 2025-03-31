@@ -103,22 +103,18 @@ final class Schema2 extends i0.VersionedSchema {
 
 class Shape0 extends i0.VersionedTable {
   Shape0({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get id =>
-      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get id => columnsByName['id']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get contractAddress =>
       columnsByName['contract_address']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<int> get decimals =>
-      columnsByName['decimals']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get decimals => columnsByName['decimals']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get iconURL =>
       columnsByName['icon_u_r_l']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get name =>
-      columnsByName['name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get name => columnsByName['name']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get networkId =>
       columnsByName['network_id']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<double> get priceUSD =>
       columnsByName['price_u_s_d']! as i1.GeneratedColumn<double>;
-  i1.GeneratedColumn<String> get symbol =>
-      columnsByName['symbol']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get symbol => columnsByName['symbol']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get symbolGroup =>
       columnsByName['symbol_group']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<int> get syncFrequency =>
@@ -126,57 +122,43 @@ class Shape0 extends i0.VersionedTable {
 }
 
 i1.GeneratedColumn<String> _column_0(String aliasedName) =>
-    i1.GeneratedColumn<String>('id', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('id', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_1(String aliasedName) =>
     i1.GeneratedColumn<String>('contract_address', aliasedName, false,
         type: i1.DriftSqlType.string);
 i1.GeneratedColumn<int> _column_2(String aliasedName) =>
-    i1.GeneratedColumn<int>('decimals', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('decimals', aliasedName, false, type: i1.DriftSqlType.int);
 i1.GeneratedColumn<String> _column_3(String aliasedName) =>
-    i1.GeneratedColumn<String>('icon_u_r_l', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('icon_u_r_l', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_4(String aliasedName) =>
-    i1.GeneratedColumn<String>('name', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('name', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_5(String aliasedName) =>
-    i1.GeneratedColumn<String>('network_id', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('network_id', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<double> _column_6(String aliasedName) =>
-    i1.GeneratedColumn<double>('price_u_s_d', aliasedName, false,
-        type: i1.DriftSqlType.double);
+    i1.GeneratedColumn<double>('price_u_s_d', aliasedName, false, type: i1.DriftSqlType.double);
 i1.GeneratedColumn<String> _column_7(String aliasedName) =>
-    i1.GeneratedColumn<String>('symbol', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('symbol', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_8(String aliasedName) =>
-    i1.GeneratedColumn<String>('symbol_group', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('symbol_group', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<int> _column_9(String aliasedName) =>
-    i1.GeneratedColumn<int>('sync_frequency', aliasedName, false,
-        type: i1.DriftSqlType.int);
+    i1.GeneratedColumn<int>('sync_frequency', aliasedName, false, type: i1.DriftSqlType.int);
 
 class Shape1 extends i0.VersionedTable {
   Shape1({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get coinId =>
-      columnsByName['coin_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get coinId => columnsByName['coin_id']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get syncAfter =>
       columnsByName['sync_after']! as i1.GeneratedColumn<DateTime>;
 }
 
 i1.GeneratedColumn<String> _column_10(String aliasedName) =>
-    i1.GeneratedColumn<String>('coin_id', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('coin_id', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<DateTime> _column_11(String aliasedName) =>
-    i1.GeneratedColumn<DateTime>('sync_after', aliasedName, false,
-        type: i1.DriftSqlType.dateTime);
+    i1.GeneratedColumn<DateTime>('sync_after', aliasedName, false, type: i1.DriftSqlType.dateTime);
 
 class Shape2 extends i0.VersionedTable {
   Shape2({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get id =>
-      columnsByName['id']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get image =>
-      columnsByName['image']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get id => columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get image => columnsByName['image']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<bool> get isTestnet =>
       columnsByName['is_testnet']! as i1.GeneratedColumn<bool>;
   i1.GeneratedColumn<String> get displayName =>
@@ -186,40 +168,30 @@ class Shape2 extends i0.VersionedTable {
 }
 
 i1.GeneratedColumn<String> _column_12(String aliasedName) =>
-    i1.GeneratedColumn<String>('image', aliasedName, false,
-        type: i1.DriftSqlType.string);
-i1.GeneratedColumn<bool> _column_13(String aliasedName) =>
-    i1.GeneratedColumn<bool>('is_testnet', aliasedName, false,
-        type: i1.DriftSqlType.bool,
-        defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-            'CHECK ("is_testnet" IN (0, 1))'));
+    i1.GeneratedColumn<String>('image', aliasedName, false, type: i1.DriftSqlType.string);
+i1.GeneratedColumn<bool> _column_13(String aliasedName) => i1.GeneratedColumn<bool>(
+    'is_testnet', aliasedName, false,
+    type: i1.DriftSqlType.bool,
+    defaultConstraints: i1.GeneratedColumn.constraintIsAlways('CHECK ("is_testnet" IN (0, 1))'));
 i1.GeneratedColumn<String> _column_14(String aliasedName) =>
-    i1.GeneratedColumn<String>('display_name', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('display_name', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_15(String aliasedName) =>
-    i1.GeneratedColumn<String>('explorer_url', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('explorer_url', aliasedName, false, type: i1.DriftSqlType.string);
 
 class Shape3 extends i0.VersionedTable {
   Shape3({required super.source, required super.alias}) : super.aliased();
-  i1.GeneratedColumn<String> get type =>
-      columnsByName['type']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get txHash =>
-      columnsByName['tx_hash']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get type => columnsByName['type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get txHash => columnsByName['tx_hash']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get networkId =>
       columnsByName['network_id']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get coinId =>
-      columnsByName['coin_id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get coinId => columnsByName['coin_id']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get senderWalletAddress =>
       columnsByName['sender_wallet_address']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get receiverWalletAddress =>
       columnsByName['receiver_wallet_address']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get id =>
-      columnsByName['id']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get fee =>
-      columnsByName['fee']! as i1.GeneratedColumn<String>;
-  i1.GeneratedColumn<String> get status =>
-      columnsByName['status']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get id => columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get fee => columnsByName['fee']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get status => columnsByName['status']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get nativeCoinId =>
       columnsByName['native_coin_id']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get dateConfirmed =>
@@ -239,14 +211,11 @@ class Shape3 extends i0.VersionedTable {
 }
 
 i1.GeneratedColumn<String> _column_16(String aliasedName) =>
-    i1.GeneratedColumn<String>('type', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('type', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_17(String aliasedName) =>
-    i1.GeneratedColumn<String>('tx_hash', aliasedName, false,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('tx_hash', aliasedName, false, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_18(String aliasedName) =>
-    i1.GeneratedColumn<String>('coin_id', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('coin_id', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_19(String aliasedName) =>
     i1.GeneratedColumn<String>('sender_wallet_address', aliasedName, false,
         type: i1.DriftSqlType.string);
@@ -254,29 +223,22 @@ i1.GeneratedColumn<String> _column_20(String aliasedName) =>
     i1.GeneratedColumn<String>('receiver_wallet_address', aliasedName, false,
         type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_21(String aliasedName) =>
-    i1.GeneratedColumn<String>('id', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('id', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_22(String aliasedName) =>
-    i1.GeneratedColumn<String>('fee', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('fee', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_23(String aliasedName) =>
-    i1.GeneratedColumn<String>('status', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('status', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_24(String aliasedName) =>
-    i1.GeneratedColumn<String>('native_coin_id', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('native_coin_id', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<DateTime> _column_25(String aliasedName) =>
     i1.GeneratedColumn<DateTime>('date_confirmed', aliasedName, true,
         type: i1.DriftSqlType.dateTime);
 i1.GeneratedColumn<DateTime> _column_26(String aliasedName) =>
-    i1.GeneratedColumn<DateTime>('created_at', aliasedName, true,
-        type: i1.DriftSqlType.dateTime);
+    i1.GeneratedColumn<DateTime>('created_at', aliasedName, true, type: i1.DriftSqlType.dateTime);
 i1.GeneratedColumn<String> _column_27(String aliasedName) =>
-    i1.GeneratedColumn<String>('user_pubkey', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('user_pubkey', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_28(String aliasedName) =>
-    i1.GeneratedColumn<String>('asset_id', aliasedName, true,
-        type: i1.DriftSqlType.string);
+    i1.GeneratedColumn<String>('asset_id', aliasedName, true, type: i1.DriftSqlType.string);
 i1.GeneratedColumn<String> _column_29(String aliasedName) =>
     i1.GeneratedColumn<String>('transferred_amount', aliasedName, true,
         type: i1.DriftSqlType.string);
