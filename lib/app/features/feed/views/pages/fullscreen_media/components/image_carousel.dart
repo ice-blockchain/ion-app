@@ -44,7 +44,6 @@ class ImageCarousel extends HookConsumerWidget {
             itemBuilder: (context, index) {
               return FullscreenImage(
                 imageUrl: images[index].url,
-                eventReference: eventReference,
                 bottomOverlayBuilder: index == currentPage.value
                     ? (context) => SafeArea(
                           top: false,

@@ -7,19 +7,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
-import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:photo_view/photo_view.dart';
 
 class FullscreenImage extends HookConsumerWidget {
   const FullscreenImage({
     required this.imageUrl,
-    required this.eventReference,
     this.bottomOverlayBuilder,
     super.key,
   });
 
   final String imageUrl;
-  final EventReference eventReference;
   final Widget Function(BuildContext)? bottomOverlayBuilder;
 
   @override

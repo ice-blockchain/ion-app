@@ -39,7 +39,6 @@ class SingleMediaView extends StatelessWidget {
 
     return FullscreenImage(
       imageUrl: media.url,
-      eventReference: eventReference,
       bottomOverlayBuilder: (context) => SafeArea(
         top: false,
         child: ColoredBox(
