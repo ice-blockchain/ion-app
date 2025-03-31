@@ -1,109 +1,88 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/attributes.dart';
+import 'package:ion/app/components/text_editor/utils/text_editor_typing_listener.dart';
 import 'package:ion/app/features/feed/providers/article/suggestions_notifier_provider.c.dart';
 
-class MentionsHashtagsHandler {
+class MentionsHashtagsHandler extends TextEditorTypingListener {
   MentionsHashtagsHandler({
-    required this.controller,
-    required this.focusNode,
-    required this.context,
-    required this.ref,
+    required super.controller,
+    required super.focusNode,
+    required super.context,
+    required super.ref,
   });
 
-  final QuillController controller;
-  final FocusNode focusNode;
-  final BuildContext context;
-  final WidgetRef ref;
   String taggingCharacter = '';
   int lastTagIndex = -1;
-  Timer? _debounce;
-  String? previousText;
-  int? _lastCursorPosition;
 
-  void initialize() {
-    controller.addListener(_editorListener);
-    focusNode.addListener(_focusListener);
-  }
+  @override
+  void onTextChanged(
+    String text,
+    int cursorIndex, {
+    required bool isBackspace,
+    required bool cursorMoved,
+  }) {
+    if (cursorMoved) {
+      _cleanAndReformatTags(text);
+    }
 
-  void dispose() {
-    controller.removeListener(_editorListener);
-    focusNode.removeListener(_focusListener);
-    _debounce?.cancel();
-  }
+    if (cursorIndex > 0) {
+      final char = text.substring(cursorIndex - 1, cursorIndex);
 
-  void _editorListener() {
-    final cursorIndex = controller.selection.baseOffset;
-    final text = controller.document.toPlainText();
+      if (char == '#' || char == '@' || char == r'$') {
+        taggingCharacter = char;
+        lastTagIndex = cursorIndex - 1;
 
-    final isBackspace = previousText != null && text.length < previousText!.length;
-    final cursorMoved = _lastCursorPosition != null && _lastCursorPosition != cursorIndex;
+        _formatSingleWord(text, lastTagIndex);
 
-    previousText = text;
-    _lastCursorPosition = cursorIndex;
-
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 1), () {
-      if (cursorMoved) {
-        _cleanAndReformatTags(text);
-      }
-
-      if (cursorIndex > 0) {
-        final char = text.substring(cursorIndex - 1, cursorIndex);
-
-        if (char == '#' || char == '@' || char == r'$') {
-          taggingCharacter = char;
-          lastTagIndex = cursorIndex - 1;
-
-          _formatSingleWord(text, lastTagIndex);
-
-          ref.invalidate(suggestionsNotifierProvider);
-        } else if (char == ' ' || char == '\n') {
-          if (lastTagIndex != -1) {
-            _resetState();
-            ref.invalidate(suggestionsNotifierProvider);
-          }
-        } else if (lastTagIndex != -1) {
-          final currentText = text.substring(lastTagIndex, cursorIndex);
-          final spaceIndex = currentText.indexOf(' ');
-
-          if (spaceIndex != -1) {
-            final tagText = currentText.substring(0, spaceIndex);
-            _applyFormatting(lastTagIndex, spaceIndex, tagText);
-            _resetState();
-          } else {
-            _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentText);
-          }
-        }
-      }
-
-      if (isBackspace && lastTagIndex != -1) {
-        if (cursorIndex <= lastTagIndex) {
+        ref.invalidate(suggestionsNotifierProvider);
+      } else if (char == ' ' || char == '\n') {
+        if (lastTagIndex != -1) {
           _resetState();
           ref.invalidate(suggestionsNotifierProvider);
+        }
+      } else if (lastTagIndex != -1) {
+        final currentText = text.substring(lastTagIndex, cursorIndex);
+        final spaceIndex = currentText.indexOf(' ');
+
+        if (spaceIndex != -1) {
+          final tagText = currentText.substring(0, spaceIndex);
+          _applyFormatting(lastTagIndex, spaceIndex, tagText);
+          _resetState();
         } else {
-          final remainingText = text.substring(lastTagIndex, cursorIndex);
-          if (remainingText.isNotEmpty) {
-            final spaceIndex = remainingText.indexOf(' ');
-            if (spaceIndex != -1) {
-              _applyFormatting(lastTagIndex, spaceIndex, remainingText.substring(0, spaceIndex));
-              _resetState();
-            } else {
-              _applyFormatting(lastTagIndex, remainingText.length, remainingText);
-            }
+          _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentText);
+        }
+      }
+    }
+
+    if (isBackspace && lastTagIndex != -1) {
+      if (cursorIndex <= lastTagIndex) {
+        _resetState();
+        ref.invalidate(suggestionsNotifierProvider);
+      } else {
+        final remainingText = text.substring(lastTagIndex, cursorIndex);
+        if (remainingText.isNotEmpty) {
+          final spaceIndex = remainingText.indexOf(' ');
+          if (spaceIndex != -1) {
+            _applyFormatting(lastTagIndex, spaceIndex, remainingText.substring(0, spaceIndex));
+            _resetState();
+          } else {
+            _applyFormatting(lastTagIndex, remainingText.length, remainingText);
           }
         }
       }
-    });
+    }
+  }
+
+  @override
+  void onFocusLost() {
+    ref.invalidate(suggestionsNotifierProvider);
   }
 
   void _cleanAndReformatTags(String text) {
-    controller.removeListener(_editorListener);
+    controller.removeListener(editorListener);
 
     try {
       final tags = <_TagInfo>[];
@@ -112,7 +91,7 @@ class MentionsHashtagsHandler {
         if ((text[i] == '#' || text[i] == '@' || text[i] == r'$') && _isWordStart(text, i)) {
           var endIndex = i;
           for (var j = i + 1; j < text.length; j++) {
-            if (_isWordBoundary(text[j])) {
+            if (isWordBoundary(text[j])) {
               break;
             }
             endIndex = j;
@@ -147,7 +126,7 @@ class MentionsHashtagsHandler {
         }
       }
     } finally {
-      controller.addListener(_editorListener);
+      controller.addListener(editorListener);
     }
   }
 
@@ -162,18 +141,18 @@ class MentionsHashtagsHandler {
         };
 
         if (tagAttribute != null) {
-          controller.removeListener(_editorListener);
+          controller.removeListener(editorListener);
           try {
             controller.formatText(tagIndex, 1, tagAttribute);
           } finally {
-            controller.addListener(_editorListener);
+            controller.addListener(editorListener);
           }
         }
 
         if (tagIndex + 1 < text.length) {
           var endIndex = tagIndex;
           for (var i = tagIndex + 1; i < text.length; i++) {
-            if (_isWordBoundary(text[i])) {
+            if (isWordBoundary(text[i])) {
               break;
             }
             endIndex = i;
@@ -190,11 +169,11 @@ class MentionsHashtagsHandler {
             };
 
             if (attribute != null) {
-              controller.removeListener(_editorListener);
+              controller.removeListener(editorListener);
               try {
                 controller.formatText(tagIndex, wordLength, attribute);
               } finally {
-                controller.addListener(_editorListener);
+                controller.addListener(editorListener);
               }
             }
           }
@@ -203,25 +182,10 @@ class MentionsHashtagsHandler {
     }
   }
 
-  bool _isWordBoundary(String char) {
-    return char == ' ' ||
-        char == '\n' ||
-        _isPunctuation(char) ||
-        char == '#' ||
-        char == r'$' ||
-        char == '@';
-  }
-
   bool _isWordStart(String text, int index) {
     if (index == 0) return true;
     final prevChar = text[index - 1];
-    return _isWordBoundary(prevChar);
-  }
-
-  bool _isPunctuation(String char) {
-    const regularPunctuation = '.,;:!?()[]{}"\'\\/\\`~=+<>*&^%_-|';
-    const specialQuotes = '\u2018\u2019\u201C\u201D\u2032\u2035\u00B4\u0060\u00AB\u00BB';
-    return regularPunctuation.contains(char) || specialQuotes.contains(char);
+    return isWordBoundary(prevChar);
   }
 
   void _applyFormatting(int index, int length, String text) {
@@ -229,7 +193,7 @@ class MentionsHashtagsHandler {
     var actualText = text;
 
     for (var i = 0; i < text.length; i++) {
-      if (_isPunctuation(text[i])) {
+      if (isPunctuation(text[i])) {
         actualLength = i;
         actualText = text.substring(0, i);
         break;
@@ -240,7 +204,7 @@ class MentionsHashtagsHandler {
       return;
     }
 
-    controller.removeListener(_editorListener);
+    controller.removeListener(editorListener);
     try {
       final attribute = switch (taggingCharacter) {
         '@' => MentionAttribute.withValue(actualText),
@@ -252,7 +216,7 @@ class MentionsHashtagsHandler {
         controller.formatText(index, actualLength, attribute);
       }
     } finally {
-      controller.addListener(_editorListener);
+      controller.addListener(editorListener);
     }
   }
 
@@ -268,7 +232,7 @@ class MentionsHashtagsHandler {
 
     try {
       controller
-        ..removeListener(_editorListener)
+        ..removeListener(editorListener)
         ..replaceText(
           lastTagIndex,
           cursorIndex - lastTagIndex,
@@ -292,25 +256,14 @@ class MentionsHashtagsHandler {
 
       _resetState();
     } finally {
-      controller.addListener(_editorListener);
+      controller.addListener(editorListener);
     }
     ref.invalidate(suggestionsNotifierProvider);
-  }
-
-  void _focusListener() {
-    if (!focusNode.hasFocus) {
-      ref.invalidate(suggestionsNotifierProvider);
-    }
-  }
-
-  void triggerListener() {
-    _editorListener();
   }
 
   void _resetState() {
     lastTagIndex = -1;
     taggingCharacter = '';
-    previousText = null;
   }
 }
 

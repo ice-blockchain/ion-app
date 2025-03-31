@@ -8,6 +8,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_separator_block/text_editor_separator_block.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
+import 'package:ion/app/components/text_editor/utils/links_handler.dart';
 import 'package:ion/app/components/text_editor/utils/mentions_hashtags_handler.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
 
@@ -41,9 +42,11 @@ class TextEditor extends ConsumerStatefulWidget {
 
 class TextEditorState extends ConsumerState<TextEditor> {
   late MentionsHashtagsHandler _mentionsHashtagsHandler;
+  late LinksHandler _linksHandler;
   late final FocusNode _focusNode = widget.focusNode ?? FocusNode();
 
   MentionsHashtagsHandler get mentionsHashtagsHandler => _mentionsHashtagsHandler;
+  LinksHandler get linksHandler => _linksHandler;
   QuillController get quillController => widget.controller;
 
   @override
@@ -55,12 +58,22 @@ class TextEditorState extends ConsumerState<TextEditor> {
       context: context,
       ref: ref,
     );
+
+    _linksHandler = LinksHandler(
+      controller: widget.controller,
+      focusNode: _focusNode,
+      context: context,
+      ref: ref,
+    );
+
     _mentionsHashtagsHandler.initialize();
+    _linksHandler.initialize();
   }
 
   @override
   void dispose() {
     _mentionsHashtagsHandler.dispose();
+    _linksHandler.dispose();
     super.dispose();
   }
 
