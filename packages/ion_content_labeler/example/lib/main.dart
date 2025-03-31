@@ -49,7 +49,12 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(controller: _controller),
+                TextField(
+                  controller: _controller,
+                  minLines: 5,
+                  maxLines: 20,
+                ),
+                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _onButtonPressed,
                   child: Text('run'),
