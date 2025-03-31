@@ -22,7 +22,7 @@ class ArticleMainToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ActionsToolbar(
       actions: [
-        ToolbarImageButton(
+        ToolbarMediaButton(
           delegate: QuillControllerHandler(textEditorController),
         ),
         ToolbarTypographyButton(

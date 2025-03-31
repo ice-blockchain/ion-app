@@ -156,9 +156,9 @@ class _ActionsSection extends StatelessWidget {
     return ScreenSideOffset.small(
       child: ActionsToolbar(
         actions: [
-          ToolbarImageButton(
+          ToolbarMediaButton(
             delegate: AttachedMediaHandler(attachedMediaNotifier),
-            maxImages: isVideo ? 1 : ModifiablePostEntity.contentMediaLimit,
+            maxMedia: isVideo ? 1 : ModifiablePostEntity.contentMediaLimit,
             enabled: !isVideo,
           ),
           ToolbarPollButton(
