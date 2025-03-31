@@ -108,9 +108,9 @@ dependencies:
   shimmer: ^3.0.0
   smooth_sheets: ^1.0.0-f324.0.10.2
   stream_transform: ^2.1.1
-  talker_dio_logger: 4.5.4
-  talker_flutter: 4.5.4
-  talker_riverpod_logger: 4.5.4
+  talker_dio_logger: 4.7.1
+  talker_flutter: 4.7.1
+  talker_riverpod_logger: 4.7.1
   timeago: ^3.6.1
   uri_to_file: ^1.0.0
   url_launcher: ^6.0.12

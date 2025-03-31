@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/core/model/feature_flags.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
+import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/core/providers/template_provider.c.dart';
 import 'package:ion/app/features/core/providers/theme_mode_provider.c.dart';
 import 'package:ion/app/features/core/views/components/app_lifecycle_observer.dart';
@@ -26,9 +28,19 @@ void main() async {
   await SecureStorage().clearOnReinstall();
   await dotenv.load(fileName: Assets.aApp);
 
+  final container = ProviderContainer();
+  final logApp = container.read(featureFlagsProvider.notifier).get(LoggerFeatureFlag.logApp);
+
+  if (logApp) {
+    Logger.init(verbose: true);
+  }
+
   /// Handles Flutter-specific errors and exceptions
   FlutterError.onError = (errorDetails) {
-    Logger.error('[Flutter Error] ${errorDetails.exceptionAsString()}');
+    Logger.error(
+      '[Flutter Error] ${errorDetails.exceptionAsString()}',
+      stackTrace: errorDetails.stack,
+    );
   };
 
   /// Handles platform-level errors that occur outside of the Flutter framework
@@ -42,14 +54,16 @@ void main() async {
   Isolate.current.addErrorListener(
     RawReceivePort((List<dynamic> pair) async {
       final errorAndStacktrace = pair;
-      Logger.error('[Isolate Error] ${errorAndStacktrace.first}');
-      Logger.error('[Isolate Stack] ${errorAndStacktrace.last}');
+      Logger.error(
+        '[Isolate Error] ${errorAndStacktrace.first}',
+        stackTrace: errorAndStacktrace.last as StackTrace?,
+      );
     }).sendPort,
   );
 
   runApp(
-    ProviderScope(
-      observers: [Logger.talkerRiverpodObserver],
+    UncontrolledProviderScope(
+      container: container,
       child: const IONApp(),
     ),
   );
