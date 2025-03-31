@@ -275,9 +275,9 @@ class SendE2eeChatMessageService {
   }
 
   Future<void> _sendKind14Message({
-    required EventSigner eventSigner,
     required String pubkey,
     required String masterPubkey,
+    required EventSigner eventSigner,
     required EventMessage eventMessage,
   }) async {
     final giftWrap = await _createGiftWrap(
