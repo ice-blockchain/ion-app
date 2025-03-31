@@ -4,15 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
-import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/providers/app_info_provider.c.dart';
+import 'package:ion/app/features/gallery/views/pages/media_picker_type.dart';
+import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ManageAccessBanner extends ConsumerWidget {
   const ManageAccessBanner({
+    required this.type,
     super.key,
   });
+
+  final MediaPickerType type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +41,9 @@ class ManageAccessBanner extends ConsumerWidget {
               ),
             ),
             Button(
-              onPressed: ref.read(permissionStrategyProvider(Permission.photos)).openSettings,
+              onPressed: () => ref.read(mediaServiceProvider).presentLimitedGallery(
+                    type.toRequestType(),
+                  ),
               type: ButtonType.outlined,
               tintColor: primaryAccent,
               leadingIcon: Assets.svg.iconButtonManagecoin.icon(

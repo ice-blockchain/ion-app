@@ -62,18 +62,29 @@ class GalleryNotifier extends _$GalleryNotifier {
       );
     }
 
-    final mediaData = await mediaService.fetchGalleryMedia(
+    final mediaSubscription = mediaService
+        .watchGalleryMedia(
       page: 0,
       size: _pageSize,
       type: type,
-    );
+    )
+        .listen((media) {
+      state = AsyncValue.data(
+        GalleryState(
+          mediaData: media,
+          currentPage: 0,
+          hasMore: media.length == _pageSize,
+          type: type,
+        ),
+      );
+    });
 
-    final hasMore = mediaData.length == _pageSize;
+    ref.onDispose(mediaSubscription.cancel);
 
     return GalleryState(
-      mediaData: mediaData,
+      mediaData: [],
       currentPage: 1,
-      hasMore: hasMore,
+      hasMore: false,
       type: type,
     );
   }

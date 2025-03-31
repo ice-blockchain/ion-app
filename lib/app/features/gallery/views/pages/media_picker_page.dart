@@ -100,7 +100,7 @@ class MediaPickerPage extends HookConsumerWidget {
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.only(bottom: 12.0.s),
-            child: const ManageAccessBanner(),
+            child: ManageAccessBanner(type: type),
           ),
         ),
       GalleryGridView(

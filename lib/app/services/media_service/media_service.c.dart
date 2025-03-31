@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -84,6 +86,39 @@ class MediaService {
       Logger.log('Error fetching gallery images: $e');
       return [];
     }
+  }
+
+  Stream<List<MediaFile>> watchGalleryMedia({
+    required int page,
+    required int size,
+    required MediaPickerType type,
+  }) {
+    final streamController = StreamController<List<MediaFile>>();
+
+    Future<void> onChangeCallback(MethodCall _) async {
+      final newMedia = await fetchGalleryMedia(
+        page: page,
+        size: size,
+        type: type,
+      );
+      streamController.add(newMedia);
+    }
+
+    PhotoManager.addChangeCallback(onChangeCallback);
+    PhotoManager.startChangeNotify();
+
+    streamController.onCancel = () {
+      PhotoManager.removeChangeCallback(onChangeCallback);
+      PhotoManager.stopChangeNotify();
+    };
+
+    fetchGalleryMedia(
+      page: page,
+      size: size,
+      type: type,
+    ).then(streamController.add);
+
+    return streamController.stream;
   }
 
   Future<MediaFile?> cropImage({
