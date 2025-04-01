@@ -33,16 +33,10 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(sendE2eeMessageServiceProvider);
+    final conversationId = useState<String?>(null);
 
     useEffect(
       () {
-        final conversationId = useState<String?>(null);
-        final currentPubkey = ref.watch(currentPubkeySelectorProvider);
-
-        if (currentPubkey == null) {
-          throw UserMasterPubkeyNotFoundException();
-        }
-
         ref.read(existChatConversationIdProvider(receiverPubKey).future).then(
           (value) {
             conversationId.value = value ??
@@ -57,6 +51,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     final onSubmitted = useCallback(
       ({String? content, List<MediaFile>? mediaFiles}) async {
+        final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+        if (currentPubkey == null) {
+          throw UserMasterPubkeyNotFoundException();
+        }
+
         final repliedMessage = ref.read(selectedMessageProvider);
 
         ref.read(selectedMessageProvider.notifier).clear();
