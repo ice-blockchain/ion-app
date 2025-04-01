@@ -60,10 +60,6 @@ class BottomBarRecordingView extends HookConsumerWidget {
           }
         });
 
-        recorderController.record(
-          bitRate: 44100,
-        );
-
         return () {
           durationSubscription.cancel();
           playerStateSubscription.cancel();
