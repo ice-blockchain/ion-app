@@ -24,15 +24,6 @@ class MessagingContextMenu extends StatelessWidget {
               child: Column(
                 children: [
                   OverlayMenuItem(
-                    label: context.i18n.button_share,
-                    icon: Assets.svg.iconButtonShare.icon(
-                      size: iconSize,
-                      color: context.theme.appColors.quaternaryText,
-                    ),
-                    onPressed: closeMenu,
-                  ),
-                  const OverlayMenuItemSeparator(),
-                  OverlayMenuItem(
                     label: context.i18n.button_mute,
                     icon: Assets.svg.iconChannelMute
                         .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
