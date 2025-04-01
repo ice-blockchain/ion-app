@@ -488,7 +488,8 @@ class _$NativeTransferRequestBodyImpl implements NativeTransferRequestBody {
   }
 }
 
-abstract class NativeTransferRequestBody implements TransferRequestBody {
+abstract class NativeTransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory NativeTransferRequestBody(
       {required final String kind,
       required final String to,
@@ -1071,7 +1072,8 @@ class _$AsaTransferRequestBodyImpl implements AsaTransferRequestBody {
   }
 }
 
-abstract class AsaTransferRequestBody implements TransferRequestBody {
+abstract class AsaTransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory AsaTransferRequestBody(
       {required final String kind,
       required final String assetId,
@@ -1364,7 +1366,8 @@ class _$Erc20TransferRequestBodyImpl implements Erc20TransferRequestBody {
   }
 }
 
-abstract class Erc20TransferRequestBody implements TransferRequestBody {
+abstract class Erc20TransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory Erc20TransferRequestBody(
       {required final String kind,
       required final String contract,
@@ -1656,7 +1659,8 @@ class _$SplTransferRequestBodyImpl implements SplTransferRequestBody {
   }
 }
 
-abstract class SplTransferRequestBody implements TransferRequestBody {
+abstract class SplTransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory SplTransferRequestBody(
       {required final String kind,
       required final String mint,
@@ -1949,7 +1953,8 @@ class _$Spl2022TransferRequestBodyImpl implements Spl2022TransferRequestBody {
   }
 }
 
-abstract class Spl2022TransferRequestBody implements TransferRequestBody {
+abstract class Spl2022TransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory Spl2022TransferRequestBody(
       {required final String kind,
       required final String mint,
@@ -2253,7 +2258,8 @@ class _$Sep41TransferRequestBodyImpl implements Sep41TransferRequestBody {
   }
 }
 
-abstract class Sep41TransferRequestBody implements TransferRequestBody {
+abstract class Sep41TransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory Sep41TransferRequestBody(
       {required final String kind,
       required final String issuer,
@@ -2547,7 +2553,8 @@ class _$Tep74TransferRequestBodyImpl implements Tep74TransferRequestBody {
   }
 }
 
-abstract class Tep74TransferRequestBody implements TransferRequestBody {
+abstract class Tep74TransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory Tep74TransferRequestBody(
       {required final String kind,
       required final String master,
@@ -2839,7 +2846,8 @@ class _$Trc10TransferRequestBodyImpl implements Trc10TransferRequestBody {
   }
 }
 
-abstract class Trc10TransferRequestBody implements TransferRequestBody {
+abstract class Trc10TransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory Trc10TransferRequestBody(
       {required final String kind,
       required final String tokenId,
@@ -3132,7 +3140,8 @@ class _$Trc20TransferRequestBodyImpl implements Trc20TransferRequestBody {
   }
 }
 
-abstract class Trc20TransferRequestBody implements TransferRequestBody {
+abstract class Trc20TransferRequestBody
+    implements TransferRequestBody, CoinTransferRequestBody {
   const factory Trc20TransferRequestBody(
       {required final String kind,
       required final String contract,

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
@@ -15,7 +15,7 @@ class SendAssetFormData with _$SendAssetFormData {
     required WalletViewData wallet,
     required DateTime arrivalDateTime,
     required String receiverAddress,
-    required CryptoAssetData assetData,
+    required CryptoAssetToSendData assetData,
     NetworkData? network,
     Wallet? senderWallet,
     String? contactPubkey,

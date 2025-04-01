@@ -64,7 +64,7 @@ class TransactionResultSheet extends ConsumerWidget {
                       coin: (coin) => TransactionAmountSummary(
                         amount: coin.amount,
                         currency: coin.coinsGroup.abbreviation,
-                        usdAmount: coin.priceUSD,
+                        usdAmount: coin.amountUSD,
                         icon: CoinIconWidget(
                           imageUrl: coin.coinsGroup.iconUrl,
                         ),

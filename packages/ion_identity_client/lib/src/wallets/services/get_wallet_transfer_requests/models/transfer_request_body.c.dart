@@ -5,9 +5,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'transfer_request_body.c.freezed.dart';
 part 'transfer_request_body.c.g.dart';
 
+abstract class CoinTransferRequestBody {
+  String get amount;
+}
+
 @Freezed(unionKey: 'kind')
 class TransferRequestBody with _$TransferRequestBody {
   @FreezedUnionValue('Native')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.native({
     required String kind,
     required String to,
@@ -23,6 +28,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = Erc721TransferRequestBody;
 
   @FreezedUnionValue('Asa')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.asa({
     required String kind,
     required String assetId,
@@ -31,6 +37,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = AsaTransferRequestBody;
 
   @FreezedUnionValue('Erc20')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.erc20({
     required String kind,
     required String contract,
@@ -39,6 +46,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = Erc20TransferRequestBody;
 
   @FreezedUnionValue('Spl')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.spl({
     required String kind,
     required String mint,
@@ -47,6 +55,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = SplTransferRequestBody;
 
   @FreezedUnionValue('Spl2022')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.spl2022({
     required String kind,
     required String mint,
@@ -55,6 +64,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = Spl2022TransferRequestBody;
 
   @FreezedUnionValue('Sep41')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.sep41({
     required String kind,
     required String issuer,
@@ -64,6 +74,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = Sep41TransferRequestBody;
 
   @FreezedUnionValue('Tep74')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.tep74({
     required String kind,
     required String master,
@@ -72,6 +83,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = Tep74TransferRequestBody;
 
   @FreezedUnionValue('Trc10')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.trc10({
     required String kind,
     required String tokenId,
@@ -80,6 +92,7 @@ class TransferRequestBody with _$TransferRequestBody {
   }) = Trc10TransferRequestBody;
 
   @FreezedUnionValue('Trc20')
+  @Implements<CoinTransferRequestBody>()
   const factory TransferRequestBody.trc20({
     required String kind,
     required String contract,

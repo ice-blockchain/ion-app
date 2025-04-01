@@ -18,8 +18,8 @@ part 'encrypted_message_service.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<EncryptedMessageService> encryptedMessageService(Ref ref) async {
-  final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
-  final eventSigner = await ref.read(currentUserIonConnectEventSignerProvider.future);
+  final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
+  final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
 
   if (eventSigner == null) {
     throw EventSignerNotFoundException();

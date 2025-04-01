@@ -15,7 +15,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/coins_network_fee_selector.dart';
@@ -54,7 +54,7 @@ class SendCoinsForm extends HookConsumerWidget {
     final formController = ref.watch(sendAssetFormControllerProvider);
     final notifier = ref.watch(sendAssetFormControllerProvider.notifier);
     final selectedContactPubkey = formController.contactPubkey;
-    final coin = formController.assetData.as<CoinAssetData>();
+    final coin = formController.assetData.as<CoinAssetToSendData>();
     final maxAmount = coin?.selectedOption?.amount ?? 0;
 
     final amountController = useTextEditingController.fromValue(

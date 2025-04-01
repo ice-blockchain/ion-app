@@ -1,47 +1,70 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'dart:async';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/mappers/nft_mapper.dart';
+import 'package:ion/app/features/wallets/data/repository/coins_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/networks_repository.c.dart';
+import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_comparator.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_crypto_asset.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
+import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/services/ion_identity/ion_identity_client_provider.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 part 'create_update_wallet_view_request_builder.dart';
 part 'wallet_views_service.c.g.dart';
 
 @riverpod
 Future<WalletViewsService> walletViewsService(Ref ref) async {
-  return WalletViewsService(
+  final service = WalletViewsService(
     await ref.watch(ionIdentityClientProvider.future),
     await ref.watch(walletsNotifierProvider.future),
+    ref.watch(coinsRepositoryProvider),
     ref.watch(networksRepositoryProvider),
+    await ref.watch(transactionsRepositoryProvider.future),
   );
+
+  ref.onDispose(service.dispose);
+
+  return service;
 }
 
 class WalletViewsService {
   WalletViewsService(
     this._identity,
     this._userWallets,
+    this._coinsRepository,
     this._networksRepository,
+    this._transactionsRepository,
   );
 
   final List<Wallet> _userWallets;
   final IONIdentityClient _identity;
+  final CoinsRepository _coinsRepository;
   final NetworksRepository _networksRepository;
+  final TransactionsRepository _transactionsRepository;
+
+  final StreamController<List<WalletViewData>> _walletViewsController =
+      StreamController.broadcast();
+  Stream<List<WalletViewData>> get walletViews => _walletViewsController.stream;
+  List<WalletViewData> _originWalletViews = [];
+  List<WalletViewData> _modifiedWalletViews = [];
+  List<WalletViewData> get lastEmitted => _modifiedWalletViews;
+
+  StreamSubscription<(List<CoinData>, Map<CoinData, List<TransactionData>>)>? _updatesSubscription;
 
   Future<List<WalletViewData>> fetch() async {
     final shortViews = await _identity.wallets.getWalletViews();
@@ -50,13 +73,11 @@ class WalletViewsService {
       shortViews.map((e) => _identity.wallets.getWalletView(e.id)),
     );
     final networks = await _networksRepository.getAllAsMap();
-    final mainWalletViewId = viewsDetailsDTO
-        .reduce(
-          (a, b) => a.createdAt.isBefore(b.createdAt) ? a : b,
-        )
-        .id;
+    final mainWalletViewId = viewsDetailsDTO.isEmpty
+        ? '' // if there no wallet views, we haven't the main one
+        : viewsDetailsDTO.reduce((a, b) => a.createdAt.isBefore(b.createdAt) ? a : b).id;
 
-    return viewsDetailsDTO
+    _originWalletViews = viewsDetailsDTO
         .map(
           (viewDTO) => _parseWalletView(
             viewDTO,
@@ -65,15 +86,176 @@ class WalletViewsService {
           ),
         )
         .toList();
+    _emitModifiedWalletViews(walletViews: _originWalletViews);
+
+    return _originWalletViews;
+  }
+
+  void _emitModifiedWalletViews({
+    List<WalletViewData>? walletViews,
+    bool refreshSubscriptions = true,
+  }) {
+    if (walletViews != null) {
+      _modifiedWalletViews = walletViews;
+    }
+
+    _walletViewsController.add(_modifiedWalletViews);
+
+    if (refreshSubscriptions) _refreshUpdateSubscription();
+  }
+
+  void _refreshUpdateSubscription() {
+    if (_originWalletViews.isEmpty) return;
+
+    final coinIds = _originWalletViews
+        .expand((view) => view.coinGroups)
+        .expand((group) => group.coins)
+        .map((coin) => coin.coin.id)
+        .toSet();
+
+    if (coinIds.isEmpty) return;
+
+    _updatesSubscription?.cancel();
+    _updatesSubscription = _transactionsRepository
+        .watchBroadcastedTransfersByCoins(coinIds.toList())
+        .combineLatest(
+          _coinsRepository.watchCoins(coinIds),
+          (Map<CoinData, List<TransactionData>> transactions, List<CoinData> coins) =>
+              (coins, transactions),
+        )
+        .listen((combined) {
+      final (updatedCoins, transactions) = combined;
+
+      if (_originWalletViews.isEmpty) return;
+
+      final updatedViews = _updateWalletViews(
+        _originWalletViews,
+        updatedCoins: updatedCoins,
+        transactions: transactions,
+      );
+
+      _emitModifiedWalletViews(
+        walletViews: updatedViews,
+        refreshSubscriptions: false,
+      );
+    });
+  }
+
+  List<WalletViewData> _updateWalletViews(
+    List<WalletViewData> views, {
+    required Iterable<CoinData> updatedCoins,
+    required Map<CoinData, List<TransactionData>> transactions,
+  }) {
+    return views.map((walletView) {
+      final updatedGroups = walletView.coinGroups.map((group) {
+        var totalGroupAmount = 0.0;
+        var totalGroupBalanceUSD = 0.0;
+
+        final updatedCoinsInGroup = group.coins.map((coinInWallet) {
+          var modifiedCoin = _applyUpdatedCoinPrice(
+            coinInWallet: coinInWallet,
+            updatedCoins: updatedCoins,
+          );
+
+          modifiedCoin = _applyExecutingTransactions(
+            coinInWallet: modifiedCoin,
+            transactions: transactions,
+          );
+
+          totalGroupAmount += modifiedCoin.amount;
+          totalGroupBalanceUSD += modifiedCoin.balanceUSD;
+
+          return modifiedCoin;
+        }).toList();
+
+        return group.copyWith(
+          coins: updatedCoinsInGroup,
+          totalAmount: totalGroupAmount,
+          totalBalanceUSD: totalGroupBalanceUSD,
+        );
+      }).toList();
+
+      return walletView.copyWith(
+        coinGroups: updatedGroups,
+        usdBalance: updatedGroups.fold(0, (sum, group) => sum + group.totalBalanceUSD),
+      );
+    }).toList();
+  }
+
+  /// Updates coin usd price
+  CoinInWalletData _applyUpdatedCoinPrice({
+    required Iterable<CoinData> updatedCoins,
+    required CoinInWalletData coinInWallet,
+  }) {
+    if (updatedCoins.isNotEmpty) {
+      final updatedCoin = updatedCoins.firstWhereOrNull(
+        (coin) => coin.id == coinInWallet.coin.id,
+      );
+
+      if (updatedCoin != null) {
+        final balanceUSD = coinInWallet.amount * updatedCoin.priceUSD;
+        return coinInWallet.copyWith(
+          coin: updatedCoin,
+          balanceUSD: balanceUSD,
+        );
+      }
+    }
+
+    return coinInWallet;
+  }
+
+  /// Subtracts sent coins from the existing number of coins.
+  CoinInWalletData _applyExecutingTransactions({
+    required Map<CoinData, List<TransactionData>> transactions,
+    required CoinInWalletData coinInWallet,
+  }) {
+    if (transactions.isNotEmpty) {
+      final key = transactions.keys.firstWhereOrNull(
+        (key) => key.id == coinInWallet.coin.id,
+      );
+      final coinTransactions = transactions[key] ?? [];
+      final wallet = _userWallets.firstWhereOrNull(
+        (w) => w.id == coinInWallet.walletId,
+      );
+
+      for (final transaction in coinTransactions) {
+        final isTransactionRelatedToCoin = transaction.senderWalletAddress == wallet?.address;
+        final transactionCoin = transaction.cryptoAsset;
+
+        if (isTransactionRelatedToCoin && transactionCoin is CoinTransactionAsset) {
+          final adjustedRawAmount =
+              (BigInt.parse(coinInWallet.rawAmount) - BigInt.parse(transactionCoin.rawAmount))
+                  .toString();
+
+          final adjustedAmount = parseCryptoAmount(
+            adjustedRawAmount,
+            coinInWallet.coin.decimals,
+          );
+          final adjustedBalanceUSD = adjustedAmount * coinInWallet.coin.priceUSD;
+
+          return coinInWallet.copyWith(
+            amount: adjustedAmount,
+            balanceUSD: adjustedBalanceUSD,
+            rawAmount: adjustedRawAmount,
+          );
+        }
+      }
+    }
+
+    return coinInWallet;
   }
 
   Future<WalletViewData> create(String name) async {
     final request = _CreateUpdateRequestBuilder().build(name: name);
     final networks = await _networksRepository.getAllAsMap();
-    final walletView = await _identity.wallets.createWalletView(request).then(
+    final newWalletView = await _identity.wallets.createWalletView(request).then(
           (viewDTO) => _parseWalletView(viewDTO, networks, isMainWalletView: false),
         );
-    return walletView;
+
+    _originWalletViews = [..._originWalletViews, newWalletView];
+    _emitModifiedWalletViews(walletViews: _originWalletViews);
+
+    return newWalletView;
   }
 
   Future<WalletViewData> update({
@@ -89,19 +271,35 @@ class WalletViewsService {
       userWallets: _userWallets,
     );
 
-    return _identity.wallets.updateWalletView(walletView.id, request).then(
+    final updatedWalletView = await _identity.wallets.updateWalletView(walletView.id, request).then(
           (viewDTO) => _parseWalletView(
             viewDTO,
             networks,
             isMainWalletView: walletView.isMainWalletView,
           ),
         );
+
+    final index = _originWalletViews.indexWhere((w) => w.id == walletView.id);
+
+    if (index != -1) {
+      _originWalletViews[index] = updatedWalletView;
+    } else {
+      _originWalletViews.add(updatedWalletView);
+    }
+
+    _emitModifiedWalletViews(walletViews: _originWalletViews);
+
+    return updatedWalletView;
   }
 
   Future<void> delete({required String walletViewId}) async {
-    return _identity.wallets.deleteWalletView(walletViewId);
+    await _identity.wallets.deleteWalletView(walletViewId);
+    _emitModifiedWalletViews(
+      walletViews: _originWalletViews.where((view) => view.id != walletViewId).toList(),
+    );
   }
 
+  // TODO: Move parsing to the separate class
   WalletViewData _parseWalletView(
     WalletView viewDTO,
     Map<String, NetworkData> networks, {
@@ -117,6 +315,7 @@ class WalletViewsService {
       final network = networks[coinDTO.network]!;
 
       var coinAmount = 0.0;
+      var rawCoinAmount = '0';
       var coinBalanceUSD = 0.0;
 
       final aggregationItem = _searchAggregationItem(
@@ -132,15 +331,8 @@ class WalletViewsService {
             ?.asset;
 
         if (asset != null) {
-          late final double assetBalance;
-          try {
-            assetBalance = double.parse(asset.balance);
-          } on FormatException catch (_) {
-            Logger.error('Failed to parse asset balance with `${asset.balance}` value.');
-            assetBalance = 0;
-          }
-
-          coinAmount = assetBalance / pow(10, coinDTO.decimals);
+          rawCoinAmount = asset.balance;
+          coinAmount = parseCryptoAmount(asset.balance, asset.decimals);
           coinBalanceUSD = coinAmount * coinDTO.priceUSD;
         }
       }
@@ -151,6 +343,7 @@ class WalletViewsService {
 
       final coinInWallet = CoinInWalletData(
         amount: coinAmount,
+        rawAmount: rawCoinAmount,
         balanceUSD: coinBalanceUSD,
         walletId: coinInWalletDTO.walletId,
         coin: CoinData.fromDTO(coinDTO, network),
@@ -210,47 +403,8 @@ class WalletViewsService {
     return search(aggregation.values);
   }
 
-  WalletViewData mergeWalletViewWithPriceUpdates(
-    WalletViewData walletView,
-    Iterable<CoinData> updatedCoins,
-  ) {
-    final updatedCoinGroups = walletView.coinGroups.map((group) {
-      final updatedCoinsInGroup = group.coins.map((coinInWallet) {
-        final updatedCoin = updatedCoins.firstWhereOrNull(
-          (coin) => coin.id == coinInWallet.coin.id,
-        );
-
-        if (updatedCoin != null) {
-          final updatedBalanceUSD = coinInWallet.amount * updatedCoin.priceUSD;
-
-          return coinInWallet.copyWith(
-            coin: updatedCoin,
-            balanceUSD: updatedBalanceUSD,
-          );
-        }
-
-        return coinInWallet;
-      }).toList();
-
-      return group.copyWith(
-        coins: updatedCoinsInGroup,
-        totalBalanceUSD: updatedCoinsInGroup.fold(
-          0,
-          (sum, coin) => sum + coin.balanceUSD,
-        ),
-        totalAmount: updatedCoinsInGroup.fold(
-          0,
-          (sum, coin) => sum + coin.amount,
-        ),
-      );
-    }).toList();
-
-    return walletView.copyWith(
-      coinGroups: updatedCoinGroups,
-      usdBalance: updatedCoinGroups.fold(
-        0,
-        (sum, group) => sum + group.totalBalanceUSD,
-      ),
-    );
+  void dispose() {
+    _walletViewsController.close();
+    _updatesSubscription?.cancel();
   }
 }
