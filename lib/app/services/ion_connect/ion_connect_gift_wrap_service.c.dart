@@ -16,7 +16,7 @@ part 'ion_connect_gift_wrap_service.c.g.dart';
 @riverpod
 Future<IonConnectGiftWrapService> ionConnectGiftWrapService(Ref ref) async =>
     IonConnectGiftWrapServiceImpl(
-      encryptedMessageService: await ref.read(encryptedMessageServiceProvider.future),
+      encryptedMessageService: await ref.watch(encryptedMessageServiceProvider.future),
     );
 
 abstract class IonConnectGiftWrapService {
