@@ -21,8 +21,9 @@ class LoggerInitializer {
     // Handles Flutter-specific errors and exceptions
     FlutterError.onError = (errorDetails) {
       Logger.error(
-        '[Flutter Error] ${errorDetails.exceptionAsString()}',
+        errorDetails.exception,
         stackTrace: errorDetails.stack,
+        message: '[Flutter Error] ${errorDetails.exceptionAsString()}',
       );
     };
 
