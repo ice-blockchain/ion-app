@@ -9,10 +9,10 @@ import 'package:ion/app/features/user/providers/search_users_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'chat_simple_search_provider.c.g.dart';
+part 'chat_users_search_provider.c.g.dart';
 
 @riverpod
-Future<Map<String, String>?> chatSimpleSearch(Ref ref, String query) async {
+Future<Map<String, String>?> chatUsersSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
   final caseInsensitiveQuery = query.toLowerCase();

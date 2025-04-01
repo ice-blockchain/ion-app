@@ -21,7 +21,7 @@ class RecentChatsEmptyPage extends ConsumerWidget {
       children: [
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => ChatSimpleSearchRoute().push<void>(context),
+          onTap: () => ChatQuickSearchRoute().push<void>(context),
           child: const IgnorePointer(
             child: SearchInput(),
           ),

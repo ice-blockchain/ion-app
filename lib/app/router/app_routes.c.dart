@@ -89,8 +89,8 @@ import 'package:ion/app/features/protect_account/phone/views/pages/setup_phone/p
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_modal.dart';
 import 'package:ion/app/features/protect_account/secure_account/views/pages/secure_account_options_page.dart';
 import 'package:ion/app/features/search/model/advanced_search_category.dart';
-import 'package:ion/app/features/search/views/pages/chat_advanced_search_page/chat_advanced_search_page.dart';
-import 'package:ion/app/features/search/views/pages/chat_simple_search_page/chat_simple_search_page.dart';
+import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/chat_advanced_search_page.dart';
+import 'package:ion/app/features/search/views/pages/chat/chat_quick_search_page/chat_quick_search_page.dart';
 import 'package:ion/app/features/search/views/pages/dapps_simple_search_page/dapps_simple_search_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_advanced_search_page/feed_advanced_search_page.dart';
 import 'package:ion/app/features/search/views/pages/feed_search_filters_page/feed_search_filters_page.dart';

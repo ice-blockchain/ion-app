@@ -8,17 +8,20 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/search/providers/feed_search_history_provider.c.dart';
-import 'package:ion/app/features/search/views/pages/chat_simple_search_page/components/search_results/chat_search_list_item_shape.dart';
+import 'package:ion/app/features/search/views/pages/chat/components/chat_search_list_item_shape.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class ChatSimpleSearchResultListItem extends ConsumerWidget {
-  const ChatSimpleSearchResultListItem({required this.pubkeyAndContent, super.key});
+class ChatSearchResultListItem extends ConsumerWidget {
+  const ChatSearchResultListItem({
+    required this.pubkeyAndContent,
+    required this.showLastMessage,
+    super.key,
+  });
 
-  static double get itemVerticalOffset => 8.0.s;
-
+  final bool showLastMessage;
   final MapEntry<String, String> pubkeyAndContent;
 
   @override
@@ -26,7 +29,7 @@ class ChatSimpleSearchResultListItem extends ConsumerWidget {
     final userMetadata = ref.watch(userMetadataProvider(pubkeyAndContent.key));
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
+      padding: EdgeInsets.symmetric(vertical: 8.0.s),
       child: ScreenSideOffset.small(
         child: userMetadata.maybeWhen(
           data: (userMetadata) {
@@ -50,7 +53,7 @@ class ChatSimpleSearchResultListItem extends ConsumerWidget {
                     child: ListItem.user(
                       profilePicture: userMetadata.data.picture,
                       title: Text(userMetadata.data.displayName),
-                      subtitle: pubkeyAndContent.value.isNotEmpty
+                      subtitle: pubkeyAndContent.value.isNotEmpty && showLastMessage
                           ? Text(
                               pubkeyAndContent.value,
                               maxLines: 1,
@@ -69,7 +72,7 @@ class ChatSimpleSearchResultListItem extends ConsumerWidget {
               ),
             );
           },
-          orElse: () => const Skeleton(child: ChatSimpleSearchListItemShape()),
+          orElse: () => const Skeleton(child: ChatSearchListItemShape()),
         ),
       ),
     );
