@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/adaptive_media_view.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -29,6 +30,8 @@ class FullscreenMediaPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useStatusBarColor();
 
+    final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
+
     return Material(
       color: Colors.transparent,
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -50,15 +53,17 @@ class FullscreenMediaPage extends HookConsumerWidget {
               ),
             ),
             onBackPress: () => context.pop(),
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(right: 6.0.s),
-                child: UserInfoMenu(
-                  pubkey: eventReference.pubkey,
-                  iconColor: context.theme.appColors.secondaryBackground,
-                ),
-              ),
-            ],
+            actions: isOwnedByCurrentUser
+                ? []
+                : [
+                    Padding(
+                      padding: EdgeInsets.only(right: 6.0.s),
+                      child: UserInfoMenu(
+                        pubkey: eventReference.pubkey,
+                        iconColor: context.theme.appColors.secondaryBackground,
+                      ),
+                    ),
+                  ],
           ),
           body: AdaptiveMediaView(
             eventReference: eventReference,
