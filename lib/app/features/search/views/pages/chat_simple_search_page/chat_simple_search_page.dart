@@ -51,7 +51,7 @@ class ChatSimpleSearchPage extends HookConsumerWidget {
               onTextChanged: (String text) => ChatSimpleSearchRoute(query: text).replace(context),
             ),
             simpleSearchResults.maybeWhen(
-              data: (masterPubkeys) => masterPubkeys == null
+              data: (pubkeysAndContentMap) => pubkeysAndContentMap == null
                   ? history.pubKeys.isEmpty && history.queries.isEmpty
                       ? SearchHistoryEmpty(
                           title: hideCommunity
@@ -64,12 +64,13 @@ class ChatSimpleSearchPage extends HookConsumerWidget {
                           onSelectQuery: (String text) =>
                               ChatSimpleSearchRoute(query: text).replace(context),
                           onClearHistory: ref.read(chatSearchHistoryProvider.notifier).clear,
-                          itemBuilder: (context, index) =>
-                              FeedSearchHistoryUserListItem(pubkey: masterPubkeys![index]),
+                          itemBuilder: (context, index) => FeedSearchHistoryUserListItem(
+                            pubkey: pubkeysAndContentMap!.keys.toList()[index],
+                          ),
                         )
-                  : masterPubkeys.isEmpty
+                  : pubkeysAndContentMap.isEmpty
                       ? const _NoResults()
-                      : ChatSimpleSearchResults(masterPubkeys: masterPubkeys),
+                      : ChatSimpleSearchResults(pubkeysAndContentMap: pubkeysAndContentMap),
               orElse: SearchResultsSkeleton.new,
             ),
           ],

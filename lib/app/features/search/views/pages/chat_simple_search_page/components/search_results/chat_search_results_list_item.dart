@@ -15,15 +15,15 @@ import 'package:ion/app/utils/username.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class ChatSimpleSearchResultListItem extends ConsumerWidget {
-  const ChatSimpleSearchResultListItem({required this.masterPubkey, super.key});
+  const ChatSimpleSearchResultListItem({required this.pubkeyAndContent, super.key});
 
   static double get itemVerticalOffset => 8.0.s;
 
-  final String masterPubkey;
+  final MapEntry<String, String> pubkeyAndContent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(masterPubkey));
+    final userMetadata = ref.watch(userMetadataProvider(pubkeyAndContent.key));
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: itemVerticalOffset),
@@ -41,7 +41,7 @@ class ChatSimpleSearchResultListItem extends ConsumerWidget {
                     .read(feedSearchHistoryProvider.notifier)
                     .addUserIdToTheHistory(userMetadata.masterPubkey);
                 context.pushReplacement(
-                  ConversationRoute(receiverPubKey: masterPubkey).location,
+                  ConversationRoute(receiverPubKey: pubkeyAndContent.key).location,
                 );
               },
               child: Row(
@@ -50,9 +50,15 @@ class ChatSimpleSearchResultListItem extends ConsumerWidget {
                     child: ListItem.user(
                       profilePicture: userMetadata.data.picture,
                       title: Text(userMetadata.data.displayName),
-                      subtitle: Text(
-                        prefixUsername(username: userMetadata.data.name, context: context),
-                      ),
+                      subtitle: pubkeyAndContent.value.isNotEmpty
+                          ? Text(
+                              pubkeyAndContent.value,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : Text(
+                              prefixUsername(username: userMetadata.data.name, context: context),
+                            ),
                     ),
                   ),
                   Assets.svg.iconArrowRight.icon(

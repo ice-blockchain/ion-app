@@ -8,20 +8,20 @@ import 'package:ion/app/features/search/views/pages/chat_simple_search_page/comp
 
 class ChatSimpleSearchResults extends ConsumerWidget {
   const ChatSimpleSearchResults({
-    required this.masterPubkeys,
+    required this.pubkeysAndContentMap,
     super.key,
   });
 
-  final List<String> masterPubkeys;
+  final Map<String, String> pubkeysAndContentMap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Flexible(
       child: ListView.builder(
-        itemCount: masterPubkeys.length,
+        itemCount: pubkeysAndContentMap.length,
         padding: EdgeInsets.symmetric(vertical: 16.0.s),
         itemBuilder: (context, index) => ChatSimpleSearchResultListItem(
-          masterPubkey: masterPubkeys[index],
+          pubkeyAndContent: pubkeysAndContentMap.entries.elementAt(index),
         ),
       ),
     );
