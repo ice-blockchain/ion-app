@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
@@ -15,15 +16,16 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/sheet_content/main_modal_item.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
+import 'package:ion/app/services/media_service/banuba_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class FeedMainModalPage extends StatelessWidget {
+class FeedMainModalPage extends ConsumerWidget {
   const FeedMainModalPage({super.key});
 
   static const List<FeedType> feedTypeValues = FeedType.values;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       topPadding: 0.0.s,
@@ -72,8 +74,13 @@ class FeedMainModalPage extends StatelessWidget {
                       );
 
                       if (result != null && result.isNotEmpty && context.mounted) {
+                        final editedPath = await ref.read(editMediaProvider(result[0]).future);
+
+                        if (!context.mounted) return;
+
                         final postWasCreated = await CreateVideoRoute(
-                              videoPath: result[0].path,
+                              videoPath: editedPath,
+                              mimeType: result[0].mimeType ?? '',
                             ).push<bool>(context) ??
                             false;
 

@@ -283,16 +283,19 @@ class EditQuoteRoute extends BaseRouteData {
 class CreateVideoRoute extends BaseRouteData {
   CreateVideoRoute({
     required this.videoPath,
+    required this.mimeType,
     this.content,
   }) : super(
           child: PostFormModal.video(
             videoPath: videoPath,
+            mimeType: mimeType,
             content: content,
           ),
           type: IceRouteType.bottomSheet,
         );
 
   final String videoPath;
+  final String mimeType;
   final String? content;
 }
 

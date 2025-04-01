@@ -80,19 +80,19 @@ class PostSubmitButton extends HookConsumerWidget {
     return ToolbarSendButton(
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
-        final convertedMediaFiles = await ref
-            .read(mediaServiceProvider)
-            .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
+        final filesToUpload = createOption == CreatePostOption.video
+            ? mediaFiles
+            : await ref
+                .read(mediaServiceProvider)
+                .convertAssetIdsToMediaFiles(ref, mediaFiles: mediaFiles);
 
-        final notifier = ref.read(
-          createPostNotifierProvider(createOption).notifier,
-        );
+        final notifier = ref.read(createPostNotifierProvider(createOption).notifier);
 
         if (modifiedEvent != null) {
           unawaited(
             notifier.modify(
               content: textEditorController.document.toDelta(),
-              mediaFiles: convertedMediaFiles,
+              mediaFiles: filesToUpload,
               mediaAttachments: mediaAttachments,
               eventReference: modifiedEvent!,
               whoCanReply: whoCanReply,
@@ -104,7 +104,7 @@ class PostSubmitButton extends HookConsumerWidget {
               content: textEditorController.document.toDelta(),
               parentEvent: parentEvent,
               quotedEvent: quotedEvent,
-              mediaFiles: convertedMediaFiles,
+              mediaFiles: filesToUpload,
               whoCanReply: whoCanReply,
             ),
           );

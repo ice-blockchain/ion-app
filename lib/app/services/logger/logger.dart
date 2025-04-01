@@ -99,7 +99,8 @@ class Logger {
   static void error(
     Object error, {
     StackTrace? stackTrace,
+    String? message,
   }) {
-    _talker?.error(error.toString(), error, stackTrace);
+    _talker?.handle(error, stackTrace, message);
   }
 }

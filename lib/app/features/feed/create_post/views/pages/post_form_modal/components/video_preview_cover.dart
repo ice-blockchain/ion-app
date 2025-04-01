@@ -10,7 +10,6 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_duration.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/video_preview_edit_cover.dart';
-import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -35,9 +34,9 @@ class VideoPreviewCover extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final filePath = ref.watch(assetFilePathProvider(attachedVideo.path)).valueOrNull;
+    final filePath = attachedVideo.path;
 
-    if (filePath == null) {
+    if (filePath.isEmpty) {
       return const _VideoPlaceholder();
     }
 
