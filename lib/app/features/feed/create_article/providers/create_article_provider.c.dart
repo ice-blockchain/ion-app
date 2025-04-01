@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_quill/quill_delta.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/text_editor_single_image_block.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -31,6 +32,13 @@ import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'create_article_provider.c.g.dart';
+
+final _createArticleNotifierStreamController = StreamController<IonConnectEntity>.broadcast();
+
+@riverpod
+Raw<Stream<IonConnectEntity>> createArticleNotifierStream(Ref ref) {
+  return _createArticleNotifierStreamController.stream;
+}
 
 enum CreateArticleOption {
   plain,
@@ -89,7 +97,8 @@ class CreateArticle extends _$CreateArticle {
         richText: richText,
       );
 
-      await _sendArticleEntities([...files, articleData]);
+      final entities = await _sendArticleEntities([...files, articleData]);
+      entities?.whereType<ArticleEntity>().forEach(_createArticleNotifierStreamController.add);
 
       ref.read(draftArticleProvider.notifier).clear();
     });

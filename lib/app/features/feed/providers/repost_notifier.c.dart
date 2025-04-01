@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
+
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -8,11 +11,19 @@ import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/counters/reposts_count_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'repost_notifier.c.g.dart';
+
+final _createRepostNotifierStreamController = StreamController<IonConnectEntity>.broadcast();
+
+@riverpod
+Raw<Stream<IonConnectEntity>> createRepostNotifierStream(Ref ref) {
+  return _createRepostNotifierStreamController.stream;
+}
 
 @riverpod
 class RepostNotifier extends _$RepostNotifier {
@@ -49,7 +60,11 @@ class RepostNotifier extends _$RepostNotifier {
         _ => throw UnsupportedRepostException(entity.toEventReference()),
       };
 
-      await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
+      final repostEntity = await ref.read(ionConnectNotifierProvider.notifier).sendEntityData(data);
+      if (repostEntity != null) {
+        _createRepostNotifierStreamController.add(repostEntity);
+      }
+
       ref.read(repostsCountProvider(eventReference).notifier).addOne();
     });
   }
