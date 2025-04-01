@@ -7,12 +7,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/select/select_coin_button.dart';
+import 'package:ion/app/components/select/select_network_button.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/extensions/object.dart';
+import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
-import 'package:ion/app/features/user/pages/profile_page/hooks/use_state_with_init_value_from_provider.dart';
+import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
-import 'package:ion/app/features/wallets/providers/coins_provider.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
@@ -20,18 +25,8 @@ import 'package:ion/generated/assets.gen.dart';
 
 class RequestCoinsFormModal extends HookConsumerWidget {
   const RequestCoinsFormModal({
-    required this.pubkey,
-    required this.networkId,
-    required this.coinSymbolGroup,
-    required this.coinAbbreviation,
     super.key,
   });
-
-  final String pubkey;
-
-  final String networkId;
-  final String coinSymbolGroup;
-  final String coinAbbreviation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,14 +36,8 @@ class RequestCoinsFormModal extends HookConsumerWidget {
     final amountController = useTextEditingController(text: '');
     useListenable(amountController);
 
-    final selectedCoinInWallet = useStateWithInitValueFromProvider(
-      ref,
-      coinInWalletProvider(
-        networkId: networkId,
-        symbolGroup: coinSymbolGroup,
-        abbreviation: coinAbbreviation,
-      ),
-    );
+    final form = ref.watch(requestCoinsFormControllerProvider);
+    final coin = form.assetData.as<CoinAssetToSendData>();
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -70,13 +59,28 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                 child: ScreenSideOffset.small(
                   child: Column(
                     children: [
-                      // TODO: Add CoinButton
+                      SelectCoinButton(
+                        selectedCoin: coin?.selectedOption,
+                        onTap: () => SelectCoinProfileRoute(paymentType: PaymentType.request)
+                            .push<void>(context),
+                      ),
                       SizedBox(height: 16.0.s),
-                      // TODO: Add NetworkButton
+                      SelectNetworkButton(
+                        selectedNetwork: form.network,
+                        onTap: () {
+                          if (coin?.selectedOption != null) {
+                            SelectCoinProfileRoute(paymentType: PaymentType.request)
+                                .push<void>(context);
+                          } else {
+                            SelectCoinProfileRoute(paymentType: PaymentType.request)
+                                .push<void>(context);
+                          }
+                        },
+                      ),
                       SizedBox(height: 16.0.s),
-                      UserPaymentFlowCard(pubkey: pubkey),
+                      UserPaymentFlowCard(pubkey: form.contactPubkey!),
                       SizedBox(height: 16.0.s),
-                      if (selectedCoinInWallet.value case final CoinInWalletData coinInWallet)
+                      if (coin?.selectedOption case final CoinInWalletData coinInWallet)
                         CoinAmountInput(
                           balanceUSD: (double.tryParse(amountController.text) ?? 0) *
                               coinInWallet.coin.priceUSD,

@@ -110,31 +110,48 @@ class PaymentSelectionRoute extends BaseRouteData {
 }
 
 class SelectCoinProfileRoute extends BaseRouteData {
-  SelectCoinProfileRoute()
+  SelectCoinProfileRoute({required this.paymentType})
       : super(
-          child: SendCoinModalPage(
-            selectNetworkRouteLocationBuilder: () => SelectNetworkProfileRoute().location,
-          ),
+          child: switch (paymentType) {
+            PaymentType.send => SendCoinModalPage(
+                selectNetworkRouteLocationBuilder: () =>
+                    SelectNetworkProfileRoute(paymentType: paymentType).location,
+              ),
+            PaymentType.request => const RequestCoinsModalPage(),
+          },
           type: IceRouteType.bottomSheet,
         );
+
+  final PaymentType paymentType;
 }
 
 class SelectNetworkProfileRoute extends BaseRouteData {
-  SelectNetworkProfileRoute()
+  SelectNetworkProfileRoute({required this.paymentType})
       : super(
           child: NetworkListView(
-            sendFormRouteLocationBuilder: () => SendCoinsFormProfileRoute().location,
+            type: switch (paymentType) {
+              PaymentType.send => NetworkListViewType.send,
+              PaymentType.request => NetworkListViewType.request,
+            },
+            sendFormRouteLocationBuilder: () => switch (paymentType) {
+              PaymentType.send => SendCoinsFormProfileRoute().location,
+              PaymentType.request => RequestCoinsFormRoute().location,
+            },
           ),
           type: IceRouteType.bottomSheet,
         );
+
+  final PaymentType paymentType;
 }
 
 class SendCoinsFormProfileRoute extends BaseRouteData {
   SendCoinsFormProfileRoute()
       : super(
           child: SendCoinsForm(
-            selectCoinRouteLocationBuilder: () => SelectCoinProfileRoute().location,
-            selectNetworkRouteLocationBuilder: () => SelectNetworkProfileRoute().location,
+            selectCoinRouteLocationBuilder: () =>
+                SelectCoinProfileRoute(paymentType: PaymentType.send).location,
+            selectNetworkRouteLocationBuilder: () =>
+                SelectNetworkProfileRoute(paymentType: PaymentType.send).location,
             scanAddressRouteLocationBuilder: () => CoinSendScanRoute().location,
             confirmRouteLocationBuilder: () => SendCoinsConfirmationProfileRoute().location,
           ),
@@ -185,23 +202,9 @@ class ExploreTransactionDetailsProfileRoute extends BaseRouteData {
 }
 
 class RequestCoinsFormRoute extends BaseRouteData {
-  RequestCoinsFormRoute({
-    required this.pubkey,
-    required this.networkId,
-    required this.coinSymbolGroup,
-    required this.coinAbbreviation,
-  }) : super(
-          child: RequestCoinsFormModal(
-            pubkey: pubkey,
-            networkId: networkId,
-            coinSymbolGroup: coinSymbolGroup,
-            coinAbbreviation: coinAbbreviation,
-          ),
+  RequestCoinsFormRoute()
+      : super(
+          child: const RequestCoinsFormModal(),
           type: IceRouteType.bottomSheet,
         );
-
-  final String pubkey;
-  final String networkId;
-  final String coinSymbolGroup;
-  final String coinAbbreviation;
 }
