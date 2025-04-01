@@ -22,6 +22,7 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/compo
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/contact_input_switcher.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/widgets/not_enough_coins_for_network_fee_message.dart';
 import 'package:ion/app/features/wallets/views/pages/contact_without_wallet_error_modal.dart';
+import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -70,7 +71,7 @@ class SendCoinsForm extends HookConsumerWidget {
     useOnInit(
       () {
         void listener() {
-          final numValue = double.tryParse(amountController.value.text);
+          final numValue = parseAmount(amountController.value.text);
           if (numValue != null && numValue > maxAmount) {
             amountController.text = formatCrypto(maxAmount);
           }

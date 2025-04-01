@@ -11,6 +11,7 @@ import 'package:ion/app/features/wallets/model/coins_group.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'request_coins_form_provider.c.g.dart';
@@ -76,7 +77,7 @@ class RequestCoinsFormController extends _$RequestCoinsFormController {
 
   void setCoinsAmount(String amount) {
     if (state.assetData case final CoinAssetToSendData coin) {
-      final parsedAmount = double.tryParse(amount) ?? 0.0;
+      final parsedAmount = parseAmount(amount) ?? 0.0;
       state = state.copyWith(
         assetData: coin.copyWith(
           amount: parsedAmount,

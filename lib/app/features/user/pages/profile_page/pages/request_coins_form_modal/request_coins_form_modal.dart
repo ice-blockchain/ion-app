@@ -17,6 +17,7 @@ import 'package:ion/app/features/user/providers/request_coins_form_provider.c.da
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
+import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -82,7 +83,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                       SizedBox(height: 16.0.s),
                       if (coin?.selectedOption case final CoinInWalletData coinInWallet)
                         CoinAmountInput(
-                          balanceUSD: (double.tryParse(amountController.text) ?? 0) *
+                          balanceUSD: (parseAmount(amountController.text) ?? 0) *
                               coinInWallet.coin.priceUSD,
                           controller: amountController,
                           coinAbbreviation: coinInWallet.coin.abbreviation,
