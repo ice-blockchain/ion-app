@@ -80,9 +80,7 @@ class PostSubmitButton extends HookConsumerWidget {
     return ToolbarSendButton(
       enabled: isSubmitButtonEnabled,
       onPressed: () async {
-        List<MediaFile> filesToUpload;
-
-        filesToUpload = createOption == CreatePostOption.video
+        final filesToUpload = createOption == CreatePostOption.video
             ? mediaFiles
             : await ref
                 .read(mediaServiceProvider)
