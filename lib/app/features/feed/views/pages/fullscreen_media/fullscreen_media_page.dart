@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/adaptive_media_view.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -53,17 +54,23 @@ class FullscreenMediaPage extends HookConsumerWidget {
               ),
             ),
             onBackPress: () => context.pop(),
-            actions: isOwnedByCurrentUser
-                ? []
-                : [
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(end: 6.0.s),
-                      child: UserInfoMenu(
+            actions: [
+              Padding(
+                padding: EdgeInsetsDirectional.only(end: 6.0.s),
+                child: isOwnedByCurrentUser
+                    ? OwnEntityMenu(
+                        eventReference: eventReference,
+                        iconColor: context.theme.appColors.onPrimaryAccent,
+                        onDelete: () {
+                          context.canPop();
+                        },
+                      )
+                    : UserInfoMenu(
                         pubkey: eventReference.pubkey,
-                        iconColor: context.theme.appColors.secondaryBackground,
+                        iconColor: context.theme.appColors.onPrimaryAccent,
                       ),
-                    ),
-                  ],
+              ),
+            ],
           ),
           body: AdaptiveMediaView(
             eventReference: eventReference,
