@@ -16,7 +16,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'encrypted_message_service.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<EncryptedMessageService> encryptedMessageService(Ref ref) async {
   final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
   final eventSigner = await ref.watch(currentUserIonConnectEventSignerProvider.future);
