@@ -20,7 +20,6 @@ import 'package:ion/app/features/chat/views/components/message_items/replied_mes
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
-import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:ion/app/utils/username.dart';
 
 class OneToOneMessagesPage extends HookConsumerWidget {
@@ -36,12 +35,20 @@ class OneToOneMessagesPage extends HookConsumerWidget {
     ref.displayErrors(sendE2eeMessageServiceProvider);
 
     final conversationId = useState<String?>(null);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
 
     useEffect(
       () {
         ref.read(existChatConversationIdProvider(receiverPubKey).future).then(
           (value) {
-            conversationId.value = value ?? generateUuid();
+            conversationId.value = value ??
+                ref.read(sendE2eeChatMessageServiceProvider).generateConversationId(
+                      receiverPubkey: receiverPubKey,
+                    );
           },
         );
         return null;
@@ -50,11 +57,6 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     final onSubmitted = useCallback(
       ({String? content, List<MediaFile>? mediaFiles}) async {
-        final currentPubkey = ref.read(currentPubkeySelectorProvider);
-        if (currentPubkey == null) {
-          throw UserMasterPubkeyNotFoundException();
-        }
-
         final repliedMessage = ref.read(selectedMessageProvider);
 
         ref.read(selectedMessageProvider.notifier).clear();
