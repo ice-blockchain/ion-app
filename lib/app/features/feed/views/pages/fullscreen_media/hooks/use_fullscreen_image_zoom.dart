@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
+import 'package:ion/app/utils/future.dart';
 
 class FullscreenImageZoomState {
   const FullscreenImageZoomState({
@@ -20,22 +21,12 @@ class FullscreenImageZoomState {
 }
 
 FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
-  final transformationController = useMemoized(TransformationController.new, const []);
-  final animationController = useAnimationController(
-    duration: const Duration(milliseconds: 300),
-  );
+  final transformationController = useTransformationController();
+  final animationController = useAnimationController(duration: 300.ms);
 
-  final zoomNotifier = ref.read(imageZoomStateProvider.notifier);
+  final zoomNotifier = ref.watch(imageZoomStateProvider.notifier);
   final tapDownDetails = useState<TapDownDetails?>(null);
-  final isZoomed = useState(false);
   final animation = useState<Animation<Matrix4>?>(null);
-
-  useEffect(
-    () {
-      return transformationController.dispose;
-    },
-    const [],
-  );
 
   useEffect(
     () {
@@ -48,7 +39,6 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
       void animationStatusListener(AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           final currentlyZoomed = transformationController.value != Matrix4.identity();
-          isZoomed.value = currentlyZoomed;
           zoomNotifier.isZoomed = currentlyZoomed;
         }
       }
@@ -69,7 +59,8 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
   void handleDoubleTap() {
     if (tapDownDetails.value == null) return;
 
-    final newZoomState = !isZoomed.value;
+    final currentZoomState = ref.read(imageZoomStateProvider);
+    final newZoomState = !currentZoomState;
     final position = tapDownDetails.value!.localPosition;
 
     final endMatrix = newZoomState
@@ -92,39 +83,16 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
       ..reset()
       ..forward();
 
-    isZoomed.value = newZoomState;
     zoomNotifier.isZoomed = newZoomState;
   }
 
   void handleInteractionEnd(ScaleEndDetails details) {
     final scale = transformationController.value.getMaxScaleOnAxis();
 
-    if (scale < 1.0) {
-      // Animate back to identity if scale is less than 1
-      Future.microtask(() {
-        animation.value = Matrix4Tween(
-          begin: transformationController.value,
-          end: Matrix4.identity(),
-        ).animate(
-          CurvedAnimation(
-            parent: animationController,
-            curve: Curves.easeOut,
-          ),
-        );
-
-        animationController
-          ..reset()
-          ..forward();
-
-        isZoomed.value = false;
-        zoomNotifier.isZoomed = false;
-      });
-    } else {
-      final newZoomState = scale > 1.0;
-      if (isZoomed.value != newZoomState) {
-        isZoomed.value = newZoomState;
-        zoomNotifier.isZoomed = newZoomState;
-      }
+    final newZoomState = scale > 1.0;
+    final currentZoomState = ref.read(imageZoomStateProvider);
+    if (currentZoomState != newZoomState) {
+      zoomNotifier.isZoomed = newZoomState;
     }
   }
 

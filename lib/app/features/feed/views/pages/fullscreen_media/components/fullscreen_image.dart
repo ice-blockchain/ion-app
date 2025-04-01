@@ -35,7 +35,7 @@ class FullscreenImage extends HookConsumerWidget {
             child: InteractiveViewer(
               transformationController: zoomState.transformationController,
               maxScale: maxScale,
-              boundaryMargin: const EdgeInsets.all(double.infinity),
+              clipBehavior: Clip.none,
               onInteractionEnd: zoomState.onInteractionEnd,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
