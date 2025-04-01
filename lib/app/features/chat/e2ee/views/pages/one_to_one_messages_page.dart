@@ -34,6 +34,11 @@ class OneToOneMessagesPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.displayErrors(sendE2eeMessageServiceProvider);
     final conversationId = useState<String?>(null);
+    final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
 
     useEffect(
       () {
@@ -51,11 +56,6 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     final onSubmitted = useCallback(
       ({String? content, List<MediaFile>? mediaFiles}) async {
-        final currentPubkey = ref.read(currentPubkeySelectorProvider);
-        if (currentPubkey == null) {
-          throw UserMasterPubkeyNotFoundException();
-        }
-
         final repliedMessage = ref.read(selectedMessageProvider);
 
         ref.read(selectedMessageProvider.notifier).clear();
