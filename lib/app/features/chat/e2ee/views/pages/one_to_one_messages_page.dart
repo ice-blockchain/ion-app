@@ -51,7 +51,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 
     final onSubmitted = useCallback(
       ({String? content, List<MediaFile>? mediaFiles}) async {
-        final currentPubkey = ref.watch(currentPubkeySelectorProvider);
+        final currentPubkey = ref.read(currentPubkeySelectorProvider);
         if (currentPubkey == null) {
           throw UserMasterPubkeyNotFoundException();
         }
