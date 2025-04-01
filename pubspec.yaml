@@ -100,7 +100,6 @@ dependencies:
   permission_handler: ^11.3.0
   photo_manager: ^3.6.3
   photo_manager_image_provider: ^2.1.1
-  photo_view: ^0.15.0
   pinenacl: ^0.6.0
   qr_code_scanner_plus: ^2.0.10+1
   qr_flutter: ^4.1.0
