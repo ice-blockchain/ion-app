@@ -63,6 +63,11 @@ class ActionButton extends HookConsumerWidget {
             );
 
             if (status == PermissionStatus.granted) {
+              unawaited(
+                recorderController.record(
+                  bitRate: 44100,
+                ),
+              );
               ref.read(messagingBottomBarActiveStateProvider.notifier).setVoice();
               unawaited(HapticFeedback.lightImpact());
             } else {
