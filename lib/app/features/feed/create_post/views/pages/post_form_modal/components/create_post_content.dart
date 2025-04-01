@@ -120,11 +120,13 @@ class _TextInputSection extends HookConsumerWidget {
       () {
         if (bottomInset > 0 && textEditorKey.currentContext != null) {
           Future.delayed(const Duration(milliseconds: 300), () {
-            Scrollable.ensureVisible(
-              textEditorKey.currentContext!,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.easeInOut,
-            );
+            if (textEditorKey.currentContext != null) {
+              Scrollable.ensureVisible(
+                textEditorKey.currentContext!,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.easeInOut,
+              );
+            }
           });
         }
         return null;

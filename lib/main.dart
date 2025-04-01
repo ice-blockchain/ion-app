@@ -12,7 +12,7 @@ import 'package:ion/app/features/core/views/components/content_scaler.dart';
 import 'package:ion/app/router/components/app_router_builder.dart';
 import 'package:ion/app/router/components/modal_wrapper/sheet_scope.dart';
 import 'package:ion/app/router/providers/go_router_provider.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/services/logger/logger_initializer.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
 import 'package:ion/generated/app_localizations.dart';
@@ -23,9 +23,12 @@ void main() async {
   await SecureStorage().clearOnReinstall();
   await dotenv.load(fileName: Assets.aApp);
 
+  final container = ProviderContainer();
+  LoggerInitializer.initialize(container);
+
   runApp(
-    ProviderScope(
-      observers: [Logger.talkerRiverpodObserver],
+    UncontrolledProviderScope(
+      container: container,
       child: const IONApp(),
     ),
   );

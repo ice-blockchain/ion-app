@@ -14,9 +14,10 @@ class Logger {
 
   static Talker? _talker;
 
-  static void init() {
+  static void init({bool verbose = false}) {
     _talker = TalkerFlutter.init(
       settings: TalkerSettings(
+        useConsoleLogs: verbose,
         colors: {
           TalkerLogType.critical.key: AnsiPen()..xterm(196), // Bright red
           TalkerLogType.warning.key: AnsiPen()..xterm(214), // Golden yellow
@@ -99,6 +100,6 @@ class Logger {
     Object error, {
     StackTrace? stackTrace,
   }) {
-    _talker?.error(error, stackTrace);
+    _talker?.error(error.toString(), error, stackTrace);
   }
 }

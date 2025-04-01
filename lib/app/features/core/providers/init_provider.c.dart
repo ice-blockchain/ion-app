@@ -15,7 +15,6 @@ import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
 import 'package:ion/app/utils/functions.dart';
 import 'package:ion/l10n/timeago_locales.dart';
@@ -26,10 +25,7 @@ part 'init_provider.c.g.dart';
 @Riverpod(keepAlive: true)
 Future<void> initApp(Ref ref) async {
   final featureFlagsNotifier = ref.read(featureFlagsProvider.notifier);
-  final logApp = featureFlagsNotifier.get(LoggerFeatureFlag.logApp);
   final logIonConnect = featureFlagsNotifier.get(LoggerFeatureFlag.logIonConnect);
-
-  if (logApp) Logger.init();
 
   IonConnect.initialize(logIonConnect ? IonConnectLogger() : null);
 
