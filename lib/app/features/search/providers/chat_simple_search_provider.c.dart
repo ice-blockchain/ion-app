@@ -15,11 +15,13 @@ part 'chat_simple_search_provider.c.g.dart';
 Future<Map<String, String>?> chatSimpleSearch(Ref ref, String query) async {
   if (query.isEmpty) return null;
 
+  final caseInsensitiveQuery = query.toLowerCase();
+
   final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
   if (currentUserMasterPubkey == null) return null;
 
   // Fetch and sort search results
-  final searchResults = ref.watch(searchUsersProvider(query: query));
+  final searchResults = ref.watch(searchUsersProvider(query: caseInsensitiveQuery));
   await Future<void>.delayed(const Duration(milliseconds: 500));
   final sortedUsers = (searchResults?.users ?? [])..sortBy((user) => user.data.displayName);
   final foundUsersPubkeysMap = {for (final user in sortedUsers) user.masterPubkey: ''};
@@ -51,8 +53,9 @@ Future<Map<String, String>?> chatSimpleSearch(Ref ref, String query) async {
         final userMetadata = await ref.watch(userMetadataProvider(entry.key).future);
         if (userMetadata == null) return null;
 
-        final nameMatches = userMetadata.data.name.contains(query);
-        final displayNameMatches = userMetadata.data.displayName.contains(query);
+        final nameMatches = userMetadata.data.name.toLowerCase().contains(caseInsensitiveQuery);
+        final displayNameMatches =
+            userMetadata.data.displayName.toLowerCase().contains(caseInsensitiveQuery);
 
         return (nameMatches || displayNameMatches) ? entry : null;
       }),
