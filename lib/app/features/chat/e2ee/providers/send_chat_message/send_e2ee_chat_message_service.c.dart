@@ -415,4 +415,17 @@ class SendE2eeChatMessageService {
       failedParticipantsMasterPubkeys: failedParticipantsMasterPubkeys,
     );
   }
+
+  String generateConversationId({
+    required String receiverPubkey,
+  }) {
+    final currentPubkey = ref.read(currentPubkeySelectorProvider);
+
+    if (currentPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
+    final sorted = [receiverPubkey, currentPubkey]..sort();
+    return sorted.join();
+  }
 }
