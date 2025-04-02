@@ -15,17 +15,44 @@ import 'package:ion/app/features/feed/create_article/views/pages/create_article_
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_toolbar.dart';
 import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/hooks/use_create_article.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
 class CreateArticleModal extends HookConsumerWidget {
-  const CreateArticleModal({super.key});
+  factory CreateArticleModal({
+    Key? key,
+  }) = CreateArticleModal.create;
+  const CreateArticleModal._({
+    super.key,
+    this.modifiedEvent,
+  });
+
+  factory CreateArticleModal.create({
+    Key? key,
+  }) {
+    return CreateArticleModal._(
+      key: key,
+    );
+  }
+
+  factory CreateArticleModal.edit({
+    required EventReference modifiedEvent,
+    Key? key,
+  }) {
+    return CreateArticleModal._(
+      key: key,
+      modifiedEvent: modifiedEvent,
+    );
+  }
+
+  final EventReference? modifiedEvent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleState = useCreateArticle(ref);
+    final articleState = useCreateArticle(ref, modifiedEvent: modifiedEvent);
 
     final scrollController = ScrollController();
     final textEditorKey = useMemoized(TextEditorKeys.createArticle);

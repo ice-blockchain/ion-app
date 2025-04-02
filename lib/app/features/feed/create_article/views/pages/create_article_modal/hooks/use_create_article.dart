@@ -7,6 +7,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -37,7 +38,7 @@ class CreateArticleState {
   final ValueNotifier<bool> isTitleFocused;
 }
 
-CreateArticleState useCreateArticle(WidgetRef ref) {
+CreateArticleState useCreateArticle(WidgetRef ref, {EventReference? modifiedEvent}) {
   final selectedImage = useState<MediaFile?>(null);
   final titleFilled = useState(false);
   final textEditorController = useQuillController();

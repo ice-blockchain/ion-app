@@ -85,6 +85,23 @@ class OwnEntityMenu extends ConsumerWidget {
                   ),
                   const OverlayMenuItemSeparator(),
                 ],
+                if (entity is ArticleEntity && _isEntityEditable(entity)) ...[
+                  OverlayMenuItem(
+                    minWidth: 75.0.s,
+                    label: context.i18n.button_edit,
+                    icon: Assets.svg.iconEditLink.icon(
+                      size: iconSize,
+                      color: context.theme.appColors.quaternaryText,
+                    ),
+                    onPressed: () {
+                      closeMenu();
+
+                      final modifiedEvent = entity.toEventReference().encode();
+                      EditArticleRoute(modifiedEvent: modifiedEvent).push<void>(context);
+                    },
+                  ),
+                  const OverlayMenuItemSeparator(),
+                ],
                 OverlayMenuItem(
                   minWidth: 75.0.s,
                   label: context.i18n.post_menu_delete,
