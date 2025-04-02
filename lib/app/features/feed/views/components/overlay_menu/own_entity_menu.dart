@@ -13,6 +13,7 @@ import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/feed/data/models/delete/delete_confirmation_type.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/views/pages/entity_delete_confirmation_modal/entity_delete_confirmation_modal.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -39,7 +40,8 @@ class OwnEntityMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
 
-    if (entity == null || (entity is! ModifiablePostEntity && entity is! ArticleEntity)) {
+    if (entity == null ||
+        (entity is! ModifiablePostEntity && entity is! PostEntity && entity is! ArticleEntity)) {
       return const SizedBox.shrink();
     }
 
