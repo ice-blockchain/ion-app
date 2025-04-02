@@ -8,7 +8,6 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_item_wrapper/message_item_wrapper.dart';
-import 'package:ion/app/features/chat/views/components/message_items/message_reactions/message_reactions.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_metadata.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
@@ -45,27 +44,16 @@ class VisualMediaMessage extends HookConsumerWidget {
         },
         child: SizedBox(
           width: messageMedias.length > 1 ? double.infinity : 146.0.s,
-          child: IntrinsicWidth(
-            child: Column(
-              children: [
-                VisualMediaCustomGrid(
-                  messageMedias: messageMedias,
-                  eventMessage: eventMessage,
-                ),
-                SizedBox(height: 8.0.s),
-                Row(
-                  children: [
-                    MessageReactions(
-                      isMe: isMe,
-                      eventMessage: eventMessage,
-                    ),
-                    VisualMediaMetadata(
-                      eventMessage: eventMessage,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+          child: Column(
+            children: [
+              VisualMediaCustomGrid(
+                messageMedias: messageMedias,
+                eventMessage: eventMessage,
+              ),
+              VisualMediaMetadata(
+                eventMessage: eventMessage,
+              ),
+            ],
           ),
         ),
       ),
