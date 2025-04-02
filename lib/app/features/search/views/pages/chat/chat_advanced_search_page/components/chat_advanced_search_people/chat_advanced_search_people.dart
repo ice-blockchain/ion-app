@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/search/providers/chat_users_search_provider.c.dart';
 import 'package:ion/app/features/search/views/components/search_results_skeleton/search_results_skeleton.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_no_results_found.dart';
-import 'package:ion/app/features/search/views/pages/chat/components/chat_people_search_results.dart';
+import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results.dart';
 
 class ChatAdvancedSearchPeople extends HookConsumerWidget {
   const ChatAdvancedSearchPeople({required this.query, super.key});
@@ -20,13 +20,13 @@ class ChatAdvancedSearchPeople extends HookConsumerWidget {
     final usersSearchResults = ref.watch(chatUsersSearchProvider(query));
 
     return usersSearchResults.maybeWhen(
-      data: (pubkeysAndContentMap) {
-        if (pubkeysAndContentMap!.entries.isEmpty) {
+      data: (pubkeysAndContentTuples) {
+        if (pubkeysAndContentTuples!.isEmpty) {
           return const ChatSearchNoResults();
         } else {
-          return ChatPeopleSearchResults(
+          return ChatSearchResults(
             showLastMessage: false,
-            pubkeysAndContentMap: pubkeysAndContentMap,
+            pubkeysAndContentTuples: pubkeysAndContentTuples,
           );
         }
       },

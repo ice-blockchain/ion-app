@@ -15,7 +15,7 @@ import 'package:ion/app/features/search/views/components/advanced_search_navigat
 import 'package:ion/app/features/search/views/components/advanced_search_tab_bar/advanced_search_tab_bar.dart';
 import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/components/chat_advanced_search_all/chat_advanced_search_all.dart';
 import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/components/chat_advanced_search_chats/chat_advanced_search_chats.dart';
-import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/components/chat_advanced_search_page/components/chat_advanced_search_users/chat_advanced_search_users.dart';
+import 'package:ion/app/features/search/views/pages/chat/chat_advanced_search_page/components/chat_advanced_search_people/chat_advanced_search_people.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class ChatAdvancedSearchPage extends HookConsumerWidget {

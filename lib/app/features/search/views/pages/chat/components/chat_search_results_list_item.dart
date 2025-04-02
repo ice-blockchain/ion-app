@@ -16,17 +16,17 @@ import 'package:ion/generated/assets.gen.dart';
 
 class ChatSearchResultListItem extends ConsumerWidget {
   const ChatSearchResultListItem({
-    required this.pubkeyAndContent,
     required this.showLastMessage,
+    required this.pubkeyAndContent,
     super.key,
   });
 
   final bool showLastMessage;
-  final MapEntry<String, String> pubkeyAndContent;
+  final (String, String) pubkeyAndContent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userMetadata = ref.watch(userMetadataProvider(pubkeyAndContent.key));
+    final userMetadata = ref.watch(userMetadataProvider(pubkeyAndContent.$1));
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0.s),
@@ -44,7 +44,7 @@ class ChatSearchResultListItem extends ConsumerWidget {
                     .read(feedSearchHistoryProvider.notifier)
                     .addUserIdToTheHistory(userMetadata.masterPubkey);
                 context.pushReplacement(
-                  ConversationRoute(receiverPubKey: pubkeyAndContent.key).location,
+                  ConversationRoute(receiverPubKey: pubkeyAndContent.$1).location,
                 );
               },
               child: Row(
@@ -53,9 +53,9 @@ class ChatSearchResultListItem extends ConsumerWidget {
                     child: ListItem.user(
                       profilePicture: userMetadata.data.picture,
                       title: Text(userMetadata.data.displayName),
-                      subtitle: pubkeyAndContent.value.isNotEmpty && showLastMessage
+                      subtitle: pubkeyAndContent.$2.isNotEmpty && showLastMessage
                           ? Text(
-                              pubkeyAndContent.value,
+                              pubkeyAndContent.$2,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             )

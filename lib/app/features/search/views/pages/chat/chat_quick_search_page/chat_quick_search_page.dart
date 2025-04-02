@@ -16,7 +16,7 @@ import 'package:ion/app/features/search/views/components/search_history_empty/se
 import 'package:ion/app/features/search/views/components/search_navigation/search_navigation.dart';
 import 'package:ion/app/features/search/views/components/search_results_skeleton/search_results_skeleton.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_no_results_found.dart';
-import 'package:ion/app/features/search/views/pages/chat/components/chat_people_search_results.dart';
+import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/future.dart';
 
@@ -49,26 +49,30 @@ class ChatQuickSearchPage extends HookConsumerWidget {
               onTextChanged: (String text) => ChatQuickSearchRoute(query: text).replace(context),
             ),
             usersSearchResults.maybeWhen(
-              data: (pubkeysAndContentMap) => pubkeysAndContentMap == null
-                  ? history.pubKeys.isEmpty && history.queries.isEmpty
-                      ? SearchHistoryEmpty(
-                          title: hideCommunity
-                              ? context.i18n.chat_search_no_community_empty
-                              : context.i18n.chat_search_empty,
-                        )
-                      : SearchHistory(
-                          queries: history.queries,
-                          itemCount: history.pubKeys.length,
-                          onSelectQuery: (String text) =>
-                              ChatQuickSearchRoute(query: text).replace(context),
-                          onClearHistory: ref.read(chatSearchHistoryProvider.notifier).clear,
-                          itemBuilder: (context, index) => FeedSearchHistoryUserListItem(
-                            pubkey: pubkeysAndContentMap!.keys.toList()[index],
-                          ),
-                        )
-                  : pubkeysAndContentMap.isEmpty
-                      ? const ChatSearchNoResults()
-                      : ChatPeopleSearchResults(pubkeysAndContentMap: pubkeysAndContentMap),
+              data: (pubkeysAndContentTuples) {
+                final pubkeys = pubkeysAndContentTuples?.map((e) => e.$1).toList() ?? [];
+
+                return pubkeysAndContentTuples == null
+                    ? history.pubKeys.isEmpty && history.queries.isEmpty
+                        ? SearchHistoryEmpty(
+                            title: hideCommunity
+                                ? context.i18n.chat_search_no_community_empty
+                                : context.i18n.chat_search_empty,
+                          )
+                        : SearchHistory(
+                            queries: history.queries,
+                            itemCount: history.pubKeys.length,
+                            onSelectQuery: (String text) =>
+                                ChatQuickSearchRoute(query: text).replace(context),
+                            onClearHistory: ref.read(chatSearchHistoryProvider.notifier).clear,
+                            itemBuilder: (context, index) => FeedSearchHistoryUserListItem(
+                              pubkey: pubkeys[index],
+                            ),
+                          )
+                    : pubkeysAndContentTuples.isEmpty
+                        ? const ChatSearchNoResults()
+                        : ChatSearchResults(pubkeysAndContentTuples: pubkeysAndContentTuples);
+              },
               orElse: SearchResultsSkeleton.new,
             ),
           ],
