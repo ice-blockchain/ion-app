@@ -71,7 +71,5 @@ Future<List<(String, String)>?> chatUsersSearch(Ref ref, String query) async {
     ),
   };
 
-  return filteredAndSortedPubkeys.entries
-      .map((entry) => (entry.key, entry.value))
-      .toList();
+  return filteredAndSortedPubkeys.entries.map((entry) => (entry.key, entry.value)).toList();
 }

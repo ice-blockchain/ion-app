@@ -25,7 +25,8 @@ Future<List<(String, String)>?> chatMessagesSearch(Ref ref, String query) async 
   final entities = searchResults.map(PrivateDirectMessageEntity.fromEventMessage);
 
   final tuples = entities
-      .sortedBy((entity) => entity.createdAt).reversed
+      .sortedBy((entity) => entity.createdAt)
+      .reversed
       .map(
         (message) => (
           message.allPubkeys.firstWhereOrNull((key) => key != currentUserMasterPubkey) ?? '',
