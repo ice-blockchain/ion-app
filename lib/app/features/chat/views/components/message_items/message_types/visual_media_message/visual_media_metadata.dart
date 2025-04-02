@@ -30,12 +30,15 @@ class VisualMediaMetadata extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (message.isNotEmpty)
-                Text(
-                  message,
-                  style: context.theme.appTextThemes.body2.copyWith(
-                    color: isMe
-                        ? context.theme.appColors.onPrimaryAccent
-                        : context.theme.appColors.primaryText,
+                Padding(
+                  padding: EdgeInsetsDirectional.only(top: 8.0.s),
+                  child: Text(
+                    message,
+                    style: context.theme.appTextThemes.body2.copyWith(
+                      color: isMe
+                          ? context.theme.appColors.onPrimaryAccent
+                          : context.theme.appColors.primaryText,
+                    ),
                   ),
                 ),
               MessageReactions(
@@ -45,7 +48,10 @@ class VisualMediaMetadata extends HookConsumerWidget {
             ],
           ),
         ),
-        MessageMetaData(eventMessage: eventMessage),
+        Padding(
+          padding: EdgeInsetsDirectional.only(top: 8.0.s),
+          child: MessageMetaData(eventMessage: eventMessage),
+        ),
       ],
     );
   }
