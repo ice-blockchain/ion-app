@@ -9,5 +9,5 @@ class ImageZoomState extends _$ImageZoomState {
   @override
   bool build() => false;
 
-  set isZoomed(bool value) => state = value;
+  set zoomed(bool value) => state = value;
 }

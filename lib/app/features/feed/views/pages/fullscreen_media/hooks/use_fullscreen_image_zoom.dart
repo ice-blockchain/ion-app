@@ -39,7 +39,7 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
       void animationStatusListener(AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           final currentlyZoomed = transformationController.value != Matrix4.identity();
-          zoomNotifier.isZoomed = currentlyZoomed;
+          zoomNotifier.zoomed = currentlyZoomed;
         }
       }
 
@@ -83,7 +83,7 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
       ..reset()
       ..forward();
 
-    zoomNotifier.isZoomed = newZoomState;
+    zoomNotifier.zoomed = newZoomState;
   }
 
   void handleInteractionEnd(ScaleEndDetails details) {
@@ -92,7 +92,7 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
     final newZoomState = scale > 1.0;
     final currentZoomState = ref.read(imageZoomStateProvider);
     if (currentZoomState != newZoomState) {
-      zoomNotifier.isZoomed = newZoomState;
+      zoomNotifier.zoomed = newZoomState;
     }
   }
 

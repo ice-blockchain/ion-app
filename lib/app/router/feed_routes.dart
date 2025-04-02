@@ -492,7 +492,7 @@ class FullscreenMediaRoute extends BaseRouteData {
                 ? EventReference.fromEncoded(framedEventReference)
                 : null,
           ),
-          type: IceRouteType.fade,
+          type: IceRouteType.swipeDismissible,
         );
 
   final int initialMediaIndex;
