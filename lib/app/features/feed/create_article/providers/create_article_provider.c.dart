@@ -42,7 +42,8 @@ Raw<Stream<IonConnectEntity>> createArticleNotifierStream(Ref ref) {
 
 enum CreateArticleOption {
   plain,
-  softDelete;
+  softDelete,
+  modify;
 }
 
 @riverpod
