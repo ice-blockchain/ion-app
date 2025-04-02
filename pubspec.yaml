@@ -90,7 +90,7 @@ dependencies:
       url: https://github.com/ice-blockchain/nostr-dart
       ref: 0.0.30
   ogp_data_extract: ^0.1.4
-  package_info_plus: ^4.2.0
+  package_info_plus: ^8.3.0
   palette_generator: ^0.3.3+5
   path: ^1.9.0
   path_provider: ^2.1.4
@@ -117,6 +117,7 @@ dependencies:
   uuid: ^4.5.1
   video_player_win: ^2.3.11
   visibility_detector: ^0.4.0+2
+  wakelock_plus: ^1.2.11
   window_manager: ^0.4.2
 
 dev_dependencies:
