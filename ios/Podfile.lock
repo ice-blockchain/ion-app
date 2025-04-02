@@ -429,7 +429,7 @@ SPEC CHECKSUMS:
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   external_app_launcher: 3411245965270a74040a3de17e27bd02b8abb905
-  ffmpeg_kit_flutter: eb4ec8e529925f657ba3a75f28ddff29c570d69b
+  ffmpeg_kit_flutter: 03e1c7562aee29a33b03def7b10a2fbc0456c63d
   file_picker: a0560bc09d61de87f12d246fc47d2119e6ef37be
   file_saver: 6cdbcddd690cb02b0c1a0c225b37cd805c2bf8b6
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7

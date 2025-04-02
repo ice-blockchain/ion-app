@@ -676,7 +676,7 @@ packages:
     description:
       path: "flutter/flutter"
       ref: "local-binaries-v6.0.3"
-      resolved-ref: eb02ebb3e34381c496a326c728e09618f2adb851
+      resolved-ref: e68ae4496ffef9efb21e33f8f7711823ea79f813
       url: "https://github.com/ice-endymion/ffmpeg-kit"
     source: git
     version: "6.0.3"
