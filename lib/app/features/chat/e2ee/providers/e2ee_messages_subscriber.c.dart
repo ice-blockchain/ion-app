@@ -23,7 +23,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'e2ee_messages_subscriber.c.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
   @override
   Stream<void> build() async* {
