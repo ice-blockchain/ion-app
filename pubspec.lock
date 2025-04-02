@@ -687,14 +687,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
-  ffmpeg_wasm:
-    dependency: "direct main"
-    description:
-      name: ffmpeg_wasm
-      sha256: "28beaac9be301be5246156b544d2f5845dad8f78eda464dee02a75ee1f83c411"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   file:
     dependency: "direct main"
     description:
