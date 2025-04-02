@@ -24,10 +24,10 @@ class StoryReactionNotification extends ConsumerWidget {
     final notificationColor = context.theme.appColors.onPrimaryAccent;
     final i18n = context.i18n;
 
-    return Positioned(
+    return PositionedDirectional(
       top: 70.0.s,
-      left: 0.0.s,
-      right: 0.0.s,
+      start: 0.0.s,
+      end: 0.0.s,
       child: Animate(
         key: ValueKey(emojiState.selectedEmoji),
         onComplete: (controller) {

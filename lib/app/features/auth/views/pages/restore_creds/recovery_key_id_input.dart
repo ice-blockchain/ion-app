@@ -26,7 +26,7 @@ class RecoveryKeyIdInput extends StatelessWidget {
         return null;
       },
       textInputAction: TextInputAction.done,
-      scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+      scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
     );
   }
 }

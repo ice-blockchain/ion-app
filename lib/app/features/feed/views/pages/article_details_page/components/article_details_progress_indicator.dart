@@ -22,7 +22,7 @@ class ArticleDetailsProgressIndicator extends ConsumerWidget {
           width: double.infinity,
           height: indicatorHeight,
           child: Stack(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             children: [
               Container(
                 width: double.infinity,
@@ -32,7 +32,7 @@ class ArticleDetailsProgressIndicator extends ConsumerWidget {
               AnimatedFractionallySizedBox(
                 duration: const Duration(milliseconds: 200),
                 widthFactor: progress,
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Container(
                   height: indicatorHeight,
                   decoration: BoxDecoration(

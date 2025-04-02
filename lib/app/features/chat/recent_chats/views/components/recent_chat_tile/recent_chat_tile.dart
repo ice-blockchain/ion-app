@@ -40,6 +40,7 @@ class RecentChatTile extends HookConsumerWidget {
   final VoidCallback? onTap;
   final Widget? avatarWidget;
   final MessageType messageType;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
@@ -85,7 +86,7 @@ class RecentChatTile extends HookConsumerWidget {
                 duration: const Duration(milliseconds: 200),
                 width: isEditMode ? 40.0.s : 0,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 10.0.s),
+                  padding: EdgeInsetsDirectional.only(end: 10.0.s),
                   child: selectedConversations.contains(conversation)
                       ? Assets.svg.iconBlockCheckboxOn.icon(size: 24.0.s)
                       : Assets.svg.iconBlockCheckboxOff.icon(size: 24.0.s),
@@ -170,7 +171,7 @@ class SenderSummary extends ConsumerWidget {
       children: [
         if (isReply)
           Padding(
-            padding: EdgeInsets.only(right: 4.0.s),
+            padding: EdgeInsetsDirectional.only(end: 4.0.s),
             child: Assets.svg.iconChatReply.icon(
               size: 16.0.s,
               color: context.theme.appColors.quaternaryText,
@@ -216,6 +217,7 @@ class ChatPreview extends HookConsumerWidget {
   final Color? textColor;
   final int maxLines;
   final MessageType messageType;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
@@ -260,7 +262,7 @@ class RecentChatMessageIcon extends StatelessWidget {
 
     if (messageIconPath != null) {
       return Padding(
-        padding: EdgeInsets.only(right: 2.0.s),
+        padding: EdgeInsetsDirectional.only(end: 2.0.s),
         child: messageIconPath.icon(
           size: 16.0.s,
           color: color ?? context.theme.appColors.onTertararyBackground,
@@ -302,8 +304,8 @@ class UnreadCountBadge extends StatelessWidget {
         minHeight: 16.0.s,
         maxHeight: 16.0.s,
       ),
-      padding: EdgeInsets.fromLTRB(5.0.s, 0, 5.0.s, 1.0.s),
-      margin: EdgeInsets.only(left: 16.0.s),
+      padding: EdgeInsetsDirectional.fromSTEB(5.0.s, 0, 5.0.s, 1.0.s),
+      margin: EdgeInsetsDirectional.only(start: 16.0.s),
       child: Text(
         unreadCount.toString(),
         textAlign: TextAlign.center,

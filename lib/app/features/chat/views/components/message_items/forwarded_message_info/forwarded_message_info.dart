@@ -15,7 +15,7 @@ class ForwardedMessageInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return IntrinsicWidth(
       child: Container(
-        margin: EdgeInsets.only(bottom: 12.0.s),
+        margin: EdgeInsetsDirectional.only(bottom: 12.0.s),
         decoration: BoxDecoration(
           color: isMe
               ? context.theme.appColors.primaryAccent
@@ -44,7 +44,7 @@ class ForwardedMessageInfo extends StatelessWidget {
             ),
             if (isPublic)
               Padding(
-                padding: EdgeInsets.only(top: 4.0.s),
+                padding: EdgeInsetsDirectional.only(top: 4.0.s),
                 child: Row(
                   children: [
                     Avatar(size: 20.0.s, imageUrl: 'https://picsum.photos/200/300'),

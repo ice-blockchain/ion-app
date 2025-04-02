@@ -24,13 +24,13 @@ class SheetShape extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: backgroundColor ?? context.theme.appColors.onPrimaryAccent,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0.s),
-          topRight: Radius.circular(30.0.s),
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: Radius.circular(30.0.s),
+          topEnd: Radius.circular(30.0.s),
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.only(bottom: bottomPadding),
+        padding: EdgeInsetsDirectional.only(bottom: bottomPadding),
         child: child,
       ),
     );

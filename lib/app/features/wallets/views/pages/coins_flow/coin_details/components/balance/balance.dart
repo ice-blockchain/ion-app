@@ -34,7 +34,7 @@ class Balance extends ConsumerWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 16.0.s),
+            padding: EdgeInsetsDirectional.only(top: 16.0.s),
             child: Column(
               children: [
                 Row(
@@ -63,7 +63,7 @@ class Balance extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 20.0.s, top: 11.0.s),
+            padding: EdgeInsetsDirectional.only(bottom: 20.0.s, top: 11.0.s),
             child: BalanceActions(
               onReceive: () {
                 ref.read(receiveCoinsFormControllerProvider.notifier).setCoin(coinsGroup);

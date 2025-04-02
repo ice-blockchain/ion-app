@@ -32,7 +32,7 @@ class SectionHeader extends StatelessWidget {
           children: [
             if (leadingIcon != null)
               Padding(
-                padding: EdgeInsets.only(right: leadingIconOffset),
+                padding: EdgeInsetsDirectional.only(end: leadingIconOffset),
                 child: leadingIcon,
               ),
             Expanded(
@@ -44,8 +44,8 @@ class SectionHeader extends StatelessWidget {
             ),
             if (onPress != null)
               Padding(
-                padding: EdgeInsets.only(
-                  right: ScreenSideOffset.defaultSmallMargin - SectionHeaderButton.hitSlop,
+                padding: EdgeInsetsDirectional.only(
+                  end: ScreenSideOffset.defaultSmallMargin - SectionHeaderButton.hitSlop,
                 ),
                 child: SectionHeaderButton(onPress!),
               ),

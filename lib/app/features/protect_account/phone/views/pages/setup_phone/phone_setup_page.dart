@@ -24,7 +24,7 @@ class PhoneSetupPage extends ConsumerWidget {
     return SheetContent(
       body: step == PhoneSetupSteps.success
           ? Padding(
-              padding: EdgeInsets.only(top: 45.0.s, bottom: 16.0.s),
+              padding: EdgeInsetsDirectional.only(top: 45.0.s, bottom: 16.0.s),
               child: const PhoneSetupSuccessPage(),
             )
           : CustomScrollView(

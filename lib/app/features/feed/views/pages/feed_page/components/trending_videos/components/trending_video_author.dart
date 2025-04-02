@@ -38,7 +38,7 @@ class TrendingVideoAuthor extends ConsumerWidget {
               ),
               Flexible(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 4.0.s),
+                  padding: EdgeInsetsDirectional.only(start: 4.0.s),
                   child: Text(
                     userMetadata.data.displayName,
                     overflow: TextOverflow.ellipsis,

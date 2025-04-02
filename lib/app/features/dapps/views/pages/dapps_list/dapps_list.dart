@@ -40,7 +40,7 @@ class DAppsList extends HookConsumerWidget {
           Expanded(
             child: ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: 12.0.s),
+                padding: EdgeInsetsDirectional.only(top: 12.0.s),
                 child: Column(
                   children: [
                     if (isSearchVisible)

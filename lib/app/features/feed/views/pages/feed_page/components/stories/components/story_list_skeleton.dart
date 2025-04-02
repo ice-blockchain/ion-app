@@ -22,7 +22,7 @@ class StoryListSkeleton extends StatelessWidget {
       child: Skeleton(
         child: OverflowBox(
           maxWidth: double.infinity,
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: ScreenSideOffset.small(
             child: SeparatedRow(
               separator: const StoryListSeparator(),

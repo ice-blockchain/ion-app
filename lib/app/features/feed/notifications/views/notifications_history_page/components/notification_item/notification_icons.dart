@@ -38,7 +38,7 @@ class NotificationIcons extends StatelessWidget {
         ),
         ...notification.pubkeys.take(iconsCount - 1).map((pubkey) {
           return Padding(
-            padding: EdgeInsets.only(left: separator),
+            padding: EdgeInsetsDirectional.only(start: separator),
             child: UserAvatar(
               pubkey: pubkey,
               avatarSize: iconSize,

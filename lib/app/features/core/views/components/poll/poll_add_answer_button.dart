@@ -19,7 +19,7 @@ class PollAddAnswerButton extends ConsumerWidget {
     }
 
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: AlignmentDirectional.centerStart,
       child: Button(
         style: const ButtonStyle(
           padding: WidgetStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.zero),

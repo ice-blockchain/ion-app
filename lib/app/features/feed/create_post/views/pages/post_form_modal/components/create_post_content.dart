@@ -140,22 +140,22 @@ class _TextInputSection extends HookConsumerWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 10.0.s),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(
-              left: ScreenSideOffset.defaultSmallMargin,
+            padding: EdgeInsetsDirectional.only(
+              start: ScreenSideOffset.defaultSmallMargin,
             ),
             child: const CurrentUserAvatar(),
           ),
           SizedBox(width: 10.0.s),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(
+              padding: EdgeInsetsDirectional.only(
                 top: 6.0.s,
-                right: ScreenSideOffset.defaultSmallMargin,
+                end: ScreenSideOffset.defaultSmallMargin,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -175,7 +175,7 @@ class _TextInputSection extends HookConsumerWidget {
                   ],
                   if (mediaFiles.isEmpty && links.isNotEmpty)
                     Padding(
-                      padding: EdgeInsets.only(
+                      padding: EdgeInsetsDirectional.only(
                         top: 10.0.s,
                       ),
                       child: UrlPreviewContent(url: links.first),

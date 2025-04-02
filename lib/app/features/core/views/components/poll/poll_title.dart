@@ -8,6 +8,7 @@ import 'package:ion/app/features/core/providers/poll/poll_title_notifier.c.dart'
 
 class PollTitle extends HookConsumerWidget {
   const PollTitle({required this.autoFocus, super.key});
+
   final bool autoFocus;
 
   @override
@@ -28,7 +29,7 @@ class PollTitle extends HookConsumerWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 4.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 4.0.s),
       child: TextField(
         autofocus: autoFocus,
         controller: textController,

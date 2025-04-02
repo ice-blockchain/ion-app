@@ -103,7 +103,8 @@ class ParentDottedLine extends StatelessWidget {
       child: DottedBorder(
         color: context.theme.appColors.onTerararyFill,
         dashPattern: [5.0.s, 5.0.s],
-        padding: EdgeInsets.only(left: padding?.end ?? 0),
+        padding: EdgeInsetsDirectional.only(start: padding?.end ?? 0.0)
+            .resolve(Directionality.of(context)),
         customPath: (size) {
           return Path()
             ..moveTo(0, 0)

@@ -39,19 +39,19 @@ class _ListItemUser extends ListItem {
               ),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
-          leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),
+          leadingPadding: leadingPadding ?? EdgeInsetsDirectional.only(end: 8.0.s),
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
             children: [
               Flexible(child: title),
               if (iceBadge)
                 Padding(
-                  padding: EdgeInsets.only(left: 4.0.s),
+                  padding: EdgeInsetsDirectional.only(start: 4.0.s),
                   child: Assets.svg.iconBadgeIcelogo.icon(size: defaultBadgeSize),
                 ),
               if (verifiedBadge)
                 Padding(
-                  padding: EdgeInsets.only(left: 4.0.s),
+                  padding: EdgeInsetsDirectional.only(start: 4.0.s),
                   child: Assets.svg.iconBadgeVerify.icon(size: defaultBadgeSize),
                 ),
             ],
@@ -97,9 +97,9 @@ class _IceBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return PositionedDirectional(
       bottom: -2.0.s,
-      right: -2.0.s,
+      end: -2.0.s,
       child: Container(
         width: 12.0.s,
         height: 12.0.s,

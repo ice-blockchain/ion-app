@@ -35,7 +35,7 @@ class Balance extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               top: 6.0.s - hitSlop,
               bottom: 8.0.s - hitSlop,
             ),
@@ -54,7 +54,7 @@ class Balance extends ConsumerWidget {
                   .copyWith(color: context.theme.appColors.primaryText),
             ),
           Padding(
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               top: 12.0.s,
               bottom: 16.0.s,
             ),

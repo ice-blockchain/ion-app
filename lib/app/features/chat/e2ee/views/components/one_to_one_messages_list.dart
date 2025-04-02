@@ -56,7 +56,7 @@ class OneToOneMessageList extends HookConsumerWidget {
 
                     return Padding(
                       key: ValueKey(message.id),
-                      padding: EdgeInsets.only(
+                      padding: EdgeInsetsDirectional.only(
                         bottom: isLastMessage
                             ? 20.0.s
                             : isLastMessageFromAuthor

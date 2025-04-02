@@ -30,14 +30,14 @@ class _ListItemDApp extends ListItem {
               ),
           borderRadius: borderRadius ?? BorderRadius.zero,
           contentPadding: contentPadding ?? EdgeInsets.zero,
-          leadingPadding: leadingPadding ?? EdgeInsets.only(right: 8.0.s),
+          leadingPadding: leadingPadding ?? EdgeInsetsDirectional.only(end: 8.0.s),
           constraints: constraints ?? const BoxConstraints(),
           title: Row(
             children: [
               Flexible(child: title),
               if (verifiedBadge)
                 Padding(
-                  padding: EdgeInsets.only(left: 4.0.s),
+                  padding: EdgeInsetsDirectional.only(end: 4.0.s),
                   child: Assets.svg.iconBadgeVerify.icon(size: defaultBadgeSize),
                 ),
             ],

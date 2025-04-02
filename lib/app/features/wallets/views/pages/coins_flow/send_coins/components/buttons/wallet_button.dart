@@ -49,9 +49,9 @@ class WalletButton extends ConsumerWidget {
               color: context.theme.appColors.strokeElements,
             ),
             constraints: BoxConstraints(minHeight: itemHeight),
-            contentPadding: EdgeInsets.only(
-              left: 12.0.s,
-              right: 8.0.s,
+            contentPadding: EdgeInsetsDirectional.only(
+              start: 12.0.s,
+              end: 8.0.s,
             ),
             backgroundColor: Colors.transparent,
             trailing: Padding(

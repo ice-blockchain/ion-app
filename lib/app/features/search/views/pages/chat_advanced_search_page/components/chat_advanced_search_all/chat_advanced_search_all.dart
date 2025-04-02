@@ -20,7 +20,7 @@ class ChatAdvancedSearchAll extends HookConsumerWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 4.0.s, bottom: 8.0.s),
+          padding: EdgeInsetsDirectional.only(top: 4.0.s, bottom: 8.0.s),
           child: const HorizontalSeparator(),
         ),
         HorizontalSeparator(

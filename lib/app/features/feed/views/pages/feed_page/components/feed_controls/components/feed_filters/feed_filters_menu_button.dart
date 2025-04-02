@@ -53,8 +53,8 @@ class _MenuButton extends ConsumerWidget {
             child: Center(child: bigIcon),
           ),
         ),
-        Positioned(
-          right: 0,
+        PositionedDirectional(
+          end: 0,
           bottom: 0,
           child: Transform.translate(
             offset: Offset(3.0.s, 3.0.s),

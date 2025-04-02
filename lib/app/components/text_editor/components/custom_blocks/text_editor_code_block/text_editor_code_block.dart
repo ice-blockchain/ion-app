@@ -37,7 +37,7 @@ class TextEditorCodeBuilder extends EmbedBuilder {
     final data = embedContext.node.value.data as String;
 
     return Container(
-      padding: EdgeInsets.only(top: 12.0.s),
+      padding: EdgeInsetsDirectional.only(top: 12.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.secondaryBackground,
         borderRadius: BorderRadius.circular(16.0.s),

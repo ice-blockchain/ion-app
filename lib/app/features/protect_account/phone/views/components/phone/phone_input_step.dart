@@ -64,7 +64,7 @@ class PhoneInputStep extends HookConsumerWidget {
                 if (isKeyboardVisible) SizedBox(height: 58.0.s),
                 const Spacer(),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 20.0.s),
+                  padding: EdgeInsetsDirectional.only(bottom: 20.0.s),
                   child: TextInput(
                     alwaysShowPrefixIcon: true,
                     prefix: Text('${country.iddCode} '),

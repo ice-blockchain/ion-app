@@ -34,9 +34,9 @@ class TextMessageLimitLabel extends HookConsumerWidget {
     );
 
     if (exceededLimit.value > 0 && bottomBarState.isHasText) {
-      return Positioned(
+      return PositionedDirectional(
         top: 8.0.s,
-        right: 15.0.s,
+        end: 15.0.s,
         child: Text(
           style: context.theme.appTextThemes.caption2.copyWith(
             color: context.theme.appColors.attentionRed,

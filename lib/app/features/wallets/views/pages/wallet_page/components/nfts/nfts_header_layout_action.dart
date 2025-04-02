@@ -35,10 +35,10 @@ class NftHeaderLayoutAction extends ConsumerWidget {
                 .setNftLayoutType(NftLayoutType.grid);
           },
           child: Padding(
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               top: UiConstants.hitSlop,
-              left: UiConstants.hitSlop,
-              right: 7.0.s,
+              start: UiConstants.hitSlop,
+              end: 7.0.s,
               bottom: UiConstants.hitSlop,
             ),
             child: NftLayoutType.grid.iconAsset.icon(
@@ -57,10 +57,10 @@ class NftHeaderLayoutAction extends ConsumerWidget {
                 .setNftLayoutType(NftLayoutType.list);
           },
           child: Padding(
-            padding: EdgeInsets.only(
+            padding: EdgeInsetsDirectional.only(
               top: UiConstants.hitSlop,
-              right: UiConstants.hitSlop,
-              left: 7.0.s,
+              start: UiConstants.hitSlop,
+              end: 7.0.s,
               bottom: UiConstants.hitSlop,
             ),
             child: NftLayoutType.list.iconAsset.icon(

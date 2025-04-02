@@ -57,7 +57,7 @@ class FullscreenMediaPage extends HookConsumerWidget {
                 ? []
                 : [
                     Padding(
-                      padding: EdgeInsets.only(right: 6.0.s),
+                      padding: EdgeInsetsDirectional.only(end: 6.0.s),
                       child: UserInfoMenu(
                         pubkey: eventReference.pubkey,
                         iconColor: context.theme.appColors.secondaryBackground,

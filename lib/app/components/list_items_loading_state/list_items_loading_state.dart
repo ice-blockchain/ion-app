@@ -44,7 +44,7 @@ class ListItemsLoadingState extends StatelessWidget {
         );
       case ListItemsLoadingStateType.scrollView:
         return SliverPadding(
-          padding: padding ?? EdgeInsets.only(top: 16.0.s),
+          padding: padding ?? EdgeInsetsDirectional.only(top: 16.0.s),
           sliver: SliverToBoxAdapter(
             child: skeleton,
           ),

@@ -12,13 +12,13 @@ class ArticlePreviewImage extends StatelessWidget {
   const ArticlePreviewImage({
     this.mediaFile,
     this.minutesToRead,
-    this.minutesToReadAlignment = Alignment.bottomRight,
+    this.minutesToReadAlignment = AlignmentDirectional.bottomEnd,
     super.key,
   });
 
   final MediaFile? mediaFile;
   final int? minutesToRead;
-  final Alignment minutesToReadAlignment;
+  final AlignmentDirectional minutesToReadAlignment;
 
   @override
   Widget build(BuildContext context) {

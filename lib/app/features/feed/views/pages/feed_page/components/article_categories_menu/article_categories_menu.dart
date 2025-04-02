@@ -25,7 +25,7 @@ class ArticleCategoriesMenu extends HookWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Padding(
-            padding: EdgeInsets.only(bottom: 12.0.s),
+            padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

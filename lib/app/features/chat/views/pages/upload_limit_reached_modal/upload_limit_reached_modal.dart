@@ -19,7 +19,8 @@ class UploadLimitReachedModal extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 28.0.s, right: 28.0.s, top: 38.0.s, bottom: 31.0.s),
+          padding:
+              EdgeInsetsDirectional.only(start: 28.0.s, end: 28.0.s, top: 38.0.s, bottom: 31.0.s),
           child: InfoCard(
             iconAsset: Assets.svg.actionWalletKeyserror,
             title: context.i18n.video_upload_limit_error_title,

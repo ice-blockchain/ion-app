@@ -80,7 +80,7 @@ class AuthenticatorSetupCodeConfirmPage extends HookConsumerWidget {
                           ),
                           validator: (value) => (value?.isEmpty ?? false) ? '' : null,
                           textInputAction: TextInputAction.done,
-                          scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+                          scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
                           onChanged: (text) => codeFailed.value = false,
                           errorText: codeFailed.value
                               ? context.i18n.two_fa_failure_invalid_code_short

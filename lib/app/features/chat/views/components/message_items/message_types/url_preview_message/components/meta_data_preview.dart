@@ -53,13 +53,13 @@ class _SideVerticalDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 2.0.s,
-      margin: EdgeInsets.only(right: 8.0.s),
+      margin: EdgeInsetsDirectional.only(end: 8.0.s),
       decoration: BoxDecoration(
         color:
             isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryAccent,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(2.0.s),
-          bottomLeft: Radius.circular(2.0.s),
+        borderRadius: BorderRadiusDirectional.only(
+          topStart: Radius.circular(2.0.s),
+          bottomStart: Radius.circular(2.0.s),
         ),
       ),
     );
@@ -74,7 +74,7 @@ class _MetaImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 8.0.s),
+      padding: EdgeInsetsDirectional.only(top: 8.0.s),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0.s),
         child: IonNetworkImage(
@@ -102,7 +102,7 @@ class _MetaSiteInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 8.0.s),
+      padding: EdgeInsetsDirectional.only(top: 8.0.s),
       child: Row(
         children: [
           IonNetworkImage(
@@ -135,7 +135,7 @@ class _MetaTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 2.0.s),
+      padding: EdgeInsetsDirectional.only(top: 2.0.s),
       child: Text(
         title,
         style: context.theme.appTextThemes.body2.copyWith(
@@ -156,7 +156,7 @@ class _MetaDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 2.0.s),
+      padding: EdgeInsetsDirectional.only(top: 2.0.s),
       child: Text(
         description,
         style: context.theme.appTextThemes.body2.copyWith(

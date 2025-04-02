@@ -81,8 +81,8 @@ class RecentChatOverlay extends HookConsumerWidget {
             ),
           ),
         ),
-        Positioned(
-          right: ScreenSideOffset.defaultSmallMargin,
+        PositionedDirectional(
+          end: ScreenSideOffset.defaultSmallMargin,
           top: topY,
           bottom: MediaQuery.paddingOf(context).bottom,
           child: SizedBox(

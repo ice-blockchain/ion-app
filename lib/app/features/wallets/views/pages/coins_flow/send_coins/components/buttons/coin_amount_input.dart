@@ -54,7 +54,7 @@ class CoinAmountInput extends StatelessWidget {
             children: [
               SizedBox(height: 6.0.s),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: Text(
                   locale.wallet_approximate_in_usd(
                     formatUSD(balanceUSD!),

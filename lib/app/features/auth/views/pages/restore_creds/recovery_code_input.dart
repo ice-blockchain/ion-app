@@ -26,7 +26,7 @@ class RecoveryCodeInput extends StatelessWidget {
         return null;
       },
       textInputAction: TextInputAction.next,
-      scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+      scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
     );
   }
 }

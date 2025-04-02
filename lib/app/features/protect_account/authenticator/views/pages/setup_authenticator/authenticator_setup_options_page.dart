@@ -68,7 +68,7 @@ class AuthenticatorSetupOptionsPage extends StatelessWidget {
                             final type = authenticatorTypes[index];
 
                             return Padding(
-                              padding: EdgeInsets.only(bottom: 12.0.s),
+                              padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
                               child: SecureAccountOption(
                                 isEnabled: false,
                                 title: type.getDisplayName(context),

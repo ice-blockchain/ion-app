@@ -169,7 +169,7 @@ class _DisabledTextInput extends ConsumerWidget {
       controller: controller,
       suffixIcon: isLoading
           ? Padding(
-              padding: EdgeInsets.only(right: 8.0.s),
+              padding: EdgeInsetsDirectional.only(end: 8.0.s),
               child: const IONLoadingIndicatorThemed(),
             )
           : null,

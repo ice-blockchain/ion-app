@@ -19,10 +19,10 @@ class SignUpFixedFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return PositionedDirectional(
       bottom: 0,
-      left: 0,
-      right: 0,
+      start: 0,
+      end: 0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -33,10 +33,10 @@ class SignUpFixedFooter extends StatelessWidget {
               height: height,
               color: context.theme.appColors.secondaryBackground,
               alignment: Alignment.topCenter,
-              padding: EdgeInsets.only(
+              padding: EdgeInsetsDirectional.only(
                 top: 16.0.s,
-                left: ScreenSideOffset.defaultLargeMargin,
-                right: ScreenSideOffset.defaultLargeMargin,
+                start: ScreenSideOffset.defaultLargeMargin,
+                end: ScreenSideOffset.defaultLargeMargin,
               ),
               child: child,
             ),

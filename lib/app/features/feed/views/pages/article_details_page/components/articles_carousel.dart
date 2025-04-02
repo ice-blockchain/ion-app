@@ -20,7 +20,7 @@ class ArticlesCarousel extends ConsumerWidget {
     return SizedBox(
       height: 161.0.s,
       child: Align(
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),

@@ -55,7 +55,7 @@ class CategoriesCollection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0.s, top: 3.0.s),
+      padding: EdgeInsetsDirectional.only(bottom: 8.0.s, top: 3.0.s),
       child: SizedBox(
         height: itemHeight,
         child: ListView.separated(

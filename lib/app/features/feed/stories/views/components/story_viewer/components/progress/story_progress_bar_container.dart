@@ -53,7 +53,7 @@ class StoryProgressBarContainer extends ConsumerWidget {
                   context.pop();
                 }
               },
-              margin: index > 0 ? EdgeInsets.only(left: 4.0.s) : null,
+              margin: index > 0 ? EdgeInsetsDirectional.only(start: 4.0.s) : null,
             ),
           );
         }).toList(),

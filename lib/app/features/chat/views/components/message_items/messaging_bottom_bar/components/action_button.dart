@@ -25,6 +25,7 @@ class ActionButton extends HookConsumerWidget {
   final TextEditingController controller;
   final Future<void> Function()? onSubmitted;
   final RecorderController recorderController;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bottomBarState = ref.watch(messagingBottomBarActiveStateProvider);
@@ -51,9 +52,9 @@ class ActionButton extends HookConsumerWidget {
       }
     }
 
-    return Positioned(
+    return PositionedDirectional(
       bottom: 8.0.s + (bottomBarState.isMore ? moreContentHeight : 0),
-      right: 14.0.s,
+      end: 14.0.s,
       child: GestureDetector(
         onLongPressStart: (details) async {
           if (!bottomBarState.isVoice) {

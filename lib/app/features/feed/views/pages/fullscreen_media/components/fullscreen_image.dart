@@ -47,9 +47,9 @@ class FullscreenImage extends HookConsumerWidget {
           gestureDetectorBehavior: HitTestBehavior.opaque,
         ),
         if (bottomOverlayBuilder != null)
-          Positioned(
-            left: 0,
-            right: 0,
+          PositionedDirectional(
+            start: 0,
+            end: 0,
             bottom: 0,
             child: bottomOverlayBuilder!(context),
           ),

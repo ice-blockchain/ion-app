@@ -18,7 +18,7 @@ class BackupWithCloudSuccessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SheetContent(
       body: Padding(
-        padding: EdgeInsets.only(top: 45.0.s, bottom: 16.0.s),
+        padding: EdgeInsetsDirectional.only(top: 45.0.s, bottom: 16.0.s),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,

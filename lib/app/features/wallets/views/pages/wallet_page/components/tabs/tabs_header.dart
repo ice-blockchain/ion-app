@@ -33,10 +33,10 @@ class WalletTabsHeader extends ConsumerWidget {
         ref.watch(featureFlagsProvider.notifier).get(WalletFeatureFlag.dappsEnabled);
 
     return Padding(
-      padding: EdgeInsets.only(
+      padding: EdgeInsetsDirectional.only(
         top: 16.0.s - UiConstants.hitSlop,
-        left: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
-        right: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
+        start: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
+        end: ScreenSideOffset.defaultSmallMargin - UiConstants.hitSlop,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

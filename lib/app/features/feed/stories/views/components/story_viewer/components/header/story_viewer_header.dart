@@ -42,10 +42,10 @@ class StoryViewerHeader extends ConsumerWidget {
       data: (userMetadata) {
         if (userMetadata == null) return const SizedBox.shrink();
 
-        return Positioned(
+        return PositionedDirectional(
           top: 14.0.s,
-          left: 16.0.s,
-          right: 22.0.s,
+          start: 16.0.s,
+          end: 22.0.s,
           child: GestureDetector(
             onTap: () => ProfileRoute(pubkey: currentPost.masterPubkey).push<void>(context),
             child: ListItem.user(

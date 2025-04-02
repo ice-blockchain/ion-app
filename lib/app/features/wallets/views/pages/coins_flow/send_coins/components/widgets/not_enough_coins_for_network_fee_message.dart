@@ -28,7 +28,7 @@ class NotEnoughMoneyForNetworkFeeMessage extends ConsumerWidget {
     final locale = context.i18n;
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(0, 8, 0, 12),
+      margin: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 12),
       padding: EdgeInsets.symmetric(
         vertical: 12.0.s,
         horizontal: 16.0.s,

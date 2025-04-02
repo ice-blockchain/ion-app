@@ -67,7 +67,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                         ),
                       ),
                     Padding(
-                      padding: EdgeInsets.only(top: 14.0.s, bottom: 18.0.s),
+                      padding: EdgeInsetsDirectional.only(top: 14.0.s, bottom: 18.0.s),
                       child: GridItem(
                         dAppData: app,
                         showIsFavourite: true,
@@ -76,7 +76,7 @@ class DAppDetailsModal extends HookConsumerWidget {
                     ),
                     if (app.fullDescription != null)
                       Padding(
-                        padding: EdgeInsets.only(bottom: 6.0.s),
+                        padding: EdgeInsetsDirectional.only(bottom: 6.0.s),
                         child: ReadMoreText(
                           app.fullDescription!,
                         ),

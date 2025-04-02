@@ -23,7 +23,7 @@ class VideoPostInfo extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.only(top: 6.0.s, left: 16.0.s, right: 16.0.s),
+          padding: EdgeInsetsDirectional.only(top: 6.0.s, start: 16.0.s, end: 16.0.s),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
@@ -65,7 +65,7 @@ class VideoPostInfo extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
+                padding: EdgeInsetsDirectional.only(
                   top: 10.0.s,
                   bottom: 14.0.s,
                 ),

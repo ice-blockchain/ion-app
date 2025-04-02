@@ -114,10 +114,10 @@ class VideoPreview extends HookConsumerWidget {
               ),
             ),
           ),
-          Positioned(
+          PositionedDirectional(
             bottom: 5.0.s,
-            left: 5.0.s,
-            right: 5.0.s,
+            start: 5.0.s,
+            end: 5.0.s,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

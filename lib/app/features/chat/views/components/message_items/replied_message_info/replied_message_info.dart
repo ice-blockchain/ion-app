@@ -21,8 +21,8 @@ class RepliedMessageInfo extends HookConsumerWidget {
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: 12.0.s),
-      padding: EdgeInsets.fromLTRB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
+      margin: EdgeInsetsDirectional.only(bottom: 12.0.s),
+      padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
       color: context.theme.appColors.onPrimaryAccent,
       child: IntrinsicHeight(
         child: Row(
@@ -31,7 +31,7 @@ class RepliedMessageInfo extends HookConsumerWidget {
             const _SideVerticalDivider(),
             if (repliedMessage is MediaItem)
               Padding(
-                padding: EdgeInsets.only(left: 6.0.s, right: 12.0.s),
+                padding: EdgeInsetsDirectional.only(start: 6.0.s, end: 12.0.s),
                 child: SizedBox(
                   width: 30.0.s,
                   child: VisualMediaCustomGrid(
@@ -79,7 +79,7 @@ class _SideVerticalDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 2.0.s,
-      margin: EdgeInsets.only(right: 6.0.s),
+      margin: EdgeInsetsDirectional.only(end: 6.0.s),
       decoration: BoxDecoration(
         color: context.theme.appColors.primaryAccent,
         borderRadius: BorderRadius.circular(2.0.s),

@@ -44,7 +44,7 @@ class CopyKeyCard extends ConsumerWidget {
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 10.0.s, bottom: 20.0.s),
+            padding: EdgeInsetsDirectional.only(top: 10.0.s, bottom: 20.0.s),
             child: _Code(code: code),
           ),
           if (code != null)

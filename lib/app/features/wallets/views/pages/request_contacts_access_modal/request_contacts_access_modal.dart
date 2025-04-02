@@ -23,10 +23,10 @@ class RequestContactAccessModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SheetContent(
       body: Padding(
-        padding: EdgeInsets.only(
-          left: ScreenSideOffset.defaultSmallMargin,
+        padding: EdgeInsetsDirectional.only(
+          start: ScreenSideOffset.defaultSmallMargin,
           top: 30.0.s,
-          right: ScreenSideOffset.defaultSmallMargin,
+          end: ScreenSideOffset.defaultSmallMargin,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

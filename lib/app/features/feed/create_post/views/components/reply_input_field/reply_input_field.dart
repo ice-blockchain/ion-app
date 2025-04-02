@@ -86,7 +86,7 @@ class ReplyInputField extends HookConsumerWidget {
           SizedBox(height: 12.0.s),
           if (hasFocus.value)
             Padding(
-              padding: EdgeInsets.only(bottom: 12.0.s),
+              padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
               child: ReplyAuthorHeader(pubkey: eventReference.pubkey),
             ),
           Row(

@@ -47,7 +47,7 @@ class BlockedUsersModal extends HookConsumerWidget {
               padding: EdgeInsets.zero,
               listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
             ),
-          SliverPadding(padding: EdgeInsets.only(bottom: 32.0.s)),
+          SliverPadding(padding: EdgeInsetsDirectional.only(bottom: 32.0.s)),
         ],
       ),
     );

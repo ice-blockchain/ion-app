@@ -28,9 +28,9 @@ class SelectionListItem extends ConsumerWidget {
     final textStyles = context.theme.appTextThemes;
 
     return ListItem(
-      contentPadding: EdgeInsets.only(
-        left: ScreenSideOffset.defaultSmallMargin,
-        right: 8.0.s,
+      contentPadding: EdgeInsetsDirectional.only(
+        start: ScreenSideOffset.defaultSmallMargin,
+        end: 8.0.s,
       ),
       title: Text(
         title,

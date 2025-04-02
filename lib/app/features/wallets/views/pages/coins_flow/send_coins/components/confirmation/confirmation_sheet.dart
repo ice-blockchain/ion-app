@@ -109,7 +109,7 @@ class ConfirmationSheet extends ConsumerWidget {
                         size: ScreenSideOffset.defaultSmallMargin,
                       ),
                       secondary: Align(
-                        alignment: Alignment.centerRight,
+                        alignment: AlignmentDirectional.centerEnd,
                         child: Text(
                           address,
                           textAlign: TextAlign.right,

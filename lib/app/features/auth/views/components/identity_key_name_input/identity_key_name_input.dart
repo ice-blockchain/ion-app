@@ -23,7 +23,7 @@ class IdentityKeyNameInput extends StatelessWidget {
 
   final TextInputAction textInputAction;
 
-  final EdgeInsets? scrollPadding;
+  final EdgeInsetsDirectional? scrollPadding;
   final bool notShowInfoIcon;
 
   final String? errorText;
@@ -66,7 +66,7 @@ class IdentityKeyNameInput extends StatelessWidget {
         return null;
       },
       textInputAction: textInputAction,
-      scrollPadding: scrollPadding ?? EdgeInsets.only(bottom: 100.0.s),
+      scrollPadding: scrollPadding ?? EdgeInsetsDirectional.only(bottom: 100.0.s),
       errorText: errorText,
     );
   }

@@ -26,7 +26,7 @@ class WalletsList extends ConsumerWidget {
     }
 
     return Padding(
-      padding: padding ?? EdgeInsets.only(top: 6.0.s),
+      padding: padding ?? EdgeInsetsDirectional.only(top: 6.0.s),
       child: Column(
         children: [
           for (final walletView in walletViews) itemBuilder(walletView),

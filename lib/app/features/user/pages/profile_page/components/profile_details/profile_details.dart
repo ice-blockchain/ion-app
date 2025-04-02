@@ -38,7 +38,7 @@ class ProfileDetails extends ConsumerWidget {
             RelevantFollowers(pubkey: pubkey),
             SizedBox(height: 12.0.s),
           ],
-          UserAbout(pubkey: pubkey, padding: EdgeInsets.only(bottom: 12.0.s)),
+          UserAbout(pubkey: pubkey, padding: EdgeInsetsDirectional.only(bottom: 12.0.s)),
           UserInfoSummary(pubkey: pubkey),
         ],
       ),

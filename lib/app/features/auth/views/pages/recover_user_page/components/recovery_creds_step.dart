@@ -65,7 +65,7 @@ class RecoveryCredsStep extends HookConsumerWidget {
                           SizedBox(height: 60.0.s),
                           ...RecoveryKeyProperty.values.map(
                             (key) => Padding(
-                              padding: EdgeInsets.only(bottom: 16.0.s),
+                              padding: EdgeInsetsDirectional.only(bottom: 16.0.s),
                               child: RecoveryKeyInput(
                                 controller: controllers[key]!,
                                 labelText: key.getDisplayName(context),

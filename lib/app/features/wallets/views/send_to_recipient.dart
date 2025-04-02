@@ -34,7 +34,7 @@ class SendToRecipient extends ConsumerWidget {
             ),
             SizedBox(height: 12.0.s),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: AlignmentDirectional.centerStart,
               child: Text(
                 address,
                 style: context.theme.appTextThemes.caption3,
@@ -47,7 +47,7 @@ class SendToRecipient extends ConsumerWidget {
       return ListItem.textWithIcon(
         title: Text(locale.wallet_send_to),
         secondary: Align(
-          alignment: Alignment.centerRight,
+          alignment: AlignmentDirectional.centerEnd,
           child: Text(
             address,
             textAlign: TextAlign.center,

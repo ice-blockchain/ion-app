@@ -17,7 +17,7 @@ class PlusButtonWithPermission extends StatelessWidget {
     final plusSize = 24.0.s;
     final iconPosition = plusSize - 6.0.s;
 
-    return Positioned(
+    return PositionedDirectional(
       bottom: iconPosition,
       child: PermissionAwareWidget(
         permissionType: Permission.camera,

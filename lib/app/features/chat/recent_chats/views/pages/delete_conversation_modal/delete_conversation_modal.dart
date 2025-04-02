@@ -28,7 +28,7 @@ class DeleteConversationModal extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 32.0.s, bottom: 28.0.s),
+              padding: EdgeInsetsDirectional.only(top: 32.0.s, bottom: 28.0.s),
               child: InfoCard(
                 title: conversationIds.length > 1
                     ? context.i18n.chat_delete_modal_title

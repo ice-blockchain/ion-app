@@ -1378,6 +1378,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  ion_lint_rules:
+    dependency: "direct dev"
+    description:
+      path: "packages/ion_lint_rules"
+      relative: true
+    source: path
+    version: "0.0.0"
   ion_screenshot_detector:
     dependency: "direct main"
     description:

@@ -99,7 +99,7 @@ class MessageItemWrapper extends HookConsumerWidget {
         }
 
         return Align(
-          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+          alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
           child: GestureDetector(
             onLongPress: () {
               HapticFeedback.mediumImpact();
@@ -119,13 +119,13 @@ class MessageItemWrapper extends HookConsumerWidget {
                       color: isMe
                           ? context.theme.appColors.primaryAccent
                           : context.theme.appColors.onPrimaryAccent,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12.0.s),
-                        topRight: Radius.circular(12.0.s),
-                        bottomLeft: !isLastMessageFromAuthor || isMe
+                      borderRadius: BorderRadiusDirectional.only(
+                        topStart: Radius.circular(12.0.s),
+                        topEnd: Radius.circular(12.0.s),
+                        bottomStart: !isLastMessageFromAuthor || isMe
                             ? Radius.circular(12.0.s)
                             : Radius.zero,
-                        bottomRight:
+                        bottomEnd:
                             isMe && isLastMessageFromAuthor ? Radius.zero : Radius.circular(12.0.s),
                       ),
                     ),
@@ -135,7 +135,7 @@ class MessageItemWrapper extends HookConsumerWidget {
                             children: [
                               ReplyMessage(messageItem, repliedMessageItem),
                               Align(
-                                alignment: Alignment.centerRight,
+                                alignment: AlignmentDirectional.centerEnd,
                                 child: child,
                               ),
                             ],

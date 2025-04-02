@@ -35,7 +35,7 @@ class CashtagsSuggestions extends StatelessWidget {
                   onTap: () => onSuggestionSelected(suggestion),
                   child: ScreenSideOffset.small(
                     child: Container(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       height: 30.0.s,
                       child: DefaultTextStyle(
                         style: context.theme.appTextThemes.caption.copyWith(

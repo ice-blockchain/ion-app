@@ -49,7 +49,7 @@ class ChatAddPollModal extends HookConsumerWidget {
           Expanded(
             child: ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: 6.0.s),
+                padding: EdgeInsetsDirectional.only(top: 6.0.s),
                 child: const Poll(
                   autoFocusToQuestion: true,
                 ),

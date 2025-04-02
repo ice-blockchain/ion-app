@@ -88,7 +88,7 @@ class DiscoverCreators extends HookConsumerWidget {
             );
           },
         ),
-      SliverPadding(padding: EdgeInsets.only(top: 16.0.s)),
+      SliverPadding(padding: EdgeInsetsDirectional.only(top: 16.0.s)),
     ];
 
     return SheetContent(
@@ -105,9 +105,9 @@ class DiscoverCreators extends HookConsumerWidget {
                   title: context.i18n.discover_creators_title,
                   description: context.i18n.discover_creators_description,
                   slivers: [
-                    SliverPadding(padding: EdgeInsets.only(top: 34.0.s)),
+                    SliverPadding(padding: EdgeInsetsDirectional.only(top: 34.0.s)),
                     ...slivers,
-                    SliverPadding(padding: EdgeInsets.only(bottom: 16.0.s)),
+                    SliverPadding(padding: EdgeInsetsDirectional.only(bottom: 16.0.s)),
                   ],
                 );
               },

@@ -53,11 +53,11 @@ class ManageWalletTile extends ConsumerWidget {
           ),
         ),
         trailing: Assets.svg.iconArrowRight.icon(),
-        contentPadding: EdgeInsets.only(
-          left: 16.0.s,
+        contentPadding: EdgeInsetsDirectional.only(
+          start: 16.0.s,
           top: 11.0.s,
           bottom: 11.0.s,
-          right: 12.0.s,
+          end: 12.0.s,
         ),
         backgroundColor: context.theme.appColors.tertararyBackground,
       ),

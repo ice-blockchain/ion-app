@@ -30,9 +30,9 @@ class NetworkButton extends StatelessWidget {
         color: colors.secondaryBackground,
       ),
       child: ListItem(
-        contentPadding: EdgeInsets.only(
-          left: ScreenSideOffset.defaultSmallMargin,
-          right: 8.0.s,
+        contentPadding: EdgeInsetsDirectional.only(
+          start: ScreenSideOffset.defaultSmallMargin,
+          end: 8.0.s,
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

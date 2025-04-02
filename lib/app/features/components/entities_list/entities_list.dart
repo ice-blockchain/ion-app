@@ -138,7 +138,7 @@ class _BottomSeparator extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        border: Border(
+        border: BorderDirectional(
           bottom: BorderSide(
             width: height,
             color: context.theme.appColors.primaryBackground,
@@ -146,7 +146,7 @@ class _BottomSeparator extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: EdgeInsets.only(bottom: height),
+        padding: EdgeInsetsDirectional.only(bottom: height),
         child: child,
       ),
     );

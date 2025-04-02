@@ -58,7 +58,7 @@ class ManageNftsPage extends HookConsumerWidget {
                     }
 
                     return SliverPadding(
-                      padding: EdgeInsets.only(
+                      padding: EdgeInsetsDirectional.only(
                         bottom: ScreenBottomOffset.defaultMargin,
                       ),
                       sliver: SliverList.separated(

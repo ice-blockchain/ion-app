@@ -37,11 +37,11 @@ class WalletsModal extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
+              padding: EdgeInsetsDirectional.only(
                 bottom: 16.0.s,
                 top: 8.0.s,
-                left: ScreenSideOffset.defaultSmallMargin,
-                right: ScreenSideOffset.defaultSmallMargin,
+                start: ScreenSideOffset.defaultSmallMargin,
+                end: ScreenSideOffset.defaultSmallMargin,
               ),
               child: Button(
                 leadingIcon: Assets.svg.iconButtonManageWallet.icon(),

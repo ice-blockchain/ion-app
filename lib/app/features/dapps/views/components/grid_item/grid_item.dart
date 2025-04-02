@@ -19,6 +19,7 @@ class GridItem extends HookWidget {
     this.showIsFavourite = false,
     this.showTips = true,
   });
+
   final DAppData dAppData;
   final bool showIsFavourite;
   final bool showTips;
@@ -56,7 +57,7 @@ class GridItem extends HookWidget {
                     ),
                     if (dAppData.isVerified)
                       Padding(
-                        padding: EdgeInsets.only(left: 4.0.s),
+                        padding: EdgeInsetsDirectional.only(start: 4.0.s),
                         child: IconTheme(
                           data: IconThemeData(
                             size: 16.0.s,
@@ -85,7 +86,7 @@ class GridItem extends HookWidget {
                       ),
                       if (dAppData.value != null)
                         Padding(
-                          padding: EdgeInsets.only(left: 3.0.s),
+                          padding: EdgeInsetsDirectional.only(start: 3.0.s),
                           child: Text(
                             formatDouble(dAppData.value!),
                             style: context.theme.appTextThemes.caption3.copyWith(

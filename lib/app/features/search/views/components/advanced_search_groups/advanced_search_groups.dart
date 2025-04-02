@@ -23,7 +23,7 @@ class AdvancedSearchGroups extends HookConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 16.0.s),
+            padding: EdgeInsetsDirectional.only(top: 16.0.s),
             child: SearchSubHeader(
               icon: Assets.svg.iconSearchJoined,
               title: context.i18n.chat_groups_joined,
@@ -32,7 +32,7 @@ class AdvancedSearchGroups extends HookConsumerWidget {
           ),
           const JoinedGroups(),
           Padding(
-            padding: EdgeInsets.only(top: 8.0.s),
+            padding: EdgeInsetsDirectional.only(top: 8.0.s),
             child: SearchSubHeader(
               icon: Assets.svg.iconSendfundsUser,
               title: context.i18n.chat_groups_explore,

@@ -34,8 +34,8 @@ class GeneralSelectionButton extends StatelessWidget {
         color: colors.secondaryBackground,
       ),
       child: ListItem(
-        contentPadding: EdgeInsets.only(
-          right: 8.0.s,
+        contentPadding: EdgeInsetsDirectional.only(
+          end: 8.0.s,
         ),
         title: Text(
           title,

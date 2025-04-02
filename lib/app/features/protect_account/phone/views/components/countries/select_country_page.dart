@@ -51,7 +51,7 @@ class SelectCountryPage extends HookConsumerWidget {
                   orElse: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
                 SliverPadding(
-                  padding: EdgeInsets.only(
+                  padding: EdgeInsetsDirectional.only(
                     bottom: 16.0.s + MediaQuery.paddingOf(context).bottom,
                   ),
                 ),

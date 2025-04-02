@@ -98,9 +98,9 @@ class CoinAddressTile extends HookConsumerWidget {
                   });
                 },
               ),
-              Positioned(
+              PositionedDirectional(
                 top: -paddingVertical,
-                left: tooltipLeftPosition.value,
+                start: tooltipLeftPosition.value,
                 child: Opacity(
                   opacity: isCopied.value ? 1 : 0,
                   child: CopiedTooltip(

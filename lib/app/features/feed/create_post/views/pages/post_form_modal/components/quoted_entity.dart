@@ -58,7 +58,7 @@ class QuotedEntity extends HookConsumerWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.only(left: 40.0.s, top: 16.0.s),
+      padding: EdgeInsetsDirectional.only(start: 40.0.s, top: 16.0.s),
       child: quoteChild,
     );
   }

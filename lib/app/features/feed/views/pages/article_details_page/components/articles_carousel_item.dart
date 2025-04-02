@@ -50,7 +50,7 @@ class ArticlesCarouselItem extends StatelessWidget {
                       ],
                       SizedBox(height: 10.0.s),
                       Padding(
-                        padding: EdgeInsets.only(right: 12.0.s),
+                        padding: EdgeInsetsDirectional.only(end: 12.0.s),
                         child: Text(
                           article.data.title ?? '',
                           maxLines: 3,
@@ -63,7 +63,7 @@ class ArticlesCarouselItem extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 4.0.s),
+                  padding: EdgeInsetsDirectional.only(end: 4.0.s),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0.s),
                     child: SizedBox(

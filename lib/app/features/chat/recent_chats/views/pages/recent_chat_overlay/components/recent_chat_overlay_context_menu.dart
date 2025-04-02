@@ -21,6 +21,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
   final ConversationListItem conversation;
 
   static final height = 237.0.s;
+
   static double get iconSize => 20.0.s;
 
   @override
@@ -28,7 +29,7 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
     return SizedBox(
       height: height,
       child: Padding(
-        padding: EdgeInsets.only(top: 6.0.s),
+        padding: EdgeInsetsDirectional.only(top: 6.0.s),
         child: OverlayMenuContainer(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 4.0.s),

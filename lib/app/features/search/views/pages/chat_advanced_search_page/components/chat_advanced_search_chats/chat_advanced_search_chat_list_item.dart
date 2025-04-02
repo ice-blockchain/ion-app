@@ -41,11 +41,11 @@ class ChatAdvancedSearchChatListItem extends ConsumerWidget {
                     ),
                     SizedBox(width: 4.0.s),
                     Padding(
-                      padding: EdgeInsets.only(left: 4.0.s),
+                      padding: EdgeInsetsDirectional.only(start: 4.0.s),
                       child: Assets.svg.iconBadgeIcelogo.icon(size: 16),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 4.0.s),
+                      padding: EdgeInsetsDirectional.only(start: 4.0.s),
                       child: Assets.svg.iconBadgeVerify.icon(size: 16),
                     ),
                   ],

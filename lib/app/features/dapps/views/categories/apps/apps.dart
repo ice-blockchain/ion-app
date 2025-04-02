@@ -23,7 +23,7 @@ class Apps extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: topOffset ?? 6.0.s),
+      padding: EdgeInsetsDirectional.only(top: topOffset ?? 6.0.s),
       child: Column(
         children: [
           SectionHeader(title: title, onPress: onPress),

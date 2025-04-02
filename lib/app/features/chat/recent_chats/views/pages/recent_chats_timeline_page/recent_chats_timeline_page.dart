@@ -69,7 +69,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.only(top: 12.0.s),
+            padding: EdgeInsetsDirectional.only(top: 12.0.s),
             child: const HorizontalSeparator(),
           ),
         ),
@@ -88,7 +88,7 @@ class RecentChatsTimelinePage extends HookConsumerWidget {
         ConversationList(conversations: conversations.where((c) => !c.isArchived).toList()),
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.only(bottom: 12.0.s),
+            padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
             child: const HorizontalSeparator(),
           ),
         ),

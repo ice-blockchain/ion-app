@@ -14,6 +14,7 @@ class ArticleCategoriesRow extends StatelessWidget {
     super.key,
     this.showAddButton = false,
   });
+
   final List<ArticleCategory> items;
   final Set<String> selectedItems;
   final ValueChanged<String> onToggle;
@@ -29,7 +30,7 @@ class ArticleCategoriesRow extends StatelessWidget {
         SizedBox(width: 16.0.s),
         if (showAddButton)
           Padding(
-            padding: EdgeInsets.only(right: 12.0.s),
+            padding: EdgeInsetsDirectional.only(end: 12.0.s),
             child: Button.icon(
               borderRadius: BorderRadius.circular(12.0.s),
               borderColor: colors.onTerararyFill,
@@ -44,7 +45,7 @@ class ArticleCategoriesRow extends StatelessWidget {
           ),
         ...items.map(
           (item) => Padding(
-            padding: EdgeInsets.only(right: 12.0.s),
+            padding: EdgeInsetsDirectional.only(end: 12.0.s),
             child: _CategoryButton(
               category: item,
               isSelected: selectedItems.contains(item.id),
@@ -63,6 +64,7 @@ class _CategoryButton extends StatelessWidget {
     required this.isSelected,
     required this.onToggle,
   });
+
   final ArticleCategory category;
   final bool isSelected;
   final ValueChanged<String> onToggle;

@@ -53,7 +53,9 @@ class ScreenSideOffset extends StatelessWidget {
   }
 
   static double get defaultSmallMargin => 16.0.s;
+
   static double get defaultMediumMargin => 28.0.s;
+
   static double get defaultLargeMargin => 44.0.s;
 
   final Widget child;
@@ -65,8 +67,8 @@ class ScreenSideOffset extends StatelessWidget {
     return Padding(
       padding: only != null
           ? only == ScreenOffsetSide.left
-              ? EdgeInsets.only(left: margin)
-              : EdgeInsets.only(right: margin)
+              ? EdgeInsetsDirectional.only(start: margin)
+              : EdgeInsetsDirectional.only(end: margin)
           : EdgeInsets.symmetric(horizontal: margin),
       child: child,
     );

@@ -67,7 +67,7 @@ class Article extends ConsumerWidget {
 
     if (entity.isDeleted) {
       return Padding(
-        padding: EdgeInsets.only(left: 16.0.s),
+        padding: EdgeInsetsDirectional.only(start: 16.0.s),
         child: DeletedEntity(entityType: DeletedEntityType.article),
       );
     }
@@ -119,9 +119,9 @@ class Article extends ConsumerWidget {
                           color: entity.data.colorLabel != null
                               ? fromHexColor(entity.data.colorLabel!.value)
                               : context.theme.appColors.primaryAccent,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(4.0.s),
-                            bottomRight: Radius.circular(4.0.s),
+                          borderRadius: BorderRadiusDirectional.only(
+                            topEnd: Radius.circular(4.0.s),
+                            bottomEnd: Radius.circular(4.0.s),
                           ),
                         ),
                       ),

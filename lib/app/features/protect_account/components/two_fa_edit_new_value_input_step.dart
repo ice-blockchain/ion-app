@@ -43,7 +43,7 @@ class TwoFaEditNewValueInputStep extends HookWidget {
                 if (isKeyboardVisible) SizedBox(height: 58.0.s),
                 const Spacer(),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 20.0.s),
+                  padding: EdgeInsetsDirectional.only(bottom: 20.0.s),
                   child: TextInput(
                     prefixIcon: TextInputIcons(
                       hasRightDivider: true,
@@ -54,7 +54,7 @@ class TwoFaEditNewValueInputStep extends HookWidget {
                     keyboardType: inputKeyboardType,
                     validator: validator,
                     textInputAction: TextInputAction.done,
-                    scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+                    scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
                   ),
                 ),
                 const Spacer(),

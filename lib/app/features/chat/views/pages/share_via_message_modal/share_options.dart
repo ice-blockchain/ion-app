@@ -39,7 +39,7 @@ class ShareOptions extends ConsumerWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-        padding: EdgeInsets.only(top: 20.0.s, right: 16.0.s, left: 16.0.s),
+        padding: EdgeInsetsDirectional.only(top: 20.0.s, end: 16.0.s, start: 16.0.s),
         child: SeparatedRow(
           separator: SizedBox(width: 12.0.s),
           children: [

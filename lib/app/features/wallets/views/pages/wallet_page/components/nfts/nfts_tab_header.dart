@@ -24,7 +24,7 @@ class NftsTabHeader extends HookConsumerWidget {
     if (isLoading) {
       return ScreenSideOffset.small(
         child: WalletSearchBar(
-          padding: EdgeInsets.only(top: UiConstants.hitSlop),
+          padding: EdgeInsetsDirectional.only(top: UiConstants.hitSlop),
           tabType: WalletTabType.nfts,
         ),
       );
@@ -40,17 +40,17 @@ class NftsTabHeader extends HookConsumerWidget {
         if (nfts.isEmpty) {
           return ScreenSideOffset.small(
             child: WalletSearchBar(
-              padding: EdgeInsets.only(top: UiConstants.hitSlop),
+              padding: EdgeInsetsDirectional.only(top: UiConstants.hitSlop),
               tabType: WalletTabType.nfts,
             ),
           );
         }
 
         return Padding(
-          padding: EdgeInsets.only(
+          padding: EdgeInsetsDirectional.only(
             bottom: 16.0.s - UiConstants.hitSlop,
-            left: padding,
-            right: padding,
+            start: padding,
+            end: padding,
           ),
           child: Column(
             children: [
@@ -62,9 +62,9 @@ class NftsTabHeader extends HookConsumerWidget {
                 ],
               ),
               WalletSearchBar(
-                padding: EdgeInsets.only(
-                  left: UiConstants.hitSlop,
-                  right: UiConstants.hitSlop,
+                padding: EdgeInsetsDirectional.only(
+                  start: UiConstants.hitSlop,
+                  end: UiConstants.hitSlop,
                   top: 16.0.s - UiConstants.hitSlop,
                   bottom: UiConstants.hitSlop,
                 ),

@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
-
 import 'package:ion/app/features/chat/model/message_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/views/components/recent_chat_tile/recent_chat_tile.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
@@ -44,8 +43,8 @@ class ReplyMessage extends HookConsumerWidget {
         : null;
 
     return Container(
-      margin: EdgeInsets.only(bottom: 12.0.s),
-      padding: EdgeInsets.fromLTRB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
+      margin: EdgeInsetsDirectional.only(bottom: 12.0.s),
+      padding: EdgeInsetsDirectional.fromSTEB(12.0.s, 5.0.s, 20.0.s, 5.0.s),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(10.0.s),
@@ -58,7 +57,7 @@ class ReplyMessage extends HookConsumerWidget {
             SizedBox(
               width: 50.0.s,
               child: Padding(
-                padding: EdgeInsets.only(left: 4.0.s, right: 8.0.s),
+                padding: EdgeInsetsDirectional.only(start: 4.0.s, end: 8.0.s),
                 child: VisualMediaCustomGrid(
                   customSpacing: 2.0.s,
                   messageMedias: mediaItem.medias,
@@ -79,7 +78,7 @@ class ReplyMessage extends HookConsumerWidget {
                   children: [
                     if (messageIconPath != null)
                       Padding(
-                        padding: EdgeInsets.only(right: 4.0.s),
+                        padding: EdgeInsetsDirectional.only(end: 4.0.s),
                         child: messageIconPath.icon(
                           size: 16.0.s,
                           color: textColor ?? context.theme.appColors.onTertararyBackground,
@@ -126,7 +125,7 @@ class _SideVerticalDivider extends StatelessWidget {
     return Container(
       width: 2.0.s,
       height: 36.0.s,
-      margin: EdgeInsets.only(right: 6.0.s),
+      margin: EdgeInsetsDirectional.only(end: 6.0.s),
       decoration: BoxDecoration(
         color: isMyMessage
             ? context.theme.appColors.onPrimaryAccent

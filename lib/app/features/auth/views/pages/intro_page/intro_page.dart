@@ -51,9 +51,9 @@ class IntroPage extends HookConsumerWidget {
                 child: CachedVideoPlayerPlus(videoController),
               ),
             ),
-          Positioned(
-            left: 40.0.s,
-            right: 40.0.s,
+          PositionedDirectional(
+            start: 40.0.s,
+            end: 40.0.s,
             bottom: MediaQuery.of(context).padding.bottom + 46.0.s,
             child: Animate(
               effects: [

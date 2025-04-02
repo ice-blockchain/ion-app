@@ -156,9 +156,9 @@ class Button extends StatelessWidget {
               if (label != null)
                 Flexible(
                   child: Padding(
-                    padding: EdgeInsets.only(
-                      left: leadingIcon == null ? 0 : leadingIconOffset,
-                      right: trailingIcon == null ? 0 : trailingIconOffset,
+                    padding: EdgeInsetsDirectional.only(
+                      start: leadingIcon == null ? 0 : leadingIconOffset,
+                      end: trailingIcon == null ? 0 : trailingIconOffset,
                     ),
                     child: label,
                   ),

@@ -49,7 +49,7 @@ class NotificationListItem extends StatelessWidget {
             color: context.theme.appColors.tertararyBackground,
           ),
         ),
-        trailingPadding: EdgeInsets.only(left: 6.0.s),
+        trailingPadding: EdgeInsetsDirectional.only(start: 6.0.s),
       ),
     );
   }

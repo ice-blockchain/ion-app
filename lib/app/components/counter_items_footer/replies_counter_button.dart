@@ -49,7 +49,7 @@ class RepliesCounterButton extends HookConsumerWidget {
             },
       child: Container(
         constraints: BoxConstraints(minWidth: 50.0.s),
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: TextActionButton(
           icon: Assets.svg.iconBlockComment.icon(
             size: 16.0.s,

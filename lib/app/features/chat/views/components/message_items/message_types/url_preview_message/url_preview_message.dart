@@ -65,7 +65,7 @@ class UrlPreviewMessage extends HookWidget {
               ),
               if (meta != null)
                 Padding(
-                  padding: EdgeInsets.only(top: 8.0.s),
+                  padding: EdgeInsetsDirectional.only(top: 8.0.s),
                   child: _MetaDataPreview(
                     meta: meta,
                     favIconUrl: favIconUrl,

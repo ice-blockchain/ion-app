@@ -73,7 +73,7 @@ class TwoFaEditConfirmNewValueStep extends HookConsumerWidget {
                 if (isKeyboardVisible) SizedBox(height: 58.0.s),
                 const Spacer(),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 22.0.s),
+                  padding: EdgeInsetsDirectional.only(bottom: 22.0.s),
                   child: TwoFaCodeInput(
                     controller: codeController,
                     twoFaType: twoFaType,

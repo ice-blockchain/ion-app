@@ -48,7 +48,7 @@ class TwoFaCodeInput extends HookWidget {
         return null;
       },
       textInputAction: TextInputAction.next,
-      scrollPadding: EdgeInsets.only(bottom: 200.0.s),
+      scrollPadding: EdgeInsetsDirectional.only(bottom: 200.0.s),
       keyboardType: TextInputType.number,
       suffixIcon: onRequestCode == null
           ? null
@@ -103,7 +103,7 @@ class SendButton extends HookConsumerWidget {
           )
         : isSending
             ? Padding(
-                padding: EdgeInsets.only(right: 16.0.s),
+                padding: EdgeInsetsDirectional.only(end: 16.0.s),
                 child: IONLoadingIndicator(
                   type: isLightTheme ? IndicatorType.dark : IndicatorType.light,
                 ),

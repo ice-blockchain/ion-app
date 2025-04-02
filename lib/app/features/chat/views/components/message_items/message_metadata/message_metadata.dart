@@ -26,7 +26,7 @@ class MessageMetaData extends ConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     return Padding(
-      padding: EdgeInsets.only(left: 8.0.s),
+      padding: EdgeInsetsDirectional.only(start: 8.0.s),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -42,7 +42,7 @@ class MessageMetaData extends ConsumerWidget {
             StreamBuilder<MessageDeliveryStatus>(
               stream: deliveryStatus,
               builder: (context, snapshot) => Padding(
-                padding: EdgeInsets.only(left: 2.0.s),
+                padding: EdgeInsetsDirectional.only(start: 2.0.s),
                 child: statusIcon(context, snapshot.data ?? MessageDeliveryStatus.created),
               ),
             ),

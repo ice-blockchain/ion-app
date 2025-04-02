@@ -32,7 +32,7 @@ class ContactPage extends ConsumerWidget {
           Stack(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 20.0.s),
+                padding: EdgeInsetsDirectional.only(top: 20.0.s),
                 child: ContactItem(userMetadata: userMetadata.data),
               ),
             ],

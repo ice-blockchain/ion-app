@@ -39,7 +39,7 @@ class DAppsPage extends HookConsumerWidget {
               children: [
                 const Featured(),
                 Padding(
-                  padding: EdgeInsets.only(top: 20.0.s, bottom: 7.0.s),
+                  padding: EdgeInsetsDirectional.only(top: 20.0.s, bottom: 7.0.s),
                   child: Container(
                     height: 10.0.s,
                     color: context.theme.appColors.primaryBackground,

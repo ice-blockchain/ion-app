@@ -33,7 +33,7 @@ class SearchHistory extends StatelessWidget {
           ),
           if (itemCount != 0)
             Padding(
-              padding: EdgeInsets.only(top: 16.0.s),
+              padding: EdgeInsetsDirectional.only(top: 16.0.s),
               child: SizedBox(
                 height: 105.0.s,
                 child: ListView.separated(

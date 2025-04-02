@@ -22,7 +22,7 @@ class UserBiography extends ConsumerWidget {
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(eventReference.pubkey));
 
     return Container(
-      alignment: Alignment.topLeft,
+      alignment: AlignmentDirectional.topStart,
       decoration: BoxDecoration(
         color: context.theme.appColors.onPrimaryAccent,
         borderRadius: BorderRadius.all(Radius.circular(16.0.s)),
@@ -43,7 +43,10 @@ class UserBiography extends ConsumerWidget {
                 : UserInfoMenu(pubkey: eventReference.pubkey),
           ),
           SizedBox(height: 12.0.s),
-          UserAbout(pubkey: eventReference.pubkey, padding: EdgeInsets.only(bottom: 12.0.s)),
+          UserAbout(
+            pubkey: eventReference.pubkey,
+            padding: EdgeInsetsDirectional.only(bottom: 12.0.s),
+          ),
           UserInfoSummary(pubkey: eventReference.pubkey),
         ],
       ),

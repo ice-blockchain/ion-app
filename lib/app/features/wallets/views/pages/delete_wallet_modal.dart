@@ -31,7 +31,7 @@ class DeleteWalletModal extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 31.0.s, bottom: 4.0.s),
+              padding: EdgeInsetsDirectional.only(top: 31.0.s, bottom: 4.0.s),
               child: Assets.svg.actionWalletDelete.icon(size: 80.0.s),
             ),
             Text(
@@ -41,11 +41,11 @@ class DeleteWalletModal extends ConsumerWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
+              padding: EdgeInsetsDirectional.only(
                 top: 8.0.s,
                 bottom: 30.0.s,
-                left: 36.0.s,
-                right: 36.0.s,
+                start: 36.0.s,
+                end: 36.0.s,
               ),
               child: Text(
                 context.i18n.wallet_delete_message,

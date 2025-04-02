@@ -8,10 +8,10 @@ class StoryHeaderGradient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return PositionedDirectional(
       top: 0,
-      left: 0,
-      right: 0,
+      start: 0,
+      end: 0,
       child: Container(
         height: 80.0.s,
         decoration: BoxDecoration(

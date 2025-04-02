@@ -26,9 +26,9 @@ class TransactionListHeader extends StatelessWidget {
           TransactionListConstants.headerPaddingBottom +
           TransactionListConstants.headerPaddingTop,
       child: ListView.separated(
-        padding: EdgeInsets.only(
-          left: ScreenSideOffset.defaultSmallMargin,
-          right: ScreenSideOffset.defaultSmallMargin,
+        padding: EdgeInsetsDirectional.only(
+          start: ScreenSideOffset.defaultSmallMargin,
+          end: ScreenSideOffset.defaultSmallMargin,
           top: TransactionListConstants.headerPaddingTop,
           bottom: TransactionListConstants.headerPaddingBottom,
         ),

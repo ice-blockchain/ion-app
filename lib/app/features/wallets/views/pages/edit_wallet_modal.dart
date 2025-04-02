@@ -51,7 +51,7 @@ class EditWalletModal extends HookConsumerWidget {
             ),
             ScreenSideOffset.small(
               child: Padding(
-                padding: EdgeInsets.only(top: 21.0.s, bottom: 24.0.s),
+                padding: EdgeInsetsDirectional.only(top: 21.0.s, bottom: 24.0.s),
                 child: TextInput(
                   onChanged: (String newValue) => walletName.value = newValue,
                   controller: controller,
