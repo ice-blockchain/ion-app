@@ -28,20 +28,18 @@ class SearchHistory extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 20.0.s),
-          SearchHistoryHeader(
-            onClearHistory: onClearHistory,
-          ),
+          SearchHistoryHeader(onClearHistory: onClearHistory),
           if (itemCount != 0)
             Padding(
               padding: EdgeInsetsDirectional.only(top: 16.0.s),
               child: SizedBox(
                 height: 105.0.s,
                 child: ListView.separated(
-                  padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
-                  scrollDirection: Axis.horizontal,
                   itemCount: itemCount,
-                  separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
                   itemBuilder: itemBuilder,
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder: (context, index) => SizedBox(width: 12.0.s),
+                  padding: EdgeInsets.symmetric(horizontal: ScreenSideOffset.defaultSmallMargin),
                 ),
               ),
             ),

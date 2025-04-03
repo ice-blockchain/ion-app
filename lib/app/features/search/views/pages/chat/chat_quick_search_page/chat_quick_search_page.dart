@@ -50,8 +50,6 @@ class ChatQuickSearchPage extends HookConsumerWidget {
             ),
             usersSearchResults.maybeWhen(
               data: (pubkeysAndContentTuples) {
-                final pubkeys = pubkeysAndContentTuples?.map((e) => e.$1).toList() ?? [];
-
                 return pubkeysAndContentTuples == null
                     ? history.pubKeys.isEmpty && history.queries.isEmpty
                         ? SearchHistoryEmpty(
@@ -66,7 +64,7 @@ class ChatQuickSearchPage extends HookConsumerWidget {
                                 ChatQuickSearchRoute(query: text).replace(context),
                             onClearHistory: ref.read(chatSearchHistoryProvider.notifier).clear,
                             itemBuilder: (context, index) => FeedSearchHistoryUserListItem(
-                              pubkey: pubkeys[index],
+                              pubkey: history.pubKeys[index],
                             ),
                           )
                     : pubkeysAndContentTuples.isEmpty
