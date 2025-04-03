@@ -6,7 +6,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview_image.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/article_preview_image.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';

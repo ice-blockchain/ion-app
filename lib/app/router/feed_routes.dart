@@ -202,7 +202,7 @@ class EditPostRoute extends BaseRouteData {
 class EditArticleRoute extends BaseRouteData {
   EditArticleRoute({required this.modifiedEvent})
       : super(
-          child: CreateArticleModal.edit(modifiedEvent: EventReference.fromEncoded(modifiedEvent)),
+          child: ArticleFormModal.edit(modifiedEvent: EventReference.fromEncoded(modifiedEvent)),
           type: IceRouteType.bottomSheet,
         );
 
@@ -313,7 +313,7 @@ class CreateVideoRoute extends BaseRouteData {
 class CreateArticleRoute extends BaseRouteData {
   CreateArticleRoute()
       : super(
-          child: CreateArticleModal.create(),
+          child: ArticleFormModal.create(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -362,7 +362,7 @@ class GalleryCameraRoute extends BaseRouteData {
 class ArticlePreviewRoute extends BaseRouteData {
   ArticlePreviewRoute()
       : super(
-          child: const CreateArticlePreviewModal(),
+          child: const ArticlePreviewModal(),
           type: IceRouteType.bottomSheet,
         );
 }
