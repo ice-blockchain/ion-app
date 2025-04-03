@@ -52,6 +52,7 @@ class FeedRoutes {
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
         TypedGoRoute<EditArticleRoute>(path: 'create-article/edit/:modifiedEvent'),
+        TypedGoRoute<EditArticlePreviewRoute>(path: 'article-preview/edit/:modifiedEvent'),
       ],
     ),
   ];
@@ -209,6 +210,15 @@ class EditArticleRoute extends BaseRouteData {
   final String modifiedEvent;
 }
 
+class EditArticlePreviewRoute extends BaseRouteData {
+  EditArticlePreviewRoute({required this.modifiedEvent})
+      : super(
+          child: ArticlePreviewModal.edit(modifiedEvent: EventReference.fromEncoded(modifiedEvent)),
+          type: IceRouteType.bottomSheet,
+        );
+  final String modifiedEvent;
+}
+
 class CreateReplyRoute extends BaseRouteData {
   CreateReplyRoute({
     required this.parentEvent,
@@ -362,7 +372,7 @@ class GalleryCameraRoute extends BaseRouteData {
 class ArticlePreviewRoute extends BaseRouteData {
   ArticlePreviewRoute()
       : super(
-          child: const ArticlePreviewModal(),
+          child: ArticlePreviewModal.create(),
           type: IceRouteType.bottomSheet,
         );
 }

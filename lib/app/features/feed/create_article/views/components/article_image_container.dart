@@ -15,17 +15,21 @@ class ArticleImageContainer extends StatelessWidget {
     required this.selectedImage,
     required this.onPressed,
     required this.onClearImage,
+    this.selectedImageUrl,
     super.key,
   });
 
   final MediaFile? selectedImage;
+  final String? selectedImageUrl;
   final VoidCallback? onPressed;
   final VoidCallback onClearImage;
 
   @override
   Widget build(BuildContext context) {
+    final hasImage = selectedImage != null || selectedImageUrl != null;
+
     return GestureDetector(
-      onTap: selectedImage == null ? onPressed : null,
+      onTap: hasImage ? null : onPressed,
       child: ScreenSideOffset.small(
         child: AspectRatio(
           aspectRatio: ArticleConstants.headerImageAspectRation,
@@ -38,9 +42,10 @@ class ArticleImageContainer extends StatelessWidget {
                   Assets.svg.articlePlaceholder,
                   fit: BoxFit.cover,
                 ),
-                if (selectedImage != null)
+                if (hasImage)
                   ArticleImageView(
-                    selectedImage: selectedImage!,
+                    selectedImage: selectedImage,
+                    imageUrl: selectedImageUrl,
                     onClearImage: onClearImage,
                   )
                 else
