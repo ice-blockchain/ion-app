@@ -57,9 +57,12 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
 
   final tags = isTagSearch
       ? {
-          // query.substring(1) is for backward compatibility - previously we set 't' tags without the symbol
-          // it might be removed after the release
-          '#${RelatedHashtag.tagName}': [query, query.substring(1)],
+          '#${RelatedHashtag.tagName}': [
+            query,
+            // Is needed for backward compatibility - previously we set 't' tags without the symbol
+            // It might be removed after the release.
+            if (query.startsWith('#')) query.substring(1),
+          ],
         }
       : <String, List<Object>>{};
 
