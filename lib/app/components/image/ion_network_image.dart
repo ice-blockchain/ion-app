@@ -19,5 +19,7 @@ class IonNetworkImage extends CachedNetworkImage {
     super.alignment,
     super.filterQuality,
     super.cacheManager,
-  });
+  }) :
+        // Do not log image loading errors
+        super(errorListener: (_) {});
 }
