@@ -25,11 +25,6 @@ class RelatedHashtag with _$RelatedHashtag {
   }
 
   List<String> toTag() {
-    if (value.startsWith('#')) {
-      return [tagName, value.substring(1)];
-    } else if (value.startsWith(r'$')) {
-      return [tagName, value];
-    }
     return [tagName, value];
   }
 
