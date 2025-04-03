@@ -12,8 +12,8 @@ import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class CreateArticleState {
-  CreateArticleState({
+class ArticleFormState {
+  ArticleFormState({
     required this.selectedImage,
     required this.titleFilled,
     required this.titleController,
@@ -38,7 +38,7 @@ class CreateArticleState {
   final ValueNotifier<bool> isTitleFocused;
 }
 
-CreateArticleState useCreateArticle(WidgetRef ref, {EventReference? modifiedEvent}) {
+ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) {
   final selectedImage = useState<MediaFile?>(null);
   final titleFilled = useState(false);
   final textEditorController = useQuillController();
@@ -136,7 +136,7 @@ CreateArticleState useCreateArticle(WidgetRef ref, {EventReference? modifiedEven
     [selectedImage.value, titleFilled.value, isTextValid.value],
   );
 
-  return CreateArticleState(
+  return ArticleFormState(
     selectedImage: selectedImage,
     titleFilled: titleFilled,
     titleController: titleController,

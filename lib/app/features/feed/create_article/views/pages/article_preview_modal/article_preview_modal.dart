@@ -10,17 +10,17 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_topics_item.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_who_can_reply_item.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/article_preview.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/select_article_topics_item.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/select_article_who_can_reply_item.dart';
 import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CreateArticlePreviewModal extends HookConsumerWidget {
-  const CreateArticlePreviewModal({super.key});
+class ArticlePreviewModal extends HookConsumerWidget {
+  const ArticlePreviewModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

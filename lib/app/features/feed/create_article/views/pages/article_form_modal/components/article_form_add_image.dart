@@ -14,8 +14,8 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class CreateArticleAddImage extends HookConsumerWidget {
-  const CreateArticleAddImage({
+class ArticleFormAddImage extends HookConsumerWidget {
+  const ArticleFormAddImage({
     required this.selectedImage,
     super.key,
   });
