@@ -20,7 +20,7 @@ class ArticlePreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DraftArticleState(:title, :image, :content, :imageColor) =
+    final DraftArticleState(:title, :image, :content, :imageColor, :imageUrl) =
         ref.watch(draftArticleProvider);
 
     final currentPubkey = ref.watch(currentPubkeySelectorProvider);
@@ -58,6 +58,7 @@ class ArticlePreview extends ConsumerWidget {
                   SizedBox(height: 10.0.s),
                   ArticlePreviewImage(
                     mediaFile: image,
+                    imageUrl: imageUrl,
                     minutesToRead: calculateReadingTime(content.toString()),
                   ),
                   SizedBox(height: 10.0.s),

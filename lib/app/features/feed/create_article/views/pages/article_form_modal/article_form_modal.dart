@@ -77,7 +77,11 @@ class ArticleFormModal extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
-              title: Text(context.i18n.create_article_nav_title),
+              title: Text(
+                modifiedEvent != null
+                    ? context.i18n.create_article_nav_title_edit
+                    : context.i18n.create_article_nav_title,
+              ),
               onBackPress: () {
                 showCancelCreationModal(context);
               },
@@ -97,7 +101,12 @@ class ArticleFormModal extends HookConsumerWidget {
                   disabled: !articleState.isButtonEnabled,
                   onPressed: () {
                     articleState.onNext();
-                    ArticlePreviewRoute().push<void>(context);
+                    if (modifiedEvent != null) {
+                      final eventEncoded = modifiedEvent!.encode();
+                      EditArticlePreviewRoute(modifiedEvent: eventEncoded).push<void>(context);
+                    } else {
+                      ArticlePreviewRoute().push<void>(context);
+                    }
                   },
                 ),
               ],
@@ -110,6 +119,7 @@ class ArticleFormModal extends HookConsumerWidget {
                     children: [
                       ArticleFormAddImage(
                         selectedImage: articleState.selectedImage,
+                        selectedImageUrl: articleState.selectedImageUrl,
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.only(
