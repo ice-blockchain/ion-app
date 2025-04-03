@@ -26,7 +26,6 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
   final transformationController = useTransformationController();
   final animationController = useAnimationController(duration: 300.ms);
   final zoomNotifier = ref.watch(imageZoomStateProvider.notifier);
-  // final interactionNotifier = ref.watch(imageInteractionStateProvider.notifier);
   final tapDownDetails = useState<TapDownDetails?>(null);
   final animation = useState<Animation<Matrix4>?>(null);
 
@@ -99,12 +98,9 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
     if (!animationController.toString().contains('DISPOSED') && animationController.isAnimating) {
       animationController.stop();
     }
-
-    ref.read(imageInteractionStateProvider.notifier).setInteracting(true);
   }
 
   void handleInteractionEnd(ScaleEndDetails details) {
-    ref.read(imageInteractionStateProvider.notifier).setInteracting(false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (animationController.toString().contains('DISPOSED')) return;
       final scale = transformationController.value.getMaxScaleOnAxis();

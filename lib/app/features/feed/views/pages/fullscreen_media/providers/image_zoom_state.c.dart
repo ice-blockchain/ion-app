@@ -11,14 +11,3 @@ class ImageZoomState extends _$ImageZoomState {
 
   set zoomed(bool value) => state = value;
 }
-
-/// Tracks whether an interaction (pan/scale) is currently active
-/// within the InteractiveViewer used for image zooming.
-@riverpod
-class ImageInteractionState extends _$ImageInteractionState {
-  @override
-  bool build() => false; // Initial state: no interaction active
-
-  /// Sets the interaction state.
-  void setInteracting(bool value) => state = value;
-}
