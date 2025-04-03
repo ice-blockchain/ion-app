@@ -26,50 +26,59 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
   final transformationController = useTransformationController();
   final animationController = useAnimationController(duration: 300.ms);
   final zoomNotifier = ref.watch(imageZoomStateProvider.notifier);
+
   final tapDownDetails = useState<TapDownDetails?>(null);
-  final animation = useState<Animation<Matrix4>?>(null);
 
-  useEffect(
-    () {
-      void animationListener() {
-        if (animation.value != null && !animationController.toString().contains('DISPOSED')) {
-          transformationController.value = animation.value!.value;
+  final matrixAnimation = useState<Animation<Matrix4>?>(null);
+
+  final context = useContext();
+
+  final mounted = context.mounted;
+
+  useEffect(() {
+    void animationListener() {
+      final anim = matrixAnimation.value;
+      if (anim == null) return;
+
+      transformationController.value = anim.value;
+    }
+
+    void animationStatusListener(AnimationStatus status) {
+      if (!mounted) return;
+
+      if (status == AnimationStatus.completed) {
+        final currentlyZoomed = transformationController.value != Matrix4.identity();
+        final alreadyZoomed = ref.read(imageZoomStateProvider);
+
+        if (alreadyZoomed != currentlyZoomed) {
+          zoomNotifier.zoomed = currentlyZoomed;
         }
       }
+    }
 
-      void animationStatusListener(AnimationStatus status) {
-        if (animationController.toString().contains('DISPOSED')) return;
+    animationController
+      ..addListener(animationListener)
+      ..addStatusListener(animationStatusListener);
 
-        if (status == AnimationStatus.completed) {
-          final currentlyZoomed = transformationController.value != Matrix4.identity();
-
-          if (ref.read(imageZoomStateProvider) != currentlyZoomed) {
-            zoomNotifier.zoomed = currentlyZoomed;
-          }
-        }
-      }
-
+    return () {
       animationController
-        ..addListener(animationListener)
-        ..addStatusListener(animationStatusListener);
-
-      return () {
-        if (!animationController.toString().contains('DISPOSED')) {
-          animationController
-            ..removeListener(animationListener)
-            ..removeStatusListener(animationStatusListener);
-        }
-      };
-    },
-    [animationController],
-  );
+        ..removeListener(animationListener)
+        ..removeStatusListener(animationStatusListener);
+    };
+  }, [
+    animationController,
+    matrixAnimation.value,
+    transformationController,
+    mounted,
+  ]);
 
   void handleDoubleTap() {
-    if (tapDownDetails.value == null) return;
+    final details = tapDownDetails.value;
+    if (details == null) return;
 
     final currentZoomState = ref.read(imageZoomStateProvider);
     final newZoomState = !currentZoomState;
-    final position = tapDownDetails.value!.localPosition;
+    final position = details.localPosition;
 
     final endMatrix = newZoomState
         ? (Matrix4.identity()
@@ -77,7 +86,7 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
           ..scale(3.0))
         : Matrix4.identity();
 
-    animation.value = Matrix4Tween(
+    matrixAnimation.value = Matrix4Tween(
       begin: transformationController.value,
       end: endMatrix,
     ).animate(
@@ -87,26 +96,25 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
       ),
     );
 
-    if (!animationController.toString().contains('DISPOSED')) {
-      animationController
-        ..reset()
-        ..forward();
-    }
+    animationController
+      ..reset()
+      ..forward();
   }
 
   void handleInteractionStart(ScaleStartDetails details) {
-    if (!animationController.toString().contains('DISPOSED') && animationController.isAnimating) {
+    if (animationController.isAnimating) {
       animationController.stop();
     }
   }
 
   void handleInteractionEnd(ScaleEndDetails details) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (animationController.toString().contains('DISPOSED')) return;
-      final scale = transformationController.value.getMaxScaleOnAxis();
+      if (!mounted) return;
 
+      final scale = transformationController.value.getMaxScaleOnAxis();
       final newZoomState = scale > 1.01;
       final currentZoomState = ref.read(imageZoomStateProvider);
+
       if (currentZoomState != newZoomState) {
         zoomNotifier.zoomed = newZoomState;
       }

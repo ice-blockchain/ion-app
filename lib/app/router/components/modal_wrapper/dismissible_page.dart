@@ -42,50 +42,10 @@ class DismissiblePage extends HookWidget {
     final animationController = useAnimationController(duration: 300.ms);
     final dragOffset = useState<double>(0);
 
-    final radius = useMemoized(
-      () {
-        if (dragOffset.value == 0) return minRadius;
-
-        final size = MediaQuery.of(context).size;
-        final dragProgress = dragOffset.value.abs() / (size.height / 2);
-        final clampedProgress = dragProgress.clamp(0.0, 1.0);
-
-        return minRadius + (maxRadius - minRadius) * clampedProgress;
-      },
-      [dragOffset.value, minRadius, maxRadius],
-    );
-
-    final scale = useMemoized(
-      () {
-        if (dragOffset.value == 0) return 1.0;
-
-        final size = MediaQuery.of(context).size;
-        final dragProgress = dragOffset.value.abs() / (size.height / 2);
-        final clampedProgress = dragProgress.clamp(0.0, 1.0);
-
-        return 1.0 - (1.0 - minScale) * clampedProgress;
-      },
-      [dragOffset.value, minScale],
-    );
-
-    final opacity = useMemoized(
-      () {
-        if (dragOffset.value == 0) return 1.0;
-
-        final size = MediaQuery.of(context).size;
-        final dragProgress = dragOffset.value.abs() / (size.height / 2);
-        final clampedProgress = dragProgress.clamp(0.0, 1.0);
-
-        return 1.0 - 0.8 * clampedProgress;
-      },
-      [dragOffset.value],
-    );
-
     useEffect(
       () {
         void listener() {
-          dragOffset.value = animationController.value * dragOffset.value;
-
+          dragOffset.value = dragOffset.value * (1 - animationController.value);
           if (animationController.isCompleted) {
             dragOffset.value = 0;
           }
@@ -97,64 +57,114 @@ class DismissiblePage extends HookWidget {
       [animationController],
     );
 
-    final shouldDismiss = useCallback(
+    final radius = useMemoized(
       () {
-        final threshold = MediaQuery.of(context).size.height * dismissThreshold;
-        return dragOffset.value.abs() > threshold;
+        if (dragOffset.value == 0) return minRadius;
+        final size = MediaQuery.of(context).size;
+        final dragProgress = dragOffset.value.abs() / (size.height / 2);
+        final clampedProgress = dragProgress.clamp(0.0, 1.0);
+        return minRadius + (maxRadius - minRadius) * clampedProgress;
       },
-      [dismissThreshold, dragOffset.value],
+      [dragOffset.value, minRadius, maxRadius],
     );
 
-    final handleDragStart = useCallback(
-      (DragStartDetails details) {
-        if (isZoomed) return;
-
-        dragOffset.value = 0;
+    final scale = useMemoized(
+      () {
+        if (dragOffset.value == 0) return 1.0;
+        final size = MediaQuery.of(context).size;
+        final dragProgress = dragOffset.value.abs() / (size.height / 2);
+        final clampedProgress = dragProgress.clamp(0.0, 1.0);
+        return 1.0 - (1.0 - minScale) * clampedProgress;
       },
-      [isZoomed],
+      [dragOffset.value, minScale],
     );
 
-    final handleDragUpdate = useCallback(
-      (DragUpdateDetails details) {
-        if (isZoomed) return;
+    final opacity = useMemoized(
+      () {
+        if (dragOffset.value == 0) return 1.0;
+        final size = MediaQuery.of(context).size;
+        final dragProgress = dragOffset.value.abs() / (size.height / 2);
+        final clampedProgress = dragProgress.clamp(0.0, 1.0);
+        return 1.0 - 0.8 * clampedProgress;
+      },
+      [dragOffset.value],
+    );
 
-        if (direction == SwipeDismissDirection.vertical) {
+    bool shouldDismiss() {
+      final threshold = MediaQuery.of(context).size.height * dismissThreshold;
+      return dragOffset.value.abs() > threshold;
+    }
+
+    void handleDragStart(DragStartDetails details) {
+      if (isZoomed) return;
+      animationController
+        ..stop()
+        ..reset();
+      dragOffset.value = 0;
+    }
+
+    void handleDragUpdate(DragUpdateDetails details) {
+      if (isZoomed) return;
+
+      switch (direction) {
+        case SwipeDismissDirection.vertical:
           dragOffset.value += details.delta.dy;
-        } else if (direction == SwipeDismissDirection.horizontal) {
+        case SwipeDismissDirection.horizontal:
           dragOffset.value += details.delta.dx;
-        }
-      },
-      [isZoomed, direction, dragOffset],
-    );
+        case SwipeDismissDirection.none:
+          break;
+      }
+    }
 
-    final handleDragEnd = useCallback(
-      (DragEndDetails details) {
-        if (isZoomed) return;
+    void handleDragEnd(DragEndDetails details) {
+      if (isZoomed) return;
 
-        if (shouldDismiss()) {
-          onDismissed();
-        } else {
-          animationController
-            ..reset()
-            ..forward();
+      if (shouldDismiss()) {
+        onDismissed();
+      } else {
+        animationController
+          ..reset()
+          ..forward();
+      }
+    }
+
+    final gestures = useMemoized(
+      () {
+        if (direction == SwipeDismissDirection.vertical) {
+          return <Type, GestureRecognizerFactory>{
+            VerticalDragGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
+              VerticalDragGestureRecognizer.new,
+              (instance) {
+                instance
+                  ..onStart = handleDragStart
+                  ..onUpdate = handleDragUpdate
+                  ..onEnd = handleDragEnd;
+              },
+            ),
+          };
+        } else if (direction == SwipeDismissDirection.horizontal) {
+          return <Type, GestureRecognizerFactory>{
+            HorizontalDragGestureRecognizer:
+                GestureRecognizerFactoryWithHandlers<HorizontalDragGestureRecognizer>(
+              HorizontalDragGestureRecognizer.new,
+              (instance) {
+                instance
+                  ..onStart = handleDragStart
+                  ..onUpdate = handleDragUpdate
+                  ..onEnd = handleDragEnd;
+              },
+            ),
+          };
         }
+
+        return <Type, GestureRecognizerFactory>{};
       },
-      [isZoomed, shouldDismiss, onDismissed, animationController],
+      [direction, isZoomed],
     );
 
     return RawGestureDetector(
-      gestures: {
-        VerticalDragGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
-          VerticalDragGestureRecognizer.new,
-          (VerticalDragGestureRecognizer instance) {
-            instance
-              ..onStart = isZoomed ? null : handleDragStart
-              ..onUpdate = isZoomed ? null : handleDragUpdate
-              ..onEnd = isZoomed ? null : handleDragEnd;
-          },
-        ),
-      },
+      gestures: gestures,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
         color: backgroundColor.withValues(alpha: opacity),
