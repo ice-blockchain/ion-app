@@ -27,6 +27,7 @@ class DAppsHeader extends ConsumerWidget {
               onPressed: context.pop,
               icon: Assets.svg.iconBackArrow.icon(
                 color: context.theme.appColors.primaryText,
+                flipForRtl: true,
               ),
             ),
             SizedBox(width: 12.0.s),

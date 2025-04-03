@@ -51,6 +51,7 @@ class FullscreenMediaPage extends HookConsumerWidget {
               icon: Assets.svg.iconChatBack.icon(
                 size: NavigationAppBar.actionButtonSide,
                 color: context.theme.appColors.onPrimaryAccent,
+                flipForRtl: true,
               ),
             ),
             onBackPress: () => context.pop(),

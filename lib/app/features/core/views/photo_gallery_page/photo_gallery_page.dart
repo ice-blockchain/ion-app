@@ -39,6 +39,7 @@ class PhotoGalleryPage extends HookWidget {
           icon: Assets.svg.iconChatBack.icon(
             size: NavigationAppBar.actionButtonSide,
             color: context.theme.appColors.onPrimaryAccent,
+            flipForRtl: true,
           ),
         ),
         title: Text(

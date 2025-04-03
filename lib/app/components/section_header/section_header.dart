@@ -13,6 +13,7 @@ class SectionHeader extends StatelessWidget {
     String? title,
     this.onPress,
     this.leadingIcon,
+    this.trailingIconSize,
     double? leadingIconOffset,
   })  : leadingIconOffset = leadingIconOffset ?? 4.0.s,
         title = title ?? '';
@@ -21,6 +22,7 @@ class SectionHeader extends StatelessWidget {
   final double leadingIconOffset;
   final VoidCallback? onPress;
   final Widget? leadingIcon;
+  final double? trailingIconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,10 @@ class SectionHeader extends StatelessWidget {
                 padding: EdgeInsetsDirectional.only(
                   end: ScreenSideOffset.defaultSmallMargin - SectionHeaderButton.hitSlop,
                 ),
-                child: SectionHeaderButton(onPress!),
+                child: SectionHeaderButton(
+                  onPress!,
+                  iconSize: trailingIconSize,
+                ),
               ),
           ],
         ),

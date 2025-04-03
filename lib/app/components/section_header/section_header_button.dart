@@ -11,18 +11,19 @@ class SectionHeaderButton extends StatelessWidget {
   const SectionHeaderButton(
     this.onPress, {
     super.key,
+    this.iconSize,
   });
 
   final VoidCallback onPress;
+  final double? iconSize;
 
   static double get hitSlop => 10.0.s;
 
-  static double get iconSize => 24.0.s;
-
-  static double get totalSize => iconSize + hitSlop * 2;
-
   @override
   Widget build(BuildContext context) {
+    final size = iconSize ?? 24.0.s;
+    final totalSize = size + hitSlop * 2;
+
     return SizedBox(
       width: totalSize,
       height: totalSize,
@@ -33,7 +34,8 @@ class SectionHeaderButton extends StatelessWidget {
           alignment: Alignment.center,
           transform: Matrix4.rotationY(pi),
           child: Assets.svg.iconChatBack.icon(
-            size: iconSize,
+            size: size,
+            flipForRtl: true,
           ),
         ),
       ),

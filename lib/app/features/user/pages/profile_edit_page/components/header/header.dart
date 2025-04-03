@@ -27,6 +27,7 @@ class Header extends StatelessWidget {
               },
               opacity: 1,
               assetName: Assets.svg.iconProfileBack,
+              flipForRtl: true,
             ),
           ],
         ),

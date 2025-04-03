@@ -41,6 +41,7 @@ class Header extends ConsumerWidget {
                   },
                   assetName: Assets.svg.iconProfileBack,
                   opacity: 1,
+                  flipForRtl: true,
                 ),
               Expanded(
                 child: Padding(
