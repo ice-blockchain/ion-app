@@ -32,7 +32,10 @@ class MessagingHeader extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Assets.svg.iconChatBack.icon(size: 24.0.s),
+            child: Assets.svg.iconChatBack.icon(
+              size: 24.0.s,
+              flipForRtl: true,
+            ),
           ),
           SizedBox(width: 12.0.s),
           GestureDetector(

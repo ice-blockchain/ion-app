@@ -36,6 +36,7 @@ class NavigationBackButton extends StatelessWidget {
         icon: icon ??
             Assets.svg.iconBackArrow.icon(
               size: iconSize,
+              flipForRtl: true,
             ),
       ),
     );

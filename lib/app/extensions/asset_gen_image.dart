@@ -39,7 +39,7 @@ extension IconStringExtension on String {
     Color? color,
     double? size,
     BoxFit? fit,
-    bool flipForRtl = true,
+    bool flipForRtl = false,
   }) {
     final iconSize = size ?? 24.0.s;
     final colorFilter = color == null ? null : ColorFilter.mode(color, BlendMode.srcIn);
@@ -74,7 +74,7 @@ extension IconStringExtension on String {
     Color? color,
     double? width,
     double? height,
-    bool flipForRtl = true,
+    bool flipForRtl = false,
   }) {
     final iconWidth = width ?? 24.0.s;
     final iconHeight = height ?? 24.0.s;

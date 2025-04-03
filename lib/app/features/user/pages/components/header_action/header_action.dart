@@ -14,6 +14,7 @@ class HeaderAction extends StatelessWidget {
     this.disabled = false,
     this.loading = false,
     this.opacity = 0,
+    this.flipForRtl = false,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class HeaderAction extends StatelessWidget {
   final bool disabled;
   final bool loading;
   final double opacity;
+  final bool flipForRtl;
 
   static double get buttonSize => 40.0.s;
 
@@ -49,7 +51,11 @@ class HeaderAction extends StatelessWidget {
       tintColor: context.theme.appColors.primaryText,
       icon: loading
           ? const IONLoadingIndicator(type: IndicatorType.dark)
-          : assetName.icon(size: iconSize, color: context.theme.appColors.primaryText),
+          : assetName.icon(
+              size: iconSize,
+              color: context.theme.appColors.primaryText,
+              flipForRtl: flipForRtl,
+            ),
       onPressed: onPressed,
     );
   }

@@ -27,6 +27,7 @@ class ChannelDetailAppBar extends StatelessWidget {
               context.pop();
             },
             assetName: Assets.svg.iconProfileBack,
+            flipForRtl: true,
             opacity: 1,
           ),
           HeaderAction(
