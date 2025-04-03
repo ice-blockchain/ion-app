@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 
-class ChatSimpleSearchListItemShape extends StatelessWidget {
-  const ChatSimpleSearchListItemShape({super.key});
+class ChatSearchListItemShape extends StatelessWidget {
+  const ChatSearchListItemShape({super.key});
 
   @override
   Widget build(BuildContext context) {

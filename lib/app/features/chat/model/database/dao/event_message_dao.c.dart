@@ -21,4 +21,13 @@ class EventMessageDao extends DatabaseAccessor<ChatDatabase> with _$EventMessage
     await into(db.eventMessageTable)
         .insert(EventMessageRowClass.fromEventMessage(event), mode: InsertMode.insertOrReplace);
   }
+
+  Future<List<EventMessage>> search(String query) async {
+    if (query.isEmpty) return [];
+
+    final searchResults =
+        await (select(db.eventMessageTable)..where((tbl) => tbl.content.like('%$query%'))).get();
+
+    return searchResults.map((row) => row.toEventMessage()).toList();
+  }
 }

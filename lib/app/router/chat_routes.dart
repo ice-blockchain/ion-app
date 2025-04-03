@@ -5,7 +5,7 @@ part of 'app_routes.c.dart';
 class ChatRoutes {
   static const routes = <TypedRoute<RouteData>>[
     TypedGoRoute<AppTestRoute>(path: 'app-test'),
-    TypedGoRoute<ChatSimpleSearchRoute>(path: 'chat-simple-search'),
+    TypedGoRoute<ChatQuickSearchRoute>(path: 'chat-simple-search'),
     TypedGoRoute<ChatAdvancedSearchRoute>(path: 'chat-advanced-search'),
     TypedGoRoute<ArchivedChatsMainRoute>(path: 'archived-chats'),
     TypedGoRoute<ConversationRoute>(
@@ -70,10 +70,10 @@ class AppTestRoute extends BaseRouteData {
   AppTestRoute() : super(child: const AppTestPage());
 }
 
-class ChatSimpleSearchRoute extends BaseRouteData {
-  ChatSimpleSearchRoute({this.query = ''})
+class ChatQuickSearchRoute extends BaseRouteData {
+  ChatQuickSearchRoute({this.query = ''})
       : super(
-          child: ChatSimpleSearchPage(query),
+          child: ChatQuickSearchPage(query: query),
         );
 
   final String query;
