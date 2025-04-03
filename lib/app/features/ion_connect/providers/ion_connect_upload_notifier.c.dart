@@ -14,7 +14,6 @@ import 'package:ion/app/features/ion_connect/model/file_alt.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/utils/file_storage_utils.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -39,15 +38,9 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
 
     final dimension = '${file.width}x${file.height}';
 
-    Logger.info('ION CONNECT - UPLOAD - START');
-
     final url = await getFileStorageApiUrl(ref);
 
-    Logger.info('ION CONNECT - UPLOAD - GET FILE STORAGE API URL END');
-
     final fileBytes = await File(file.path).readAsBytes();
-
-    Logger.info('ION CONNECT - UPLOAD - GET FILE BYTES END');
 
     final authorizationToken = await generateAuthorizationToken(
       ref: ref,
@@ -57,8 +50,6 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
       method: 'POST',
     );
 
-    Logger.info('ION CONNECT - UPLOAD - GENERATE AUTHORIZATION TOKEN END');
-
     final response = await _makeUploadRequest(
       url: url,
       alt: alt,
@@ -67,14 +58,10 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
       authorizationToken: authorizationToken,
     );
 
-    Logger.info('ION CONNECT - UPLOAD - MAKE UPLOAD REQUEST END');
-
     final fileMetadata = FileMetadata.fromUploadResponseTags(
       response.nip94Event.tags,
       mimeType: file.mimeType,
     );
-
-    Logger.info('ION CONNECT - UPLOAD - CREATE FILE METADATA END');
 
     final mediaAttachment = MediaAttachment(
       url: fileMetadata.url,

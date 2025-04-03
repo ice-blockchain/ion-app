@@ -14,7 +14,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/ion_connect/ed25519_key_store.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/blurhash_service.c.dart';
 import 'package:ion/app/services/media_service/media_encryption_service.c.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
@@ -42,11 +41,9 @@ class SendChatMedia extends _$SendChatMedia {
 
     _cancellableOperation = CancelableOperation.fromFuture(
       AsyncValue.guard(() async {
-        Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - COMPRESS MEDIA FILE START');
         final compressedMediaFile = await ref.read(
           compressChatMediaProvider(mediaFile),
         );
-        Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - COMPRESS MEDIA FILE END');
 
         for (final participantKey in participantsMasterPubkeys) {
           if (_cancellableOperation?.isCanceled ?? false) {
@@ -92,7 +89,6 @@ class SendChatMedia extends _$SendChatMedia {
     MediaFile mediaFile,
     String masterPubkey,
   ) async {
-    Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA START');
     final mediaAttachments = <MediaAttachment>[];
     final oneTimeEventSigner = await Ed25519KeyStore.generate();
     final env = ref.read(envProvider.notifier);
@@ -104,39 +100,27 @@ class SendChatMedia extends _$SendChatMedia {
     String? thumbUrl;
 
     if (isVideo) {
-      Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - THUMB START');
       final thumbMediaFile = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
       blurHash = await ref.read(generateBlurhashProvider(thumbMediaFile));
       final thumbMediaAttachment = (await _processMedia(thumbMediaFile, masterPubkey)).first;
       mediaAttachments.add(thumbMediaAttachment);
       thumbUrl = thumbMediaAttachment.url;
-      Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - THUMB END');
     }
-
-    Logger.info(
-      'CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - ENCRYPT MEDIA FILE START',
-    );
 
     final encryptedMediaFile = await ref.read(mediaEncryptionServiceProvider).encryptMediaFile(
           mediaFile,
         );
-    Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - ENCRYPT MEDIA FILE END');
 
-    Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - UPLOAD MEDIA FILE START');
     final uploadResult = await ref.read(ionConnectUploadNotifierProvider.notifier).upload(
           encryptedMediaFile.mediaFile,
           alt: FileAlt.message,
           customEventSigner: oneTimeEventSigner,
         );
-    Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - UPLOAD MEDIA FILE END');
 
     if (isImage) {
       thumbUrl = uploadResult.mediaAttachment.url;
     }
 
-    Logger.info(
-      'CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - CREATE MEDIA METADATA EVENT START',
-    );
     final mediaMetadataEvent = await uploadResult.fileMetadata
         .copyWith(
       blurhash: blurHash,
@@ -161,9 +145,6 @@ class SendChatMedia extends _$SendChatMedia {
           ),
     );
 
-    Logger.info(
-      'CHAT - SEND MESSAGE - SEND MEDIA FILES - PROCESS MEDIA - CREATE MEDIA ATTACHMENT START',
-    );
     final mediaAttachment = uploadResult.mediaAttachment.copyWith(
       blurhash: blurHash,
       encryptionKey: encryptedMediaFile.secretKey,

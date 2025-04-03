@@ -28,7 +28,6 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/services/compressor/compress_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -56,7 +55,6 @@ class SendE2eeChatMessageService {
     EventMessage? repliedMessage,
     List<String>? failedParticipantsMasterPubkeys,
   }) async {
-    Logger.info('CHAT - SEND MESSAGE - START');
     String? currentUserEventMessageId;
 
     try {
@@ -110,14 +108,12 @@ class SendE2eeChatMessageService {
             );
       });
 
-      Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES START');
       final mediaAttachmentsUsersBased = await _sendMediaFiles(
         mediaFiles,
         failedParticipantsMasterPubkeys ?? participantsMasterPubkeys,
         eventMessage.id,
         messageMediaIds,
       );
-      Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES END');
 
       final participantsKeysMap = await ref
           .read(conversationPubkeysProvider.notifier)
@@ -128,7 +124,6 @@ class SendE2eeChatMessageService {
         if (b == currentUserMasterPubkey) return -1;
         return a.compareTo(b);
       });
-      Logger.info('CHAT - SEND MESSAGE - SEND EVENT MESSAGE START');
 
       await Future.wait(
         participantsMasterPubkeys.map((masterPubkey) async {
@@ -181,7 +176,6 @@ class SendE2eeChatMessageService {
           }
         }),
       );
-      Logger.info('CHAT - SEND MESSAGE - SEND EVENT MESSAGE END');
     } catch (e) {
       if (currentUserEventMessageId != null) {
         for (final pubkey in participantsMasterPubkeys) {
@@ -227,8 +221,6 @@ class SendE2eeChatMessageService {
     String eventMessageId,
     List<int> messageMediaIds,
   ) async {
-    Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES -  CACHE END');
-
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
     final mediaAttachmentsUsersBased = <String, List<MediaAttachment>>{};
 
@@ -236,8 +228,6 @@ class SendE2eeChatMessageService {
       (mediaFile) async {
         final indexOfMediaFile = mediaFiles.indexOf(mediaFile);
         final id = messageMediaIds[indexOfMediaFile];
-
-        Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - SEND MEDIA FILE START $id');
 
         final sendResult = await ref
             .read(sendChatMediaProvider(id).notifier)
@@ -256,7 +246,6 @@ class SendE2eeChatMessageService {
               MessageMediaStatus.completed,
             );
 
-        Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES - SEND MEDIA FILE END $id');
         return sendResult;
       },
     ).toList();
@@ -273,7 +262,6 @@ class SendE2eeChatMessageService {
       }
     }
 
-    Logger.info('CHAT - SEND MESSAGE - SEND MEDIA FILES -END');
     return mediaAttachmentsUsersBased;
   }
 
