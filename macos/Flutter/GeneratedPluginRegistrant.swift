@@ -6,7 +6,7 @@ import FlutterMacOS
 import Foundation
 
 import device_info_plus
-import ffmpeg_kit_flutter_full_gpl
+import ffmpeg_kit_flutter
 import file_picker
 import file_saver
 import flutter_inappwebview_macos
