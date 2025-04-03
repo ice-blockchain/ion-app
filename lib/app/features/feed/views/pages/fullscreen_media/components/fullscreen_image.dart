@@ -12,13 +12,11 @@ class FullscreenImage extends HookConsumerWidget {
   const FullscreenImage({
     required this.imageUrl,
     this.bottomOverlayBuilder,
-    this.onInteractionStarted,
     super.key,
   });
 
   final String imageUrl;
   final Widget Function(BuildContext)? bottomOverlayBuilder;
-  final VoidCallback? onInteractionStarted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,27 +26,23 @@ class FullscreenImage extends HookConsumerWidget {
     final zoomState = useFullscreenImageZoom(ref);
 
     final handleDoubleTapDown = useCallback(
-      (TapDownDetails details) {
-        onInteractionStarted?.call();
-        zoomState.onDoubleTapDown(details);
-      },
-      [zoomState, onInteractionStarted],
+      zoomState.onDoubleTapDown,
+      [zoomState],
     );
 
     final handleDoubleTap = useCallback(
-      () {
-        onInteractionStarted?.call();
-        zoomState.onDoubleTap();
-      },
-      [zoomState, onInteractionStarted],
+      zoomState.onDoubleTap,
+      [zoomState],
     );
 
     final handleInteractionStart = useCallback(
-      (ScaleStartDetails details) {
-        onInteractionStarted?.call();
-        zoomState.onInteractionStart(details);
-      },
-      [zoomState, onInteractionStarted],
+      zoomState.onInteractionStart,
+      [zoomState],
+    );
+
+    final handleInteractionEnd = useCallback(
+      zoomState.onInteractionEnd,
+      [zoomState],
     );
 
     return Stack(
@@ -64,7 +58,7 @@ class FullscreenImage extends HookConsumerWidget {
               maxScale: maxScale,
               clipBehavior: Clip.none,
               onInteractionStart: handleInteractionStart,
-              onInteractionEnd: zoomState.onInteractionEnd,
+              onInteractionEnd: handleInteractionEnd,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
                 placeholder: (_, __) => const CenteredLoadingIndicator(),

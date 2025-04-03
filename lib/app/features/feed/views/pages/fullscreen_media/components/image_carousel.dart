@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: ice License 1.0
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,27 +29,29 @@ class ImageCarousel extends HookConsumerWidget {
     final horizontalPadding = 16.0.s;
 
     final isZoomed = ref.watch(imageZoomStateProvider);
+
     final currentPage = useState(initialIndex);
-    final zoomInitialized = useState(false);
-    final previousZoomState = usePrevious(isZoomed);
 
     useEffect(
       () {
-        if ((previousZoomState ?? false) == true && isZoomed == false) {
-          zoomInitialized.value = false;
+        void listener() {
+          if (pageController.hasClients && pageController.page != null) {
+            final newPage = pageController.page!.round();
+            if (newPage != currentPage.value) {
+              currentPage.value = newPage;
+            }
+          }
         }
 
-        return null;
-      },
-      [isZoomed, previousZoomState],
-    );
+        pageController.addListener(listener);
 
-    useEffect(
-      () {
-        zoomInitialized.value = false;
-        return null;
+        return () {
+          if (pageController.hasClients) {
+            pageController.removeListener(listener);
+          }
+        };
       },
-      [currentPage.value],
+      [pageController],
     );
 
     return Column(
@@ -55,14 +59,12 @@ class ImageCarousel extends HookConsumerWidget {
         Expanded(
           child: PageView.builder(
             controller: pageController,
-            physics:
-                isZoomed || zoomInitialized.value ? const NeverScrollableScrollPhysics() : null,
+            physics: isZoomed ? const NeverScrollableScrollPhysics() : const PageScrollPhysics(),
             itemCount: images.length,
-            onPageChanged: (index) => currentPage.value = index,
             itemBuilder: (context, index) {
               return FullscreenImage(
+                key: ValueKey(images[index].url),
                 imageUrl: images[index].url,
-                onInteractionStarted: () => zoomInitialized.value = true,
                 bottomOverlayBuilder: index == currentPage.value
                     ? (context) => SafeArea(
                           top: false,
