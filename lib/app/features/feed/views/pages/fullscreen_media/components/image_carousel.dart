@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_image.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
@@ -28,12 +29,14 @@ class ImageCarousel extends HookConsumerWidget {
     final horizontalPadding = 16.0.s;
 
     final currentPage = useState(initialIndex);
+    final isZoomed = ref.watch(imageZoomStateProvider);
 
     return Column(
       children: [
         Expanded(
           child: PageView.builder(
             controller: pageController,
+            physics: isZoomed ? const NeverScrollableScrollPhysics() : null,
             itemCount: images.length,
             onPageChanged: (index) {
               currentPage.value = index;
@@ -41,7 +44,6 @@ class ImageCarousel extends HookConsumerWidget {
             itemBuilder: (context, index) {
               return FullscreenImage(
                 imageUrl: images[index].url,
-                inPageView: true,
                 bottomOverlayBuilder: index == currentPage.value
                     ? (context) => SafeArea(
                           top: false,
