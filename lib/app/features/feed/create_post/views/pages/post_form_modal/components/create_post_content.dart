@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
+import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -56,6 +57,7 @@ class CreatePostContent extends StatelessWidget {
               createOption: createOption,
               attachedMediaNotifier: attachedMediaNotifier,
               attachedMediaLinksNotifier: attachedMediaLinksNotifier,
+              scrollController: scrollController,
             ),
             if (quotedEvent != null) _QuotedEntitySection(eventReference: quotedEvent!),
           ],
@@ -103,12 +105,14 @@ class _TextInputSection extends HookConsumerWidget {
     required this.createOption,
     required this.attachedMediaNotifier,
     required this.attachedMediaLinksNotifier,
+    required this.scrollController,
   });
 
   final QuillController textEditorController;
   final CreatePostOption createOption;
   final AttachedMediaNotifier attachedMediaNotifier;
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -180,6 +184,10 @@ class _TextInputSection extends HookConsumerWidget {
                       ),
                       child: UrlPreviewContent(url: links.first),
                     ),
+                  SuggestionsContainer(
+                    scrollController: scrollController,
+                    editorKey: textEditorKey,
+                  ),
                 ],
               ),
             ),

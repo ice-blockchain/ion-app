@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/providers/article/cashtag_suggestions_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/hashtag_suggestions_provider.c.dart';
 import 'package:ion/app/features/feed/providers/article/mention_suggestions_provider.c.dart';
@@ -22,6 +23,8 @@ class SuggestionsState {
 
 @riverpod
 class SuggestionsNotifier extends _$SuggestionsNotifier {
+  String _currentQuery = '';
+
   @override
   SuggestionsState build() {
     return const SuggestionsState();
@@ -30,6 +33,12 @@ class SuggestionsNotifier extends _$SuggestionsNotifier {
   Future<void> updateSuggestions(String query, String taggingCharacter) async {
     if (query.isEmpty) {
       ref.invalidate(suggestionsNotifierProvider);
+      return;
+    }
+
+    _currentQuery = query;
+    await ref.debounce();
+    if (_currentQuery != query) {
       return;
     }
 
