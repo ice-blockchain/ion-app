@@ -58,10 +58,10 @@ List<EntitiesDataSource>? feedSearchPostsDataSource(
   final tags = isTagSearch
       ? {
           '#${RelatedHashtag.tagName}': [
-            query,
+            query.toLowerCase(),
             // Is needed for backward compatibility - previously we set 't' tags without the symbol
             // It might be removed after the release.
-            if (query.startsWith('#')) query.substring(1),
+            if (query.startsWith('#')) query.substring(1).toLowerCase(),
           ],
         }
       : <String, List<Object>>{};

@@ -25,7 +25,7 @@ class RelatedHashtag with _$RelatedHashtag {
   }
 
   List<String> toTag() {
-    return [tagName, value];
+    return [tagName, value.toLowerCase()];
   }
 
   static bool isTag(String input) {
