@@ -99,6 +99,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
                             coverImagePath: image?.path,
                             whoCanReply: whoCanReply,
                             imageColor: imageColor,
+                            originalImageUrl: imageUrl,
                             eventReference: modifiedEvent!,
                           );
                     } else {
