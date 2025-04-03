@@ -91,22 +91,10 @@ class SendE2eeChatMessageService {
 
       currentUserEventMessageId = eventMessage.id;
 
-      final cacheKeys = await _generateCacheKeys(mediaFiles);
-      var messageMediaIds = <int>[];
-      await ref.read(chatDatabaseProvider).transaction(() async {
-        await ref.read(conversationDaoProvider).add([eventMessage]);
-        await ref.read(conversationEventMessageDaoProvider).add(eventMessage);
-        await ref.read(conversationMessageDataDaoProvider).add(
-              masterPubkey: currentUserMasterPubkey,
-              eventMessageId: eventMessage.id,
-              status: MessageDeliveryStatus.created,
-            );
-
-        messageMediaIds = await ref.read(messageMediaDaoProvider).addBatch(
-              eventMessageId: eventMessage.id,
-              cacheKeys: cacheKeys,
-            );
-      });
+      final messageMediaIds = await _addDbEntities(
+        eventMessage,
+        mediaFiles,
+      );
 
       final mediaAttachmentsUsersBased = await _sendMediaFiles(
         mediaFiles,
@@ -438,5 +426,32 @@ class SendE2eeChatMessageService {
     }
 
     return cacheKeys;
+  }
+
+  Future<List<int>> _addDbEntities(
+    EventMessage eventMessage,
+    List<MediaFile> mediaFiles,
+  ) async {
+    final cacheKeys = await _generateCacheKeys(mediaFiles);
+
+    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+
+    var messageMediaIds = <int>[];
+    await ref.read(chatDatabaseProvider).transaction(() async {
+      await ref.read(conversationDaoProvider).add([eventMessage]);
+      await ref.read(conversationEventMessageDaoProvider).add(eventMessage);
+      await ref.read(conversationMessageDataDaoProvider).add(
+            masterPubkey: currentUserMasterPubkey!,
+            eventMessageId: eventMessage.id,
+            status: MessageDeliveryStatus.created,
+          );
+
+      messageMediaIds = await ref.read(messageMediaDaoProvider).addBatch(
+            eventMessageId: eventMessage.id,
+            cacheKeys: cacheKeys,
+          );
+    });
+
+    return messageMediaIds;
   }
 }
