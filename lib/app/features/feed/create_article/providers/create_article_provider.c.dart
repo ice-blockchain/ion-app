@@ -145,6 +145,7 @@ class CreateArticle extends _$CreateArticle {
     String? title,
     String? summary,
     String? coverImagePath,
+    String? originalImageUrl,
     Map<String, MediaAttachment> mediaAttachments = const {},
     String? imageColor,
   }) async {
@@ -160,10 +161,15 @@ class CreateArticle extends _$CreateArticle {
       final files = <FileMetadata>[];
       final mediaAttachments2 = <MediaAttachment>[];
 
-      final mainImageFuture = _uploadCoverImage(coverImagePath, files, mediaAttachments2);
-      final contentFuture = _prepareContent(content, null, files, mediaAttachments2);
+      final String? imageUrlToUpload;
 
-      final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
+      if (originalImageUrl != null) {
+        imageUrlToUpload = originalImageUrl;
+      } else {
+        imageUrlToUpload = await _uploadCoverImage(coverImagePath, files, mediaAttachments2);
+      }
+
+      final updatedContent = await _prepareContent(content, null, files, mediaAttachments2);
 
       final richText = RichText(
         protocol: 'quill_delta',
@@ -188,7 +194,7 @@ class CreateArticle extends _$CreateArticle {
       final articleData = modifiedEntity.data.copyWith(
         title: title,
         summary: summary,
-        image: imageUrl,
+        image: imageUrlToUpload,
         content: deltaToMarkdown(updatedContent),
         media: modifiedMedia,
         relatedHashtags: relatedHashtags,
