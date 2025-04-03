@@ -13,8 +13,8 @@ enum SwipeDismissDirection {
 
 /// Widget that allows you to dismiss content by swiping,
 /// with proper handling of gesture conflicts during zoom
-class SwipeToDismiss extends HookWidget {
-  const SwipeToDismiss({
+class DismissiblePage extends HookWidget {
+  const DismissiblePage({
     required this.child,
     required this.onDismissed,
     this.isZoomed = false,
