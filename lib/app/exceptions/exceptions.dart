@@ -460,3 +460,8 @@ class FileDeleteException extends IONException {
   FileDeleteException(dynamic error, {required String fileHash})
       : super(10090, 'Failed to delete file $fileHash: $error');
 }
+
+class FormException extends IONException {
+  FormException(dynamic error, {String? formName})
+      : super(10091, 'Form ${formName ?? '<not specified>'} issue: $error');
+}

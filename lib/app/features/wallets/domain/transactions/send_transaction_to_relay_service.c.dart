@@ -56,7 +56,7 @@ class SendTransactionToRelayService {
   final IonConnectGiftWrapService wrapService;
 
   Future<void> sendTransactionEntity({
-    required WalletAssetData entityData,
+    required EventMessage Function(String currentUserPubkey) createEventMessage,
     required MasterPubkeyWithDeviceKeys senderPubkeys,
     required MasterPubkeyWithDeviceKeys receiverPubkeys,
   }) async {
@@ -76,7 +76,7 @@ class SendTransactionToRelayService {
         ),
       ];
 
-      final event = entityData.toEventMessage(currentUserPubkey: eventSigner.publicKey);
+      final event = createEventMessage(eventSigner.publicKey);
 
       // TODO: Optimize it to use sendEvents with master pubkey
       await pubkeyCombinations.map((pubkeys) async {

@@ -6,6 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/button/button.dart';
 import 'package:ion/app/components/list_items_loading_state/item_loading_state.dart';
+import 'package:ion/app/components/progress_bar/ion_loading_indicator.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/select/select_coin_button.dart';
 import 'package:ion/app/components/select/select_network_button.dart';
@@ -14,6 +15,7 @@ import 'package:ion/app/extensions/object.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/user_payment_flow_card/user_payment_flow_card.dart';
 import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
+import 'package:ion/app/features/user/providers/request_coins_submit_notifier.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
 import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/buttons/coin_amount_input.dart';
@@ -39,6 +41,16 @@ class RequestCoinsFormModal extends HookConsumerWidget {
 
     final form = ref.watch(requestCoinsFormControllerProvider);
     final coin = form.assetData.as<CoinAssetToSendData>();
+
+    ref
+      ..displayErrors(requestCoinsSubmitNotifierProvider)
+      ..listenSuccess(
+        requestCoinsSubmitNotifierProvider,
+        (_) => Navigator.of(context, rootNavigator: true).pop(),
+      );
+
+    final isLoading = ref.watch(requestCoinsSubmitNotifierProvider).isLoading;
+    final isButtonDisabled = amountController.text.isEmpty || isLoading;
 
     return SheetContent(
       body: KeyboardDismissOnTap(
@@ -70,7 +82,7 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                         selectedNetwork: form.network,
                         onTap: () {
                           if (coin?.selectedOption != null) {
-                            SelectCoinProfileRoute(paymentType: PaymentType.request)
+                            SelectNetworkProfileRoute(paymentType: PaymentType.request)
                                 .push<void>(context);
                           } else {
                             SelectCoinProfileRoute(paymentType: PaymentType.request)
@@ -90,25 +102,25 @@ class RequestCoinsFormModal extends HookConsumerWidget {
                         )
                       else
                         ItemLoadingState(itemHeight: 60.0.s),
-                      SizedBox(height: 45.0.s),
+                      SizedBox(height: 16.0.s),
                       Button(
-                        type: amountController.text.isEmpty
-                            ? ButtonType.disabled
-                            : ButtonType.primary,
-                        disabled: amountController.text.isEmpty,
-                        label: Text(
-                          locale.button_request,
-                        ),
+                        type: isButtonDisabled ? ButtonType.disabled : ButtonType.primary,
+                        disabled: isButtonDisabled,
+                        label: Text(locale.button_request),
                         mainAxisSize: MainAxisSize.max,
-                        trailingIcon: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            colors.primaryBackground,
-                            BlendMode.srcIn,
-                          ),
-                          child: Assets.svg.iconButtonNext.icon(),
-                        ),
+                        trailingIcon: isLoading
+                            ? const IONLoadingIndicator()
+                            : ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  colors.primaryBackground,
+                                  BlendMode.srcIn,
+                                ),
+                                child: Assets.svg.iconButtonNext.icon(),
+                              ),
                         onPressed: () {
-                          if (formKey.currentState!.validate()) {}
+                          if (formKey.currentState!.validate()) {
+                            ref.read(requestCoinsSubmitNotifierProvider.notifier).submitRequest();
+                          }
                         },
                       ),
                       SizedBox(height: 16.0.s),
