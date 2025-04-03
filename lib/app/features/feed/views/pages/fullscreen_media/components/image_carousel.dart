@@ -58,15 +58,11 @@ class ImageCarousel extends HookConsumerWidget {
             physics:
                 isZoomed || zoomInitialized.value ? const NeverScrollableScrollPhysics() : null,
             itemCount: images.length,
-            onPageChanged: (index) {
-              currentPage.value = index;
-            },
+            onPageChanged: (index) => currentPage.value = index,
             itemBuilder: (context, index) {
               return FullscreenImage(
                 imageUrl: images[index].url,
-                onInteractionStarted: () {
-                  zoomInitialized.value = true;
-                },
+                onInteractionStarted: () => zoomInitialized.value = true,
                 bottomOverlayBuilder: index == currentPage.value
                     ? (context) => SafeArea(
                           top: false,
