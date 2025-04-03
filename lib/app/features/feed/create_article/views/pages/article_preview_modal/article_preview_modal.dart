@@ -92,7 +92,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
                   ),
                   onPressed: () {
                     if (modifiedEvent != null) {
-                      ref.read(createArticleProvider(CreateArticleOption.plain).notifier).modify(
+                      ref.read(createArticleProvider(CreateArticleOption.modify).notifier).modify(
                             title: title,
                             content: content,
                             topics: selectedTopics,
