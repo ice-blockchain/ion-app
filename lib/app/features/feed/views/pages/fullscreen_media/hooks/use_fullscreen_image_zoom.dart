@@ -11,35 +11,42 @@ class FullscreenImageZoomState {
     required this.transformationController,
     required this.onDoubleTapDown,
     required this.onDoubleTap,
+    required this.onInteractionStart,
     required this.onInteractionEnd,
   });
 
   final TransformationController transformationController;
   final void Function(TapDownDetails details) onDoubleTapDown;
   final VoidCallback onDoubleTap;
+  final void Function(ScaleStartDetails details) onInteractionStart;
   final void Function(ScaleEndDetails details) onInteractionEnd;
 }
 
 FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
   final transformationController = useTransformationController();
   final animationController = useAnimationController(duration: 300.ms);
-
   final zoomNotifier = ref.watch(imageZoomStateProvider.notifier);
+  // final interactionNotifier = ref.watch(imageInteractionStateProvider.notifier);
   final tapDownDetails = useState<TapDownDetails?>(null);
   final animation = useState<Animation<Matrix4>?>(null);
 
   useEffect(
     () {
       void animationListener() {
-        if (animation.value != null) {
+        if (animation.value != null && !animationController.toString().contains('DISPOSED')) {
           transformationController.value = animation.value!.value;
         }
       }
 
       void animationStatusListener(AnimationStatus status) {
+        if (animationController.toString().contains('DISPOSED')) return;
+
         if (status == AnimationStatus.completed) {
           final currentlyZoomed = transformationController.value != Matrix4.identity();
-          zoomNotifier.zoomed = currentlyZoomed;
+
+          if (ref.read(imageZoomStateProvider) != currentlyZoomed) {
+            zoomNotifier.zoomed = currentlyZoomed;
+          }
         }
       }
 
@@ -48,12 +55,14 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
         ..addStatusListener(animationStatusListener);
 
       return () {
-        animationController
-          ..removeListener(animationListener)
-          ..removeStatusListener(animationStatusListener);
+        if (!animationController.toString().contains('DISPOSED')) {
+          animationController
+            ..removeListener(animationListener)
+            ..removeStatusListener(animationStatusListener);
+        }
       };
     },
-    const [],
+    [animationController],
   );
 
   void handleDoubleTap() {
@@ -79,27 +88,40 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
       ),
     );
 
-    animationController
-      ..reset()
-      ..forward();
+    if (!animationController.toString().contains('DISPOSED')) {
+      animationController
+        ..reset()
+        ..forward();
+    }
+  }
 
-    zoomNotifier.zoomed = newZoomState;
+  void handleInteractionStart(ScaleStartDetails details) {
+    if (!animationController.toString().contains('DISPOSED') && animationController.isAnimating) {
+      animationController.stop();
+    }
+
+    ref.read(imageInteractionStateProvider.notifier).setInteracting(true);
   }
 
   void handleInteractionEnd(ScaleEndDetails details) {
-    final scale = transformationController.value.getMaxScaleOnAxis();
+    ref.read(imageInteractionStateProvider.notifier).setInteracting(false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (animationController.toString().contains('DISPOSED')) return;
+      final scale = transformationController.value.getMaxScaleOnAxis();
 
-    final newZoomState = scale > 1.0;
-    final currentZoomState = ref.read(imageZoomStateProvider);
-    if (currentZoomState != newZoomState) {
-      zoomNotifier.zoomed = newZoomState;
-    }
+      final newZoomState = scale > 1.01;
+      final currentZoomState = ref.read(imageZoomStateProvider);
+      if (currentZoomState != newZoomState) {
+        zoomNotifier.zoomed = newZoomState;
+      }
+    });
   }
 
   return FullscreenImageZoomState(
     transformationController: transformationController,
     onDoubleTapDown: (details) => tapDownDetails.value = details,
     onDoubleTap: handleDoubleTap,
+    onInteractionStart: handleInteractionStart,
     onInteractionEnd: handleInteractionEnd,
   );
 }
