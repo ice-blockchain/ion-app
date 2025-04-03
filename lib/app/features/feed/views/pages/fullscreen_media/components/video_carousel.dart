@@ -7,6 +7,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
 import 'package:ion/app/utils/future.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class VideoCarousel extends HookWidget {
   const VideoCarousel({
@@ -42,6 +43,11 @@ class VideoCarousel extends HookWidget {
       },
       [pageController],
     );
+
+    useEffect(() {
+      WakelockPlus.enable();
+      return WakelockPlus.disable;
+    });
 
     return PageView.builder(
       controller: pageController,
