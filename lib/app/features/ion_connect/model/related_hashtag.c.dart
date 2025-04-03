@@ -28,5 +28,10 @@ class RelatedHashtag with _$RelatedHashtag {
     return [tagName, value];
   }
 
+  static bool isTag(String input) {
+    // starts with # or $ and contains only 1 word
+    return RegExp(r'^[#\$]\S+$').hasMatch(input);
+  }
+
   static const String tagName = 't';
 }
