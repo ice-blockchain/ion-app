@@ -23,8 +23,8 @@ class TextMessage extends ConsumerWidget {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
     final textStyle = context.theme.appTextThemes.body2.copyWith(
-        color:
-            isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText);
+      color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+    );
 
     final oneLineTextPainter = TextPainter(
       text: TextSpan(
