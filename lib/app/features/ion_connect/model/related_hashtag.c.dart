@@ -25,12 +25,12 @@ class RelatedHashtag with _$RelatedHashtag {
   }
 
   List<String> toTag() {
-    if (value.startsWith('#')) {
-      return [tagName, value.substring(1)];
-    } else if (value.startsWith(r'$')) {
-      return [tagName, value];
-    }
-    return [tagName, value];
+    return [tagName, value.toLowerCase()];
+  }
+
+  static bool isTag(String input) {
+    // starts with # or $ and contains only 1 word
+    return RegExp(r'^[#\$]\S+$').hasMatch(input);
   }
 
   static const String tagName = 't';

@@ -28,7 +28,6 @@ class FeedAdvancedSearchUsers extends HookConsumerWidget {
       slivers: [
         if (searchUsers == null)
           const ListItemsLoadingState(
-            padding: EdgeInsets.zero,
             listItemsLoadingStateType: ListItemsLoadingStateType.scrollView,
           )
         else if (searchUsers.isEmpty)

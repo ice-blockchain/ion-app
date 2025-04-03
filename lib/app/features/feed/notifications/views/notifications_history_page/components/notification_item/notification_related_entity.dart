@@ -41,7 +41,7 @@ class NotificationRelatedEntity extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        PostDetailsRoute(eventReference: entity.toEventReference().encode()).push<void>(context);
+        PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
       },
       child: Post(
         eventReference: eventReference,
