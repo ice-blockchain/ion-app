@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
@@ -11,11 +12,13 @@ class FullscreenImage extends HookConsumerWidget {
   const FullscreenImage({
     required this.imageUrl,
     this.bottomOverlayBuilder,
+    this.onInteractionStarted,
     super.key,
   });
 
   final String imageUrl;
   final Widget Function(BuildContext)? bottomOverlayBuilder;
+  final VoidCallback? onInteractionStarted;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,19 +27,43 @@ class FullscreenImage extends HookConsumerWidget {
 
     final zoomState = useFullscreenImageZoom(ref);
 
+    final handleDoubleTapDown = useCallback(
+      (TapDownDetails details) {
+        onInteractionStarted?.call();
+        zoomState.onDoubleTapDown(details);
+      },
+      [zoomState, onInteractionStarted],
+    );
+
+    final handleDoubleTap = useCallback(
+      () {
+        onInteractionStarted?.call();
+        zoomState.onDoubleTap();
+      },
+      [zoomState, onInteractionStarted],
+    );
+
+    final handleInteractionStart = useCallback(
+      (ScaleStartDetails details) {
+        onInteractionStarted?.call();
+        zoomState.onInteractionStart(details);
+      },
+      [zoomState, onInteractionStarted],
+    );
+
     return Stack(
       fit: StackFit.expand,
       children: [
         ColoredBox(
           color: primaryTextColor,
           child: GestureDetector(
-            onDoubleTapDown: zoomState.onDoubleTapDown,
-            onDoubleTap: zoomState.onDoubleTap,
+            onDoubleTapDown: handleDoubleTapDown,
+            onDoubleTap: handleDoubleTap,
             child: InteractiveViewer(
               transformationController: zoomState.transformationController,
               maxScale: maxScale,
               clipBehavior: Clip.none,
-              onInteractionStart: zoomState.onInteractionStart,
+              onInteractionStart: handleInteractionStart,
               onInteractionEnd: zoomState.onInteractionEnd,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,

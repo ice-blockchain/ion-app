@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: ice License 1.0
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -28,15 +26,37 @@ class ImageCarousel extends HookConsumerWidget {
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
     final horizontalPadding = 16.0.s;
 
-    final currentPage = useState(initialIndex);
     final isZoomed = ref.watch(imageZoomStateProvider);
+    final currentPage = useState(initialIndex);
+    final zoomInitialized = useState(false);
+    final previousZoomState = usePrevious(isZoomed);
+
+    useEffect(
+      () {
+        if ((previousZoomState ?? false) == true && isZoomed == false) {
+          zoomInitialized.value = false;
+        }
+
+        return null;
+      },
+      [isZoomed, previousZoomState],
+    );
+
+    useEffect(
+      () {
+        zoomInitialized.value = false;
+        return null;
+      },
+      [currentPage.value],
+    );
 
     return Column(
       children: [
         Expanded(
           child: PageView.builder(
             controller: pageController,
-            physics: isZoomed ? const NeverScrollableScrollPhysics() : null,
+            physics:
+                isZoomed || zoomInitialized.value ? const NeverScrollableScrollPhysics() : null,
             itemCount: images.length,
             onPageChanged: (index) {
               currentPage.value = index;
@@ -44,6 +64,9 @@ class ImageCarousel extends HookConsumerWidget {
             itemBuilder: (context, index) {
               return FullscreenImage(
                 imageUrl: images[index].url,
+                onInteractionStarted: () {
+                  zoomInitialized.value = true;
+                },
                 bottomOverlayBuilder: index == currentPage.value
                     ? (context) => SafeArea(
                           top: false,
