@@ -18,10 +18,11 @@ class TransactionsTable extends Table {
   TextColumn get fee => text().nullable()();
   TextColumn get status => text().nullable()();
   TextColumn get nativeCoinId => text().nullable()(); // to get decimals to calculate fee
-  DateTimeColumn get dateConfirmed => dateTime().nullable()(); // arrival time
+  DateTimeColumn get dateConfirmed => dateTime().nullable().map(const UtcDateTimeConverter())();
+  DateTimeColumn get dateRequested => dateTime().nullable().map(const UtcDateTimeConverter())();
 
   // Entity fields
-  DateTimeColumn get createdAt => dateTime().nullable()(); // arrival time
+  DateTimeColumn get createdAtInRelay => dateTime().nullable().map(const UtcDateTimeConverter())();
   // sender, if current user receiver, and vice versa
   TextColumn get userPubkey => text().nullable()();
   // If asset is nft
@@ -33,4 +34,16 @@ class TransactionsTable extends Table {
 
   @override
   Set<Column> get primaryKey => {txHash};
+}
+
+/// We need to be sure that the data in the db is stored in a single format,
+/// so a custom type converter was used for that purpose.
+class UtcDateTimeConverter extends TypeConverter<DateTime?, DateTime?> {
+  const UtcDateTimeConverter();
+
+  @override
+  DateTime? fromSql(DateTime? fromDb) => fromDb?.toUtc();
+
+  @override
+  DateTime? toSql(dynamic value) => value is DateTime ? value.toUtc() : null;
 }

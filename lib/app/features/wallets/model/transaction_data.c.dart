@@ -21,9 +21,10 @@ class TransactionData with _$TransactionData {
     required TransactionCryptoAsset cryptoAsset,
     String? id,
     String? fee,
-    DateTime? createdAt,
     DateTime? dateConfirmed,
-    TransactionStatus? status,
+    DateTime? dateRequested,
+    DateTime? createdAtInRelay,
+    @Default(TransactionStatus.broadcasted) TransactionStatus status,
     String? userPubkey,
   }) = _TransactionData;
 }

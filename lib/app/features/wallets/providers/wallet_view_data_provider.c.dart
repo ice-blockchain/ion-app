@@ -8,6 +8,7 @@ import 'package:ion/app/features/wallets/domain/wallet_views/wallet_views_servic
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/wallet_view_data.c.dart';
 import 'package:ion/app/features/wallets/providers/selected_wallet_view_id_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'wallet_view_data_provider.c.g.dart';
@@ -18,6 +19,9 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
 
   @override
   Future<List<WalletViewData>> build() async {
+    // Wait until all preparations are completed
+    await ref.watch(walletsInitializerProvider.future);
+
     final walletViewsService = await ref.watch(walletViewsServiceProvider.future);
 
     final walletViews = await walletViewsService.fetch();

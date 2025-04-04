@@ -10,18 +10,22 @@ part 'network_fee_option.c.freezed.dart';
 @freezed
 class NetworkFeeOption with _$NetworkFeeOption {
   const factory NetworkFeeOption({
-    required NetworkFeeType type,
     required double amount,
-    required double priceUSD,
     required String symbol,
+    required double priceUSD,
+    required NetworkFeeType? type,
     Duration? arrivalTime,
   }) = _NetworkFeeOption;
 
   const NetworkFeeOption._();
 
-  String getDisplayArrivalTime(BuildContext context) {
-    return arrivalTime != null
-        ? '${arrivalTime!.inMinutes} ${context.i18n.wallet_arrival_time_minutes}'
-        : type.getDisplayName(context);
+  String? getDisplayArrivalTime(BuildContext context) {
+    if (arrivalTime != null) {
+      return '${arrivalTime!.inMinutes} ${context.i18n.wallet_arrival_time_minutes}';
+    }
+
+    if (type != null) return type!.getDisplayName(context);
+
+    return null;
   }
 }
