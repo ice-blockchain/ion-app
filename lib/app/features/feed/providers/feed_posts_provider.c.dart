@@ -44,19 +44,13 @@ class FeedPosts extends _$FeedPosts {
     final currentCategory = ref.read(feedCurrentFilterProvider).category;
     switch (currentCategory) {
       case FeedCategory.feed:
-        final isRegularPost = entity is ModifiablePostEntity &&
-            entity.data.parentEvent?.eventReference == null &&
-            entity.data.expiration == null;
-        final isPostRepost = _isPostRepost(entity);
-        return isRegularPost || isPostRepost;
+        return _isRegularPostOrRepost(entity) || _isArticleOrArticleRepost(entity);
       case FeedCategory.videos:
         final isVideoPost = _isVideoPost(entity);
         final isVideoRepost = _isVideoRepost(entity);
         return isVideoPost || isVideoRepost;
       case FeedCategory.articles:
-        final isArticle = entity is ArticleEntity;
-        final isArticleRepost = _isArticleRepost(entity);
-        return isArticle || isArticleRepost;
+        return _isArticleOrArticleRepost(entity);
     }
   }
 
@@ -79,10 +73,22 @@ class FeedPosts extends _$FeedPosts {
     return false;
   }
 
+  bool _isRegularPostOrRepost(IonConnectEntity entity) {
+    final isRegularPost = entity is ModifiablePostEntity &&
+        entity.data.parentEvent?.eventReference == null &&
+        entity.data.expiration == null;
+    final isPostRepost = _isPostRepost(entity);
+    return isRegularPost || isPostRepost;
+  }
+
   bool _isPostRepost(IonConnectEntity entity) {
     final repostedEntity = _repostedEntity(entity);
     return repostedEntity != null &&
         (repostedEntity is ModifiablePostEntity || repostedEntity is PostEntity);
+  }
+
+  bool _isArticleOrArticleRepost(IonConnectEntity entity) {
+    return entity is ArticleEntity || _isArticleRepost(entity);
   }
 
   bool _isArticleRepost(IonConnectEntity entity) {

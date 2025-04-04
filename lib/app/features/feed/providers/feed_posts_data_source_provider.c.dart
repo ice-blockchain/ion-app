@@ -240,6 +240,20 @@ EntitiesDataSource _buildPostsDataSource({
       currentPubkey: currentPubkey,
       forKind: PostEntity.kind,
     ).extensions,
+    ...SearchExtensions.withCounters(
+      [
+        GenericIncludeSearchExtension(
+          forKind: ArticleEntity.kind,
+          includeKind: UserMetadataEntity.kind,
+        ),
+        GenericIncludeSearchExtension(
+          forKind: ArticleEntity.kind,
+          includeKind: BlockListEntity.kind,
+        ),
+      ],
+      currentPubkey: currentPubkey,
+      forKind: ArticleEntity.kind,
+    ).extensions,
     ReferencesSearchExtension(contain: false),
     ExpirationSearchExtension(expiration: false),
   ]).toString();
@@ -254,7 +268,8 @@ EntitiesDataSource _buildPostsDataSource({
       return (entity is ModifiablePostEntity && entity.data.parentEvent == null) ||
           (entity is PostEntity && entity.data.parentEvent == null) ||
           entity is RepostEntity ||
-          entity is GenericRepostEntity;
+          entity is GenericRepostEntity ||
+          entity is ArticleEntity;
     },
     requestFilters: [
       RequestFilter(
@@ -262,6 +277,7 @@ EntitiesDataSource _buildPostsDataSource({
           PostEntity.kind,
           ModifiablePostEntity.kind,
           RepostEntity.kind,
+          ArticleEntity.kind,
         ],
         search: search,
         authors: authors,
@@ -272,7 +288,10 @@ EntitiesDataSource _buildPostsDataSource({
         authors: authors,
         search: search,
         tags: {
-          '#k': [ModifiablePostEntity.kind.toString()],
+          '#k': [
+            ModifiablePostEntity.kind.toString(),
+            ArticleEntity.kind.toString(),
+          ],
         },
         limit: 20,
       ),
