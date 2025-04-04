@@ -27,7 +27,7 @@ class FollowUserButton extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    ref.displayErrors(followListManagerProvider); //TODO:test
+    ref.displayErrors(followListManagerProvider);
 
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
     return FollowButton(
