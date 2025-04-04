@@ -14,7 +14,9 @@ import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
@@ -23,6 +25,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -96,6 +99,7 @@ class CreateArticle extends _$CreateArticle {
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
         richText: richText,
+        editingEndedAt: EntityEditingEndedAt.build(ref),
       );
 
       final entities = await _sendArticleEntities([...files, articleData]);
@@ -130,6 +134,76 @@ class CreateArticle extends _$CreateArticle {
       );
 
       await _sendArticleEntities([articleData]);
+    });
+  }
+
+  Future<void> modify({
+    required EventReference eventReference,
+    required Delta content,
+    required WhoCanReplySettingsOption whoCanReply,
+    required List<ArticleTopic> topics,
+    String? title,
+    String? summary,
+    String? coverImagePath,
+    Map<String, MediaAttachment> mediaAttachments = const {},
+    String? imageColor,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final modifiedEntity =
+          await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+      if (modifiedEntity is! ArticleEntity) {
+        throw UnsupportedEventReference(eventReference);
+      }
+
+      final files = <FileMetadata>[];
+      final mediaAttachments2 = <MediaAttachment>[];
+
+      final mainImageFuture = _uploadCoverImage(coverImagePath, files, mediaAttachments2);
+      final contentFuture = _prepareContent(content, null, files, mediaAttachments2);
+
+      final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
+
+      final richText = RichText(
+        protocol: 'quill_delta',
+        content: jsonEncode(updatedContent.toJson()),
+      );
+
+      final relatedHashtags = [
+        ...topics.map((topic) => RelatedHashtag(value: topic.toShortString())),
+        ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
+      ];
+
+      final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments);
+      for (final attachment in mediaAttachments2) {
+        modifiedMedia[attachment.url] = attachment;
+      }
+
+      final originalMediaHashes =
+          modifiedEntity.data.media.values.map((e) => e.originalFileHash).toSet();
+      final attachedMediaHashes = modifiedMedia.values.map((e) => e.originalFileHash).toSet();
+      final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
+
+      final articleData = modifiedEntity.data.copyWith(
+        title: title,
+        summary: summary,
+        image: imageUrl,
+        content: deltaToMarkdown(updatedContent),
+        media: modifiedMedia,
+        relatedHashtags: relatedHashtags,
+        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
+        colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
+        richText: richText,
+      );
+
+      if (removedMediaHashes.isNotEmpty) {
+        await ref
+            .read(ionConnectDeleteFileNotifierProvider.notifier)
+            .deleteMultiple(removedMediaHashes);
+      }
+
+      await _sendArticleEntities([...files, articleData]);
     });
   }
 

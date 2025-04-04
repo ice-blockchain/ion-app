@@ -80,7 +80,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
-        editingEndedAt: _buildEntityEditingEndedAt(),
+        editingEndedAt: EntityEditingEndedAt.build(ref),
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
@@ -186,16 +186,6 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   EntityPublishedAt _buildEntityPublishedAt() {
     return EntityPublishedAt(value: DateTime.now());
-  }
-
-  EntityEditingEndedAt _buildEntityEditingEndedAt() {
-    return EntityEditingEndedAt(
-      value: DateTime.now().add(
-        Duration(
-          minutes: ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
-        ),
-      ),
-    );
   }
 
   EntityExpiration? _buildExpiration() {

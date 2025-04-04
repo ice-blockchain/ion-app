@@ -10,6 +10,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_media_content.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_published_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
@@ -77,6 +78,7 @@ class ArticleData
     List<RelatedHashtag>? relatedHashtags,
     List<EventSetting>? settings,
     ColorLabel? colorLabel,
+    EntityEditingEndedAt? editingEndedAt,
   }) = _ArticleData;
 
   const ArticleData._();
@@ -103,6 +105,9 @@ class ArticleData
       colorLabel: ColorLabel.fromTags(tags, eventId: eventMessage.id),
       richText:
           tags[RichText.tagName] != null ? RichText.fromTag(tags[RichText.tagName]!.first) : null,
+      editingEndedAt: tags[EntityEditingEndedAt.tagName] != null
+          ? EntityEditingEndedAt.fromTag(tags[EntityEditingEndedAt.tagName]!.first)
+          : null,
     );
   }
 
@@ -117,6 +122,7 @@ class ArticleData
     List<EventSetting>? settings,
     String? imageColor,
     RichText? richText,
+    EntityEditingEndedAt? editingEndedAt,
   }) {
     return ArticleData(
       content: content,
@@ -130,6 +136,7 @@ class ArticleData
       settings: settings,
       colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
       richText: richText,
+      editingEndedAt: editingEndedAt,
     );
   }
 
@@ -156,6 +163,7 @@ class ArticleData
         if (settings != null) ...settings!.map((setting) => setting.toTag()),
         if (relatedHashtags != null) ...relatedHashtags!.map((hashtag) => hashtag.toTag()),
         if (richText != null) richText!.toTag(),
+        if (editingEndedAt != null) editingEndedAt!.toTag(),
       ],
       content: content,
     );
