@@ -23,6 +23,7 @@ import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/services/compressor/compress_service.c.dart';
@@ -45,10 +46,10 @@ class SendE2eeChatMessageService {
   final Ref ref;
 
   Future<void> sendMessage({
-    required String conversationId,
-    required List<String> participantsMasterPubkeys,
     required String content,
+    required String conversationId,
     required List<MediaFile> mediaFiles,
+    required List<String> participantsMasterPubkeys,
     String? subject,
     List<String>? groupImageTag,
     String? failedEventMessageId,
@@ -85,8 +86,8 @@ class SendE2eeChatMessageService {
       final eventMessage = await _createEventMessage(
         content: content,
         signer: eventSigner,
-        tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
         previousId: failedEventMessageId,
+        tags: conversationTags..addAll(mediaAttachments.map((a) => a.toTag())),
       );
 
       currentUserEventMessageId = eventMessage.id;
@@ -279,18 +280,20 @@ class SendE2eeChatMessageService {
     String? subject,
     List<String>? groupImageTag,
     EventMessage? repliedMessage,
+    ReplaceableEventIdentifier? replaceableIdentifier,
   }) {
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
 
     final relatedEventsTags = _buildRelatedEvents(repliedMessage).map((tag) => tag.toTag());
 
     final tags = [
-      if (subject != null) ['subject', subject],
-      ...masterPubkeys.map((pubkey) => ['p', pubkey]),
+      replaceableIdentifier?.toTag() ?? ReplaceableEventIdentifier.generate().toTag(),
       ...relatedEventsTags,
-      [CommunityIdentifierTag.tagName, conversationId],
-      if (groupImageTag != null) groupImageTag,
+      ...masterPubkeys.map((pubkey) => ['p', pubkey]),
       ['b', currentUserMasterPubkey!],
+      [CommunityIdentifierTag.tagName, conversationId],
+      if (subject != null) ['subject', subject],
+      if (groupImageTag != null) groupImageTag,
     ];
 
     return tags;
@@ -301,7 +304,7 @@ class SendE2eeChatMessageService {
     required EventSigner signer,
     required List<List<String>> tags,
     String? previousId,
-    int kind = PrivateDirectMessageEntity.kind,
+    int kind = PrivateDirectMessageEntity.immutableKind,
   }) async {
     final createdAt = DateTime.now().toUtc();
 
@@ -332,7 +335,7 @@ class SendE2eeChatMessageService {
     required String receiverMasterPubkey,
     required EventSigner signer,
     required EventMessage eventMessage,
-    int kind = PrivateDirectMessageEntity.kind,
+    int kind = PrivateDirectMessageEntity.immutableKind,
   }) async {
     final env = ref.read(envProvider.notifier);
     final sealService = await ref.read(ionConnectSealServiceProvider.future);

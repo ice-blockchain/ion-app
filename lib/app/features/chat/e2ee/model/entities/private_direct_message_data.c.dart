@@ -13,6 +13,7 @@ import 'package:ion/app/features/ion_connect/model/entity_data_with_media_conten
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_pubkey.c.dart';
+import 'package:ion/app/features/ion_connect/model/replaceable_event_identifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_protocol_identifier_type.dart';
 import 'package:ion/app/services/uuid/uuid.dart';
@@ -32,11 +33,9 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
 
   const PrivateDirectMessageEntity._();
 
-  factory PrivateDirectMessageEntity.fromEventMessage(
-    EventMessage eventMessage,
-  ) {
-    if (eventMessage.kind != kind) {
-      throw IncorrectEventKindException(eventMessage.id, kind: kind);
+  factory PrivateDirectMessageEntity.fromEventMessage(EventMessage eventMessage) {
+    if (eventMessage.kind != immutableKind) {
+      throw IncorrectEventKindException(eventMessage.id, kind: immutableKind);
     }
 
     return PrivateDirectMessageEntity(
@@ -47,7 +46,8 @@ class PrivateDirectMessageEntity with _$PrivateDirectMessageEntity {
     );
   }
 
-  static const kind = 14;
+  static const immutableKind = 14;
+  static const replaceableKind = 30014;
 
   List<String> get allPubkeys {
     return data.relatedPubkeys?.map((pubkey) => pubkey.value).toList() ?? []
@@ -75,6 +75,7 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     List<RelatedEvent>? relatedEvents,
     List<RelatedPubkey>? relatedPubkeys,
     CommunityIdentifierTag? relatedConversationId,
+    ReplaceableEventIdentifier? replaceableIdentifier,
   }) = _PrivateDirectMessageData;
 
   factory PrivateDirectMessageData.fromEventMessage(EventMessage eventMessage) {
@@ -86,6 +87,9 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
       relatedSubject: tags[RelatedSubject.tagName]?.map(RelatedSubject.fromTag).singleOrNull,
       relatedPubkeys: tags[RelatedPubkey.tagName]?.map(RelatedPubkey.fromTag).toList(),
       relatedEvents: tags[RelatedImmutableEvent.tagName]?.map(RelatedEvent.fromTag).toList(),
+      replaceableIdentifier: tags[ReplaceableEventIdentifier.tagName]
+          ?.map(ReplaceableEventIdentifier.fromTag)
+          .singleOrNull,
       uuid:
           tags[CommunityIdentifierTag.tagName]?.map(CommunityIdentifierTag.fromTag).single.value ??
               '',
@@ -94,8 +98,8 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
 
   factory PrivateDirectMessageData.fromRawContent(String content) {
     return PrivateDirectMessageData(
-      content: content,
       media: {},
+      content: content,
       uuid: generateUuid(),
     );
   }
@@ -106,8 +110,9 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     required String pubkey,
   }) {
     final eventTags = [
-      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
+      if (replaceableIdentifier != null) replaceableIdentifier!.toTag(),
       if (relatedEvents != null) ...relatedEvents!.map((event) => event.toTag()),
+      if (relatedPubkeys != null) ...relatedPubkeys!.map((pubkey) => pubkey.toTag()),
       if (media.isNotEmpty) ...media.values.map((mediaAttachment) => mediaAttachment.toTag()),
       CommunityIdentifierTag(value: uuid).toTag(),
     ];
@@ -115,21 +120,21 @@ class PrivateDirectMessageData with _$PrivateDirectMessageData, EntityDataWithMe
     final createdAt = DateTime.now();
 
     final kind14EventId = EventMessage.calculateEventId(
-      publicKey: pubkey,
-      createdAt: createdAt,
-      kind: PrivateDirectMessageEntity.kind,
       tags: eventTags,
       content: content,
+      publicKey: pubkey,
+      createdAt: createdAt,
+      kind: PrivateDirectMessageEntity.immutableKind,
     );
 
     return EventMessage(
-      id: kind14EventId,
+      sig: null,
       pubkey: pubkey,
-      createdAt: createdAt,
-      kind: PrivateDirectMessageEntity.kind,
       tags: eventTags,
       content: content,
-      sig: null,
+      id: kind14EventId,
+      createdAt: createdAt,
+      kind: PrivateDirectMessageEntity.immutableKind,
     );
   }
 
