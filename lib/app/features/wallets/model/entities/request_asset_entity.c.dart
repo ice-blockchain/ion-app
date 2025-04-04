@@ -109,30 +109,16 @@ class RequestAssetData with _$RequestAssetData {
   }
 }
 
-@JsonSerializable(createToJson: true, includeIfNull: false)
-class RequestAssetContent {
-  const RequestAssetContent({
-    required this.from,
-    required this.to,
-    this.assetId,
-    this.amount,
-    this.amountUsd,
-  });
+@freezed
+class RequestAssetContent with _$RequestAssetContent {
+  const factory RequestAssetContent({
+    required String from,
+    required String to,
+    @JsonKey(includeIfNull: false) String? assetId,
+    @JsonKey(includeIfNull: false) String? amount,
+    @JsonKey(includeIfNull: false) String? amountUsd,
+  }) = _RequestAssetContent;
 
   factory RequestAssetContent.fromJson(Map<String, dynamic> json) =>
       _$RequestAssetContentFromJson(json);
-
-  final String from; // address
-  final String to; // address
-
-  /// the identifier of the NFT in the collection; used only for NFTs
-  final String? assetId;
-
-  /// the transfer amount in native discriminator:I.E. if bitcoin, amount is in Satoshi; used only for coins/fungible tokens
-  final String? amount;
-
-  /// the decimal value amount priced in USD at the time of the transfer; used only for coins/fungible tokens
-  final String? amountUsd;
-
-  Map<String, dynamic> toJson() => _$RequestAssetContentToJson(this);
 }
