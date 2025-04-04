@@ -38,6 +38,7 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
     EmbedContext embedContext,
   ) {
     final path = embedContext.node.value.data as String;
+    final isNetworkImage = Uri.tryParse(path)?.hasAbsolutePath ?? false;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -47,7 +48,7 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
           padding: EdgeInsets.symmetric(vertical: 8.0.s),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: (Uri.tryParse(path)?.hasAbsolutePath ?? false)
+            child: isNetworkImage
                 ? ImageBlockNetworkImage(path: path, media: media)
                 : ImageBlockLocalImage(path: path),
           ),

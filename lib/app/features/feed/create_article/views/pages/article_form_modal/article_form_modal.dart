@@ -155,6 +155,7 @@ class ArticleFormModal extends HookConsumerWidget {
                           builder: (context, isFocused, child) {
                             return TextEditor(
                               autoFocus: isFocused,
+                              media: modifiedEvent != null ? articleState.media.value : null,
                               articleState.textEditorController,
                               placeholder: context.i18n.create_article_story_placeholder,
                               key: textEditorKey,

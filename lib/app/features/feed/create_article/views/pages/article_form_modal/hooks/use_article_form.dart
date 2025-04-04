@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,8 +9,10 @@ import 'package:ion/app/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
@@ -29,6 +29,7 @@ class ArticleFormState {
     required this.titleInputFormatters,
     required this.titleFocusNode,
     required this.isTitleFocused,
+    required this.media,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
@@ -42,10 +43,12 @@ class ArticleFormState {
   final List<TextInputFormatter> titleInputFormatters;
   final FocusNode titleFocusNode;
   final ValueNotifier<bool> isTitleFocused;
+  final ValueNotifier<Map<String, MediaAttachment>?> media;
 }
 
 ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) {
   final selectedImage = useState<MediaFile?>(null);
+  final media = useState<Map<String, MediaAttachment>?>(null);
   final selectedImageUrl = useState<String?>(null);
   final selectedImageUrlColor = useState<String?>(null);
   final titleFilled = useState(false);
@@ -110,23 +113,20 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
             titleFilled.value = true;
           }
 
-          if (modifiableEntity.data.richText?.protocol == 'quill_delta' &&
-              modifiableEntity.data.richText?.content != null) {
-            try {
-              final content = jsonDecode(modifiableEntity.data.richText!.content);
-              if (content is List) {
-                textEditorController.document = Document.fromJson(content);
-                isTextValid.value = true;
-              }
-            } catch (e) {
-              debugPrint('Error parsing rich text: $e');
-            }
-          }
+          final delta = parseAndConvertDelta(
+            modifiableEntity.data.richText?.content,
+            modifiableEntity.data.content,
+          );
+
+          textEditorController.document = Document.fromDelta(delta);
+          isTextValid.value = textEditorController.document.toPlainText().trim().isNotEmpty;
 
           if (modifiableEntity.data.image != null) {
             selectedImageUrl.value = modifiableEntity.data.image;
             selectedImageUrlColor.value = modifiableEntity.data.colorLabel?.value;
           }
+
+          media.value = modifiableEntity.data.media;
         }
       }
       return null;
@@ -197,5 +197,6 @@ ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) 
     titleInputFormatters: titleInputFormatters,
     titleFocusNode: titleFocusNode,
     isTitleFocused: isTitleFocused,
+    media: media,
   );
 }
