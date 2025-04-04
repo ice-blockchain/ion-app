@@ -124,6 +124,7 @@ class CarouselImageItem extends StatelessWidget {
               maxScale: maxScale,
               clipBehavior: Clip.none,
               onInteractionStart: zoomController.onInteractionStart,
+              onInteractionUpdate: zoomController.onInteractionUpdate,
               onInteractionEnd: zoomController.onInteractionEnd,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
