@@ -7,6 +7,7 @@ import 'package:ion/app/components/overlay_menu/overlay_menu.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
+import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/core/views/pages/unfollow_user_page.dart';
@@ -94,6 +95,7 @@ class _FollowUserMenuItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.displayErrors(followListManagerProvider);
     final following = ref.watch(isCurrentUserFollowingSelectorProvider(pubkey));
     return OverlayMenuItem(
       label: following
