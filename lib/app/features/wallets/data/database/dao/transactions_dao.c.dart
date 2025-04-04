@@ -25,16 +25,99 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
   TransactionsDao({required WalletsDatabase db}) : super(db);
 
   Future<DateTime?> lastCreatedAt() {
-    final maxCreatedAt = transactionsTable.createdAt.max();
+    final maxCreatedAt = transactionsTable.createdAtInRelay.max();
     return (selectOnly(transactionsTable)..addColumns([maxCreatedAt]))
         .map((row) => row.read(maxCreatedAt))
         .getSingleOrNull();
   }
 
-  Future<void> save(List<Transaction> transactions) {
-    return batch((batch) {
-      batch.insertAllOnConflictUpdate(transactionsTable, transactions);
+  Future<bool> save(List<Transaction> transactions) {
+    return transaction(() async {
+      final existing = await (select(transactionsTable)
+            ..where((t) => t.txHash.isIn(transactions.map((e) => e.txHash))))
+          .get();
+
+      final existingMap = {for (final e in existing) e.txHash: e};
+
+      final newTransactions = transactions.where((t) => !existingMap.containsKey(t.txHash));
+      final updatedTransactions = transactions.where((t) {
+        final existing = existingMap[t.txHash];
+        return existing != null && existing != t;
+      });
+
+      await batch((batch) {
+        batch.insertAllOnConflictUpdate(transactionsTable, transactions);
+      });
+
+      return newTransactions.isNotEmpty || updatedTransactions.isNotEmpty;
     });
+  }
+
+  Future<List<TransactionData>> getTransactions({
+    List<String> coinIds = const [],
+    List<String> walletAddresses = const [],
+    int limit = 20,
+    int? offset,
+    String? symbol,
+    String? networkId,
+  }) async {
+    final transactionCoinAlias = alias(coinsTable, 'transactionCoin');
+    final nativeCoinAlias = alias(coinsTable, 'nativeCoin');
+
+    final query = (select(transactionsTable)
+          ..where((tbl) {
+            Expression<bool> expr = const Constant(true);
+
+            if (coinIds.isNotEmpty) {
+              expr = expr & tbl.coinId.isIn(coinIds);
+            }
+
+            if (symbol != null) {
+              expr = expr & transactionCoinAlias.symbol.lower().equals(symbol.toLowerCase());
+            }
+
+            if (walletAddresses.isNotEmpty) {
+              expr = expr &
+                  (tbl.receiverWalletAddress.isIn(walletAddresses) |
+                      tbl.senderWalletAddress.isIn(walletAddresses));
+            }
+
+            if (networkId != null) {
+              expr = expr & tbl.networkId.equals(networkId);
+            }
+
+            return expr;
+          })
+          ..orderBy([
+            (tbl) => OrderingTerm(
+                  expression:
+                      tbl.dateRequested, // We need new field, like dateRequested to sort rows
+                  mode: OrderingMode.desc,
+                ),
+          ])
+          ..limit(limit, offset: offset))
+        .join([
+      leftOuterJoin(
+        networksTable,
+        networksTable.id.equalsExp(transactionsTable.networkId),
+      ),
+      leftOuterJoin(
+        transactionCoinAlias,
+        transactionCoinAlias.id.equalsExp(transactionsTable.coinId),
+      ),
+      leftOuterJoin(
+        nativeCoinAlias,
+        nativeCoinAlias.id.equalsExp(transactionsTable.nativeCoinId),
+      ),
+    ]);
+
+    return query.map((row) {
+      return _mapRowToDomainModel(
+        row,
+        nativeCoinAlias: nativeCoinAlias,
+        transactionCoinAlias: transactionCoinAlias,
+      );
+    }).get();
   }
 
   Future<List<TransactionData>> getBroadcastedTransfers() {
@@ -47,13 +130,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
                 tbl.type.equals(TransactionType.send.value) &
                 tbl.id.isNotNull() &
                 (tbl.status.isNull() | tbl.status.equals(TransactionStatus.broadcasted.toJson())),
-          )
-          ..orderBy([
-            (tbl) => OrderingTerm(
-                  expression: tbl.createdAt,
-                  mode: OrderingMode.desc,
-                ),
-          ]))
+          ))
         .join([
       leftOuterJoin(
         networksTable,
@@ -96,13 +173,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
                   tbl.transferredAmountUsd.isNotNull() &
                   tbl.balanceBeforeTransfer.isNotNull();
             },
-          )
-          ..orderBy([
-            (tbl) => OrderingTerm(
-                  expression: tbl.createdAt,
-                  mode: OrderingMode.desc,
-                ),
-          ]))
+          ))
         .join([
       leftOuterJoin(
         networksTable,
@@ -174,9 +245,12 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
       ),
       id: transaction.id,
       fee: transaction.fee,
-      createdAt: transaction.createdAt,
+      createdAtInRelay: transaction.createdAtInRelay,
       dateConfirmed: transaction.dateConfirmed,
-      status: transaction.status != null ? TransactionStatus.fromJson(transaction.status!) : null,
+      dateRequested: transaction.dateRequested,
+      status: transaction.status != null
+          ? TransactionStatus.fromJson(transaction.status!)
+          : TransactionStatus.broadcasted,
       userPubkey: transaction.userPubkey,
     );
   }

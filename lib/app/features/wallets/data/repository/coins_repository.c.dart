@@ -42,6 +42,8 @@ class CoinsRepository {
 
   Future<void> updateCoinSyncQueue(List<SyncCoins> syncCoins) => _syncCoinsDao.insertAll(syncCoins);
 
+  Future<List<SyncCoins>> getCoinSyncQueue() => _syncCoinsDao.load();
+
   Future<DateTime?> getNextSyncTime() => _syncCoinsDao.getNextSyncTime();
 
   Future<bool> hasSyncQueue() => _syncCoinsDao.hasAny();

@@ -49,4 +49,8 @@ class SyncCoinsDao extends DatabaseAccessor<WalletsDatabase> with _$SyncCoinsDao
   Future<void> clear() async {
     await delete(syncCoinsTable).go();
   }
+
+  Future<List<SyncCoins>> load() {
+    return (select(syncCoinsTable)..orderBy([(tbl) => OrderingTerm.asc(tbl.syncAfter)])).get();
+  }
 }

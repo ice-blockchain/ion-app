@@ -8,7 +8,6 @@ import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
 import 'package:ion/app/features/wallets/model/coins_group.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/providers/receive_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/balance/balance_actions.dart';
@@ -19,12 +18,10 @@ import 'package:ion/generated/assets.gen.dart';
 class Balance extends ConsumerWidget {
   const Balance({
     required this.coinsGroup,
-    required this.network,
     super.key,
   });
 
   final CoinsGroup coinsGroup;
-  final NetworkData network;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

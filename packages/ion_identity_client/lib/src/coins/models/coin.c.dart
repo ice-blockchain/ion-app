@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:ion_identity_client/src/core/network/duration_converter.dart';
 
 part 'coin.c.freezed.dart';
 part 'coin.c.g.dart';
@@ -18,8 +17,18 @@ class Coin with _$Coin {
     required double priceUSD,
     required String symbol,
     required String symbolGroup,
-    @DurationConverter() required Duration syncFrequency,
+    @SyncFrequencyConverter() required Duration syncFrequency,
   }) = _Coin;
 
   factory Coin.fromJson(Map<String, dynamic> json) => _$CoinFromJson(json);
+}
+
+class SyncFrequencyConverter implements JsonConverter<Duration, int> {
+  const SyncFrequencyConverter();
+
+  @override
+  Duration fromJson(int nanos) => Duration(microseconds: nanos ~/ 1000);
+
+  @override
+  int toJson(Duration object) => object.inMicroseconds * 1000;
 }

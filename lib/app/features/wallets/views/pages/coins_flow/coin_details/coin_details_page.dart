@@ -10,8 +10,12 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
+import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
+import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
@@ -20,6 +24,7 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/com
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/coin_transaction_history_notifier_provider.c.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/providers/network_selector_notifier.c.dart';
 import 'package:ion/app/features/wallets/views/pages/wallet_page/components/delimiter/delimiter.dart';
+import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/utils/date.dart';
 
@@ -66,30 +71,26 @@ class CoinDetailsPage extends HookConsumerWidget {
         hasMore: history?.hasMore ?? false,
         onLoadMore: historyNotifier.loadMore,
         slivers: [
-          if (networkSelectorData?.selected case final NetworkData selectedNetwork)
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const Delimiter(),
-                  Balance(
-                    coinsGroup: coinsGroup,
-                    network: selectedNetwork,
-                  ),
-                  const Delimiter(),
-                ],
-              ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                const Delimiter(),
+                Balance(
+                  coinsGroup: coinsGroup,
+                ),
+                const Delimiter(),
+              ],
             ),
+          ),
           if (networkSelectorData != null)
             SliverToBoxAdapter(
               child: TransactionListHeader(
-                networks: networkSelectorData.availableNetworks,
-                selectedNetwork: networkSelectorData.selected,
-                onNetworkTypeSelect: (NetworkData newNetwork) {
+                items: networkSelectorData.items,
+                selected: networkSelectorData.selected,
+                onNetworkTypeSelect: (selected) {
                   ref
-                      .read(
-                        networkSelectorNotifierProvider(symbolGroup: symbolGroup).notifier,
-                      )
-                      .selectedNetwork = newNetwork;
+                      .read(networkSelectorNotifierProvider(symbolGroup: symbolGroup).notifier)
+                      .selected = selected;
                 },
               ),
             ),
@@ -118,6 +119,48 @@ class CoinDetailsPage extends HookConsumerWidget {
                     child: TransactionListItem(
                       transactionData: transactions[index],
                       coinData: coinsGroup.coins.first.coin,
+                      onTap: () {
+                        final transaction = transactions[index].origin;
+
+                        final feeAmount = transaction.fee != null
+                            ? parseCryptoAmount(transaction.fee!, transaction.nativeCoin.decimals)
+                            : null;
+                        final transactionDetails = TransactionDetails(
+                          id: transaction.id,
+                          txHash: transaction.txHash,
+                          network: transaction.network,
+                          type: transaction.type,
+                          assetData: transaction.cryptoAsset.map(
+                            coin: (coin) => CryptoAssetToSendData.coin(
+                              coinsGroup: coinsGroup,
+                              amount: coin.amount,
+                              rawAmount: coin.rawAmount,
+                              amountUSD: coin.amountUSD,
+                            ),
+                            nft: (nft) => CryptoAssetToSendData.nft(nft: nft.nft),
+                          ),
+                          walletViewName: walletView.name,
+                          senderAddress: transaction.senderWalletAddress,
+                          receiverAddress: transaction.receiverWalletAddress,
+                          participantPubkey: transaction.userPubkey,
+                          status: transaction.status,
+                          dateRequested: transaction.dateRequested,
+                          dateConfirmed: transaction.dateConfirmed,
+                          nativeCoin: transaction.nativeCoin,
+                          networkFeeOption: feeAmount != null
+                              ? NetworkFeeOption(
+                                  amount: feeAmount,
+                                  symbol: transaction.nativeCoin.abbreviation,
+                                  priceUSD: feeAmount * transaction.nativeCoin.priceUSD,
+                                  type: null,
+                                )
+                              : null,
+                          dateBroadcasted: null,
+                        );
+
+                        ref.read(transactionNotifierProvider.notifier).details = transactionDetails;
+                        CoinTransactionDetailsRoute().push<void>(context);
+                      },
                     ),
                   );
                 },

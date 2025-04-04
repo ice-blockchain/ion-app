@@ -29,7 +29,7 @@ mixin _$Coin {
   double get priceUSD => throw _privateConstructorUsedError;
   String get symbol => throw _privateConstructorUsedError;
   String get symbolGroup => throw _privateConstructorUsedError;
-  @DurationConverter()
+  @SyncFrequencyConverter()
   Duration get syncFrequency => throw _privateConstructorUsedError;
 
   /// Serializes this Coin to a JSON map.
@@ -56,7 +56,7 @@ abstract class $CoinCopyWith<$Res> {
       double priceUSD,
       String symbol,
       String symbolGroup,
-      @DurationConverter() Duration syncFrequency});
+      @SyncFrequencyConverter() Duration syncFrequency});
 }
 
 /// @nodoc
@@ -147,7 +147,7 @@ abstract class _$$CoinImplCopyWith<$Res> implements $CoinCopyWith<$Res> {
       double priceUSD,
       String symbol,
       String symbolGroup,
-      @DurationConverter() Duration syncFrequency});
+      @SyncFrequencyConverter() Duration syncFrequency});
 }
 
 /// @nodoc
@@ -231,7 +231,7 @@ class _$CoinImpl implements _Coin {
       required this.priceUSD,
       required this.symbol,
       required this.symbolGroup,
-      @DurationConverter() required this.syncFrequency});
+      @SyncFrequencyConverter() required this.syncFrequency});
 
   factory _$CoinImpl.fromJson(Map<String, dynamic> json) =>
       _$$CoinImplFromJson(json);
@@ -255,7 +255,7 @@ class _$CoinImpl implements _Coin {
   @override
   final String symbolGroup;
   @override
-  @DurationConverter()
+  @SyncFrequencyConverter()
   final Duration syncFrequency;
 
   @override
@@ -308,16 +308,17 @@ class _$CoinImpl implements _Coin {
 
 abstract class _Coin implements Coin {
   factory _Coin(
-      {required final String contractAddress,
-      required final int decimals,
-      required final String iconURL,
-      required final String id,
-      required final String name,
-      required final String network,
-      required final double priceUSD,
-      required final String symbol,
-      required final String symbolGroup,
-      @DurationConverter() required final Duration syncFrequency}) = _$CoinImpl;
+          {required final String contractAddress,
+          required final int decimals,
+          required final String iconURL,
+          required final String id,
+          required final String name,
+          required final String network,
+          required final double priceUSD,
+          required final String symbol,
+          required final String symbolGroup,
+          @SyncFrequencyConverter() required final Duration syncFrequency}) =
+      _$CoinImpl;
 
   factory _Coin.fromJson(Map<String, dynamic> json) = _$CoinImpl.fromJson;
 
@@ -340,7 +341,7 @@ abstract class _Coin implements Coin {
   @override
   String get symbolGroup;
   @override
-  @DurationConverter()
+  @SyncFrequencyConverter()
   Duration get syncFrequency;
 
   /// Create a copy of Coin

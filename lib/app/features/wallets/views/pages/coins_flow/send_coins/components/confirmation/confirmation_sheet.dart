@@ -21,8 +21,8 @@ import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.d
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
+import 'package:ion/app/features/wallets/views/components/transaction_participant.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
-import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -86,7 +86,7 @@ class ConfirmationSheet extends ConsumerWidget {
                       ),
                     ),
                   SizedBox(height: 16.0.s),
-                  SendToRecipient(
+                  TransactionParticipant(
                     address: formData.receiverAddress,
                     pubkey: formData.contactPubkey,
                   ),
@@ -129,9 +129,8 @@ class ConfirmationSheet extends ConsumerWidget {
                     ),
                   SizedBox(height: 16.0.s),
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
-                    ListItemArrivalTime(
-                      formattedTime: fee.getDisplayArrivalTime(context),
-                    ),
+                    if (fee.getDisplayArrivalTime(context) case final String arrivalTime)
+                      ListItemArrivalTime(formattedTime: arrivalTime),
                     SizedBox(height: 16.0.s),
                     ListItemNetworkFee(value: formatCrypto(fee.amount, fee.symbol)),
                   ],
