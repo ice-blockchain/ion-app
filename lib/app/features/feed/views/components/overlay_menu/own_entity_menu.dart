@@ -132,6 +132,8 @@ class OwnEntityMenu extends ConsumerWidget {
     return switch (entity) {
       final ModifiablePostEntity post =>
         post.data.editingEndedAt?.value.isAfter(DateTime.now()) ?? false,
+      final ArticleEntity article =>
+        article.data.editingEndedAt?.value.isAfter(DateTime.now()) ?? false,
       _ => false,
     };
   }
