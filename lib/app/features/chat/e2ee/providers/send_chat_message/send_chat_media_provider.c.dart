@@ -59,6 +59,10 @@ class SendChatMedia extends _$SendChatMedia {
           result.add((participantKey, processedAttachments));
         }
 
+        if (_cancellableOperation?.isCanceled ?? false) {
+          return [];
+        }
+
         return mediaAttachments;
       }),
     );
@@ -68,6 +72,10 @@ class SendChatMedia extends _$SendChatMedia {
     );
 
     state = operation!;
+
+    if (_cancellableOperation?.isCanceled ?? false) {
+      return [];
+    }
 
     return result;
   }

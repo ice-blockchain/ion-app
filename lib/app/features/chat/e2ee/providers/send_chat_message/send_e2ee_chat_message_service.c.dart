@@ -91,18 +91,16 @@ class SendE2eeChatMessageService {
 
       currentUserEventMessageId = eventMessage.id;
 
-      await ref.read(conversationDaoProvider).add([eventMessage]);
-      await ref.read(conversationEventMessageDaoProvider).add(eventMessage);
-      await ref.read(conversationMessageDataDaoProvider).add(
-            masterPubkey: currentUserMasterPubkey,
-            eventMessageId: eventMessage.id,
-            status: MessageDeliveryStatus.created,
-          );
+      final messageMediaIds = await _addDbEntities(
+        eventMessage,
+        mediaFiles,
+      );
 
       final mediaAttachmentsUsersBased = await _sendMediaFiles(
         mediaFiles,
         failedParticipantsMasterPubkeys ?? participantsMasterPubkeys,
         eventMessage.id,
+        messageMediaIds,
       );
 
       final participantsKeysMap = await ref
@@ -209,27 +207,8 @@ class SendE2eeChatMessageService {
     List<MediaFile> mediaFiles,
     List<String> participantsMasterPubkeys,
     String eventMessageId,
+    List<int> messageMediaIds,
   ) async {
-    final cacheKeys = <String>[];
-    for (final mediaFile in mediaFiles) {
-      final file = File(mediaFile.path);
-      final fileName = generateUuid();
-      final isVideo = MediaType.fromMimeType(mediaFile.mimeType ?? '') == MediaType.video;
-
-      if (isVideo) {
-        final thumb = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
-        await FileSaver.instance.saveFileOnly(name: fileName, file: File(thumb.path));
-      } else {
-        await FileSaver.instance.saveFileOnly(name: fileName, file: file);
-      }
-      cacheKeys.add(fileName);
-    }
-
-    final messageMediaIds = await ref.read(messageMediaDaoProvider).addBatch(
-          eventMessageId: eventMessageId,
-          cacheKeys: cacheKeys,
-        );
-
     final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
     final mediaAttachmentsUsersBased = <String, List<MediaAttachment>>{};
 
@@ -427,5 +406,52 @@ class SendE2eeChatMessageService {
 
     final sorted = [receiverPubkey, currentPubkey]..sort();
     return sorted.join();
+  }
+
+  Future<List<String>> _generateCacheKeys(List<MediaFile> mediaFiles) async {
+    final cacheKeys = <String>[];
+
+    for (final mediaFile in mediaFiles) {
+      final file = File(mediaFile.path);
+      final fileName = generateUuid();
+      final isVideo = MediaType.fromMimeType(mediaFile.mimeType ?? '') == MediaType.video;
+
+      if (isVideo) {
+        final thumb = await ref.read(compressServiceProvider).getThumbnail(mediaFile);
+        await FileSaver.instance.saveFileOnly(name: fileName, file: File(thumb.path));
+      } else {
+        await FileSaver.instance.saveFileOnly(name: fileName, file: file);
+      }
+      cacheKeys.add(fileName);
+    }
+
+    return cacheKeys;
+  }
+
+  Future<List<int>> _addDbEntities(
+    EventMessage eventMessage,
+    List<MediaFile> mediaFiles,
+  ) async {
+    final cacheKeys = await _generateCacheKeys(mediaFiles);
+
+    final currentUserMasterPubkey = ref.read(currentPubkeySelectorProvider);
+
+    var messageMediaIds = <int>[];
+    await ref.read(chatDatabaseProvider).transaction(() async {
+      await ref.read(conversationDaoProvider).add([eventMessage]);
+      await ref.read(conversationEventMessageDaoProvider).add(eventMessage);
+      await ref.read(conversationMessageDataDaoProvider).add(
+            masterPubkey: currentUserMasterPubkey!,
+            eventMessageId: eventMessage.id,
+            status: MessageDeliveryStatus.created,
+          );
+
+      messageMediaIds = await ref.read(messageMediaDaoProvider).addBatch(
+            eventMessageId: eventMessage.id,
+            cacheKeys: cacheKeys,
+          );
+    });
+
+    return messageMediaIds;
   }
 }

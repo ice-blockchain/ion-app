@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:es_compression/brotli.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter/ffmpeg_session.dart';
 import 'package:ffmpeg_kit_flutter/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter/return_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,6 +23,7 @@ import 'package:ion/app/services/uuid/uuid.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:synchronized/synchronized.dart';
 
 part 'compress_service.c.g.dart';
 
@@ -35,6 +37,8 @@ final brotliCodec = BrotliCodec(level: 0);
 /// TODO: Support windows and web platforms
 ///
 class CompressionService {
+  final _lock = Lock();
+
   ///
   /// Compresses a video file to a new file with the same name in the application cache directory.
   /// If success, returns a new [MediaFile] with the compressed video.
@@ -79,7 +83,7 @@ class CompressionService {
         output,
       ];
 
-      final session = await FFmpegKit.executeWithArguments(args);
+      final session = await _executeFFmpeg(args);
       final returnCode = await session.getReturnCode();
       if (!ReturnCode.isSuccess(returnCode)) {
         final logs = await session.getAllLogsAsString();
@@ -116,7 +120,7 @@ class CompressionService {
   }) async {
     try {
       final output = await _generateOutputPath();
-      final session = await FFmpegKit.executeWithArguments([
+      final session = await _executeFFmpeg([
         '-i',
         file.path,
         '-c:v',
@@ -159,7 +163,7 @@ class CompressionService {
   Future<MediaFile> compressAudio(String inputPath) async {
     final outputPath = await _generateOutputPath(extension: 'opus');
     try {
-      final session = await FFmpegKit.executeWithArguments([
+      final session = await _executeFFmpeg([
         '-i',
         inputPath,
         '-c:a',
@@ -193,7 +197,7 @@ class CompressionService {
   Future<String> compressAudioToWav(String inputPath) async {
     final outputPath = await _generateOutputPath(extension: 'wav');
     try {
-      final session = await FFmpegKit.executeWithArguments([
+      final session = await _executeFFmpeg([
         '-i',
         inputPath,
         '-c:a',
@@ -230,7 +234,7 @@ class CompressionService {
       // If no external thumb was provided, extract a single frame from the video
       if (thumbPath == null) {
         final outputPath = await _generateOutputPath();
-        final session = await FFmpegKit.executeWithArguments([
+        final session = await _executeFFmpeg([
           '-i',
           videoFile.path,
           '-ss',
@@ -380,7 +384,13 @@ class CompressionService {
     }
     return (width: width, height: height);
   }
+
+  Future<FFmpegSession> _executeFFmpeg(List<String> args) async {
+    return _lock.synchronized(() async {
+      return FFmpegKit.executeWithArguments(args);
+    });
+  }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 CompressionService compressService(Ref ref) => CompressionService();
