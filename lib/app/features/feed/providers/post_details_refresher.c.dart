@@ -11,6 +11,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'post_details_refresher.c.g.dart';
 
+//TODO:rename to PostWithDependencies and method fetch - use in the Post component
+// ionConnectSyncEntityProvider -> ionConnectCachedEntityProvider
+// test - check if counters and other deps are fetched for reposted / quoted posts
 @riverpod
 class PostDetailsRefresher extends _$PostDetailsRefresher {
   @override
