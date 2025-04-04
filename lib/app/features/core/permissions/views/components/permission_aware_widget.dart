@@ -12,7 +12,7 @@ class PermissionAwareWidget extends ConsumerWidget {
     required this.builder,
     required this.onGranted,
     required this.requestDialog,
-    required this.settingsDialog,
+    this.settingsDialog,
     this.requestId = 'default',
     this.onGrantedPredicate = _defaultPredicate,
     super.key,
@@ -22,7 +22,7 @@ class PermissionAwareWidget extends ConsumerWidget {
   final Widget Function(BuildContext context, VoidCallback onPressed) builder;
   final VoidCallback onGranted;
   final Widget requestDialog;
-  final Widget settingsDialog;
+  final Widget? settingsDialog;
   final String requestId;
 
   /// A predicate function that determines if onGranted should be executed.
@@ -90,10 +90,12 @@ class PermissionAwareWidget extends ConsumerWidget {
     if (!context.mounted) return;
 
     if (isPermanentlyDenied) {
-      final shouldOpenSettings = await showSimpleBottomSheet<bool>(
-        context: context,
-        child: settingsDialog,
-      );
+      final shouldOpenSettings = settingsDialog != null
+          ? await showSimpleBottomSheet<bool>(
+              context: context,
+              child: settingsDialog!,
+            )
+          : true;
       if (shouldOpenSettings ?? false) {
         await permissionStrategy.openSettings();
       }

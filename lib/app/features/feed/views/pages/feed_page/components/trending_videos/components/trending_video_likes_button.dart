@@ -30,7 +30,7 @@ class TrendingVideoLikesButton extends ConsumerWidget {
       ),
     ];
     final appColors = context.theme.appColors;
-    final iconColor = isLiked ? appColors.attentionRed : appColors.onPrimaryAccent;
+    final color = isLiked ? appColors.attentionRed : appColors.onPrimaryAccent;
 
     return TextButton(
       style: TextButton.styleFrom(
@@ -42,7 +42,7 @@ class TrendingVideoLikesButton extends ConsumerWidget {
           SvgShadow(
             child: (isLiked ? Assets.svg.iconVideoLikeOn : Assets.svg.iconVideoLikeOff).icon(
               size: 14.0.s,
-              color: iconColor,
+              color: color,
             ),
           ),
           Padding(
@@ -50,7 +50,7 @@ class TrendingVideoLikesButton extends ConsumerWidget {
             child: Text(
               formatDoubleCompact(likesCount),
               style: context.theme.appTextThemes.caption3.copyWith(
-                color: appColors.secondaryBackground,
+                color: color,
                 shadows: boxShadow,
               ),
             ),

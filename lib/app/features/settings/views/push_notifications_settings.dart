@@ -13,7 +13,6 @@ import 'package:ion/app/features/core/permissions/data/models/permissions_types.
 import 'package:ion/app/features/core/permissions/providers/permissions_provider.c.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
-import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/settings_redirect_sheet.dart';
 import 'package:ion/app/features/settings/components/selectable_options_group.dart';
 import 'package:ion/app/features/settings/model/push_notifications_options.dart';
 import 'package:ion/app/hooks/use_selected_state.dart';
@@ -133,10 +132,6 @@ class _DevicePermissionButton extends StatelessWidget {
           permissionType: Permission.notifications,
           requestDialog: const PermissionRequestSheet(
             permission: Permission.notifications,
-          ),
-          settingsDialog: SettingsRedirectSheet.fromType(
-            context,
-            Permission.notifications,
           ),
           onGranted: () {},
           builder: (BuildContext context, VoidCallback onPressed) {

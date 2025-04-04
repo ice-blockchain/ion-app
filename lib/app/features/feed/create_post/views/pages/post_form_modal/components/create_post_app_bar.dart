@@ -25,12 +25,10 @@ class CreatePostAppBar extends HookWidget {
   Future<void> _handleClose({
     required BuildContext context,
     required FocusNode focusNode,
-    required bool isVideo,
+    required bool finishedEditing,
   }) async {
-    final shouldReturnToMediaPicker = isVideo;
-
     if (textEditorController.document.isEmpty()) {
-      context.pop(shouldReturnToMediaPicker);
+      context.pop(finishedEditing);
       return;
     }
 
@@ -41,7 +39,7 @@ class CreatePostAppBar extends HookWidget {
         onCancel: () => {
           focusNode.unfocus(),
           textEditorController.clearContent(),
-          Navigator.of(context).pop(shouldReturnToMediaPicker),
+          Navigator.of(context).pop(finishedEditing),
         },
       ),
     );
@@ -58,14 +56,14 @@ class CreatePostAppBar extends HookWidget {
       onBackPress: () => _handleClose(
         context: context,
         focusNode: focusNode,
-        isVideo: isVideo,
+        finishedEditing: false,
       ),
       actions: [
         NavigationCloseButton(
           onPressed: () => _handleClose(
             context: context,
             focusNode: focusNode,
-            isVideo: isVideo,
+            finishedEditing: true,
           ),
         ),
       ],
