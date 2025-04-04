@@ -44,9 +44,7 @@ class PostDetailsPage extends ConsumerWidget {
                   child: Post(
                     eventReference: eventReference,
                     timeFormat: TimestampFormat.detailed,
-                    onDelete: () {
-                      context.pop();
-                    },
+                    onDelete: context.pop,
                     isTextSelectable: true,
                     bodyMaxLines: null,
                   ),

@@ -50,6 +50,4 @@ class LikesCount extends _$LikesCount {
           );
     }
   }
-
-  void refresh() {}
 }

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_definition_data.c.dart';
 import 'package:ion/app/features/chat/community/models/entities/community_join_data.c.dart';
 import 'package:ion/app/features/core/providers/env_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/user/providers/count_provider.c.dart';
@@ -43,10 +44,10 @@ FutureOr<int?> communityMembersCount(
 
   return await ref.watch(
     countProvider(
-      key: community.data.uuid,
       actionSource: ActionSourceUserChat(community.ownerPubkey),
+      requestData: EventCountRequestData(filters: filters),
+      key: community.data.uuid,
       type: EventCountResultType.members,
-      filters: filters,
       cacheExpirationDuration: getCommunityMembersCountCacheMinutes,
     ).future,
   ) as FutureOr<int?>;
