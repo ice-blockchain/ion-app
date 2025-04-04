@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/app_locale_provider.c.dart';
@@ -16,12 +15,10 @@ import 'package:ion/app/services/logger/logger_initializer.dart';
 import 'package:ion/app/services/storage/secure_storage.c.dart';
 import 'package:ion/app/theme/theme.dart';
 import 'package:ion/generated/app_localizations.dart';
-import 'package:ion/generated/assets.gen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SecureStorage().clearOnReinstall();
-  await dotenv.load(fileName: Assets.aApp);
 
   final container = ProviderContainer();
   LoggerInitializer.initialize(container);

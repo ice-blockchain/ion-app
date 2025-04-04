@@ -230,7 +230,7 @@ jobs:
           source .env
           set +a
           ./scripts/generate_ios_export_options.sh --signType $IOS_SIGN_TYPE --bundleId $APP_ID --outputPath ios/ExportOptions.plist
-          flutter build ipa --release --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --export-options-plist=ios/ExportOptions.plist
+          flutter build ipa --release --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --export-options-plist=ios/ExportOptions.plist --dart-define-from-file=.app.env
       - name: Deploy iOS App to ${{env.DEPLOYMENT_TARGET}}
         id: deploy-app
         run: |
@@ -318,7 +318,7 @@ jobs:
         id: build-app
         run: |
           cd main-repo
-          flutter build $ANDROID_ARCHIVE_TYPE --release --flavor=$APP_FLAVOR --build-number=$BUILD_NUMBER --build-name=$APP_VERSION
+          flutter build $ANDROID_ARCHIVE_TYPE --release --flavor=$APP_FLAVOR --build-number=$BUILD_NUMBER --build-name=$APP_VERSION --dart-define-from-file=.app.env
       - name: Deploy Android App to ${{env.DEPLOYMENT_TARGET}}
         id: deploy-app
         run: |
