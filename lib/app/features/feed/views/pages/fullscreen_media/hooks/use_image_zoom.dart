@@ -6,14 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
 import 'package:ion/app/utils/future.dart';
 
-class CarouselImageZoomState {
-  const CarouselImageZoomState({
+class ImageZoomController {
+  const ImageZoomController({
     required this.transformationController,
     required this.onDoubleTapDown,
     required this.onDoubleTap,
     required this.onInteractionStart,
     required this.onInteractionEnd,
-    required this.resetZoom,
+    this.resetZoom,
   });
 
   final TransformationController transformationController;
@@ -21,17 +21,16 @@ class CarouselImageZoomState {
   final VoidCallback onDoubleTap;
   final void Function(ScaleStartDetails details) onInteractionStart;
   final void Function(ScaleEndDetails details) onInteractionEnd;
-  final VoidCallback resetZoom;
+  final VoidCallback? resetZoom;
 }
 
-CarouselImageZoomState useCarouselImageZoom(WidgetRef ref) {
+ImageZoomController useImageZoom(WidgetRef ref, {bool withReset = false}) {
   final transformationController = useTransformationController();
   final animationController = useAnimationController(duration: 300.ms);
   final zoomNotifier = ref.watch(imageZoomProvider.notifier);
 
   final tapDownDetails = useState<TapDownDetails?>(null);
   final matrixAnimation = useState<Animation<Matrix4>?>(null);
-
   final context = useContext();
   final mounted = context.mounted;
 
@@ -39,17 +38,14 @@ CarouselImageZoomState useCarouselImageZoom(WidgetRef ref) {
     void animationListener() {
       final anim = matrixAnimation.value;
       if (anim == null) return;
-
       transformationController.value = anim.value;
     }
 
     void animationStatusListener(AnimationStatus status) {
       if (!mounted) return;
-
       if (status == AnimationStatus.completed) {
         final currentlyZoomed = transformationController.value != Matrix4.identity();
         final alreadyZoomed = ref.read(imageZoomProvider);
-
         if (alreadyZoomed != currentlyZoomed) {
           zoomNotifier.zoomed = currentlyZoomed;
         }
@@ -110,49 +106,47 @@ CarouselImageZoomState useCarouselImageZoom(WidgetRef ref) {
   void handleInteractionEnd(ScaleEndDetails details) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-
       final scale = transformationController.value.getMaxScaleOnAxis();
       final newZoomState = scale > 1.01;
       final currentZoomState = ref.read(imageZoomProvider);
-
       if (currentZoomState != newZoomState) {
         zoomNotifier.zoomed = newZoomState;
       }
     });
   }
 
-  void resetZoom() {
-    if (animationController.isAnimating) {
-      animationController.stop();
-    }
-
-    if (transformationController.value != Matrix4.identity()) {
-      matrixAnimation.value = Matrix4Tween(
-        begin: transformationController.value,
-        end: Matrix4.identity(),
-      ).animate(
-        CurvedAnimation(
-          parent: animationController,
-          curve: Curves.easeOut,
-        ),
-      );
-
-      animationController
-        ..reset()
-        ..forward();
-
-      if (ref.read(imageZoomProvider)) {
-        zoomNotifier.zoomed = false;
+  VoidCallback? resetZoomCallback;
+  if (withReset) {
+    resetZoomCallback = () {
+      if (animationController.isAnimating) {
+        animationController.stop();
       }
-    }
+      if (transformationController.value != Matrix4.identity()) {
+        matrixAnimation.value = Matrix4Tween(
+          begin: transformationController.value,
+          end: Matrix4.identity(),
+        ).animate(
+          CurvedAnimation(
+            parent: animationController,
+            curve: Curves.easeOut,
+          ),
+        );
+        animationController
+          ..reset()
+          ..forward();
+        if (ref.read(imageZoomProvider)) {
+          zoomNotifier.zoomed = false;
+        }
+      }
+    };
   }
 
-  return CarouselImageZoomState(
+  return ImageZoomController(
     transformationController: transformationController,
     onDoubleTapDown: (details) => tapDownDetails.value = details,
     onDoubleTap: handleDoubleTap,
     onInteractionStart: handleInteractionStart,
     onInteractionEnd: handleInteractionEnd,
-    resetZoom: resetZoom,
+    resetZoom: resetZoomCallback,
   );
 }

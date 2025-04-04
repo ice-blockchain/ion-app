@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
 import 'package:ion/app/utils/future.dart';
 
 class FullscreenImageZoomState {
@@ -25,7 +25,7 @@ class FullscreenImageZoomState {
 FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
   final transformationController = useTransformationController();
   final animationController = useAnimationController(duration: 300.ms);
-  final zoomNotifier = ref.watch(imageZoomStateProvider.notifier);
+  final zoomNotifier = ref.watch(imageZoomProvider.notifier);
 
   final tapDownDetails = useState<TapDownDetails?>(null);
 
@@ -48,7 +48,7 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
 
       if (status == AnimationStatus.completed) {
         final currentlyZoomed = transformationController.value != Matrix4.identity();
-        final alreadyZoomed = ref.read(imageZoomStateProvider);
+        final alreadyZoomed = ref.read(imageZoomProvider);
 
         if (alreadyZoomed != currentlyZoomed) {
           zoomNotifier.zoomed = currentlyZoomed;
@@ -76,7 +76,7 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
     final details = tapDownDetails.value;
     if (details == null) return;
 
-    final currentZoomState = ref.read(imageZoomStateProvider);
+    final currentZoomState = ref.read(imageZoomProvider);
     final newZoomState = !currentZoomState;
     final position = details.localPosition;
 
@@ -113,7 +113,7 @@ FullscreenImageZoomState useFullscreenImageZoom(WidgetRef ref) {
 
       final scale = transformationController.value.getMaxScaleOnAxis();
       final newZoomState = scale > 1.01;
-      final currentZoomState = ref.read(imageZoomStateProvider);
+      final currentZoomState = ref.read(imageZoomProvider);
 
       if (currentZoomState != newZoomState) {
         zoomNotifier.zoomed = newZoomState;

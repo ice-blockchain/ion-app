@@ -2,11 +2,10 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_fullscreen_image_zoom.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 
 class FullscreenImage extends HookConsumerWidget {
   const FullscreenImage({
@@ -23,27 +22,7 @@ class FullscreenImage extends HookConsumerWidget {
     final primaryTextColor = context.theme.appColors.primaryText;
     final maxScale = 6.0.s;
 
-    final zoomState = useFullscreenImageZoom(ref);
-
-    final handleDoubleTapDown = useCallback(
-      zoomState.onDoubleTapDown,
-      [zoomState],
-    );
-
-    final handleDoubleTap = useCallback(
-      zoomState.onDoubleTap,
-      [zoomState],
-    );
-
-    final handleInteractionStart = useCallback(
-      zoomState.onInteractionStart,
-      [zoomState],
-    );
-
-    final handleInteractionEnd = useCallback(
-      zoomState.onInteractionEnd,
-      [zoomState],
-    );
+    final zoomController = useImageZoom(ref);
 
     return Stack(
       fit: StackFit.expand,
@@ -51,14 +30,14 @@ class FullscreenImage extends HookConsumerWidget {
         ColoredBox(
           color: primaryTextColor,
           child: GestureDetector(
-            onDoubleTapDown: handleDoubleTapDown,
-            onDoubleTap: handleDoubleTap,
+            onDoubleTapDown: zoomController.onDoubleTapDown,
+            onDoubleTap: zoomController.onDoubleTap,
             child: InteractiveViewer(
-              transformationController: zoomState.transformationController,
+              transformationController: zoomController.transformationController,
               maxScale: maxScale,
               clipBehavior: Clip.none,
-              onInteractionStart: handleInteractionStart,
-              onInteractionEnd: handleInteractionEnd,
+              onInteractionStart: zoomController.onInteractionStart,
+              onInteractionEnd: zoomController.onInteractionEnd,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
                 placeholder: (_, __) => const CenteredLoadingIndicator(),

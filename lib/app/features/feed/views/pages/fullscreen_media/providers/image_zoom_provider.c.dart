@@ -2,10 +2,10 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'image_zoom_state.c.g.dart';
+part 'image_zoom_provider.c.g.dart';
 
 @riverpod
-class ImageZoomState extends _$ImageZoomState {
+class ImageZoom extends _$ImageZoom {
   @override
   bool build() => false;
 
