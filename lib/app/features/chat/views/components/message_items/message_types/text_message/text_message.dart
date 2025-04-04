@@ -22,9 +22,26 @@ class TextMessage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isMe = ref.watch(isCurrentUserSelectorProvider(eventMessage.masterPubkey));
 
+    final textStyle = context.theme.appTextThemes.body2.copyWith(
+      color: isMe ? context.theme.appColors.onPrimaryAccent : context.theme.appColors.primaryText,
+    );
+
+    final oneLineTextPainter = TextPainter(
+      text: TextSpan(
+        text: eventMessage.content,
+        style: textStyle,
+      ),
+      textDirection: TextDirection.ltr,
+      textWidthBasis: TextWidthBasis.longestLine,
+    )..layout(maxWidth: 194.0.s);
+
+    final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
+    final multiline = oneLineMetrics.length > 1;
+
     return MessageItemWrapper(
       isMe: isMe,
       messageItem: TextItem(
+        multiline: multiline,
         eventMessage: eventMessage,
         contentDescription: eventMessage.content,
       ),
@@ -36,11 +53,8 @@ class TextMessage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _TextMessageContent(
-            style: context.theme.appTextThemes.body2.copyWith(
-              color: isMe
-                  ? context.theme.appColors.onPrimaryAccent
-                  : context.theme.appColors.primaryText,
-            ),
+            multiline: multiline,
+            textStyle: textStyle,
             eventMessage: eventMessage,
           ),
           MessageReactions(isMe: isMe, eventMessage: eventMessage),
@@ -52,38 +66,28 @@ class TextMessage extends ConsumerWidget {
 
 class _TextMessageContent extends StatelessWidget {
   const _TextMessageContent({
-    required this.style,
+    required this.textStyle,
+    required this.multiline,
     required this.eventMessage,
   });
 
-  final TextStyle style;
+  final bool multiline;
+  final TextStyle textStyle;
   final EventMessage eventMessage;
 
   @override
   Widget build(BuildContext context) {
-    final oneLineTextPainter = TextPainter(
-      text: TextSpan(text: eventMessage.content, style: style),
-      textDirection: TextDirection.ltr,
-      textWidthBasis: TextWidthBasis.longestLine,
-    )..layout(maxWidth: 194.0.s);
-
-    final oneLineMetrics = oneLineTextPainter.computeLineMetrics();
-
-    if (oneLineMetrics.length <= 1) {
+    if (!multiline) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            eventMessage.content,
-            style: style,
-          ),
-          MessageMetaData(eventMessage: eventMessage),
+          Text(eventMessage.content, style: textStyle),
         ],
       );
     } else {
       final multiLineTextPainter = TextPainter(
-        text: TextSpan(text: eventMessage.content, style: style),
+        text: TextSpan(text: eventMessage.content, style: textStyle),
         textDirection: TextDirection.ltr,
         textWidthBasis: TextWidthBasis.longestLine,
       )..layout(maxWidth: 240.0.s);
@@ -96,7 +100,7 @@ class _TextMessageContent extends StatelessWidget {
         children: [
           Text(
             '${eventMessage.content}${wouldOverlap ? '\n' : ''}',
-            style: style,
+            style: textStyle,
           ),
           MessageMetaData(eventMessage: eventMessage),
         ],
