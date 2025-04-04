@@ -11,6 +11,7 @@ import 'package:ion/app/components/text_editor/custom_recognizer_builder.dart';
 import 'package:ion/app/components/text_editor/utils/links_handler.dart';
 import 'package:ion/app/components/text_editor/utils/mentions_hashtags_handler.dart';
 import 'package:ion/app/components/text_editor/utils/text_editor_styles.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
 class TextEditorKeys {
   const TextEditorKeys._();
@@ -30,6 +31,7 @@ class TextEditor extends ConsumerStatefulWidget {
     this.focusNode,
     this.autoFocus = true,
     this.scrollController,
+    this.media,
   }) : super(key: key);
 
   final QuillController controller;
@@ -37,7 +39,7 @@ class TextEditor extends ConsumerStatefulWidget {
   final FocusNode? focusNode;
   final bool autoFocus;
   final ScrollController? scrollController;
-
+  final Map<String, MediaAttachment>? media;
   @override
   TextEditorState createState() => TextEditorState();
 }
@@ -89,7 +91,7 @@ class TextEditorState extends ConsumerState<TextEditor> {
       scrollController: widget.scrollController,
       config: QuillEditorConfig(
         embedBuilders: [
-          TextEditorSingleImageBuilder(),
+          TextEditorSingleImageBuilder(media: widget.media),
           TextEditorPollBuilder(
             controller: widget.controller,
           ),

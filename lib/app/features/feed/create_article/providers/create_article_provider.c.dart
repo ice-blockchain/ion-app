@@ -159,17 +159,17 @@ class CreateArticle extends _$CreateArticle {
       }
 
       final files = <FileMetadata>[];
-      final mediaAttachments2 = <MediaAttachment>[];
+      final updatedMediaAttachments = <MediaAttachment>[];
 
       final String? imageUrlToUpload;
 
       if (originalImageUrl != null) {
         imageUrlToUpload = originalImageUrl;
       } else {
-        imageUrlToUpload = await _uploadCoverImage(coverImagePath, files, mediaAttachments2);
+        imageUrlToUpload = await _uploadCoverImage(coverImagePath, files, updatedMediaAttachments);
       }
 
-      final updatedContent = await _prepareContent(content, null, files, mediaAttachments2);
+      final updatedContent = await _prepareContent(content, null, files, updatedMediaAttachments);
 
       final contentString = jsonEncode(updatedContent.toJson());
 
@@ -184,7 +184,7 @@ class CreateArticle extends _$CreateArticle {
       ];
 
       final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments);
-      for (final attachment in mediaAttachments2) {
+      for (final attachment in updatedMediaAttachments) {
         modifiedMedia[attachment.url] = attachment;
       }
 
@@ -205,7 +205,7 @@ class CreateArticle extends _$CreateArticle {
         cleanedMedia.remove(url);
       }
 
-      for (final attachment in mediaAttachments2) {
+      for (final attachment in updatedMediaAttachments) {
         cleanedMedia[attachment.url] = attachment;
       }
 
