@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
@@ -12,6 +13,7 @@ class ImageZoomController {
     required this.onDoubleTapDown,
     required this.onDoubleTap,
     required this.onInteractionStart,
+    required this.onInteractionUpdate,
     required this.onInteractionEnd,
     this.resetZoom,
   });
@@ -20,6 +22,7 @@ class ImageZoomController {
   final void Function(TapDownDetails details) onDoubleTapDown;
   final VoidCallback onDoubleTap;
   final void Function(ScaleStartDetails details) onInteractionStart;
+  final void Function(ScaleUpdateDetails details) onInteractionUpdate;
   final void Function(ScaleEndDetails details) onInteractionEnd;
   final VoidCallback? resetZoom;
 }
@@ -28,11 +31,12 @@ ImageZoomController useImageZoom(WidgetRef ref, {bool withReset = false}) {
   final transformationController = useTransformationController();
   final animationController = useAnimationController(duration: 300.ms);
   final zoomNotifier = ref.watch(imageZoomProvider.notifier);
-
   final tapDownDetails = useState<TapDownDetails?>(null);
   final matrixAnimation = useState<Animation<Matrix4>?>(null);
   final context = useContext();
   final mounted = context.mounted;
+
+  final hasZoomedDuringGesture = useRef<bool>(false);
 
   useEffect(() {
     void animationListener() {
@@ -45,9 +49,14 @@ ImageZoomController useImageZoom(WidgetRef ref, {bool withReset = false}) {
       if (!mounted) return;
       if (status == AnimationStatus.completed) {
         final currentlyZoomed = transformationController.value != Matrix4.identity();
+
         final alreadyZoomed = ref.read(imageZoomProvider);
         if (alreadyZoomed != currentlyZoomed) {
           zoomNotifier.zoomed = currentlyZoomed;
+
+          if (!currentlyZoomed && alreadyZoomed) {
+            HapticFeedback.lightImpact();
+          }
         }
       }
     }
@@ -101,16 +110,30 @@ ImageZoomController useImageZoom(WidgetRef ref, {bool withReset = false}) {
     if (animationController.isAnimating) {
       animationController.stop();
     }
+
+    hasZoomedDuringGesture.value = false;
+  }
+
+  void handleInteractionUpdate(ScaleUpdateDetails details) {
+    final scale = transformationController.value.getMaxScaleOnAxis();
+    if (scale > 1.01) {
+      hasZoomedDuringGesture.value = true;
+    }
   }
 
   void handleInteractionEnd(ScaleEndDetails details) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final scale = transformationController.value.getMaxScaleOnAxis();
-      final newZoomState = scale > 1.01;
+      final isZoomed = (scale - 1.0).abs() > 0.01;
+
+      if (hasZoomedDuringGesture.value && !isZoomed) {
+        HapticFeedback.lightImpact();
+      }
+
       final currentZoomState = ref.read(imageZoomProvider);
-      if (currentZoomState != newZoomState) {
-        zoomNotifier.zoomed = newZoomState;
+      if (currentZoomState != isZoomed) {
+        zoomNotifier.zoomed = isZoomed;
       }
     });
   }
@@ -146,6 +169,7 @@ ImageZoomController useImageZoom(WidgetRef ref, {bool withReset = false}) {
     onDoubleTapDown: (details) => tapDownDetails.value = details,
     onDoubleTap: handleDoubleTap,
     onInteractionStart: handleInteractionStart,
+    onInteractionUpdate: handleInteractionUpdate,
     onInteractionEnd: handleInteractionEnd,
     resetZoom: resetZoomCallback,
   );
