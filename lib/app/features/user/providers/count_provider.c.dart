@@ -101,7 +101,7 @@ class Count extends _$Count {
               _ => false,
             },
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 30));
 
       if (responseEntity is EventCountErrorEntity) {
         final errorContent = responseEntity.data.content;
