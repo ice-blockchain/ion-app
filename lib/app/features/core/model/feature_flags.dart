@@ -17,7 +17,7 @@ final class FeedFeatureFlag extends FeatureFlag {
   const FeedFeatureFlag._({required super.key});
 
   static const showTrendingVideo = FeedFeatureFlag._(key: 'showTrendingVideo');
-  static const showMentionsSuggestions = FeedFeatureFlag._(key: 'showMentionsSuggestions');
+  static const showSuggestions = FeedFeatureFlag._(key: 'showSuggestions');
 }
 
 final class LoggerFeatureFlag extends FeatureFlag {
