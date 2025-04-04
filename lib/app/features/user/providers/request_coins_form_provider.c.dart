@@ -29,7 +29,7 @@ class RequestCoinsFormController extends _$RequestCoinsFormController {
   void setCoin(CoinsGroup coin) {
     state = state.copyWith(
       assetData: CoinAssetToSendData(coinsGroup: coin),
-      senderWallet: null,
+      toWallet: null,
     );
   }
 
@@ -46,7 +46,7 @@ class RequestCoinsFormController extends _$RequestCoinsFormController {
     // Reset current information about network
     state = state.copyWith(
       network: network,
-      senderWallet: wallet,
+      toWallet: wallet,
     );
 
     if (state.assetData case final CoinAssetToSendData coin) {

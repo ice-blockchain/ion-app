@@ -14,7 +14,7 @@ class RequestCoinsFormData with _$RequestCoinsFormData {
     required WalletViewData wallet,
     CoinAssetToSendData? assetData,
     NetworkData? network,
-    Wallet? senderWallet,
+    Wallet? toWallet,
     String? contactPubkey,
     WalletAsset? networkNativeToken,
   }) = _RequestCoinsFormData;

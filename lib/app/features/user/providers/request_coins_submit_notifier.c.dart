@@ -22,21 +22,29 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
     state = await AsyncValue.guard(() async {
       final formData = ref.read(requestCoinsFormControllerProvider);
 
+      final toWalletAddress = formData.toWallet?.address;
+      final fromWalletAddress = formData.assetData?.selectedOption?.walletAddress;
+
       if (formData.assetData == null ||
           formData.network == null ||
-          formData.contactPubkey == null) {
+          formData.contactPubkey == null ||
+          toWalletAddress == null ||
+          fromWalletAddress == null) {
         throw FormException('Missing required form data', formName: 'RequestCoinsForm');
+      }
+
+      final currentUserPubkey = ref.read(currentPubkeySelectorProvider);
+      if (currentUserPubkey == null) {
+        throw const CurrentUserNotFoundException();
       }
 
       final assetData = formData.assetData!;
       final network = formData.network!;
       final contactPubkey = formData.contactPubkey!;
 
-      final walletAddress = assetData.selectedOption?.walletAddress ?? '';
-
       final content = RequestAssetContent(
-        from: walletAddress,
-        to: formData.senderWallet?.address ?? '',
+        from: fromWalletAddress,
+        to: toWalletAddress,
         assetId: assetData.selectedOption?.coin.id,
         amount: assetData.amount.toString(),
         amountUsd: assetData.amountUSD.toString(),
@@ -50,24 +58,30 @@ class RequestCoinsSubmitNotifier extends _$RequestCoinsSubmitNotifier {
         assetClass: isNative ? 'native' : 'token',
         assetAddress: contractAddress,
         pubkey: contactPubkey,
-        walletAddress: formData.senderWallet?.address ?? '',
+        walletAddress: toWalletAddress,
         content: content,
       );
-
-      final currentUserPubkey = ref.read(currentPubkeySelectorProvider) ?? '';
 
       final currentUserDelegation = await ref.read(currentUserDelegationProvider.future);
       final contactDelegation = await ref.read(userDelegationProvider(contactPubkey).future);
 
+      final senderDevicePubkeys =
+          currentUserDelegation?.data.delegates.map((e) => e.pubkey).toList() ?? [];
       final senderPubkeys = (
         masterPubkey: currentUserPubkey,
-        devicePubkeys: currentUserDelegation?.data.delegates.map((e) => e.pubkey).toList() ?? [],
+        devicePubkeys: senderDevicePubkeys,
       );
 
+      final receiverDevicePubkeys =
+          contactDelegation?.data.delegates.map((e) => e.pubkey).toList() ?? [];
       final receiverPubkeys = (
         masterPubkey: contactPubkey,
-        devicePubkeys: contactDelegation?.data.delegates.map((e) => e.pubkey).toList() ?? [],
+        devicePubkeys: receiverDevicePubkeys,
       );
+
+      if (senderDevicePubkeys.isEmpty && receiverDevicePubkeys.isEmpty) {
+        throw FormException('Missing pubkeys', formName: 'RequestCoinsForm');
+      }
 
       final sendToRelayService = await ref.read(sendTransactionToRelayServiceProvider.future);
       await sendToRelayService.sendTransactionEntity(
