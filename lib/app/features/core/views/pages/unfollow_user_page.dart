@@ -24,6 +24,8 @@ class UnfollowUserModal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final name = ref.watch(userMetadataProvider(pubkey)).valueOrNull?.data.name ?? '';
 
+    ref.displayErrors(followListManagerProvider);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

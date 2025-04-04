@@ -27,7 +27,7 @@ class RepostsCount extends _$RepostsCount {
     if (state == null) return;
 
     final countType = isQuote ? EventCountResultType.quotes : EventCountResultType.reposts;
-    final count = _getCountFromCache(countType);
+    final count = _getCountFromCache(countType, subscribe: false);
 
     if (count == 1) {
       _removeCacheEntry(countType);
@@ -38,8 +38,9 @@ class RepostsCount extends _$RepostsCount {
     }
   }
 
-  int _getCountFromCache(EventCountResultType type) {
-    final entity = ref.read(
+  int _getCountFromCache(EventCountResultType type, {bool subscribe = true}) {
+    final method = subscribe ? ref.watch : ref.read;
+    final entity = method(
       ionConnectCacheProvider.select(
         cacheSelector<EventCountResultEntity>(
           _buildCacheKey(type),
