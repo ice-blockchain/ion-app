@@ -275,10 +275,10 @@ packages:
     dependency: transitive
     description:
       name: camera_avfoundation
-      sha256: ba48b65a3a97004276ede882e6b838d9667642ff462c95a8bb57ca8a82b6bd25
+      sha256: "6bff67a6821aa094fec2d317735c572264960a0afe034525ee355c4345524243"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.18+11"
+    version: "0.9.18+13"
   camera_platform_interface:
     dependency: transitive
     description:
@@ -555,10 +555,10 @@ packages:
     dependency: "direct main"
     description:
       name: dlibphonenumber
-      sha256: "8d6ebe4e941a43268ed977c2f7d331e6d8d0d2fb92a4236efcc5e38c0b1cd964"
+      sha256: "3b1bc4c8184e3b509efc555621c17cec711a276c9e1061187cd6dcbf84892a81"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.34"
+    version: "1.1.35"
   dotted_border:
     dependency: "direct main"
     description:
@@ -619,10 +619,10 @@ packages:
     dependency: "direct main"
     description:
       name: es_compression
-      sha256: bc412135d4c9338e25f2c06dc919d102653c3ac49123e79f6f9fa13df84bd26e
+      sha256: "174d2cee4e182d1a8df92712eaa6ee56a0adf83d4b8a14838c66380caa4e65a7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.13"
+    version: "2.0.14"
   extended_text:
     dependency: "direct main"
     description:
@@ -643,10 +643,10 @@ packages:
     dependency: "direct main"
     description:
       name: extension_google_sign_in_as_googleapis_auth
-      sha256: bcf4f8dedcc1e66ce5fe98fbd98cc86ed25ad7fce0511e8d6cdc46ccbf421e8e
+      sha256: "0dcb17e399f62e897ac78f0a402a3cb6ab9313ced8b2bf131f684d317e05c9ab"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.12"
+    version: "2.0.13"
   external_app_launcher:
     dependency: "direct main"
     description:
@@ -675,8 +675,8 @@ packages:
     dependency: "direct main"
     description:
       path: "flutter/flutter"
-      ref: "v6.0.3"
-      resolved-ref: "7e781bd9aab4ec6fad7c301cbe181df06fb6d681"
+      ref: "local-binaries-v6.0.3"
+      resolved-ref: e23da3886b8db4e0b26e0c1ad4149786e6bad27b
       url: "https://github.com/ice-blockchain/ffmpeg-kit"
     source: git
     version: "6.0.3"
@@ -982,10 +982,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_quill_delta_from_html
-      sha256: "79405765612016de9de2361be86383360b0b43a6bf88b818c079a953583f1849"
+      sha256: "231d4fcd2be117044daf6e1d0a00caf2f2c7f366e9741fa1629e37a7b88fc9d9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.0"
+    version: "1.5.1"
   flutter_riverpod:
     dependency: transitive
     description:
@@ -1232,10 +1232,10 @@ packages:
     dependency: transitive
     description:
       name: googleapis_auth
-      sha256: befd71383a955535060acde8792e7efc11d2fccd03dd1d3ec434e85b68775938
+      sha256: b81fe352cc4a330b3710d2b7ad258d9bcef6f909bb759b306bf42973a7d046db
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.0"
+    version: "2.0.0"
   graphs:
     dependency: transitive
     description:
@@ -1336,18 +1336,18 @@ packages:
     dependency: transitive
     description:
       name: image_cropper_for_web
-      sha256: "34256c8fb7fcb233251787c876bb37271744459b593a948a2db73caa323034d0"
+      sha256: fd81ebe36f636576094377aab32673c4e5d1609b32dec16fad98d2b71f1250a9
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.2"
+    version: "6.1.0"
   image_cropper_platform_interface:
     dependency: transitive
     description:
       name: image_cropper_platform_interface
-      sha256: e8e9d2ca36360387aee39295ce49029362ae4df3071f23e8e71f2b81e40b7531
+      sha256: "6ca6b81769abff9a4dcc3bbd3d75f5dfa9de6b870ae9613c8cd237333a4283af"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "7.1.0"
   image_size_getter:
     dependency: transitive
     description:
@@ -1368,10 +1368,10 @@ packages:
     dependency: transitive
     description:
       name: io
-      sha256: "2ec25704aba361659e10e3e5f5d672068d332fc8ac516421d483a11e5cbd061e"
+      sha256: dfd5a80599cf0165756e3181807ed3e77daf6dd4137caaad72d0b7931597650b
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   ion_identity_client:
     dependency: "direct main"
     description:
@@ -2184,10 +2184,10 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: "846849e3e9b68f3ef4b60c60cf4b3e02e9321bc7f4d8c4692cf87ffa82fc8a3a"
+      sha256: "6e8bf70b7fef813df4e9a36f658ac46d107db4b4cfe1048b477d4e453a8159f5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.2"
+    version: "2.5.3"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -2557,10 +2557,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_ios
-      sha256: "16a513b6c12bb419304e72ea0ae2ab4fed569920d1c7cb850263fe3acc824626"
+      sha256: "7f2022359d4c099eea7df3fdf739f7d3d3b9faf3166fb1dd390775176e0b76cb"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.2"
+    version: "6.3.3"
   url_launcher_linux:
     dependency: transitive
     description:
