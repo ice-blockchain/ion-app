@@ -171,6 +171,8 @@ class CreateArticle extends _$CreateArticle {
 
       final updatedContent = await _prepareContent(content, null, files, mediaAttachments2);
 
+      final contentString = jsonEncode(updatedContent.toJson());
+
       final richText = RichText(
         protocol: 'quill_delta',
         content: jsonEncode(updatedContent.toJson()),
@@ -186,29 +188,44 @@ class CreateArticle extends _$CreateArticle {
         modifiedMedia[attachment.url] = attachment;
       }
 
-      final originalMediaHashes =
-          modifiedEntity.data.media.values.map((e) => e.originalFileHash).toSet();
-      final attachedMediaHashes = modifiedMedia.values.map((e) => e.originalFileHash).toSet();
-      final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
+      final unusedMediaUrls = <String>[];
+      final unusedMediaFileHashes = <String>[];
+
+      modifiedEntity.data.media.forEach((url, attachment) {
+        final urlInContent = contentString.contains(url);
+        final urlToCheck = url.replaceAll('url ', '');
+        if (!urlInContent && (originalImageUrl != null && urlToCheck != originalImageUrl)) {
+          unusedMediaUrls.add(url);
+          unusedMediaFileHashes.add(attachment.originalFileHash);
+        }
+      });
+
+      final cleanedMedia = Map<String, MediaAttachment>.from(modifiedEntity.data.media);
+      for (final url in unusedMediaUrls) {
+        cleanedMedia.remove(url);
+      }
+
+      for (final attachment in mediaAttachments2) {
+        cleanedMedia[attachment.url] = attachment;
+      }
 
       final articleData = modifiedEntity.data.copyWith(
         title: title,
         summary: summary,
         image: imageUrlToUpload,
         content: deltaToMarkdown(updatedContent),
-        media: modifiedMedia,
+        media: cleanedMedia,
         relatedHashtags: relatedHashtags,
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
         richText: richText,
       );
 
-      if (removedMediaHashes.isNotEmpty) {
+      if (unusedMediaFileHashes.isNotEmpty) {
         await ref
             .read(ionConnectDeleteFileNotifierProvider.notifier)
-            .deleteMultiple(removedMediaHashes);
+            .deleteMultiple(unusedMediaFileHashes);
       }
-
       await _sendArticleEntities([...files, articleData]);
     });
   }
