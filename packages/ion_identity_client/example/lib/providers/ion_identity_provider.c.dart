@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ion_identity_client/ion_identity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,9 +12,9 @@ part 'ion_identity_provider.c.g.dart';
 
 @riverpod
 Future<IONIdentity> ionIdentity(Ref ref) async {
-  await dotenv.load(fileName: '.app.env');
-  final appId =
-      Platform.isAndroid ? dotenv.get('ION_ANDROID_APP_ID') : dotenv.get('ION_IOS_APP_ID');
+  final appId = Platform.isAndroid
+      ? const String.fromEnvironment('ION_ANDROID_APP_ID')
+      : const String.fromEnvironment('ION_IOS_APP_ID');
   final origin = dotenv.get('ION_ORIGIN');
 
   final config = IONIdentityConfig(

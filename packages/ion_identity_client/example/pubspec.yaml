@@ -10,7 +10,6 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.8
   dio:
-  flutter_dotenv: ^5.1.0
   flutter_hooks: ^0.20.5
   flutter_riverpod: ^2.6.1
   flutter:
