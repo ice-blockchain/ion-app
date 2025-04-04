@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/features/feed/data/models/entities/event_count_request_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
@@ -26,10 +27,10 @@ FutureOr<int?> followersCount(
 
   return await ref.watch(
     countProvider(
-      key: pubkey,
       actionSource: ActionSourceUser(pubkey),
+      requestData: EventCountRequestData(filters: filters),
+      key: pubkey,
       type: EventCountResultType.followers,
-      filters: filters,
       cache: false,
     ).future,
   ) as FutureOr<int?>;

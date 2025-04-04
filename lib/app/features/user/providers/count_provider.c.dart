@@ -24,7 +24,7 @@ class Count extends _$Count {
   Future<dynamic> build({
     required String key,
     required EventCountResultType type,
-    required List<RequestFilter> filters,
+    required EventCountRequestData requestData,
     required ActionSource actionSource,
     Duration? cacheExpirationDuration,
     bool cache = true,
@@ -47,13 +47,13 @@ class Count extends _$Count {
       }
     }
 
-    return _fetchCount(key: key, actionSource: actionSource, filters: filters);
+    return _fetchCount(key: key, actionSource: actionSource, requestData: requestData);
   }
 
   Future<dynamic> _fetchCount({
     required String key,
     required ActionSource actionSource,
-    required List<RequestFilter> filters,
+    required EventCountRequestData requestData,
   }) async {
     final currentPubkey = ref.read(currentPubkeySelectorProvider);
     if (currentPubkey == null) {
@@ -62,7 +62,7 @@ class Count extends _$Count {
 
     final relay = await ref.read(relayCreationProvider.notifier).getRelay(actionSource);
 
-    final requestEvent = await _buildRequestEvent(relayUrl: relay.url, filters: filters);
+    final requestEvent = await _buildRequestEvent(relayUrl: relay.url, requestData: requestData);
 
     final subscriptionMessage = RequestMessage()
       ..addFilter(
@@ -121,13 +121,12 @@ class Count extends _$Count {
 
   Future<EventMessage> _buildRequestEvent({
     required String relayUrl,
-    required List<RequestFilter> filters,
+    required EventCountRequestData requestData,
   }) async {
-    final countRequest = EventCountRequestData(
+    final requestDataWithRelays = requestData.copyWith(
       relays: [relayUrl],
-      filters: filters,
     );
 
-    return ref.read(ionConnectNotifierProvider.notifier).sign(countRequest);
+    return ref.read(ionConnectNotifierProvider.notifier).sign(requestDataWithRelays);
   }
 }
