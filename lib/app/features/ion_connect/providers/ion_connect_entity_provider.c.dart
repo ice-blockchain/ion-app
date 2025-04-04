@@ -28,10 +28,17 @@ IonConnectEntity? ionConnectCachedEntity(
 Future<IonConnectEntity?> ionConnectNetworkEntity(
   Ref ref, {
   required EventReference eventReference,
+  String? search,
 }) async {
   if (eventReference is ImmutableEventReference) {
     final requestMessage = RequestMessage()
-      ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
+      ..addFilter(
+        RequestFilter(
+          ids: [eventReference.eventId],
+          search: search,
+          limit: 1,
+        ),
+      );
     return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
           requestMessage,
           actionSource: ActionSourceUser(eventReference.pubkey),
@@ -45,6 +52,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
           tags: {
             if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
           },
+          search: search,
           limit: 1,
         ),
       );
