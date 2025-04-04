@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/chat/model/upload_limit_modal_type.dart';
 import 'package:ion/app/features/chat/views/pages/upload_limit_reached_modal/upload_limit_reached_modal.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
 import 'package:ion/app/features/gallery/providers/media_selection_provider.c.dart';
@@ -132,7 +133,9 @@ class GalleryGridCell extends ConsumerWidget {
         unawaited(
           showSimpleBottomSheet<void>(
             context: context,
-            child: const UploadLimitReachedModal(),
+            child: const UploadLimitReachedModal(
+              type: UploadLimitModalType.video,
+            ),
           ),
         );
       }

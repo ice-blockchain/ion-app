@@ -796,6 +796,7 @@
   "users_search": "ابحث أعلاه عن المستخدمين",
   "contact_wallet_not_found_title": "لم يتم العثور على المحفظة",
   "contact_wallet_not_found_description": "لا يملك محفظة في شبكة {network}",
-  "video_upload_limit_error_title": "تم الوصول إلى حد الرفع",
-  "video_upload_limit_error_description": "يمكنك رفع فيديو بمدة تصل إلى 5 دقائق"
+  "upload_limit_error_title": "تم الوصول إلى الحد الأقصى للتحميل",
+  "video_upload_limit_modal_description": "يمكنك رفع فيديو مدته تصل إلى 5 دقائق",
+  "file_upload_limit_modal_description": "يمكنك رفع ملف حجمه يصل إلى 25 ميغابايت"
 }

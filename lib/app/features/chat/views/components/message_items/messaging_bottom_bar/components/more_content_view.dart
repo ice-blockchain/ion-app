@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/model/upload_limit_modal_type.dart';
 import 'package:ion/app/features/chat/providers/messaging_bottom_bar_state_provider.c.dart';
+import 'package:ion/app/features/chat/views/pages/upload_limit_reached_modal/upload_limit_reached_modal.dart';
 import 'package:ion/app/features/core/permissions/data/models/permissions_types.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_aware_widget.dart';
 import 'package:ion/app/features/core/permissions/views/components/permission_dialogs/permission_request_sheet.dart';
@@ -121,6 +123,18 @@ class MoreContentView extends ConsumerWidget {
                   final firstFile = result?.files.first;
                   if (firstFile != null && context.mounted && firstFile.path != null) {
                     final mimeType = lookupMimeType(firstFile.path!);
+                    if (firstFile.size > PrivateDirectMessageData.fileMessageSizeLimit) {
+                      unawaited(
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => const UploadLimitReachedModal(
+                            type: UploadLimitModalType.file,
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+
                     unawaited(
                       onSubmitted(
                         content: firstFile.name,
