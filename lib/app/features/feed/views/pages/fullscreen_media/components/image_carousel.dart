@@ -29,7 +29,6 @@ class ImageCarousel extends HookConsumerWidget {
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
     final horizontalPadding = 16.0.s;
 
-    // Используем хук зума с функцией сброса для карусели
     final zoomController = useImageZoom(ref, withReset: true);
     final currentPage = useState(initialIndex);
 
