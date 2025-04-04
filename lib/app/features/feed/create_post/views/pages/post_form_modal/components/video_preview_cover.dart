@@ -40,13 +40,15 @@ class VideoPreviewCover extends HookConsumerWidget {
       return const _VideoPlaceholder();
     }
 
-    final videoController = ref.watch(
-      videoControllerProvider(
-        VideoControllerParams(sourcePath: filePath, looping: true),
-      ),
-    );
+    final videoController = ref
+        .watch(
+          videoControllerProvider(
+            VideoControllerParams(sourcePath: filePath, looping: true),
+          ),
+        )
+        .value;
 
-    if (!videoController.value.isInitialized) {
+    if (videoController == null || !videoController.value.isInitialized) {
       return const _VideoPlaceholder();
     }
 

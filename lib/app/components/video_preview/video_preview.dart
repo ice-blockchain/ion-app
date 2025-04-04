@@ -32,15 +32,18 @@ class VideoPreview extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final uniqueId = useRef(UniqueKey().toString());
 
-    final controller = ref.watch(
-      videoControllerProvider(
-        VideoControllerParams(
-          sourcePath: videoUrl,
-          looping: true,
-          uniqueId: framedEventReference?.encode() ?? '',
-        ),
-      ),
-    );
+    final controller = ref
+        .watch(
+          videoControllerProvider(
+            VideoControllerParams(
+              sourcePath: videoUrl,
+              looping: true,
+              uniqueId: framedEventReference?.encode() ?? '',
+            ),
+          ),
+        )
+        .value;
+
     final isFullyVisible = useState(false);
     final isRouteFocused = useState(true);
     useRoutePresence(
@@ -54,22 +57,18 @@ class VideoPreview extends HookConsumerWidget {
 
     final isMuted = ref.watch(globalMuteProvider);
 
-    ref.listen(globalMuteProvider, (_, isMuted) {
-      if (controller.value.isInitialized) {
-        controller.setVolume(isMuted ? 0 : 1);
-      }
-    });
-
     final handleVisibilityChanged = useCallback(
       (VisibilityInfo info) {
-        isFullyVisible.value = info.visibleFraction == 1;
+        if (context.mounted) {
+          isFullyVisible.value = info.visibleFraction == 1;
+        }
       },
-      [isFullyVisible],
+      [isFullyVisible, context],
     );
 
     useOnInit(
       () {
-        if (!controller.value.isInitialized) {
+        if (controller == null || !controller.value.isInitialized) {
           return;
         }
         final shouldBeActive =
@@ -77,14 +76,12 @@ class VideoPreview extends HookConsumerWidget {
         final shouldBePaused =
             (!isFullyVisible.value || !isRouteFocused.value) && controller.value.isPlaying;
         if (shouldBeActive) {
-          controller
-            ..play()
-            ..setVolume(ref.read(globalMuteProvider) ? 0 : 1);
+          controller.play();
         } else if (shouldBePaused) {
           controller.pause();
         }
       },
-      [isFullyVisible.value, isRouteFocused.value, controller.value.isInitialized],
+      [isFullyVisible.value, isRouteFocused.value, controller],
     );
 
     return VisibilityDetector(
@@ -97,40 +94,44 @@ class VideoPreview extends HookConsumerWidget {
               color: context.theme.appColors.primaryBackground,
             ),
           ),
-          if (thumbnailUrl != null)
+          if (thumbnailUrl != null &&
+              (!(controller?.value.isInitialized ?? false) ||
+                  (controller?.value.hasError ?? false)))
             Positioned.fill(
               child: _BlurredThumbnail(
                 thumbnailUrl: thumbnailUrl!,
-                isLoading: !controller.value.isInitialized,
+                isLoading: !(controller?.value.hasError ?? false),
               ),
             ),
-          Positioned.fill(
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: SizedBox(
-                width: controller.value.size.width,
-                height: controller.value.size.height,
-                child: CachedVideoPlayerPlus(controller),
-              ),
-            ),
-          ),
-          PositionedDirectional(
-            bottom: 5.0.s,
-            start: 5.0.s,
-            end: 5.0.s,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _VideoDurationLabel(controller: controller),
-                _MuteButton(
-                  isMuted: isMuted,
-                  onToggle: () {
-                    ref.read(globalMuteProvider.notifier).toggle();
-                  },
+          if (controller != null)
+            Positioned.fill(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: controller.value.size.width,
+                  height: controller.value.size.height,
+                  child: CachedVideoPlayerPlus(controller),
                 ),
-              ],
+              ),
             ),
-          ),
+          if (controller != null)
+            PositionedDirectional(
+              bottom: 5.0.s,
+              start: 5.0.s,
+              end: 5.0.s,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _VideoDurationLabel(controller: controller),
+                  _MuteButton(
+                    isMuted: isMuted,
+                    onToggle: () {
+                      ref.read(globalMuteProvider.notifier).toggle();
+                    },
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

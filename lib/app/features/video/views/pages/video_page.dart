@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/providers/app_lifecycle_provider.c.dart';
-import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -43,18 +42,20 @@ class VideoPage extends HookConsumerWidget {
       return Text(context.i18n.video_not_found);
     }
 
-    final playerController = ref.watch(
-      videoControllerProvider(
-        VideoControllerParams(
-          sourcePath: videoPath,
-          autoPlay: true,
-          looping: looping,
-          uniqueId: framedEventReference?.encode() ?? '',
-        ),
-      ),
-    );
+    final playerController = ref
+        .watch(
+          videoControllerProvider(
+            VideoControllerParams(
+              sourcePath: videoPath,
+              autoPlay: true,
+              looping: looping,
+              uniqueId: framedEventReference?.encode() ?? '',
+            ),
+          ),
+        )
+        .value;
 
-    if (!playerController.value.isInitialized) {
+    if (playerController == null || !playerController.value.isInitialized) {
       return const CenteredLoadingIndicator();
     }
 
@@ -77,23 +78,17 @@ class VideoPage extends HookConsumerWidget {
       onVideoEnded: onVideoEnded,
     );
 
-    ref
-      ..listen(appLifecycleProvider, (_, current) {
-        if (!context.mounted) return;
+    ref.listen(appLifecycleProvider, (_, current) {
+      if (!context.mounted) return;
 
-        if (current == AppLifecycleState.resumed) {
-          playerController.play();
-        } else if (current == AppLifecycleState.inactive ||
-            current == AppLifecycleState.paused ||
-            current == AppLifecycleState.hidden) {
-          playerController.pause();
-        }
-      })
-      ..listen(globalMuteProvider, (_, isMuted) {
-        if (playerController.value.isInitialized) {
-          playerController.setVolume(isMuted ? 0 : 1);
-        }
-      });
+      if (current == AppLifecycleState.resumed) {
+        playerController.play();
+      } else if (current == AppLifecycleState.inactive ||
+          current == AppLifecycleState.paused ||
+          current == AppLifecycleState.hidden) {
+        playerController.pause();
+      }
+    });
 
     return VisibilityDetector(
       key: ValueKey(videoPath),

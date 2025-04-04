@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,13 +19,11 @@ class VideoControllerParams {
     this.uniqueId = '',
     this.autoPlay = false,
     this.looping = false,
-    this.options,
   });
 
   final String sourcePath;
   final String
       uniqueId; // an optional uniqueId parameter which should be used when needed independent controllers for the same sourcePath
-  final VideoPlayerOptions? options;
   final bool autoPlay;
   final bool looping;
 
@@ -39,44 +39,50 @@ class VideoControllerParams {
 }
 
 @riverpod
-Raw<CachedVideoPlayerPlusController> videoController(
-  Ref ref,
-  VideoControllerParams params,
-) {
-  final controller = ref
-      .watch(videoPlayerControllerFactoryProvider(params.sourcePath))
-      .createController(params.options);
-  var isInitialized = false;
+class VideoController extends _$VideoController {
+  CachedVideoPlayerPlusController? _activeController;
 
-  void handleInitialized() {
-    if (!isInitialized && controller.value.isInitialized) {
-      isInitialized = true;
-      controller.setLooping(params.looping);
+  @override
+  Future<Raw<CachedVideoPlayerPlusController>> build(VideoControllerParams params) async {
+    final isMuted = ref.watch(globalMuteProvider);
 
-      if (kIsWeb) {
-        controller.setVolume(0); // required for web - https://developer.chrome.com/blog/autoplay/
-      } else {
-        final isMuted = ref.read(globalMuteProvider);
-        controller.setVolume(isMuted ? 0 : 1);
+    final controller = ref
+        .watch(videoPlayerControllerFactoryProvider(params.sourcePath))
+        .createController(VideoPlayerOptions(mixWithOthers: isMuted));
+
+    await controller.initialize();
+    await Future.wait(
+      [controller.setLooping(params.looping), controller.setVolume(isMuted ? 0 : 1)],
+    );
+
+    if (_activeController != null) {
+      final prevController = _activeController!;
+      final isPlaying = prevController.value.isLooping ||
+          prevController.value.isBuffering ||
+          prevController.value.isPlaying;
+      await controller.seekTo(prevController.value.position);
+      if (isPlaying) {
+        unawaited(controller.play());
       }
-
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) {
+          prevController.dispose();
+        },
+      );
+    } else {
       if (params.autoPlay) {
-        controller.play();
+        unawaited(controller.play());
       }
-      ref.notifyListeners();
     }
+
+    _activeController = controller;
+
+    ref.onCancel(() async {
+      return controller.dispose();
+    });
+
+    return controller;
   }
-
-  controller
-    ..addListener(handleInitialized)
-    ..initialize();
-
-  ref.onDispose(() async {
-    controller.removeListener(handleInitialized);
-    await controller.dispose();
-  });
-
-  return controller;
 }
 
 class VideoPlayerControllerFactory {

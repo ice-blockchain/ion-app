@@ -4,9 +4,7 @@ import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
-import 'package:ion/app/features/core/providers/mute_provider.c.dart';
 import 'package:ion/app/features/core/providers/video_player_provider.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 
 class VideoStoryViewer extends HookConsumerWidget {
   const VideoStoryViewer({
@@ -18,21 +16,17 @@ class VideoStoryViewer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMuted = ref.watch(globalMuteProvider);
-    final videoController = ref.watch(
-      videoControllerProvider(
-        VideoControllerParams(sourcePath: videoPath),
-      ),
-    );
+    final videoController = ref
+        .watch(
+          videoControllerProvider(
+            VideoControllerParams(sourcePath: videoPath),
+          ),
+        )
+        .value;
 
-    if (!videoController.value.isInitialized) {
+    if (videoController == null || !videoController.value.isInitialized) {
       return const CenteredLoadingIndicator();
     }
-
-    useOnInit(
-      () => videoController.setVolume(isMuted ? 0 : 1),
-      [isMuted],
-    );
 
     final videoAspectRatio = videoController.value.aspectRatio;
 
