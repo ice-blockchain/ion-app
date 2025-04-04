@@ -6,16 +6,19 @@ import 'package:ion/app/components/card/rounded_card.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_type.dart';
 
-class SendToRecipient extends ConsumerWidget {
-  const SendToRecipient({
+class TransactionParticipant extends ConsumerWidget {
+  const TransactionParticipant({
     required this.address,
     this.pubkey,
+    this.transactionType = TransactionType.send,
     super.key,
   });
 
   final String address;
   final String? pubkey;
+  final TransactionType transactionType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,8 +47,12 @@ class SendToRecipient extends ConsumerWidget {
         ),
       );
     } else {
+      final title = switch (transactionType) {
+        TransactionType.send => locale.wallet_send_to,
+        TransactionType.receive => locale.wallet_from,
+      };
       return ListItem.textWithIcon(
-        title: Text(locale.wallet_send_to),
+        title: Text(title),
         secondary: Align(
           alignment: AlignmentDirectional.centerEnd,
           child: Text(

@@ -16,11 +16,13 @@ class TransactionListItem extends StatelessWidget {
   const TransactionListItem({
     required this.transactionData,
     required this.coinData,
+    required this.onTap,
     super.key,
   });
 
-  final CoinTransactionData transactionData;
   final CoinData coinData;
+  final VoidCallback onTap;
+  final CoinTransactionData transactionData;
 
   Color _getTextColor(BuildContext context) {
     return switch (transactionData.transactionType) {
@@ -32,6 +34,7 @@ class TransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListItem(
+      onTap: onTap,
       title: Text(transactionData.transactionType.getDisplayName(context)),
       subtitle: Row(
         children: [
@@ -49,7 +52,8 @@ class TransactionListItem extends StatelessWidget {
       ),
       backgroundColor: context.theme.appColors.tertararyBackground,
       leading: TransactionListItemLeadingIcon(
-        transactionType: transactionData.transactionType,
+        type: transactionData.transactionType,
+        status: transactionData.origin.status,
       ),
       trailing: Column(
         crossAxisAlignment: CrossAxisAlignment.end,

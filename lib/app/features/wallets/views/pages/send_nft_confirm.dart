@@ -17,7 +17,7 @@ import 'package:ion/app/features/wallets/views/components/arrival_time/list_item
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
-import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
+import 'package:ion/app/features/wallets/views/components/transaction_participant.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
@@ -59,7 +59,7 @@ class SendNftConfirmPage extends ConsumerWidget {
                 children: [
                   NftItem(nftData: nft, showNetwork: false),
                   SizedBox(height: 16.0.s),
-                  SendToRecipient(
+                  TransactionParticipant(
                     address: formData.receiverAddress,
                     pubkey: formData.contactPubkey,
                   ),
@@ -90,10 +90,8 @@ class SendNftConfirmPage extends ConsumerWidget {
                   ),
                   SizedBox(height: 12.0.s),
                   if (formData.selectedNetworkFeeOption case final NetworkFeeOption fee) ...[
-                    if (fee.arrivalTime != null) ...[
-                      ListItemArrivalTime(
-                        formattedTime: fee.getDisplayArrivalTime(context),
-                      ),
+                    if (fee.getDisplayArrivalTime(context) case final String arrivalTime) ...[
+                      ListItemArrivalTime(formattedTime: arrivalTime),
                       SizedBox(height: 12.0.s),
                     ],
                     ListItemNetworkFee(

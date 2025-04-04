@@ -32,7 +32,7 @@ Future<void> transactionsSubscription(Ref ref) async {
     return;
   }
 
-  final since = await transactionsRepository.lastCreatedAt();
+  final since = await transactionsRepository.getLastCreatedAt();
 
   final requestMessage = RequestMessage(
     filters: [

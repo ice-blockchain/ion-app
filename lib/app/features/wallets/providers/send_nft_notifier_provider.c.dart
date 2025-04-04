@@ -63,8 +63,8 @@ class SendNftNotifier extends _$SendNftNotifier {
           );
 
       final details = TransactionDetails(
+        id: result.id,
         txHash: result.txHash!,
-        walletId: result.walletId,
         network: nft.network,
         status: result.status,
         nativeCoin: nativeCoin,
@@ -75,7 +75,7 @@ class SendNftNotifier extends _$SendNftNotifier {
         walletViewName: form.wallet.name,
         senderAddress: form.senderWallet!.address!,
         receiverAddress: form.receiverAddress,
-        receiverPubkey: form.contactPubkey,
+        participantPubkey: form.contactPubkey,
         type: TransactionType.send,
         networkFeeOption: form.selectedNetworkFeeOption,
       );
