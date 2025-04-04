@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/back_hardware_button_interceptor/back_hardware_button_interceptor.dart';
+import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -157,6 +158,7 @@ class PostFormModal extends HookConsumerWidget {
     final textEditorController =
         usePostQuillController(ref, content: content, modifiedEvent: modifiedEvent);
     final scrollController = useScrollController();
+    final textEditorKey = useMemoized(TextEditorKeys.createPost);
 
     final mediaFiles = useMemoized(
       () {
@@ -231,6 +233,7 @@ class PostFormModal extends HookConsumerWidget {
                 attachedMediaNotifier: attachedMediaNotifier,
                 attachedMediaLinksNotifier: attachedMediaLinksNotifier,
                 quotedEvent: quotedEvent,
+                textEditorKey: textEditorKey,
               ),
             ),
             CreatePostBottomPanel(
@@ -242,6 +245,8 @@ class PostFormModal extends HookConsumerWidget {
               attachedVideoNotifier: attachedVideoNotifier,
               attachedMediaLinksNotifier: attachedMediaLinksNotifier,
               createOption: createOption,
+              scrollController: scrollController,
+              textEditorKey: textEditorKey,
             ),
           ],
         ),

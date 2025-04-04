@@ -6,7 +6,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
-import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
@@ -31,6 +30,7 @@ class CreatePostContent extends StatelessWidget {
     required this.attachedMediaNotifier,
     required this.attachedMediaLinksNotifier,
     required this.quotedEvent,
+    required this.textEditorKey,
     super.key,
   });
 
@@ -42,6 +42,7 @@ class CreatePostContent extends StatelessWidget {
   final AttachedMediaNotifier attachedMediaNotifier;
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final EventReference? quotedEvent;
+  final GlobalKey<TextEditorState> textEditorKey;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class CreatePostContent extends StatelessWidget {
               createOption: createOption,
               attachedMediaNotifier: attachedMediaNotifier,
               attachedMediaLinksNotifier: attachedMediaLinksNotifier,
-              scrollController: scrollController,
+              textEditorKey: textEditorKey,
             ),
             if (quotedEvent != null) _QuotedEntitySection(eventReference: quotedEvent!),
           ],
@@ -105,20 +106,19 @@ class _TextInputSection extends HookConsumerWidget {
     required this.createOption,
     required this.attachedMediaNotifier,
     required this.attachedMediaLinksNotifier,
-    required this.scrollController,
+    required this.textEditorKey,
   });
 
   final QuillController textEditorController;
   final CreatePostOption createOption;
   final AttachedMediaNotifier attachedMediaNotifier;
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
-  final ScrollController scrollController;
+  final GlobalKey<TextEditorState> textEditorKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
-    final textEditorKey = useMemoized(TextEditorKeys.createPost);
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     useEffect(
       () {
@@ -184,10 +184,6 @@ class _TextInputSection extends HookConsumerWidget {
                       ),
                       child: UrlPreviewContent(url: links.first),
                     ),
-                  SuggestionsContainer(
-                    scrollController: scrollController,
-                    editorKey: textEditorKey,
-                  ),
                 ],
               ),
             ),
