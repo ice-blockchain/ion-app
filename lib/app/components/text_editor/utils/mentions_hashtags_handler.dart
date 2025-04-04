@@ -14,9 +14,6 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
     required super.ref,
   });
 
-  String taggingCharacter = '';
-  int lastTagIndex = -1;
-
   @override
   void onTextChanged(
     String text,
@@ -24,55 +21,15 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
     required bool isBackspace,
     required bool cursorMoved,
   }) {
-    if (cursorMoved) {
-      _cleanAndReformatTags(text);
-    }
+    _reapplyAllTags(text);
 
-    if (cursorIndex > 0) {
-      final char = text.substring(cursorIndex - 1, cursorIndex);
-
-      if (char == '#' || char == '@' || char == r'$') {
-        taggingCharacter = char;
-        lastTagIndex = cursorIndex - 1;
-
-        _formatSingleWord(text, lastTagIndex);
-
-        ref.invalidate(suggestionsNotifierProvider);
-      } else if (char == ' ' || char == '\n') {
-        if (lastTagIndex != -1) {
-          _resetState();
-          ref.invalidate(suggestionsNotifierProvider);
-        }
-      } else if (lastTagIndex != -1) {
-        final currentText = text.substring(lastTagIndex, cursorIndex);
-        final spaceIndex = currentText.indexOf(' ');
-
-        if (spaceIndex != -1) {
-          final tagText = currentText.substring(0, spaceIndex);
-          _applyFormatting(lastTagIndex, spaceIndex, tagText);
-          _resetState();
-        } else {
-          _applyFormatting(lastTagIndex, cursorIndex - lastTagIndex, currentText);
-        }
-      }
-    }
-
-    if (isBackspace && lastTagIndex != -1) {
-      if (cursorIndex <= lastTagIndex) {
-        _resetState();
-        ref.invalidate(suggestionsNotifierProvider);
-      } else {
-        final remainingText = text.substring(lastTagIndex, cursorIndex);
-        if (remainingText.isNotEmpty) {
-          final spaceIndex = remainingText.indexOf(' ');
-          if (spaceIndex != -1) {
-            _applyFormatting(lastTagIndex, spaceIndex, remainingText.substring(0, spaceIndex));
-            _resetState();
-          } else {
-            _applyFormatting(lastTagIndex, remainingText.length, remainingText);
-          }
-        }
-      }
+    final activeTag = _findActiveTagNearCursor(text, cursorIndex);
+    if (isBackspace && activeTag == null) {
+      ref.invalidate(suggestionsNotifierProvider);
+    } else if (activeTag != null) {
+      ref
+          .read(suggestionsNotifierProvider.notifier)
+          .updateSuggestions(activeTag.text, activeTag.tagChar);
     }
   }
 
@@ -81,189 +38,101 @@ class MentionsHashtagsHandler extends TextEditorTypingListener {
     ref.invalidate(suggestionsNotifierProvider);
   }
 
-  void _cleanAndReformatTags(String text) {
-    controller.removeListener(editorListener);
-
-    try {
-      final tags = <_TagInfo>[];
-
-      for (var i = 0; i < text.length; i++) {
-        if ((text[i] == '#' || text[i] == '@' || text[i] == r'$') && _isWordStart(text, i)) {
-          var endIndex = i;
-          for (var j = i + 1; j < text.length; j++) {
-            if (isWordBoundary(text[j])) {
-              break;
-            }
-            endIndex = j;
-          }
-
-          if (endIndex >= i) {
-            final tagText = text.substring(i, endIndex + 1);
-            if (tagText.length > 1) {
-              tags.add(
-                _TagInfo(
-                  start: i,
-                  length: tagText.length,
-                  text: tagText,
-                  tagChar: text[i],
-                ),
-              );
-            }
-          }
-        }
-      }
-
-      for (final tag in tags) {
-        final attribute = switch (tag.tagChar) {
-          '#' => HashtagAttribute.withValue(tag.text),
-          '@' => MentionAttribute.withValue(tag.text),
-          r'$' => CashtagAttribute.withValue(tag.text),
-          _ => null,
-        };
-
-        if (attribute != null) {
-          controller.formatText(tag.start, tag.length, attribute);
-        }
-      }
-    } finally {
-      controller.addListener(editorListener);
-    }
-  }
-
-  void _formatSingleWord(String text, int tagIndex) {
-    if (tagIndex >= 0 && tagIndex < text.length) {
-      final tagChar = text[tagIndex];
-      if (tagChar == '#' || tagChar == r'$') {
-        final tagAttribute = switch (tagChar) {
-          '#' => const HashtagAttribute.withValue('#'),
-          r'$' => const CashtagAttribute.withValue(r'$'),
-          _ => null,
-        };
-
-        if (tagAttribute != null) {
-          controller.removeListener(editorListener);
-          try {
-            controller.formatText(tagIndex, 1, tagAttribute);
-          } finally {
-            controller.addListener(editorListener);
-          }
-        }
-
-        if (tagIndex + 1 < text.length) {
-          var endIndex = tagIndex;
-          for (var i = tagIndex + 1; i < text.length; i++) {
-            if (isWordBoundary(text[i])) {
-              break;
-            }
-            endIndex = i;
-          }
-
-          if (endIndex > tagIndex) {
-            final wordLength = endIndex - tagIndex + 1;
-            final tagText = text.substring(tagIndex, tagIndex + wordLength);
-
-            final attribute = switch (tagChar) {
-              '#' => HashtagAttribute.withValue(tagText),
-              r'$' => CashtagAttribute.withValue(tagText),
-              _ => null,
-            };
-
-            if (attribute != null) {
-              controller.removeListener(editorListener);
-              try {
-                controller.formatText(tagIndex, wordLength, attribute);
-              } finally {
-                controller.addListener(editorListener);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  bool _isWordStart(String text, int index) {
-    if (index == 0) return true;
-    final prevChar = text[index - 1];
-    return isWordBoundary(prevChar);
-  }
-
-  void _applyFormatting(int index, int length, String text) {
-    var actualLength = length;
-    var actualText = text;
-
-    for (var i = 0; i < text.length; i++) {
-      if (isPunctuation(text[i])) {
-        actualLength = i;
-        actualText = text.substring(0, i);
-        break;
-      }
-    }
-
-    if (actualLength == 0) {
-      return;
-    }
-
-    controller.removeListener(editorListener);
-    try {
-      final attribute = switch (taggingCharacter) {
-        '@' => MentionAttribute.withValue(actualText),
-        '#' => HashtagAttribute.withValue(actualText),
-        r'$' => CashtagAttribute.withValue(actualText),
-        _ => null,
-      };
-      if (attribute != null) {
-        controller.formatText(index, actualLength, attribute);
-      }
-    } finally {
-      controller.addListener(editorListener);
-    }
-  }
-
   void onSuggestionSelected(String suggestion) {
+    final fullText = controller.document.toPlainText();
     final cursorIndex = controller.selection.baseOffset;
 
-    final attribute = switch (taggingCharacter) {
-      '@' => MentionAttribute.withValue(suggestion),
-      '#' => HashtagAttribute.withValue(suggestion),
-      r'$' => CashtagAttribute.withValue(suggestion),
-      _ => null,
-    };
+    final tags = _extractTags(fullText);
+    final tag = tags.lastWhere(
+      (t) => t.start < cursorIndex && t.start + t.length >= cursorIndex - 1,
+      orElse: () => _TagInfo(start: -1, length: 0, text: '', tagChar: ''),
+    );
 
+    if (tag.start == -1) return;
+
+    final attribute = _getAttribute(tag.tagChar);
+
+    if (attribute != null) {
+      controller.removeListener(editorListener);
+      try {
+        final suggestionWithTagChar =
+            suggestion.startsWith(tag.tagChar) ? suggestion : '${tag.tagChar}$suggestion';
+        controller
+          ..replaceText(tag.start, tag.length, suggestionWithTagChar, null)
+          ..formatText(tag.start, suggestionWithTagChar.length, attribute)
+          ..replaceText(tag.start + suggestionWithTagChar.length, 0, ' ', null)
+          ..updateSelection(
+            TextSelection.collapsed(offset: tag.start + suggestionWithTagChar.length + 1),
+            ChangeSource.local,
+          );
+      } finally {
+        controller.addListener(editorListener);
+      }
+
+      _reapplyAllTags(controller.document.toPlainText());
+      ref.invalidate(suggestionsNotifierProvider);
+    }
+  }
+
+  void _reapplyAllTags(String fullText) {
+    controller.removeListener(editorListener);
     try {
-      controller
-        ..removeListener(editorListener)
-        ..replaceText(
-          lastTagIndex,
-          cursorIndex - lastTagIndex,
-          suggestion,
-          null,
-        )
-        ..formatText(lastTagIndex, suggestion.length, attribute)
-        ..replaceText(
-          lastTagIndex + suggestion.length,
-          0,
-          ' ',
-          null,
-        );
-
-      final newCursorIndex = lastTagIndex + suggestion.length + 1;
-
-      controller.updateSelection(
-        TextSelection.collapsed(offset: newCursorIndex),
-        ChangeSource.local,
-      );
-
-      _resetState();
+      final tags = _extractTags(fullText);
+      _applyTagAttributes(tags);
     } finally {
       controller.addListener(editorListener);
     }
-    ref.invalidate(suggestionsNotifierProvider);
   }
 
-  void _resetState() {
-    lastTagIndex = -1;
-    taggingCharacter = '';
+  List<_TagInfo> _extractTags(String text) {
+    final regex = RegExp(r'(?:(?<=\s)|^)[@#$]\w+');
+    final matches = regex.allMatches(text);
+
+    return matches.map((match) {
+      final tagText = match.group(0)!;
+      final tagChar = tagText[0];
+      return _TagInfo(
+        start: match.start,
+        length: tagText.length,
+        text: tagText,
+        tagChar: tagChar,
+      );
+    }).toList();
+  }
+
+  void _applyTagAttributes(List<_TagInfo> tags) {
+    final docLength = controller.document.length;
+
+    controller
+      ..formatText(0, docLength, const HashtagAttribute.unset())
+      ..formatText(0, docLength, const MentionAttribute.unset())
+      ..formatText(0, docLength, const CashtagAttribute.unset());
+
+    for (final tag in tags) {
+      final attribute = _getAttribute(tag.tagChar);
+      if (attribute != null) {
+        controller.formatText(tag.start, tag.length, attribute);
+      }
+    }
+  }
+
+  _TagInfo? _findActiveTagNearCursor(String text, int cursorIndex) {
+    final tags = _extractTags(text);
+    for (final tag in tags) {
+      if (cursorIndex > tag.start && cursorIndex <= tag.start + tag.length) {
+        return tag;
+      }
+    }
+    return null;
+  }
+
+  Attribute<String?>? _getAttribute(String tagChar) {
+    return switch (tagChar) {
+      '@' => MentionAttribute.withValue(tagChar),
+      '#' => HashtagAttribute.withValue(tagChar),
+      r'$' => CashtagAttribute.withValue(tagChar),
+      _ => null,
+    };
   }
 }
 
@@ -274,6 +143,7 @@ class _TagInfo {
     required this.text,
     required this.tagChar,
   });
+
   final int start;
   final int length;
   final String text;

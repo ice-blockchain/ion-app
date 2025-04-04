@@ -16,7 +16,9 @@ class TextEditorKeys {
   const TextEditorKeys._();
 
   static GlobalKey<TextEditorState> createArticle() => GlobalKey<TextEditorState>();
+
   static GlobalKey<TextEditorState> replyInput() => GlobalKey<TextEditorState>();
+
   static GlobalKey<TextEditorState> createPost() => GlobalKey<TextEditorState>();
 }
 
@@ -46,7 +48,9 @@ class TextEditorState extends ConsumerState<TextEditor> {
   late final FocusNode _focusNode = widget.focusNode ?? FocusNode();
 
   MentionsHashtagsHandler get mentionsHashtagsHandler => _mentionsHashtagsHandler;
+
   LinksHandler get linksHandler => _linksHandler;
+
   QuillController get quillController => widget.controller;
 
   @override
@@ -97,8 +101,11 @@ class TextEditorState extends ConsumerState<TextEditor> {
         customStyles: textEditorStyles(context),
         floatingCursorDisabled: true,
         customStyleBuilder: (attribute) => customTextStyleBuilder(attribute, context),
-        customRecognizerBuilder: (attribute, leaf) =>
-            customRecognizerBuilder(context, attribute, isEditing: true),
+        customRecognizerBuilder: (attribute, leaf) => customRecognizerBuilder(
+          context,
+          attribute,
+          isEditing: true,
+        ),
         scrollable: false,
       ),
     );

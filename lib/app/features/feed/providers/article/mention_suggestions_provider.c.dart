@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
@@ -10,12 +9,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'mention_suggestions_provider.c.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<String>> mentionSuggestions(Ref ref, String query) async {
   if (query.isEmpty || !query.startsWith('@')) {
     return [];
   }
-  await ref.debounce();
 
   final searchQuery = query.substring(1).toLowerCase();
 

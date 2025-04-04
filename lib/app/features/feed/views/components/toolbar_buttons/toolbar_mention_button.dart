@@ -35,10 +35,7 @@ class ToolbarMentionButton extends ConsumerWidget {
 
           final textEditorState = textEditorKey.currentState;
           if (textEditorState != null) {
-            textEditorState.mentionsHashtagsHandler
-              ..taggingCharacter = '@'
-              ..lastTagIndex = cursorPosition
-              ..triggerListener();
+            textEditorState.mentionsHashtagsHandler.triggerListener();
           }
         }
       },

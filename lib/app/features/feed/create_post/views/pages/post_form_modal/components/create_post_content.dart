@@ -30,6 +30,7 @@ class CreatePostContent extends StatelessWidget {
     required this.attachedMediaNotifier,
     required this.attachedMediaLinksNotifier,
     required this.quotedEvent,
+    required this.textEditorKey,
     super.key,
   });
 
@@ -41,6 +42,7 @@ class CreatePostContent extends StatelessWidget {
   final AttachedMediaNotifier attachedMediaNotifier;
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final EventReference? quotedEvent;
+  final GlobalKey<TextEditorState> textEditorKey;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class CreatePostContent extends StatelessWidget {
               createOption: createOption,
               attachedMediaNotifier: attachedMediaNotifier,
               attachedMediaLinksNotifier: attachedMediaLinksNotifier,
+              textEditorKey: textEditorKey,
             ),
             if (quotedEvent != null) _QuotedEntitySection(eventReference: quotedEvent!),
           ],
@@ -103,18 +106,19 @@ class _TextInputSection extends HookConsumerWidget {
     required this.createOption,
     required this.attachedMediaNotifier,
     required this.attachedMediaLinksNotifier,
+    required this.textEditorKey,
   });
 
   final QuillController textEditorController;
   final CreatePostOption createOption;
   final AttachedMediaNotifier attachedMediaNotifier;
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
+  final GlobalKey<TextEditorState> textEditorKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mediaFiles = attachedMediaNotifier.value;
     final mediaLinks = attachedMediaLinksNotifier.value.values.toList();
-    final textEditorKey = useMemoized(TextEditorKeys.createPost);
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     useEffect(
       () {

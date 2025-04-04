@@ -36,10 +36,10 @@ class SuggestionsContainer extends HookConsumerWidget {
       editorKey: editorKey,
     );
 
-    final showMentionsSuggestions =
-        ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showMentionsSuggestions);
+    final showSuggestions =
+        ref.read(featureFlagsProvider.notifier).get(FeedFeatureFlag.showSuggestions);
 
-    if (!showMentionsSuggestions || !suggestionsState.isVisible) {
+    if (!showSuggestions || !suggestionsState.isVisible) {
       return const SizedBox.shrink();
     }
 

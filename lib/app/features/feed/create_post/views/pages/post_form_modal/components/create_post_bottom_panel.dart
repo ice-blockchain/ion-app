@@ -6,6 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/separated/separator.dart';
+import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
+import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_post/model/create_post_option.dart';
 import 'package:ion/app/features/feed/create_post/views/components/character_limit_exceed_indicator/character_limit_exceed_indicator.dart';
@@ -37,6 +39,8 @@ class CreatePostBottomPanel extends StatelessWidget {
     required this.attachedMediaLinksNotifier,
     required this.attachedVideoNotifier,
     required this.createOption,
+    required this.scrollController,
+    required this.textEditorKey,
     super.key,
   });
 
@@ -48,11 +52,17 @@ class CreatePostBottomPanel extends StatelessWidget {
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final CreatePostOption createOption;
+  final ScrollController scrollController;
+  final GlobalKey<TextEditorState> textEditorKey;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SuggestionsContainer(
+          scrollController: scrollController,
+          editorKey: textEditorKey,
+        ),
         const HorizontalSeparator(),
         _WhoCanReplySection(
           createOption: createOption,
