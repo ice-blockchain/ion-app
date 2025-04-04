@@ -14,6 +14,7 @@ command:
     # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
     # makes the CI much more stable.
     runPubGetInParallel: false
+    usePubspecOverrides: true
 
 scripts:
   pub_get:

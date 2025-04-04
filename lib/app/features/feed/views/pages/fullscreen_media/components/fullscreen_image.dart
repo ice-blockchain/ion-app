@@ -2,12 +2,10 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
 
 class FullscreenImage extends HookConsumerWidget {
   const FullscreenImage({
@@ -21,30 +19,32 @@ class FullscreenImage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final maxScaleFactor = 6.0.s;
     final primaryTextColor = context.theme.appColors.primaryText;
-    final scaleState = useState(PhotoViewScaleState.initial);
+    final maxScale = 6.0.s;
+
+    final zoomController = useImageZoom(ref);
 
     return Stack(
       fit: StackFit.expand,
       children: [
-        PhotoView(
-          imageProvider: CachedNetworkImageProvider(imageUrl),
-          loadingBuilder: (_, __) => const CenteredLoadingIndicator(),
-          minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.covered * maxScaleFactor,
-          initialScale: PhotoViewComputedScale.contained,
-          basePosition: Alignment.center,
-          backgroundDecoration: BoxDecoration(color: primaryTextColor),
-          tightMode: false,
-          scaleStateChangedCallback: (state) {
-            scaleState.value = state;
-            ref.read(imageZoomStateProvider.notifier).setZoomed(state);
-          },
-          scaleStateCycle: (actual) => actual == PhotoViewScaleState.initial
-              ? PhotoViewScaleState.covering
-              : PhotoViewScaleState.initial,
-          gestureDetectorBehavior: HitTestBehavior.opaque,
+        ColoredBox(
+          color: primaryTextColor,
+          child: GestureDetector(
+            onDoubleTapDown: zoomController.onDoubleTapDown,
+            onDoubleTap: zoomController.onDoubleTap,
+            child: InteractiveViewer(
+              transformationController: zoomController.transformationController,
+              maxScale: maxScale,
+              clipBehavior: Clip.none,
+              onInteractionStart: zoomController.onInteractionStart,
+              onInteractionEnd: zoomController.onInteractionEnd,
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (_, __) => const CenteredLoadingIndicator(),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
         ),
         if (bottomOverlayBuilder != null)
           PositionedDirectional(

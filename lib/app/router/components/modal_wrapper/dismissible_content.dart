@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: ice License 1.0
 
-import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
+import 'package:ion/app/router/components/modal_wrapper/dismissible_page.dart';
 
 class DismissibleContent extends ConsumerWidget {
   const DismissibleContent({
@@ -18,7 +18,7 @@ class DismissibleContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isZoomed = ref.watch(imageZoomStateProvider);
+    final isZoomed = ref.watch(imageZoomProvider);
 
     return DismissiblePage(
       onDismissed: () {
@@ -26,9 +26,7 @@ class DismissibleContent extends ConsumerWidget {
           context.pop();
         }
       },
-      direction: isZoomed
-          ? DismissiblePageDismissDirection.none
-          : DismissiblePageDismissDirection.vertical,
+      isZoomed: isZoomed,
       child: child,
     );
   }

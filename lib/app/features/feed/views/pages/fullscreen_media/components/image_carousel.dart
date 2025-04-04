@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: ice License 1.0
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
+import 'package:ion/app/components/progress_bar/centered_loading_indicator.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_image.dart';
-import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_state.c.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/hooks/use_image_zoom.dart';
+import 'package:ion/app/features/feed/views/pages/fullscreen_media/providers/image_zoom_provider.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
@@ -28,22 +29,45 @@ class ImageCarousel extends HookConsumerWidget {
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
     final horizontalPadding = 16.0.s;
 
+    final zoomController = useImageZoom(ref, withReset: true);
     final currentPage = useState(initialIndex);
-    final isZoomed = ref.watch(imageZoomStateProvider);
+
+    useEffect(
+      () {
+        void listener() {
+          if (pageController.hasClients && pageController.page != null) {
+            final newPage = pageController.page!.round();
+            if (newPage != currentPage.value) {
+              currentPage.value = newPage;
+              zoomController.resetZoom?.call();
+            }
+          }
+        }
+
+        pageController.addListener(listener);
+        return () {
+          if (pageController.hasClients) {
+            pageController.removeListener(listener);
+          }
+        };
+      },
+      [pageController, zoomController],
+    );
+
+    final isZoomed = ref.watch(imageZoomProvider);
 
     return Column(
       children: [
         Expanded(
           child: PageView.builder(
             controller: pageController,
-            physics: isZoomed ? const NeverScrollableScrollPhysics() : null,
+            physics: isZoomed ? const NeverScrollableScrollPhysics() : const PageScrollPhysics(),
             itemCount: images.length,
-            onPageChanged: (index) {
-              currentPage.value = index;
-            },
             itemBuilder: (context, index) {
-              return FullscreenImage(
+              return CarouselImageItem(
+                key: ValueKey(images[index].url),
                 imageUrl: images[index].url,
+                zoomController: zoomController,
                 bottomOverlayBuilder: index == currentPage.value
                     ? (context) => SafeArea(
                           top: false,
@@ -65,6 +89,57 @@ class ImageCarousel extends HookConsumerWidget {
             },
           ),
         ),
+      ],
+    );
+  }
+}
+
+class CarouselImageItem extends StatelessWidget {
+  const CarouselImageItem({
+    required this.imageUrl,
+    required this.zoomController,
+    this.bottomOverlayBuilder,
+    super.key,
+  });
+
+  final String imageUrl;
+  final ImageZoomController zoomController;
+  final Widget Function(BuildContext)? bottomOverlayBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    final primaryTextColor = context.theme.appColors.primaryText;
+    final maxScale = 6.0.s;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ColoredBox(
+          color: primaryTextColor,
+          child: GestureDetector(
+            onDoubleTapDown: zoomController.onDoubleTapDown,
+            onDoubleTap: zoomController.onDoubleTap,
+            child: InteractiveViewer(
+              transformationController: zoomController.transformationController,
+              maxScale: maxScale,
+              clipBehavior: Clip.none,
+              onInteractionStart: zoomController.onInteractionStart,
+              onInteractionEnd: zoomController.onInteractionEnd,
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (_, __) => const CenteredLoadingIndicator(),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+        if (bottomOverlayBuilder != null)
+          PositionedDirectional(
+            start: 0,
+            end: 0,
+            bottom: 0,
+            child: bottomOverlayBuilder!(context),
+          ),
       ],
     );
   }
