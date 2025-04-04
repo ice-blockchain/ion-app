@@ -10,6 +10,7 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/extensions/object.dart';
+import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/coin_data.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
@@ -27,7 +28,7 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 
-enum NetworkListViewType { send, receive }
+enum NetworkListViewType { send, receive, request }
 
 class NetworkListView extends ConsumerWidget {
   const NetworkListView({
@@ -47,6 +48,11 @@ class NetworkListView extends ConsumerWidget {
       NetworkListViewType.send =>
         ref.watch(sendAssetFormControllerProvider).assetData.as<CoinAssetToSendData>()?.coinsGroup,
       NetworkListViewType.receive => ref.watch(receiveCoinsFormControllerProvider).selectedCoin!,
+      NetworkListViewType.request => ref
+          .watch(requestCoinsFormControllerProvider)
+          .assetData
+          .as<CoinAssetToSendData>()
+          ?.coinsGroup,
     };
 
     final coinsState = coinsGroup == null
@@ -55,7 +61,7 @@ class NetworkListView extends ConsumerWidget {
             NetworkListViewType.send => ref.watch(
                 syncedCoinsBySymbolGroupProvider(coinsGroup.symbolGroup),
               ),
-            NetworkListViewType.receive => ref.watch(
+            NetworkListViewType.receive || NetworkListViewType.request => ref.watch(
                 coinsByFiltersProvider(
                   symbol: coinsGroup.abbreviation,
                   symbolGroup: coinsGroup.symbolGroup,
@@ -96,6 +102,9 @@ class NetworkListView extends ConsumerWidget {
         case NetworkListViewType.receive:
           ref.read(receiveCoinsFormControllerProvider.notifier).setNetwork(network);
           unawaited(ShareAddressRoute().push<void>(context));
+        case NetworkListViewType.request:
+          unawaited(ref.read(requestCoinsFormControllerProvider.notifier).setNetwork(network));
+          unawaited(context.push(sendFormRouteLocationBuilder!()));
       }
     }
 

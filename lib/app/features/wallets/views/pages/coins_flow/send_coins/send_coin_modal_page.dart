@@ -3,11 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/providers/filtered_assets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
-import 'package:ion/app/features/wallets/views/components/coins_list/coins_list_view.dart';
-import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
+import 'package:ion/app/features/wallets/views/components/select_coin_modal_page.dart';
 
 class SendCoinModalPage extends ConsumerWidget {
   const SendCoinModalPage({
@@ -19,20 +16,11 @@ class SendCoinModalPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final coinsResult = ref.watch(filteredCoinsNotifierProvider);
-
-    return SheetContent(
-      body: CoinsListView(
-        coinsResult: coinsResult,
-        onItemTap: (group) {
-          ref.read(sendAssetFormControllerProvider.notifier).setCoin(group);
-          context.push(selectNetworkRouteLocationBuilder());
-        },
-        title: context.i18n.wallet_send_coins,
-        onQueryChanged: (String query) {
-          ref.read(filteredCoinsNotifierProvider.notifier).search(query);
-        },
-      ),
+    return SelectCoinModalPage(
+      onCoinSelected: (value) {
+        ref.read(sendAssetFormControllerProvider.notifier).setCoin(value);
+        context.push(selectNetworkRouteLocationBuilder());
+      },
     );
   }
 }

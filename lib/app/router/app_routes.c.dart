@@ -104,6 +104,7 @@ import 'package:ion/app/features/settings/views/privacy_settings_modal.dart';
 import 'package:ion/app/features/settings/views/push_notifications_settings.dart';
 import 'package:ion/app/features/settings/views/settings_modal.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
+import 'package:ion/app/features/user/model/payment_type.dart';
 import 'package:ion/app/features/user/model/tab_entity_type.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/pages/category_select_modal/category_select_modal.dart';
 import 'package:ion/app/features/user/pages/profile_edit_page/profile_edit_page.dart';
@@ -124,6 +125,7 @@ import 'package:ion/app/features/wallets/views/pages/coins_flow/contact_picker/c
 import 'package:ion/app/features/wallets/views/pages/coins_flow/network_list/network_list_view.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/components/share_address_view.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/receive_coins/receive_coin_modal_page.dart';
+import 'package:ion/app/features/wallets/views/pages/coins_flow/request_coins/request_coins_modal_page.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/confirmation_sheet.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_result_sheet.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/send_coins_form.dart';

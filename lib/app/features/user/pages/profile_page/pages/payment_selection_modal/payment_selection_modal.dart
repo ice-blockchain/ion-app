@@ -8,6 +8,7 @@ import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
 import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/user/model/payment_type.dart';
+import 'package:ion/app/features/user/providers/request_coins_form_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/send_asset_form_provider.c.dart';
 import 'package:ion/app/hooks/use_on_receive_funds_flow.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -28,20 +29,27 @@ class PaymentSelectionModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final onContinue = useCallback(
       (PaymentType paymentType) {
-        ref.invalidate(sendAssetFormControllerProvider);
-        ref.read(sendAssetFormControllerProvider.notifier).setContact(
-              pubkey,
-              isContactPreselected: true,
-            );
-        SelectCoinProfileRoute().push<void>(context);
+        switch (paymentType) {
+          case PaymentType.send:
+            ref.invalidate(sendAssetFormControllerProvider);
+            ref.read(sendAssetFormControllerProvider.notifier).setContact(
+                  pubkey,
+                  isContactPreselected: true,
+                );
+          case PaymentType.request:
+            ref.invalidate(requestCoinsFormControllerProvider);
+            ref.read(requestCoinsFormControllerProvider.notifier).setContact(pubkey);
+        }
+        SelectCoinProfileRoute(paymentType: paymentType).push<void>(context);
       },
       [],
     );
-    final onReceiveFlow = useOnReceiveFundsFlow(
-      onReceive: () => onContinue(PaymentType.receive),
+    final onRequestFlow = useOnReceiveFundsFlow(
+      onReceive: () => onContinue(PaymentType.request),
       onNeedToEnable2FA: () => Navigator.of(context).pop(true),
       ref: ref,
     );
+
     return SheetContent(
       backgroundColor: context.theme.appColors.secondaryBackground,
       body: Column(
@@ -69,8 +77,8 @@ class PaymentSelectionModal extends HookConsumerWidget {
                     backgroundColor: context.theme.appColors.tertararyBackground,
                     leading: option.iconAsset.icon(size: 48.0.s),
                     onTap: () {
-                      if (option == PaymentType.receive) {
-                        onReceiveFlow();
+                      if (option == PaymentType.request) {
+                        onRequestFlow();
                       } else {
                         onContinue(option);
                       }

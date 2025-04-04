@@ -7,6 +7,7 @@ import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
+import 'package:ion/app/features/wallets/model/entities/request_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
@@ -71,8 +72,14 @@ Future<void> transactionsSubscription(Ref ref) async {
       );
 
       if (rumor != null) {
-        final message = WalletAssetEntity.fromEventMessage(rumor);
-        await transactionsRepository.saveEntities([message]);
+        switch (rumor.kind) {
+          case WalletAssetEntity.kind:
+            final message = WalletAssetEntity.fromEventMessage(rumor);
+            await transactionsRepository.saveEntities([message]);
+          case RequestAssetEntity.kind:
+            // TODO: parse and save
+            break;
+        }
       }
     } on Exception catch (ex) {
       Logger.error('Caught error in subscription: $ex');
