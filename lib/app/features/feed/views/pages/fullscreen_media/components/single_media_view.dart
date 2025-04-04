@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/components/counter_items_footer/counter_items_footer.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
@@ -8,9 +9,10 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/views/pages/fullscreen_media/components/fullscreen_image.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/video/views/hooks/use_wake_lock.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
 
-class SingleMediaView extends StatelessWidget {
+class SingleMediaView extends HookWidget {
   const SingleMediaView({
     required this.post,
     required this.media,
@@ -28,6 +30,8 @@ class SingleMediaView extends StatelessWidget {
   Widget build(BuildContext context) {
     final onPrimaryAccentColor = context.theme.appColors.onPrimaryAccent;
     final horizontalPadding = 16.0.s;
+
+    useWakelock();
 
     if (media.mediaType == MediaType.video) {
       return VideoPage(

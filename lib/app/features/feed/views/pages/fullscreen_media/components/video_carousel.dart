@@ -5,9 +5,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/video/views/hooks/use_wake_lock.dart';
 import 'package:ion/app/features/video/views/pages/video_page.dart';
 import 'package:ion/app/utils/future.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 class VideoCarousel extends HookWidget {
   const VideoCarousel({
@@ -44,10 +44,7 @@ class VideoCarousel extends HookWidget {
       [pageController],
     );
 
-    useEffect(() {
-      WakelockPlus.enable();
-      return WakelockPlus.disable;
-    });
+    useWakelock();
 
     return PageView.builder(
       controller: pageController,
