@@ -8,13 +8,11 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/create_post/views/components/reply_input_field/reply_input_field.dart';
 import 'package:ion/app/features/feed/providers/can_reply_notifier.c.dart';
-import 'package:ion/app/features/feed/providers/post_details_refresher.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/reply_list/reply_list.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/hooks/use_on_init.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class PostDetailsPage extends HookConsumerWidget {
@@ -28,10 +26,6 @@ class PostDetailsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final canReply = ref.watch(canReplyProvider(eventReference)).value ?? false;
-
-    useOnInit(() {
-      ref.read(postDetailsRefresherProvider(eventReference).notifier).refresh();
-    });
 
     return Scaffold(
       appBar: NavigationAppBar.screen(

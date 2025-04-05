@@ -182,7 +182,9 @@ class IonConnectNotifier extends _$IonConnectNotifier {
     final entitiesStream = requestEntities<T>(requestMessage, actionSource: actionSource);
 
     final entities = await entitiesStream.toList();
-    return entities.isNotEmpty ? entities.first : null;
+    return entities.isNotEmpty
+        ? entities.last
+        : null; //TODO:how reliable to take last (in case of search)
   }
 
   Future<EventMessage> sign(

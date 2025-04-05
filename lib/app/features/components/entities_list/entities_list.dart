@@ -12,6 +12,7 @@ import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters.c.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -104,8 +105,8 @@ class _EntityListItem extends ConsumerWidget {
 
   bool _isRepostedEntityDeleted(WidgetRef ref, IonConnectEntity entity) {
     if (entity is GenericRepostEntity) {
-      final repostedEntity =
-          ref.watch(ionConnectSyncEntityProvider(eventReference: entity.data.eventReference));
+      final repostedEntity = ref
+          .watch(ionConnectEntityWithCountersProvider(eventReference: entity.data.eventReference));
       return repostedEntity == null ||
           (repostedEntity is SoftDeletableEntity && repostedEntity.isDeleted);
     }

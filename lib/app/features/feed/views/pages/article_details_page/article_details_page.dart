@@ -11,6 +11,7 @@ import 'package:ion/app/components/text_editor/text_editor_preview.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters.c.dart';
 import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/article_details_date_topics.dart';
@@ -22,7 +23,6 @@ import 'package:ion/app/features/feed/views/pages/article_details_page/component
 import 'package:ion/app/features/feed/views/pages/article_details_page/components/user_biography.dart';
 import 'package:ion/app/features/feed/views/pages/article_details_page/hooks/use_scroll_indicator.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/services/markdown/quill.dart';
 
@@ -37,7 +37,7 @@ class ArticleDetailsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final articleEntity =
-        ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
+        ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
     if (articleEntity is! ArticleEntity) {
       return const SizedBox.shrink();
