@@ -42,6 +42,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
     return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
           requestMessage,
           actionSource: ActionSourceUser(eventReference.pubkey),
+          entityEventReference: eventReference,
         );
   } else if (eventReference is ReplaceableEventReference) {
     final requestMessage = RequestMessage()
@@ -59,6 +60,7 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
     return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
           requestMessage,
           actionSource: ActionSourceUser(eventReference.pubkey),
+          entityEventReference: eventReference,
         );
   } else {
     throw UnsupportedEventReference(eventReference);
@@ -71,6 +73,7 @@ Future<IonConnectEntity?> ionConnectEntity(
   required EventReference eventReference,
   bool network = true,
   bool cache = true,
+  String? search,
 }) async {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentUser == null) {
@@ -83,7 +86,9 @@ Future<IonConnectEntity?> ionConnectEntity(
     }
   }
   if (network) {
-    return ref.watch(ionConnectNetworkEntityProvider(eventReference: eventReference).future);
+    return ref.watch(
+      ionConnectNetworkEntityProvider(eventReference: eventReference, search: search).future,
+    );
   }
   return null;
 }
@@ -94,6 +99,7 @@ IonConnectEntity? ionConnectSyncEntity(
   required EventReference eventReference,
   bool network = true,
   bool cache = true,
+  String? search,
 }) {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentUser == null) {
@@ -106,7 +112,9 @@ IonConnectEntity? ionConnectSyncEntity(
     }
   }
   if (network) {
-    return ref.watch(ionConnectNetworkEntityProvider(eventReference: eventReference)).valueOrNull;
+    return ref
+        .watch(ionConnectNetworkEntityProvider(eventReference: eventReference, search: search))
+        .valueOrNull;
   }
   return null;
 }

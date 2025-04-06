@@ -12,7 +12,7 @@ import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_posts_data_source_provider.c.dart';
-import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters.c.dart';
+import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
 import 'package:ion/app/features/feed/providers/repost_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -117,7 +117,7 @@ class FeedPosts extends _$FeedPosts {
 
     if (repostedEventReference == null) return null;
     return ref.read(
-      ionConnectEntityWithCountersProvider(eventReference: repostedEventReference),
+      feedEntityProvider(eventReference: repostedEventReference),
     );
   }
 }

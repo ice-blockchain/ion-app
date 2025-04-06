@@ -12,7 +12,7 @@ import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/co
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters.c.dart';
+import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/own_entity_menu.dart';
@@ -63,7 +63,7 @@ class Post extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
+    final entity = ref.watch(feedEntityProvider(eventReference: eventReference));
 
     if (entity == null) {
       return ScreenSideOffset.small(child: const Skeleton(child: PostSkeleton()));
@@ -198,7 +198,7 @@ final class _FramedEvent extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entity = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
+    final entity = ref.watch(feedEntityProvider(eventReference: eventReference));
     final isParent = framedEventType == FramedEventType.parent;
     Widget? deletedEntity;
 
@@ -263,8 +263,7 @@ final class _QuotedPost extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final postEntity =
-        ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
+    final postEntity = ref.watch(feedEntityProvider(eventReference: eventReference));
 
     return QuotedEntityFrame.post(
       child: GestureDetector(
