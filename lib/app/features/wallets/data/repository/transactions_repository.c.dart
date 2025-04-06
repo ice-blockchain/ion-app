@@ -66,9 +66,8 @@ class TransactionsRepository {
     await _transactionsDao.save([mapped]);
   }
 
-  Future<bool> saveTransactions(List<TransactionData> transactions) {
-    return _transactionsDao.save(_coinMapper.fromDomainToDB(transactions));
-  }
+  Future<bool> saveTransactions(List<TransactionData> transactions) =>
+      _transactionsDao.save(_coinMapper.fromDomainToDB(transactions));
 
   Future<void> saveEntities(List<WalletAssetEntity> entities) async {
     // Always add empty contract address to get native coin of the network
@@ -162,9 +161,7 @@ class TransactionsRepository {
             networks: [network.id],
           ).then((result) => result.firstOrNull);
 
-          if (coin == null) {
-            return null;
-          }
+          if (coin == null) return null;
 
           final rawAmount = transaction.value;
           final amount = parseCryptoAmount(rawAmount, coin.decimals);

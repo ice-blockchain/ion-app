@@ -31,6 +31,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
         .getSingleOrNull();
   }
 
+  /// Returns true if there were changes in the database
   Future<bool> save(List<Transaction> transactions) {
     return transaction(() async {
       final existing = await (select(transactionsTable)
@@ -90,8 +91,7 @@ class TransactionsDao extends DatabaseAccessor<WalletsDatabase> with _$Transacti
           })
           ..orderBy([
             (tbl) => OrderingTerm(
-                  expression:
-                      tbl.dateRequested, // We need new field, like dateRequested to sort rows
+                  expression: tbl.dateRequested,
                   mode: OrderingMode.desc,
                 ),
           ])

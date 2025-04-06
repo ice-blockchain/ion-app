@@ -14,6 +14,7 @@ import 'package:ion/app/features/user/providers/update_user_metadata_notifier.c.
 import 'package:ion/app/features/wallets/providers/coins_sync_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/transactions_subscription_provider.c.dart';
+import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_logger.dart';
 import 'package:ion/app/services/storage/local_storage.c.dart';
@@ -44,6 +45,7 @@ Future<void> initApp(Ref ref) async {
   ref
     ..listen(coinsSyncProvider, noop)
     ..listen(transactionsSubscriptionProvider, noop)
+    ..listen(walletsInitializerNotifierProvider, noop)
     ..listen(connectedCryptoWalletsProvider, (_, __) {
       ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
     });

@@ -10,12 +10,9 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/components/scroll_view/load_more_builder.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/coin_transaction_data.c.dart';
-import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart';
-import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_details.c.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
-import 'package:ion/app/features/wallets/utils/crypto_amount_parser.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/balance/balance.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/empty_state/empty_state.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/transaction_list_header.dart';
@@ -75,9 +72,7 @@ class CoinDetailsPage extends HookConsumerWidget {
             child: Column(
               children: [
                 const Delimiter(),
-                Balance(
-                  coinsGroup: coinsGroup,
-                ),
+                Balance(coinsGroup: coinsGroup),
                 const Delimiter(),
               ],
             ),
@@ -121,41 +116,10 @@ class CoinDetailsPage extends HookConsumerWidget {
                       coinData: coinsGroup.coins.first.coin,
                       onTap: () {
                         final transaction = transactions[index].origin;
-
-                        final feeAmount = transaction.fee != null
-                            ? parseCryptoAmount(transaction.fee!, transaction.nativeCoin.decimals)
-                            : null;
-                        final transactionDetails = TransactionDetails(
-                          id: transaction.id,
-                          txHash: transaction.txHash,
-                          network: transaction.network,
-                          type: transaction.type,
-                          assetData: transaction.cryptoAsset.map(
-                            coin: (coin) => CryptoAssetToSendData.coin(
-                              coinsGroup: coinsGroup,
-                              amount: coin.amount,
-                              rawAmount: coin.rawAmount,
-                              amountUSD: coin.amountUSD,
-                            ),
-                            nft: (nft) => CryptoAssetToSendData.nft(nft: nft.nft),
-                          ),
+                        final transactionDetails = TransactionDetails.fromTransactionData(
+                          transaction,
+                          coinsGroup: coinsGroup,
                           walletViewName: walletView.name,
-                          senderAddress: transaction.senderWalletAddress,
-                          receiverAddress: transaction.receiverWalletAddress,
-                          participantPubkey: transaction.userPubkey,
-                          status: transaction.status,
-                          dateRequested: transaction.dateRequested,
-                          dateConfirmed: transaction.dateConfirmed,
-                          nativeCoin: transaction.nativeCoin,
-                          networkFeeOption: feeAmount != null
-                              ? NetworkFeeOption(
-                                  amount: feeAmount,
-                                  symbol: transaction.nativeCoin.abbreviation,
-                                  priceUSD: feeAmount * transaction.nativeCoin.priceUSD,
-                                  type: null,
-                                )
-                              : null,
-                          dateBroadcasted: null,
                         );
 
                         ref.read(transactionNotifierProvider.notifier).details = transactionDetails;

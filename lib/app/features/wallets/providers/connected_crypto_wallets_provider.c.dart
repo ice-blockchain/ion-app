@@ -8,7 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'connected_crypto_wallets_provider.c.g.dart';
 
-/// Returns all connected crypto wallets to the WalletView.
+/// Returns all connected crypto wallets to the WalletViews
 @riverpod
 Future<List<Wallet>> connectedCryptoWallets(Ref ref) async {
   final walletViews = await ref.watch(walletViewsDataNotifierProvider.future);
@@ -20,7 +20,7 @@ Future<List<Wallet>> connectedCryptoWallets(Ref ref) async {
   return cryptoWallets.filterByIds(walletIds);
 }
 
-/// Returns crypto wallets of the current WalletView.
+/// Returns crypto wallets of the current WalletView
 @riverpod
 Future<List<Wallet>> currentWalletViewCryptoWallets(Ref ref) async {
   final walletView = await ref.watch(currentWalletViewDataProvider.future);
@@ -31,7 +31,7 @@ Future<List<Wallet>> currentWalletViewCryptoWallets(Ref ref) async {
   return cryptoWallets.filterByIds(walletIds);
 }
 
-/// Returns crypto wallets of the main WalletView.
+/// Returns crypto wallets of the main WalletView
 @riverpod
 Future<List<Wallet>> mainCryptoWallets(Ref ref) async {
   final walletViews = await ref.watch(walletViewsDataNotifierProvider.future);

@@ -20,7 +20,7 @@ class WalletViewsDataNotifier extends _$WalletViewsDataNotifier {
   @override
   Future<List<WalletViewData>> build() async {
     // Wait until all preparations are completed
-    await ref.watch(walletsInitializerProvider.future);
+    await ref.watch(walletsInitializerNotifierProvider.future);
 
     final walletViewsService = await ref.watch(walletViewsServiceProvider.future);
 

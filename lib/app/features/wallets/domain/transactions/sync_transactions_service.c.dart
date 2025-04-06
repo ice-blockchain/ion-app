@@ -38,7 +38,7 @@ class SyncTransactionsService {
 
   Future<void> sync() async {
     await _userWallets.map((wallet) async {
-      return await _cryptoWalletsRepository.isHistoryLoadedForWallet(id: wallet.id)
+      return await _cryptoWalletsRepository.isHistoryLoadedForWallet(walletId: wallet.id)
           ? _syncTransactionsByPages(wallet)
           : _loadAllTransactions(wallet);
     }).wait;

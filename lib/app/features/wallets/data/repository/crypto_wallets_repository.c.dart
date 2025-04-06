@@ -34,7 +34,7 @@ class CryptoWalletsRepository {
   }
 
   /// Indicates whether the transaction history has been fully loaded into the database previously
-  Future<bool> isHistoryLoadedForWallet({required String id}) {
-    return _cryptoWalletsDao.isHistoryLoadedForWallet(id: id);
+  Future<bool> isHistoryLoadedForWallet({required String walletId}) {
+    return _cryptoWalletsDao.isHistoryLoadedForWallet(id: walletId);
   }
 }
