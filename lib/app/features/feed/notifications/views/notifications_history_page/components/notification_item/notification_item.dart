@@ -50,7 +50,7 @@ class NotificationItem extends ConsumerWidget {
         ScreenSideOffset.small(
           child: NotificationInfo(notification: notification),
         ),
-        if (entity != null) NotificationRelatedEntity(entity: entity),
+        if (entity != null) NotificationRelatedEntity(entity: entity, notification: notification),
         SizedBox(height: 16.0.s),
         FeedListSeparator(),
       ],
