@@ -13,7 +13,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_entity_provider.c.g.dart';
 
-// test - check if counters and other deps are fetched for reposted / quoted posts
 @riverpod
 IonConnectEntity? feedEntity(
   Ref ref, {
