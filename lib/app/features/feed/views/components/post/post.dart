@@ -29,7 +29,7 @@ import 'package:ion/app/typedefs/typedefs.dart';
 
 enum FramedEventType { parent, quoted, none }
 
-class Post extends HookConsumerWidget {
+class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
     this.parentEventReference,
