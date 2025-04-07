@@ -202,22 +202,18 @@ class CreateArticle extends _$CreateArticle {
         modifiedMedia[attachment.url] = attachment;
       }
 
-      final unusedMediaUrls = <String>[];
       final unusedMediaFileHashes = <String>[];
+
+      final cleanedMedia = Map<String, MediaAttachment>.from(modifiedEntity.data.media);
 
       modifiedEntity.data.media.forEach((url, attachment) {
         final urlInContent = contentString.contains(url);
         final urlToCheck = url.replaceAll('url ', '');
         if (!urlInContent && (originalImageUrl != null && urlToCheck != originalImageUrl)) {
-          unusedMediaUrls.add(url);
+          cleanedMedia.remove(url);
           unusedMediaFileHashes.add(attachment.originalFileHash);
         }
       });
-
-      final cleanedMedia = Map<String, MediaAttachment>.from(modifiedEntity.data.media);
-      for (final url in unusedMediaUrls) {
-        cleanedMedia.remove(url);
-      }
 
       for (final attachment in updatedMediaAttachments) {
         cleanedMedia[attachment.url] = attachment;
