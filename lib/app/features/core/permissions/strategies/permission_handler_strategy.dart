@@ -47,7 +47,6 @@ class PermissionHandlerStrategy extends PermissionStrategy {
       };
 
   Future<ph.Permission> _getPermission() async {
-
     final permission = switch (permissionType) {
       Permission.videos => ph.Permission.videos,
       Permission.camera => ph.Permission.camera,
