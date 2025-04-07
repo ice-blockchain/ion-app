@@ -130,7 +130,7 @@ class OnboardingCompleteNotifier extends _$OnboardingCompleteNotifier {
   }
 
   Future<Map<String, String>> _buildUserWallets() async {
-    final cryptoWallets = await ref.read(connectedCryptoWalletsProvider.future);
+    final cryptoWallets = await ref.read(mainCryptoWalletsProvider.future);
     return Map.fromEntries(
       cryptoWallets.map((wallet) {
         if (wallet.address == null) return null;

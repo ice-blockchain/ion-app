@@ -61,7 +61,7 @@ class UpdateUserMetadataNotifier extends _$UpdateUserMetadataNotifier {
   Future<void> publishWallets(WalletAddressPrivacyOption option) async {
     Map<String, String>? wallets;
     if (option == WalletAddressPrivacyOption.public) {
-      final cryptoWallets = await ref.read(connectedCryptoWalletsProvider.future);
+      final cryptoWallets = await ref.read(mainCryptoWalletsProvider.future);
       wallets = Map.fromEntries(
         cryptoWallets.map((wallet) {
           if (wallet.address == null) return null;
