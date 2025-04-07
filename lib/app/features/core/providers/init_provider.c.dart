@@ -46,7 +46,7 @@ Future<void> initApp(Ref ref) async {
     ..listen(coinsSyncProvider, noop)
     ..listen(transactionsSubscriptionProvider, noop)
     ..listen(walletsInitializerNotifierProvider, noop)
-    ..listen(connectedCryptoWalletsProvider, (_, __) {
+    ..listen(mainCryptoWalletsProvider, (_, __) {
       ref.read(updateUserMetadataNotifierProvider.notifier).updatePublishedWallets();
     });
 

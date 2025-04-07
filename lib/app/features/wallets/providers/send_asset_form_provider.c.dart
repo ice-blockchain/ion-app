@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/domain/coins/coins_service.c.dart';
 import 'package:ion/app/features/wallets/model/coin_in_wallet_data.c.dart';
@@ -12,6 +11,7 @@ import 'package:ion/app/features/wallets/model/crypto_asset_to_send_data.c.dart'
 import 'package:ion/app/features/wallets/model/network_data.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/send_asset_form_data.c.dart';
+import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/features/wallets/views/utils/amount_parser.dart';
@@ -62,7 +62,7 @@ class SendAssetFormController extends _$SendAssetFormController {
   }
 
   Future<void> setNetwork(NetworkData network) async {
-    final wallets = await ref.read(walletsNotifierProvider.future);
+    final wallets = await ref.read(currentWalletViewCryptoWalletsProvider.future);
 
     // Reset current information about network
     state = state.copyWith(

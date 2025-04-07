@@ -3,11 +3,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/features/wallets/model/network_fee_option.c.dart';
 import 'package:ion/app/features/wallets/model/nft_data.c.dart';
 import 'package:ion/app/features/wallets/model/send_nft_form_data.c.dart';
+import 'package:ion/app/features/wallets/providers/connected_crypto_wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/network_fee_provider.c.dart';
 import 'package:ion/app/features/wallets/providers/wallet_view_data_provider.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -65,7 +65,7 @@ class SendNftFormController extends _$SendNftFormController {
   }
 
   Future<void> _loadNetworkFeeOptions(SendNftFormData form) async {
-    final wallets = await ref.read(walletsNotifierProvider.future);
+    final wallets = await ref.read(currentWalletViewCryptoWalletsProvider.future);
     final wallet = wallets.firstWhereOrNull(
       (wallet) => wallet.network == form.nft!.network.id,
     );
