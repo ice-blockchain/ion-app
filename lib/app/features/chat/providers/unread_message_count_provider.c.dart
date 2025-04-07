@@ -31,11 +31,9 @@ Stream<int> getAllUnreadMessagesCountInArchive(Ref ref) async* {
     throw UserMasterPubkeyNotFoundException();
   }
 
-  final mutedConversationIds = await ref.watch(mutedConversationIdsProvider.future);
-
   yield* ref
       .watch(conversationMessageDaoProvider)
-      .getAllUnreadMessagesCountInArchive(currentUserMasterPubkey, mutedConversationIds);
+      .getAllUnreadMessagesCountInArchive(currentUserMasterPubkey);
 }
 
 @riverpod
