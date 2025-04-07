@@ -10,7 +10,7 @@ import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/feed_category.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';

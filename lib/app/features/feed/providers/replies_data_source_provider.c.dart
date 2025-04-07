@@ -8,7 +8,7 @@ import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event_marker.dart';

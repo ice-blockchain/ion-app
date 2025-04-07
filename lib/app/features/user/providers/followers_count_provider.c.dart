@@ -3,7 +3,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
 import 'package:ion/app/features/user/providers/count_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,7 +14,6 @@ part 'followers_count_provider.c.g.dart';
 FutureOr<int?> followersCount(
   Ref ref, {
   required String pubkey,
-  required EventCountResultType type,
 }) async {
   final filters = [
     RequestFilter(
@@ -29,7 +28,7 @@ FutureOr<int?> followersCount(
     countProvider(
       key: pubkey,
       actionSource: ActionSourceUser(pubkey),
-      type: type,
+      type: EventCountResultType.followers,
       filters: filters,
       cache: false,
     ).future,

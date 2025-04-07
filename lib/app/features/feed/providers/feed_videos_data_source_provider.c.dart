@@ -8,7 +8,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/feed_current_filter_provider.c.dart';
 import 'package:ion/app/features/feed/providers/feed_filter_relays_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/entities_paged_data_provider.c.dart';
