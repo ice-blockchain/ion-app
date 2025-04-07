@@ -53,11 +53,10 @@ Future<void> notificationRepliesSubscription(Ref ref) async {
     },
   );
 
-  final subscription = events.listen((eventMessage) {
-    if (eventMessage.masterPubkey != currentPubkey) {
-      commentsRepository.save(eventParser.parse(eventMessage));
-    }
-  });
+  final subscription = events
+      .where((eventMessage) => eventMessage.masterPubkey != currentPubkey)
+      .map(eventParser.parse)
+      .listen(commentsRepository.save);
 
   ref.onDispose(subscription.cancel);
 }
