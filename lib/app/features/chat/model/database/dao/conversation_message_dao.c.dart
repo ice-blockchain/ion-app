@@ -41,7 +41,6 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
 
   Stream<int> getAllUnreadMessagesCountInArchive(
     String currentUserMasterPubkey,
-    List<String> mutedConversationIds,
   ) {
     final query = select(messageStatusTable).join([
       innerJoin(
@@ -55,8 +54,7 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     ])
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(conversationTable.isArchived.equals(true))
-      ..where(conversationTable.id.isNotIn(mutedConversationIds));
+      ..where(conversationTable.isArchived.equals(true));
 
     return query.watch().map((rows) => rows.length);
   }
