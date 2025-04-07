@@ -73,7 +73,7 @@ class MutedConversations extends _$MutedConversations {
 @riverpod
 Future<List<String>> mutedConversationIds(Ref ref) async {
   final mutedConversations = await ref.watch(mutedConversationsProvider.future);
-  final mutedCommunityIds = mutedConversations?.data.communitiesIds ?? [];
+  final mutedCommunityIds = mutedConversations?.data.communityIds ?? [];
 
   final mutedReceiverPubkeys = mutedConversations?.data.masterPubkeys ?? [];
   final e2eeChatMessageService = ref.watch(sendE2eeChatMessageServiceProvider);

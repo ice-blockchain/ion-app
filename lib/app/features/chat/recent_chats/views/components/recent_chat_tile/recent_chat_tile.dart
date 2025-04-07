@@ -116,20 +116,25 @@ class RecentChatTile extends HookConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    name,
-                                    style: context.theme.appTextThemes.subtitle3.copyWith(
-                                      color: context.theme.appColors.primaryText,
+                              Expanded(
+                                child: Row(
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Text(
+                                        name,
+                                        style: context.theme.appTextThemes.subtitle3.copyWith(
+                                          color: context.theme.appColors.primaryText,
+                                        ),
+                                        maxLines: 1,
+                                      ),
                                     ),
-                                  ),
-                                  if (isMuted)
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.only(start: 4.0.s),
-                                      child: Assets.svg.iconChannelfillMute.icon(size: 16.0.s),
-                                    ),
-                                ],
+                                    if (isMuted)
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.only(start: 4.0.s),
+                                        child: Assets.svg.iconChannelfillMute.icon(size: 16.0.s),
+                                      ),
+                                  ],
+                                ),
                               ),
                               ChatTimestamp(lastMessageAt),
                             ],

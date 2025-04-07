@@ -61,7 +61,7 @@ class MuteSetData with _$MuteSetData implements EventSerializable, ReplaceableEn
   const factory MuteSetData({
     required MuteSetType type,
     @Default('') String content,
-    @Default([]) List<String> communitiesIds,
+    @Default([]) List<String> communityIds,
     @Default([]) List<String> masterPubkeys,
   }) = _MuteSetData;
 
@@ -77,7 +77,7 @@ class MuteSetData with _$MuteSetData implements EventSerializable, ReplaceableEn
 
     return MuteSetData(
       content: eventMessage.content,
-      communitiesIds: eventMessage.tags.where((tag) => tag[0] == 'h').map((tag) => tag[1]).toList(),
+      communityIds: eventMessage.tags.where((tag) => tag[0] == 'h').map((tag) => tag[1]).toList(),
       masterPubkeys: eventMessage.tags.where((tag) => tag[0] == 'p').map((tag) => tag[1]).toList(),
       type: MuteSetType.values.firstWhere(
         (type) => type.dTagName == typeName,
@@ -101,7 +101,7 @@ class MuteSetData with _$MuteSetData implements EventSerializable, ReplaceableEn
       tags: [
         ...tags,
         ReplaceableEventIdentifier(value: type.dTagName).toTag(),
-        ...communitiesIds.map((id) => ['h', id]),
+        ...communityIds.map((id) => ['h', id]),
         ...masterPubkeys.map((pubkey) => ['p', pubkey]),
       ],
     );
