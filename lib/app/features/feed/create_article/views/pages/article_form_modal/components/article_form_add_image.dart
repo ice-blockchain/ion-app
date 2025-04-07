@@ -14,13 +14,15 @@ import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class CreateArticleAddImage extends HookConsumerWidget {
-  const CreateArticleAddImage({
+class ArticleFormAddImage extends HookConsumerWidget {
+  const ArticleFormAddImage({
     required this.selectedImage,
+    required this.selectedImageUrl,
     super.key,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
+  final ValueNotifier<String?> selectedImageUrl;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,6 +43,8 @@ class CreateArticleAddImage extends HookConsumerWidget {
           ).push<List<MediaFile>>(context);
 
           if (mediaFiles != null && mediaFiles.isNotEmpty && context.mounted) {
+            selectedImageUrl.value = null;
+
             final cropUiSettings = mediaService.buildCropImageUiSettings(
               context,
               aspectRatioPresets: [CropAspectRatioPreset.ratio16x9],
@@ -59,8 +63,12 @@ class CreateArticleAddImage extends HookConsumerWidget {
       settingsDialog: SettingsRedirectSheet.fromType(context, Permission.photos),
       builder: (context, onPressed) => ArticleImageContainer(
         selectedImage: selectedImage.value,
+        selectedImageUrl: selectedImageUrl.value,
         onPressed: onPressed,
-        onClearImage: () => selectedImage.value = null,
+        onClearImage: () {
+          selectedImage.value = null;
+          selectedImageUrl.value = null;
+        },
       ),
     );
   }

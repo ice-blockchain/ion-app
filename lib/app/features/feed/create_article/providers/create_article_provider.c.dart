@@ -9,12 +9,15 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/who_can_reply_settings_option.dart';
 import 'package:ion/app/features/gallery/providers/gallery_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/color_label.c.dart';
 import 'package:ion/app/features/ion_connect/model/entity_data_with_settings.dart';
+import 'package:ion/app/features/ion_connect/model/entity_editing_ended_at.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_alt.dart';
@@ -23,6 +26,7 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 import 'package:ion/app/features/ion_connect/model/related_hashtag.c.dart';
 import 'package:ion/app/features/ion_connect/model/rich_text.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
@@ -42,7 +46,8 @@ Raw<Stream<IonConnectEntity>> createArticleNotifierStream(Ref ref) {
 
 enum CreateArticleOption {
   plain,
-  softDelete;
+  softDelete,
+  modify;
 }
 
 @riverpod
@@ -68,7 +73,12 @@ class CreateArticle extends _$CreateArticle {
       final mediaAttachments = <MediaAttachment>[];
 
       final mainImageFuture = _uploadCoverImage(coverImagePath, files, mediaAttachments);
-      final contentFuture = _prepareContent(content, mediaIds, files, mediaAttachments);
+      final contentFuture = _prepareContent(
+        content: content,
+        mediaIds: mediaIds,
+        files: files,
+        mediaAttachments: mediaAttachments,
+      );
 
       final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
 
@@ -81,6 +91,10 @@ class CreateArticle extends _$CreateArticle {
         ...topics.map((topic) => RelatedHashtag(value: topic.toShortString())),
         ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
       ];
+
+      final editingEndedAt = EntityEditingEndedAt.build(
+        ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+      );
 
       final articleData = ArticleData.fromData(
         title: title,
@@ -95,6 +109,7 @@ class CreateArticle extends _$CreateArticle {
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
         richText: richText,
+        editingEndedAt: editingEndedAt,
       );
 
       final entities = await _sendArticleEntities([...files, articleData]);
@@ -132,6 +147,100 @@ class CreateArticle extends _$CreateArticle {
     });
   }
 
+  Future<void> modify({
+    required EventReference eventReference,
+    required Delta content,
+    required WhoCanReplySettingsOption whoCanReply,
+    required List<ArticleTopic> topics,
+    String? title,
+    String? summary,
+    String? coverImagePath,
+    String? originalImageUrl,
+    Map<String, MediaAttachment> mediaAttachments = const {},
+    String? imageColor,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final modifiedEntity =
+          await ref.read(ionConnectEntityProvider(eventReference: eventReference).future);
+      if (modifiedEntity is! ArticleEntity) {
+        throw UnsupportedEventReference(eventReference);
+      }
+
+      final files = <FileMetadata>[];
+      final updatedMediaAttachments = <MediaAttachment>[];
+
+      final String? imageUrlToUpload;
+
+      if (originalImageUrl != null) {
+        imageUrlToUpload = originalImageUrl;
+      } else {
+        imageUrlToUpload = await _uploadCoverImage(coverImagePath, files, updatedMediaAttachments);
+      }
+
+      final updatedContent = await _prepareContent(
+        content: content,
+        files: files,
+        mediaAttachments: updatedMediaAttachments,
+      );
+
+      final contentString = jsonEncode(updatedContent.toJson());
+
+      final richText = RichText(
+        protocol: 'quill_delta',
+        content: contentString,
+      );
+
+      final relatedHashtags = [
+        ...topics.map((topic) => RelatedHashtag(value: topic.toShortString())),
+        ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
+      ];
+
+      final modifiedMedia = Map<String, MediaAttachment>.from(mediaAttachments);
+      for (final attachment in updatedMediaAttachments) {
+        modifiedMedia[attachment.url] = attachment;
+      }
+
+      final unusedMediaFileHashes = <String>[];
+
+      final cleanedMedia = Map<String, MediaAttachment>.from(modifiedEntity.data.media);
+
+      modifiedEntity.data.media.forEach((url, attachment) {
+        final urlInContent = contentString.contains(url);
+        final urlToCheck = url.replaceAll('url ', '');
+        if (!urlInContent && (originalImageUrl != null && urlToCheck != originalImageUrl)) {
+          cleanedMedia.remove(url);
+          unusedMediaFileHashes.add(attachment.originalFileHash);
+        }
+      });
+
+      for (final attachment in updatedMediaAttachments) {
+        cleanedMedia[attachment.url] = attachment;
+      }
+
+      final articleData = modifiedEntity.data.copyWith(
+        title: title,
+        summary: summary,
+        image: imageUrlToUpload,
+        content: deltaToMarkdown(updatedContent),
+        media: cleanedMedia,
+        relatedHashtags: relatedHashtags,
+        settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
+        colorLabel: imageColor != null ? ColorLabel(value: imageColor) : null,
+        richText: richText,
+      );
+
+      if (unusedMediaFileHashes.isNotEmpty) {
+        await ref
+            .read(ionConnectDeleteFileNotifierProvider.notifier)
+            .deleteMultiple(unusedMediaFileHashes);
+      }
+      await _sendArticleEntities([...files, articleData]);
+      ref.read(draftArticleProvider.notifier).clear();
+    });
+  }
+
   Future<List<IonConnectEntity>?> _sendArticleEntities(List<EventSerializable> entitiesData) async {
     return ref.read(ionConnectNotifierProvider.notifier).sendEntitiesData(entitiesData);
   }
@@ -149,12 +258,12 @@ class CreateArticle extends _$CreateArticle {
     return uploadResult.mediaAttachment.url;
   }
 
-  Future<Delta> _prepareContent(
-    Delta content,
+  Future<Delta> _prepareContent({
+    required Delta content,
+    required List<FileMetadata> files,
+    required List<MediaAttachment> mediaAttachments,
     List<String>? mediaIds,
-    List<FileMetadata> files,
-    List<MediaAttachment> mediaAttachments,
-  ) async {
+  }) async {
     final uploadedUrls = <String, String>{};
 
     var updatedContent = content;

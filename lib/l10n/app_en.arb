@@ -592,6 +592,7 @@
   "create_post_modal_title": "New post",
   "create_post_modal_placeholder": "What's happening?",
   "create_article_nav_title": "New article",
+  "create_article_nav_title_edit": "Edit article",
   "create_article_title_placeholder": "Title",
   "create_article_add_cover": "Add cover image",
   "create_article_story_placeholder": "Write your story...",

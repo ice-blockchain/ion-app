@@ -7,13 +7,19 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/text_editor/hooks/use_quill_controller.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/user/providers/image_proccessor_notifier.c.dart';
+import 'package:ion/app/services/markdown/quill.dart';
 import 'package:ion/app/services/media_service/image_proccessing_config.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 
-class CreateArticleState {
-  CreateArticleState({
+class ArticleFormState {
+  ArticleFormState({
     required this.selectedImage,
+    required this.selectedImageUrl,
     required this.titleFilled,
     required this.titleController,
     required this.textEditorController,
@@ -23,9 +29,11 @@ class CreateArticleState {
     required this.titleInputFormatters,
     required this.titleFocusNode,
     required this.isTitleFocused,
+    required this.media,
   });
 
   final ValueNotifier<MediaFile?> selectedImage;
+  final ValueNotifier<String?> selectedImageUrl;
   final ValueNotifier<bool> titleFilled;
   final TextEditingController titleController;
   final QuillController textEditorController;
@@ -35,10 +43,14 @@ class CreateArticleState {
   final List<TextInputFormatter> titleInputFormatters;
   final FocusNode titleFocusNode;
   final ValueNotifier<bool> isTitleFocused;
+  final ValueNotifier<Map<String, MediaAttachment>?> media;
 }
 
-CreateArticleState useCreateArticle(WidgetRef ref) {
+ArticleFormState useArticleForm(WidgetRef ref, {EventReference? modifiedEvent}) {
   final selectedImage = useState<MediaFile?>(null);
+  final media = useState<Map<String, MediaAttachment>?>(null);
+  final selectedImageUrl = useState<String?>(null);
+  final selectedImageUrlColor = useState<String?>(null);
   final titleFilled = useState(false);
   final textEditorController = useQuillController();
   final editorFocusNotifier = useState<bool>(false);
@@ -46,7 +58,6 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
   final titleFocusNode = useFocusNode();
   final isTitleFocused = useState(false);
   final isTextValid = useState(false);
-
   const titleMaxLength = 120;
 
   useEffect(
@@ -92,6 +103,39 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
 
   useEffect(
     () {
+      if (modifiedEvent != null) {
+        final modifiableEntity =
+            ref.read(ionConnectEntityProvider(eventReference: modifiedEvent)).valueOrNull;
+
+        if (modifiableEntity is ArticleEntity) {
+          if (modifiableEntity.data.title != null) {
+            titleController.text = modifiableEntity.data.title!;
+            titleFilled.value = true;
+          }
+
+          final delta = parseAndConvertDelta(
+            modifiableEntity.data.richText?.content,
+            modifiableEntity.data.content,
+          );
+
+          textEditorController.document = Document.fromDelta(delta);
+          isTextValid.value = textEditorController.document.toPlainText().trim().isNotEmpty;
+
+          if (modifiableEntity.data.image != null) {
+            selectedImageUrl.value = modifiableEntity.data.image;
+            selectedImageUrlColor.value = modifiableEntity.data.colorLabel?.value;
+          }
+
+          media.value = modifiableEntity.data.media;
+        }
+      }
+      return null;
+    },
+    [modifiedEvent],
+  );
+
+  useEffect(
+    () {
       void listener() {
         if (titleController.text.length > titleMaxLength) {
           titleController
@@ -123,20 +167,27 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
   );
 
   void onNext() {
-    ref
-        .read(draftArticleProvider.notifier)
-        .updateArticleDetails(textEditorController, selectedImage.value, titleController.text);
+    ref.read(draftArticleProvider.notifier).updateArticleDetails(
+          textEditorController,
+          selectedImage.value,
+          titleController.text,
+          selectedImageUrl.value,
+          selectedImageUrlColor.value,
+        );
   }
 
   final isButtonEnabled = useMemoized(
     () {
-      return selectedImage.value != null && titleFilled.value && isTextValid.value;
+      return (selectedImage.value != null || selectedImageUrl.value != null) &&
+          titleFilled.value &&
+          isTextValid.value;
     },
-    [selectedImage.value, titleFilled.value, isTextValid.value],
+    [selectedImage.value, selectedImageUrl.value, titleFilled.value, isTextValid.value],
   );
 
-  return CreateArticleState(
+  return ArticleFormState(
     selectedImage: selectedImage,
+    selectedImageUrl: selectedImageUrl,
     titleFilled: titleFilled,
     titleController: titleController,
     textEditorController: textEditorController,
@@ -146,5 +197,6 @@ CreateArticleState useCreateArticle(WidgetRef ref) {
     titleInputFormatters: titleInputFormatters,
     titleFocusNode: titleFocusNode,
     isTitleFocused: isTitleFocused,
+    media: media,
   );
 }

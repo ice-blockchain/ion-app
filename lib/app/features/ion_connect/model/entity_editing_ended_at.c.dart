@@ -23,6 +23,16 @@ class EntityEditingEndedAt with _$EntityEditingEndedAt {
     );
   }
 
+  factory EntityEditingEndedAt.build(int minutes) {
+    return EntityEditingEndedAt(
+      value: DateTime.now().add(
+        Duration(
+          minutes: minutes,
+        ),
+      ),
+    );
+  }
+
   List<String> toTag() {
     return [tagName, (value.millisecondsSinceEpoch ~/ 1000).toString()];
   }

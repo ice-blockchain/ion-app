@@ -10,21 +10,45 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/create_article/providers/create_article_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/article_preview.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_topics_item.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_preview_modal/components/select_article_who_can_reply_item.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/article_preview.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/select_article_topics_item.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_preview_modal/components/select_article_who_can_reply_item.dart';
 import 'package:ion/app/features/feed/providers/article/select_topics_provider.c.dart';
 import 'package:ion/app/features/feed/providers/selected_who_can_reply_option_provider.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/generated/assets.gen.dart';
 
-class CreateArticlePreviewModal extends HookConsumerWidget {
-  const CreateArticlePreviewModal({super.key});
+class ArticlePreviewModal extends HookConsumerWidget {
+  factory ArticlePreviewModal({
+    Key? key,
+  }) = ArticlePreviewModal.create;
+  const ArticlePreviewModal._({super.key, this.modifiedEvent});
+
+  factory ArticlePreviewModal.create({
+    Key? key,
+  }) {
+    return ArticlePreviewModal._(
+      key: key,
+    );
+  }
+
+  factory ArticlePreviewModal.edit({
+    required EventReference modifiedEvent,
+    Key? key,
+  }) {
+    return ArticlePreviewModal._(
+      key: key,
+      modifiedEvent: modifiedEvent,
+    );
+  }
+
+  final EventReference? modifiedEvent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DraftArticleState(:title, :image, :imageIds, :content, :imageColor) =
+    final DraftArticleState(:title, :image, :imageIds, :content, :imageColor, :imageUrl) =
         ref.watch(draftArticleProvider);
     final whoCanReply = ref.watch(selectedWhoCanReplyOptionProvider);
     final selectedTopics = ref.watch(selectTopicsProvider);
@@ -67,18 +91,34 @@ class CreateArticlePreviewModal extends HookConsumerWidget {
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   onPressed: () {
-                    ref.read(createArticleProvider(CreateArticleOption.plain).notifier).create(
-                          title: title,
-                          content: content,
-                          topics: selectedTopics,
-                          coverImagePath: image?.path,
-                          mediaIds: imageIds,
-                          whoCanReply: whoCanReply,
-                          imageColor: imageColor,
-                        );
+                    final type = modifiedEvent != null
+                        ? CreateArticleOption.modify
+                        : CreateArticleOption.plain;
 
-                    if (!ref.read(createArticleProvider(CreateArticleOption.plain)).hasError &&
-                        ref.context.mounted) {
+                    if (modifiedEvent != null) {
+                      ref.read(createArticleProvider(type).notifier).modify(
+                            title: title,
+                            content: content,
+                            topics: selectedTopics,
+                            coverImagePath: image?.path,
+                            whoCanReply: whoCanReply,
+                            imageColor: imageColor,
+                            originalImageUrl: imageUrl,
+                            eventReference: modifiedEvent!,
+                          );
+                    } else {
+                      ref.read(createArticleProvider(type).notifier).create(
+                            title: title,
+                            content: content,
+                            topics: selectedTopics,
+                            coverImagePath: image?.path,
+                            mediaIds: imageIds,
+                            whoCanReply: whoCanReply,
+                            imageColor: imageColor,
+                          );
+                    }
+
+                    if (!ref.read(createArticleProvider(type)).hasError && ref.context.mounted) {
                       final state = GoRouterState.of(ref.context);
                       ref.context.go(state.currentTab.baseRouteLocation);
                     }

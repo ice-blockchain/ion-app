@@ -11,21 +11,48 @@ import 'package:ion/app/components/separated/separator.dart';
 import 'package:ion/app/components/text_editor/components/suggestions_container.dart';
 import 'package:ion/app/components/text_editor/text_editor.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_add_image.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/components/create_article_toolbar.dart';
-import 'package:ion/app/features/feed/create_article/views/pages/create_article_modal/hooks/use_create_article.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/components/article_form_add_image.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/components/article_form_toolbar.dart';
+import 'package:ion/app/features/feed/create_article/views/pages/article_form_modal/hooks/use_article_form.dart';
 import 'package:ion/app/features/feed/views/pages/cancel_creation_modal/cancel_creation_modal.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/sheet_content/sheet_content.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 
-class CreateArticleModal extends HookConsumerWidget {
-  const CreateArticleModal({super.key});
+class ArticleFormModal extends HookConsumerWidget {
+  factory ArticleFormModal({
+    Key? key,
+  }) = ArticleFormModal.create;
+  const ArticleFormModal._({
+    super.key,
+    this.modifiedEvent,
+  });
+
+  factory ArticleFormModal.create({
+    Key? key,
+  }) {
+    return ArticleFormModal._(
+      key: key,
+    );
+  }
+
+  factory ArticleFormModal.edit({
+    required EventReference modifiedEvent,
+    Key? key,
+  }) {
+    return ArticleFormModal._(
+      key: key,
+      modifiedEvent: modifiedEvent,
+    );
+  }
+
+  final EventReference? modifiedEvent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articleState = useCreateArticle(ref);
+    final articleState = useArticleForm(ref, modifiedEvent: modifiedEvent);
 
     final scrollController = ScrollController();
     final textEditorKey = useMemoized(TextEditorKeys.createArticle);
@@ -50,7 +77,11 @@ class CreateArticleModal extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             NavigationAppBar.modal(
-              title: Text(context.i18n.create_article_nav_title),
+              title: Text(
+                modifiedEvent != null
+                    ? context.i18n.create_article_nav_title_edit
+                    : context.i18n.create_article_nav_title,
+              ),
               onBackPress: () {
                 showCancelCreationModal(context);
               },
@@ -70,7 +101,12 @@ class CreateArticleModal extends HookConsumerWidget {
                   disabled: !articleState.isButtonEnabled,
                   onPressed: () {
                     articleState.onNext();
-                    ArticlePreviewRoute().push<void>(context);
+                    if (modifiedEvent != null) {
+                      final eventEncoded = modifiedEvent!.encode();
+                      EditArticlePreviewRoute(modifiedEvent: eventEncoded).push<void>(context);
+                    } else {
+                      ArticlePreviewRoute().push<void>(context);
+                    }
                   },
                 ),
               ],
@@ -81,8 +117,9 @@ class CreateArticleModal extends HookConsumerWidget {
                   controller: scrollController,
                   child: Column(
                     children: [
-                      CreateArticleAddImage(
+                      ArticleFormAddImage(
                         selectedImage: articleState.selectedImage,
+                        selectedImageUrl: articleState.selectedImageUrl,
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.only(
@@ -118,6 +155,7 @@ class CreateArticleModal extends HookConsumerWidget {
                           builder: (context, isFocused, child) {
                             return TextEditor(
                               autoFocus: isFocused,
+                              media: modifiedEvent != null ? articleState.media.value : null,
                               articleState.textEditorController,
                               placeholder: context.i18n.create_article_story_placeholder,
                               key: textEditorKey,
@@ -148,7 +186,7 @@ class CreateArticleModal extends HookConsumerWidget {
                       return const SizedBox.shrink();
                     }
                     return ScreenSideOffset.small(
-                      child: CreateArticleToolbar(
+                      child: ArticleFormToolbar(
                         textEditorController: articleState.textEditorController,
                         textEditorKey: textEditorKey,
                       ),

@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:ion/app/components/image/ion_network_image.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/services/media_service/media_service.c.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -11,10 +12,12 @@ class ArticleImageView extends StatelessWidget {
   const ArticleImageView({
     required this.selectedImage,
     required this.onClearImage,
+    this.imageUrl,
     super.key,
   });
 
-  final MediaFile selectedImage;
+  final MediaFile? selectedImage;
+  final String? imageUrl;
   final VoidCallback onClearImage;
 
   @override
@@ -22,10 +25,17 @@ class ArticleImageView extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: Image.file(
-            File(selectedImage.path),
-            fit: BoxFit.cover,
-          ),
+          child: (imageUrl != null)
+              ? IonNetworkImage(
+                  imageUrl: imageUrl!,
+                  fit: BoxFit.cover,
+                )
+              : selectedImage != null
+                  ? Image.file(
+                      File(selectedImage!.path),
+                      fit: BoxFit.cover,
+                    )
+                  : const SizedBox.shrink(),
         ),
         PositionedDirectional(
           top: 12.0.s,

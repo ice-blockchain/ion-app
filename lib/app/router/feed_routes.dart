@@ -51,6 +51,8 @@ class FeedRoutes {
         TypedGoRoute<FeedSearchFiltersRoute>(path: 'feed-search_filters'),
         TypedGoRoute<ArticlePreviewRoute>(path: 'article-preview'),
         TypedGoRoute<SelectArticleTopicsRoute>(path: 'article-topics'),
+        TypedGoRoute<EditArticleRoute>(path: 'create-article/edit/:modifiedEvent'),
+        TypedGoRoute<EditArticlePreviewRoute>(path: 'article-preview/edit/:modifiedEvent'),
       ],
     ),
   ];
@@ -198,6 +200,25 @@ class EditPostRoute extends BaseRouteData {
   final String? attachedMedia;
 }
 
+class EditArticleRoute extends BaseRouteData {
+  EditArticleRoute({required this.modifiedEvent})
+      : super(
+          child: ArticleFormModal.edit(modifiedEvent: EventReference.fromEncoded(modifiedEvent)),
+          type: IceRouteType.bottomSheet,
+        );
+
+  final String modifiedEvent;
+}
+
+class EditArticlePreviewRoute extends BaseRouteData {
+  EditArticlePreviewRoute({required this.modifiedEvent})
+      : super(
+          child: ArticlePreviewModal.edit(modifiedEvent: EventReference.fromEncoded(modifiedEvent)),
+          type: IceRouteType.bottomSheet,
+        );
+  final String modifiedEvent;
+}
+
 class CreateReplyRoute extends BaseRouteData {
   CreateReplyRoute({
     required this.parentEvent,
@@ -302,7 +323,7 @@ class CreateVideoRoute extends BaseRouteData {
 class CreateArticleRoute extends BaseRouteData {
   CreateArticleRoute()
       : super(
-          child: const CreateArticleModal(),
+          child: ArticleFormModal.create(),
           type: IceRouteType.bottomSheet,
         );
 }
@@ -351,7 +372,7 @@ class GalleryCameraRoute extends BaseRouteData {
 class ArticlePreviewRoute extends BaseRouteData {
   ArticlePreviewRoute()
       : super(
-          child: const CreateArticlePreviewModal(),
+          child: ArticlePreviewModal.create(),
           type: IceRouteType.bottomSheet,
         );
 }

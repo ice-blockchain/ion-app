@@ -24,6 +24,7 @@ class DraftArticleState with _$DraftArticleState {
     @Default('') String title,
     String? imageColor,
     @Default({}) Map<String, String> codeBlocks,
+    String? imageUrl,
   }) = _DraftArticleState;
 }
 
@@ -38,16 +39,19 @@ class DraftArticle extends _$DraftArticle {
     QuillController textEditorController,
     MediaFile? image,
     String title,
+    String? imageUrl,
+    String? imageUrlColor,
   ) async {
     final delta = textEditorController.document.toDelta();
     final imageIds = extractImageIds(textEditorController.document.toDelta());
 
-    final colorHex = await _extractDominantColorFromImage(image);
+    final colorHex = imageUrl != null ? imageUrlColor : await _extractDominantColorFromImage(image);
 
     state = state.copyWith(
       content: delta,
       imageIds: imageIds,
       image: image,
+      imageUrl: imageUrl,
       title: title.trim(),
       imageColor: colorHex,
     );
