@@ -73,7 +73,12 @@ class CreateArticle extends _$CreateArticle {
       final mediaAttachments = <MediaAttachment>[];
 
       final mainImageFuture = _uploadCoverImage(coverImagePath, files, mediaAttachments);
-      final contentFuture = _prepareContent(content, mediaIds, files, mediaAttachments);
+      final contentFuture = _prepareContent(
+        content: content,
+        mediaIds: mediaIds,
+        files: files,
+        mediaAttachments: mediaAttachments,
+      );
 
       final (imageUrl, updatedContent) = await (mainImageFuture, contentFuture).wait;
 
@@ -174,7 +179,11 @@ class CreateArticle extends _$CreateArticle {
         imageUrlToUpload = await _uploadCoverImage(coverImagePath, files, updatedMediaAttachments);
       }
 
-      final updatedContent = await _prepareContent(content, null, files, updatedMediaAttachments);
+      final updatedContent = await _prepareContent(
+        content: content,
+        files: files,
+        mediaAttachments: updatedMediaAttachments,
+      );
 
       final contentString = jsonEncode(updatedContent.toJson());
 
@@ -253,12 +262,12 @@ class CreateArticle extends _$CreateArticle {
     return uploadResult.mediaAttachment.url;
   }
 
-  Future<Delta> _prepareContent(
-    Delta content,
+  Future<Delta> _prepareContent({
+    required Delta content,
+    required List<FileMetadata> files,
+    required List<MediaAttachment> mediaAttachments,
     List<String>? mediaIds,
-    List<FileMetadata> files,
-    List<MediaAttachment> mediaAttachments,
-  ) async {
+  }) async {
     final uploadedUrls = <String, String>{};
 
     var updatedContent = content;
