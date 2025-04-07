@@ -24,10 +24,11 @@ abstract class BaseRouteData extends GoRouteData {
   BaseRouteData({
     required this.child,
     this.type = IceRouteType.single,
+    this.isFullscreenImage = false,
   });
 
   final IceRouteType type;
-
+  final bool isFullscreenImage;
   final Widget child;
 
   @override
@@ -52,7 +53,11 @@ abstract class BaseRouteData extends GoRouteData {
         MainModalSheetPage(child: child, state: state, context: context),
       IceRouteType.simpleModalSheet =>
         ScrollableModalSheetPageRoute(child: child, state: state, context: context),
-      IceRouteType.swipeDismissible => SwipeDismissiblePageRoute(child: child, state: state),
+      IceRouteType.swipeDismissible => SwipeDismissiblePageRoute(
+          child: child,
+          state: state,
+          isFullscreenImage: isFullscreenImage,
+        ),
     };
   }
 }
@@ -170,6 +175,7 @@ class SwipeDismissiblePageRoute extends CustomTransitionPage<void> {
   SwipeDismissiblePageRoute({
     required Widget child,
     required GoRouterState state,
+    required bool isFullscreenImage,
   }) : super(
           key: state.pageKey,
           fullscreenDialog: true,
@@ -184,6 +190,7 @@ class SwipeDismissiblePageRoute extends CustomTransitionPage<void> {
             );
           },
           child: DismissibleContent(
+            isFullscreenImage: isFullscreenImage,
             state: state,
             child: child,
           ),

@@ -7,12 +7,15 @@ import 'package:ion/app/utils/future.dart';
 
 enum SwipeDismissDirection {
   vertical,
-  horizontal,
+  multi,
   none,
 }
 
-/// Widget that allows you to dismiss content by swiping,
-/// with proper handling of gesture conflicts during zoom
+/// Widget for dismissing content with swipe.
+/// Support for directions:
+/// - vertical – only along the Y axis,
+/// - multi – any direction (two-dimensional),
+/// - none – disable swipes.
 class DismissiblePage extends HookWidget {
   const DismissiblePage({
     required this.child,
@@ -40,54 +43,33 @@ class DismissiblePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final animationController = useAnimationController(duration: 300.ms);
-    final dragOffset = useState<double>(0);
+    final dragOffset = useState<Offset>(Offset.zero);
+    final offsetTween = useRef<Tween<Offset>?>(null);
+    final size = MediaQuery.sizeOf(context);
 
-    final radius = useMemoized(
-      () {
-        if (dragOffset.value == 0) return minRadius;
+    // Calculate progress of dragging:
+    // For vertical – use absolute value of dy,
+    // for multi – maximum of relative shifts by X and Y.
+    final double progress;
+    if (direction == SwipeDismissDirection.vertical) {
+      progress = (dragOffset.value.dy.abs() / (size.height / 2)).clamp(0.0, 1.0);
+    } else if (direction == SwipeDismissDirection.multi) {
+      final progressX = (dragOffset.value.dx.abs() / (size.width / 2)).clamp(0.0, 1.0);
+      final progressY = (dragOffset.value.dy.abs() / (size.height / 2)).clamp(0.0, 1.0);
+      progress = progressX > progressY ? progressX : progressY;
+    } else {
+      progress = 0.0;
+    }
 
-        final size = MediaQuery.of(context).size;
-        final dragProgress = dragOffset.value.abs() / (size.height / 2);
-        final clampedProgress = dragProgress.clamp(0.0, 1.0);
-
-        return minRadius + (maxRadius - minRadius) * clampedProgress;
-      },
-      [dragOffset.value, minRadius, maxRadius],
-    );
-
-    final scale = useMemoized(
-      () {
-        if (dragOffset.value == 0) return 1.0;
-
-        final size = MediaQuery.of(context).size;
-        final dragProgress = dragOffset.value.abs() / (size.height / 2);
-        final clampedProgress = dragProgress.clamp(0.0, 1.0);
-
-        return 1.0 - (1.0 - minScale) * clampedProgress;
-      },
-      [dragOffset.value, minScale],
-    );
-
-    final opacity = useMemoized(
-      () {
-        if (dragOffset.value == 0) return 1.0;
-
-        final size = MediaQuery.of(context).size;
-        final dragProgress = dragOffset.value.abs() / (size.height / 2);
-        final clampedProgress = dragProgress.clamp(0.0, 1.0);
-
-        return 1.0 - 0.8 * clampedProgress;
-      },
-      [dragOffset.value],
-    );
+    final radius = minRadius + (maxRadius - minRadius) * progress;
+    final scale = 1.0 - (1.0 - minScale) * progress;
+    final opacity = 1.0 - 0.8 * progress;
 
     useEffect(
       () {
         void listener() {
-          dragOffset.value = animationController.value * dragOffset.value;
-
-          if (animationController.isCompleted) {
-            dragOffset.value = 0;
+          if (offsetTween.value != null) {
+            dragOffset.value = offsetTween.value!.evaluate(animationController);
           }
         }
 
@@ -97,19 +79,26 @@ class DismissiblePage extends HookWidget {
       [animationController],
     );
 
+    // Define the condition for dismissal: for vertical – along the Y axis, for multi – by X or Y.
     final shouldDismiss = useCallback(
       () {
-        final threshold = MediaQuery.of(context).size.height * dismissThreshold;
-        return dragOffset.value.abs() > threshold;
+        if (direction == SwipeDismissDirection.vertical) {
+          final threshold = size.height * dismissThreshold;
+          return dragOffset.value.dy.abs() > threshold;
+        } else if (direction == SwipeDismissDirection.multi) {
+          final relativeX = dragOffset.value.dx.abs() / size.width;
+          final relativeY = dragOffset.value.dy.abs() / size.height;
+          return (relativeX > dismissThreshold) || (relativeY > dismissThreshold);
+        }
+        return false;
       },
-      [dismissThreshold, dragOffset.value],
+      [direction, size, dismissThreshold, dragOffset],
     );
 
     final handleDragStart = useCallback(
-      (DragStartDetails details) {
+      (_) {
         if (isZoomed) return;
-
-        dragOffset.value = 0;
+        dragOffset.value = Offset.zero;
       },
       [isZoomed],
     );
@@ -117,52 +106,68 @@ class DismissiblePage extends HookWidget {
     final handleDragUpdate = useCallback(
       (DragUpdateDetails details) {
         if (isZoomed) return;
-
         if (direction == SwipeDismissDirection.vertical) {
-          dragOffset.value += details.delta.dy;
-        } else if (direction == SwipeDismissDirection.horizontal) {
-          dragOffset.value += details.delta.dx;
+          dragOffset.value += Offset(0, details.delta.dy);
+        } else if (direction == SwipeDismissDirection.multi) {
+          dragOffset.value += details.delta;
         }
       },
-      [isZoomed, direction, dragOffset],
+      [isZoomed, direction],
     );
 
     final handleDragEnd = useCallback(
-      (DragEndDetails details) {
+      (_) {
         if (isZoomed) return;
-
         if (shouldDismiss()) {
           onDismissed();
         } else {
+          offsetTween.value = Tween<Offset>(begin: dragOffset.value, end: Offset.zero);
           animationController
             ..reset()
             ..forward();
         }
       },
-      [isZoomed, shouldDismiss, onDismissed, animationController],
+      [isZoomed, animationController, onDismissed],
     );
 
-    return RawGestureDetector(
-      gestures: {
+    // Select gesture recognizer based on direction.
+    final Map<Type, GestureRecognizerFactory> gestures;
+    if (direction == SwipeDismissDirection.vertical) {
+      gestures = {
         VerticalDragGestureRecognizer:
             GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
           VerticalDragGestureRecognizer.new,
           (VerticalDragGestureRecognizer instance) {
             instance
-              ..onStart = isZoomed ? null : handleDragStart
-              ..onUpdate = isZoomed ? null : handleDragUpdate
-              ..onEnd = isZoomed ? null : handleDragEnd;
+              ..onStart = handleDragStart
+              ..onUpdate = handleDragUpdate
+              ..onEnd = handleDragEnd;
           },
         ),
-      },
+      };
+    } else if (direction == SwipeDismissDirection.multi) {
+      gestures = {
+        PanGestureRecognizer: GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
+          PanGestureRecognizer.new,
+          (PanGestureRecognizer instance) {
+            instance
+              ..onStart = handleDragStart
+              ..onUpdate = handleDragUpdate
+              ..onEnd = handleDragEnd;
+          },
+        ),
+      };
+    } else {
+      gestures = {};
+    }
+
+    return RawGestureDetector(
+      gestures: gestures,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
+        duration: 100.ms,
         color: backgroundColor.withValues(alpha: opacity),
         child: Transform.translate(
-          offset: Offset(
-            direction == SwipeDismissDirection.horizontal ? dragOffset.value : 0,
-            direction == SwipeDismissDirection.vertical ? dragOffset.value : 0,
-          ),
+          offset: dragOffset.value,
           child: Transform.scale(
             scale: scale,
             child: ClipRRect(

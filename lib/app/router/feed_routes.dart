@@ -493,6 +493,7 @@ class FullscreenMediaRoute extends BaseRouteData {
                 : null,
           ),
           type: IceRouteType.swipeDismissible,
+          isFullscreenImage: true,
         );
 
   final int initialMediaIndex;
