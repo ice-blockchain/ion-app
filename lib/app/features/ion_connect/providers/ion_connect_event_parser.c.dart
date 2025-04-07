@@ -17,6 +17,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
+import 'package:ion/app/features/ion_connect/model/mute_set.c.dart';
 import 'package:ion/app/features/ion_connect/model/not_authoritative_event.c.dart';
 import 'package:ion/app/features/user/model/block_list.c.dart';
 import 'package:ion/app/features/user/model/follow_list.c.dart';
@@ -55,6 +56,7 @@ class EventParser {
       CommunityDefinitionEntity.kind => CommunityDefinitionEntity.fromEventMessage(eventMessage),
       CommunityUpdateEntity.kind => CommunityUpdateEntity.fromEventMessage(eventMessage),
       CommunityJoinEntity.kind => CommunityJoinEntity.fromEventMessage(eventMessage),
+      MuteSetEntity.kind => MuteSetEntity.fromEventMessage(eventMessage),
       _ => throw UnknownEventException(eventId: eventMessage.id, kind: eventMessage.kind)
     };
   }

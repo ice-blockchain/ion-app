@@ -93,7 +93,7 @@ class ArchiveChatTile extends HookConsumerWidget {
                                 messageType: MessageType.text,
                               ),
                             ),
-                            UnreadCountBadge(unreadCount: unreadMessagesCount),
+                            UnreadCountBadge(unreadCount: unreadMessagesCount, isMuted: false),
                           ],
                         ),
                       ],
