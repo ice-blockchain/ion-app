@@ -94,6 +94,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
                     final type = modifiedEvent != null
                         ? CreateArticleOption.modify
                         : CreateArticleOption.plain;
+
                     if (modifiedEvent != null) {
                       ref.read(createArticleProvider(type).notifier).modify(
                             title: title,
@@ -116,6 +117,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
                             imageColor: imageColor,
                           );
                     }
+
                     if (!ref.read(createArticleProvider(type)).hasError && ref.context.mounted) {
                       final state = GoRouterState.of(ref.context);
                       ref.context.go(state.currentTab.baseRouteLocation);
