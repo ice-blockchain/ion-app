@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/features/core/providers/env_provider.c.dart';
 
 part 'entity_editing_ended_at.c.freezed.dart';
 
@@ -25,11 +23,11 @@ class EntityEditingEndedAt with _$EntityEditingEndedAt {
     );
   }
 
-  factory EntityEditingEndedAt.build(Ref ref) {
+  factory EntityEditingEndedAt.build(int minutes) {
     return EntityEditingEndedAt(
       value: DateTime.now().add(
         Duration(
-          minutes: ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+          minutes: minutes,
         ),
       ),
     );

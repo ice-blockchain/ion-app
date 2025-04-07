@@ -9,6 +9,7 @@ import 'package:ion/app/components/text_editor/components/custom_blocks/text_edi
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/core/providers/env_provider.c.dart';
 import 'package:ion/app/features/feed/create_article/providers/draft_article_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/article_topic.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
@@ -86,6 +87,10 @@ class CreateArticle extends _$CreateArticle {
         ...extractTags(updatedContent).map((tag) => RelatedHashtag(value: tag)),
       ];
 
+      final editingEndedAt = EntityEditingEndedAt.build(
+        ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+      );
+
       final articleData = ArticleData.fromData(
         title: title,
         summary: summary,
@@ -99,7 +104,7 @@ class CreateArticle extends _$CreateArticle {
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         imageColor: imageColor,
         richText: richText,
-        editingEndedAt: EntityEditingEndedAt.build(ref),
+        editingEndedAt: editingEndedAt,
       );
 
       final entities = await _sendArticleEntities([...files, articleData]);
@@ -175,7 +180,7 @@ class CreateArticle extends _$CreateArticle {
 
       final richText = RichText(
         protocol: 'quill_delta',
-        content: jsonEncode(updatedContent.toJson()),
+        content: contentString,
       );
 
       final relatedHashtags = [
@@ -227,6 +232,7 @@ class CreateArticle extends _$CreateArticle {
             .deleteMultiple(unusedMediaFileHashes);
       }
       await _sendArticleEntities([...files, articleData]);
+      ref.read(draftArticleProvider.notifier).clear();
     });
   }
 

@@ -91,8 +91,11 @@ class ArticlePreviewModal extends HookConsumerWidget {
                     color: context.theme.appColors.onPrimaryAccent,
                   ),
                   onPressed: () {
+                    final type = modifiedEvent != null
+                        ? CreateArticleOption.modify
+                        : CreateArticleOption.plain;
                     if (modifiedEvent != null) {
-                      ref.read(createArticleProvider(CreateArticleOption.modify).notifier).modify(
+                      ref.read(createArticleProvider(type).notifier).modify(
                             title: title,
                             content: content,
                             topics: selectedTopics,
@@ -103,7 +106,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
                             eventReference: modifiedEvent!,
                           );
                     } else {
-                      ref.read(createArticleProvider(CreateArticleOption.plain).notifier).create(
+                      ref.read(createArticleProvider(type).notifier).create(
                             title: title,
                             content: content,
                             topics: selectedTopics,
@@ -113,9 +116,7 @@ class ArticlePreviewModal extends HookConsumerWidget {
                             imageColor: imageColor,
                           );
                     }
-
-                    if (!ref.read(createArticleProvider(CreateArticleOption.plain)).hasError &&
-                        ref.context.mounted) {
+                    if (!ref.read(createArticleProvider(type)).hasError && ref.context.mounted) {
                       final state = GoRouterState.of(ref.context);
                       ref.context.go(state.currentTab.baseRouteLocation);
                     }

@@ -74,13 +74,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final postContent = content ?? buildEmptyDelta();
       final parentEntity = parentEvent != null ? await _getParentEntity(parentEvent) : null;
       final (:files, :media) = await _uploadMediaFiles(mediaFiles: mediaFiles);
+      final editingEndedAt = EntityEditingEndedAt.build(
+        ref.read(envProvider.notifier).get<int>(EnvVariable.EDIT_POST_ALLOWED_MINUTES),
+      );
 
       final postData = ModifiablePostData(
         content: _buildContentWithMediaLinks(content: postContent, media: media.values.toList()),
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
-        editingEndedAt: EntityEditingEndedAt.build(ref),
+        editingEndedAt: editingEndedAt,
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
         quotedEvent: quotedEvent != null ? _buildQuotedEvent(quotedEvent) : null,
         relatedEvents: parentEntity != null ? _buildRelatedEvents(parentEntity) : null,
