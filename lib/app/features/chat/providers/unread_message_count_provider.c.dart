@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
+import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'unread_message_count_provider.c.g.dart';
@@ -30,9 +31,11 @@ Stream<int> getAllUnreadMessagesCountInArchive(Ref ref) async* {
     throw UserMasterPubkeyNotFoundException();
   }
 
+  final mutedConversationIds = await ref.watch(mutedConversationIdsProvider.future);
+
   yield* ref
       .watch(conversationMessageDaoProvider)
-      .getAllUnreadMessagesCountInArchive(currentUserMasterPubkey);
+      .getAllUnreadMessagesCountInArchive(currentUserMasterPubkey, mutedConversationIds);
 }
 
 @riverpod
@@ -42,7 +45,10 @@ Stream<int> getAllUnreadMessagesCount(Ref ref) async* {
   if (currentUserMasterPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
   }
+
+  final mutedConversationIds = await ref.watch(mutedConversationIdsProvider.future);
+
   yield* ref
       .watch(conversationMessageDaoProvider)
-      .getAllUnreadMessagesCount(currentUserMasterPubkey);
+      .getAllUnreadMessagesCount(currentUserMasterPubkey, mutedConversationIds);
 }

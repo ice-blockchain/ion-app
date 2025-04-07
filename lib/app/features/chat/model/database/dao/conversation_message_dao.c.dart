@@ -39,7 +39,10 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     return query.watch().map((rows) => rows.length);
   }
 
-  Stream<int> getAllUnreadMessagesCountInArchive(String currentUserMasterPubkey) {
+  Stream<int> getAllUnreadMessagesCountInArchive(
+    String currentUserMasterPubkey,
+    List<String> mutedConversationIds,
+  ) {
     final query = select(messageStatusTable).join([
       innerJoin(
         conversationMessageTable,
@@ -52,15 +55,31 @@ class ConversationMessageDao extends DatabaseAccessor<ChatDatabase>
     ])
       ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
       ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey))
-      ..where(conversationTable.isArchived.equals(true));
+      ..where(conversationTable.isArchived.equals(true))
+      ..where(conversationTable.id.isNotIn(mutedConversationIds));
 
     return query.watch().map((rows) => rows.length);
   }
 
-  Stream<int> getAllUnreadMessagesCount(String currentUserMasterPubkey) {
-    final query = select(messageStatusTable)
-      ..where((table) => table.status.equals(MessageDeliveryStatus.received.index))
-      ..where((table) => table.masterPubkey.equals(currentUserMasterPubkey));
+  Stream<int> getAllUnreadMessagesCount(
+    String currentUserMasterPubkey,
+    List<String> mutedConversationIds,
+  ) {
+    final query = select(messageStatusTable).join([
+      innerJoin(
+        eventMessageTable,
+        eventMessageTable.id.equalsExp(messageStatusTable.eventMessageId),
+      ),
+      innerJoin(
+        conversationMessageTable,
+        conversationMessageTable.eventMessageId.equalsExp(eventMessageTable.id),
+      ),
+    ])
+      ..where(
+        conversationMessageTable.conversationId.isNotIn(mutedConversationIds),
+      )
+      ..where(messageStatusTable.status.equals(MessageDeliveryStatus.received.index))
+      ..where(messageStatusTable.masterPubkey.equals(currentUserMasterPubkey));
 
     return query.watch().map((rows) => rows.length);
   }

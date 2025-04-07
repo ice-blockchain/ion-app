@@ -14,6 +14,7 @@ import 'package:ion/app/features/chat/e2ee/views/components/one_to_one_messages_
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/chat/providers/conversation_messages_provider.c.dart';
 import 'package:ion/app/features/chat/providers/exist_chat_conversation_id_provider.c.dart';
+import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_message_provider.c.dart';
 import 'package:ion/app/features/chat/views/components/message_items/messaging_bottom_bar/messaging_bottom_bar.dart';
 import 'package:ion/app/features/chat/views/components/message_items/replied_message_info/replied_message_info.dart';
@@ -76,7 +77,7 @@ class OneToOneMessagesPage extends HookConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _Header(receiverMasterPubKey: receiverPubKey),
+            _Header(receiverMasterPubKey: receiverPubKey, conversationId: conversationId.value),
             _MessagesList(conversationId: conversationId.value),
             const RepliedMessageInfo(),
             MessagingBottomBar(onSubmitted: onSubmitted),
@@ -88,9 +89,10 @@ class OneToOneMessagesPage extends HookConsumerWidget {
 }
 
 class _Header extends HookConsumerWidget {
-  const _Header({required this.receiverMasterPubKey});
+  const _Header({required this.receiverMasterPubKey, required this.conversationId});
 
   final String receiverMasterPubKey;
+  final String? conversationId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,6 +112,10 @@ class _Header extends HookConsumerWidget {
           color: context.theme.appColors.quaternaryText,
         ),
       ),
+      conversationId: conversationId,
+      onToggleMute: () {
+        ref.read(mutedConversationsProvider.notifier).toggleMutedMasterPubkey(receiverMasterPubKey);
+      },
     );
   }
 }

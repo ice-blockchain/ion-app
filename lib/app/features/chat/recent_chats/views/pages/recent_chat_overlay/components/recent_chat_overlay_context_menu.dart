@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: ice License 1.0
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +8,9 @@ import 'package:ion/app/components/overlay_menu/components/overlay_menu_item.dar
 import 'package:ion/app/components/overlay_menu/components/overlay_menu_item_separator.dart';
 import 'package:ion/app/components/overlay_menu/overlay_menu_container.dart';
 import 'package:ion/app/extensions/extensions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
+import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/toggle_archive_conversation_provider.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
@@ -26,6 +30,11 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isMuted = ref
+            .watch(mutedConversationIdsProvider)
+            .valueOrNull
+            ?.contains(conversation.conversationId) ??
+        false;
     return SizedBox(
       height: height,
       child: Padding(
@@ -54,11 +63,26 @@ class RecentChatOverlayContextMenu extends ConsumerWidget {
                 ),
                 const OverlayMenuItemSeparator(),
                 OverlayMenuItem(
-                  label: context.i18n.button_mute,
+                  label: isMuted ? context.i18n.button_unmute : context.i18n.button_mute,
                   verticalPadding: 12.0.s,
-                  icon: Assets.svg.iconChannelMute
-                      .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
+                  icon: isMuted
+                      ? Assets.svg.iconChannelUnmute
+                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText)
+                      : Assets.svg.iconChannelMute
+                          .icon(size: iconSize, color: context.theme.appColors.quaternaryText),
                   onPressed: () {
+                    final currentUserPubkey = ref.watch(currentPubkeySelectorProvider);
+                    final receiverPubkey = PrivateDirectMessageData.fromEventMessage(
+                      conversation.latestMessage!,
+                    ).relatedPubkeys?.firstWhereOrNull((p) => p.value != currentUserPubkey)?.value;
+
+                    if (receiverPubkey == null) {
+                      return;
+                    }
+
+                    ref
+                        .read(mutedConversationsProvider.notifier)
+                        .toggleMutedMasterPubkey(receiverPubkey);
                     Navigator.of(context).pop();
                   },
                 ),

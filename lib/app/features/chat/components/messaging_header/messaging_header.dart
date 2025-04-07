@@ -14,6 +14,8 @@ class MessagingHeader extends StatelessWidget {
     this.imageUrl,
     this.imageWidget,
     this.onTap,
+    this.conversationId,
+    this.onToggleMute,
     super.key,
   });
 
@@ -23,7 +25,8 @@ class MessagingHeader extends StatelessWidget {
   final String? imageUrl;
   final Widget? imageWidget;
   final GestureTapCallback? onTap;
-
+  final String? conversationId;
+  final VoidCallback? onToggleMute;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -71,7 +74,10 @@ class MessagingHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          const MessagingContextMenu(),
+          MessagingContextMenu(
+            conversationId: conversationId,
+            onToggleMute: onToggleMute,
+          ),
         ],
       ),
     );

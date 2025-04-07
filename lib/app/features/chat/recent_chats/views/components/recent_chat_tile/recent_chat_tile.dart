@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/components/avatar/avatar.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/model/message_type.dart';
+import 'package:ion/app/features/chat/providers/muted_conversations_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/model/conversation_list_item.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/conversations_edit_mode_provider.c.dart';
 import 'package:ion/app/features/chat/recent_chats/providers/selected_conversations_ids_provider.c.dart';
@@ -40,11 +41,16 @@ class RecentChatTile extends HookConsumerWidget {
   final VoidCallback? onTap;
   final Widget? avatarWidget;
   final MessageType messageType;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isEditMode = ref.watch(conversationsEditModeProvider);
     final selectedConversations = ref.watch(selectedConversationsProvider);
+
+    final isMuted = ref
+            .watch(mutedConversationIdsProvider)
+            .valueOrNull
+            ?.contains(conversation.conversationId) ??
+        false;
 
     final messageItemKey = useMemoized(GlobalKey.new);
 
@@ -110,11 +116,20 @@ class RecentChatTile extends HookConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                name,
-                                style: context.theme.appTextThemes.subtitle3.copyWith(
-                                  color: context.theme.appColors.primaryText,
-                                ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    name,
+                                    style: context.theme.appTextThemes.subtitle3.copyWith(
+                                      color: context.theme.appColors.primaryText,
+                                    ),
+                                  ),
+                                  if (isMuted)
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.only(start: 4.0.s),
+                                      child: Assets.svg.iconChannelfillMute.icon(size: 16.0.s),
+                                    ),
+                                ],
                               ),
                               ChatTimestamp(lastMessageAt),
                             ],
@@ -129,7 +144,7 @@ class RecentChatTile extends HookConsumerWidget {
                                   messageType: messageType,
                                 ),
                               ),
-                              UnreadCountBadge(unreadCount: unreadMessagesCount),
+                              UnreadCountBadge(unreadCount: unreadMessagesCount, isMuted: isMuted),
                             ],
                           ),
                         ],
@@ -284,10 +299,10 @@ class RecentChatMessageIcon extends StatelessWidget {
 }
 
 class UnreadCountBadge extends StatelessWidget {
-  const UnreadCountBadge({required this.unreadCount, super.key});
+  const UnreadCountBadge({required this.unreadCount, required this.isMuted, super.key});
 
   final int unreadCount;
-
+  final bool isMuted;
   @override
   Widget build(BuildContext context) {
     if (unreadCount == 0) {
@@ -296,7 +311,7 @@ class UnreadCountBadge extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.0.s),
-        color: context.theme.appColors.primaryAccent,
+        color: isMuted ? context.theme.appColors.sheetLine : context.theme.appColors.primaryAccent,
       ),
       alignment: Alignment.center,
       constraints: BoxConstraints(
