@@ -5,32 +5,36 @@ import 'package:ion/app/extensions/asset_gen_image.dart';
 import 'package:ion/app/extensions/build_context.dart';
 import 'package:ion/app/extensions/num.dart';
 import 'package:ion/app/extensions/theme_data.dart';
+import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
 import 'package:ion/app/features/wallets/model/transaction_type.dart';
+import 'package:ion/generated/assets.gen.dart';
 
 class TransactionListItemLeadingIcon extends StatelessWidget {
   const TransactionListItemLeadingIcon({
-    required this.transactionType,
+    required this.type,
+    required this.status,
     super.key,
   });
 
-  final TransactionType transactionType;
+  final TransactionType type;
+  final TransactionStatus status;
 
   Color _getBorderColor(BuildContext context) {
-    return switch (transactionType) {
+    return switch (type) {
       TransactionType.receive => context.theme.appColors.success,
       TransactionType.send => context.theme.appColors.onTerararyFill,
     };
   }
 
   Color _getIconColor(BuildContext context) {
-    return switch (transactionType) {
+    return switch (type) {
       TransactionType.receive => context.theme.appColors.secondaryBackground,
       TransactionType.send => context.theme.appColors.secondaryText,
     };
   }
 
   Color _getBackgroundColor(BuildContext context) {
-    return switch (transactionType) {
+    return switch (type) {
       TransactionType.receive => context.theme.appColors.success,
       TransactionType.send => context.theme.appColors.onSecondaryBackground,
     };
@@ -38,20 +42,45 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = 36.0.s;
-    return Container(
-      width: size,
-      height: size,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: _getBackgroundColor(context),
-        borderRadius: BorderRadius.circular(10.0.s),
-        border: Border.all(
-          color: _getBorderColor(context),
-          width: 1.0.s,
-        ),
+    final direction = Directionality.of(context);
+    final showBroadcastedTransactionIcon = status == TransactionStatus.broadcasted;
+    final mainIconSize = 36.0.s;
+    final broadcastedIconMargin = 4.0.s;
+    final widgetSize = mainIconSize + broadcastedIconMargin;
+
+    return SizedBox(
+      height: widgetSize,
+      width: widgetSize,
+      child: Stack(
+        children: [
+          Positioned.directional(
+            top: 0,
+            start: 0,
+            textDirection: direction,
+            child: Container(
+              width: mainIconSize,
+              height: mainIconSize,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: _getBackgroundColor(context),
+                borderRadius: BorderRadius.circular(10.0.s),
+                border: Border.all(
+                  color: _getBorderColor(context),
+                  width: 1.0.s,
+                ),
+              ),
+              child: type.iconAsset.icon(color: _getIconColor(context)),
+            ),
+          ),
+          if (showBroadcastedTransactionIcon)
+            Positioned.directional(
+              end: 0,
+              bottom: 0,
+              textDirection: direction,
+              child: Assets.svg.iconhourglass.icon(size: 14.0.s),
+            ),
+        ],
       ),
-      child: transactionType.iconAsset.icon(color: _getIconColor(context)),
     );
   }
 }

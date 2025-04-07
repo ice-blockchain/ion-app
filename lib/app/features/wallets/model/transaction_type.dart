@@ -10,6 +10,16 @@ enum TransactionType {
 
   const TransactionType(this.value);
 
+  factory TransactionType.fromDirection(String direction) {
+    return switch (direction.toLowerCase()) {
+      'in' => TransactionType.receive,
+      'out' => TransactionType.send,
+      String() => throw FormatException(
+          'Failed to build TransactionType from direction $direction',
+        ),
+    };
+  }
+
   factory TransactionType.fromValue(String value) {
     final lowered = value.toLowerCase();
     return TransactionType.values.firstWhere(

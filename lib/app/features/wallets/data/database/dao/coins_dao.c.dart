@@ -95,6 +95,11 @@ class CoinsDao extends DatabaseAccessor<WalletsDatabase> with _$CoinsDaoMixin {
     return query.map(_toCoinData).get();
   }
 
+  Future<CoinData?> getNativeCoin(String networkId) async {
+    final result = await getByFilters(contractAddresses: [''], networks: [networkId]);
+    return result.firstOrNull;
+  }
+
   Future<List<CoinData>> getByFilters({
     Iterable<String>? symbolGroups,
     Iterable<String>? symbols,

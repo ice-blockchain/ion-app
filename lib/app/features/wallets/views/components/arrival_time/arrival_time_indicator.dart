@@ -18,15 +18,16 @@ class ArrivalTimeIndicator extends StatelessWidget {
     final colors = context.theme.appColors;
     final textTheme = context.theme.appTextThemes;
     final locale = context.i18n;
-
+    final text = option.type?.getDisplayName(context);
     return Row(
       children: [
-        Text(
-          option.type.getDisplayName(context),
-          style: textTheme.body2.copyWith(
-            color: colors.secondaryText,
+        if (text != null)
+          Text(
+            text,
+            style: textTheme.body2.copyWith(
+              color: colors.secondaryText,
+            ),
           ),
-        ),
         if (option.arrivalTime?.inMinutes != null) ...[
           SizedBox(width: 6.0.s),
           Container(

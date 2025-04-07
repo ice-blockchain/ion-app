@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:ion/app/components/coins/coin_icon.dart';
 import 'package:ion/app/components/list_item/list_item.dart';
 import 'package:ion/app/components/screen_offset/screen_bottom_offset.dart';
@@ -10,15 +11,16 @@ import 'package:ion/app/components/screen_offset/screen_side_offset.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/wallets/model/timeline_item_data.dart';
 import 'package:ion/app/features/wallets/model/transaction_status.c.dart';
+import 'package:ion/app/features/wallets/model/transaction_type.dart';
 import 'package:ion/app/features/wallets/providers/transaction_provider.c.dart';
 import 'package:ion/app/features/wallets/views/components/arrival_time/list_item_arrival_time.dart';
 import 'package:ion/app/features/wallets/views/components/network_fee/list_item_network_fee.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/components/nft_item.dart';
 import 'package:ion/app/features/wallets/views/components/timeline/timeline.dart';
+import 'package:ion/app/features/wallets/views/components/transaction_participant.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/send_coins/components/confirmation/transaction_amount_summary.dart';
 import 'package:ion/app/features/wallets/views/pages/transaction_details/transaction_details_actions.dart';
-import 'package:ion/app/features/wallets/views/send_to_recipient.dart';
 import 'package:ion/app/features/wallets/views/utils/crypto_formatter.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_close_button.dart';
@@ -38,6 +40,10 @@ class TransactionDetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = context.i18n;
     final transactionData = ref.watch(transactionNotifierProvider)!;
+    final arrivalTime = transactionData.status == TransactionStatus.confirmed &&
+            transactionData.dateConfirmed != null
+        ? DateFormat('dd.MM.yyyy HH:mm:ss').format(transactionData.dateConfirmed!.toLocal())
+        : transactionData.networkFeeOption?.getDisplayArrivalTime(context);
 
     return SheetContent(
       body: SingleChildScrollView(
@@ -84,7 +90,9 @@ class TransactionDetailsPage extends ConsumerWidget {
                         ),
                         TimelineItemData(
                           title: locale.transaction_details_timeline_executing,
-                          isDone: transactionData.dateBroadcasted != null,
+                          isDone: transactionData.dateBroadcasted != null ||
+                              transactionData.status == TransactionStatus.confirmed ||
+                              transactionData.status == TransactionStatus.broadcasted,
                         ),
                         TimelineItemData(
                           title: locale.transaction_details_timeline_successful,
@@ -94,9 +102,13 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ],
                     ),
                     SizedBox(height: 16.0.s),
-                    SendToRecipient(
-                      address: transactionData.receiverAddress,
-                      pubkey: transactionData.receiverPubkey,
+                    TransactionParticipant(
+                      address: switch (transactionData.type) {
+                        TransactionType.send => transactionData.senderAddress,
+                        TransactionType.receive => transactionData.receiverAddress,
+                      },
+                      transactionType: transactionData.type,
+                      pubkey: transactionData.participantPubkey,
                     ),
                     SizedBox(height: 12.0.s),
                     ListItem.textWithIcon(
@@ -139,20 +151,20 @@ class TransactionDetailsPage extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 12.0.s),
-                    if (transactionData.networkFeeOption != null) ...[
-                      ListItemArrivalTime(
-                        formattedTime:
-                            transactionData.networkFeeOption!.getDisplayArrivalTime(context),
-                      ),
+                    if (arrivalTime != null) ...[
+                      ListItemArrivalTime(formattedTime: arrivalTime),
                       SizedBox(height: 12.0.s),
+                    ],
+                    if (transactionData.networkFeeOption != null &&
+                        transactionData.type == TransactionType.send) ...[
                       ListItemNetworkFee(
                         value: formatCrypto(
                           transactionData.networkFeeOption!.amount,
                           transactionData.networkFeeOption!.symbol,
                         ),
                       ),
+                      SizedBox(height: 15.0.s),
                     ],
-                    SizedBox(height: 15.0.s),
                     TransactionDetailsActions(
                       onViewOnExplorer: () {
                         final url = transactionData.transactionExplorerUrl;

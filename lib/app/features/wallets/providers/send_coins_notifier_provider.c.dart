@@ -92,7 +92,6 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       final details = TransactionDetails(
         id: result.id,
         txHash: result.txHash!,
-        walletId: result.walletId,
         network: form.network!,
         status: result.status,
         type: TransactionType.send,
@@ -106,7 +105,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
         walletViewName: form.wallet.name,
         senderAddress: senderWallet.address!,
         receiverAddress: form.receiverAddress,
-        receiverPubkey: form.contactPubkey,
+        participantPubkey: form.contactPubkey,
         networkFeeOption: form.selectedNetworkFeeOption,
       );
 
@@ -144,11 +143,11 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
           ),
         );
 
-    if (details.receiverPubkey == null) return;
+    if (details.participantPubkey == null) return;
 
     // Send transaction to the relay
     final receiverDelegation = await ref.read(
-      userDelegationProvider(details.receiverPubkey!).future,
+      userDelegationProvider(details.participantPubkey!).future,
     );
     final currentUserDelegation = await ref.read(currentUserDelegationProvider.future);
     final currentUserPubkey = ref.read(currentPubkeySelectorProvider) ?? '';
@@ -157,7 +156,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       networkId: details.network.id,
       assetClass: sendableAsset.kind,
       assetAddress: coinAssetData.selectedOption!.coin.contractAddress,
-      pubkey: details.receiverPubkey,
+      pubkey: details.participantPubkey,
       walletAddress: details.receiverAddress,
       content: WalletAssetContent(
         amount: transferResult.requestBody['amount'] as String?,
@@ -175,7 +174,7 @@ class SendCoinsNotifier extends _$SendCoinsNotifier {
       devicePubkeys: currentUserDelegation?.data.delegates.map((e) => e.pubkey).toList() ?? [],
     );
     final receiverPubkeys = (
-      masterPubkey: details.receiverPubkey!,
+      masterPubkey: details.participantPubkey!,
       devicePubkeys: receiverDelegation?.data.delegates.map((e) => e.pubkey).toList() ?? [],
     );
 

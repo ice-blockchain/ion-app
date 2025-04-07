@@ -9,6 +9,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.da
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
 import 'package:ion/app/features/wallets/model/entities/request_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
+import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -18,6 +19,15 @@ part 'transactions_subscription_provider.c.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<void> transactionsSubscription(Ref ref) async {
+  // Wait until all necessary wallets components are initialized
+  await ref.watch(walletsInitializerNotifierProvider.future);
+
+  final authState = await ref.watch(authProvider.future);
+
+  if (!authState.isAuthenticated) {
+    return;
+  }
+
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final transactionsRepository = ref.watch(transactionsRepositoryProvider).valueOrNull;
   final eventSigner = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull;
@@ -32,7 +42,7 @@ Future<void> transactionsSubscription(Ref ref) async {
     return;
   }
 
-  final since = await transactionsRepository.lastCreatedAt();
+  final since = await transactionsRepository.getLastCreatedAt();
 
   final requestMessage = RequestMessage(
     filters: [

@@ -2,21 +2,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/wallets/model/network_data.c.dart';
+import 'package:ion/app/features/wallets/model/network_selector_data.c.dart';
 import 'package:ion/app/features/wallets/views/components/network_icon_widget.dart';
 import 'package:ion/app/features/wallets/views/pages/coins_flow/coin_details/components/transaction_list_item/constants.dart';
 
 class TransactionListHeaderItem extends StatelessWidget {
   const TransactionListHeaderItem({
-    required this.network,
-    required this.isSelected,
+    required this.item,
     required this.onPress,
+    required this.isSelected,
     super.key,
   });
 
-  final NetworkData network;
   final bool isSelected;
   final VoidCallback onPress;
+  final SelectedNetworkItem item;
 
   Color _getBorderColor(BuildContext context) {
     return isSelected
@@ -53,15 +53,18 @@ class TransactionListHeaderItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              NetworkIconWidget(
-                size: 16.0.s,
-                imageUrl: network.image,
+              item.when(
+                network: (network) => NetworkIconWidget(
+                  size: 16.0.s,
+                  imageUrl: network.image,
+                ),
+                all: (_) => item.image.icon(size: 16.0.s),
               ),
               SizedBox(
                 width: 6.0.s,
               ),
               Text(
-                network.displayName,
+                item.getDisplayName(context),
                 style: context.theme.appTextThemes.body2.copyWith(
                   color: _getTextColor(context),
                 ),
