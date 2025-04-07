@@ -2,12 +2,14 @@
 
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/core/providers/main_wallet_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart' as ion;
 import 'package:ion/app/features/ion_connect/ion_connect.dart' hide requestEvents;
-import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
+import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_serializable.dart';
 import 'package:ion/app/features/ion_connect/model/file_metadata.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
@@ -178,11 +180,19 @@ class IonConnectNotifier extends _$IonConnectNotifier {
   Future<T?> requestEntity<T extends IonConnectEntity>(
     RequestMessage requestMessage, {
     ActionSource actionSource = const ActionSourceCurrentUser(),
+    // In case if we request an entity with the search extension, multiple events are returned.
+    // To identity the needed one, entityEventReference might be user
+    EventReference? entityEventReference,
   }) async {
     final entitiesStream = requestEntities<T>(requestMessage, actionSource: actionSource);
 
     final entities = await entitiesStream.toList();
-    return entities.isNotEmpty ? entities.first : null;
+    return entities.isNotEmpty
+        ? entityEventReference != null
+            ? entities.reversed
+                .firstWhereOrNull((entity) => entity.toEventReference() == entityEventReference)
+            : entities.last
+        : null;
   }
 
   Future<EventMessage> sign(

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/model/action_source.dart';
+import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
@@ -28,13 +28,21 @@ IonConnectEntity? ionConnectCachedEntity(
 Future<IonConnectEntity?> ionConnectNetworkEntity(
   Ref ref, {
   required EventReference eventReference,
+  String? search,
 }) async {
   if (eventReference is ImmutableEventReference) {
     final requestMessage = RequestMessage()
-      ..addFilter(RequestFilter(ids: [eventReference.eventId], limit: 1));
+      ..addFilter(
+        RequestFilter(
+          ids: [eventReference.eventId],
+          search: search,
+          limit: 1,
+        ),
+      );
     return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
           requestMessage,
           actionSource: ActionSourceUser(eventReference.pubkey),
+          entityEventReference: eventReference,
         );
   } else if (eventReference is ReplaceableEventReference) {
     final requestMessage = RequestMessage()
@@ -45,12 +53,14 @@ Future<IonConnectEntity?> ionConnectNetworkEntity(
           tags: {
             if (eventReference.dTag != null) '#d': [eventReference.dTag.toString()],
           },
+          search: search,
           limit: 1,
         ),
       );
     return ref.read(ionConnectNotifierProvider.notifier).requestEntity(
           requestMessage,
           actionSource: ActionSourceUser(eventReference.pubkey),
+          entityEventReference: eventReference,
         );
   } else {
     throw UnsupportedEventReference(eventReference);
@@ -63,6 +73,7 @@ Future<IonConnectEntity?> ionConnectEntity(
   required EventReference eventReference,
   bool network = true,
   bool cache = true,
+  String? search,
 }) async {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentUser == null) {
@@ -75,7 +86,9 @@ Future<IonConnectEntity?> ionConnectEntity(
     }
   }
   if (network) {
-    return ref.watch(ionConnectNetworkEntityProvider(eventReference: eventReference).future);
+    return ref.watch(
+      ionConnectNetworkEntityProvider(eventReference: eventReference, search: search).future,
+    );
   }
   return null;
 }
@@ -86,6 +99,7 @@ IonConnectEntity? ionConnectSyncEntity(
   required EventReference eventReference,
   bool network = true,
   bool cache = true,
+  String? search,
 }) {
   final currentUser = ref.watch(currentIdentityKeyNameSelectorProvider);
   if (currentUser == null) {
@@ -98,7 +112,9 @@ IonConnectEntity? ionConnectSyncEntity(
     }
   }
   if (network) {
-    return ref.watch(ionConnectNetworkEntityProvider(eventReference: eventReference)).valueOrNull;
+    return ref
+        .watch(ionConnectNetworkEntityProvider(eventReference: eventReference, search: search))
+        .valueOrNull;
   }
   return null;
 }

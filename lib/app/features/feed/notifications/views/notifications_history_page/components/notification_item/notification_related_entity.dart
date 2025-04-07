@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
+import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -11,9 +13,11 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 
 class NotificationRelatedEntity extends StatelessWidget {
-  const NotificationRelatedEntity({required this.entity, super.key});
+  const NotificationRelatedEntity({required this.entity, required this.notification, super.key});
 
   final IonConnectEntity entity;
+
+  final IonNotification notification;
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +43,18 @@ class NotificationRelatedEntity extends StatelessWidget {
       );
     }
 
+    final isReplyNotification = notification is CommentIonNotification &&
+        (notification as CommentIonNotification).type == CommentIonNotificationType.reply;
+    final isLikedReplyNotification = notification is LikesIonNotification &&
+        entity is ModifiablePostEntity &&
+        (entity as ModifiablePostEntity).data.parentEvent != null;
+
     return GestureDetector(
       onTap: () {
-        PostDetailsRoute(eventReference: eventReference.encode()).push<void>(context);
+        PostDetailsRoute(
+          eventReference: eventReference.encode(),
+          displayParent: isReplyNotification || isLikedReplyNotification,
+        ).push<void>(context);
       },
       child: Post(
         eventReference: eventReference,

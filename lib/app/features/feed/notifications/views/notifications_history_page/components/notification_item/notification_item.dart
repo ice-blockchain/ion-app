@@ -9,10 +9,10 @@ import 'package:ion/app/features/feed/notifications/data/model/ion_notification.
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_icons.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_info.dart';
 import 'package:ion/app/features/feed/notifications/views/notifications_history_page/components/notification_item/notification_related_entity.dart';
+import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/list_separator/list_separator.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 
 class NotificationItem extends ConsumerWidget {
   const NotificationItem({
@@ -33,7 +33,7 @@ class NotificationItem extends ConsumerWidget {
     IonConnectEntity? entity;
 
     if (eventReference != null) {
-      entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+      entity = ref.watch(feedEntityProvider(eventReference: eventReference));
       if (entity == null || _isDeleted(ref, entity) || _isRepostedEntityDeleted(ref, entity)) {
         return const SizedBox.shrink();
       }
@@ -50,7 +50,7 @@ class NotificationItem extends ConsumerWidget {
         ScreenSideOffset.small(
           child: NotificationInfo(notification: notification),
         ),
-        if (entity != null) NotificationRelatedEntity(entity: entity),
+        if (entity != null) NotificationRelatedEntity(entity: entity, notification: notification),
         SizedBox(height: 16.0.s),
         FeedListSeparator(),
       ],
@@ -64,7 +64,7 @@ class NotificationItem extends ConsumerWidget {
   bool _isRepostedEntityDeleted(WidgetRef ref, IonConnectEntity entity) {
     if (entity is GenericRepostEntity) {
       final repostedEntity =
-          ref.watch(ionConnectSyncEntityProvider(eventReference: entity.data.eventReference));
+          ref.watch(feedEntityProvider(eventReference: entity.data.eventReference));
       return repostedEntity == null ||
           (repostedEntity is SoftDeletableEntity && repostedEntity.isDeleted);
     }

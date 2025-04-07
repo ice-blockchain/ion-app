@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
-import 'package:ion/app/features/feed/data/models/entities/event_count_result_data.c.dart';
 import 'package:ion/app/features/user/model/follow_type.dart';
 import 'package:ion/app/features/user/providers/follow_list_provider.c.dart';
 import 'package:ion/app/features/user/providers/followers_count_provider.c.dart';
@@ -23,14 +22,7 @@ class FollowCountersCell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final usersNumber = followType == FollowType.following
         ? ref.watch(followListProvider(pubkey)).valueOrNull?.data.list.length
-        : ref
-            .watch(
-              followersCountProvider(
-                pubkey: pubkey,
-                type: EventCountResultType.followers,
-              ),
-            )
-            .valueOrNull;
+        : ref.watch(followersCountProvider(pubkey: pubkey)).valueOrNull;
 
     if (usersNumber == null) {
       return const SizedBox.shrink();

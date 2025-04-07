@@ -9,6 +9,7 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/components/entities_list/components/bookmark_button/bookmark_button.dart';
 import 'package:ion/app/features/feed/create_post/views/pages/post_form_modal/components/parent_entity.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
+import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_footer/article_footer.dart';
 import 'package:ion/app/features/feed/views/components/article/components/article_image/article_image.dart';
 import 'package:ion/app/features/feed/views/components/deleted_entity/deleted_entity.dart';
@@ -18,7 +19,6 @@ import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/feed/views/components/user_info/user_info.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/utils/algorithm.dart';
 import 'package:ion/app/utils/color.dart';
 
@@ -58,8 +58,7 @@ class Article extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(ionConnectEntityProvider(eventReference: eventReference)).valueOrNull;
-    final entity = ref.watch(ionConnectSyncEntityProvider(eventReference: eventReference));
+    final entity = ref.watch(feedEntityProvider(eventReference: eventReference));
 
     if (entity is! ArticleEntity) {
       return const Skeleton(child: PostSkeleton());

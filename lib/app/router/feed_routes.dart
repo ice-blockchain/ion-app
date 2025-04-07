@@ -111,12 +111,16 @@ class ArticlesFromAuthorRoute extends BaseRouteData {
 }
 
 class PostDetailsRoute extends BaseRouteData {
-  PostDetailsRoute({required this.eventReference})
+  PostDetailsRoute({required this.eventReference, this.displayParent = false})
       : super(
-          child: PostDetailsPage(eventReference: EventReference.fromEncoded(eventReference)),
+          child: PostDetailsPage(
+            eventReference: EventReference.fromEncoded(eventReference),
+            displayParent: displayParent,
+          ),
         );
 
   final String eventReference;
+  final bool displayParent;
 }
 
 class NotificationsHistoryRoute extends BaseRouteData {
