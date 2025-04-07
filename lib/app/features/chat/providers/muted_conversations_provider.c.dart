@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: ice License 1.0
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/exceptions/exceptions.dart';
+import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_e2ee_chat_message_service.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/mute_set.c.dart';
@@ -13,10 +15,17 @@ part 'muted_conversations_provider.c.g.dart';
 class MutedConversations extends _$MutedConversations {
   @override
   FutureOr<MuteSetEntity?> build() async {
+    final currentUserMasterPubkey = ref.watch(currentPubkeySelectorProvider);
+
+    if (currentUserMasterPubkey == null) {
+      throw UserMasterPubkeyNotFoundException();
+    }
+
     final requestMessage = RequestMessage()
       ..addFilter(
         RequestFilter(
           kinds: const [MuteSetEntity.kind],
+          authors: [currentUserMasterPubkey],
           tags: {
             '#d': [MuteSetType.chatConversations.dTagName],
           },
