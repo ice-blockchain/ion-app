@@ -2,8 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_local_image.dart';
-import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block_network_image.dart';
+import 'package:ion/app/components/text_editor/components/custom_blocks/text_editor_single_image_block/image_block.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
 
@@ -38,7 +37,6 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
     EmbedContext embedContext,
   ) {
     final path = embedContext.node.value.data as String;
-    final isNetworkImage = Uri.tryParse(path)?.hasAbsolutePath ?? false;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -48,9 +46,10 @@ class TextEditorSingleImageBuilder extends EmbedBuilder {
           padding: EdgeInsets.symmetric(vertical: 8.0.s),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: isNetworkImage
-                ? ImageBlockNetworkImage(path: path, media: media)
-                : ImageBlockLocalImage(path: path),
+            child: ImageBlock(
+              path: path,
+              media: media,
+            ),
           ),
         ),
       ],
