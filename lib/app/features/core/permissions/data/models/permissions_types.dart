@@ -4,6 +4,7 @@ enum Permission {
   notifications,
   camera,
   photos,
+  videos,
   cloud,
   microphone,
 }

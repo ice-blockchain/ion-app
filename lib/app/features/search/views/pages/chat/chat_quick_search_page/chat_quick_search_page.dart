@@ -14,9 +14,9 @@ import 'package:ion/app/features/search/views/components/feed_search_history/fee
 import 'package:ion/app/features/search/views/components/search_history/search_history.dart';
 import 'package:ion/app/features/search/views/components/search_history_empty/search_history_empty.dart';
 import 'package:ion/app/features/search/views/components/search_navigation/search_navigation.dart';
-import 'package:ion/app/features/search/views/components/search_results_skeleton/search_results_skeleton.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_no_results_found.dart';
 import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results.dart';
+import 'package:ion/app/features/search/views/pages/chat/components/chat_search_results_skeleton.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/utils/future.dart';
 
@@ -68,10 +68,13 @@ class ChatQuickSearchPage extends HookConsumerWidget {
                             ),
                           )
                     : pubkeysAndContentTuples.isEmpty
-                        ? const ChatSearchNoResults()
-                        : ChatSearchResults(pubkeysAndContentTuples: pubkeysAndContentTuples);
+                        ? const Expanded(child: ChatSearchNoResults())
+                        : Expanded(
+                            child:
+                                ChatSearchResults(pubkeysAndContentTuples: pubkeysAndContentTuples),
+                          );
               },
-              orElse: SearchResultsSkeleton.new,
+              orElse: ChatSearchResultsSkeleton.new,
             ),
           ],
         ),

@@ -35,6 +35,13 @@ class SettingsRedirectSheet extends StatelessWidget {
           headerIconAsset: Assets.svg.iconPostGallerypermission,
           iconAsset: Assets.svg.walletIconWalletNoaccess,
         ),
+      Permission.videos => SettingsRedirectSheet(
+          header: context.i18n.gallery_permission_headline,
+          title: context.i18n.gallery_no_access_title,
+          description: context.i18n.common_no_access_permission,
+          headerIconAsset: Assets.svg.iconPostGallerypermission,
+          iconAsset: Assets.svg.walletIconWalletNoaccess,
+        ),
       Permission.camera => SettingsRedirectSheet(
           header: context.i18n.camera_permission_headline,
           title: context.i18n.camera_no_access_title,

@@ -47,19 +47,23 @@ class PermissionHandlerStrategy extends PermissionStrategy {
       };
 
   Future<ph.Permission> _getPermission() async {
-    if (!kIsWeb && Platform.isAndroid && permissionType == Permission.photos) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      return androidInfo.version.sdkInt <= 32 ? ph.Permission.storage : ph.Permission.photos;
-    }
 
     final permission = switch (permissionType) {
+      Permission.videos => ph.Permission.videos,
       Permission.camera => ph.Permission.camera,
       Permission.notifications => ph.Permission.notification,
       Permission.photos => ph.Permission.photos,
       Permission.cloud => ph.Permission.unknown,
       Permission.microphone => ph.Permission.microphone,
     };
+
+    if (!kIsWeb &&
+        Platform.isAndroid &&
+        (permissionType == Permission.photos || permissionType == Permission.videos)) {
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+
+      return androidInfo.version.sdkInt <= 32 ? ph.Permission.storage : permission;
+    }
 
     return Future.value(permission);
   }
