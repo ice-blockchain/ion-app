@@ -61,7 +61,8 @@ class CoinTransactionHistoryNotifier extends _$CoinTransactionHistoryNotifier {
   Future<void> reload() async {
     state = null;
 
-    await ref.read(syncTransactionsServiceProvider.future).then((service) => service.sync());
+    final service = await ref.read(syncTransactionsServiceProvider.future);
+    await service.sync();
 
     _reset();
     await _loadNextPage();

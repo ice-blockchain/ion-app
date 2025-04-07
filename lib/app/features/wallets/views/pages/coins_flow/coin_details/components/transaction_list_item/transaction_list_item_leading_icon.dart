@@ -77,7 +77,7 @@ class TransactionListItemLeadingIcon extends StatelessWidget {
               end: 0,
               bottom: 0,
               textDirection: direction,
-              child: Assets.svg.iconhourglass.icon(size: 14),
+              child: Assets.svg.iconhourglass.icon(size: 14.0.s),
             ),
         ],
       ),
