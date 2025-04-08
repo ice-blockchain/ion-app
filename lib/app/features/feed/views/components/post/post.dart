@@ -27,14 +27,12 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 
-enum FramedEventType { quoted, none }
-
 class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
     this.repostEventReference,
-    this.framedEventType = FramedEventType.quoted,
     this.timeFormat = TimestampFormat.short,
+    this.displayQuote = true,
     this.displayParent = false,
     this.topOffset,
     this.headerOffset,
@@ -50,7 +48,7 @@ class Post extends ConsumerWidget {
 
   final EventReference eventReference;
   final EventReference? repostEventReference;
-  final FramedEventType framedEventType;
+  final bool displayQuote;
   final bool displayParent;
   final double? topOffset;
   final double? headerOffset;
@@ -77,8 +75,7 @@ class Post extends ConsumerWidget {
 
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
 
-    final quotedEventReference =
-        _getQuotedEventReference(entity: entity, framedEventType: framedEventType);
+    final quotedEventReference = _getQuotedEventReference(entity: entity);
 
     final parentEventReference = _getParentEventReference(entity: entity);
 
@@ -95,7 +92,7 @@ class Post extends ConsumerWidget {
         ScreenSideOffset.small(
           child: Column(
             children: [
-              if (framedEventType == FramedEventType.quoted && quotedEventReference != null)
+              if (displayQuote && quotedEventReference != null)
                 _QuotedEvent(eventReference: quotedEventReference),
               footer ?? CounterItemsFooter(eventReference: eventReference),
             ],
@@ -128,14 +125,10 @@ class Post extends ConsumerWidget {
     );
   }
 
-  EventReference? _getQuotedEventReference({
-    required IonConnectEntity entity,
-    required FramedEventType framedEventType,
-  }) {
-    return switch (framedEventType) {
-      FramedEventType.quoted when entity is ModifiablePostEntity =>
-        entity.data.quotedEvent?.eventReference,
-      FramedEventType.quoted when entity is PostEntity => entity.data.quotedEvent?.eventReference,
+  EventReference? _getQuotedEventReference({required IonConnectEntity entity}) {
+    return switch (entity) {
+      ModifiablePostEntity() => entity.data.quotedEvent?.eventReference,
+      PostEntity() => entity.data.quotedEvent?.eventReference,
       _ => null,
     };
   }
@@ -273,7 +266,7 @@ final class _QuotedPost extends ConsumerWidget {
         child: AbsorbPointer(
           child: Post(
             eventReference: eventReference,
-            framedEventType: FramedEventType.none,
+            displayQuote: false,
             header: UserInfo(
               pubkey: eventReference.pubkey,
               createdAt: postEntity is ModifiablePostEntity
@@ -319,7 +312,7 @@ final class _ParentPost extends StatelessWidget {
       },
       child: Post(
         eventReference: eventReference,
-        framedEventType: FramedEventType.none,
+        displayQuote: false,
         headerOffset: 0,
         topOffset: 0,
         contentWrapper: (content) {
