@@ -9,7 +9,7 @@ part 'wallet_history_asset_metadata.c.g.dart';
 class WalletHistoryAssetMetadata with _$WalletHistoryAssetMetadata {
   const factory WalletHistoryAssetMetadata({
     required String symbol,
-    required int decimals,
+    required int? decimals,
     required bool? verified,
   }) = _WalletHistoryAssetMetadata;
 

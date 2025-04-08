@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/extensions/string.dart';
 import 'package:ion/app/features/core/providers/wallets_provider.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/coins_dao.c.dart';
 import 'package:ion/app/features/wallets/data/database/dao/networks_dao.c.dart';
@@ -164,7 +165,7 @@ class TransactionsRepository {
           if (coin == null) return null;
 
           final rawAmount = transaction.value;
-          final amount = parseCryptoAmount(rawAmount, coin.decimals);
+          final amount = parseCryptoAmount(rawAmount.emptyOrValue, coin.decimals);
           final amountUSD = amount * coin.priceUSD;
 
           return TransactionData(
@@ -181,7 +182,7 @@ class TransactionsRepository {
               coin: coin,
               amount: amount,
               amountUSD: amountUSD,
-              rawAmount: rawAmount,
+              rawAmount: rawAmount.emptyOrValue,
             ),
           );
         })

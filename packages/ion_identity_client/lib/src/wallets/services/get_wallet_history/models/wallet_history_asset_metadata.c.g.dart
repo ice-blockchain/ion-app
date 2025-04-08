@@ -10,7 +10,7 @@ _$WalletHistoryAssetMetadataImpl _$$WalletHistoryAssetMetadataImplFromJson(
         Map<String, dynamic> json) =>
     _$WalletHistoryAssetMetadataImpl(
       symbol: json['symbol'] as String,
-      decimals: (json['decimals'] as num).toInt(),
+      decimals: (json['decimals'] as num?)?.toInt(),
       verified: json['verified'] as bool?,
     );
 
