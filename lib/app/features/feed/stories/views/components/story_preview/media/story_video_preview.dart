@@ -14,13 +14,15 @@ class StoryVideoPreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoController = ref.watch(
-      videoControllerProvider(
-        VideoControllerParams(sourcePath: path, autoPlay: true, looping: true),
-      ),
-    );
+    final videoController = ref
+        .watch(
+          videoControllerProvider(
+            VideoControllerParams(sourcePath: path, autoPlay: true, looping: true),
+          ),
+        )
+        .value;
 
-    if (!videoController.value.isInitialized) {
+    if (videoController == null || !videoController.value.isInitialized) {
       return const CenteredLoadingIndicator();
     }
 

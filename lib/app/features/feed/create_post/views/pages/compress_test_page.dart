@@ -195,30 +195,41 @@ class VideoPlayerTab extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final remoteVideoController = ref.watch(
-      videoControllerProvider(
-        const VideoControllerParams(
-          sourcePath:
-              'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-          looping: true,
-        ),
-      ),
-    );
+    final remoteVideoController = ref
+        .watch(
+          videoControllerProvider(
+            const VideoControllerParams(
+              sourcePath:
+                  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              looping: true,
+            ),
+          ),
+        )
+        .value;
 
     final isPlaying = useState<bool>(false);
     final totalDuration = useState<Duration>(Duration.zero);
     final currentDuration = useState<Duration>(Duration.zero);
     var accumulatedOffset = Duration.zero;
 
-    useOnInit(() {
-      totalDuration.value = remoteVideoController.value.duration;
-      remoteVideoController.addListener(() {
-        isPlaying.value = remoteVideoController.value.isPlaying;
-        currentDuration.value = remoteVideoController.value.position;
-      });
-    });
+    useOnInit(
+      () {
+        if (remoteVideoController == null) {
+          return;
+        }
+        totalDuration.value = remoteVideoController.value.duration;
+        remoteVideoController.addListener(() {
+          isPlaying.value = remoteVideoController.value.isPlaying;
+          currentDuration.value = remoteVideoController.value.position;
+        });
+      },
+      [remoteVideoController],
+    );
 
     void handleSeek(Duration seekOffset) {
+      if (remoteVideoController == null) {
+        return;
+      }
       remoteVideoController.pause();
       if (debounce?.isActive ?? false) {
         debounce!.cancel();
@@ -255,48 +266,51 @@ class VideoPlayerTab extends HookConsumerWidget {
             ),
             child: Stack(
               children: [
-                AspectRatio(
-                  aspectRatio: remoteVideoController.value.aspectRatio,
-                  child: CachedVideoPlayerPlus(remoteVideoController),
-                ),
-                PositionedDirectional(
-                  top: 0,
-                  end: 0,
-                  child: IconButton(
-                    icon: Icon(
-                      isPlaying.value ? Icons.pause : Icons.play_arrow,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      remoteVideoController.value.isPlaying
-                          ? remoteVideoController.pause()
-                          : remoteVideoController.play();
-                    },
+                if (remoteVideoController != null)
+                  AspectRatio(
+                    aspectRatio: remoteVideoController.value.aspectRatio,
+                    child: CachedVideoPlayerPlus(remoteVideoController),
                   ),
-                ),
-                PositionedDirectional(
-                  bottom: 0,
-                  start: 0,
-                  end: 0,
-                  child: GestureDetector(
-                    onHorizontalDragStart: (_) {
-                      remoteVideoController.setPlaybackSpeed(0.1);
-                    },
-                    onHorizontalDragEnd: (_) {
-                      remoteVideoController.setPlaybackSpeed(1);
-                    },
-                    child: VideoProgressIndicator(
-                      remoteVideoController,
-                      colors: VideoProgressColors(
-                        playedColor: Colors.red,
-                        bufferedColor: Colors.grey.withValues(alpha: 0.5),
-                        backgroundColor: Colors.white,
+                if (remoteVideoController != null)
+                  PositionedDirectional(
+                    top: 0,
+                    end: 0,
+                    child: IconButton(
+                      icon: Icon(
+                        isPlaying.value ? Icons.pause : Icons.play_arrow,
+                        color: Colors.white,
                       ),
-                      padding: const EdgeInsets.all(20),
-                      allowScrubbing: true,
+                      onPressed: () {
+                        remoteVideoController.value.isPlaying
+                            ? remoteVideoController.pause()
+                            : remoteVideoController.play();
+                      },
                     ),
                   ),
-                ),
+                if (remoteVideoController != null)
+                  PositionedDirectional(
+                    bottom: 0,
+                    start: 0,
+                    end: 0,
+                    child: GestureDetector(
+                      onHorizontalDragStart: (_) {
+                        remoteVideoController.setPlaybackSpeed(0.1);
+                      },
+                      onHorizontalDragEnd: (_) {
+                        remoteVideoController.setPlaybackSpeed(1);
+                      },
+                      child: VideoProgressIndicator(
+                        remoteVideoController,
+                        colors: VideoProgressColors(
+                          playedColor: Colors.red,
+                          bufferedColor: Colors.grey.withValues(alpha: 0.5),
+                          backgroundColor: Colors.white,
+                        ),
+                        padding: const EdgeInsets.all(20),
+                        allowScrubbing: true,
+                      ),
+                    ),
+                  ),
                 PositionedDirectional(
                   bottom: 40,
                   start: 10,

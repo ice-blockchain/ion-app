@@ -22,48 +22,48 @@ class SplashPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     _setSystemChrome();
 
-    final options = VideoPlayerOptions(mixWithOthers: true);
-    final splashVideoController = ref.watch(
-      videoControllerProvider(
-        VideoControllerParams(
-          sourcePath: Assets.videos.logoStatic,
-          autoPlay: true,
-          options: options,
-        ),
-      ),
-    );
+    final splashVideoController = ref
+        .watch(
+          videoControllerProvider(
+            VideoControllerParams(
+              sourcePath: Assets.videos.logoStatic,
+              autoPlay: true,
+            ),
+          ),
+        )
+        .value;
 
     // We watch the intro video controller here to initialize the intro video in advance.
     // This ensures a seamless transition to the IntroPage without flickering or delays.
-    ref
-      ..watch(
-        videoControllerProvider(
-          VideoControllerParams(sourcePath: Assets.videos.intro, autoPlay: true, options: options),
-        ),
-      )
-      ..listen<CachedVideoPlayerPlusController>(
-        videoControllerProvider(
-          VideoControllerParams(sourcePath: Assets.videos.logoStatic),
-        ),
-        (previous, controller) {
-          void onSplashVideoComplete() {
-            if (controller.value.position >= controller.value.duration ||
-                controller.value.hasError) {
-              ref.read(splashProvider.notifier).animationCompleted = true;
+    ref.watch(
+      videoControllerProvider(
+        VideoControllerParams(sourcePath: Assets.videos.intro, autoPlay: true),
+      ),
+    );
 
-              controller.removeListener(onSplashVideoComplete);
-            }
+    useEffect(
+      () {
+        if (splashVideoController == null) {
+          return null;
+        }
+        void onSplashVideoComplete() {
+          if (splashVideoController.value.position >= splashVideoController.value.duration ||
+              splashVideoController.value.hasError) {
+            ref.read(splashProvider.notifier).animationCompleted = true;
           }
+        }
 
-          controller.addListener(onSplashVideoComplete);
-        },
-      );
+        splashVideoController.addListener(onSplashVideoComplete);
+        return () => splashVideoController.removeListener(onSplashVideoComplete);
+      },
+      [splashVideoController],
+    );
 
     // Timer to check if the video is stuck (position remains zero) for too long.
     useEffect(
       () {
         // Only start the timer after the video is initialized.
-        if (splashVideoController.value.isInitialized) {
+        if (splashVideoController != null && splashVideoController.value.isInitialized) {
           final timer = Timer.periodic(const Duration(seconds: 1), (timer) {
             // If after 2 seconds the position is still zero, we trigger fallback.
             if (splashVideoController.value.position == Duration.zero && timer.tick >= 2) {
@@ -78,27 +78,29 @@ class SplashPage extends HookConsumerWidget {
         }
         return null;
       },
-      [splashVideoController.value.isInitialized],
+      [splashVideoController?.value.isInitialized],
     );
 
     useOnInit(
       () {
-        if (splashVideoController.value.hasError) {
+        if (splashVideoController != null && splashVideoController.value.hasError) {
           ref.read(splashProvider.notifier).animationCompleted = true;
         }
       },
-      [splashVideoController.value.hasError],
+      [splashVideoController?.value.hasError],
     );
 
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Center(
-        child: splashVideoController.value.isInitialized && !splashVideoController.value.hasError
+        child: splashVideoController != null &&
+                splashVideoController.value.isInitialized &&
+                !splashVideoController.value.hasError
             ? AspectRatio(
                 aspectRatio: splashVideoController.value.aspectRatio,
                 child: CachedVideoPlayerPlus(splashVideoController),
               )
-            : splashVideoController.value.hasError
+            : splashVideoController != null && splashVideoController.value.hasError
                 ? Assets.svg.logo.logoCircle.icon(size: 148.0.s)
                 : const SizedBox.shrink(),
       ),

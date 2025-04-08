@@ -16,7 +16,7 @@ CachedVideoPlayerPlusController? useVideoStoryProgress({
   required VoidCallback onCompleted,
 }) {
   final videoController = isVideo
-      ? ref.watch(videoControllerProvider(VideoControllerParams(sourcePath: videoUrl)))
+      ? ref.watch(videoControllerProvider(VideoControllerParams(sourcePath: videoUrl))).value
       : null;
 
   final wasCurrentRef = useRef<bool>(false);

@@ -18,26 +18,29 @@ class IntroPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // We watch the intro page video controller here and ensure we pass the same parameters
     // (looping: true) to get the same instance of the already initialized provider from SplashPage.
-    final videoController = ref.watch(
-      videoControllerProvider(
-        VideoControllerParams(
-          sourcePath: Assets.videos.intro,
-          looping: true,
-          options: VideoPlayerOptions(mixWithOthers: true),
-        ),
-      ),
-    );
+    final videoController = ref
+        .watch(
+          videoControllerProvider(
+            VideoControllerParams(
+              sourcePath: Assets.videos.intro,
+              looping: true,
+            ),
+          ),
+        )
+        .value;
 
     // Playing the intro video as soon as the widget is built.
     // This ensures the video starts playing immediately after the page is displayed.
-    useOnInit(videoController.play);
+    useOnInit(() => videoController?.play(), [videoController]);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           // Fallback white background if the video isn't initialized or an error occurs.
-          if (!videoController.value.isInitialized || videoController.value.hasError)
+          if (videoController == null ||
+              !videoController.value.isInitialized ||
+              videoController.value.hasError)
             ColoredBox(
               color: Colors.white,
               child: Center(
