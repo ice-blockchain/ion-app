@@ -8,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/media_attachment.dart';
@@ -55,7 +55,8 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
     final rightPadding = 6.0.s;
     final animationDuration = 300.ms;
 
-    final ionConnectEntity = ref.watch(feedEntityProvider(eventReference: eventReference));
+    final ionConnectEntity =
+        ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
     if (ionConnectEntity is! ModifiablePostEntity) {
       return Center(
         child: Text(context.i18n.video_not_found),

@@ -7,7 +7,7 @@ import 'package:ion/app/components/skeleton/skeleton.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
-import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/post/post_skeleton.dart';
@@ -25,7 +25,8 @@ class QuotedEntity extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ionConnectEntity = ref.watch(feedEntityProvider(eventReference: eventReference));
+    final ionConnectEntity =
+        ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
 
     if (ionConnectEntity == null) {
       return const Skeleton(child: PostSkeleton());

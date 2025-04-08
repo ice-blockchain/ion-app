@@ -15,10 +15,9 @@ import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
 import 'package:ion/app/features/ion_connect/model/deletion_request.c.dart';
 import 'package:ion/app/features/ion_connect/model/related_event.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_seal_service.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'e2ee_messages_subscriber.c.g.dart';
@@ -67,21 +66,14 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
 
     // TODO Clear expired and deleted database messages later
 
-    ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
-      requestMessage,
-      actionSource: const ActionSourceCurrentUserChat(),
-      subscriptionBuilder: (requestMessage, relay) {
-        final subscription = relay.subscribe(requestMessage);
-        ref.onDispose(() {
-          try {
-            relay.unsubscribe(subscription.id);
-          } catch (error, stackTrace) {
-            Logger.log('Failed to unsubscribe', error: error, stackTrace: stackTrace);
-          }
-        });
-        return subscription.messages;
-      },
-    ).listen((wrap) async {
+    final events = ref.watch(
+      ionConnectEventsSubscriptionProvider(
+        requestMessage,
+        actionSource: const ActionSourceCurrentUserChat(),
+      ),
+    );
+
+    final subscription = events.listen((wrap) async {
       if (eventSigner.publicKey != _receiverDevicePubkey(wrap)) {
         return;
       }
@@ -204,6 +196,8 @@ class E2eeMessagesSubscriber extends _$E2eeMessagesSubscriber {
         }
       }
     });
+
+    ref.onDispose(subscription.cancel);
 
     yield null;
   }
