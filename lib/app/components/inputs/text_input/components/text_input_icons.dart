@@ -39,7 +39,7 @@ class TextInputIcons extends StatelessWidget {
         ),
         if (hasRightDivider)
           Padding(
-            padding: EdgeInsetsDirectional.only(start: 16.0.s),
+            padding: EdgeInsetsDirectional.only(end: 16.0.s),
             child: const TextInputIconsDivider(),
           ),
       ],
