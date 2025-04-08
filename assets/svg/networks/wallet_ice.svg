@@ -1,18 +1,1 @@
-<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_19002_45837)">
-<rect width="36" height="36" rx="10" fill="#0F0137"/>
-<path d="M18 6L16.878 13.4865L18 17.2463L19.122 13.4865L18 6Z" fill="white"/>
-<path d="M18 30L19.122 22.5135L18 18.7537L16.878 22.5135L18 30Z" fill="white"/>
-<path d="M30 18L22.5135 16.878L18.7537 18L22.5135 19.122L30 18Z" fill="white"/>
-<path d="M6 18L13.4865 19.122L17.2463 18L13.4865 16.878L6 18Z" fill="white"/>
-<path d="M26.4338 9.4632L20.3742 14.0006L18.53 17.4638L21.9705 15.5776L26.4338 9.4632Z" fill="white"/>
-<path d="M9.5662 26.5368L15.6258 21.9994L17.47 18.5362L14.0295 20.4224L9.5662 26.5368Z" fill="white"/>
-<path d="M26.5362 26.4338L21.9988 20.3742L18.5356 18.53L20.4218 21.9705L26.5362 26.4338Z" fill="white"/>
-<path d="M9.46382 9.5662L14.0012 15.6258L17.4644 17.47L15.5782 14.0295L9.46382 9.5662Z" fill="white"/>
-</g>
-<defs>
-<clipPath id="clip0_19002_45837">
-<rect width="36" height="36" fill="white"/>
-</clipPath>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="none"><g clip-path="url(#a)"><rect width="36" height="36" fill="#0F0137" rx="10"/><path fill="#fff" d="m18 6-1.122 7.486L18 17.246l1.122-3.76zM18 30l1.122-7.486L18 18.754l-1.122 3.76zM30 18l-7.486-1.122L18.754 18l3.76 1.122zM6 18l7.486 1.122L17.246 18l-3.76-1.122zM26.434 9.463l-6.06 4.538-1.844 3.463 3.44-1.886zM9.566 26.537l6.06-4.538 1.844-3.463-3.44 1.886zM26.536 26.434 22 20.374l-3.463-1.844 1.886 3.44zM9.464 9.566 14 15.626l3.463 1.844-1.886-3.44z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h36v36H0z"/></clipPath></defs></svg>

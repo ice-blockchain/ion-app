@@ -1,16 +1,1 @@
-<svg width="302" height="187" viewBox="0 0 302 187" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path opacity="0.3" d="M104 157H64" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M49 117H1" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M148 1H112" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M291 94H231" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M301 65H277" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M88.5 45H54" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M171 186H145" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M210 23H194" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.3" d="M267 132H251" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
-<circle cx="2" cy="2" r="2" transform="matrix(-1 0 0 1 267 63)" fill="#0166FF"/>
-<circle cx="2" cy="2" r="2" transform="matrix(-1 0 0 1 231 1)" fill="#F0F0F0"/>
-<circle cx="2" cy="2" r="2" transform="matrix(-1 0 0 1 246 157)" fill="#F0F0F0"/>
-<circle cx="3.5" cy="3.5" r="3.5" transform="matrix(-1 0 0 1 45 41)" fill="#0166FF"/>
-<circle cx="2" cy="2" r="2" transform="matrix(-1 0 0 1 64 115)" fill="#0166FF"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="302" height="187" fill="none"><path stroke="#CCC" stroke-linecap="round" stroke-width="2" d="M104 157H64M49 117H1M148 1h-36M291 94h-60M301 65h-24M88.5 45H54M171 186h-26M210 23h-16M267 132h-16" opacity=".3"/><circle cx="2" cy="2" r="2" fill="#0166FF" transform="matrix(-1 0 0 1 267 63)"/><circle cx="2" cy="2" r="2" fill="#F0F0F0" transform="matrix(-1 0 0 1 231 1)"/><circle cx="2" cy="2" r="2" fill="#F0F0F0" transform="matrix(-1 0 0 1 246 157)"/><circle cx="3.5" cy="3.5" r="3.5" fill="#0166FF" transform="matrix(-1 0 0 1 45 41)"/><circle cx="2" cy="2" r="2" fill="#0166FF" transform="matrix(-1 0 0 1 64 115)"/></svg>

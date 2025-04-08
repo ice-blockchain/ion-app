@@ -1,3 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M20 12.9961V17.4961C20 20.5538 16 20.4961 12 20.4961C8 20.4961 4 20.5538 4 17.4961V12.9961M12 2.99609V14.9961M12 2.99609L16 6.99609M12 2.99609L8 6.99609" stroke="#494949" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><path stroke="#494949" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M20 12.996v4.5c0 3.058-4 3-8 3s-8 .058-8-3v-4.5m8-10v12m0-12 4 4m-4-4-4 4"/></svg>

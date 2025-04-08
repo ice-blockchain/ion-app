@@ -1,9 +1,1 @@
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Linear / Faces, Emotions, Stickers / Smile Circle">
-<circle id="Vector" cx="10.0007" cy="10.0007" r="6.66667" stroke="#494949" stroke-width="1.2"/>
-<path id="Vector_2" d="M8 12.666C8.56692 13.0862 9.25638 13.3327 10 13.3327C10.7436 13.3327 11.4331 13.0862 12 12.666" stroke="#494949" stroke-width="1.2" stroke-linecap="round"/>
-<path id="Vector_3" d="M12.6673 9C12.6673 9.55228 12.3688 10 12.0007 10C11.6325 10 11.334 9.55228 11.334 9C11.334 8.44772 11.6325 8 12.0007 8C12.3688 8 12.6673 8.44772 12.6673 9Z" fill="#494949"/>
-<ellipse id="Vector_4" cx="8.00065" cy="9" rx="0.666667" ry="1" fill="#494949"/>
-<path id="Vector_5" d="M16.6667 8.33398C16.6667 8.33398 18.75 8.84949 18.75 10.6673C18.75 12.334 16.25 12.9173 16.25 12.9173M3.33333 8.33398C3.33333 8.33398 1.25 8.83398 1.25 10.6673C1.25 12.5007 3.75 12.9173 3.75 12.9173M10.4167 3.33398L11.6667 2.08398" stroke="#494949" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"><circle cx="10.001" cy="10.001" r="6.667" stroke="#494949" stroke-width="1.2"/><path stroke="#494949" stroke-linecap="round" stroke-width="1.2" d="M8 12.666c.567.42 1.256.667 2 .667s1.433-.247 2-.667"/><path fill="#494949" d="M12.667 9c0 .552-.298 1-.666 1s-.667-.448-.667-1 .299-1 .667-1 .666.448.666 1"/><ellipse cx="8.001" cy="9" fill="#494949" rx=".667" ry="1"/><path stroke="#494949" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16.667 8.334s2.083.515 2.083 2.333c0 1.667-2.5 2.25-2.5 2.25M3.333 8.334s-2.083.5-2.083 2.333 2.5 2.25 2.5 2.25m6.667-9.583 1.25-1.25"/></svg>

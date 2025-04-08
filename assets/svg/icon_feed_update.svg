@@ -1,10 +1,1 @@
-<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="icon/feed_update">
-<path id="Vector" d="M6.10156 10.4C6.10156 7.38301 6.10156 5.87452 7.03882 4.93726C7.97608 4 9.48457 4 12.5016 4C15.5186 4 17.027 4 17.9643 4.93726C18.9016 5.87452 18.9016 7.38301 18.9016 10.4V13.6C18.9016 16.617 18.9016 18.1255 17.9643 19.0627C17.027 20 15.5186 20 12.5016 20C9.48457 20 7.97608 20 7.03882 19.0627C6.10156 18.1255 6.10156 16.617 6.10156 13.6V10.4Z" stroke="white" stroke-width="1.2"/>
-<g id="Vector_2">
-<path d="M12.5 7.5V15V7.5ZM12.5 15L15 12.5L12.5 15ZM12.5 15L10 12.5L12.5 15Z" fill="white"/>
-<path d="M12.5 7.5V15M12.5 15L15 12.5M12.5 15L10 12.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<path id="Vector_3" d="M14.9016 17.5996H10.1016" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
-</g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="none"><path stroke="#fff" stroke-width="1.2" d="M6.102 10.4c0-3.017 0-4.525.937-5.463S9.485 4 12.502 4s4.525 0 5.462.937c.938.938.938 2.446.938 5.463v3.2c0 3.017 0 4.525-.938 5.463S15.52 20 12.502 20s-4.526 0-5.463-.937-.937-2.446-.937-5.463z"/><path fill="#fff" d="M12.5 7.5V15zm0 7.5 2.5-2.5zm0 0L10 12.5z"/><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12.5 7.5V15m0 0 2.5-2.5M12.5 15 10 12.5"/><path stroke="#fff" stroke-linecap="round" stroke-width="1.2" d="M14.902 17.6h-4.8"/></svg>
