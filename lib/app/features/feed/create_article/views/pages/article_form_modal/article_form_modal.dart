@@ -177,6 +177,7 @@ class ArticleFormModal extends HookConsumerWidget {
                 SuggestionsContainer(
                   scrollController: scrollController,
                   editorKey: textEditorKey,
+                  onMentionSuggestionSelected: (pubkeyUsernamePair) {},
                 ),
                 const HorizontalSeparator(),
                 ValueListenableBuilder<bool>(

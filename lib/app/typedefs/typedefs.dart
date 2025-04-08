@@ -12,3 +12,4 @@ typedef OnVideoTapCallback = void Function({
 
 typedef AttachedMediaNotifier = ValueNotifier<List<MediaFile>>;
 typedef AttachedMediaLinksNotifier = ValueNotifier<Map<String, MediaAttachment>>;
+typedef MentionsMapNotifier = ValueNotifier<Map<String, String>>;
