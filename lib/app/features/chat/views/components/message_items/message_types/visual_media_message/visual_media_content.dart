@@ -159,9 +159,9 @@ class _VideoDurationLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
+    return PositionedDirectional(
       bottom: 5.0.s,
-      left: 5.0.s,
+      start: 5.0.s,
       child: Container(
         padding: EdgeInsetsDirectional.symmetric(horizontal: 4.0.s),
         decoration: BoxDecoration(
