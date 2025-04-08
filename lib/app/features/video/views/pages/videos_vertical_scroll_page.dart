@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
+import 'package:ion/app/features/feed/providers/feed_posts_provider.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
@@ -64,10 +65,11 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
     }
 
     final videosData = getVideosData();
-    final filteredVideos = videosData?.data.items
-            ?.whereType<ModifiablePostEntity>()
-            .where((item) => item.data.hasVideo)
-            .toList() ??
+    final filteredVideos = videosData?.data.items?.where((item) {
+          final videoPost = ref.read(isVideoPostProvider(item));
+          final videoRepost = ref.read(isVideoRepostProvider(item));
+          return videoPost || videoRepost;
+        }).toList() ??
         [];
 
     final entities = filteredVideos.isEmpty ? [ionConnectEntity] : filteredVideos;
@@ -76,8 +78,17 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
       () {
         final result = <_FlattenedVideo>[];
         for (final entity in entities) {
-          for (final media in entity.data.videos) {
-            result.add(_FlattenedVideo(entity: entity, media: media));
+          if (entity is ModifiablePostEntity) {
+            for (final media in entity.data.videos) {
+              result.add(_FlattenedVideo(entity: entity, media: media));
+            }
+          } else {
+            final reposted = ref.read(getRepostedEntityProvider(entity));
+            if (reposted is ModifiablePostEntity) {
+              for (final media in reposted.data.videos) {
+                result.add(_FlattenedVideo(entity: reposted, media: media));
+              }
+            }
           }
         }
         return result;

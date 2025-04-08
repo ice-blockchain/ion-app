@@ -76,6 +76,7 @@ class FullscreenMediaPage extends HookConsumerWidget {
           body: AdaptiveMediaView(
             eventReference: eventReference,
             initialMediaIndex: initialMediaIndex,
+            framedEventReference: framedEventReference,
           ),
         ),
       ),
