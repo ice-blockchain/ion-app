@@ -144,6 +144,7 @@ class MediaEncryptionService {
           width: mediaFile.width,
           height: mediaFile.height,
           mimeType: mediaFile.mimeType,
+          duration: mediaFile.duration,
         );
 
         return EncryptedMediaFile(

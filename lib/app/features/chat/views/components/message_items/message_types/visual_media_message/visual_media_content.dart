@@ -13,6 +13,7 @@ import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
 import 'package:ion/app/features/core/model/media_type.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
+import 'package:ion/app/utils/date.dart';
 import 'package:ion/generated/assets.gen.dart';
 
 class VisualMediaContent extends HookConsumerWidget {
@@ -95,6 +96,8 @@ class VisualMediaContent extends HookConsumerWidget {
               ),
             ),
           ),
+        if (isVideo && mediaAttachment?.duration != null)
+          _VideoDurationLabel(duration: mediaAttachment!.duration!),
         if (messageMediaTableData.status == MessageMediaStatus.processing)
           CancelButton(
             messageMediaId: messageMediaTableData.id,
@@ -141,6 +144,35 @@ class CancelButton extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _VideoDurationLabel extends StatelessWidget {
+  const _VideoDurationLabel({
+    required this.duration,
+  });
+
+  final int duration;
+
+  @override
+  Widget build(BuildContext context) {
+    return PositionedDirectional(
+      bottom: 5.0.s,
+      start: 5.0.s,
+      child: Container(
+        padding: EdgeInsetsDirectional.symmetric(horizontal: 4.0.s),
+        decoration: BoxDecoration(
+          color: context.theme.appColors.backgroundSheet.withValues(alpha: 0.7),
+          borderRadius: BorderRadius.circular(6.0.s),
+        ),
+        child: Text(
+          formatDuration(Duration(seconds: duration)),
+          style: context.theme.appTextThemes.caption.copyWith(
+            color: context.theme.appColors.secondaryBackground,
+          ),
         ),
       ),
     );

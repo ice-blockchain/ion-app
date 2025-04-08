@@ -72,6 +72,7 @@ class IonConnectUploadNotifier extends _$IonConnectUploadNotifier {
       originalFileHash: fileMetadata.originalFileHash,
       alt: alt,
       thumb: fileMetadata.thumb,
+      duration: file.duration,
     );
 
     return (fileMetadata: fileMetadata, mediaAttachment: mediaAttachment);

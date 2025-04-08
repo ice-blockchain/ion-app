@@ -100,6 +100,7 @@ class CompressionService {
         mimeType: 'video/mp4',
         width: outWidth,
         height: outHeight,
+        duration: inputFile.duration,
       );
     } catch (error, stackTrace) {
       Logger.log('Error during video compression!', error: error, stackTrace: stackTrace);

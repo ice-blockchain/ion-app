@@ -26,6 +26,7 @@ class MediaAttachment {
     this.thumb,
     this.image,
     this.blurhash,
+    this.duration,
   });
 
   factory MediaAttachment.fromMediaFile(MediaFile mediaFile) {
@@ -40,6 +41,7 @@ class MediaAttachment {
       image: mediaFile.path,
       blurhash: mediaFile.blurhash,
       thumb: mediaFile.path,
+      duration: mediaFile.duration,
     );
   }
 
@@ -62,6 +64,7 @@ class MediaAttachment {
     String? encryptionNonce;
     String? encryptionMac;
     String? blurhash;
+    int? duration;
     for (final params in tag.skip(1)) {
       final pair = params.split(' ');
       final value = pair[1];
@@ -97,6 +100,8 @@ class MediaAttachment {
             encryptionNonce = nonce;
             encryptionMac = mac;
           }
+        case 'duration':
+          duration = int.tryParse(value);
       }
     }
 
@@ -114,6 +119,7 @@ class MediaAttachment {
       encryptionNonce: encryptionNonce,
       encryptionMac: encryptionMac,
       blurhash: blurhash,
+      duration: duration,
     );
   }
 
@@ -132,6 +138,7 @@ class MediaAttachment {
         thumb: json['thumb'] as String?,
         image: json['image'] as String?,
         blurhash: json['blurhash'] as String?,
+        duration: json['duration'] as int?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -147,6 +154,7 @@ class MediaAttachment {
         'encryptionMac': encryptionMac,
         'thumb': thumb,
         'blurhash': blurhash,
+        'duration': duration,
       };
 
   final String url;
@@ -178,6 +186,8 @@ class MediaAttachment {
   late MediaType mediaType = _parseMediaType(url: url, mimeType: mimeType);
 
   final String? blurhash;
+
+  final int? duration;
 
   /// Calculates the aspect ratio from a given dimension string.
   ///
@@ -226,6 +236,7 @@ class MediaAttachment {
       if (thumb != null) 'thumb $thumb',
       if (image != null) 'image $image',
       if (blurhash != null) 'blurhash $blurhash',
+      if (duration != null) 'duration $duration',
     ];
   }
 
@@ -233,7 +244,7 @@ class MediaAttachment {
 
   @override
   String toString() {
-    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb, image: $image, blurhash: $blurhash)';
+    return 'MediaAttachment(url: $url, mimeType: $mimeType, dimension: $dimension, alt: $alt, fileHash: $fileHash, originalFileHash: $originalFileHash, torrentInfoHash: $torrentInfoHash, thumb: $thumb, image: $image, blurhash: $blurhash, duration: $duration)';
   }
 
   MediaAttachment copyWith({
@@ -250,6 +261,7 @@ class MediaAttachment {
     String? encryptionNonce,
     String? encryptionMac,
     String? blurhash,
+    int? duration,
   }) {
     return MediaAttachment(
       url: url ?? this.url,
@@ -265,6 +277,7 @@ class MediaAttachment {
       encryptionNonce: encryptionNonce ?? this.encryptionNonce,
       encryptionMac: encryptionMac ?? this.encryptionMac,
       blurhash: blurhash ?? this.blurhash,
+      duration: duration ?? this.duration,
     );
   }
 }
