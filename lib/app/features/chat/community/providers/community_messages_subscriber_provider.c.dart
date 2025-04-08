@@ -8,8 +8,7 @@ import 'package:ion/app/features/core/providers/feature_flags_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/model/action_source.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
-import 'package:ion/app/services/logger/logger.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'community_messages_subscriber_provider.c.g.dart';
@@ -56,24 +55,17 @@ class CommunityMessagesSubscriber extends _$CommunityMessagesSubscriber {
 
     final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-    ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
-      requestMessage,
-      actionSource: ActionSourceUser(ownerPubkey),
-      subscriptionBuilder: (requestMessage, relay) {
-        final subscription = relay.subscribe(requestMessage);
-        ref.onDispose(() {
-          try {
-            relay.unsubscribe(subscription.id);
-          } catch (error, stackTrace) {
-            Logger.log('Failed to unsubscribe', error: error, stackTrace: stackTrace);
-          }
-        });
-        return subscription.messages;
-      },
-    ).listen((event) {
-      if (event.kind == ModifiablePostEntity.kind) {
-        ref.watch(conversationEventMessageDaoProvider).add(event);
-      }
-    });
+    final events = ref.watch(
+      ionConnectEventsSubscriptionProvider(
+        requestMessage,
+        actionSource: ActionSourceUser(ownerPubkey),
+      ),
+    );
+
+    final subscription = events
+        .where((event) => event.kind == ModifiablePostEntity.kind)
+        .listen(ref.read(conversationEventMessageDaoProvider).add);
+
+    ref.onDispose(subscription.cancel);
   }
 }

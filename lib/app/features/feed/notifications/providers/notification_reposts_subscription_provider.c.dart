@@ -2,7 +2,6 @@
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
-import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
@@ -10,8 +9,7 @@ import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/notifications/data/model/ion_notification.c.dart';
 import 'package:ion/app/features/feed/notifications/data/repository/comments_repository.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_event_parser.c.dart';
-import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notification_reposts_subscription_provider.c.g.dart';
@@ -20,7 +18,6 @@ part 'notification_reposts_subscription_provider.c.g.dart';
 Future<void> notificationRepostsSubscription(Ref ref) async {
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final commentsRepository = ref.watch(commentsRepositoryProvider);
-  final eventParser = ref.watch(eventParserProvider);
 
   if (currentPubkey == null) {
     throw UserMasterPubkeyNotFoundException();
@@ -38,18 +35,10 @@ Future<void> notificationRepostsSubscription(Ref ref) async {
   );
   final requestMessage = RequestMessage()..addFilter(requestFilter);
 
-  final events = ref.watch(ionConnectNotifierProvider.notifier).requestEvents(
-    requestMessage,
-    subscriptionBuilder: (requestMessage, relay) {
-      final subscription = relay.subscribe(requestMessage);
-      ref.onDispose(() => relay.unsubscribe(subscription.id));
-      return subscription.messages;
-    },
-  );
+  final entities = ref.watch(ionConnectEntitiesSubscriptionProvider(requestMessage));
 
-  final subscription = events
-      .where((eventMessage) => eventMessage.masterPubkey != currentPubkey)
-      .map(eventParser.parse)
+  final subscription = entities
+      .where((entity) => entity.masterPubkey != currentPubkey)
       .listen(commentsRepository.save);
 
   ref.onDispose(subscription.cancel);
