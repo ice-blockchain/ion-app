@@ -40,6 +40,7 @@ class CreatePostBottomPanel extends StatelessWidget {
     required this.createOption,
     required this.scrollController,
     required this.textEditorKey,
+    required this.mentionsMapNotifier,
     super.key,
   });
 
@@ -53,6 +54,7 @@ class CreatePostBottomPanel extends StatelessWidget {
   final CreatePostOption createOption;
   final ScrollController scrollController;
   final GlobalKey<TextEditorState> textEditorKey;
+  final MentionsMapNotifier mentionsMapNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,11 @@ class CreatePostBottomPanel extends StatelessWidget {
         SuggestionsContainer(
           scrollController: scrollController,
           editorKey: textEditorKey,
+          onMentionSuggestionSelected: (pubkeyUsernamePair) {
+            final mapCopy = Map<String, String>.from(mentionsMapNotifier.value);
+            mapCopy[pubkeyUsernamePair.$2] = pubkeyUsernamePair.$1;
+            mentionsMapNotifier.value = mapCopy;
+          },
         ),
         const HorizontalSeparator(),
         _WhoCanReplySection(
@@ -76,6 +83,7 @@ class CreatePostBottomPanel extends StatelessWidget {
           attachedMediaLinksNotifier: attachedMediaLinksNotifier,
           attachedVideoNotifier: attachedVideoNotifier,
           createOption: createOption,
+          mentionsMapNotifier: mentionsMapNotifier,
         ),
       ],
     );
@@ -147,6 +155,7 @@ class _ActionsSection extends StatelessWidget {
     required this.attachedMediaLinksNotifier,
     required this.attachedVideoNotifier,
     required this.createOption,
+    required this.mentionsMapNotifier,
   });
 
   final QuillController textEditorController;
@@ -157,6 +166,7 @@ class _ActionsSection extends StatelessWidget {
   final AttachedMediaLinksNotifier attachedMediaLinksNotifier;
   final ValueNotifier<MediaFile?> attachedVideoNotifier;
   final CreatePostOption createOption;
+  final MentionsMapNotifier mentionsMapNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +205,7 @@ class _ActionsSection extends StatelessWidget {
               ],
               mediaAttachments: attachedMediaLinksNotifier.value,
               createOption: createOption,
+              mentionsMap: mentionsMapNotifier.value,
             ),
           ],
         ),

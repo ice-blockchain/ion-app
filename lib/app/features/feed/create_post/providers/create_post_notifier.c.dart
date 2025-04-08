@@ -7,6 +7,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ion/app/components/text_editor/attributes.dart';
 import 'package:ion/app/components/text_editor/utils/build_empty_delta.dart';
 import 'package:ion/app/components/text_editor/utils/extract_tags.dart';
 import 'package:ion/app/exceptions/exceptions.dart';
@@ -40,6 +41,7 @@ import 'package:ion/app/features/ion_connect/providers/ion_connect_delete_file_n
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_notifier.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_upload_notifier.c.dart';
+import 'package:ion/app/features/user/providers/user_metadata_provider.c.dart';
 import 'package:ion/app/services/compressors/image_compressor.c.dart';
 import 'package:ion/app/services/compressors/video_compressor.c.dart';
 import 'package:ion/app/services/logger/logger.dart';
@@ -68,6 +70,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     EventReference? quotedEvent,
     List<MediaFile>? mediaFiles,
     String? communityId,
+    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -80,7 +83,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       );
 
       final postData = ModifiablePostData(
-        content: _buildContentWithMediaLinks(content: postContent, media: media.values.toList()),
+        content: await _buildContentWithMediaLinksAndMentions(
+          content: postContent,
+          media: media.values.toList(),
+          mentions: mentions,
+        ),
         media: media,
         replaceableEventId: ReplaceableEventIdentifier.generate(),
         publishedAt: _buildEntityPublishedAt(),
@@ -92,8 +99,11 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         settings: EntityDataWithSettings.build(whoCanReply: whoCanReply),
         expiration: _buildExpiration(),
         communityId: communityId,
-        richText:
-            _buildRichTextContentWithMediaLinks(content: postContent, media: media.values.toList()),
+        richText: await _buildRichTextContentWithMediaLinksAndMentions(
+          content: postContent,
+          media: media.values.toList(),
+          mentions: mentions,
+        ),
       );
 
       final posts = await _sendPostEntities([...files, postData]);
@@ -114,6 +124,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     List<MediaFile>? mediaFiles,
     Map<String, MediaAttachment> mediaAttachments = const {},
     WhoCanReplySettingsOption? whoCanReply,
+    Map<String, String> mentions = const {},
   }) async {
     state = const AsyncValue.loading();
 
@@ -133,13 +144,15 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       final removedMediaHashes = originalMediaHashes.difference(attachedMediaHashes).toList();
 
       final postData = modifiedEntity.data.copyWith(
-        content: _buildContentWithMediaLinks(
+        content: await _buildContentWithMediaLinksAndMentions(
           content: postContent,
           media: modifiedMedia.values.toList(),
+          mentions: mentions,
         ),
-        richText: _buildRichTextContentWithMediaLinks(
+        richText: await _buildRichTextContentWithMediaLinksAndMentions(
           content: postContent,
           media: modifiedMedia.values.toList(),
+          mentions: mentions,
         ),
         media: modifiedMedia,
         relatedHashtags: extractTags(postContent).map((tag) => RelatedHashtag(value: tag)).toList(),
@@ -248,11 +261,16 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     };
   }
 
-  RichText _buildRichTextContentWithMediaLinks({
+  Future<RichText> _buildRichTextContentWithMediaLinksAndMentions({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
-    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
+    required Map<String, String> mentions,
+  }) async {
+    final contentWithMedia = await _buildContentWithMediaLinksAndMentionsDelta(
+      content: content,
+      media: media,
+      mentions: mentions,
+    );
 
     final richText = RichText(
       protocol: 'quill_delta',
@@ -262,25 +280,64 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     return richText;
   }
 
-  String _buildContentWithMediaLinks({
+  Future<String> _buildContentWithMediaLinksAndMentions({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
-    final contentWithMedia = _buildContentWithMediaLinksDelta(content: content, media: media);
+    required Map<String, String> mentions,
+  }) async {
+    final contentWithMedia = await _buildContentWithMediaLinksAndMentionsDelta(
+      content: content,
+      media: media,
+      mentions: mentions,
+    );
     return deltaToMarkdown(contentWithMedia);
   }
 
-  Delta _buildContentWithMediaLinksDelta({
+  Future<Delta> _buildContentWithMediaLinksAndMentionsDelta({
     required Delta content,
     required List<MediaAttachment> media,
-  }) {
+    required Map<String, String> mentions,
+  }) async {
+    final currentOperations = content.operations.toList();
+    final mappedMentionsOperations = await Future.wait(
+      currentOperations
+          .map((operation) => _getMappedMentionOperation(operation, mentions: mentions))
+          .toList(),
+    );
+    final newContentDelta = Delta.fromOperations(mappedMentionsOperations);
+
     return Delta.fromOperations(
       media
           .map(
             (mediaItem) => Operation.insert(mediaItem.url, {Attribute.link.key: mediaItem.url}),
           )
           .toList(),
-    ).concat(content);
+    ).concat(newContentDelta);
+  }
+
+  Future<Operation> _getMappedMentionOperation(
+    Operation operation, {
+    required Map<String, String> mentions,
+  }) async {
+    if (!operation.hasAttribute(MentionAttribute.attributeKey) ||
+        operation.data is! String ||
+        !(operation.data! as String).startsWith('@')) {
+      return operation;
+    }
+    final username = operation.data! as String;
+    final pubkey = mentions[username];
+    if (pubkey == null) {
+      return operation;
+    }
+    final userMetadata = await ref.read(userMetadataProvider(pubkey).future);
+    if (userMetadata == null) {
+      return operation;
+    }
+    final userMetadataEncoded = userMetadata.toEventReference().encode();
+    return Operation.insert(
+      userMetadataEncoded,
+      operation.attributes,
+    );
   }
 
   List<RelatedEvent> _buildRelatedEvents(IonConnectEntity parentEntity) {

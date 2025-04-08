@@ -15,7 +15,7 @@ class MentionsSuggestions extends StatelessWidget {
     super.key,
   });
   final List<String> suggestions;
-  final ValueChanged<String> onSuggestionSelected;
+  final void Function((String pubkey, String username)) onSuggestionSelected;
 
   @override
   Widget build(BuildContext context) {
