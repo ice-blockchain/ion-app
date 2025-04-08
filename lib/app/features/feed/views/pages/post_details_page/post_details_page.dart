@@ -13,6 +13,7 @@ import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/feed/views/components/reply_list/reply_list.dart';
 import 'package:ion/app/features/feed/views/components/time_ago/time_ago.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
+import 'package:ion/app/features/ion_connect/providers/ion_connect_cache.c.dart';
 import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.dart';
 
 class PostDetailsPage extends HookConsumerWidget {
@@ -42,6 +43,11 @@ class PostDetailsPage extends HookConsumerWidget {
           Flexible(
             child: ReplyList(
               eventReference: eventReference,
+              onPullToRefresh: () {
+                ref
+                    .read(ionConnectCacheProvider.notifier)
+                    .remove(CacheableEntity.cacheKeyBuilder(eventReference: eventReference));
+              },
               headers: [
                 SliverToBoxAdapter(
                   child: Post(
