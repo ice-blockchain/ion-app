@@ -9,7 +9,7 @@ import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/feed/data/models/entities/article_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/modifiable_post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
-import 'package:ion/app/features/feed/providers/feed_entity_provider.c.dart';
+import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
 import 'package:ion/app/features/feed/views/components/article/article.dart';
 import 'package:ion/app/features/feed/views/components/overlay_menu/user_info_menu.dart';
 import 'package:ion/app/features/feed/views/components/post/components/post_body/post_body.dart';
@@ -29,7 +29,8 @@ class ParentEntity extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final parentEntity = ref.watch(feedEntityProvider(eventReference: eventReference));
+    final parentEntity =
+        ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
     final userMetadata = ref.watch(userMetadataProvider(eventReference.pubkey)).valueOrNull;
 
     if (parentEntity == null || userMetadata == null) {

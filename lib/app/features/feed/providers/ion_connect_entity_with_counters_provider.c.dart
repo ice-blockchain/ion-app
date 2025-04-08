@@ -11,10 +11,10 @@ import 'package:ion/app/features/ion_connect/model/search_extension.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_entity_provider.c.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'feed_entity_provider.c.g.dart';
+part 'ion_connect_entity_with_counters_provider.c.g.dart';
 
 @riverpod
-IonConnectEntity? feedEntity(
+IonConnectEntity? ionConnectEntityWithCounters(
   Ref ref, {
   required EventReference eventReference,
   bool network = true,
