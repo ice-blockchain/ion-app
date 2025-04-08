@@ -35,6 +35,7 @@ class MediaFile with _$MediaFile {
     String? mimeType,
     String? thumb,
     String? blurhash,
+    int? duration,
   }) = _MediaFile;
 
   const MediaFile._();
@@ -242,6 +243,7 @@ class MediaService {
           width: assetEntity.width,
           mimeType: mimeType,
           thumb: mediaFile.thumb,
+          duration: assetEntity.duration,
         );
       }),
     );
