@@ -28,16 +28,16 @@ class CameraIdlePreview extends ConsumerWidget {
           top: 10.0.s,
           start: 10.0.s,
           child: StoryControlButton(
-            icon: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
-            onPressed: () => context.pop(),
+            icon: Assets.svg.iconStoryLightning.icon(),
+            onPressed: cameraActionsNotifier.toggleFlash,
           ),
         ),
         PositionedDirectional(
           top: 10.0.s,
           end: 10.0.s,
           child: StoryControlButton(
-            icon: Assets.svg.iconStoryLightning.icon(),
-            onPressed: cameraActionsNotifier.toggleFlash,
+            icon: Assets.svg.iconSheetClose.icon(color: context.theme.appColors.onPrimaryAccent),
+            onPressed: () => context.pop(),
           ),
         ),
         PositionedDirectional(
