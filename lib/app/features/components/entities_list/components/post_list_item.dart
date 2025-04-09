@@ -9,14 +9,14 @@ import 'package:ion/app/typedefs/typedefs.dart';
 class PostListItem extends StatelessWidget {
   const PostListItem({
     required this.eventReference,
-    this.framedEventType = FramedEventType.quoted,
+    this.displayParent = false,
     this.onVideoTap,
     super.key,
   });
 
   final EventReference eventReference;
 
-  final FramedEventType framedEventType;
+  final bool displayParent;
 
   final OnVideoTapCallback? onVideoTap;
 
@@ -29,7 +29,7 @@ class PostListItem extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Post(
         eventReference: eventReference,
-        framedEventType: framedEventType,
+        displayParent: displayParent,
         onVideoTap: onVideoTap,
       ),
     );

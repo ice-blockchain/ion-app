@@ -13,7 +13,6 @@ import 'package:ion/app/features/feed/data/models/entities/post_data.c.dart';
 import 'package:ion/app/features/feed/data/models/entities/repost_data.c.dart';
 import 'package:ion/app/features/feed/data/models/generic_repost.c.dart';
 import 'package:ion/app/features/feed/providers/ion_connect_entity_with_counters_provider.c.dart';
-import 'package:ion/app/features/feed/views/components/post/post.dart';
 import 'package:ion/app/features/ion_connect/model/event_reference.c.dart';
 import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/features/ion_connect/model/soft_deletable_entity.dart';
@@ -25,7 +24,7 @@ import 'package:ion/app/typedefs/typedefs.dart';
 class EntitiesList extends HookWidget {
   const EntitiesList({
     required this.entities,
-    this.framedEventType = FramedEventType.quoted,
+    this.displayParent = false,
     this.separatorHeight,
     this.onVideoTap,
     super.key,
@@ -33,7 +32,7 @@ class EntitiesList extends HookWidget {
 
   final List<IonConnectEntity> entities;
   final double? separatorHeight;
-  final FramedEventType framedEventType;
+  final bool displayParent;
   final OnVideoTapCallback? onVideoTap;
 
   @override
@@ -45,7 +44,7 @@ class EntitiesList extends HookWidget {
         return _EntityListItem(
           key: ValueKey(eventReference),
           eventReference: eventReference,
-          framedEventType: framedEventType,
+          displayParent: displayParent,
           separatorHeight: separatorHeight,
           onVideoTap: onVideoTap,
         );
@@ -57,7 +56,7 @@ class EntitiesList extends HookWidget {
 class _EntityListItem extends ConsumerWidget {
   _EntityListItem({
     required this.eventReference,
-    required this.framedEventType,
+    required this.displayParent,
     this.onVideoTap,
     double? separatorHeight,
     super.key,
@@ -65,7 +64,7 @@ class _EntityListItem extends ConsumerWidget {
 
   final EventReference eventReference;
   final double separatorHeight;
-  final FramedEventType framedEventType;
+  final bool displayParent;
   final OnVideoTapCallback? onVideoTap;
 
   @override
@@ -87,7 +86,7 @@ class _EntityListItem extends ConsumerWidget {
       child: switch (entity) {
         ModifiablePostEntity() || PostEntity() => PostListItem(
             eventReference: entity.toEventReference(),
-            framedEventType: framedEventType,
+            displayParent: displayParent,
             onVideoTap: onVideoTap,
           ),
         final ArticleEntity article => ArticleListItem(article: article),

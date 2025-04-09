@@ -27,14 +27,13 @@ import 'package:ion/app/features/ion_connect/model/ion_connect_entity.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/typedefs/typedefs.dart';
 
-enum FramedEventType { parent, quoted, none }
-
 class Post extends ConsumerWidget {
   const Post({
     required this.eventReference,
-    this.parentEventReference,
-    this.framedEventType = FramedEventType.quoted,
+    this.repostEventReference,
     this.timeFormat = TimestampFormat.short,
+    this.displayQuote = true,
+    this.displayParent = false,
     this.topOffset,
     this.headerOffset,
     this.header,
@@ -48,8 +47,9 @@ class Post extends ConsumerWidget {
   });
 
   final EventReference eventReference;
-  final EventReference? parentEventReference;
-  final FramedEventType framedEventType;
+  final EventReference? repostEventReference;
+  final bool displayQuote;
+  final bool displayParent;
   final double? topOffset;
   final double? headerOffset;
   final Widget? header;
@@ -75,8 +75,9 @@ class Post extends ConsumerWidget {
 
     final isOwnedByCurrentUser = ref.watch(isCurrentUserSelectorProvider(entity.masterPubkey));
 
-    final framedEventReference =
-        _getFramedEventReference(entity: entity, framedEventType: framedEventType);
+    final quotedEventReference = _getQuotedEventReference(entity: entity);
+
+    final parentEventReference = _getParentEventReference(entity: entity);
 
     final content = Column(
       children: [
@@ -86,13 +87,13 @@ class Post extends ConsumerWidget {
           isTextSelectable: isTextSelectable,
           maxLines: bodyMaxLines,
           onVideoTap: onVideoTap,
-          framedEventReference: parentEventReference ?? framedEventReference,
+          framedEventReference: repostEventReference ?? quotedEventReference,
         ),
         ScreenSideOffset.small(
           child: Column(
             children: [
-              if (framedEventType == FramedEventType.quoted)
-                _QuotedEvent(eventReference: framedEventReference),
+              if (displayQuote && quotedEventReference != null)
+                _QuotedEvent(eventReference: quotedEventReference),
               footer ?? CounterItemsFooter(eventReference: eventReference),
             ],
           ),
@@ -104,8 +105,8 @@ class Post extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: topOffset ?? 12.0.s),
-        if (framedEventType == FramedEventType.parent)
-          _ParentEvent(eventReference: framedEventReference),
+        if (displayParent && parentEventReference != null)
+          _ParentEvent(eventReference: parentEventReference),
         ScreenSideOffset.small(
           child: header ??
               UserInfo(
@@ -124,17 +125,18 @@ class Post extends ConsumerWidget {
     );
   }
 
-  EventReference? _getFramedEventReference({
-    required IonConnectEntity entity,
-    required FramedEventType framedEventType,
-  }) {
-    return switch (framedEventType) {
-      FramedEventType.parent when entity is ModifiablePostEntity =>
-        entity.data.parentEvent?.eventReference,
-      FramedEventType.parent when entity is PostEntity => entity.data.parentEvent?.eventReference,
-      FramedEventType.quoted when entity is ModifiablePostEntity =>
-        entity.data.quotedEvent?.eventReference,
-      FramedEventType.quoted when entity is PostEntity => entity.data.quotedEvent?.eventReference,
+  EventReference? _getQuotedEventReference({required IonConnectEntity entity}) {
+    return switch (entity) {
+      ModifiablePostEntity() => entity.data.quotedEvent?.eventReference,
+      PostEntity() => entity.data.quotedEvent?.eventReference,
+      _ => null,
+    };
+  }
+
+  EventReference? _getParentEventReference({required IonConnectEntity entity}) {
+    return switch (entity) {
+      ModifiablePostEntity() => entity.data.parentEvent?.eventReference,
+      PostEntity() => entity.data.parentEvent?.eventReference,
       _ => null,
     };
   }
@@ -143,19 +145,14 @@ class Post extends ConsumerWidget {
 class _QuotedEvent extends StatelessWidget {
   const _QuotedEvent({required this.eventReference});
 
-  final EventReference? eventReference;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context) {
-    final eventReference = this.eventReference;
-    if (eventReference == null) {
-      return const SizedBox.shrink();
-    }
     return Padding(
       padding: EdgeInsetsDirectional.only(top: 12.0.s),
       child: _FramedEvent(
         eventReference: eventReference,
-        framedEventType: FramedEventType.quoted,
         postWidget: _QuotedPost(eventReference: eventReference),
         articleWidget: _QuotedArticle(eventReference: eventReference),
       ),
@@ -166,17 +163,13 @@ class _QuotedEvent extends StatelessWidget {
 final class _ParentEvent extends StatelessWidget {
   const _ParentEvent({required this.eventReference});
 
-  final EventReference? eventReference;
+  final EventReference eventReference;
 
   @override
   Widget build(BuildContext context) {
-    final eventReference = this.eventReference;
-    if (eventReference == null) {
-      return const SizedBox.shrink();
-    }
     return _FramedEvent(
       eventReference: eventReference,
-      framedEventType: FramedEventType.parent,
+      isParent: true,
       postWidget: _ParentPost(eventReference: eventReference),
       articleWidget: _ParentArticle(eventReference: eventReference),
     );
@@ -188,18 +181,17 @@ final class _FramedEvent extends HookConsumerWidget {
     required this.eventReference,
     required this.postWidget,
     required this.articleWidget,
-    required this.framedEventType,
+    this.isParent = false,
   });
 
   final EventReference eventReference;
   final Widget postWidget;
   final Widget articleWidget;
-  final FramedEventType framedEventType;
+  final bool isParent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entity = ref.watch(ionConnectEntityWithCountersProvider(eventReference: eventReference));
-    final isParent = framedEventType == FramedEventType.parent;
     Widget? deletedEntity;
 
     if (entity is ModifiablePostEntity && entity.isDeleted) {
@@ -274,7 +266,7 @@ final class _QuotedPost extends ConsumerWidget {
         child: AbsorbPointer(
           child: Post(
             eventReference: eventReference,
-            framedEventType: FramedEventType.none,
+            displayQuote: false,
             header: UserInfo(
               pubkey: eventReference.pubkey,
               createdAt: postEntity is ModifiablePostEntity
@@ -320,7 +312,7 @@ final class _ParentPost extends StatelessWidget {
       },
       child: Post(
         eventReference: eventReference,
-        framedEventType: FramedEventType.none,
+        displayQuote: false,
         headerOffset: 0,
         topOffset: 0,
         contentWrapper: (content) {

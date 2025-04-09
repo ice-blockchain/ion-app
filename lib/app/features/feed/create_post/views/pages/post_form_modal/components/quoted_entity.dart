@@ -39,7 +39,7 @@ class QuotedEntity extends HookConsumerWidget {
             return QuotedEntityFrame.post(
               child: Post(
                 eventReference: eventReference,
-                framedEventType: FramedEventType.none,
+                displayQuote: false,
                 header: UserInfo(pubkey: eventReference.pubkey),
                 footer: const SizedBox.shrink(),
               ),

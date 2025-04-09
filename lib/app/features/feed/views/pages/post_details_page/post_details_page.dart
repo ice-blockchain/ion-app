@@ -19,13 +19,10 @@ import 'package:ion/app/router/components/navigation_app_bar/navigation_app_bar.
 class PostDetailsPage extends HookConsumerWidget {
   const PostDetailsPage({
     required this.eventReference,
-    this.displayParent = false,
     super.key,
   });
 
   final EventReference eventReference;
-
-  final bool displayParent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,13 +48,12 @@ class PostDetailsPage extends HookConsumerWidget {
               headers: [
                 SliverToBoxAdapter(
                   child: Post(
-                    framedEventType:
-                        displayParent ? FramedEventType.parent : FramedEventType.quoted,
                     eventReference: eventReference,
                     timeFormat: TimestampFormat.detailed,
                     onDelete: context.pop,
                     isTextSelectable: true,
                     bodyMaxLines: null,
+                    displayParent: true,
                   ),
                 ),
                 SliverToBoxAdapter(child: FeedListSeparator()),

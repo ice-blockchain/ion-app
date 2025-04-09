@@ -29,7 +29,8 @@ on:
       run_checks:
         description: "Run code analysis, tests and license check"
         required: false
-        default: "true"
+        default: true
+        type: bool
 
 env:
   APP_ENV: ${{ inputs.environment || 'staging' }}
@@ -127,19 +128,19 @@ jobs:
           ./scripts/generate_code.sh
       - name: Analyze code
         id: analyze-code
-        if: ${{ inputs.run_checks == 'true' }}
+        if: inputs.run_checks
         run: |
           cd main-repo
           melos run analyze
       - name: Run tests
         id: run-tests
-        if: ${{ inputs.run_checks == 'true' }}
+        if: inputs.run_checks
         run: |
           cd main-repo
           melos run test
       - name: Check license
         id: check-license
-        if: ${{ inputs.run_checks == 'true' }}
+        if: inputs.run_checks
         run: |
           cd main-repo
           ./scripts/license_check.sh
