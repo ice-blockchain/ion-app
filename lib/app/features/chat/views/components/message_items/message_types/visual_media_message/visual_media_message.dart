@@ -11,7 +11,6 @@ import 'package:ion/app/features/chat/views/components/message_items/message_ite
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_custom_grid.dart';
 import 'package:ion/app/features/chat/views/components/message_items/message_types/visual_media_message/visual_media_metadata.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
-import 'package:ion/app/router/app_routes.c.dart';
 
 class VisualMediaMessage extends HookConsumerWidget {
   const VisualMediaMessage({
@@ -39,27 +38,18 @@ class VisualMediaMessage extends HookConsumerWidget {
         contentDescription: context.i18n.common_media,
       ),
       contentPadding: EdgeInsets.all(padding),
-      child: GestureDetector(
-        onTap: () {
-          //TODO: show full screen media
-          PhotoGalleryRoute(
-            eventMessageId: eventMessage.id,
-            initialIndex: 0,
-          ).push<void>(context);
-        },
-        child: SizedBox(
-          width: messageMedias.length > 1 ? double.infinity : 146.0.s,
-          child: Column(
-            children: [
-              VisualMediaCustomGrid(
-                messageMedias: messageMedias,
-                eventMessage: eventMessage,
-              ),
-              VisualMediaMetadata(
-                eventMessage: eventMessage,
-              ),
-            ],
-          ),
+      child: SizedBox(
+        width: messageMedias.length > 1 ? double.infinity : 146.0.s,
+        child: Column(
+          children: [
+            VisualMediaCustomGrid(
+              messageMedias: messageMedias,
+              eventMessage: eventMessage,
+            ),
+            VisualMediaMetadata(
+              eventMessage: eventMessage,
+            ),
+          ],
         ),
       ),
     );
