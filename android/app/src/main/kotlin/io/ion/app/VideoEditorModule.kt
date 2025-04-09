@@ -7,6 +7,7 @@ import com.banuba.sdk.arcloud.di.ArCloudKoinModule
 import com.banuba.sdk.audiobrowser.di.AudioBrowserKoinModule
 import com.banuba.sdk.audiobrowser.domain.AudioBrowserMusicProvider
 import com.banuba.sdk.core.data.TrackData
+import com.banuba.sdk.core.domain.DraftConfig
 import com.banuba.sdk.core.ui.ContentFeatureProvider
 import com.banuba.sdk.effectplayer.adapter.BanubaEffectPlayerKoinModule
 import com.banuba.sdk.export.di.VeExportKoinModule
@@ -67,6 +68,9 @@ private class SampleIntegrationVeKoinModule {
             )
         }
 
+        factory {
+            DraftConfig.DISABLED
+        }
 
         // Audio Browser provider implementation.
         single<ContentFeatureProvider<TrackData, Fragment>>(
