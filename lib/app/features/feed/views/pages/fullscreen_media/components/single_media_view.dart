@@ -35,7 +35,7 @@ class SingleMediaView extends HookWidget {
 
     if (media.mediaType == MediaType.video) {
       return VideoPage(
-        video: post,
+        // video: post,
         framedEventReference: framedEventReference,
         looping: true,
       );

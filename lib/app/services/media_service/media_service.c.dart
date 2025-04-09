@@ -78,6 +78,7 @@ class MediaService {
             height: asset.height,
             width: asset.width,
             mimeType: mimeType,
+            duration: asset.duration,
           );
         }),
       );

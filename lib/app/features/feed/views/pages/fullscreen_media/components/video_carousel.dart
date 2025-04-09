@@ -54,7 +54,7 @@ class VideoCarousel extends HookWidget {
         final videoUrl = videos[index].url;
         return VideoPage(
           key: ValueKey('video_$videoUrl'),
-          video: post,
+          // video: post,
           videoUrl: videoUrl,
           framedEventReference: framedEventReference,
           onVideoEnded: () {
