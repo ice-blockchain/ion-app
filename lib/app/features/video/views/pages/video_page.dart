@@ -18,20 +18,21 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoPage extends HookConsumerWidget {
   const VideoPage({
-    // required this.video,
     this.onVideoEnded,
     this.videoUrl,
     this.looping = false,
     this.framedEventReference,
+    this.videoInfo,
+    this.bottomOverlay,
     super.key,
   });
 
-  // final ModifiablePostEntity video;
   final VoidCallback? onVideoEnded;
   final String? videoUrl;
   final EventReference? framedEventReference;
   final bool looping;
-
+  final Widget? videoInfo;
+  final Widget? bottomOverlay;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final videoPath = videoUrl;
@@ -134,7 +135,7 @@ class VideoPage extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Spacer(),
-                // VideoPostInfo(videoPost: video),
+                if (videoInfo != null) videoInfo!,
                 VideoProgress(
                   controller: playerController,
                   builder: (context, position, duration) => VideoSlider(
@@ -151,9 +152,7 @@ class VideoPage extends HookConsumerWidget {
                     },
                   ),
                 ),
-                // VideoActions(
-                //   eventReference: video.toEventReference(),
-                // ),
+                if (bottomOverlay != null) bottomOverlay!,
               ],
             ),
           ),
