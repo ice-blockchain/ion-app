@@ -14,7 +14,7 @@ import 'package:ion/app/features/feed/stories/providers/story_pause_provider.c.d
 import 'package:ion/app/features/feed/views/pages/entity_delete_confirmation_modal/entity_delete_confirmation_modal.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
+import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
 
@@ -176,6 +176,8 @@ class _OtherUserMenuItems extends ConsumerWidget {
     final i18n = context.i18n;
     final isMuted = ref.watch(globalMuteProvider);
 
+    ref.displayErrors(reportNotifierProvider);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -183,10 +185,8 @@ class _OtherUserMenuItems extends ConsumerWidget {
           label: i18n.button_report,
           iconAsset: Assets.svg.iconReport,
           onPressed: () {
-            showSimpleBottomSheet<void>(
-              context: context,
-              child: ReportUserModal(pubkey: pubkey),
-            );
+            onClose();
+            ref.read(reportNotifierProvider.notifier).report(ReportReason.user(pubkey: pubkey));
           },
           onLayout: onUpdateWidth,
         ),

@@ -12,8 +12,8 @@ import 'package:ion/app/features/user/pages/components/header_action/header_acti
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item.dart';
 import 'package:ion/app/features/user/pages/profile_page/components/header/context_menu_item_divider.dart';
 import 'package:ion/app/features/user/pages/profile_page/pages/block_user_modal/block_user_modal.dart';
-import 'package:ion/app/features/user/pages/profile_page/pages/report_user_modal/report_user_modal.dart';
 import 'package:ion/app/features/user/providers/block_list_notifier.c.dart';
+import 'package:ion/app/features/user/providers/report_notifier.c.dart';
 import 'package:ion/app/router/app_routes.c.dart';
 import 'package:ion/app/router/utils/show_simple_bottom_sheet.dart';
 import 'package:ion/generated/assets.gen.dart';
@@ -40,6 +40,8 @@ class ContextMenu extends HookConsumerWidget {
       },
       [],
     );
+
+    ref.displayErrors(reportNotifierProvider);
 
     return OverlayMenu(
       menuBuilder: (closeMenu) => OverlayMenuContainer(
@@ -70,12 +72,8 @@ class ContextMenu extends HookConsumerWidget {
               label: context.i18n.button_report,
               iconAsset: Assets.svg.iconReport,
               onPressed: () {
-                showSimpleBottomSheet<void>(
-                  context: context,
-                  child: ReportUserModal(
-                    pubkey: pubkey,
-                  ),
-                );
+                closeMenu();
+                ref.read(reportNotifierProvider.notifier).report(ReportReason.user(pubkey: pubkey));
               },
               onLayout: updateWidth,
             ),

@@ -10,11 +10,11 @@ class MessagingHeader extends StatelessWidget {
   const MessagingHeader({
     required this.name,
     required this.subtitle,
+    required this.conversationId,
     this.isVerified = false,
     this.imageUrl,
     this.imageWidget,
     this.onTap,
-    this.conversationId,
     this.onToggleMute,
     super.key,
   });
@@ -25,7 +25,7 @@ class MessagingHeader extends StatelessWidget {
   final String? imageUrl;
   final Widget? imageWidget;
   final GestureTapCallback? onTap;
-  final String? conversationId;
+  final String conversationId;
   final VoidCallback? onToggleMute;
   @override
   Widget build(BuildContext context) {
