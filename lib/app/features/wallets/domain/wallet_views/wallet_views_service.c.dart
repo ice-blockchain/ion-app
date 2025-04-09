@@ -90,22 +90,21 @@ class WalletViewsService {
           ),
         )
         .toList();
-    _syncCoinsFromWalletViews();
-    _emitModifiedWalletViews(walletViews: _originWalletViews);
+    _updateEmittedWalletViews(walletViews: _originWalletViews);
 
     return _originWalletViews;
   }
 
-  // TODO: We need somehow to improve the call of this method. Maybe, move it to the _emitModifiedWalletViews with a flag
-  void _syncCoinsFromWalletViews() {
-    final coins = _originWalletViews.expand((wv) => wv.coins).map((c) => c.coin).toList();
-    _syncWalletViewCoinsService.startCoinsSyncQueue(coins);
-  }
-
-  void _emitModifiedWalletViews({
+  void _updateEmittedWalletViews({
     List<WalletViewData>? walletViews,
     bool refreshSubscriptions = true,
+    bool updatePeriodicCoinsSync = true,
   }) {
+    if (updatePeriodicCoinsSync) {
+      final coins = _originWalletViews.expand((wv) => wv.coins).map((c) => c.coin).toList();
+      _syncWalletViewCoinsService.startCoinsSyncQueue(coins);
+    }
+
     if (walletViews != null) {
       _modifiedWalletViews = walletViews;
     }
@@ -145,9 +144,10 @@ class WalletViewsService {
         transactions: transactions,
       );
 
-      _emitModifiedWalletViews(
+      _updateEmittedWalletViews(
         walletViews: updatedViews,
         refreshSubscriptions: false,
+        updatePeriodicCoinsSync: false,
       );
     });
   }
@@ -264,8 +264,7 @@ class WalletViewsService {
         );
 
     _originWalletViews = [..._originWalletViews, newWalletView];
-    _syncCoinsFromWalletViews();
-    _emitModifiedWalletViews(walletViews: _originWalletViews);
+    _updateEmittedWalletViews(walletViews: _originWalletViews);
 
     return newWalletView;
   }
@@ -299,8 +298,7 @@ class WalletViewsService {
       _originWalletViews.add(updatedWalletView);
     }
 
-    _syncCoinsFromWalletViews();
-    _emitModifiedWalletViews(walletViews: _originWalletViews);
+    _updateEmittedWalletViews(walletViews: _originWalletViews);
 
     return updatedWalletView;
   }
@@ -309,8 +307,7 @@ class WalletViewsService {
     await _identity.wallets.deleteWalletView(walletViewId);
     _originWalletViews = _originWalletViews.where((view) => view.id != walletViewId).toList();
 
-    _syncCoinsFromWalletViews();
-    _emitModifiedWalletViews(walletViews: _originWalletViews);
+    _updateEmittedWalletViews(walletViews: _originWalletViews);
   }
 
   // TODO: Move parsing to the separate class

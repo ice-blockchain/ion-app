@@ -27,14 +27,14 @@ class CoinsSync extends _$CoinsSync {
     }
 
     final coinSyncService = await ref.watch(coinsSyncServiceProvider.future);
+    final walletViewsCoinsSyncService = await ref.watch(syncWalletViewCoinsServiceProvider.future);
 
     if (authState.isAuthenticated.falseOrValue) {
       await coinSyncService.syncAllCoins();
       coinSyncService.startPeriodicSync();
       ref.onDispose(coinSyncService.stopPeriodicSync);
     } else {
-      final service = await ref.read(syncWalletViewCoinsServiceProvider.future);
-      service.removeCoinsSyncQueue();
+      walletViewsCoinsSyncService.removeCoinsSyncQueue();
     }
   }
 }

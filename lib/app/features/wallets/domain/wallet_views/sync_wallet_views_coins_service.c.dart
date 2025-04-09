@@ -20,7 +20,6 @@ Future<SyncWalletViewCoinsService> syncWalletViewCoinsService(Ref ref) async {
   );
 }
 
-// TODO: We need to stop/dispose this queue
 class SyncWalletViewCoinsService {
   SyncWalletViewCoinsService({
     required CoinsRepository coinsRepository,
