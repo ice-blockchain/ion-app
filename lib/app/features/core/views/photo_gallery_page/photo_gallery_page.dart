@@ -201,7 +201,7 @@ class PhotoGalleryPage extends HookConsumerWidget {
                               onInteractionUpdate: zoomController.onInteractionUpdate,
                               onInteractionEnd: zoomController.onInteractionEnd,
                               child: Container(
-                                padding: EdgeInsets.only(
+                                padding: EdgeInsetsDirectional.only(
                                   top: MediaQuery.of(context).padding.top,
                                   bottom:
                                       bottomHeight.value + MediaQuery.of(context).padding.bottom,
@@ -219,20 +219,20 @@ class PhotoGalleryPage extends HookConsumerWidget {
                   },
                 ),
               ),
-              Positioned(
+              PositionedDirectional(
                 bottom: MediaQuery.of(context).padding.bottom,
-                left: 0,
-                right: 0,
+                start: 0,
+                end: 0,
                 child: ScreenSideOffset.small(
                   key: messageDetailsKey.value,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0.s),
+                    padding: EdgeInsetsDirectional.symmetric(vertical: 8.0.s),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (eventMessage.content.isNotEmpty)
                           Padding(
-                            padding: EdgeInsets.only(bottom: 24.0.s),
+                            padding: EdgeInsetsDirectional.only(bottom: 24.0.s),
                             child: Text(
                               eventMessage.content,
                               style: context.theme.appTextThemes.body2.copyWith(
