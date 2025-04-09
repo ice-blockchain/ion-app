@@ -32,6 +32,7 @@ class SyncWalletViewCoinsService {
 
   var _syncQueueActive = false;
   var _syncQueueInitialized = false;
+  StreamSubscription<List<CoinData>>? _subscription;
 
   Future<void> startCoinsSyncQueue(List<CoinData> coins) async {
     final coinIds = coins.map((coin) => coin.id).toSet();
@@ -46,7 +47,9 @@ class SyncWalletViewCoinsService {
       // we tell the sync method to remove the coins that are not in WalletViews from the queue
       // and add new ones.
       final completer = Completer<void>();
-      final subscription = _coinsRepository.watchCoins(coinIds).listen((coins) async {
+
+      await _subscription?.cancel();
+      _subscription = _coinsRepository.watchCoins(coinIds).listen((coins) async {
         if (coins.isNotEmpty) {
           if (await isQueueNotReady()) {
             await _updateCoinsSyncQueue(
@@ -61,7 +64,7 @@ class SyncWalletViewCoinsService {
       });
 
       await completer.future;
-      await subscription.cancel();
+      await _subscription?.cancel();
     }
 
     if (!_syncQueueInitialized) {
@@ -74,6 +77,7 @@ class SyncWalletViewCoinsService {
     Logger.log('Remove coins sync queue');
 
     _stopCoinsSyncQueue();
+    _subscription?.cancel();
     _coinsRepository.removeSyncQueue();
   }
 
