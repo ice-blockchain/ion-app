@@ -67,7 +67,6 @@ class PhotoGalleryCarousel extends HookConsumerWidget {
                 height: double.infinity,
               );
             }
-            print(snapshot.data!.path);
             return VideoPreview(videoUrl: snapshot.data!.path);
           },
         );

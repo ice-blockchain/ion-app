@@ -101,7 +101,6 @@ class VideoPlayerControllerFactory {
         videoPlayerOptions: videoPlayerOptions,
       );
     } else if (_isLocalFile(sourcePath)) {
-      print(sourcePath);
       return CachedVideoPlayerPlusController.file(
         File(sourcePath),
         videoPlayerOptions: videoPlayerOptions,

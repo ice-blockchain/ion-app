@@ -81,7 +81,6 @@ class PhotoGalleryPage extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          await Future<void>.delayed(const Duration(milliseconds: 100));
           final context = messageDetailsKey.value.currentContext;
           if (context != null) {
             final box = context.findRenderObject() as RenderBox?;
