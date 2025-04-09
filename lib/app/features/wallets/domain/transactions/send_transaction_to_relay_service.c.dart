@@ -55,7 +55,7 @@ class SendTransactionToRelayService {
   final IonConnectSealService sealService;
   final IonConnectGiftWrapService wrapService;
 
-  Future<void> sendTransactionEntity({
+  Future<EventMessage> sendTransactionEntity({
     required EventMessage Function(String currentUserPubkey) createEventMessage,
     required MasterPubkeyWithDeviceKeys senderPubkeys,
     required MasterPubkeyWithDeviceKeys receiverPubkeys,
@@ -96,6 +96,8 @@ class SendTransactionToRelayService {
           actionSource: ActionSourceUser(masterPubkey, anonymous: true),
         );
       }).wait;
+
+      return event;
     } catch (e) {
       throw SendEventException(e.toString());
     }

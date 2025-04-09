@@ -29,3 +29,4 @@ targets:
           databases:
             chat_database: lib/app/features/chat/model/database/chat_database.c.dart
             notifications_database: lib/app/features/feed/notifications/data/database/notifications_database.c.dart
+            wallets_database: lib/app/features/wallets/data/database/wallets_database.c.dart

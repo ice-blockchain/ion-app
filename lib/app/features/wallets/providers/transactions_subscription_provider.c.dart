@@ -6,8 +6,9 @@ import 'package:ion/app/features/auth/providers/auth_provider.c.dart';
 import 'package:ion/app/features/ion_connect/ion_connect.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_event_signer_provider.c.dart';
 import 'package:ion/app/features/ion_connect/providers/ion_connect_subscription_provider.c.dart';
+import 'package:ion/app/features/wallets/data/repository/request_assets_repository.c.dart';
 import 'package:ion/app/features/wallets/data/repository/transactions_repository.c.dart';
-import 'package:ion/app/features/wallets/model/entities/request_asset_entity.c.dart';
+import 'package:ion/app/features/wallets/model/entities/funds_request_entity.c.dart';
 import 'package:ion/app/features/wallets/model/entities/wallet_asset_entity.c.dart';
 import 'package:ion/app/features/wallets/providers/wallets_initializer_provider.c.dart';
 import 'package:ion/app/services/ion_connect/ion_connect_gift_wrap_service.c.dart';
@@ -30,6 +31,7 @@ Future<void> transactionsSubscription(Ref ref) async {
 
   final currentPubkey = ref.watch(currentPubkeySelectorProvider);
   final transactionsRepository = ref.watch(transactionsRepositoryProvider).valueOrNull;
+  final requestAssetsRepository = ref.watch(requestAssetsRepositoryProvider);
   final eventSigner = ref.watch(currentUserIonConnectEventSignerProvider).valueOrNull;
   final sealService = ref.watch(ionConnectSealServiceProvider).valueOrNull;
   final giftWrapService = ref.watch(ionConnectGiftWrapServiceProvider).valueOrNull;
@@ -42,15 +44,23 @@ Future<void> transactionsSubscription(Ref ref) async {
     return;
   }
 
-  final since = await transactionsRepository.getLastCreatedAt();
+  final transactionLastCreatedAt = await transactionsRepository.getLastCreatedAt();
+  final requestLastCreatedAt = await requestAssetsRepository.getLastCreatedAt();
+
+  final lastCreatedAt = _getEarliestDateTime(transactionLastCreatedAt, requestLastCreatedAt);
+  final since = lastCreatedAt?.subtract(const Duration(days: 2)) ??
+      DateTime.now().subtract(const Duration(days: 30));
 
   final requestMessage = RequestMessage(
     filters: [
       RequestFilter(
         kinds: const [IonConnectGiftWrapServiceImpl.kind],
-        since: since?.subtract(const Duration(days: 2)),
+        since: since,
         tags: {
-          '#k': ['1755', WalletAssetEntity.kind.toString()],
+          '#k': [
+            FundsRequestEntity.kind.toString(),
+            WalletAssetEntity.kind.toString(),
+          ],
           '#p': [currentPubkey],
         },
       ),
@@ -73,9 +83,9 @@ Future<void> transactionsSubscription(Ref ref) async {
           case WalletAssetEntity.kind:
             final message = WalletAssetEntity.fromEventMessage(rumor);
             await transactionsRepository.saveEntities([message]);
-          case RequestAssetEntity.kind:
-            // TODO: parse and save
-            break;
+          case FundsRequestEntity.kind:
+            final request = FundsRequestEntity.fromEventMessage(rumor);
+            await requestAssetsRepository.saveRequestAsset(request);
         }
       }
     } on Exception catch (ex) {
@@ -84,6 +94,15 @@ Future<void> transactionsSubscription(Ref ref) async {
   });
 
   ref.onDispose(subscription.cancel);
+}
+
+/// Returns the earliest datetime between two optional datetimes.
+/// If both are null, returns null.
+/// If only one is null, returns the non-null one.
+DateTime? _getEarliestDateTime(DateTime? first, DateTime? second) {
+  if (first == null) return second;
+  if (second == null) return first;
+  return first.isBefore(second) ? first : second;
 }
 
 Future<EventMessage?> _unwrapGift({
