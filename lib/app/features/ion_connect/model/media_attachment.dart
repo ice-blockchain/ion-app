@@ -221,7 +221,7 @@ class MediaAttachment {
     return MediaType.fromUrl(url);
   }
 
-  List<String> toTag() {
+  List<String> toTag({bool includeDuration = true}) {
     return [
       tagName,
       'url $url',
@@ -236,7 +236,7 @@ class MediaAttachment {
       if (thumb != null) 'thumb $thumb',
       if (image != null) 'image $image',
       if (blurhash != null) 'blurhash $blurhash',
-      if (duration != null) 'duration $duration',
+      if (includeDuration && (duration ?? 0) > 0) 'duration $duration',
     ];
   }
 
