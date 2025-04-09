@@ -9,9 +9,12 @@ Future<void> sendEmail({
   final emailUri = Uri(
     scheme: 'mailto',
     path: receiver,
+    // Applying Uri.encodeComponent manually to query params
+    // because otherwise the whitespaces will be encoded as
+    // '+' instead of proper '%20'
     queryParameters: {
-      'subject': subject,
-      'body': body,
+      'subject': Uri.encodeComponent(subject),
+      'body': Uri.encodeComponent(body),
     },
   );
 
