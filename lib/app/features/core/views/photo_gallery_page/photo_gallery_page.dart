@@ -36,7 +36,6 @@ class PhotoGalleryPage extends HookConsumerWidget {
   final int initialIndex;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeIndex = useState(1);
     final eventMessageFuture = useFuture(
       useMemoized(
         () => ref.watch(eventMessageDaoProvider).getById(eventMessageId),
@@ -136,7 +135,7 @@ class PhotoGalleryPage extends HookConsumerWidget {
               PhotoGalleryContextMenu(),
             ],
             title: Text(
-              '${activeIndex.value}/${medias.length}',
+              '${currentPage.value + 1}/${medias.length}',
               style: context.theme.appTextThemes.subtitle2.copyWith(
                 color: context.theme.appColors.onPrimaryAccent,
               ),
@@ -147,7 +146,7 @@ class PhotoGalleryPage extends HookConsumerWidget {
               Align(
                 child: PageView.builder(
                   onPageChanged: (index) {
-                    activeIndex.value = index + 1;
+                    currentPage.value = index + 1;
                   },
                   controller: pageController,
                   physics:
@@ -157,13 +156,6 @@ class PhotoGalleryPage extends HookConsumerWidget {
                     final media = medias[index];
                     final mediaAttchment =
                         entity.visualMedias.where((e) => e.url == media.remoteUrl).first;
-                    // final urlFeature = ref.read(
-                    //   chatMessageLoadMediaProvider(
-                    //     entity: entity,
-                    //     mediaAttachment: mediaAttchment,
-                    //     loadThumbnail: false,
-                    //   ),
-                    // );
 
                     final urlFeature = ref
                         .read(
@@ -263,64 +255,5 @@ class PhotoGalleryPage extends HookConsumerWidget {
         ),
       ),
     );
-
-    // return Scaffold(
-    //   backgroundColor: context.theme.appColors.primaryText,
-    //   appBar: NavigationAppBar.screen(
-    //     backgroundColor: context.theme.appColors.primaryText,
-    //     leading: NavigationBackButton(
-    //       () {
-    //         Navigator.of(context).pop();
-    //       },
-    //       icon: Assets.svg.iconChatBack.icon(
-    //         size: NavigationAppBar.actionButtonSide,
-    //         color: context.theme.appColors.onPrimaryAccent,
-    //         flipForRtl: true,
-    //       ),
-    //     ),
-    //     title: Text(
-    //       '${activeIndex.value}/${medias.length}',
-    //       style: context.theme.appTextThemes.subtitle2.copyWith(
-    //         color: context.theme.appColors.onPrimaryAccent,
-    //       ),
-    //     ),
-    //     actions: const [
-    //       PhotoGalleryContextMenu(),
-    //     ],
-    //   ),
-    //   body: Column(
-    //     children: [
-    //       Expanded(
-    //         child: Center(
-    //           child: ImageCarousel(
-    //             images: entity.visualMedias,
-    //             initialIndex: activeIndex.value,
-    //             eventReference: null,
-    //           ),
-    //         ),
-    //       ),
-    //       ScreenSideOffset.small(
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             PhotoGalleryTitle(message: eventMessage.content),
-    //             SizedBox(height: 24.0.s),
-    //             Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 PhotoGalleryMeta(senderName: senderName, sentAt: eventMessage.createdAt),
-    //                 Assets.svg.iconChatReplymessage.icon(
-    //                   size: 20.0.s,
-    //                   color: context.theme.appColors.onPrimaryAccent,
-    //                 ),
-    //               ],
-    //             ),
-    //             ScreenBottomOffset(margin: 8.0.s),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

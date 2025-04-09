@@ -8,6 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ion/app/extensions/extensions.dart';
 import 'package:ion/app/features/chat/e2ee/model/entities/private_direct_message_data.c.dart';
+import 'package:ion/app/features/chat/e2ee/providers/chat_medias_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/chat_message_load_media_provider.c.dart';
 import 'package:ion/app/features/chat/e2ee/providers/send_chat_message/send_chat_media_provider.c.dart';
 import 'package:ion/app/features/chat/model/database/chat_database.c.dart';
@@ -61,11 +62,16 @@ class VisualMediaContent extends HookConsumerWidget {
     final isVideo = MediaType.fromMimeType(mediaAttachment?.mimeType ?? '') == MediaType.video;
 
     return GestureDetector(
-      onTap: () {
-        PhotoGalleryRoute(
-          eventMessageId: eventMessage.id,
-          initialIndex: 0,
-        ).push<void>(context);
+      onTap: () async {
+        final messageMedias =
+            await ref.read(chatMediasProvider(eventMessageId: eventMessage.id).future);
+
+        if (context.mounted) {
+          await PhotoGalleryRoute(
+            eventMessageId: eventMessage.id,
+            initialIndex: messageMedias.indexOf(messageMediaTableData),
+          ).push<void>(context);
+        }
       },
       child: Stack(
         key: Key(messageMediaTableData.id.toString()),
