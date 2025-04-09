@@ -139,7 +139,7 @@ class VideosVerticalScrollPage extends HookConsumerWidget {
           scrollDirection: Axis.vertical,
           onPageChanged: (index) => _loadMore(ref, index, flattenedVideos.length),
           itemBuilder: (_, index) => VideoPage(
-            video: flattenedVideos[index].entity,
+            // video: flattenedVideos[index].entity,
             videoUrl: flattenedVideos[index].media.url,
             framedEventReference: index == initialPage ? framedEventReference : null,
             onVideoEnded: () {

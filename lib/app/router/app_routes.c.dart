@@ -332,22 +332,16 @@ class CompressTestRoute extends BaseRouteData {
 @TypedGoRoute<PhotoGalleryRoute>(path: '/photo-gallery')
 class PhotoGalleryRoute extends BaseRouteData {
   PhotoGalleryRoute({
-    required this.title,
-    required this.senderName,
-    required this.sentAt,
-    this.photoUrls = const [],
+    required this.eventMessageId,
+    required this.initialIndex,
   }) : super(
           child: PhotoGalleryPage(
-            photoUrls: photoUrls,
-            title: title,
-            senderName: senderName,
-            sentAt: sentAt,
+            eventMessageId: eventMessageId,
+            initialIndex: initialIndex,
           ),
-          type: IceRouteType.fade,
+          type: IceRouteType.swipeDismissible,
         );
 
-  final List<String> photoUrls;
-  final String title;
-  final String senderName;
-  final DateTime sentAt;
+  final String eventMessageId;
+  final int initialIndex;
 }

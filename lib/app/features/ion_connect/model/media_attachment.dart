@@ -154,7 +154,7 @@ class MediaAttachment {
         'encryptionMac': encryptionMac,
         'thumb': thumb,
         'blurhash': blurhash,
-        'duration': duration,
+        if (duration != 0) 'duration': duration,
       };
 
   final String url;
