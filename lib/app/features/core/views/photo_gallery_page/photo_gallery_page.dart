@@ -183,10 +183,8 @@ class PhotoGalleryPage extends HookConsumerWidget {
                         final isVideo = mediaAttchment.mediaType == MediaType.video;
 
                         if (isVideo) {
-                          print(snapshot.data!.path);
                           return VideoPage(
                             key: ValueKey('video_${media.id}'),
-                            // video: post,
                             videoUrl: snapshot.data!.path,
                           );
                         }
